@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -25,6 +24,7 @@ public sealed partial class ParsedJsonDocument<T>
     private static ParsedJsonDocument<T>? s_nullLiteral;
 
     private static ParsedJsonDocument<T>? s_trueLiteral;
+
     private static ParsedJsonDocument<T>? s_falseLiteral;
 
     private const int UnseekableStreamInitialRentSize = 4096;
@@ -451,6 +451,7 @@ public sealed partial class ParsedJsonDocument<T>
                 // so we need to move to the first token.
                 // (or a reader has terminated and we're about to throw)
                 case JsonTokenType.None:
+
                 // Using a reader loop the caller has identified a property they wish to
                 // hydrate into a ParsedJsonDocument. Move to the value first.
                 case JsonTokenType.PropertyName:
@@ -599,6 +600,7 @@ public sealed partial class ParsedJsonDocument<T>
 
                     break;
                 }
+
                 default:
                 {
                     if (shouldThrow)
@@ -847,6 +849,7 @@ public sealed partial class ParsedJsonDocument<T>
                     byte[] toReturn = rented;
                     rented = ArrayPool<byte>.Shared.Rent(checked(toReturn.Length * 2));
                     Buffer.BlockCopy(toReturn, 0, rented, 0, toReturn.Length);
+
                     // Holds document content, clear it.
                     ArrayPool<byte>.Shared.Return(toReturn, clearArray: true);
                 }
@@ -927,6 +930,7 @@ public sealed partial class ParsedJsonDocument<T>
                     byte[] toReturn = rented;
                     rented = ArrayPool<byte>.Shared.Rent(toReturn.Length * 2);
                     Buffer.BlockCopy(toReturn, 0, rented, 0, toReturn.Length);
+
                     // Holds document content, clear it.
                     ArrayPool<byte>.Shared.Return(toReturn, clearArray: true);
                 }
@@ -956,14 +960,21 @@ public sealed partial class ParsedJsonDocument<T>
         private static MetadataDb? s_nullLiteral;
 
         private static MetadataDb? s_trueLiteral;
+
         private static MetadataDb? s_falseLiteral;
+
         private static MetadataDb? s_zeroLiteral;
+
         private static MetadataDb? s_oneLiteral;
 
         public static MetadataDb Null => s_nullLiteral ??= Create(JsonConstants.NullValue.Length, JsonTokenType.Null);
+
         public static MetadataDb True => s_trueLiteral ??= Create(JsonConstants.TrueValue.Length, JsonTokenType.True);
+
         public static MetadataDb False => s_falseLiteral ??= Create(JsonConstants.FalseValue.Length, JsonTokenType.False);
+
         public static MetadataDb Zero => s_zeroLiteral ??= Create(JsonConstants.ZeroValue.Length, JsonTokenType.Number);
+
         public static MetadataDb One => s_oneLiteral ??= Create(JsonConstants.OneValue.Length, JsonTokenType.Number);
 
         private static MetadataDb Create(int length, JsonTokenType jsonTokenType)

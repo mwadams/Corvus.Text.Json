@@ -6,29 +6,20 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 // This file contains the IDN functions and implementation.
-
 // This allows encoding of non-ASCII domain names in a "punycode" form,
 // for example:
-
 // \u5B89\u5BA4\u5948\u7F8E\u6075-with-SUPER-MONKEYS
-
 // is encoded as:
-
 // xn---with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n
-
 // Additional options are provided to allow unassigned IDN characters and
 // to validate according to the Std3ASCII Rules (like DNS names).
-
 // There are also rules regarding bidirectionality of text and the length
 // of segments.
-
 // For additional rules see also:
 // RFC 3490 - Internationalizing Domain Names in Applications (IDNA)
 // RFC 3491 - Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)
 // RFC 3492 - Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -120,6 +111,7 @@ public sealed partial class IdnMapping
 
         // Copy up
         outputBuffer.Slice(index, written - index).CopyTo(outputBuffer.Slice(index + localWritten));
+
         // Insert in the space
         buffer.Slice(0, localWritten).CopyTo(outputBuffer.Slice(index));
         written += localWritten;
@@ -329,11 +321,15 @@ public sealed partial class IdnMapping
                 // This form DOES NOT support an FQDN, which supports a trailing dot on the hostname.
                 written = 0;
                 return false;
+
                 // (unlike this code below)
+
                 //// if (iNextDot != ascii.Length)
                 //// {
                 //// written = 0;
+
                 //// return false;
+
                 //// }
 
                 ////// Last dot, stop
@@ -508,7 +504,6 @@ public sealed partial class IdnMapping
                             // If its a surrogate, we have to go one more
                             // (We are guaranteed to be inside the outBuffer range so we don't
                             // need to test the index here);
-
                             Rune.DecodeFromUtf8(outputBuffer.Slice(iUseInsertLocation), out _, out int bytesConsumed);
                             iUseInsertLocation += bytesConsumed;
                         }
@@ -613,6 +608,7 @@ public sealed partial class IdnMapping
             // We're only using part of the string
             ascii = ascii.Slice(index, count);
         }
+
         // Convert Punycode to Unicode
         if (!PunycodeDecode(ascii, outputBuffer, out written))
         {
@@ -621,6 +617,7 @@ public sealed partial class IdnMapping
         }
 
         // We should not need to assert the round trip rule here
+
         //// GetAscii(strUnicode)
         ////// Output name MUST obey IDNA rules & round trip (casing differences are allowed)
         //// if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))

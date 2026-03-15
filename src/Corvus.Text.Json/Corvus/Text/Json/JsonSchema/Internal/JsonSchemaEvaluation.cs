@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers.Text;
 using System.Diagnostics;
 using System.Numerics;
@@ -20,7 +19,9 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider<string> ExpectedConstant = static (expectedValue, buffer, out written) => ExpectedConstantValue(expectedValue, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider EvaluatedSubschema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_EvaluatedSubschema.AsSpan(), buffer, out written);
+
     /// <summary>
     /// Creates a schema location for an indexed keyword by appending the index to the base location.
     /// </summary>

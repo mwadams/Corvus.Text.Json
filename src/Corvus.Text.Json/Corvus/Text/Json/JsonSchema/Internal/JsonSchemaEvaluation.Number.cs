@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -21,144 +20,277 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeNumber = static (buffer, out written) => IgnoredNotType("number"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeInteger = static (buffer, out written) => IgnoredNotType("integer"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedTypeNumber = static (buffer, out written) => ExpectedType("number"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedTypeInteger = static (buffer, out written) => ExpectedType("integer"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<string> ExpectedMultipleOf = static (divisor, buffer, out written) => ExpectedMultipleOfDivisor(divisor, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<string> ExpectedEquals = static (value, buffer, out written) => ExpectedEqualsValue(value, buffer, out written);
 
     private const int MaximumByteExponent = 0;
+
     private const bool MaximumByteIsNegative = false;
+
     private const int MaximumDecimalExponent = 0;
+
     private const bool MaximumDecimalIsNegative = false;
+
     private const int MaximumDoubleExponent = 291;
+
     private const bool MaximumDoubleIsNegative = false;
+
     private const int MaximumHalfExponent = 0;
+
     private const bool MaximumHalfIsNegative = false;
+
     private const int MaximumInt128Exponent = 0;
+
     private const bool MaximumInt128IsNegative = false;
+
     private const int MaximumInt16Exponent = 0;
+
     private const bool MaximumInt16IsNegative = false;
+
     private const int MaximumInt32Exponent = 0;
+
     private const bool MaximumInt32IsNegative = false;
+
     private const int MaximumInt64Exponent = 0;
+
     private const bool MaximumInt64IsNegative = false;
+
     private const int MaximumSByteExponent = 0;
+
     private const bool MaximumSByteIsNegative = false;
+
     private const int MaximumSingleExponent = 20;
+
     private const bool MaximumSingleIsNegative = false;
+
     private const int MaximumUInt128Exponent = 0;
+
     private const bool MaximumUInt128IsNegative = false;
+
     private const int MaximumUInt16Exponent = 0;
+
     private const bool MaximumUInt16IsNegative = false;
+
     private const int MaximumUInt32Exponent = 0;
+
     private const bool MaximumUInt32IsNegative = false;
+
     private const int MaximumUInt64Exponent = 0;
+
     private const bool MaximumUInt64IsNegative = false;
+
     private const int MinimumByteExponent = 0;
+
     private const bool MinimumByteIsNegative = false;
+
     private const int MinimumDecimalExponent = 0;
+
     private const bool MinimumDecimalIsNegative = true;
+
     private const int MinimumDoubleExponent = 291;
+
     private const bool MinimumDoubleIsNegative = true;
+
     private const int MinimumHalfExponent = 0;
+
     private const bool MinimumHalfIsNegative = true;
+
     private const int MinimumInt128Exponent = 0;
+
     private const bool MinimumInt128IsNegative = true;
+
     private const int MinimumInt16Exponent = 0;
+
     private const bool MinimumInt16IsNegative = true;
+
     private const int MinimumInt32Exponent = 0;
+
     private const bool MinimumInt32IsNegative = true;
+
     private const int MinimumInt64Exponent = 0;
+
     private const bool MinimumInt64IsNegative = true;
+
     private const int MinimumSByteExponent = 0;
+
     private const bool MinimumSByteIsNegative = true;
+
     private const int MinimumSingleExponent = 20;
+
     private const bool MinimumSingleIsNegative = true;
+
     private const int MinimumUInt128Exponent = 0;
+
     private const bool MinimumUInt128IsNegative = false;
+
     private const int MinimumUInt16Exponent = 0;
+
     private const bool MinimumUInt16IsNegative = false;
+
     private const int MinimumUInt32Exponent = 0;
+
     private const bool MinimumUInt32IsNegative = false;
+
     private const int MinimumUInt64Exponent = 0;
+
     private const bool MinimumUInt64IsNegative = false;
+
     private static readonly JsonSchemaMessageProvider ExpectedByte = static (buffer, out written) => ExpectedNumberFormat("byte"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedDecimal = static (buffer, out written) => ExpectedNumberFormat("decimal"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedDouble = static (buffer, out written) => ExpectedNumberFormat("double"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedHalf = static (buffer, out written) => ExpectedNumberFormat("half"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedInt128 = static (buffer, out written) => ExpectedNumberFormat("int128"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedInt16 = static (buffer, out written) => ExpectedNumberFormat("int16"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedInt32 = static (buffer, out written) => ExpectedNumberFormat("int32"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedInt64 = static (buffer, out written) => ExpectedNumberFormat("int64"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedSByte = static (buffer, out written) => ExpectedNumberFormat("sbyte"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedSingle = static (buffer, out written) => ExpectedNumberFormat("single"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUInt128 = static (buffer, out written) => ExpectedNumberFormat("uint128"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUInt16 = static (buffer, out written) => ExpectedNumberFormat("uint16"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUInt32 = static (buffer, out written) => ExpectedNumberFormat("uint32"u8, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUInt64 = static (buffer, out written) => ExpectedNumberFormat("uint64"u8, buffer, out written);
 
     private static readonly JsonSchemaMessageProvider<string> ExpectedNotEquals = static (value, buffer, out written) => ExpectedNotEqualsValue(value, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<string> ExpectedLessThanOrEquals = static (value, buffer, out written) => ExpectedLessThanOrEqualsValue(value, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<string> ExpectedLessThan = static (value, buffer, out written) => ExpectedLessThanValue(value, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<string> ExpectedGreaterThanOrEquals = static (value, buffer, out written) => ExpectedGreaterThanOrEqualsValue(value, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<string> ExpectedGreaterThan = static (value, buffer, out written) => ExpectedGreaterThanValue(value, buffer, out written);
 
     private static ReadOnlySpan<byte> MaximumByteFractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumByteIntegral => "255"u8;
+
     private static ReadOnlySpan<byte> MaximumDecimalFractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumDecimalIntegral => "79228162514264337593543950335"u8;
+
     private static ReadOnlySpan<byte> MaximumDoubleFractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumDoubleIntegral => "17976931348623157"u8;
+
     private static ReadOnlySpan<byte> MaximumHalfFractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumHalfIntegral => "65504"u8;
+
     private static ReadOnlySpan<byte> MaximumInt128Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumInt128Integral => "170141183460469231731687303715884105727"u8;
+
     private static ReadOnlySpan<byte> MaximumInt16Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumInt16Integral => "32767"u8;
+
     private static ReadOnlySpan<byte> MaximumInt32Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumInt32Integral => "2147483647"u8;
+
     private static ReadOnlySpan<byte> MaximumInt64Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumInt64Integral => "9223372036854775807"u8;
+
     private static ReadOnlySpan<byte> MaximumSByteFractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumSByteIntegral => "127"u8;
+
     private static ReadOnlySpan<byte> MaximumSingleFractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumSingleIntegral => "340282346638528859"u8;
+
     private static ReadOnlySpan<byte> MaximumUInt128Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumUInt128Integral => "340282366920938463463374607431768211455"u8;
+
     private static ReadOnlySpan<byte> MaximumUInt16Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumUInt16Integral => "65535"u8;
+
     private static ReadOnlySpan<byte> MaximumUInt32Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumUInt32Integral => "4294967295"u8;
+
     private static ReadOnlySpan<byte> MaximumUInt64Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MaximumUInt64Integral => "18446744073709551615"u8;
+
     private static ReadOnlySpan<byte> MinimumByteFractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumByteIntegral => ""u8;
+
     private static ReadOnlySpan<byte> MinimumDecimalFractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumDecimalIntegral => "79228162514264337593543950335"u8;
+
     private static ReadOnlySpan<byte> MinimumDoubleFractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumDoubleIntegral => "17976931348623157"u8;
+
     private static ReadOnlySpan<byte> MinimumHalfFractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumHalfIntegral => "65504"u8;
+
     private static ReadOnlySpan<byte> MinimumInt128Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumInt128Integral => "170141183460469231731687303715884105728"u8;
+
     private static ReadOnlySpan<byte> MinimumInt16Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumInt16Integral => "32768"u8;
+
     private static ReadOnlySpan<byte> MinimumInt32Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumInt32Integral => "2147483648"u8;
+
     private static ReadOnlySpan<byte> MinimumInt64Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumInt64Integral => "9223372036854775808"u8;
+
     private static ReadOnlySpan<byte> MinimumSByteFractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumSByteIntegral => "128"u8;
+
     private static ReadOnlySpan<byte> MinimumSingleFractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumSingleIntegral => "340282346638528859"u8;
+
     private static ReadOnlySpan<byte> MinimumUInt128Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt128Integral => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt16Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt16Integral => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt32Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt32Integral => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt64Fractional => ""u8;
+
     private static ReadOnlySpan<byte> MinimumUInt64Integral => ""u8;
 
     /// <summary>

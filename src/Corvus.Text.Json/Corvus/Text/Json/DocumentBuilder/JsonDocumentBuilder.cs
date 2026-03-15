@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -28,7 +27,9 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     where T : struct, IMutableJsonElement<T>
 {
     private readonly JsonWorkspace _workspace;
+
     private int _parentWorkspaceIndex = -1;
+
     private ulong _version = 0;
 
     internal JsonDocumentBuilder(JsonWorkspace workspace)
@@ -664,6 +665,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     string IJsonDocument.GetNameOfPropertyValue(int index)
     {
         CheckNotDisposed();
+
         // The property name is one row before the property value
         return GetStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName)!;
     }
@@ -1236,6 +1238,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                 // null parent should have hit the None case
                 return GetRawValueAsStringUnsafe(index);
             }
+
             case JsonTokenType.String:
                 return GetStringUnsafe(index, JsonTokenType.String)!;
 
@@ -1271,9 +1274,11 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         ReadOnlyMemory<byte> name = GetRawSimpleValueUnsafe(propertyNameIndex, includeQuotes: true);
         using RawUtf8JsonString value = GetRawValueUnsafe(valueIndex, includeQuotes: true);
+
         // quoted name, quoted value and a colon
         int length = name.Length + value.Span.Length + 1;
         byte[]? buffer = null;
+
         // Use unsigned comparison for efficient stackalloc threshold check
         Span<byte> propertySpan =
             (uint)length < (uint)JsonConstants.StackallocByteThreshold
@@ -1338,6 +1343,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         Utf8JsonWriter writer)
     {
         CheckNotDisposed();
+
         // Need to look at the element types/deferrals etc
         WriteElementToUnsafe(index, writer);
     }
@@ -1368,6 +1374,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                 {
                     writer.WriteStringValue(GetRawSimpleValueUnsafe(index, false).Span);
                 }
+
                 return;
 
             case JsonTokenType.Number:
@@ -1414,6 +1421,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                     {
                         writer.WriteStringValue(GetRawSimpleValueUnsafe(i, false).Span);
                     }
+
                     continue;
                 case JsonTokenType.Number:
                     writer.WriteNumberValue(GetRawSimpleValueUnsafe(i, includeQuotes: false).Span);
@@ -1449,6 +1457,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                     {
                         writer.WritePropertyName(GetRawSimpleValueUnsafe(i, false).Span);
                     }
+
                     continue;
             }
 
@@ -1690,6 +1699,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         MetadataDb db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
         AppendLocalElement(index, workspace, ref db, workspaceDocumentIndex);
+
         // Note we just orphan this db instance, as we are passing the underlying
         // byte array off to the dynamically created document that wants it.
         return db.TakeOwnership(out rentedBacking);

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>
@@ -15,8 +14,11 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeBoolean = static (buffer, out written) => IgnoredNotType("boolean"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedTypeBoolean = static (buffer, out written) => ExpectedType("boolean"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedBooleanTrue = static (buffer, out written) => ExpectedBooleanTrueValue(buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedBooleanFalse = static (buffer, out written) => ExpectedBooleanFalseValue(buffer, out written);
 
     /// <summary>

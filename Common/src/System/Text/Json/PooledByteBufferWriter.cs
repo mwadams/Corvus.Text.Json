@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipelines;
@@ -15,6 +14,7 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
     private const int MinimumBufferSize = 256;
 
     private ArrayBuffer _buffer;
+
     private readonly Stream? _stream;
 
     public PooledByteBufferWriter(int initialCapacity)
@@ -85,6 +85,7 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
     }
 
     public override bool CanGetUnflushedBytes => true;
+
     public override long UnflushedBytes => _buffer.ActiveLength;
 
     // This type is used internally in JsonSerializer to help buffer and flush bytes to the underlying Stream.

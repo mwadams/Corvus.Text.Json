@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -50,23 +49,17 @@ internal static class HexConverter
     // => hex := nibble + 55.
     // The difference in the starting ASCII offset is (55 - 48) = 7, depending on whether the nibble is <= 9 or >= 10.
     // Since 7 is 0b111, this conveniently matches the YYY or ZZZ value computed during the earlier subtraction.
-
     // The commented out code below is code that directly implements the logic described above.
-
     // uint packedOriginalValues = (((uint)value & 0xF0U) << 4) + ((uint)value & 0x0FU);
     // uint difference = 0x8989U - packedOriginalValues;
     // uint add7Mask = (difference & 0x7070U) >> 4; // line YYY and ZZZ back up with the packed values
     // uint packedResult = packedOriginalValues + add7Mask + 0x3030U /* ascii '0' */;
-
     // The code below is equivalent to the commented out code above but has been tweaked
     // to allow codegen to make some extra optimizations.
-
     // The low byte of the packed result contains the hex representation of the incoming byte's low nibble.
     // The adjacent byte of the packed result contains the hex representation of the incoming byte's high nibble.
-
     // Finally, write to the output buffer starting with the *highest* index so that codegen can
     // elide all but the first bounds check. (This only works if 'startingIndex' is a compile-time constant.)
-
     // The JIT can elide bounds checks if 'startingIndex' is constant and if the caller is
     // writing to a span of known length (or the caller has already checked the bounds of the
     // furthest access).
@@ -98,6 +91,7 @@ internal static class HexConverter
     internal static (Vector128<byte>, Vector128<byte>) AsciiToHexVector128(Vector128<byte> src, Vector128<byte> hexMap)
     {
         Debug.Assert(Ssse3.IsSupported || AdvSimd.Arm64.IsSupported);
+
         // The algorithm is simple: a single srcVec (contains the whole 16b Guid) is converted
         // into nibbles and then, via hexMap, converted into a HEX representation via
         // Shuffle(nibbles, srcVec). ASCII is then expanded to UTF-16.
@@ -136,7 +130,6 @@ internal static class HexConverter
             // to support 16 bytes at once, but that didn't demonstrate noticeable wins
             // for Converter.ToHexString (around 8% faster for large inputs) so
             // it focuses on small inputs instead.
-
             uint i32 = Unsafe.ReadUnaligned<uint>(ref Unsafe.Add(ref srcRef, pos));
             Vector128<byte> vec = Vector128.CreateScalar(i32).AsByte();
 
@@ -191,6 +184,7 @@ internal static class HexConverter
             ToCharsBuffer(b, result, pos, casing);
             pos += 2;
         }
+
         return result.ToString();
 #elif NET9_0_OR_GREATER
         SpanCasingPair args = new() { Bytes = bytes, Casing = casing };
@@ -209,6 +203,7 @@ internal static class HexConverter
     private ref struct SpanCasingPair
     {
         public ReadOnlySpan<byte> Bytes { get; set; }
+
         public Casing Casing { get; set; }
     }
 
@@ -280,19 +275,24 @@ internal static class HexConverter
             // by Geoff Langdale and Wojciech Mula
             // Move digits '0'..'9' into range 0xf6..0xff.
             Vector128<byte> t1 = vec + Vector128.Create((byte)(0xFF - '9'));
+
             // And then correct the range to 0xf0..0xf9.
             // All other bytes become less than 0xf0.
             Vector128<byte> t2 = Vector128.SubtractSaturate(t1, Vector128.Create((byte)6));
+
             // Convert into uppercase 'a'..'f' => 'A'..'F' and
             // move hex letter 'A'..'F' into range 0..5.
             Vector128<byte> t3 = (vec & Vector128.Create((byte)0xDF)) - Vector128.Create((byte)'A');
+
             // And correct the range into 10..15.
             // The non-hex letters bytes become greater than 0x0f.
             Vector128<byte> t4 = Vector128.AddSaturate(t3, Vector128.Create((byte)10));
+
             // Convert '0'..'9' into nibbles 0..9. Non-digit bytes become
             // greater than 0x0f. Finally choose the result: either valid nibble (0..9/10..15)
             // or some byte greater than 0x0f.
             Vector128<byte> nibbles = Vector128.Min(t2 - Vector128.Create((byte)0xF0), t4);
+
             // Any high bit is a sign that input is not a valid hex data
             if (!Utf16Utility.AllCharsInVectorAreAscii(vec1 | vec2) ||
                 Vector128.AddSaturate(nibbles, Vector128.Create((byte)(127 - 15))).ExtractMostSignificantBits() != 0)
@@ -300,6 +300,7 @@ internal static class HexConverter
                 // Input is either non-ASCII or invalid hex data
                 break;
             }
+
             Vector128<byte> output;
             if (Ssse3.IsSupported)
             {
@@ -320,8 +321,10 @@ internal static class HexConverter
                 ThrowHelper.ThrowUnreachableException();
                 output = default;
             }
+
             // Accumulate output in lower INT64 half and take care about endianness
             output = Vector128.Shuffle(output, Vector128.Create((byte)0, 2, 4, 6, 8, 10, 12, 14, 0, 0, 0, 0, 0, 0, 0, 0));
+
             // Store 8 bytes in dest by given offset
             Unsafe.WriteUnaligned(ref Unsafe.Add(ref destRef, offset / 2), output.AsUInt64().ToScalar());
 
@@ -331,6 +334,7 @@ internal static class HexConverter
                 charsProcessed = chars.Length;
                 return true;
             }
+
             // Overlap with the current chunk for trailing elements
             if (offset > lengthSubTwoVector128)
             {

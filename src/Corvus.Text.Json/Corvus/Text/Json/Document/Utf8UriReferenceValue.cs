@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using Corvus.Text.Json.Internal;
 
@@ -22,8 +21,11 @@ public readonly struct Utf8UriReferenceValue
     : IDisposable
 {
     private readonly Utf8UriOffset _offsets;
+
     private readonly Utf8UriTools.Flags _flags;
+
     private readonly ReadOnlyMemory<byte> _bytes;
+
     private readonly byte[]? _extraRentedArrayPoolBytes;
 
     private Utf8UriReferenceValue(ReadOnlyMemory<byte> bytes, byte[]? extraRentedArrayPoolBytes, Utf8UriOffset offsets, Utf8UriTools.Flags flags)

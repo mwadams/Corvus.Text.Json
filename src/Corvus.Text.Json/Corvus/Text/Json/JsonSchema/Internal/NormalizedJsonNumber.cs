@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>
@@ -15,6 +14,7 @@ namespace Corvus.Text.Json.Internal;
 public readonly struct NormalizedJsonNumber
 {
     private readonly byte[] _integral;
+
     private readonly byte[] _fractional;
 
     public NormalizedJsonNumber(bool isNegative, byte[] integral, byte[] fractional, int exponent)

@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Globalization;
@@ -23,7 +22,6 @@ namespace System
             uint tempValue;
 
             // We operate on 32-bit integers (two chars) at a time.
-
             while (ucount >= 2)
             {
                 tempValue = Unsafe.ReadUnaligned<uint>(ref Unsafe.As<char, byte>(ref Unsafe.AddByteOffset(ref data, byteOffset)));
@@ -31,6 +29,7 @@ namespace System
                 {
                     goto NotAscii;
                 }
+
                 p0 += Utf16Utility.ConvertAllAsciiCharsInUInt32ToUppercase(tempValue);
                 Block(ref p0, ref p1);
 
@@ -60,6 +59,7 @@ namespace System
                     p0 += (Utf16Utility.ConvertAllAsciiCharsInUInt32ToUppercase(tempValue) << 16) + 0x8000u - 0x80000000u;
                 }
             }
+
             if (BitConverter.IsLittleEndian)
             {
                 p0 += 0x80u;

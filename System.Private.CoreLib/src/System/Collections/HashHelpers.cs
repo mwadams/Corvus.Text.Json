@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -92,6 +91,7 @@ internal static partial class HashHelpers
             if (IsPrime(i) && ((i - 1) % HashPrime != 0))
                 return i;
         }
+
         return min;
     }
 
@@ -105,8 +105,10 @@ internal static partial class HashHelpers
                 if ((candidate % divisor) == 0)
                     return false;
             }
+
             return true;
         }
+
         return candidate == 2;
     }
 }

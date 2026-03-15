@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
@@ -105,6 +104,7 @@ public readonly partial struct JsonElement
     /// <param name="element">Receives the parsed element.</param>
     /// <returns>
     /// <see langword="true"/> if a value was read and parsed into a JsonElement;
+
     /// <see langword="false"/> if the reader ran out of data while parsing.
     /// All other situations result in an exception being thrown.
     /// </returns>

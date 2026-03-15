@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Runtime.InteropServices;
 
 namespace System.Buffers
@@ -11,6 +10,7 @@ namespace System.Buffers
     public static partial class BoundedMemory
     {
         public static bool UnixBoundsEnabled { get; set; }
+
         private static readonly int SystemPageSize = Environment.SystemPageSize;
 
         /// <summary>
@@ -31,6 +31,7 @@ namespace System.Buffers
             {
                 throw new ArgumentOutOfRangeException(nameof(elementCount));
             }
+
             if (placement != PoisonPagePlacement.Before && placement != PoisonPagePlacement.After)
             {
                 throw new ArgumentOutOfRangeException(nameof(placement));
@@ -70,7 +71,6 @@ namespace System.Buffers
         {
             // Loop over a Random instance manually since Random.NextBytes(Span<byte>) doesn't
             // exist on all platforms we target.
-
             Random random = new Random(); // doesn't need to be cryptographically strong
 
             for (int i = 0; i < buffer.Length; i++)
@@ -85,6 +85,7 @@ namespace System.Buffers
             {
                 return AllocateWithoutDataPopulationWindows<T>(elementCount, placement);
             }
+
 #if NETFRAMEWORK
             return AllocateWithoutDataPopulationDefault<T>(elementCount, placement);
 #else
@@ -92,6 +93,7 @@ namespace System.Buffers
             {
                 return AllocateWithoutDataPopulationDefault<T>(elementCount, placement);
             }
+
             return AllocateWithoutDataPopulationUnix<T>(elementCount, placement);
 #endif
         }

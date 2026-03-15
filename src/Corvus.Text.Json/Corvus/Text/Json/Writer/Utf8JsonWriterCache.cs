@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 
@@ -45,18 +44,25 @@ namespace Corvus.Text.Json;
 /// <code>
 /// // Rent writer and buffer for JSON writing
 /// Utf8JsonWriter writer = Utf8JsonWriterCache.RentWriterAndBuffer(options, bufferSize, out var buffer);
+
 /// try
 /// {
 /// // Perform JSON writing operations
 /// writer.WriteStartObject();
+
 /// writer.WriteString("property", "value");
+
 /// writer.WriteEndObject();
+
 /// }
+
 /// finally
 /// {
 /// // Always return to cache when done
 /// Utf8JsonWriterCache.ReturnWriterAndBuffer(writer, buffer);
+
 /// }
+
 /// </code>
 /// </para>
 /// <para>

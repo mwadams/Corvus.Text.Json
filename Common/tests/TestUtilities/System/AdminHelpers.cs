@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -65,6 +64,7 @@ namespace System
                 {
                     throw new Win32Exception(Marshal.GetLastWin32Error(), "Get token information failed");
                 }
+
                 return elevation.TokenIsElevated != Interop.BOOL.FALSE;
             }
         }

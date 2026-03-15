@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -10,7 +9,9 @@ namespace System.Collections.Generic;
 internal ref partial struct ValueListBuilder<T>
 {
     private Span<T> _span;
+
     private T[]? _arrayFromPool;
+
     private int _pos;
 
     public ValueListBuilder(Span<T?> scratchBuffer)

@@ -6,18 +6,17 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 #pragma warning disable
 
 // Copyright 2013 The Noda Time Authors. All rights reserved.
 // Use of this source code is governed by the Apache License 2.0,
 // as found in the LICENSE.txt file.
-
 namespace NodaTime.Calendars;
 
 internal static class GregorianYearMonthDayCalculator
 {
     internal const int MinGregorianYear = -9998;
+
     internal const int MaxGregorianYear = 9999;
 
     // We precompute useful values for each month between these years, as we anticipate most
@@ -25,13 +24,17 @@ internal static class GregorianYearMonthDayCalculator
     private const int FirstOptimizedYear = 1900;
 
     private const int LastOptimizedYear = 2100;
+
     private const int FirstOptimizedDay = -25567;
+
     private const int LastOptimizedDay = 47846;
 
     private const int DaysFrom0000To1970 = 719527;
+
     private const int AverageDaysPer10Years = 3652; // Ideally 365.2425 per year...
 
     private static readonly int[] NonLeapDaysPerMonth = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
     private static readonly int[] LeapDaysPerMonth = { 0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
     // Note: these fields must be declared after NonLeapDaysPerMonth and LeapDaysPerMonth so that the initialization
@@ -57,6 +60,7 @@ internal static class GregorianYearMonthDayCalculator
                 return false;
             }
         }
+
         // If we've been asked for day 1-28, we're definitely okay regardless of month.
         if (day >= 1 && day <= 28)
         {
@@ -86,6 +90,7 @@ internal static class GregorianYearMonthDayCalculator
         {
             ret[i + 1] = ret[i] + monthLengths[i];
         }
+
         return ret;
     }
 

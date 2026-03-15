@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Collections.Generic;
 using Corvus.Text.Json.Internal;
@@ -21,8 +20,11 @@ public class JsonWorkspace : IDisposable
     private static readonly JsonWriterOptions s_internalWriterOptions = new() { Indented = false };
 
     private IJsonDocument[] _documents;
+
     private readonly Dictionary<IJsonDocument, int> _documentIndices;
+
     private int _length;
+
     private bool _rented;
 
     internal JsonWorkspace(bool rented, int initialDocumentCapacity = 5, JsonWriterOptions? options = null)

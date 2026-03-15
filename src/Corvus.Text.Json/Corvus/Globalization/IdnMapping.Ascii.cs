@@ -6,29 +6,20 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 // This file contains the IDN functions and implementation.
-
 // This allows encoding of non-ASCII domain names in a "punycode" form,
 // for example:
-
 // \u5B89\u5BA4\u5948\u7F8E\u6075-with-SUPER-MONKEYS
-
 // is encoded as:
-
 // xn---with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n
-
 // Additional options are provided to allow unassigned IDN characters and
 // to validate according to the Std3ASCII Rules (like DNS names).
-
 // There are also rules regarding bidirectionality of text and the length
 // of segments.
-
 // For additional rules see also:
 // RFC 3490 - Internationalizing Domain Names in Applications (IDNA)
 // RFC 3491 - Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)
 // RFC 3492 - Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)
-
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -41,6 +32,7 @@ public sealed partial class IdnMapping
     public static IdnMapping Default { get; } = new IdnMapping { AllowUnassigned = true, UseStd3AsciiRules = true };
 
     private bool _allowUnassigned;
+
     private bool _useStd3AsciiRules;
 
     public IdnMapping()
@@ -121,18 +113,26 @@ public sealed partial class IdnMapping
         (_allowUnassigned ? 100 : 200) + (_useStd3AsciiRules ? 1000 : 2000);
 
     // Invariant implementation
-
     private const char c_delimiter = '-';
+
     private static ReadOnlySpan<char> c_strAcePrefix => "xn--";
+
     private const int c_labelLimit = 63;          // Not including dots
     private const int c_defaultNameLimit = 255;   // Including dots
     private const int c_initialN = 0x80;
+
     private const int c_maxint = 0x7ffffff;
+
     private const int c_initialBias = 72;
+
     private const int c_punycodeBase = 36;
+
     private const int c_tmin = 1;
+
     private const int c_tmax = 26;
+
     private const int c_skew = 38;
+
     private const int c_damp = 700;
 
     private bool GetAsciiInvariant(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, out int written)
@@ -291,6 +291,7 @@ public sealed partial class IdnMapping
         int iAfterLastDot = 0;
         int iOutputAfterLastDot = 0;
         int bufferIndex = 0;
+
         // Find the next dot
         while (iNextDot < unicode.Length)
         {
@@ -307,11 +308,15 @@ public sealed partial class IdnMapping
                 // This form DOES NOT support an FQDN, which supports a trailing dot on the hostname.
                 written = 0;
                 return false;
+
                 // (unlike this code below)
+
                 //// if (iNextDot != ascii.Length)
                 //// {
                 //// written = 0;
+
                 //// return false;
+
                 //// }
 
                 ////// Last dot, stop
@@ -478,7 +483,6 @@ public sealed partial class IdnMapping
 
                         // Adjust for character position (only the chars in our string already, some
                         // haven't been processed.
-
                         if (test < n)
                         {
                             delta++;
@@ -523,6 +527,7 @@ public sealed partial class IdnMapping
                             }
                         }
                     }
+
                     ++delta;
                     ++n;
                     Debug.Assert(delta > 0, "[IdnMapping.cs]3 punycode_encode - delta overflowed int");
@@ -621,6 +626,7 @@ public sealed partial class IdnMapping
         cTest >= 0x10000;
 
     private static bool Basic(uint cp) =>
+
         // Is it in ASCII range?
         cp < 0x80;
 
@@ -718,6 +724,7 @@ public sealed partial class IdnMapping
     private static char EncodeDigit(int d)
     {
         Debug.Assert(d >= 0 && d < c_punycodeBase, "[IdnMapping.encode_digit]Expected 0 <= d < punycodeBase");
+
         // 26-35 map to ASCII 0-9
         if (d > 25) return (char)(d - 26 + '0');
 

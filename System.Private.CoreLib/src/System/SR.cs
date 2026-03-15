@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -13,7 +12,9 @@ namespace System
     internal static partial class SR
     {
         private static readonly object _lock = new object();
+
         private static List<string>? _currentlyLoading;
+
         private static int _infinitelyRecursingCount;
 #if SYSTEM_PRIVATE_CORELIB
         private static bool _resourceManagerInited;
@@ -38,14 +39,12 @@ namespace System
             // this is not a bounded set of code, and we need to fix the problem.
             // Fortunately, this is limited to mscorlib's error lookups and is NOT
             // a general problem for all user code using the ResourceManager.
-
             // The solution is to make sure only one thread at a time can call
             // GetResourceString.  Also, since resource lookups can be
             // reentrant, if the same thread comes into GetResourceString
             // twice looking for the exact same resource name before
             // returning, we're going into an infinite loop and we should
             // return a bogus string.
-
             bool lockTaken = false;
             try
             {
@@ -62,6 +61,7 @@ namespace System
                     {
                         return key;
                     }
+
                     _infinitelyRecursingCount++;
 
 #if SYSTEM_PRIVATE_CORELIB
@@ -105,6 +105,7 @@ namespace System
                     s_resourceManager = null;
                     _currentlyLoading = null;
                 }
+
                 throw;
             }
             finally

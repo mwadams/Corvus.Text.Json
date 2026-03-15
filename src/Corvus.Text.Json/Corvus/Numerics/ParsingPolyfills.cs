@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 #if !NET
 
 using System.Globalization;
@@ -214,6 +213,7 @@ internal static class ParsingPolyfills
             {
                 return false;
             }
+
             value = (long)result;
         }
         else
@@ -222,6 +222,7 @@ internal static class ParsingPolyfills
             {
                 return false;
             }
+
             value = -(long)result;
         }
 

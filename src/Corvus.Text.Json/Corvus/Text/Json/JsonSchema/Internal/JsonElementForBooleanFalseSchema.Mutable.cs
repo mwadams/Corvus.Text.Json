@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
@@ -22,7 +21,9 @@ public readonly partial struct JsonElementForBooleanFalseSchema
     public readonly partial struct Mutable : IMutableJsonElement<Mutable>
     {
         private readonly IMutableJsonDocument _parent;
+
         private readonly int _idx;
+
         private readonly ulong _documentVersion;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -107,6 +108,7 @@ public readonly partial struct JsonElementForBooleanFalseSchema
             if (value._parent is not IMutableJsonDocument)
             {
                 ThrowHelper.ThrowFormatException();
+
                 // We will never get here
                 return default;
             }

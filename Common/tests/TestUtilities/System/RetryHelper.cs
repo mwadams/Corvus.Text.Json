@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -12,7 +11,9 @@ namespace System
     public static partial class RetryHelper
     {
         private static readonly bool s_debug = Environment.GetEnvironmentVariable("DEBUG_RETRYHELPER") == "1";
+
         private static readonly Func<int, int> s_defaultBackoffFunc = i => Math.Min(i * 100, 60_000);
+
         private static readonly Predicate<Exception> s_defaultRetryWhenFunc = _ => true;
 
         /// <summary>Executes the <paramref name="test"/> action up to a maximum of <paramref name="maxAttempts"/> times.</summary>
@@ -27,6 +28,7 @@ namespace System
             {
                 throw new ArgumentOutOfRangeException(nameof(maxAttempts));
             }
+
             if (test == null)
             {
                 throw new ArgumentNullException(nameof(test));
@@ -77,6 +79,7 @@ namespace System
             {
                 throw new ArgumentOutOfRangeException(nameof(maxAttempts));
             }
+
             if (test == null)
             {
                 throw new ArgumentNullException(nameof(test));

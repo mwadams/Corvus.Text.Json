@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal;
@@ -22,10 +21,13 @@ internal static partial class IPv4AddressHelper
     internal const long Invalid = -1;
 
     private const int Decimal = 10;
+
     private const int Hex = 16;
+
     private const long MaxIPv4Value = uint.MaxValue; // the native parser cannot handle MaxIPv4Value, only MaxIPv4Value - 1
 
     private const int NumberOfLabels = 4;
+
     private const int Octal = 8;
 
     /// <summary>
@@ -100,7 +102,6 @@ internal static partial class IPv4AddressHelper
             {
                 // For a normal IPv4 address, the terminator is the prefix ('/' or its counterpart, '\'). If notImplicitFile is set, the terminator
                 // is one of the characters which signify the start of the rest of the URI - the port number (':'), query string ('?') or fragment ('#')
-
                 break;
             }
 
@@ -131,12 +132,12 @@ internal static partial class IPv4AddressHelper
             else if (ch == '.')
             {
                 // If the current character is not an integer, it may be the IPv4 component separator ('.')
-
                 if (!haveNumber || (number > 0 && firstCharIsZero))
                 {
                     // 0 is not allowed to prefix a number.
                     return false;
                 }
+
                 ++dots;
                 haveNumber = false;
                 number = 0;
@@ -146,13 +147,16 @@ internal static partial class IPv4AddressHelper
             {
                 return false;
             }
+
             ++start;
         }
+
         bool res = (dots == 3) && haveNumber;
         if (res)
         {
             end = start;
         }
+
         return res;
     }
 
@@ -223,6 +227,7 @@ internal static partial class IPv4AddressHelper
                 {
                     break; // Invalid/terminator
                 }
+
                 currentValue = (currentValue * numberBase) + digitValue;
 
                 if (currentValue > MaxIPv4Value) // Overflow
@@ -237,16 +242,19 @@ internal static partial class IPv4AddressHelper
             {
                 if (dotCount >= 3 // Max of 3 dots and 4 segments
                     || !atLeastOneChar // No empty segments: 1...1
+
                                        // Only the last segment can be more than 255 (if there are less than 3 dots)
                     || currentValue > 0xFF)
                 {
                     return Invalid;
                 }
+
                 parts[dotCount] = currentValue;
                 dotCount++;
                 atLeastOneChar = false;
                 continue;
             }
+
             // We don't get here unless we find an invalid character or a terminator
             break;
         }
@@ -264,7 +272,6 @@ internal static partial class IPv4AddressHelper
         {
             // For a normal IPv4 address, the terminator is the prefix ('/' or its counterpart, '\'). If notImplicitFile is set, the terminator
             // is one of the characters which signify the start of the rest of the URI - the port number (':'), query string ('?') or fragment ('#')
-
             end = current;
         }
         else
@@ -285,6 +292,7 @@ internal static partial class IPv4AddressHelper
                 {
                     return Invalid;
                 }
+
                 return (parts[0] << 24) | currentValue;
 
             case 2: // 0xFF.0xFF.0xFFFF
@@ -294,6 +302,7 @@ internal static partial class IPv4AddressHelper
                 {
                     return Invalid;
                 }
+
                 return (parts[0] << 24) | (parts[1] << 16) | currentValue;
 
             case 3: // 0xFF.0xFF.0xFF.0xFF
@@ -304,6 +313,7 @@ internal static partial class IPv4AddressHelper
                 {
                     return Invalid;
                 }
+
                 return (parts[0] << 24) | (parts[1] << 16) | (parts[2] << 8) | currentValue;
 
             default:

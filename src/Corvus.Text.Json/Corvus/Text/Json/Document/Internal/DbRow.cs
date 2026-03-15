@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 #pragma warning disable IDE0032 // We do not want to use autoproperties here.
 
 using System.Diagnostics;
@@ -132,5 +131,6 @@ internal readonly struct DbRow
     }
 
     internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;
+
     internal bool HasPropertyMap => _sizeLengthOrPropertyMapIndexUnion <= 0;
 }

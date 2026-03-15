@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 #if NET
 
 using System.Buffers;
@@ -92,9 +91,7 @@ internal class Utf8UriDomainNameHelper
         // with RFC 1123, section 2.1, the requirement that the first character
         // of a label be alphabetic is dropped. Therefore, Domain names are
         // formed as:
-
         // <label> -> <alphanum> [<alphanum> | <hyphen> | <underscore>] * 62
-
         // We already verified the content, now verify the lengths of individual labels
         while (true)
         {

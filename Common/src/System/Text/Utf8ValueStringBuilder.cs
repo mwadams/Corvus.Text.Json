@@ -6,7 +6,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See https:// github.com/dotnet/runtime/blob/c1049390d5b33483203f058b0e1457d2a1f62bf4/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 // </license>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -18,7 +17,9 @@ namespace Corvus.Text;
 internal ref partial struct Utf8ValueStringBuilder
 {
     private byte[]? _arrayToReturnToPool;
+
     private Span<byte> _bytes;
+
     private int _pos;
 
     public Utf8ValueStringBuilder(Span<byte> initialBuffer)
@@ -126,6 +127,7 @@ internal ref partial struct Utf8ValueStringBuilder
             EnsureCapacity(Length + 1);
             _bytes[Length] = (byte)'\0';
         }
+
         return ref MemoryMarshal.GetReference(_bytes);
     }
 
@@ -190,11 +192,14 @@ internal ref partial struct Utf8ValueStringBuilder
             EnsureCapacity(Length + 1);
             _bytes[Length] = (byte)'\0';
         }
+
         return _bytes.Slice(0, _pos);
     }
 
     public ReadOnlySpan<byte> AsSpan() => _bytes.Slice(0, _pos);
+
     public ReadOnlySpan<byte> AsSpan(int start) => _bytes.Slice(start, _pos - start);
+
     public ReadOnlySpan<byte> AsSpan(int start, int length) => _bytes.Slice(start, length);
 
     /// <summary>
@@ -345,6 +350,7 @@ internal ref partial struct Utf8ValueStringBuilder
         {
             dst[i] = c;
         }
+
         _pos += count;
     }
 
@@ -381,8 +387,8 @@ internal ref partial struct Utf8ValueStringBuilder
     {
         Debug.Assert(additionalCapacityBeyondPos > 0);
         Debug.Assert(_bytes.Length < _pos + additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
-        // Debug.Assert(_pos > _bytes.Length - additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
 
+        // Debug.Assert(_pos > _bytes.Length - additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
         const uint ArrayMaxLength = 0x7FFFFFC7; // same as Array.MaxLength
 
         // Increase to at least the required size (_pos + additionalCapacityBeyondPos), but try

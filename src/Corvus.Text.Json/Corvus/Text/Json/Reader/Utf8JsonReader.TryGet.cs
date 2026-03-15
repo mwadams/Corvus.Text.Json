@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -123,6 +122,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Byte);
         }
+
         return value;
     }
 
@@ -143,6 +143,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(DataType.Base64String);
         }
+
         return value;
     }
 
@@ -159,6 +160,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowInvalidOperationException_ExpectedComment(TokenType);
         }
+
         ReadOnlySpan<byte> span = HasValueSequence ? ValueSequence.ToArray() : ValueSpan;
         return JsonReaderHelper.TranscodeHelper(span);
     }
@@ -229,6 +231,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Decimal);
         }
+
         return value;
     }
 
@@ -252,6 +255,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Double);
         }
+
         return value;
     }
 
@@ -299,6 +303,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Int16);
         }
+
         return value;
     }
 
@@ -323,6 +328,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Int32);
         }
+
         return value;
     }
 
@@ -347,6 +353,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Int64);
         }
+
         return value;
     }
 
@@ -372,6 +379,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.SByte);
         }
+
         return value;
     }
 
@@ -395,6 +403,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.Single);
         }
+
         return value;
     }
 
@@ -456,6 +465,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.UInt16);
         }
+
         return value;
     }
 
@@ -481,6 +491,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.UInt32);
         }
+
         return value;
     }
 
@@ -506,6 +517,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowFormatException(NumericType.UInt64);
         }
+
         return value;
     }
 

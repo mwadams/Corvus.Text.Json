@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 #if !NET8_0_OR_GREATER
 using System.Collections;
 #endif
@@ -144,6 +143,7 @@ internal static partial class JsonHelpers
     public static readonly Regex IntegerRegex = CreateIntegerRegex();
 
     private const string IntegerRegexPattern = @"^\s*(?:\+|\-)?[0-9]+\s*$";
+
     private const int IntegerRegexTimeoutMs = 200;
 
 #if NET

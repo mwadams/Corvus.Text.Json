@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 
 namespace Corvus.Text.Json.Compatibility;
@@ -17,6 +16,7 @@ namespace Corvus.Text.Json.Compatibility;
 public readonly struct ValidationResult
 {
     private readonly JsonSchemaResultsCollector _collector;
+
     private readonly int _resultIndex;
 
     /// <summary>
@@ -74,7 +74,9 @@ public readonly struct ValidationResult
     public readonly ref struct LocationTuple
     {
         private readonly ReadOnlySpan<byte> _documentLocation;
+
         private readonly ReadOnlySpan<byte> _schemaLocation;
+
         private readonly ReadOnlySpan<byte> _validationLocation;
 
         /// <summary>

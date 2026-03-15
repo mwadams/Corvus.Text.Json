@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Runtime.InteropServices;
 
 namespace System.Buffers
@@ -54,7 +53,6 @@ namespace System.Buffers
 
                 // We only need to round the count up if it's not an exact multiple
                 // of the system page size.
-
                 long leftoverBytes = totalBytesToAllocate % SystemPageSize;
                 if (leftoverBytes != 0)
                 {
@@ -62,7 +60,6 @@ namespace System.Buffers
                 }
 
                 // Finally, account for the poison pages at the front and back.
-
                 totalBytesToAllocate += 2 * SystemPageSize;
             }
 
@@ -90,7 +87,6 @@ namespace System.Buffers
             // flags only apply at page-level granularity, we need to "left-align" or "right-
             // align" the section we carve out so that it's guaranteed adjacent to one of
             // the NOACCESS bookend pages.
-
             return new WindowsImplementation<T>(
                 handle: handle,
                 byteOffsetIntoHandle: (placement == PoisonPagePlacement.Before)
@@ -106,11 +102,17 @@ namespace System.Buffers
         private struct MEMORY_BASIC_INFORMATION
         {
             public IntPtr BaseAddress;
+
             public IntPtr AllocationBase;
+
             public VirtualAllocProtection AllocationProtect;
+
             public IntPtr RegionSize;
+
             public VirtualAllocAllocationType State;
+
             public VirtualAllocProtection Protect;
+
             public VirtualAllocAllocationType Type;
         };
 
@@ -161,8 +163,11 @@ namespace System.Buffers
         private sealed class WindowsImplementation<T> : BoundedMemory<T> where T : unmanaged
         {
             private readonly int _byteOffsetIntoHandle;
+
             private readonly int _elementCount;
+
             private readonly VirtualAllocHandle _handle;
+
             private readonly BoundedMemoryManager _memoryManager;
 
             internal WindowsImplementation(VirtualAllocHandle handle, int byteOffsetIntoHandle, int elementCount)
@@ -216,6 +221,7 @@ namespace System.Buffers
                             Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
                             throw new InvalidOperationException("VirtualQuery failed unexpectedly.");
                         }
+
                         return memoryInfo.Protect;
                     }
                     finally
@@ -226,6 +232,7 @@ namespace System.Buffers
                         }
                     }
                 }
+
                 set
                 {
                     if (_elementCount > 0)

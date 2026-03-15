@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -14,6 +13,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using Corvus.Numerics;
+
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>
@@ -22,6 +22,7 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonElementHelpers
 {
     private static readonly StandardFormat D3Format = StandardFormat.Parse("D3");
+
     private const int MaxExponent = 18;
 
     // This table is used to quickly look up 10^X for X in [0..18]
@@ -188,11 +189,9 @@ public static partial class JsonElementHelpers
         // a) that it is a positive integer
         // b) that we normalize to remove trailing zeros and apply them to the exponent
         // c) that we normalize to remove any fractional component and apply them to the exponent
-
         // Step 1.
         // Check for a divisor of zero, then check for a number that is trivially zero by length
         // Calculate the length of the significand of the number
-
         if (divisor == 0)
         {
             // Never true for a divisor of 0
@@ -279,11 +278,9 @@ public static partial class JsonElementHelpers
         // a) that it is a positive integer
         // b) that we normalize to remove trailing zeros and apply them to the exponent
         // c) that we normalize to remove any fractional component and apply them to the exponent
-
         // Step 1.
         // Check for a divisor of zero, then check for a number that is trivially zero by length
         // Calculate the length of the significand of the number
-
         if (divisor == 0)
         {
             // Never true for a divisor of 0
@@ -479,12 +476,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + 1 + percentSym.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -498,12 +497,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + percentSym.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
@@ -518,6 +519,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -531,6 +533,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -542,12 +545,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + negSign.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     break;
@@ -558,12 +563,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + negSign.Length + percentSym.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
@@ -576,12 +583,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + percentSym.Length + negSign.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
@@ -598,12 +607,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -613,12 +624,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + 1 + percentSym.Length + negSign.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -634,18 +647,21 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + negSign.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     break;
@@ -658,6 +674,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
@@ -666,6 +683,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -675,12 +693,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + negSign.Length + 1 + percentSym.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     negSign.AsSpan().CopyTo(destination.Slice(pos));
                     pos += negSign.Length;
                     destination[pos++] = ' ';
@@ -707,12 +727,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + 1 + percentSym.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
@@ -724,12 +746,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + percentSym.Length > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     percentSym.AsSpan().CopyTo(destination.Slice(pos));
                     pos += percentSym.Length;
                     break;
@@ -742,6 +766,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -753,12 +778,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!TryFormatNumber(false, integral, fractional, adjustedExponent, destination.Slice(pos), out numberChars, effectivePrecision, tempFormatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -832,6 +859,7 @@ public static partial class JsonElementHelpers
             {
                 destination[i] = '0';
             }
+
             charsWritten = requiredLength;
             return true;
         }
@@ -871,6 +899,7 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
+
                 if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
                 {
                     break;
@@ -900,6 +929,7 @@ public static partial class JsonElementHelpers
                     {
                         workingDigits[newDigitCount++] = (byte)quotient;
                     }
+
                     remainingTrailingZeros--;
                 }
 
@@ -937,6 +967,7 @@ public static partial class JsonElementHelpers
             {
                 // Copy from right to left position
                 destination.Slice(sourceStart, hexDigitsGenerated).CopyTo(destination.Slice(leadingZeros));
+
                 // Fill leading zeros
                 for (int i = 0; i < leadingZeros; i++)
                 {
@@ -978,6 +1009,7 @@ public static partial class JsonElementHelpers
             {
                 destination[i] = '0';
             }
+
             charsWritten = requiredLength;
             return true;
         }
@@ -1016,6 +1048,7 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
+
                 if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
                 {
                     break;
@@ -1049,6 +1082,7 @@ public static partial class JsonElementHelpers
                             workingDigits[newDigitCount++] = (byte)quotient;
                         }
                     }
+
                     remainingTrailingZeros--;
                 }
                 else
@@ -1062,6 +1096,7 @@ public static partial class JsonElementHelpers
                     charsWritten = 0;
                     return false;
                 }
+
                 destination[writePos--] = (char)('0' + remainder);
                 binaryDigitsGenerated++;
                 digitCount = newDigitCount;
@@ -1084,6 +1119,7 @@ public static partial class JsonElementHelpers
             {
                 // Copy from right to left position
                 destination.Slice(sourceStart, binaryDigitsGenerated).CopyTo(destination.Slice(leadingZeros));
+
                 // Fill leading zeros
                 for (int i = 0; i < leadingZeros; i++)
                 {
@@ -1125,6 +1161,7 @@ public static partial class JsonElementHelpers
             {
                 destination[i] = (byte)'0';
             }
+
             bytesWritten = requiredLength;
             return true;
         }
@@ -1160,6 +1197,7 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
+
                 if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
                 {
                     break;
@@ -1189,6 +1227,7 @@ public static partial class JsonElementHelpers
                     {
                         workingDigits[newDigitCount++] = (byte)quotient;
                     }
+
                     remainingTrailingZeros--;
                 }
 
@@ -1264,6 +1303,7 @@ public static partial class JsonElementHelpers
             {
                 destination[i] = (byte)'0';
             }
+
             bytesWritten = requiredLength;
             return true;
         }
@@ -1299,6 +1339,7 @@ public static partial class JsonElementHelpers
                 {
                     break;
                 }
+
                 if (digitCount == 1 && workingDigits[0] == 0 && remainingTrailingZeros == 0)
                 {
                     break;
@@ -1332,6 +1373,7 @@ public static partial class JsonElementHelpers
                             workingDigits[newDigitCount++] = (byte)quotient;
                         }
                     }
+
                     remainingTrailingZeros--;
                 }
                 else
@@ -1345,6 +1387,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 destination[writePos--] = (byte)('0' + remainder);
                 binaryDigitsGenerated++;
                 digitCount = newDigitCount;
@@ -1417,6 +1460,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = '(';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1425,12 +1469,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars0;
                     if (pos + 1 > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ')';
                     break;
 
@@ -1444,6 +1490,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars1;
                     break;
 
@@ -1457,6 +1504,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars2;
                     break;
 
@@ -1468,6 +1516,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars3;
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1479,12 +1528,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = '(';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars4, effectivePrecision, formatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars4;
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1493,6 +1544,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ')';
                     break;
 
@@ -1504,6 +1556,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars5;
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1515,6 +1568,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars6;
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1528,6 +1582,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars7;
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1543,12 +1598,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars8;
                     if (pos + 1 > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1564,12 +1621,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars9, effectivePrecision, formatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars9;
                     break;
 
@@ -1579,12 +1638,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars10;
                     if (pos + 1 > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1600,12 +1661,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars11, effectivePrecision, formatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars11;
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1619,6 +1682,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1627,6 +1691,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars12;
                     break;
 
@@ -1636,6 +1701,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars13;
                     negativeSign.CopyTo(destination.Slice(pos));
                     pos += negativeSign.Length;
@@ -1644,6 +1710,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1655,6 +1722,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = '(';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1663,18 +1731,21 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars14, effectivePrecision, formatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars14;
                     if (pos + 1 > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ')';
                     break;
 
@@ -1684,18 +1755,21 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = '(';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars15, effectivePrecision, formatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars15;
                     if (pos + 1 > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1704,6 +1778,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ')';
                     break;
 
@@ -1725,6 +1800,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars0;
                     break;
 
@@ -1734,6 +1810,7 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars1;
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1747,12 +1824,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars2, effectivePrecision, formatInfo))
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars2;
                     break;
 
@@ -1762,12 +1841,14 @@ public static partial class JsonElementHelpers
                         charsWritten = 0;
                         return false;
                     }
+
                     pos += numberChars3;
                     if (pos + 1 > destination.Length)
                     {
                         charsWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = ' ';
                     currencySymbol.CopyTo(destination.Slice(pos));
                     pos += currencySymbol.Length;
@@ -1841,8 +1922,10 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
+
             hasCarry = carry > 0;
 
             if (hasCarry)
@@ -1851,6 +1934,7 @@ public static partial class JsonElementHelpers
                 {
                     roundedDigits[i] = roundedDigits[i - 1];
                 }
+
                 roundedDigits[0] = (byte)'1';
                 roundedLength++;
                 integralDigits++;
@@ -1969,6 +2053,7 @@ public static partial class JsonElementHelpers
                         {
                             carry = 0;
                         }
+
                         destination[pos + i] = (char)digit;
                     }
 
@@ -2026,6 +2111,7 @@ public static partial class JsonElementHelpers
                     accumulated += groupSize;
                     groupIndex++;
                 }
+
                 nextSeparatorAt = integralDigits - accumulated;
             }
         }
@@ -2125,6 +2211,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
+
             formatInfo.NegativeSign.AsSpan().CopyTo(destination.Slice(pos));
             pos += formatInfo.NegativeSign.Length;
         }
@@ -2185,6 +2272,7 @@ public static partial class JsonElementHelpers
                             {
                                 carry = 0;
                             }
+
                             destination[pos + i] = (char)digit;
                         }
 
@@ -2281,6 +2369,7 @@ public static partial class JsonElementHelpers
                         {
                             carry = 0;
                         }
+
                         destination[pos + i] = (char)digit;
                     }
 
@@ -2305,6 +2394,7 @@ public static partial class JsonElementHelpers
                             {
                                 destination[i] = destination[i - 1];
                             }
+
                             destination[isNegative ? formatInfo.NegativeSign.Length : 0] = '1';
                             pos++;
                         }
@@ -2346,6 +2436,7 @@ public static partial class JsonElementHelpers
                         break;
                     }
                 }
+
                 if (carry > 0)
                 {
                     scientificExponent++;
@@ -2413,6 +2504,7 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 destination[pos + i] = (char)digit;
             }
 
@@ -2423,6 +2515,7 @@ public static partial class JsonElementHelpers
                 {
                     destination[pos + i] = destination[pos + i - 1];
                 }
+
                 destination[pos] = '1';
                 pos += precision + 1;
                 scientificExponent++;
@@ -2457,6 +2550,7 @@ public static partial class JsonElementHelpers
             {
                 destination[i] = destination[i - 1];
             }
+
             destination[significandStart + 1] = formatInfo.NumberDecimalSeparator[0];
             pos++;
 
@@ -2525,6 +2619,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
+
             formatInfo.NegativeSign.AsSpan().CopyTo(destination.Slice(pos));
             pos += formatInfo.NegativeSign.Length;
         }
@@ -2555,6 +2650,7 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
 
@@ -2565,6 +2661,7 @@ public static partial class JsonElementHelpers
                 {
                     roundedDigits[i] = roundedDigits[i - 1];
                 }
+
                 roundedDigits[0] = (byte)'1';
                 roundedLength = precision + 1;
                 decimalPosition++;
@@ -2704,6 +2801,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
+
             formatInfo.NegativeSign.AsSpan().CopyTo(destination.Slice(pos));
             pos += formatInfo.NegativeSign.Length;
         }
@@ -2764,6 +2862,7 @@ public static partial class JsonElementHelpers
                             {
                                 carry = 0;
                             }
+
                             destination[pos + i] = (char)digit;
                         }
 
@@ -2832,8 +2931,10 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
+
             hasCarry = carry > 0;
 
             if (hasCarry)
@@ -2842,6 +2943,7 @@ public static partial class JsonElementHelpers
                 {
                     roundedDigits[i] = roundedDigits[i - 1];
                 }
+
                 roundedDigits[0] = (byte)'1';
                 roundedLength++;
                 integralDigits++;
@@ -3005,6 +3107,7 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
 
@@ -3019,6 +3122,7 @@ public static partial class JsonElementHelpers
             {
                 carry = 0;
             }
+
             roundedDigits[0] = firstDigit;
 
             // If carry overflowed, adjust
@@ -3094,6 +3198,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
+
             pos += expChars;
         }
         else
@@ -3116,6 +3221,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
+
             destination[0] = '0';
             charsWritten = 1;
             return true;
@@ -3132,6 +3238,7 @@ public static partial class JsonElementHelpers
                 charsWritten = 0;
                 return false;
             }
+
             destination[0] = '0';
             charsWritten = 1;
             return true;
@@ -3236,6 +3343,7 @@ public static partial class JsonElementHelpers
                     charsWritten = 0;
                     return false;
                 }
+
                 currencySymbol.CopyTo(destination.Slice(pos));
                 pos += currencySymbol.Length;
                 tempDest.Slice(0, numberChars).CopyTo(destination.Slice(pos));
@@ -3248,6 +3356,7 @@ public static partial class JsonElementHelpers
                     charsWritten = 0;
                     return false;
                 }
+
                 tempDest.Slice(0, numberChars).CopyTo(destination.Slice(pos));
                 pos += numberChars;
                 currencySymbol.CopyTo(destination.Slice(pos));
@@ -3260,6 +3369,7 @@ public static partial class JsonElementHelpers
                     charsWritten = 0;
                     return false;
                 }
+
                 currencySymbol.CopyTo(destination.Slice(pos));
                 pos += currencySymbol.Length;
                 destination[pos++] = ' ';
@@ -3273,6 +3383,7 @@ public static partial class JsonElementHelpers
                     charsWritten = 0;
                     return false;
                 }
+
                 tempDest.Slice(0, numberChars).CopyTo(destination.Slice(pos));
                 pos += numberChars;
                 destination[pos++] = ' ';
@@ -3474,7 +3585,6 @@ public static partial class JsonElementHelpers
         // Use the GetDigitAtPosition() method to get the digit value using the integral and fractional parts, and the net exponent.
         // Return remainder == 0.
         // By using a ulong for the divisor, we support ~19 digits of precision in the divisor
-
         ulong remainder = 0;
 
         int maxRealSignificandIndex = integral.Length + fractional.Length;
@@ -3514,7 +3624,6 @@ public static partial class JsonElementHelpers
         // Use the GetDigitAtPosition() method to get the digit value using the integral and fractional parts, and the net exponent.
         // Return remainder == 0.
         // By using a ulong for the divisor, we support ~19 digits of precision in the divisor
-
         System.Numerics.BigInteger remainder = 0;
 
         int maxRealSignificandIndex = integral.Length + fractional.Length;
@@ -3651,12 +3760,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + 1 + percentSym.Length > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(percentSym.AsSpan(), destination.Slice(pos), out int percentSymLength1))
@@ -3682,12 +3793,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (pos + percentSym.Length > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     if (!JsonReaderHelper.TryGetUtf8FromText(percentSym.AsSpan(), destination.Slice(pos), out int percentSymLength2))
                     {
                         bytesWritten = 0;
@@ -3719,6 +3832,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -3744,6 +3858,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -3761,6 +3876,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(negSign.AsSpan(), destination.Slice(pos), out int negSignLength5))
@@ -3778,6 +3894,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(negSign.AsSpan(), destination.Slice(pos), out int negSignLength6))
@@ -3803,6 +3920,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(percentSym.AsSpan(), destination.Slice(pos), out int percentSymLength7))
@@ -3852,6 +3970,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -3861,6 +3980,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
 
                     if (pos + 1 > destination.Length)
@@ -3952,6 +4072,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -3961,6 +4082,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(negSign.AsSpan(), destination.Slice(pos), out int negSignLength12))
@@ -4007,6 +4129,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
 
                     if (pos + 1 > destination.Length)
@@ -4014,6 +4137,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(percentSym.AsSpan(), destination.Slice(pos), out int percentSymLength1))
@@ -4031,6 +4155,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     if (!JsonReaderHelper.TryGetUtf8FromText(percentSym.AsSpan(), destination.Slice(pos), out int percentSymLength2))
                     {
@@ -4054,6 +4179,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -4077,6 +4203,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars;
                     break;
 
@@ -4178,6 +4305,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars0;
 
                     if (pos + 1 > destination.Length)
@@ -4210,6 +4338,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars1;
                     break;
 
@@ -4233,6 +4362,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars2;
                     break;
 
@@ -4249,6 +4379,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars3;
                     if (!JsonReaderHelper.TryGetUtf8FromText(negativeSign, destination.Slice(pos), out int negativeSignLength4))
                     {
@@ -4265,12 +4396,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)'(';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars4, effectivePrecision, formatInfo))
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars4;
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength5))
                     {
@@ -4284,6 +4417,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)')';
                     break;
 
@@ -4300,6 +4434,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars5;
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength6))
                     {
@@ -4316,6 +4451,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars6;
                     if (!JsonReaderHelper.TryGetUtf8FromText(negativeSign, destination.Slice(pos), out int negativeSignLength7))
                     {
@@ -4339,6 +4475,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars7;
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength8))
                     {
@@ -4369,12 +4506,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars8;
                     if (pos + 1 > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength9))
                     {
@@ -4405,12 +4544,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars9, effectivePrecision, formatInfo))
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars9;
                     break;
 
@@ -4420,12 +4561,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars10;
                     if (pos + 1 > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength11))
                     {
@@ -4463,6 +4606,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars11;
                     if (!JsonReaderHelper.TryGetUtf8FromText(negativeSign, destination.Slice(pos), out int negativeSignLength12))
                     {
@@ -4501,6 +4645,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars12;
                     break;
 
@@ -4510,6 +4655,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars13;
                     if (!JsonReaderHelper.TryGetUtf8FromText(negativeSign, destination.Slice(pos), out int negativeSignLength14))
                     {
@@ -4524,6 +4670,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
 
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength14))
@@ -4541,6 +4688,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)'(';
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength15))
                     {
@@ -4561,12 +4709,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars14;
                     if (pos + 1 > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)')';
                     break;
 
@@ -4576,18 +4726,21 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)'(';
                     if (!FormatCurrencyNumber(integral, fractional, exponent, destination.Slice(pos), out int numberChars15, effectivePrecision, formatInfo))
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars15;
                     if (pos + 1 > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength16))
                     {
@@ -4601,6 +4754,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)')';
                     break;
 
@@ -4627,6 +4781,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars0;
                     break;
 
@@ -4636,6 +4791,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars1;
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength2))
                     {
@@ -4666,6 +4822,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars2;
                     break;
 
@@ -4675,12 +4832,14 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberChars3;
                     if (pos + 1 > destination.Length)
                     {
                         bytesWritten = 0;
                         return false;
                     }
+
                     destination[pos++] = (byte)' ';
                     if (!JsonReaderHelper.TryGetUtf8FromText(currencySymbol, destination.Slice(pos), out int currencySymbolLength4))
                     {
@@ -4759,8 +4918,10 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
+
             hasCarry = carry > 0;
 
             if (hasCarry)
@@ -4769,6 +4930,7 @@ public static partial class JsonElementHelpers
                 {
                     roundedDigits[i] = roundedDigits[i - 1];
                 }
+
                 roundedDigits[0] = (byte)'1';
                 roundedLength++;
                 integralDigits++;
@@ -4834,7 +4996,6 @@ public static partial class JsonElementHelpers
         NumberFormatInfo formatInfo)
     {
         // Format as 0.xxx
-
         int requiredSize = 1 + (precision > 0 ? Encoding.UTF8.GetByteCount(formatInfo.CurrencyDecimalSeparator) + precision : 0);
         if (requiredSize > destination.Length)
         {
@@ -4893,6 +5054,7 @@ public static partial class JsonElementHelpers
                         {
                             carry = 0;
                         }
+
                         destination[pos + i] = digit;
                     }
 
@@ -4976,6 +5138,7 @@ public static partial class JsonElementHelpers
                     accumulated += groupSize;
                     groupIndex++;
                 }
+
                 nextSeparatorAt = integralDigits - accumulated;
             }
         }
@@ -5140,6 +5303,7 @@ public static partial class JsonElementHelpers
                             {
                                 carry = 0;
                             }
+
                             destination[pos + i] = digit;
                         }
 
@@ -5241,6 +5405,7 @@ public static partial class JsonElementHelpers
                         {
                             carry = 0;
                         }
+
                         destination[pos + i] = digit;
                     }
 
@@ -5265,6 +5430,7 @@ public static partial class JsonElementHelpers
                             {
                                 destination[i] = destination[i - 1];
                             }
+
                             destination[isNegative ? formatInfo.NegativeSign.Length : 0] = (byte)'1';
                             pos++;
                         }
@@ -5306,6 +5472,7 @@ public static partial class JsonElementHelpers
                         break;
                     }
                 }
+
                 if (carry > 0)
                 {
                     scientificExponent++;
@@ -5378,6 +5545,7 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 destination[pos + i] = digit;
             }
 
@@ -5388,6 +5556,7 @@ public static partial class JsonElementHelpers
                 {
                     destination[pos + i] = destination[pos + i - 1];
                 }
+
                 destination[pos] = (byte)'1';
                 pos += precision + 1;
                 scientificExponent++;
@@ -5431,6 +5600,7 @@ public static partial class JsonElementHelpers
             {
                 destination[i] = destination[i - 1];
             }
+
             destination[significandStart + 1] = decimalSep;
             pos++;
 
@@ -5464,6 +5634,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += positiveSignLength;
         }
         else
@@ -5473,6 +5644,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += negativeSignLength;
             scientificExponent = -scientificExponent;
         }
@@ -5507,6 +5679,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += negativeSignLength;
         }
 
@@ -5536,6 +5709,7 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
 
@@ -5546,6 +5720,7 @@ public static partial class JsonElementHelpers
                 {
                     roundedDigits[i] = roundedDigits[i - 1];
                 }
+
                 roundedDigits[0] = (byte)'1';
                 roundedLength = precision + 1;
                 decimalPosition++;
@@ -5582,6 +5757,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += decimalSeparatorLength;
 
             // Leading zeros after decimal
@@ -5696,6 +5872,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += negativeSignLength;
         }
 
@@ -5720,6 +5897,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += numberDecimalSeparatorLength;
 
                 int leadingZeros = -decimalPosition;
@@ -5759,6 +5937,7 @@ public static partial class JsonElementHelpers
                             {
                                 carry = 0;
                             }
+
                             destination[pos + i] = digit;
                         }
 
@@ -5827,8 +6006,10 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
+
             hasCarry = carry > 0;
 
             if (hasCarry)
@@ -5837,6 +6018,7 @@ public static partial class JsonElementHelpers
                 {
                     roundedDigits[i] = roundedDigits[i - 1];
                 }
+
                 roundedDigits[0] = (byte)'1';
                 roundedLength++;
                 integralDigits++;
@@ -5929,6 +6111,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += negativeSignLength;
         }
 
@@ -5952,6 +6135,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += numberDecimalSeparatorLength;
                 for (int i = 0; i < precision; i++)
                 {
@@ -5965,6 +6149,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += positiveSignLength;
             destination[pos++] = (byte)'0';
             destination[pos++] = (byte)'0';
@@ -6014,6 +6199,7 @@ public static partial class JsonElementHelpers
                 {
                     carry = 0;
                 }
+
                 roundedDigits[i] = digit;
             }
 
@@ -6028,6 +6214,7 @@ public static partial class JsonElementHelpers
             {
                 carry = 0;
             }
+
             roundedDigits[0] = firstDigit;
 
             // If carry overflowed, adjust
@@ -6043,6 +6230,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberDecimalSeparatorLength;
                     for (int i = 0; i < precision; i++)
                     {
@@ -6061,6 +6249,7 @@ public static partial class JsonElementHelpers
                         bytesWritten = 0;
                         return false;
                     }
+
                     pos += numberDecimalSeparatorLength;
                     for (int i = 1; i <= precision; i++)
                     {
@@ -6081,6 +6270,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += numberDecimalSeparatorLength;
 
                 for (int i = 1; i <= precision && i < totalLength; i++)
@@ -6106,6 +6296,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += positiveSignLength;
         }
         else
@@ -6115,6 +6306,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += negativeSignLength;
             scientificExponent = -scientificExponent;
         }
@@ -6127,6 +6319,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             pos += expChars;
         }
         else
@@ -6149,6 +6342,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             destination[0] = (byte)'0';
             bytesWritten = 1;
             return true;
@@ -6165,6 +6359,7 @@ public static partial class JsonElementHelpers
                 bytesWritten = 0;
                 return false;
             }
+
             destination[0] = (byte)'0';
             bytesWritten = 1;
             return true;
@@ -6284,12 +6479,14 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += currencyLength0;
                 if (pos + numberBytes > destination.Length)
                 {
                     bytesWritten = 0;
                     return false;
                 }
+
                 tempDest.Slice(0, numberBytes).CopyTo(destination.Slice(pos));
                 pos += numberBytes;
                 break;
@@ -6300,6 +6497,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 tempDest.Slice(0, numberBytes).CopyTo(destination.Slice(pos));
                 pos += numberBytes;
                 if (!JsonReaderHelper.TryGetUtf8FromText(formatInfo.CurrencySymbol, destination.Slice(pos), out int currencyLength1))
@@ -6307,6 +6505,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += currencyLength1;
                 break;
 
@@ -6316,12 +6515,14 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += currencyLength2;
                 if (pos + 1 + numberBytes > destination.Length)
                 {
                     bytesWritten = 0;
                     return false;
                 }
+
                 destination[pos++] = (byte)' ';
                 tempDest.Slice(0, numberBytes).CopyTo(destination.Slice(pos));
                 pos += numberBytes;
@@ -6333,6 +6534,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 tempDest.Slice(0, numberBytes).CopyTo(destination.Slice(pos));
                 pos += numberBytes;
                 destination[pos++] = (byte)' ';
@@ -6341,6 +6543,7 @@ public static partial class JsonElementHelpers
                     bytesWritten = 0;
                     return false;
                 }
+
                 pos += currencyLength3;
                 break;
 

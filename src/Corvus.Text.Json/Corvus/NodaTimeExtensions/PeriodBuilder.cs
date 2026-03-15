@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using NodaTime;
 
 namespace Corvus.Text.Json;
@@ -115,6 +114,7 @@ public struct PeriodBuilder
             PeriodUnits.Nanoseconds => this.Nanoseconds,
             _ => throw new ArgumentOutOfRangeException(nameof(unit), "Indexer for PeriodBuilder only takes a single unit"),
         };
+
         set
         {
             switch (unit)

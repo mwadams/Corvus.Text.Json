@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Tracing;
@@ -15,6 +14,7 @@ namespace TestUtilities;
 /// Example usage:
 /// // Put the following line into your test method:
 /// using var listener = new TestEventListener(_output, TestEventListener.NetworkingEvents);
+
 /// </summary>
 public sealed class TestEventListener : EventListener
 {
@@ -40,7 +40,9 @@ public sealed class TestEventListener : EventListener
     };
 
     private readonly Action<string> _writeFunc;
+
     private readonly HashSet<string> _sourceNames;
+
     private readonly bool _enableActivityId;
 
     // Until https:// github.com/dotnet/runtime/issues/63979 is solved.
@@ -135,6 +137,7 @@ public sealed class TestEventListener : EventListener
                 sb.Append(", ");
             sb.Append(eventData.PayloadNames?[i]).Append(": ").Append(eventData.Payload[i]);
         }
+
         try
         {
             _writeFunc?.Invoke(sb.ToString());
@@ -181,6 +184,7 @@ public sealed class TestEventListener : EventListener
                 {
                     break;
                 }
+
                 if (nibble <= (uint)NumberListCodes.LastImmediateValue)
                 {
                     sb.Append('/').Append(nibble);
@@ -190,6 +194,7 @@ public sealed class TestEventListener : EventListener
                         secondNibble = true;
                         goto NextNibble;
                     }
+
                     bytePtr++;
                     continue;
                 }
@@ -206,14 +211,18 @@ public sealed class TestEventListener : EventListener
                         {
                             break;
                         }
+
                         nibble = (uint)(*bytePtr >> 4);
                     }
+
                     if (nibble < (uint)NumberListCodes.MultiByte1)
                     {
                         return guid.ToString();
                     }
+
                     separator = '$';
                 }
+
                 Debug.Assert((uint)NumberListCodes.MultiByte1 <= nibble);
                 uint numBytes = nibble - (uint)NumberListCodes.MultiByte1;
                 uint value = 0;
@@ -221,16 +230,19 @@ public sealed class TestEventListener : EventListener
                 {
                     value = (uint)(*bytePtr & 0xF);
                 }
+
                 bytePtr++;
                 numBytes++;
                 if (endPtr < bytePtr + numBytes)
                 {
                     break;
                 }
+
                 for (int i = (int)numBytes - 1; 0 <= i; --i)
                 {
                     value = (value << 8) + bytePtr[i];
                 }
+
                 sb.Append(separator).Append(value);
 
                 bytePtr += numBytes;

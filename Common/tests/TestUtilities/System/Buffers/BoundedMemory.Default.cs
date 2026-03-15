@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Runtime.InteropServices;
 
 namespace System.Buffers
@@ -11,7 +10,6 @@ namespace System.Buffers
         {
             // On non-Windows platforms, we don't yet have support for changing the permissions of individual pages.
             // We'll instead use AllocHGlobal / FreeHGlobal to carve out a r+w section of unmanaged memory.
-
             return new DefaultImplementation<T>(elementCount);
         }
 
@@ -44,7 +42,9 @@ namespace System.Buffers
         private sealed class DefaultImplementation<T> : BoundedMemory<T> where T : unmanaged
         {
             private readonly int _elementCount;
+
             private readonly AllocHGlobalHandle _handle;
+
             private readonly BoundedMemoryManager _memoryManager;
 
             public DefaultImplementation(int elementCount)

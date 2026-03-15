@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -19,7 +18,9 @@ namespace System.Reflection
     sealed class NullabilityInfoContext
     {
         private const string CompilerServicesNameSpace = "System.Runtime.CompilerServices";
+
         private readonly Dictionary<Module, NotAnnotatedStatus> _publicOnlyModules = new();
+
         private readonly Dictionary<MemberInfo, NullabilityState> _context = new();
 
         [Flags]
@@ -127,6 +128,7 @@ namespace System.Reflection
 
             return null;
         }
+
         private static MethodInfo GetMethodMetadataDefinition(MethodInfo method)
         {
             if (method.IsGenericMethod && !method.IsGenericMethodDefinition)
@@ -174,6 +176,7 @@ namespace System.Reflection
             {
                 nullability.ReadState = codeAnalysisReadState;
             }
+
             if (codeAnalysisWriteState != NullabilityState.Unknown)
             {
                 nullability.WriteState = codeAnalysisWriteState;
@@ -471,6 +474,7 @@ namespace System.Reflection
                 {
                     CheckGenericParameters(elementNullability, metaMember, metaType.GetElementType()!, reflectedType);
                 }
+
                 // We could also follow this branch for metaType.IsPointer, but since pointers must be unmanaged this
                 // will be a no-op regardless
                 else if (metaType.IsByRef)
@@ -558,6 +562,7 @@ namespace System.Reflection
             {
                 nullabilityStateIndex += CountNullabilityStates(genericArguments[i]);
             }
+
             return TryPopulateNullabilityInfo(nullability, parser, ref nullabilityStateIndex);
 
             static int CountNullabilityStates(Type type)
@@ -570,6 +575,7 @@ namespace System.Reflection
                     {
                         count += CountNullabilityStates(genericArgument);
                     }
+
                     return count;
                 }
 

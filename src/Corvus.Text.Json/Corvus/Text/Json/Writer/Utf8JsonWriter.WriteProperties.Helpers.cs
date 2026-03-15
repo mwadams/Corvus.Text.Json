@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -82,6 +81,7 @@ public sealed partial class Utf8JsonWriter
                 Debug.Assert(_tokenType != JsonTokenType.StartObject);
                 OnValidateWritingPropertyFailed();
             }
+
             UpdateBitStackOnStart(token);
         }
     }
@@ -192,6 +192,7 @@ public sealed partial class Utf8JsonWriter
         {
             output[BytesPending++] = JsonConstants.ListSeparator;
         }
+
         output[BytesPending++] = JsonConstants.Quote;
 
         escapedPropertyName.CopyTo(output.Slice(BytesPending));
@@ -221,6 +222,7 @@ public sealed partial class Utf8JsonWriter
         {
             output[BytesPending++] = JsonConstants.ListSeparator;
         }
+
         output[BytesPending++] = JsonConstants.Quote;
 
         TranscodeAndWrite(escapedPropertyName, output);

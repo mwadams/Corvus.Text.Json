@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -31,12 +30,10 @@ namespace System
             // minimize the number of branches taken for large (>= 8 bytes, 4 chars) inputs.
             // If small inputs (< 8 bytes, 4 chars) are given, this jumps to a "small inputs"
             // handler at the end of the method.
-
             if (count < 8)
             {
                 // We can't run the main loop, but we might still have 4 or more bytes available to us.
                 // If so, jump to the 4 .. 7 bytes logic immediately after the main loop.
-
                 if (count >= 4)
                 {
                     goto Between4And7BytesRemain;
@@ -49,7 +46,6 @@ namespace System
 
             // Main loop - read 8 bytes at a time.
             // The block function is unrolled 2x in this loop.
-
             uint loopCount = count / 8;
             Debug.Assert(loopCount > 0, "Shouldn't reach this code path for small inputs.");
 
@@ -60,23 +56,19 @@ namespace System
                 // typical use case for Marvin32 is computing String hash codes, and the particular
                 // layout of String instances means the starting data is never 8-byte aligned when
                 // running in a 64-bit process.
-
                 p0 += Unsafe.ReadUnaligned<uint>(ref data);
                 uint nextUInt32 = Unsafe.ReadUnaligned<uint>(ref Unsafe.AddByteOffset(ref data, 4));
 
                 // One block round for each of the 32-bit integers we just read, 2x rounds total.
-
                 Block(ref p0, ref p1);
                 p0 += nextUInt32;
                 Block(ref p0, ref p1);
 
                 // Bump the data reference pointer and decrement the loop count.
-
                 // Decrementing by 1 every time and comparing against zero allows the JIT to produce
                 // better codegen compared to a standard 'for' loop with an incrementing counter.
                 // Requires https:// github.com/dotnet/runtime/issues/6794 to be addressed first
                 // before we can realize the full benefits of this.
-
                 data = ref Unsafe.AddByteOffset(ref data, 8);
             } while (--loopCount > 0);
 
@@ -84,7 +76,6 @@ namespace System
             // still the original data length. However, we can still rely on its least significant
             // 3 bits to tell us how much data remains (0 .. 7 bytes) after the loop above is
             // completed.
-
             if ((count & 0b_0100) == 0)
             {
                 goto DoFinalPartialRead;
@@ -95,7 +86,6 @@ namespace System
             // If after finishing the main loop we still have 4 or more leftover bytes, or if we had
             // 4 .. 7 bytes to begin with and couldn't enter the loop in the first place, we need to
             // consume 4 bytes immediately and send them through one round of the block function.
-
             Debug.Assert(count >= 4, "Only should've gotten here if the original count was >= 4.");
 
             p0 += Unsafe.ReadUnaligned<uint>(ref data);
@@ -108,11 +98,9 @@ namespace System
             // read the 4 bytes at the end of the buffer without reading past the beginning of the
             // original buffer. This necessarily means the data we're about to read will overlap with
             // some data we've already processed, but we can handle that below.
-
             Debug.Assert(count >= 4, "Only should've gotten here if the original count was >= 4.");
 
             // Read the last 4 bytes of the buffer.
-
             uint partialResult = Unsafe.ReadUnaligned<uint>(ref Unsafe.Add(ref Unsafe.AddByteOffset(ref data, (nuint)count & 7), -4));
 
             // The 'partialResult' local above contains any data we have yet to read, plus some number
@@ -126,7 +114,6 @@ namespace System
             // count mod 4 = 1 -> [ ## ## ## ## | AA          ] -> 0xAA##_####             -> 0x0000_80AA
             // count mod 4 = 2 -> [ ## ## ## ## | AA BB       ] -> 0xBBAA_####             -> 0x0080_BBAA
             // count mod 4 = 3 -> [ ## ## ## ## | AA BB CC    ] -> 0xCCBB_AA##             -> 0x80CC_BBAA
-
             count = ~count << 3;
 
             if (BitConverter.IsLittleEndian)
@@ -146,7 +133,6 @@ namespace System
 
             // Now that we've computed the final partial result, merge it in and run two rounds of
             // the block function to finish out the Marvin algorithm.
-
             p0 += partialResult;
             Block(ref p0, ref p1);
             Block(ref p0, ref p1);
@@ -159,7 +145,6 @@ namespace System
             // This means that we're going to be building up the final result right away and
             // will only ever run two rounds total of the block function. Let's initialize
             // the partial result to "no data".
-
             if (BitConverter.IsLittleEndian)
             {
                 partialResult = 0x80u;
@@ -178,7 +163,6 @@ namespace System
                 // (little-endian / big-endian)
                 // [ AA          ]  -> 0x0000_80AA / 0xAA80_0000
                 // [ AA BB CC    ]  -> 0x0000_80CC / 0xCC80_0000
-
                 partialResult = Unsafe.AddByteOffset(ref data, (nuint)count & 2);
 
                 if (BitConverter.IsLittleEndian)
@@ -201,7 +185,6 @@ namespace System
                 // (little-endian / big-endian)
                 // [ AA BB       ]  -> 0x0080_BBAA / 0xAABB_8000
                 // [ AA BB CC    ]  -> 0x80CC_BBAA / 0xAABB_CC80 (carried over from above)
-
                 if (BitConverter.IsLittleEndian)
                 {
                     partialResult <<= 16;
@@ -215,7 +198,6 @@ namespace System
             }
 
             // Everything is consumed! Go perform the final rounds and return.
-
             goto DoFinalRoundsAndReturn;
         }
 

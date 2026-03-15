@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -107,7 +106,6 @@ namespace Corvus.Text.Json.Internal
         internal static bool AllBytesInUInt32AreAscii(uint value)
         {
             // If the high bit of any byte is set, that byte is non-ASCII.
-
             return (value & UInt32HighBitsOnlyMask) == 0;
         }
     }

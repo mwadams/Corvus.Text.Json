@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -18,6 +17,7 @@ namespace Corvus.Text.Json;
 internal static partial class JsonReaderHelper
 {
     private const string SpecialCharacters = ". '/\"[]()\t\n\r\f\b\\\u0085\u2028\u2029";
+
 #if NET8_0_OR_GREATER
     private static readonly SearchValues<char> s_specialCharacters = SearchValues.Create(SpecialCharacters);
 

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 
@@ -51,10 +50,13 @@ public struct JsonSchemaContext
 #endif
 
     private readonly IJsonSchemaResultsCollector? _resultsCollector;
+
     private readonly int _offset;
+
     private readonly int _sequenceNumber;
 
     private int[]? _rentedBuffer;
+
     private uint _lengthAndUsingFeatures;
 
 #if NET
@@ -73,8 +75,11 @@ public struct JsonSchemaContext
 
 #else
     private readonly int _localEvaluatedOffset;
+
     private readonly int _localEvaluatedLength;
+
     private readonly int _appliedEvaluatedOffset;
+
     private readonly int _appliedEvaluatedLength;
 #endif
 
@@ -274,12 +279,15 @@ public struct JsonSchemaContext
     /// // Push child context for validating a property
     /// JsonSchemaContext childContext = parentContext.PushChildContext(
     /// document, propertyIndex, useItems: false, useProperties: true, propertyName);
+
     ///
     /// // Perform validation using child context
     /// bool isValid = ValidateProperty(ref childContext);
+
     ///
     /// // Commit results back to parent
     /// parentContext.CommitChildContext(isValid, ref childContext);
+
     /// </code>
     /// </para>
     /// </remarks>
@@ -325,12 +333,15 @@ public struct JsonSchemaContext
     /// // Push child context for validating a property
     /// JsonSchemaContext childContext = parentContext.PushChildContext(
     /// document, propertyIndex, useItems: false, useProperties: true, propertyName);
+
     ///
     /// // Perform validation using child context
     /// bool isValid = ValidateProperty(ref childContext);
+
     ///
     /// // Commit results back to parent
     /// parentContext.CommitChildContext(isValid, ref childContext);
+
     /// </code>
     /// </para>
     /// </remarks>
@@ -493,16 +504,21 @@ public struct JsonSchemaContext
     /// <code>
     /// // After validation with child context
     /// bool childIsValid = ValidateWithChild(ref childContext);
+
     /// bool parentIsValid = parentContext.IsMatch &amp;&amp; childIsValid;
+
     ///
     /// // Commit the child results
     /// parentContext.CommitChildContext(parentIsValid, ref childContext, contextData, messageProvider);
+
     ///
     /// // Optionally merge evaluated tracking
     /// if (needsEvaluatedTracking)
     /// {
     /// parentContext.ApplyEvaluated(ref childContext);
+
     /// }
+
     /// </code>
     /// </para>
     /// </remarks>
@@ -1057,6 +1073,7 @@ public struct JsonSchemaContext
 
         _rentedBuffer = ArrayPool<int>.Shared.Rent(newCapacity);
         Buffer.BlockCopy(toReturn, 0, _rentedBuffer, 0, toReturn.Length * sizeof(int));
+
         // Clear the new buffer bits
         _rentedBuffer.AsSpan(toReturn.Length).Clear();
 

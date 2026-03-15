@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System;
 using System.Buffers;
 using System.Buffers.Text;
@@ -67,18 +66,25 @@ public readonly partial struct JsonElement
     /// <para>Basic value construction:</para>
     /// <code>
     /// using JsonWorkspace workspace = JsonWorkspace.Create();
+
     ///
     /// // Numeric values
     /// using var intDoc = JsonElement.CreateBuilder(workspace, 42);
+
     /// using var doubleDoc = JsonElement.CreateBuilder(workspace, 3.14159);
+
     ///
     /// // String values
     /// using var stringDoc = JsonElement.CreateBuilder(workspace, "Hello, World!");
+
     /// using var utf8Doc = JsonElement.CreateBuilder(workspace, "Hello"u8);
+
     ///
     /// // Boolean and null
     /// using var boolDoc = JsonElement.CreateBuilder(workspace, true);
+
     /// using var nullDoc = JsonElement.CreateBuilder(workspace, JsonElement.Source.Null());
+
     /// </code>
     /// </example>
     /// <example>
@@ -88,14 +94,21 @@ public readonly partial struct JsonElement
     /// new((ref JsonObjectBuilder objBuilder) =>
     /// {
     /// objBuilder.Add("name", "John Doe");
+
     /// objBuilder.Add("age", 30);
+
     /// objBuilder.Add("active", true);
+
     /// objBuilder.Add("metadata", new((ref JsonObjectBuilder metaBuilder) =>
     /// {
     /// metaBuilder.Add("created", DateTime.UtcNow);
+
     /// metaBuilder.Add("version", 1);
+
     /// }));
+
     /// }));
+
     /// </code>
     /// </example>
     /// <example>
@@ -105,13 +118,19 @@ public readonly partial struct JsonElement
     /// new((ref JsonArrayBuilder arrayBuilder) =>
     /// {
     /// arrayBuilder.AddItem(1);
+
     /// arrayBuilder.AddItem("two");
+
     /// arrayBuilder.AddItem(3.0);
+
     /// arrayBuilder.AddItem(new((ref JsonObjectBuilder objBuilder) =>
     /// {
     /// objBuilder.AddProperty("nested", true);
+
     /// }));
+
     /// }));
+
     /// </code>
     /// </example>
     public readonly ref struct Source
@@ -156,11 +175,17 @@ public readonly partial struct JsonElement
         }
 
         private readonly Kind _kind;
+
         private readonly JsonElement _jsonElement;
+
         private readonly SimpleTypesBacking _simpleTypeBacking;
+
         private readonly ReadOnlySpan<byte> _utf8Backing;
+
         private readonly ReadOnlySpan<char> _utf16Backing;
+
         private readonly ArrayBuilder.Build? _arrayBuilder;
+
         private readonly ObjectBuilder.Build? _objectBuilder;
 
         /// <summary>
@@ -680,9 +705,11 @@ public readonly partial struct JsonElement
         /// <code>
         /// // Create a document with null value
         /// using var doc = JsonElement.CreateBuilder(workspace, JsonElement.Source.Null());
+
         ///
         /// // Add null property to object
         /// objBuilder.Add("nullProp", JsonElement.Source.Null());
+
         /// </code>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -717,9 +744,11 @@ public readonly partial struct JsonElement
         /// <code>
         /// // Raw string without escapes
         /// var source1 = JsonElement.Source.RawString("hello"u8, requiresUnescaping: false);
+
         ///
         /// // String with escape sequences
         /// var source2 = JsonElement.Source.RawString("hello\\nworld"u8, requiresUnescaping: true);
+
         /// </code>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -754,12 +783,15 @@ public readonly partial struct JsonElement
         /// <code>
         /// // Pre-formatted integer
         /// var source1 = JsonElement.Source.FormattedNumber("12345"u8);
+
         ///
         /// // Pre-formatted decimal
         /// var source2 = JsonElement.Source.FormattedNumber("123.456"u8);
+
         ///
         /// // Scientific notation
         /// var source3 = JsonElement.Source.FormattedNumber("1.23e+10"u8);
+
         /// </code>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1222,9 +1254,13 @@ public readonly partial struct JsonElement
         }
 
         private readonly Kind _kind;
+
         private readonly TContext _context;
+
         private readonly ArrayBuilder.Build<TContext>? _arrayBuilder;
+
         private readonly ObjectBuilder.Build<TContext>? _objectBuilder;
+
         private readonly Source _source;
 
         /// <summary>
@@ -1462,13 +1498,16 @@ public readonly partial struct JsonElement
     /// <code>
     /// // Simple value
     /// using var doc = JsonElement.CreateBuilder(workspace, 42);
+
     ///
     /// // Complex object
     /// using var doc = JsonElement.CreateBuilder(workspace,
     /// new(objectBuilder => { /* build object */ }));
+
     ///
     /// // From existing JsonElement
     /// using var doc = JsonElement.CreateBuilder(workspace, existingElement);
+
     /// </code>
     /// </remarks>
     /// <remarks>This method is not CLS compliant.</remarks>
@@ -1616,29 +1655,41 @@ public readonly partial struct JsonElement
     /// <para>Basic property manipulation:</para>
     /// <code>
     /// using var workspace = JsonWorkspace.Create();
+
     /// using var doc = JsonElement.CreateBuilder(workspace, new Source(
     /// new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
     /// {
     /// builder.Add("name", "John Doe");
+
     /// builder.Add("age", 30);
+
     /// builder.Add("active", true);
+
     /// })));
+
     ///
     /// var root = doc.RootElement;
+
     ///
     /// // Read properties
     /// string name = root.GetProperty("name").GetString();
+
     /// int age = root.GetProperty("age").GetInt32();
+
     ///
     /// // Modify properties
     /// root.SetProperty("age", age + 1);
+
     /// root.SetProperty("lastModified", DateTime.UtcNow);
+
     ///
     /// // Safe property access
     /// if (root.TryGetProperty("email", out var emailElement))
     /// {
     /// Console.WriteLine($"Email: {emailElement.GetString()}");
+
     /// }
+
     /// </code>
     /// </example>
     /// <example>
@@ -1649,27 +1700,38 @@ public readonly partial struct JsonElement
     /// new JsonArrayBuilder.Build((ref JsonArrayBuilder builder) =>
     /// {
     /// builder.Add(1);
+
     /// builder.Add(2);
+
     /// builder.Add(3);
+
     /// })));
+
     ///
     /// var array = arrayDoc.RootElement;
+
     ///
     /// // Read array elements
     /// for (int i = 0; i &lt; array.GetArrayLength(); i++)
     /// {
     /// Console.WriteLine(array[i].GetInt32());
+
     /// }
+
     ///
     /// // Modify array elements
     /// array.SetItem(0, 10);
+
     /// array.SetItem(1, "modified");
+
     ///
     /// // Enumerate array
     /// foreach (var item in array.EnumerateArray())
     /// {
     /// Console.WriteLine(item.ToString());
+
     /// }
+
     /// </code>
     /// </example>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
@@ -1683,7 +1745,9 @@ public readonly partial struct JsonElement
 #endif
     {
         private readonly IMutableJsonDocument _parent;
+
         private readonly int _idx;
+
         private ulong _documentVersion;
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider adding the 'required' modifier or declaring as nullable.
@@ -1776,17 +1840,26 @@ public readonly partial struct JsonElement
         /// {
         /// case JsonValueKind.String:
         /// Console.WriteLine($"String: {element.GetString()}");
+
         /// break;
+
         /// case JsonValueKind.Number:
         /// Console.WriteLine($"Number: {element.GetDouble()}");
+
         /// break;
+
         /// case JsonValueKind.Array:
         /// Console.WriteLine($"Array length: {element.GetArrayLength()}");
+
         /// break;
+
         /// case JsonValueKind.Object:
         /// Console.WriteLine($"Object properties: {element.GetPropertyCount()}");
+
         /// break;
+
         /// }
+
         /// </code>
         /// </example>
         /// <exception cref="ObjectDisposedException">
@@ -1819,10 +1892,13 @@ public readonly partial struct JsonElement
         /// <code>
         /// // Access array elements
         /// var firstElement = arrayElement[0];
+
         /// var secondElement = arrayElement[1];
+
         ///
         /// // Chain operations
         /// string value = arrayElement[2].GetString();
+
         /// int count = arrayElement[3].GetArrayLength(); // if nested array
         ///
         /// // Modify through indexer
@@ -1965,9 +2041,11 @@ public readonly partial struct JsonElement
         /// <example>
         /// <code>
         /// Mutable mutableElement = GetMutableElement();
+
         ///
         /// // Implicit conversion to JsonElement
         /// JsonElement readOnlyElement = mutableElement;
+
         ///
         /// // Use with read-only APIs
         /// ProcessReadOnlyElement(mutableElement); // implicit conversion
@@ -1976,7 +2054,9 @@ public readonly partial struct JsonElement
         /// {
         /// // Can only read, not modify
         /// Console.WriteLine(element.GetString());
+
         /// }
+
         /// </code>
         /// </example>
         public static implicit operator JsonElement(Mutable value)
@@ -2014,18 +2094,23 @@ public readonly partial struct JsonElement
         /// <code>
         /// // Start with mutable element
         /// Mutable mutableElement = GetMutableElement();
+
         ///
         /// // Convert to read-only for some operation
         /// JsonElement readOnlyElement = mutableElement;
+
         ///
         /// // Convert back to mutable (explicit cast required)
         /// Mutable backToMutable = (Mutable)readOnlyElement;
+
         ///
         /// // Now can modify again
         /// backToMutable.SetProperty("modified", true);
+
         ///
         /// // This would fail - element from read-only document
         /// JsonElement fromParse = JsonDocument.Parse("{}").RootElement;
+
         /// Mutable invalid = (Mutable)fromParse; // throws FormatException
         /// </code>
         /// </example>
@@ -2038,6 +2123,7 @@ public readonly partial struct JsonElement
             if (value._parent is not IMutableJsonDocument)
             {
                 ThrowHelper.ThrowFormatException();
+
                 // We will never get here
                 return default;
             }
@@ -2070,15 +2156,20 @@ public readonly partial struct JsonElement
         /// <example>
         /// <code>
         /// var element1 = CreateElementWithValue(42);
+
         /// var element2 = CreateElementWithValue(42);
+
         /// var element3 = CreateElementWithValue(43);
+
         ///
         /// bool same = element1 == element2;      // true - same value
         /// bool different = element1 == element3; // false - different value
         ///
         /// // Works across different documents
         /// var doc1Element = doc1.RootElement.GetProperty("value");
+
         /// var doc2Element = doc2.RootElement.GetProperty("value");
+
         /// bool crossDoc = doc1Element == doc2Element; // true if values match
         /// </code>
         /// </example>
@@ -2117,7 +2208,9 @@ public readonly partial struct JsonElement
         /// <example>
         /// <code>
         /// Mutable mutableElement = GetMutableElement();
+
         /// JsonElement readOnlyElement = JsonDocument.Parse("42").RootElement;
+
         ///
         /// bool equal = mutableElement == readOnlyElement; // true if both represent 42
         /// </code>
@@ -2165,10 +2258,13 @@ public readonly partial struct JsonElement
         /// <example>
         /// <code>
         /// Mutable element = GetElement();
+
         ///
         /// // Compare with other JSON elements
         /// bool equal1 = element.Equals(otherMutableElement);
+
         /// bool equal2 = element.Equals(readOnlyElement);
+
         ///
         /// // Null comparison for JSON null values
         /// bool isNull = nullElement.Equals(null); // true for JSON null
@@ -2203,13 +2299,17 @@ public readonly partial struct JsonElement
         /// <example>
         /// <code>
         /// Mutable mutableElement = GetMutableElement();
+
         /// JsonElement readOnlyElement = GetReadOnlyElement();
+
         ///
         /// // Type-safe comparison
         /// bool equal = mutableElement.Equals(readOnlyElement);
+
         ///
         /// // Works with any IJsonElement implementation
         /// bool customEqual = mutableElement.Equals(customJsonElement);
+
         /// </code>
         /// </example>
         [CLSCompliant(false)]
@@ -2522,7 +2622,6 @@ public readonly partial struct JsonElement
         {
             // CheckValidInstance is redundant.  Asking for the type will
             // return None, which then throws the same exception in the return statement.
-
             JsonTokenType type = TokenType;
 
 #pragma warning disable IDE0075 // Simplify conditional expression
@@ -3964,7 +4063,6 @@ public readonly partial struct JsonElement
         public readonly bool ValueEquals(string? text)
         {
             // CheckValidInstance is done in the helper
-
             if (TokenType == JsonTokenType.Null)
             {
                 return text == null;
@@ -3992,7 +4090,6 @@ public readonly partial struct JsonElement
         public readonly bool ValueEquals(ReadOnlySpan<byte> utf8Text)
         {
             // CheckValidInstance is done in the helper
-
             if (TokenType == JsonTokenType.Null)
             {
                 // This is different than Length == 0, in that it tests true for null, but false for ""
@@ -4022,7 +4119,6 @@ public readonly partial struct JsonElement
         public readonly bool ValueEquals(ReadOnlySpan<char> text)
         {
             // CheckValidInstance is done in the helper
-
             if (TokenType == JsonTokenType.Null)
             {
                 // This is different than Length == 0, in that it tests true for null, but false for ""

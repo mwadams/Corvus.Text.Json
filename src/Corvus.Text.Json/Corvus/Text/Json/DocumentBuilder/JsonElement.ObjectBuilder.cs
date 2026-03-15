@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Numerics;
 using Corvus.Numerics;
@@ -48,12 +47,14 @@ public readonly partial struct JsonElement
         /// </summary>
         /// <param name="builder">The builder to use for value construction.</param>
         public delegate void Build(ref ObjectBuilder builder);
+
 #if NET9_0_OR_GREATER
         public delegate void Build<T>(in T context, ref ObjectBuilder builder)
             where T : allows ref struct;
 #else
         public delegate void Build<T>(in T context, ref ObjectBuilder builder);
 #endif
+
         private ComplexValueBuilder _builder;
 
         /// <summary>

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json;
 
 /// <summary>
@@ -47,5 +46,6 @@ internal enum Utf8UriSyntaxFlags
     UnEscapeDotsAndSlashes = 0x2000000, // additionally unescape dots and slashes before doing path compression
     AllowIdn = 0x4000000,    // IDN host conversion allowed
     AllowIriParsing = 0x10000000,   // Iri parsing. String is normalized, bidi control
+
                                     // characters are removed, unicode char limits are checked etc.
 }

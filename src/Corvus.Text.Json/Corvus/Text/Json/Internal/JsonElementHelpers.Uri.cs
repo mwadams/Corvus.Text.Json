@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -24,6 +23,7 @@ public static partial class JsonElementHelpers
     /// <param name="uri">The URI to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
@@ -71,6 +71,7 @@ public static partial class JsonElementHelpers
     /// <param name="uri">The URI to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="destination">The destination buffer.</param>
@@ -111,6 +112,7 @@ public static partial class JsonElementHelpers
     /// <param name="uriReference">The URI reference to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
@@ -158,6 +160,7 @@ public static partial class JsonElementHelpers
     /// <param name="uriReference">The URI reference to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="destination">The destination buffer.</param>
@@ -198,6 +201,7 @@ public static partial class JsonElementHelpers
     /// <param name="iri">The IRI to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
@@ -245,6 +249,7 @@ public static partial class JsonElementHelpers
     /// <param name="iri">The IRI to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="destination">The destination buffer.</param>
@@ -285,6 +290,7 @@ public static partial class JsonElementHelpers
     /// <param name="iriReference">The IRI reference to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>
@@ -332,6 +338,7 @@ public static partial class JsonElementHelpers
     /// <param name="iriReference">The IRI reference to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
+
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="destination">The destination buffer.</param>

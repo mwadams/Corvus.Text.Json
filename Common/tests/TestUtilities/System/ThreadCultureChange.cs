@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Globalization;
 
 namespace System.Tests
@@ -8,6 +7,7 @@ namespace System.Tests
     public sealed class ThreadCultureChange : IDisposable
     {
         private readonly CultureInfo _origCulture = CultureInfo.CurrentCulture;
+
         private readonly CultureInfo _origUICulture = CultureInfo.CurrentUICulture;
 
         public ThreadCultureChange(string? cultureName) :

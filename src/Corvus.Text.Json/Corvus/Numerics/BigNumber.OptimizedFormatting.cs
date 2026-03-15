@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Globalization;
 using System.Numerics;
@@ -89,6 +88,7 @@ public readonly partial struct BigNumber
                 charsWritten = 0;
                 return false;
             }
+
             destination[0] = '0';
             charsWritten = 1;
             return true;
@@ -113,6 +113,7 @@ public readonly partial struct BigNumber
             charsWritten = 0;
             return false;
         }
+
         destination[sigChars] = 'E';
         sigChars++;
 
@@ -195,6 +196,7 @@ public readonly partial struct BigNumber
                 bytesWritten = 0;
                 return false;
             }
+
             destination[0] = (byte)'0';
             bytesWritten = 1;
             return true;
@@ -219,6 +221,7 @@ public readonly partial struct BigNumber
             bytesWritten = 0;
             return false;
         }
+
         destination[sigBytes] = (byte)'E';
         sigBytes++;
 

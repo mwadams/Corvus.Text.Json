@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers.Text;
 using System.Runtime.CompilerServices;
 
@@ -31,19 +30,31 @@ public static partial class JsonSchemaEvaluation
     /// Message provider for expected "array type" validation messages.
     /// </summary>
     public static readonly JsonSchemaMessageProvider ExpectedTypeArray = static (buffer, out written) => ExpectedType("array"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedUniqueItems = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUniqueItems.AsSpan(), buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountEquals = static (value, buffer, out written) => ExpectedItemCountEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountNotEquals = static (value, buffer, out written) => ExpectedItemCountNotEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountGreaterThan = static (value, buffer, out written) => ExpectedItemCountGreaterThanValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountGreaterThanOrEquals = static (value, buffer, out written) => ExpectedItemCountGreaterThanOrEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountLessThan = static (value, buffer, out written) => ExpectedItemCountLessThanValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedItemCountLessThanOrEquals = static (value, buffer, out written) => ExpectedItemCountLessThanOrEqualsValue(value, buffer, out written);
 
     public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountEquals = static (value, buffer, out written) => ExpectedContainsCountEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountNotEquals = static (value, buffer, out written) => ExpectedContainsCountNotEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountGreaterThan = static (value, buffer, out written) => ExpectedContainsCountGreaterThanValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountGreaterThanOrEquals = static (value, buffer, out written) => ExpectedContainsCountGreaterThanOrEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountLessThan = static (value, buffer, out written) => ExpectedContainsCountLessThanValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedContainsCountLessThanOrEquals = static (value, buffer, out written) => ExpectedContainsCountLessThanOrEqualsValue(value, buffer, out written);
 
     /// <summary>

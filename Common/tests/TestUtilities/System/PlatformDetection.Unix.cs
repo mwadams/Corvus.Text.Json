@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -14,37 +13,61 @@ namespace System
         // means that one exception anywhere means all tests using PlatformDetection fail. If you feel a value is worth latching,
         // do it in a way that failures don't cascade.
         //
-
         public static bool IsLinux => RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+
         public static bool IsOpenSUSE => IsDistroAndVersion("opensuse");
+
         public static bool IsUbuntu => IsDistroAndVersion("ubuntu");
+
         public static bool IsUbuntu2004 => IsDistroAndVersion("ubuntu", 20, 4);
+
         public static bool IsUbuntu24 => IsDistroAndVersion("ubuntu", 24);
+
         public static bool IsUbuntu24OrHigher => IsDistroAndVersionOrHigher("ubuntu", 24);
+
         public static bool IsDebian => IsDistroAndVersion("debian");
+
         public static bool IsAlpine => IsDistroAndVersion("alpine");
+
         public static bool IsRaspbian10 => IsDistroAndVersion("raspbian", 10);
+
         public static bool IsMariner => IsDistroAndVersion("mariner");
+
         public static bool IsSLES => IsDistroAndVersion("sles");
+
         public static bool IsTizen => IsDistroAndVersion("tizen");
+
         public static bool IsFedora => IsDistroAndVersion("fedora");
+
         public static bool IsLinuxBionic => IsBionic();
+
         public static bool IsRedHatFamily => IsRedHatFamilyAndVersion();
+
         public static bool IsAzureLinux => IsDistroAndVersionOrHigher("azurelinux", 3);
 
         public static bool IsMonoLinuxArm64 => IsMonoRuntime && IsLinux && IsArm64Process;
+
         public static bool IsNotMonoLinuxArm64 => !IsMonoLinuxArm64;
+
         public static bool IsQemuLinux => IsLinux && Environment.GetEnvironmentVariable("DOTNET_RUNNING_UNDER_QEMU") != null;
+
         public static bool IsNotQemuLinux => !IsQemuLinux;
+
         public static bool IsNotAzureLinux => !IsAzureLinux;
 
         // OSX family
         public static bool IsApplePlatform => IsOSX || IsiOS || IstvOS || IsMacCatalyst;
+
         public static bool IsOSX => RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+
         public static bool IsNotOSX => !IsOSX;
+
         public static bool IsMacOsAppleSilicon => IsOSX && IsArm64Process;
+
         public static bool IsNotMacOsAppleSilicon => !IsMacOsAppleSilicon;
+
         public static bool IsAppSandbox => Environment.GetEnvironmentVariable("APP_SANDBOX_CONTAINER_ID") != null;
+
         public static bool IsNotAppSandbox => !IsAppSandbox;
 
         public static Version OpenSslVersion => !IsApplePlatform && !IsWindows && !IsAndroid ?
@@ -52,11 +75,15 @@ namespace System
             throw new PlatformNotSupportedException();
 
         private static readonly Version s_openssl3Version = new Version(3, 0, 0);
+
         private static readonly Version s_openssl3_4Version = new Version(3, 4, 0);
+
         private static readonly Version s_openssl3_5Version = new Version(3, 5, 0);
 
         public static bool IsOpenSsl3 => IsOpenSslVersionAtLeast(s_openssl3Version);
+
         public static bool IsOpenSsl3_4 => IsOpenSslVersionAtLeast(s_openssl3_4Version);
+
         public static bool IsOpenSsl3_5 => IsOpenSslVersionAtLeast(s_openssl3_5Version);
 
         /// <summary>
@@ -121,6 +148,7 @@ namespace System
         }
 
         private static Version s_opensslVersion;
+
         private static Version GetOpenSslVersion()
         {
             if (s_opensslVersion == null)
@@ -192,6 +220,7 @@ namespace System
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -202,6 +231,7 @@ namespace System
             if (IsFreeBSD)
             {
                 result.Id = "FreeBSD";
+
                 // example:
                 // FreeBSD 11.0-RELEASE-p1 FreeBSD 11.0-RELEASE-p1 #0 r306420: Thu Sep 29 01:43:23 UTC 2016     root@releng2.nyi.freebsd.org:/usr/obj/usr/src/sys/GENERIC
                 // What we want is major release as minor releases should be compatible.
@@ -229,6 +259,7 @@ namespace System
                         break;
                     case string version when version.StartsWith("illumos"):
                         result.Id = "OpenIndiana";
+
                         // version-less
                         break;
                 }
@@ -238,6 +269,7 @@ namespace System
                 // example:
                 // SunOS 5.11 11.3
                 result.Id = "Solaris";
+
                 // we only need the major version; 11
                 result.VersionId = ToVersion(RuntimeInformation.OSDescription.Split(' ')[2].Split('.')[0]); // e.g. 11
             }
@@ -345,6 +377,7 @@ namespace System
         private struct DistroInfo
         {
             public string Id { get; set; }
+
             public Version VersionId { get; set; }
         }
 

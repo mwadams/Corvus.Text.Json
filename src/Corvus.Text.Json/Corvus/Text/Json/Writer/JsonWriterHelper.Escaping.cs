@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -23,7 +22,6 @@ internal static partial class JsonWriterHelper
     // Only allow ASCII characters between ' ' (0x20) and '~' (0x7E), inclusively,
     // but exclude characters that need to be escaped as hex: '"', '\'', '&', '+', '<', '>', '`'
     // and exclude characters that need to be escaped by adding a backslash: '\n', '\r', '\t', '\\', '\b', '\f'
-
     // non-zero = allowed, 0 = disallowed
     public const int LastAsciiCharacter = 0x7F;
 
@@ -169,6 +167,7 @@ internal static partial class JsonWriterHelper
         switch (value)
         {
             case JsonConstants.Quote:
+
                 // Optimize for the common quote case.
                 destination[written++] = (byte)'u';
                 destination[written++] = (byte)'0';
@@ -296,6 +295,7 @@ internal static partial class JsonWriterHelper
         switch ((byte)value)
         {
             case JsonConstants.Quote:
+
                 // Optimize for the common quote case.
                 destination[written++] = 'u';
                 destination[written++] = '0';

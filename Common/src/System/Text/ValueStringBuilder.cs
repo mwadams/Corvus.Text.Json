@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -13,7 +12,9 @@ namespace System.Text;
 internal ref partial struct ValueStringBuilder
 {
     private char[]? _arrayToReturnToPool;
+
     private Span<char> _chars;
+
     private int _pos;
 
     public ValueStringBuilder(Span<char> initialBuffer)
@@ -75,6 +76,7 @@ internal ref partial struct ValueStringBuilder
             EnsureCapacity(Length + 1);
             _chars[Length] = '\0';
         }
+
         return ref MemoryMarshal.GetReference(_chars);
     }
 
@@ -108,6 +110,7 @@ internal ref partial struct ValueStringBuilder
             EnsureCapacity(Length + 1);
             _chars[Length] = '\0';
         }
+
         return _chars.Slice(0, _pos);
     }
 
@@ -234,6 +237,7 @@ internal ref partial struct ValueStringBuilder
         {
             dst[i] = c;
         }
+
         _pos += count;
     }
 

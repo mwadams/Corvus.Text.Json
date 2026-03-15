@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -24,8 +23,11 @@ public struct ArrayEnumerator<TItem> : IEnumerable<TItem>, IEnumerator<TItem>
     where TItem : struct, IJsonElement<TItem>
 {
     private readonly IJsonDocument _targetDocument;
+
     private readonly int _initialIndex;
+
     private int _curIdx;
+
     private readonly int _endIdxOrVersion;
 
     internal ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)

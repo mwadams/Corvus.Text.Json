@@ -1,7 +1,6 @@
 ﻿// <copyright file="Metaschema.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
-
 using System.IO;
 using System.Text.Json;
 using Corvus.Json;

@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -220,7 +219,6 @@ namespace System.Text.Unicode
             // n.b. All of the logic below assumes we have at least 2 "known zero" bits leading
             // each of the 7-bit ASCII values. This assumption won't hold if this method is
             // ever adapted to deal with packed bytes instead of packed chars.
-
             uint differentBits = (valueA ^ valueB) << 2;
 
             // Now, we want to generate a mask where for each word in the input, the mask contains
@@ -240,7 +238,6 @@ namespace System.Text.Unicode
             //
             // This combination of operations results in the 0x80 bit of each word being set
             // iff the original word value was *not* [A-Za-z].
-
             uint indicator = valueA + 0x0005_0005u;
             indicator |= 0x00A0_00A0u;
             indicator += 0x001A_001Au;
@@ -250,7 +247,6 @@ namespace System.Text.Unicode
             // differ between the inputs, and 'differentBits' contains the mask of bits which
             // actually differ between the inputs. If these masks have any bits in common, then
             // the two values are *not* equal under an OrdinalIgnoreCase comparer.
-
             return (differentBits & indicator) == 0;
         }
 
@@ -271,7 +267,6 @@ namespace System.Text.Unicode
 
             // Duplicate of logic in UInt32OrdinalIgnoreCaseAscii, but using 64-bit consts.
             // See comments in that method for more info.
-
             ulong differentBits = (valueA ^ valueB) << 2;
             ulong indicator = valueA + 0x0005_0005_0005_0005ul;
             indicator |= 0x00A0_00A0_00A0_00A0ul;

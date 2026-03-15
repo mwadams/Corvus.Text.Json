@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -440,6 +439,7 @@ namespace System
 
         // NOTE: Consider using SequenceEqual below instead, as it will give more useful information about what
         // the actual differences are, especially for large arrays/spans.
+
         /// <summary>
         /// Validates that the actual array is equal to the expected array. XUnit only displays the first 5 values
         /// of each collection if the test fails. This doesn't display at what point or how the equality assertion failed.
@@ -479,6 +479,7 @@ namespace System
         /// <summary>
         /// Validates that the actual collection contains same items as expected collection. If the test fails, this will display:
         /// 1. Count if two collection count are different;
+
         /// 2. Missed expected collection item when found
         /// </summary>
         /// <param name="expected">The collection that <paramref name="actual"/> should contain same items as</param>
@@ -718,6 +719,7 @@ namespace System
         private class ItemCount
         {
             public int Original { get; set; }
+
             public int Remain { get; set; }
 
             public ItemCount(int original, int remain)
@@ -1215,6 +1217,7 @@ namespace System
             //// {
             //// // RISC-V does not preserve payload
             //// return;
+
             //// }
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));
@@ -1240,6 +1243,7 @@ namespace System
             //// {
             //// // RISC-V does not preserve payload
             //// return;
+
             //// }
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));
@@ -1262,6 +1266,7 @@ namespace System
             //// {
             //// // RISC-V does not preserve payload
             //// return;
+
             //// }
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));

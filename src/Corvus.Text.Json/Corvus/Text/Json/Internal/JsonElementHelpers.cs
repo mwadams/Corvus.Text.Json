@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 
 #if !NET
@@ -260,6 +259,7 @@ public static partial class JsonElementHelpers
                 {
                     // Start of a new consecutive block
                     consecutiveBlockStartIndex = currentStartIndex;
+
                     // For the end index, we need the end of this element
                     currentEndIndex = enumerator.CurrentEndIndex + DbRow.Size;
                     consecutiveBlockEndIndex = currentEndIndex;
@@ -362,6 +362,7 @@ public static partial class JsonElementHelpers
             case JsonTokenType.True:
             case JsonTokenType.False:
             case JsonTokenType.Null:
+
                 // This is the offset between the set of literals within JsonValueType and JsonTokenType
                 // Essentially: JsonTokenType.Null - JsonValueType.Null
                 return (JsonValueKind)((byte)tokenType - 4);

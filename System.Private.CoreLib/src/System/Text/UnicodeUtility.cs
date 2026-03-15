@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Runtime.CompilerServices;
 
 namespace System.Text
@@ -34,7 +33,6 @@ namespace System.Text
             // Need to remove the D800 marker from the high surrogate and the DC00 marker from the low surrogate,
             // then fix up the "wwww = uuuuu - 1" section of the bit distribution. The code is written as below
             // to become just two instructions: shl, lea.
-
             return (highSurrogateCodePoint << 10) + lowSurrogateCodePoint - ((0xD800U << 10) + 0xDC00U - (1 << 16));
         }
 
@@ -60,7 +58,6 @@ namespace System.Text
             UnicodeDebug.AssertIsValidSupplementaryPlaneScalar(value);
 
             // This calculation comes from the Unicode specification, Table 3-5.
-
             highSurrogateCodePoint = (char)((value + ((0xD800u - 0x40u) << 10)) >> 10);
             lowSurrogateCodePoint = (char)((value & 0x3FFu) + 0xDC00u);
         }
@@ -75,10 +72,8 @@ namespace System.Text
             // The logic below can handle all valid scalar values branchlessly.
             // It gives generally good performance across all inputs, and on x86
             // it's only six instructions: lea, sar, xor, add, shr, lea.
-
             // 'a' will be -1 if input is < 0x800; else 'a' will be 0
             // => 'a' will be -1 if input is 1 or 2 UTF-8 code units; else 'a' will be 0
-
             int a = ((int)value - 0x0800) >> 31;
 
             // The number of UTF-8 code units for a given scalar is as follows:
@@ -95,7 +90,6 @@ namespace System.Text
             //
             // Since the 1- and 3-code unit cases are now clustered, they can
             // both be checked together very cheaply.
-
             value ^= 0xF800u;
             value -= 0xF880u;   // if scalar is 1 or 3 code units, high byte = 0xFF; else high byte = 0x00
             value += (4 << 24); // if scalar is 1 or 3 code units, high byte = 0x03; else high byte = 0x04
@@ -178,7 +172,6 @@ namespace System.Text
             //
             // So now the range [ FFEF0800..FFFFFFFF ] contains all valid code points,
             // excluding surrogates. This allows us to perform a single comparison.
-
             return ((value - 0x110000u) ^ 0xD800u) >= 0xFFEF0800u;
         }
     }

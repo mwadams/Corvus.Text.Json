@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Collections;
 
 namespace Corvus.Text.Json.Internal;
@@ -17,23 +16,38 @@ internal partial class Utf8UriParser
 
     // These are always available without paying hashtable lookup cost
     // Note: see UpdateStaticSyntaxReference()
-
     internal static readonly Utf8UriParser FileUri = new BuiltInUriParser("file", NoDefaultPort, FileSyntaxFlags);
+
     internal static readonly Utf8UriParser FtpUri = new BuiltInUriParser("ftp", 21, FtpSyntaxFlags);
+
     internal static readonly Utf8UriParser GopherUri = new BuiltInUriParser("gopher", 70, GopherSyntaxFlags);
+
     internal static readonly Utf8UriParser HttpUri = new BuiltInUriParser("http", 80, HttpSyntaxFlags);
+
     internal static readonly Utf8UriParser HttpsUri = new BuiltInUriParser("https", 443, HttpUri._flags);
+
     internal static readonly Utf8UriParser LdapUri = new BuiltInUriParser("ldap", 389, LdapSyntaxFlags);
+
     internal static readonly Utf8UriParser MailToUri = new BuiltInUriParser("mailto", 25, MailtoSyntaxFlags);
+
     internal static readonly Utf8UriParser NetPipeUri = new BuiltInUriParser("net.pipe", NoDefaultPort, NetPipeSyntaxFlags);
+
     internal static readonly Utf8UriParser NetTcpUri = new BuiltInUriParser("net.tcp", 808, NetTcpSyntaxFlags);
+
     internal static readonly Utf8UriParser NewsUri = new BuiltInUriParser("news", NoDefaultPort, NewsSyntaxFlags);
+
     internal static readonly Utf8UriParser NntpUri = new BuiltInUriParser("nntp", 119, NntpSyntaxFlags);
+
     internal static readonly Utf8UriParser TelnetUri = new BuiltInUriParser("telnet", 23, TelnetSyntaxFlags);
+
     internal static readonly Utf8UriParser UnixFileUri = new BuiltInUriParser("file", NoDefaultPort, UnixFileSyntaxFlags);
+
     internal static readonly Utf8UriParser UuidUri = new BuiltInUriParser("uuid", NoDefaultPort, NewsUri._flags);
+
     internal static readonly Utf8UriParser VsMacrosUri = new BuiltInUriParser("vsmacros", NoDefaultPort, VsmacrosSyntaxFlags);
+
     internal static readonly Utf8UriParser WssUri = new BuiltInUriParser("wss", 443, HttpSyntaxFlags);
+
     internal static readonly Utf8UriParser WsUri = new BuiltInUriParser("ws", 80, HttpSyntaxFlags);
 
     private const int c_InitialTableSize = 25;
@@ -206,7 +220,6 @@ internal partial class Utf8UriParser
                                     FileSyntaxFlags & ~Utf8UriSyntaxFlags.ConvertPathSlashes;
 
     // Various Uri scheme syntax flags
-
     private const Utf8UriSyntaxFlags UnknownV1SyntaxFlags =
                                         Utf8UriSyntaxFlags.V1_UnknownUri | // This flag must be always set here
                                         Utf8UriSyntaxFlags.OptionalAuthority |
@@ -272,10 +285,10 @@ internal partial class Utf8UriParser
     private Utf8UriSyntaxFlags _flags;
 
     private int _port;
+
     private string _scheme;
 
     // Internal .ctor, any ctor eventually goes through this one
-
     internal Utf8UriParser(Utf8UriSyntaxFlags flags)
     {
         _flags = flags;
@@ -298,17 +311,20 @@ internal partial class Utf8UriParser
         {
             return syntax;
         }
+
         syntax = (Utf8UriParser?)s_tempTable[lwrCaseScheme];
         if (syntax != null)
         {
             return syntax;
         }
+
         lock (s_table)
         {
             if (s_tempTable.Count >= c_MaxCapacity)
             {
                 s_tempTable = new Hashtable(c_InitialTableSize);
             }
+
             syntax = new BuiltInUriParser(lwrCaseScheme, NoDefaultPort, UnknownV1SyntaxFlags);
             s_tempTable[lwrCaseScheme] = syntax;
             return syntax;

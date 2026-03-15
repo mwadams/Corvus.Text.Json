@@ -1,7 +1,6 @@
 ﻿// <copyright file="FakeWebDocumentResolver.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
-
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -17,7 +16,9 @@ namespace TestUtilities;
 public class FakeWebDocumentResolver : IDocumentResolver
 {
     private readonly string baseDirectory;
+
     private readonly Dictionary<string, JsonDocument> documents = [];
+
     private bool disposedValue;
 
     /// <summary>

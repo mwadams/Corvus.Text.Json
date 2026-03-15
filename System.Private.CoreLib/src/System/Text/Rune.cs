@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -39,11 +38,15 @@ namespace System.Text
         internal const int MaxUtf8BytesPerRune = 4; // supplementary plane code points are encoded as 4 UTF-8 code units
 
         private const char HighSurrogateStart = '\ud800';
+
         private const char LowSurrogateStart = '\udc00';
+
         private const int HighSurrogateRange = 0x3FF;
 
         private const byte IsWhiteSpaceFlag = 0x80;
+
         private const byte IsLetterOrDigitFlag = 0x40;
+
         private const byte UnicodeCategoryMask = 0x1F;
 
         // Contains information about the ASCII character range [ U+0000..U+007F ], with:
@@ -79,6 +82,7 @@ namespace System.Text
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.ch);
             }
+
             _value = expanded;
         }
 
@@ -118,6 +122,7 @@ namespace System.Text
             {
                 ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
             }
+
             _value = value;
         }
 
@@ -141,7 +146,6 @@ namespace System.Text
         public static bool operator >=(Rune left, Rune right) => left._value >= right._value;
 
         // Operators below are explicit because they may throw.
-
         public static explicit operator Rune(char ch) => new Rune(ch);
 
         [CLSCompliant(false)]
@@ -245,7 +249,6 @@ namespace System.Text
             // We use simple case folding rules, which disallows moving between the BMP and supplementary
             // planes when performing a case conversion. The helper methods which reconstruct a Rune
             // contain debug asserts for this condition.
-
             if (rune.IsBmp)
             {
                 return UnsafeCreate(modified[0]);
@@ -279,7 +282,6 @@ namespace System.Text
             // We use simple case folding rules, which disallows moving between the BMP and supplementary
             // planes when performing a case conversion. The helper methods which reconstruct a Rune
             // contain debug asserts for this condition.
-
             if (rune.IsBmp)
             {
                 return UnsafeCreate(modified[0]);
@@ -325,7 +327,6 @@ namespace System.Text
             {
                 // First, check for the common case of a BMP scalar value.
                 // If this is correct, return immediately.
-
                 char firstChar = source[0];
                 if (TryCreate(firstChar, out result))
                 {
@@ -336,7 +337,6 @@ namespace System.Text
                 // First thing we saw was a UTF-16 surrogate code point.
                 // Let's optimistically assume for now it's a high surrogate and hope
                 // that combining it with the next char yields useful results.
-
                 if (source.Length > 1)
                 {
                     char secondChar = source[1];
@@ -365,7 +365,6 @@ namespace System.Text
 
             // If we got to this point, the input buffer was empty, or the buffer
             // was a single element in length and that element was a high surrogate char.
-
             charsConsumed = source.Length;
             result = ReplacementChar;
             return OperationStatus.NeedMoreData;
@@ -410,9 +409,7 @@ namespace System.Text
             // Ch. 3.9 for more details. In summary, when reporting an invalid subsequence,
             // it tries to consume as many code units as possible as long as those code
             // units constitute the beginning of a longer well-formed subsequence per Table 3-7.
-
             // Try reading source[0].
-
             int index = 0;
             if (source.IsEmpty)
             {
@@ -431,9 +428,7 @@ namespace System.Text
             // the range [C2..F4]. If it's outside of that range, it's either a standalone
             // continuation byte, or it's an overlong two-byte sequence, or it's an out-of-range
             // four-byte sequence.
-
             // Try reading source[1].
-
             index = 1;
             if (!UnicodeUtility.IsInRangeInclusive(tempValue, 0xC2, 0xF4))
             {
@@ -450,7 +445,6 @@ namespace System.Text
             // Continuation bytes are of the form [10xxxxxx], which means that their two's
             // complement representation is in the range [-65..-128]. This allows us to
             // perform a single comparison to see if a byte is a continuation byte.
-
             int thisByteSignExtended = (sbyte)source[1];
             if (thisByteSignExtended >= -64)
             {
@@ -470,7 +464,6 @@ namespace System.Text
             // This appears to be a 3- or 4-byte sequence. Since per Table 3-7 we now have
             // enough information (from just two code units) to detect overlong or surrogate
             // sequences, we need to perform these checks now.
-
             if (!UnicodeUtility.IsInRangeInclusive(tempValue, ((0xE0 - 0xC0) << 6) + (0xA0 - 0x80), ((0xF4 - 0xC0) << 6) + (0x8F - 0x80)))
             {
                 // The first two bytes were not in the range [[E0 A0]..[F4 8F]].
@@ -492,9 +485,7 @@ namespace System.Text
 
             // The first two bytes were just fine. We don't need to perform any other checks
             // on the remaining bytes other than to see that they're valid continuation bytes.
-
             // Try reading source[2].
-
             index = 2;
             if (source.Length <= 2)
             {
@@ -519,7 +510,6 @@ namespace System.Text
             }
 
             // Try reading source[3].
-
             index = 3;
             if (source.Length <= 3)
             {
@@ -578,7 +568,6 @@ namespace System.Text
             {
                 // First, check for the common case of a BMP scalar value.
                 // If this is correct, return immediately.
-
                 char finalChar = source[index];
                 if (TryCreate(finalChar, out result))
                 {
@@ -591,7 +580,6 @@ namespace System.Text
                     // The final character was a UTF-16 low surrogate code point.
                     // This must be preceded by a UTF-16 high surrogate code point, otherwise
                     // we have a standalone low surrogate, which is always invalid.
-
                     index--;
                     if ((uint)index < (uint)source.Length)
                     {
@@ -606,7 +594,6 @@ namespace System.Text
 
                     // If we got to this point, we saw a standalone low surrogate
                     // and must report an error.
-
                     charsConsumed = 1; // standalone surrogate
                     result = ReplacementChar;
                     return OperationStatus.InvalidData;
@@ -616,7 +603,6 @@ namespace System.Text
             // If we got this far, the source buffer was empty, or the source buffer ended
             // with a UTF-16 high surrogate code point. These aren't errors since they could
             // be valid given more input data.
-
             charsConsumed = (int)((uint)(-source.Length) >> 31); // 0 -> 0, all other lengths -> 1
             result = ReplacementChar;
             return OperationStatus.NeedMoreData;
@@ -638,7 +624,6 @@ namespace System.Text
             {
                 // The buffer contains at least one byte. Let's check the fast case where the
                 // buffer ends with an ASCII byte.
-
                 uint tempValue = source[index];
                 if (UnicodeUtility.IsAsciiCodePoint(tempValue))
                 {
@@ -653,18 +638,15 @@ namespace System.Text
                 // sequences begin with a byte whose 0x40 bit is set. Since all multi-byte sequences
                 // are no greater than 4 code units in length, we only need to search back a maximum
                 // of four bytes.
-
                 if (((byte)tempValue & 0x40) != 0)
                 {
                     // This is a UTF-8 leading byte. We'll do a forward read from here.
                     // It'll return invalid (if given C0, F5, etc.) or incomplete. Both are fine.
-
                     return DecodeFromUtf8(source.Slice(index), out value, out bytesConsumed);
                 }
 
                 // If we got to this point, the final byte was a UTF-8 continuation byte.
                 // Let's check the three bytes immediately preceding this, looking for the starting byte.
-
                 for (int i = 3; i > 0; i--)
                 {
                     index--;
@@ -676,7 +658,6 @@ namespace System.Text
                     // The check below will get hit for ASCII (values 00..7F) and for UTF-8 starting bytes
                     // (bits 0xC0 set, values C0..FF). In two's complement this is the range [-64..127].
                     // It's just a fast way for us to terminate the search.
-
                     if ((sbyte)source[index] >= -64)
                     {
                         goto ForwardDecode;
@@ -693,7 +674,6 @@ namespace System.Text
                 //
                 // In all of these cases, the final byte must be a maximal invalid subsequence of length 1.
                 // See comment near the end of this method for more information.
-
                 value = ReplacementChar;
                 bytesConsumed = 1;
                 return OperationStatus.InvalidData;
@@ -704,7 +684,6 @@ namespace System.Text
                 // Technically this could also mean we found an invalid byte like C0 or F5 at this position, but that's
                 // fine since it'll be handled by the forward read. From this position, we'll perform a forward read
                 // and see if we consumed the entirety of the buffer.
-
                 source = source.Slice(index);
                 Debug.Assert(!source.IsEmpty, "Shouldn't reach this for empty inputs.");
 
@@ -715,7 +694,6 @@ namespace System.Text
                     // as the result of this function. It could be well-formed, incomplete, or invalid. If it's
                     // invalid and we consumed the remainder of the buffer, we know we've found the maximal invalid
                     // subsequence, which is what we wanted anyway.
-
                     bytesConsumed = tempBytesConsumed;
                     value = tempRune;
                     return operationStatus;
@@ -727,7 +705,6 @@ namespace System.Text
                 // continuation byte at the end of the input. Furthermore, since any maximal invalid subsequence
                 // of length > 1 must have a UTF-8 leading byte as its first code unit, this implies that the
                 // continuation byte at the end of the buffer is itself a maximal invalid subsequence of length 1.
-
                 goto Invalid;
             }
             else
@@ -822,7 +799,6 @@ namespace System.Text
             }
 
             // Optimistically assume input is within BMP.
-
             uint returnValue = input[0];
             if (UnicodeUtility.IsSurrogateCodePoint(returnValue))
             {
@@ -832,7 +808,6 @@ namespace System.Text
                 }
 
                 // Treat 'returnValue' as the high surrogate.
-
                 if (input.Length <= 1)
                 {
                     return -1; // not an argument exception - just a "bad data" failure
@@ -864,7 +839,6 @@ namespace System.Text
             }
 
             // Optimistically assume input is within BMP.
-
             uint returnValue = input[index];
             if (UnicodeUtility.IsSurrogateCodePoint(returnValue))
             {
@@ -879,7 +853,6 @@ namespace System.Text
                 // off the end of the string using unsafe code. Since strings are null-terminated,
                 // we're guaranteed not to read a valid low surrogate, so we'll fail correctly if
                 // the string terminates unexpectedly.
-
                 index++;
                 if ((uint)index >= (uint)input.Length)
                 {
@@ -963,14 +936,12 @@ namespace System.Text
         {
             // First, extend both to 32 bits, then calculate the offset of
             // each candidate surrogate char from the start of its range.
-
             uint highSurrogateOffset = (uint)highSurrogate - HighSurrogateStart;
             uint lowSurrogateOffset = (uint)lowSurrogate - LowSurrogateStart;
 
             // This is a single comparison which allows us to check both for validity at once since
             // both the high surrogate range and the low surrogate range are the same length.
             // If the comparison fails, we call to a helper method to throw the correct exception message.
-
             if ((highSurrogateOffset | lowSurrogateOffset) <= HighSurrogateRange)
             {
                 // The 0x40u << 10 below is to account for uuuuu = wwww + 1 in the surrogate encoding.
@@ -1047,7 +1018,6 @@ namespace System.Text
             }
 
             // Destination buffer not large enough
-
             charsWritten = default;
             return false;
         }
@@ -1075,7 +1045,6 @@ namespace System.Text
         private static bool TryEncodeToUtf8(Rune value, Span<byte> destination, out int bytesWritten)
         {
             // The bit patterns below come from the Unicode Standard, Table 3-6.
-
             if (!destination.IsEmpty)
             {
                 if (value.IsAscii)
@@ -1123,7 +1092,6 @@ namespace System.Text
             }
 
             // Destination buffer not large enough
-
             bytesWritten = default;
             return false;
         }
@@ -1174,7 +1142,6 @@ namespace System.Text
         internal static Rune UnsafeCreate(uint scalarValue) => new Rune(scalarValue, false);
 
         // These are analogs of APIs on System.Char
-
         public static double GetNumericValue(Rune value)
         {
             if (value.IsAscii)
@@ -1192,6 +1159,7 @@ namespace System.Text
                 {
                     return CharUnicodeInfo.GetNumericValue((char)value._value);
                 }
+
                 return CharUnicodeInfo.GetNumericValue(value.ToString(), 0);
 #endif
             }
@@ -1219,6 +1187,7 @@ namespace System.Text
             {
                 return CharUnicodeInfo.GetUnicodeCategory((char)value._value);
             }
+
             return CharUnicodeInfo.GetUnicodeCategory(value.ToString(), 0);
 #endif
         }
@@ -1266,11 +1235,9 @@ namespace System.Text
             // is forever fixed at [ U+0000..U+001F ], [ U+007F..U+009F ]. No
             // characters will ever be added to or removed from the "control characters"
             // group. See https:// www.unicode.org/policies/stability_policy.html.
-
             // Logic below depends on Rune.Value never being -1 (since Rune is a validating type)
             // 00..1F (+1) => 01..20 (&~80) => 01..20
             // 7F..9F (+1) => 80..A0 (&~80) => 00..20
-
             return ((value._value + 1) & ~0x80u) <= 0x20u;
         }
 
@@ -1370,7 +1337,6 @@ namespace System.Text
 
             // Only BMP code points can be white space, so only call into CharUnicodeInfo
             // if the incoming value is within the BMP.
-
             return value.IsBmp &&
 #if SYSTEM_PRIVATE_CORELIB
                 CharUnicodeInfo.GetIsWhiteSpace((char)value._value);
@@ -1389,7 +1355,6 @@ namespace System.Text
             // We don't want to special-case ASCII here since the specified culture might handle
             // ASCII characters differently than the invariant culture (e.g., Turkish I). Instead
             // we'll just jump straight to the globalization tables if they're available.
-
 #if SYSTEM_PRIVATE_CORELIB
             if (GlobalizationMode.Invariant)
             {
@@ -1406,7 +1371,6 @@ namespace System.Text
         {
             // Handle the most common case (ASCII data) first. Within the common case, we expect
             // that there'll be a mix of lowercase & uppercase chars, so make the conversion branchless.
-
             if (value.IsAscii)
             {
                 // It's ok for us to use the UTF-16 conversion utility for this since the high
@@ -1421,7 +1385,6 @@ namespace System.Text
             }
 
             // Non-ASCII data requires going through the case folding tables.
-
             return ChangeCaseCultureAware(value, TextInfo.Invariant, toUpper: false);
 #else
             return ChangeCaseCultureAware(value, CultureInfo.InvariantCulture, toUpper: false);
@@ -1438,7 +1401,6 @@ namespace System.Text
             // We don't want to special-case ASCII here since the specified culture might handle
             // ASCII characters differently than the invariant culture (e.g., Turkish I). Instead
             // we'll just jump straight to the globalization tables if they're available.
-
 #if SYSTEM_PRIVATE_CORELIB
             if (GlobalizationMode.Invariant)
             {
@@ -1455,7 +1417,6 @@ namespace System.Text
         {
             // Handle the most common case (ASCII data) first. Within the common case, we expect
             // that there'll be a mix of lowercase & uppercase chars, so make the conversion branchless.
-
             if (value.IsAscii)
             {
                 // It's ok for us to use the UTF-16 conversion utility for this since the high
@@ -1470,7 +1431,6 @@ namespace System.Text
             }
 
             // Non-ASCII data requires going through the case folding tables.
-
             return ChangeCaseCultureAware(value, TextInfo.Invariant, toUpper: true);
 #else
             return ChangeCaseCultureAware(value, CultureInfo.InvariantCulture, toUpper: true);

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -23,6 +22,7 @@ namespace Corvus.Text.Json;
 public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
 {
     internal readonly byte[] _utf8Value;
+
     internal readonly string _value;
 
     private JsonEncodedText(byte[] utf8Value)
@@ -128,6 +128,7 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
         {
             return Equals(encodedText);
         }
+
         return false;
     }
 

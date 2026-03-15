@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -38,6 +37,7 @@ internal static partial class JsonReaderHelper
             utf8Unescaped.Clear();
             ArrayPool<byte>.Shared.Return(unescapedArray);
         }
+
         return result;
     }
 
@@ -192,6 +192,7 @@ internal static partial class JsonReaderHelper
             bytes = null;
             return false;
         }
+
         bytes = utf8Unescaped.Slice(0, bytesWritten).ToArray();
         return true;
     }
@@ -218,6 +219,7 @@ internal static partial class JsonReaderHelper
 
             return false;
         }
+
         Debug.Assert(bytesConsumed == utf8Unescaped.Length);
 
         bytes = byteSpan.Slice(0, bytesWritten).ToArray();
@@ -242,6 +244,7 @@ internal static partial class JsonReaderHelper
             {
                 return string.Empty;
             }
+
             unsafe
             {
                 fixed (byte* bytePtr = utf8Unescaped)
@@ -303,6 +306,7 @@ internal static partial class JsonReaderHelper
             {
                 return 0;
             }
+
             unsafe
             {
                 fixed (byte* srcPtr = utf8Unescaped)
@@ -341,6 +345,7 @@ internal static partial class JsonReaderHelper
             {
                 return 0;
             }
+
             unsafe
             {
                 fixed (char* srcPtr = chars)
@@ -410,6 +415,7 @@ internal static partial class JsonReaderHelper
             {
                 return;
             }
+
             unsafe
             {
                 fixed (byte* srcPtr = utf8Buffer)
@@ -442,6 +448,7 @@ internal static partial class JsonReaderHelper
             {
                 return 0;
             }
+
             unsafe
             {
                 fixed (char* charPtr = text)

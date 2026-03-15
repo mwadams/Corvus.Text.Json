@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Collections;
 using System.Diagnostics;
@@ -151,16 +150,20 @@ public ref struct UniqueItemsHashSet
     /// Backing array for the hash buckets used in property lookups.
     /// </summary>
     private int[]? _bucketsBacking;
+
     private Span<int> _buckets;
 
     /// <summary>
     /// Backing array for the hash table entries used in property lookups.
     /// </summary>
     private byte[]? _entriesBacking;
+
     private Span<byte> _entries;
+
     private int _propertyIndex = 0;
 
     private IJsonDocument _parentDocument;
+
     private int _size;
 
     /// <summary>
@@ -301,6 +304,7 @@ public ref struct UniqueItemsHashSet
     ReturnFound:
         return false;
     ReturnNotFound:
+
         // Wasn't found, so add it and return
         int entryIndex = _propertyIndex * JsonItemIndexHashSet.Entry.Size;
         JsonItemIndexHashSet.Entry.Write(_entries.Slice(entryIndex, JsonItemIndexHashSet.Entry.Size), hashCode, bucket - 1, parentDocumentIndex);

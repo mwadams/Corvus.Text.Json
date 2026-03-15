@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 namespace System.IO.Tests
 {
     /// <summary>
@@ -9,8 +8,11 @@ namespace System.IO.Tests
     public class WrappedMemoryStream : Stream
     {
         private bool _canRead;
+
         private bool _canSeek;
+
         private bool _canWrite;
+
         private MemoryStream wrapped;
 
         public WrappedMemoryStream(bool canRead, bool canWrite, bool canSeek) :

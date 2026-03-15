@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -33,6 +32,7 @@ public readonly partial struct JsonElement
 #endif
 {
     private readonly IJsonDocument _parent;
+
     private readonly int _idx;
 
     internal JsonElement(IJsonDocument parent, int idx)
@@ -547,7 +547,6 @@ public readonly partial struct JsonElement
     {
         // CheckValidInstance is redundant.  Asking for the type will
         // return None, which then throws the same exception in the return statement.
-
         JsonTokenType type = TokenType;
 
 #pragma warning disable IDE0075 // Disable the IDE suggestion to simplify the conditional as it makes it unreadable
@@ -1865,7 +1864,6 @@ public readonly partial struct JsonElement
     public bool ValueEquals(string? text)
     {
         // CheckValidInstance is done in the helper
-
         if (TokenType == JsonTokenType.Null)
         {
             return text == null;
@@ -1893,7 +1891,6 @@ public readonly partial struct JsonElement
     public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
     {
         // CheckValidInstance is done in the helper
-
         if (TokenType == JsonTokenType.Null)
         {
             // This is different than Length == 0, in that it tests true for null, but false for ""
@@ -1923,7 +1920,6 @@ public readonly partial struct JsonElement
     public bool ValueEquals(ReadOnlySpan<char> text)
     {
         // CheckValidInstance is done in the helper
-
         if (TokenType == JsonTokenType.Null)
         {
             // This is different than Length == 0, in that it tests true for null, but false for ""

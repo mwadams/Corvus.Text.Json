@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -22,9 +21,13 @@ namespace Corvus.Globalization;
 public static partial class CharUnicodeInfo
 {
     internal const char HIGH_SURROGATE_END = '\udbff';
+
     internal const int HIGH_SURROGATE_RANGE = 0x3FF;
+
     internal const char HIGH_SURROGATE_START = '\ud800';
+
     internal const char LOW_SURROGATE_END = '\udfff';
+
     internal const char LOW_SURROGATE_START = '\udc00';
 
     // The starting codepoint for Unicode plane 1.  Plane 1 contains 0x010000 ~ 0x01ffff.
@@ -72,7 +75,6 @@ public static partial class CharUnicodeInfo
         nuint offset = GetCategoryCasingTableOffsetNoBoundsChecks(codePoint);
 
         // Each entry of the 'CategoryValues' table uses bits 5 - 6 to store the strong bidi information.
-
         StrongBidiCategory bidiCategory = (StrongBidiCategory)(Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoriesValues), offset) & 0b_0110_0000);
         Debug.Assert(bidiCategory == StrongBidiCategory.Other || bidiCategory == StrongBidiCategory.StrongLeftToRight || bidiCategory == StrongBidiCategory.StrongRightToLeft, "Unknown StrongBidiCategory value.");
 
@@ -97,13 +99,11 @@ public static partial class CharUnicodeInfo
         AssertCategoryCasingTableLevels(11, 5, 4);
 
         // Get the level index item from the high 11 bits of the code point.
-
         uint index = Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel1Index), codePoint >> 9);
 
         // Get the level 2 WORD offset from the next 5 bits of the code point.
         // This provides the base offset of the level 3 table.
         // Note that & has lower precedence than +, so remember the parens.
-
         ref byte level2Ref = ref Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel2Index), (index << 6) + ((codePoint >> 3) & 0b_0011_1110));
 
         if (BitConverter.IsLittleEndian)
@@ -117,7 +117,6 @@ public static partial class CharUnicodeInfo
 
         // Get the result from the low 4 bits of the code point.
         // This is the offset into the values table where the data is stored.
-
         return Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoryCasingLevel3Index), (index << 4) + (codePoint & 0x0F));
     }
 
@@ -137,7 +136,6 @@ public static partial class CharUnicodeInfo
 
         // We know the 'if' block below will always succeed, but it allows the
         // JIT to optimize the codegen of this method.
-
         if ((uint)index < (uint)s.Length)
         {
             codePoint = s[index];
@@ -177,7 +175,6 @@ public static partial class CharUnicodeInfo
 
         // We know the 'if' block below will always succeed, but it allows the
         // JIT to optimize the codegen of this method.
-
         if ((uint)index < (uint)s.Length)
         {
             Rune.DecodeFromUtf8(s.Slice(index), out Rune result, out consumed);

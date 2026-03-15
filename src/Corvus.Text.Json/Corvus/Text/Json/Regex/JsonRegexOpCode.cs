@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>Opcodes written by <see cref="RegexWriter"/> and used by <see cref="RegexInterpreter"/> to process a regex.</summary>
@@ -203,6 +202,7 @@ internal enum JsonRegexOpCode
     /// <summary>Push a null marker into the grouping stack for quantifiers with a minimum of zero when no explicit counter is needed.</summary>
     /// <remarks>
     /// This opcode is similar to <see cref="Nullcount"/> but is used in cases where the quantified construct does not require counting;
+
     /// it pushes a marker value (-1) onto the grouping stack to record the starting position. On backtracking, the marker is simply removed.
     /// </remarks>
     Nullmark = 30,

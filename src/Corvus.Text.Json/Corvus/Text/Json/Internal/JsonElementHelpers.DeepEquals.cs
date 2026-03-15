@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 
 using System.Diagnostics;
@@ -245,7 +244,6 @@ public static partial class JsonElementHelpers
                 // Two JSON objects are considered equal if they define the same set of properties.
                 // Start optimistically with pairwise comparison, but fall back to unordered
                 // comparison as soon as a mismatch is encountered.
-
                 while (objectEnumerator1.MoveNext())
                 {
                     if (!objectEnumerator2.MoveNext())
@@ -302,7 +300,6 @@ public static partial class JsonElementHelpers
         // duplicate, out of order properties resolve the value in the second instance to the last value
         // in the first instance. This differs from the System.Text.Json.JsonElement implementation, which supports duplicate
         // property names, if they are in order.
-
         // Note that this is because we *do not* support duplicate property names in our JSON Schema implementation.
         element1ParentDocument.EnsurePropertyMap(element1ParentDocumentIndex);
 

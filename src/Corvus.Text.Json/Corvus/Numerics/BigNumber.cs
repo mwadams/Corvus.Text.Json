@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -48,6 +47,7 @@ public readonly partial struct BigNumber :
     /// </summary>
     private const int MaximumFormatUInt32Length = 10;  // i.e. 4294967295
 #endif
+
     /// <summary>
     /// Maximum size in characters for stack allocation. Larger buffers will use ArrayPool.
     /// </summary>
@@ -197,8 +197,11 @@ public readonly partial struct BigNumber :
     static BigNumber IMultiplicativeIdentity<BigNumber, BigNumber>.MultiplicativeIdentity => One;
 
     static BigNumber INumberBase<BigNumber>.One => One;
+
     static int INumberBase<BigNumber>.Radix => Radix;
+
     static BigNumber INumberBase<BigNumber>.Zero => Zero;
+
     static BigNumber ISignedNumber<BigNumber>.NegativeOne => MinusOne;
 #endif
 
@@ -975,6 +978,7 @@ public readonly partial struct BigNumber :
         {
             throw new ArgumentNullException(nameof(s));
         }
+
         return Parse(s, NumberStyles.Float | NumberStyles.AllowThousands, provider);
 #endif
     }
@@ -1216,6 +1220,7 @@ public readonly partial struct BigNumber :
             if (s.StartsWith(formatInfo.PositiveSign))
             {
                 s = s.Slice(formatInfo.PositiveSign.Length);
+
                 // After consuming sign, no whitespace allowed before digits
                 if (s.Length > 0 && char.IsWhiteSpace(s[0]))
                 {
@@ -1227,6 +1232,7 @@ public readonly partial struct BigNumber :
             {
                 isNegative = true;
                 s = s.Slice(formatInfo.NegativeSign.Length);
+
                 // After consuming sign, no whitespace allowed before digits
                 if (s.Length > 0 && char.IsWhiteSpace(s[0]))
                 {
@@ -1780,7 +1786,6 @@ public readonly partial struct BigNumber :
         // For left = s1 * 10^e1 and right = s2 * 10^e2:
         // If e1 >= e2: (s1 * 10^e1) % (s2 * 10^e2) = ((s1 * 10^(e1-e2)) % s2) * 10^e2
         // If e1 < e2: (s1 * 10^e1) % (s2 * 10^e2) = s1 * 10^e1 (since left < right in magnitude)
-
         if (left.Exponent >= right.Exponent)
         {
             int exponentDiff = left.Exponent - right.Exponent;
@@ -1880,6 +1885,7 @@ public readonly partial struct BigNumber :
         // Adjust exponent to be within a manageable range for decimal
         // This might lose precision for very large or small exponents, which is acceptable for an explicit conversion.
         const int maxDecimalExponent = 28;
+
         const int minDecimalExponent = -28;
 
         if (exponent > maxDecimalExponent)
@@ -2074,6 +2080,7 @@ public readonly partial struct BigNumber :
         BigInteger x = scaledValue / 2;
         BigInteger previous;
         int iterations = 0;
+
         const int maxIterations = 100;
 
         do
@@ -2211,46 +2218,64 @@ public readonly partial struct BigNumber :
 #if NET
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsCanonical(BigNumber value) => true;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsComplexNumber(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsEvenInteger(BigNumber value) => value.IsInteger() && value.Significand.IsEven;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsFinite(BigNumber value) => true;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsImaginaryNumber(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsInfinity(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsInteger(BigNumber value) => value.IsInteger();
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsNaN(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsNegative(BigNumber value) => value.Significand.Sign < 0;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsNegativeInfinity(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsNormal(BigNumber value) => !value.Significand.IsZero;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsOddInteger(BigNumber value) => value.IsInteger() && !value.Significand.IsEven;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsPositive(BigNumber value) => value.Significand.Sign > 0;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsPositiveInfinity(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsRealNumber(BigNumber value) => true;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsSubnormal(BigNumber value) => false;
+
     /// <inheritdoc/>
     static bool INumberBase<BigNumber>.IsZero(BigNumber value) => value.Significand.IsZero;
 
     /// <inheritdoc/>
     static BigNumber INumberBase<BigNumber>.MaxMagnitude(BigNumber x, BigNumber y) => MaxMagnitude(x, y);
+
     /// <inheritdoc/>
     static BigNumber INumberBase<BigNumber>.MaxMagnitudeNumber(BigNumber x, BigNumber y) => MaxMagnitude(x, y);
 
     /// <inheritdoc/>
     static BigNumber INumberBase<BigNumber>.MinMagnitude(BigNumber x, BigNumber y) => MinMagnitude(x, y);
+
     /// <inheritdoc/>
     static BigNumber INumberBase<BigNumber>.MinMagnitudeNumber(BigNumber x, BigNumber y) => MinMagnitude(x, y);
 

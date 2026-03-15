@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -151,6 +150,7 @@ public sealed partial class Utf8JsonWriter
         {
             ThrowHelper.ThrowArgumentException(SR.ExpectedJsonTokens);
         }
+
         if (utf8JsonLen >= int.MaxValue)
         {
             ThrowHelper.ThrowArgumentException_ValueTooLarge(utf8JsonLen);
@@ -208,10 +208,13 @@ public sealed partial class Utf8JsonWriter
 
         // For performance, avoid obtaining actual byte count unless memory usage is higher than the threshold.
         Span<byte> utf8Json =
+
             // Use stack memory
             json.Length <= (JsonConstants.StackallocByteThreshold / JsonConstants.MaxExpansionFactorWhileTranscoding) ? stackalloc byte[JsonConstants.StackallocByteThreshold] :
+
             // Use a pooled array
             json.Length <= (JsonConstants.ArrayPoolMaxSizeBeforeUsingNormalAlloc / JsonConstants.MaxExpansionFactorWhileTranscoding) ? tempArray = ArrayPool<byte>.Shared.Rent(json.Length * JsonConstants.MaxExpansionFactorWhileTranscoding) :
+
             // Use a normal alloc since the pool would create a normal alloc anyway based on the threshold (per current implementation)
             // and by using a normal alloc we can avoid the Clear().
             new byte[JsonReaderHelper.GetUtf8ByteCount(json)];

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -20,9 +19,7 @@ using System.Threading;
 namespace Corvus.Text.Json.Internal;
 
 // The database for the parsed structure of a JSON document.
-
 // Every token from the document gets a row, which has one of the following forms:
-
 // Number
 // * First int
 // * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -34,7 +31,6 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 // * 4 bits JsonTokenType
 // * 28 bits for the index of the workspace document in the workspace for this row
-
 // String, PropertyName
 // * First int
 // * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -46,7 +42,6 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 // * 4 bits JsonTokenType
 // * 28 bits for the index of the workspace document in the workspace for this row
-
 // Other value types (True, False, Null)
 // * First int
 // * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -58,7 +53,6 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 // * 4 bits JsonTokenType
 // * 28 bits for the index of the workspace document in the workspace for this row
-
 // EndObject
 // * First int
 // * Top bit is unassigned / always clear
@@ -70,7 +64,6 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 // * 4 bits JsonTokenType
 // * 28 bits for the number of rows until the previous value (never 0)
-
 // EndArray
 // * First int
 // * Top bit is unassigned / always clear
@@ -81,7 +74,6 @@ namespace Corvus.Text.Json.Internal;
 // * Third int
 // * 4 bits JsonTokenType
 // * 28 bits for the number of rows until the previous value (never 0)
-
 // StartObject
 // * First int
 // * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -94,7 +86,6 @@ namespace Corvus.Text.Json.Internal;
 // * 4 bits JsonTokenType
 // * 28 bits for the number of rows until the next value (never 0) if this is a local value,
 // or the index of the workspace document in the workspace for this row if this is an external value.
-
 // StartArray
 // * First int
 // * Top bit is 0 if this is the local token offset, 1 if it is an external document
@@ -115,19 +106,21 @@ namespace Corvus.Text.Json.Internal;
 public struct MetadataDb : IDisposable
 {
     private const int SizeOrLengthOffset = 4;
+
     private const int NumberOfRowsOffset = 8;
 
     internal int Length { get; private set; }
+
     private byte[] _data;
 
     private bool _convertToAlloc; // Convert the rented data to an alloc when complete.
     private bool _isLocked; // Is the array the correct fixed size.
+
                             // _isLocked _convertToAlloc truth table:
                             // false     false  Standard flow. Size is not known and renting used throughout lifetime.
                             // true      false  Used by JsonElement.ParseValue() for primitives and JsonDocument.Clone(). Size is known and no renting.
                             // false     true   Used by JsonElement.ParseValue() for arrays and objects. Renting used until size is known.
                             // true      true   not valid
-
     private MetadataDb(byte[] initialDb, bool isLocked, bool convertToAlloc, int length = 0)
     {
         _data = initialDb;
@@ -183,7 +176,6 @@ public struct MetadataDb : IDisposable
         // int estimatedTokens = payloadLength / 12
         // now acknowledge that the number of bytes we need per token is 12.
         // So that's just the payload length.
-
         // Add one row worth of data since we need at least one row for a primitive type.
         int initialSize = payloadLength + DbRow.Size;
 
@@ -425,25 +417,30 @@ public struct MetadataDb : IDisposable
             {
                 case JsonTokenType.EndObject:
                 case JsonTokenType.EndArray:
+
                     // Skip past the start object of this end object, and into the previous entry
                     currentIndex = GetStartIndex(currentIndex) - DbRow.Size;
                     break;
 
                 case JsonTokenType.StartObject:
+
                     // This was not skipped by hitting an EndObject/Array,
                     // so it must be the start of a containing object/array
                     // which will need to have its row count updated
                     SetRowAndMemberCount(currentIndex, currentIndex + parentDocument.GetDbSize(currentIndex, false), rowCountToInsert, memberCountToInsert);
+
                     // No more members to insert once we move out of our object, just rows.
                     memberCountToInsert = 0;
                     currentIndex -= DbRow.Size;
                     break;
 
                 case JsonTokenType.StartArray:
+
                     // This was not skipped by hitting an EndObject/Array,
                     // so it must be the start of a containing object/array
                     // which will need to have its row count updated
                     SetRowAndMemberCount(currentIndex, currentIndex + parentDocument.GetDbSize(currentIndex, false), rowCountToInsert, memberCountToInsert, isArray: true);
+
                     // No more members to insert once we move out of our array, just rows.
                     memberCountToInsert = 0;
                     currentIndex -= DbRow.Size;
@@ -487,8 +484,10 @@ public struct MetadataDb : IDisposable
             if (newCapacity == toReturn.Length) newCapacity = int.MaxValue;
 
             _data = ArrayPool<byte>.Shared.Rent(newCapacity);
+
             // Block copy up to index
             Buffer.BlockCopy(toReturn, 0, _data, 0, startIndex);
+
             // Then copy the rest of the data with the extra space
             Buffer.BlockCopy(toReturn, endIndex, _data, endIndex + lengthToInsert, Length - endIndex);
 
@@ -535,7 +534,6 @@ public struct MetadataDb : IDisposable
         // We have reversed the order from the usual so we update end first, then start
         // because we need the info from the end tgo calculate the number of rows
         // and this should help avoid busting the cache so often
-
         // Set the token offset to 0 - this makes it a local item in the builder document
         // as we no longer directly apply the target backing
         target = _data.AsSpan(startIndex, sizeof(int));
@@ -559,7 +557,6 @@ public struct MetadataDb : IDisposable
             // If the array item count is (e.g.) 12 and the number of rows is (e.g.) 13
             // then the extra row is just the EndArray item, so the array was made up
             // of simple values.
-
             // If the off-by-one relationship does not hold, then one of the values was
             // more than one row, making it a complex object. This is indicated by setting
             // the top bit of currentLength (which, handily, is just negating the value).
@@ -718,6 +715,7 @@ public struct MetadataDb : IDisposable
         int lengthToRemove = (length * DbRow.Size);
         Debug.Assert(startIndex + lengthToRemove <= Length, $"Length {lengthToRemove} is out of bounds of the array.");
         int sourceIndex = startIndex + lengthToRemove;
+
         // Use unsigned comparison for efficient positive check
         if ((uint)lengthToRemove > 0)
         {

@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 
@@ -101,16 +100,25 @@ namespace System
         {
             [MarshalAs(UnmanagedType.LPWStr)]
             public string shi502_netname;
+
             public uint shi502_type;
+
             [MarshalAs(UnmanagedType.LPWStr)]
             public string shi502_remark;
+
             public int shi502_permissions;
+
             public int shi502_max_uses;
+
             public int shi502_current_uses;
+
             [MarshalAs(UnmanagedType.LPWStr)]
             public string shi502_path;
+
             public IntPtr shi502_passwd;
+
             public int shi502_reserved;
+
             public IntPtr shi502_security_descriptor;
         }
     }

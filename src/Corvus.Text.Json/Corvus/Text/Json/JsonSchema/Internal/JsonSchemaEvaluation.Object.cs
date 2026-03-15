@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Runtime.CompilerServices;
 
 namespace Corvus.Text.Json.Internal;
@@ -17,17 +16,29 @@ namespace Corvus.Text.Json.Internal;
 public static partial class JsonSchemaEvaluation
 {
     public static readonly JsonSchemaMessageProvider IgnoredNotTypeObject = static (buffer, out written) => IgnoredNotType("object"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedTypeObject = static (buffer, out written) => ExpectedType("object"u8, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountEquals = static (value, buffer, out written) => ExpectedPropertyCountEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountNotEquals = static (value, buffer, out written) => ExpectedPropertyCountNotEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountGreaterThan = static (value, buffer, out written) => ExpectedPropertyCountGreaterThanValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountGreaterThanOrEquals = static (value, buffer, out written) => ExpectedPropertyCountGreaterThanOrEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountLessThan = static (value, buffer, out written) => ExpectedPropertyCountLessThanValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<int> ExpectedPropertyCountLessThanOrEquals = static (value, buffer, out written) => ExpectedPropertyCountLessThanOrEqualsValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<string> ExpectedMatchPatternPropertySchema = static (value, buffer, out written) => ExpectedMatchPatternPropertySchemaValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<string> ExpectedPropertyNameMatchesRegularExpression = static (value, buffer, out written) => ExpectedPropertyNameMatchesRegularExpressionValue(value, buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedPropertyNameMatchesSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyNameMatchesSchema.AsSpan(), buffer, out written);
+
     public static readonly JsonSchemaMessageProvider ExpectedPropertyMatchesFallbackSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedPropertyMatchesFallbackSchema.AsSpan(), buffer, out written);
+
     public static readonly JsonSchemaMessageProvider<string> ExpectedMatchesDependentSchema = static (value, buffer, out written) => ExpectedMatchesDependentSchemaValue(value, buffer, out written);
 
     /// <summary>

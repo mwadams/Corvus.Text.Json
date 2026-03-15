@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -303,6 +302,7 @@ internal static class JsonRegexCharClass
             UnicodeCategory.ParagraphSeparator or
             UnicodeCategory.SpaceSeparator => false,
             _ => true, // We don't know (without testing the character against every other
+
                       // character), so assume it does.
         };
     }

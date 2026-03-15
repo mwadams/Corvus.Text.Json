@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Runtime.CompilerServices;
@@ -36,34 +35,61 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider<string> ExpectedStringEquals = static (constantValue, buffer, out written) => ExpectedStringEqualsValue(constantValue, buffer, out written);
 
     private static readonly JsonSchemaMessageProvider ExpectedDate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Date.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedDateTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetDateTime.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedDuration = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601Duration.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedEmail.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedHostname = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedHostname.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedIdnEmail = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnEmail.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedIdnHostname = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIdnHostname.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedIPV4 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV4.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedIPV6 = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIPV6.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedIri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIri.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedIriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIriReference.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedJsonPointer.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedRegex = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRegex.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedBase64String = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBase64String.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedJsonContent = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedJsonContent.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedBase64Content = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBase64Content.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedRelativeJsonPointer = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedRelativeJsonPointer.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedTime = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedIso8601OffsetTime.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUri = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUri.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUriReference = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriReference.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUriTemplate = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUriTemplate.AsSpan(), buffer, out written);
+
     private static readonly JsonSchemaMessageProvider ExpectedUuid = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedUuid.AsSpan(), buffer, out written);
 
     private static readonly JsonSchemaMessageProvider<string> ExpectedStringMatchesRegularExpression = static (expression, buffer, out written) => ExpectedMatchRegularExpression(expression, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthEquals = static (length, buffer, out written) => ExpectedLengthEquals(length, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthNotEquals = static (length, buffer, out written) => ExpectedLengthNotEquals(length, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthLessThan = static (length, buffer, out written) => ExpectedLengthLessThan(length, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthLessThanOrEquals = static (length, buffer, out written) => ExpectedLengthLessThanOrEquals(length, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThan = static (length, buffer, out written) => ExpectedLengthGreaterThan(length, buffer, out written);
+
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThanOrEquals = static (length, buffer, out written) => ExpectedLengthGreaterThanOrEquals(length, buffer, out written);
 
     /// <summary>
@@ -873,13 +899,11 @@ public static partial class JsonSchemaEvaluation
                 hasKatakankaMiddleDot |= (rune.Value == 0x30FB);
 
                 // First we do all the items that are allowed at the first character
-
                 Rune lookahead = default;
 
                 if (rune.Value == 0x0375)
                 {
                     // If we have a Greek Keraia, it must be followed by a Greek character.
-
                     // If we are the last character, that's a fail
                     if (i >= value.Length)
                     {
@@ -887,6 +911,7 @@ public static partial class JsonSchemaEvaluation
                     }
 
                     Rune.DecodeFromUtf8(value.Slice(i), out lookahead, out _);
+
                     // If the next character is not Greek, that's a fail
                     if (!IsGreek(lookahead.Value))
                     {
@@ -1051,7 +1076,6 @@ public static partial class JsonSchemaEvaluation
             if (lastAscii == (byte)'-' && value[i] == (byte)'-')
             {
                 // Look for punicode signature
-
                 if (characterCount != 3 ||
                     !((value[i - 3] == (byte)'x' || value[i - 3] == (byte)'X') &&
                       (value[i - 2] == (byte)'n' || value[i - 2] == (byte)'N')))
@@ -1243,7 +1267,6 @@ public static partial class JsonSchemaEvaluation
         // and then rejecting relative Uris. This causes this method to reject "/abc" on all
         // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
         // "abc".
-
         if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: true, allowUNCPath: false))
         {
             // We may need the extra tests here
@@ -1365,7 +1388,6 @@ public static partial class JsonSchemaEvaluation
         // and then rejecting relative Uris. This causes this method to reject "/abc" on all
         // platforms. Back when we passed UriKind.Absolute, this code incorrectly accepted
         // "abc".
-
         if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: true, allowIri: false, allowUNCPath: false))
         {
             // We may need the extra tests here

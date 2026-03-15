@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using Corvus.Text.Json.Internal;
@@ -35,7 +34,9 @@ public readonly partial struct JsonElementForBooleanFalseSchema
     public static class JsonSchema
     {
         public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => { written = 0; return true; };
+
         public const string SchemaLocation = "";
+
         public static ReadOnlySpan<byte> SchemaLocationUtf8 => ""u8;
 
         /// <summary>

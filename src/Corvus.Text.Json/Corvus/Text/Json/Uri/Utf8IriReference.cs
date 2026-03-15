@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json;
@@ -30,7 +29,9 @@ namespace Corvus.Text.Json;
 public readonly ref struct Utf8IriReference
 {
     internal readonly Utf8UriTools.Flags _flags;
+
     internal readonly Utf8UriOffset _offsets;
+
     internal readonly ReadOnlySpan<byte> _originalIriReference;
 
     private Utf8IriReference(ReadOnlySpan<byte> uri)

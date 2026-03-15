@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Collections;
@@ -116,10 +115,13 @@ namespace Corvus.Text.Json;
 /// <para>Basic validation with pooled collector:</para>
 /// <code>
 /// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic, estimatedCapacity: 50);
+
 ///
 /// // Perform validation operations...
 /// int context = collector.BeginChildContext(0, evaluationPath, schemaPath, documentPath);
+
 /// collector.CommitChildContext(context, parentMatch: true, childMatch: false, messageProvider);
+
 ///
 /// // Enumerate results
 /// foreach (var result in collector.EnumerateResults())
@@ -127,9 +129,13 @@ namespace Corvus.Text.Json;
 /// if (!result.IsMatch)
 /// {
 /// Console.WriteLine($"Validation failed: {result.GetMessageText()}");
+
 /// Console.WriteLine($"  Location: {result.GetDocumentEvaluationLocationText()}");
+
 /// }
+
 /// }
+
 /// </code>
 /// </example>
 /// <example>
@@ -139,39 +145,53 @@ namespace Corvus.Text.Json;
 /// using var collector = JsonSchemaResultsCollector.Create(
 /// JsonSchemaResultsLevel.Basic,
 /// estimatedCapacity: documentSize / 10);
+
 ///
 /// // Use UTF-8 paths for optimal performance
 /// ReadOnlySpan&lt;byte&gt; propertyName = "username"u8;
+
 /// int context = collector.BeginChildContext(0, propertyName, evaluationPath, schemaPath);
+
 ///
 /// // Minimal overhead result reporting
 /// collector.CommitChildContext(context, true, validationResult, messageProvider);
+
 ///
 /// // Fast result access
 /// int resultCount = collector.GetResultCount();
+
 /// if (resultCount > 0)
 /// {
 /// var enumerator = collector.EnumerateResults();
+
 /// while (enumerator.MoveNext())
 /// {
 /// ProcessResult(enumerator.Current);
+
 /// }
+
 /// }
+
 /// </code>
 /// </example>
 /// <example>
 /// <para>Debugging with verbose output:</para>
 /// <code>
 /// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose, 100);
+
 ///
 /// // Verbose mode captures all validation steps
 /// int rootContext = collector.BeginChildContext(0, rootEvalPath, rootSchemaPath, rootDocPath);
+
 ///
 /// // All keyword evaluations are recorded
 /// collector.EvaluatedKeyword(true, successMessageProvider, "type"u8);
+
 /// collector.EvaluatedKeyword(false, failureMessageProvider, "pattern"u8);
+
 ///
 /// collector.CommitChildContext(rootContext, true, false, summaryMessageProvider);
+
 ///
 /// // Comprehensive result analysis
 /// foreach (var result in collector.EnumerateResults())
@@ -182,7 +202,9 @@ namespace Corvus.Text.Json;
 /// result.GetSchemaEvaluationLocationText(),
 /// result.GetDocumentEvaluationLocationText(),
 /// result.GetMessageText());
+
 /// }
+
 /// </code>
 /// </example>
 public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
@@ -191,7 +213,9 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     private const int MaxMessageLength = 1024;
 
     private const int ResultHeaderSize = 4;
+
     private const int MaxPathSegmentLength = 1024;
+
     private const int MaxUriBaseLength = 4096;
 
     // We assume an initial estimate of 32 bytes per path segment, and 128 bytes per message
@@ -220,6 +244,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     internal readonly struct ValueRange
     {
         public readonly int Start;
+
         public readonly int End;
 
         public ValueRange(int start, int end)
@@ -254,8 +279,11 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     private readonly struct ValueRangeWithCommitIndexAndSequenceNumber
     {
         public readonly int Start;
+
         public readonly int End;
+
         public readonly int CommitIndex;
+
         public readonly int SequenceNumber;
 
         public ValueRangeWithCommitIndexAndSequenceNumber(int start, int end, int commitIndex, int sequenceNumber)
@@ -271,32 +299,41 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     private readonly bool _rented;
+
     private bool _isDisposed;
 
     private byte[] _utf8StringBacking;
+
     private int _utf8StringBackingLength;
 
     private ValueRange _currentEvaluationPathRange;
+
     private ValueRange _currentDocumentEvaluationPathRange;
+
     private ValueRange _currentSchemaEvaluationPathRange;
 
     private byte[] _evaluationPath;
+
     private byte[] _schemaEvaluationPath;
+
     private byte[] _documentEvaluationPath;
+
     private int _sequenceNumber;
 
     private JsonSchemaResultsLevel _level;
 
     // indices for the end of the path stack at each level
-
     // When pushing items onto a path stack, we just append it if it is an append
     // or push the whole path if it is change of base. We push the previous start/end
     // range onto the corresponding stack, and then update the _currentXYZPathRange.
     private ValueStack<ValueRange> _evaluationPathStack;
 
     private ValueStack<ValueRange> _documentEvaluationPathStack;
+
     private ValueStack<ValueRange> _schemaEvaluationPathStack;
+
     private ValueStack<ValueRangeWithCommitIndexAndSequenceNumber> _resultStack;
+
     private ValueStack<ValueRange> _committedResultStack;
 
     /// <summary>
@@ -388,9 +425,11 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// // Estimate capacity based on schema complexity
     /// int expectedResults = schemaKeywordCount * documentDepth / 4;
+
     /// using var collector = JsonSchemaResultsCollector.Create(
     /// JsonSchemaResultsLevel.Basic,
     /// expectedResults);
+
     ///
     /// // Validation operations...
     /// </code>
@@ -402,6 +441,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// using var collector = JsonSchemaResultsCollector.Create(
     /// JsonSchemaResultsLevel.Verbose,
     /// estimatedCapacity: 200);
+
     ///
     /// // All validation steps will be captured
     /// </code>
@@ -445,6 +485,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// using var collector = JsonSchemaResultsCollector.CreateUnrented(
     /// JsonSchemaResultsLevel.Detailed,
     /// estimatedCapacity: 75);
+
     ///
     /// // Validation operations with complete memory isolation...
     /// </code>
@@ -485,9 +526,13 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     public readonly struct Result
     {
         private readonly JsonSchemaResultsCollector _collector;
+
         private readonly ValueRange _evaluationLocation;
+
         private readonly ValueRange _schemaEvaluationLocation;
+
         private readonly ValueRange _documentEvaluationLocation;
+
         private readonly ValueRange _message;
 
         internal Result(
@@ -581,6 +626,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     public struct ResultsEnumerator : IEnumerable<Result>, IEnumerator<Result>
     {
         private readonly JsonSchemaResultsCollector _collector;
+
         private int _endResultIdx; // end of the committed result stack range
         private int _curResultIdx; // the current index in the committed result stack range
 
@@ -680,9 +726,11 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <para>High-performance result processing:</para>
     /// <code>
     /// var enumerator = collector.EnumerateResults();
+
     /// while (enumerator.MoveNext())
     /// {
     /// var result = enumerator.Current;
+
     /// if (!result.IsMatch)
     /// {
     /// // Direct UTF-8 processing for optimal performance
@@ -690,8 +738,11 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// result.Message,
     /// result.DocumentEvaluationLocation,
     /// result.SchemaEvaluationLocation);
+
     /// }
+
     /// }
+
     /// </code>
     /// </example>
     /// <example>
@@ -700,11 +751,17 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// foreach (var result in collector.EnumerateResults())
     /// {
     /// Console.WriteLine($"Match: {result.IsMatch}");
+
     /// Console.WriteLine($"Message: {result.GetMessageText()}");
+
     /// Console.WriteLine($"Document Path: {result.GetDocumentEvaluationLocationText()}");
+
     /// Console.WriteLine($"Schema Path: {result.GetSchemaEvaluationLocationText()}");
+
     /// Console.WriteLine();
+
     /// }
+
     /// </code>
     /// </example>
     [CLSCompliant(false)]
@@ -740,22 +797,30 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <example>
     /// <code>
     /// int resultCount = collector.GetResultCount();
+
     /// if (resultCount > 0)
     /// {
     /// Console.WriteLine($"Validation produced {resultCount} results");
+
     ///
     /// // Pre-size collections if needed
     /// var issues = new List&lt;ValidationIssue&gt;(resultCount);
+
     ///
     /// foreach (var result in collector.EnumerateResults())
     /// {
     /// issues.Add(ConvertToIssue(result));
+
     /// }
+
     /// }
+
     /// else
     /// {
     /// Console.WriteLine("Validation completed successfully with no issues");
+
     /// }
+
     /// </code>
     /// </example>
     public int GetResultCount()
@@ -805,6 +870,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// // Recommended using pattern
     /// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+
     ///
     /// // Validation operations...
     ///
@@ -815,14 +881,17 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// // Manual disposal when using pattern is not available
     /// var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+
     /// try
     /// {
     /// // Validation operations...
     /// }
+
     /// finally
     /// {
     /// collector.Dispose(); // Essential for proper resource management
     /// }
+
     /// </code>
     /// </example>
     public void Dispose()
@@ -1991,6 +2060,8 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     }
 
     internal string SchemaLocation => JsonReaderHelper.GetTextFromUtf8(_schemaEvaluationPath.AsSpan(_currentSchemaEvaluationPathRange.Start, _currentSchemaEvaluationPathRange.Length));
+
     internal string DocumentLocation => JsonReaderHelper.GetTextFromUtf8(_documentEvaluationPath.AsSpan(_currentDocumentEvaluationPathRange.Start, _currentDocumentEvaluationPathRange.Length));
+
     internal string EvaluationLocation => JsonReaderHelper.GetTextFromUtf8(_evaluationPath.AsSpan(_currentEvaluationPathRange.Start, _currentEvaluationPathRange.Length));
 }

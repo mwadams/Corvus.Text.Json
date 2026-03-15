@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Buffers;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -27,7 +26,6 @@ namespace System.IO
             // so that it can be easily correlated if necessary, and the random string to helps avoid conflicts if
             // the same test should be run concurrently with itself (e.g. if a [Fact] method lives on a base class)
             // or if some stray files were left over from a previous run.
-
             // Make 3 attempts since we have seen this on rare occasions fail with access denied, perhaps due to machine
             // configuration, and it doesn't make sense to fail arbitrary tests for this reason.
             string failure = string.Empty;
@@ -93,14 +91,19 @@ namespace System.IO
         protected string TestDirectory { get; }
 
         protected string GetRandomFileName([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0) => GetTestFileName(index: null, memberName, lineNumber) + ".txt";
+
         protected string GetRandomLinkName([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0) => GetTestFileName(index: null, memberName, lineNumber) + ".link";
+
         protected string GetRandomDirName([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0) => GetTestFileName(index: null, memberName, lineNumber) + "_dir";
 
         protected string GetRandomFilePath([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0) => Path.Combine(TestDirectoryActualCasing, GetRandomFileName(memberName, lineNumber));
+
         protected string GetRandomLinkPath([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0) => Path.Combine(TestDirectoryActualCasing, GetRandomLinkName(memberName, lineNumber));
+
         protected string GetRandomDirPath([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0)  => Path.Combine(TestDirectoryActualCasing, GetRandomDirName(memberName, lineNumber));
 
         private string _testDirectoryActualCasing;
+
         private string TestDirectoryActualCasing => _testDirectoryActualCasing ??= GetTestDirectoryActualCasing();
 
         /// <summary>Gets a test file full path that is associated with the call site.</summary>
@@ -177,6 +180,7 @@ namespace System.IO
             {
                 sb.Append((char)('a' + random.Next(0, 26)));
             }
+
             return sb.ToString();
         }
 

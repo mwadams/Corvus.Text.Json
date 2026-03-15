@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 
 namespace NodaTime.Text;
@@ -166,14 +165,21 @@ internal ref struct ValueCursor
     //// if (this.Index > 0)
     //// {
     //// this.Index--;
+
     //// this.Current = this.Value[this.Index];
+
     //// return true;
+
     //// }
 
     //// this.Current = Nul;
+
     //// this.Index = -1;
+
     //// return false;
+
     //// }
+
     //// }
 
     /////// <summary>
@@ -187,10 +193,13 @@ internal ref struct ValueCursor
     //// if (this.Current == character)
     //// {
     //// this.MoveNext();
+
     //// return true;
+
     //// }
 
     //// return false;
+
     //// }
 
     /////// <summary>
@@ -206,16 +215,21 @@ internal ref struct ValueCursor
     //// if (match.Length > this.Value.Length - this.Index)
     //// {
     //// return false;
+
     //// }
 
     //// if (this.Value.Slice(this.Index, match.Length).SequenceEqual(match))
     //// {
     //// this.Move(this.Index + match.Length);
+
     //// return true;
+
     //// }
 
     //// return false;
+
     //// }
+
     //// }
 
     /////// <summary>
@@ -233,6 +247,7 @@ internal ref struct ValueCursor
     //// if (match.Length > this.Value.Length - this.Index)
     //// {
     //// return false;
+
     //// }
 
     //// // Note: This will fail if the length in the input string is different to the length in the
@@ -243,13 +258,17 @@ internal ref struct ValueCursor
     //// if (moveOnSuccess)
     //// {
     //// this.Move(this.Index + match.Length);
+
     //// }
 
     //// return true;
+
     //// }
 
     //// return false;
+
     //// }
+
     //// }
 
     /////// <summary>
@@ -268,13 +287,17 @@ internal ref struct ValueCursor
     //// internal readonly int CompareOrdinal(ReadOnlySpan<char> match)
     //// {
     //// int remaining = this.Value.Length - this.Index;
+
     //// if (match.Length > remaining)
     //// {
     //// int ret = this.Value[this.Index..].CompareTo(match[..remaining], StringComparison.Ordinal);
+
     //// return ret == 0 ? -1 : ret;
+
     //// }
 
     //// return this.Value.Slice(this.Index, match.Length).CompareTo(match, StringComparison.Ordinal);
+
     //// }
 
     /// <summary>
@@ -373,11 +396,15 @@ internal ref struct ValueCursor
     //// unchecked
     //// {
     //// result = 0;
+
     //// int localIndex = this.Index;
+
     //// int maxIndex = localIndex + maximumDigits;
+
     //// if (maxIndex >= this.Length)
     //// {
     //// maxIndex = this.Length;
+
     //// }
 
     //// for (; localIndex < maxIndex; localIndex++)
@@ -385,23 +412,31 @@ internal ref struct ValueCursor
     //// // Optimized digit handling: rather than checking for the range, returning -1
     //// // and then checking whether the result is -1, we can do both checks at once.
     //// int digit = this.Value[localIndex] - '0';
+
     //// if (digit < 0 || digit > 9)
     //// {
     //// break;
+
     //// }
 
     //// result = (result * 10) + digit;
+
     //// }
 
     //// int count = localIndex - this.Index;
+
     //// if (count < minimumDigits)
     //// {
     //// return false;
+
     //// }
 
     //// this.Move(localIndex);
+
     //// return true;
+
     //// }
+
     //// }
 
     /////// <summary>
@@ -419,11 +454,15 @@ internal ref struct ValueCursor
     //// unchecked
     //// {
     //// result = 0;
+
     //// int localIndex = this.Index;
+
     //// int maxIndex = localIndex + maximumDigits;
+
     //// if (maxIndex >= this.Length)
     //// {
     //// maxIndex = this.Length;
+
     //// }
 
     //// for (; localIndex < maxIndex; localIndex++)
@@ -431,23 +470,31 @@ internal ref struct ValueCursor
     //// // Optimized digit handling: rather than checking for the range, returning -1
     //// // and then checking whether the result is -1, we can do both checks at once.
     //// int digit = this.Value[localIndex] - '0';
+
     //// if (digit < 0 || digit > 9)
     //// {
     //// break;
+
     //// }
 
     //// result = (result * 10) + digit;
+
     //// }
 
     //// int count = localIndex - this.Index;
+
     //// if (count < minimumDigits)
     //// {
     //// return false;
+
     //// }
 
     //// this.Move(localIndex);
+
     //// return true;
+
     //// }
+
     //// }
 
     /// <summary>

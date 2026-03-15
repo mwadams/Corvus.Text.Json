@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers.Text;
 using System.Diagnostics;
 using Corvus.Text.Json.Internal;
@@ -93,6 +92,7 @@ public sealed partial class Utf8JsonWriter
             {
                 WriteNewLine(output);
             }
+
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
         }
@@ -135,6 +135,7 @@ public sealed partial class Utf8JsonWriter
         {
             output[BytesPending++] = JsonConstants.ListSeparator;
         }
+
         output[BytesPending++] = JsonConstants.Quote;
 
         Base64EncodeAndWrite(bytes, output);

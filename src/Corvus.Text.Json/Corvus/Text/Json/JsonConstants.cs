@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json;
 
 /// <summary>
@@ -81,6 +80,7 @@ internal static partial class JsonConstants
     public const byte TimePrefix = (byte)'T';
 
     public const string NewLineLineFeed = "\n";
+
     public const string NewLineCarriageReturnLineFeed = "\r\n";
 
     // \u2028 and \u2029 are considered respectively line and paragraph separators
@@ -88,27 +88,43 @@ internal static partial class JsonConstants
     public const byte StartingByteOfNonStandardSeparator = 0xE2;
 
     public static ReadOnlySpan<byte> Utf8Bom => [0xEF, 0xBB, 0xBF];
+
     public static ReadOnlySpan<byte> TrueValue => "true"u8;
+
     public static ReadOnlySpan<byte> FalseValue => "false"u8;
+
     public static ReadOnlySpan<byte> NullValue => "null"u8;
+
     public static ReadOnlySpan<byte> ZeroValue => "0"u8;
+
     public static ReadOnlySpan<byte> OneValue => "1"u8;
 
     public static ReadOnlySpan<byte> ToStringTrueValue => "True"u8;
+
     public static ReadOnlySpan<byte> ToStringFalseValue => "False"u8;
+
     public static ReadOnlySpan<char> ToStringTrueValueUtf16 => "True";
+
     public static ReadOnlySpan<char> ToStringFalseValueUtf16 => "False";
+
     public static string ToStringTrueValueUtf16String => "True";
+
     public static string ToStringFalseValueUtf16String => "False";
 
     public static byte[] TrueValueArray { get; } = TrueValue.ToArray();
+
     public static byte[] FalseValueArray { get; } = FalseValue.ToArray();
+
     public static byte[] NullValueArray { get; } = NullValue.ToArray();
+
     public static byte[] ZeroValueArray { get; } = ZeroValue.ToArray();
+
     public static byte[] OneValueArray { get; } = OneValue.ToArray();
 
     public static ReadOnlySpan<byte> NaNValue => "NaN"u8;
+
     public static ReadOnlySpan<byte> PositiveInfinityValue => "Infinity"u8;
+
     public static ReadOnlySpan<byte> NegativeInfinityValue => "-Infinity"u8;
 
     // Used to search for the end of a number
@@ -150,6 +166,7 @@ internal static partial class JsonConstants
     public const int MaxCharacterTokenSize = MaxEscapedTokenSize / MaxExpansionFactorWhileEscaping; // 166_666_666 characters
 
     public const int MaximumFormatBooleanLength = 5;
+
     public const int MaximumFormatInt64Length = 20;   // 19 + sign (i.e. -9223372036854775808)
     public const int MaximumFormatUInt32Length = 10;  // i.e. 4294967295
     public const int MaximumFormatUInt64Length = 20;  // i.e. 18446744073709551615
@@ -158,12 +175,18 @@ internal static partial class JsonConstants
     public const int MaximumFormatDecimalLength = 31; // default (i.e. 'G')
     public const int MaximumFormatGuidLength = 36;    // default (i.e. 'D'), 8 + 4 + 4 + 4 + 12 + 4 for the hyphens (e.g. 094ffa0a-0442-494d-b452-04003fa755cc)
     public const int MaximumFormatInt128Length = 40;
+
     public const int InitialFormatBigIntegerLength = 80;
+
     public const int InitialFormatBigNumberLength = InitialFormatBigIntegerLength + MaximumFormatUInt32Length;
+
     public const int MaximumFormatUInt128Length = 39;
+
     public const int MaximumFormatNumberLength = 2048; // We only permit up to 2048 characters when writing a number in order to prevent DoS scenarios where an extremely large number is written that would cause excessive memory usage when parsed.
     public const int MaximumFormatHalfLength = 20;
+
     public const int MaximumEscapedGuidLength = MaxExpansionFactorWhileEscaping * MaximumFormatGuidLength;
+
     public const int MaximumFormatDateTimeLength = 27;    // StandardFormat 'O', e.g. 2017-06-12T05:30:45.7680000
     public const int MaximumFormatDateLength = 10;    // StandardFormat 'O', e.g. 2017-06-12
     public const int MaximumFormatOffsetDateLength = 16;    // StandardFormat 'O', e.g. 2017-06-12-07:00
@@ -190,14 +213,21 @@ internal static partial class JsonConstants
     public const char HighSurrogateStart = '\ud800';
 
     public const char HighSurrogateEnd = '\udbff';
+
     public const char LowSurrogateStart = '\udc00';
+
     public const char LowSurrogateEnd = '\udfff';
 
     public const int UnicodePlane01StartValue = 0x10000;
+
     public const int HighSurrogateStartValue = 0xD800;
+
     public const int HighSurrogateEndValue = 0xDBFF;
+
     public const int LowSurrogateStartValue = 0xDC00;
+
     public const int LowSurrogateEndValue = 0xDFFF;
+
     public const int BitShiftBy10 = 0x400;
 
     // The maximum number of parameters a constructor can have where it can be considered
@@ -208,7 +238,10 @@ internal static partial class JsonConstants
     public const char DefaultIndentCharacter = ' ';
 
     public const char TabIndentCharacter = '\t';
+
     public const int DefaultIndentSize = 2;
+
     public const int MinimumIndentSize = 0;
+
     public const int MaximumIndentSize = 127; // If this value is changed, the impact on the options masking used in the JsonWriterOptions struct must be checked carefully.
 }

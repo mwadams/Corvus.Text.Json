@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -674,6 +673,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out long value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Int64);
@@ -737,6 +737,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out ulong value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.UInt64);
@@ -799,6 +800,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out int value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Int32);
@@ -861,6 +863,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out uint value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.UInt32);
@@ -923,6 +926,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out short value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Int16);
@@ -985,6 +989,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out ushort value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.UInt16);
@@ -1049,6 +1054,7 @@ public static partial class JsonElementTensorHelpers
                 if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out sbyte value))
                 {
                     written = 0;
+
                     // Clear the array as it may contain sensitive data
                     array.Slice(0, written).Clear();
                     ThrowHelper.ThrowFormatException(NumericType.SByte);
@@ -1062,6 +1068,7 @@ public static partial class JsonElementTensorHelpers
         catch (InvalidOperationException)
         {
             written = 0;
+
             // Clear the array as it may contain sensitive data
             array.Slice(0, written).Clear();
             throw;
@@ -1122,6 +1129,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out byte value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Byte);
@@ -1184,6 +1192,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out double value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Double);
@@ -1246,6 +1255,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out float value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Single);
@@ -1308,6 +1318,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out decimal value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Decimal);
@@ -1372,6 +1383,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out Int128 value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Int128);
@@ -1434,6 +1446,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out UInt128 value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.UInt128);
@@ -1496,6 +1509,7 @@ public static partial class JsonElementTensorHelpers
             if (!parentDocument.TryGetValue(enumerator.CurrentIndex, out Half value))
             {
                 written = 0;
+
                 // Clear the array as it may contain sensitive data
                 array.Slice(0, written).Clear();
                 ThrowHelper.ThrowFormatException(NumericType.Int128);

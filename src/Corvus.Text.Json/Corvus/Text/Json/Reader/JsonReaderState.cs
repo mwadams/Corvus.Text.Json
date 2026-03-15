@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using Corvus.Text.Json.Internal;
 
 namespace Corvus.Text.Json;
@@ -22,14 +21,23 @@ namespace Corvus.Text.Json;
 public readonly struct JsonReaderState
 {
     internal readonly BitStack _bitStack;
+
     internal readonly long _bytePositionInLine;
+
     internal readonly bool _inObject;
+
     internal readonly bool _isNotPrimitive;
+
     internal readonly long _lineNumber;
+
     internal readonly JsonTokenType _previousTokenType;
+
     internal readonly JsonReaderOptions _readerOptions;
+
     internal readonly JsonTokenType _tokenType;
+
     internal readonly bool _trailingCommaBeforeComment;
+
     internal readonly bool _valueIsEscaped;
 
     /// <summary>

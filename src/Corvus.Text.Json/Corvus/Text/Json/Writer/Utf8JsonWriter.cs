@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -40,17 +39,23 @@ namespace Corvus.Text.Json;
 public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
 {
     private const int DefaultGrowthSize = 4096;
+
     private const int InitialGrowthSize = 256;
 
     private IBufferWriter<byte>? _output;
+
     private Stream? _stream;
+
     private ArrayBufferWriter<byte>? _arrayBufferWriter;
 
     private Memory<byte> _memory;
 
     private EnclosingContainerType _enclosingContainer;
+
     private bool _commentAfterNoneOrPropertyName;
+
     private JsonTokenType _tokenType;
+
     private BitStack _bitStack;
 
     /// <summary>
@@ -59,9 +64,11 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// </summary>
 #if !NET
     private byte[]? _partialStringData;
+
     private Span<byte> PartialStringDataRaw => _partialStringData ??= new byte[3];
 #else
     private Inline3ByteArray _partialStringData;
+
     private Span<byte> PartialStringDataRaw => _partialStringData;
 
     [InlineArray(3)]
@@ -170,6 +177,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
 
             return MemoryMarshal.Cast<byte, char>(partialStringDataBytes.Slice(0, length));
         }
+
         set
         {
             Debug.Assert(value.Length <= 1);
@@ -198,6 +206,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
 
             return partialStringDataBytes.Slice(0, length);
         }
+
         set
         {
             Debug.Assert(value.Length < 3);
@@ -319,6 +328,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
         {
             _arrayBufferWriter.Clear();
         }
+
         _output = null;
 
         ResetHelper();
@@ -430,6 +440,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
                 BytesCommitted += _arrayBufferWriter.WrittenCount;
                 _arrayBufferWriter.Clear();
             }
+
             _stream.Flush();
         }
         else
@@ -535,6 +546,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
                 BytesCommitted += _arrayBufferWriter.WrittenCount;
                 _arrayBufferWriter.Clear();
             }
+
             await _stream.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
         else
@@ -607,6 +619,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
         {
             output[BytesPending++] = JsonConstants.ListSeparator;
         }
+
         output[BytesPending++] = token;
     }
 
@@ -621,6 +634,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
                 ValidateStart();
                 UpdateBitStackOnStart(token);
             }
+
             WriteStartIndented(token);
         }
         else
@@ -1026,6 +1040,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
         }
 
         SetFlagToAddListSeparatorBeforeNextItem();
+
         // Necessary if WriteEndX is called without a corresponding WriteStartX first.
         if (CurrentDepth != 0)
         {
@@ -1054,6 +1069,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
             {
                 ValidateEnd(token);
             }
+
             WriteEndIndented(token);
         }
         else
@@ -1141,6 +1157,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
         {
             output[BytesPending++] = JsonConstants.CarriageReturn;
         }
+
         output[BytesPending++] = JsonConstants.LineFeed;
     }
 

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -50,6 +49,7 @@ internal struct BitStack
     /// </summary>
     /// <returns>The bit at the top of the stack.</returns>
     public readonly bool Peek()
+
         // If the stack is small enough, we can use the allocation-free container, otherwise check the allocated array.
         => _currentDepth <= AllocationFreeMaxDepth ? (_allocationFreeContainer & 1) != 0 : PeekInArray();
 
@@ -76,6 +76,7 @@ internal struct BitStack
             // Decrementing depth above effectively pops the last element in the array-backed case.
             inObject = PeekInArray();
         }
+
         return inObject;
     }
 
@@ -93,6 +94,7 @@ internal struct BitStack
         {
             PushToArray(false);
         }
+
         _currentDepth++;
     }
 
@@ -110,6 +112,7 @@ internal struct BitStack
         {
             PushToArray(true);
         }
+
         _currentDepth++;
     }
 
@@ -209,6 +212,7 @@ internal struct BitStack
         {
             newValue &= ~(1 << extraBits);
         }
+
         _array[elementIndex] = newValue;
     }
 }

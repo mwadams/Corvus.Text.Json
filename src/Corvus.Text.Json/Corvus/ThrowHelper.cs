@@ -6,14 +6,12 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
 namespace System;
 
 // The convention for this enum is using the argument name as the enum name
-
 internal enum ExceptionArgument
 {
     ch,
@@ -128,7 +126,6 @@ internal static class ThrowHelper
 }
 
 // The convention for this enum is using the resource name as the enum name
-
 internal enum ExceptionResource
 {
     Argument_CannotExtractScalar,

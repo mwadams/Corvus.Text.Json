@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal;
@@ -19,8 +18,11 @@ namespace Corvus.Text.Json.Internal;
 public struct ArrayEnumerator
 {
     private readonly int _endIdxOrVersion;
+
     private readonly int _initialIndex;
+
     private readonly IJsonDocument _targetDocument;
+
     private int _curIdx;
 
     /// <summary>

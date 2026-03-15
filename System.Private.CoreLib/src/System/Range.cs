@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -15,8 +14,11 @@ namespace System
     /// Range is used by the C# compiler to support the range syntax.
     /// <code>
     /// int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
+
     /// int[] subArray1 = someArray[0..2]; // { 1, 2 }
+
     /// int[] subArray2 = someArray[1..^0]; // { 2, 3, 4, 5 }
+
     /// </code>
     /// </remarks>
 #if SYSTEM_PRIVATE_CORELIB || MICROSOFT_BCL_MEMORY
@@ -74,6 +76,7 @@ namespace System
                 span[0] = '^';
                 pos = 1;
             }
+
             bool formatted = ((uint)Start.Value).TryFormat(span.Slice(pos), out int charsWritten);
             Debug.Assert(formatted);
             pos += charsWritten;
@@ -85,6 +88,7 @@ namespace System
             {
                 span[pos++] = '^';
             }
+
             formatted = ((uint)End.Value).TryFormat(span.Slice(pos), out charsWritten);
             Debug.Assert(formatted);
             pos += charsWritten;

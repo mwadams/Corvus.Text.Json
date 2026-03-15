@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal;
@@ -96,14 +95,17 @@ internal readonly struct JsonRegexNode
             switch (max)
             {
                 case 0:
+
                     // The node is repeated 0 times, so it's actually empty.
                     return validator.CreateNode(JsonRegexNodeKind.Empty);
 
                 case 1:
+
                     // The node is repeated 1 time, so it's not actually a repeater.
                     return this;
 
                 case <= MultiVsRepeaterLimit when GetNodeKind(ref validator) == JsonRegexNodeKind.One:
+
                     // The same character is repeated a fixed number of times, so it's actually a multi.
                     // While this could remain a repeater, multis are more readily optimized later in
                     // processing. The counts used here in real-world expressions are invariably small (e.g. 4),

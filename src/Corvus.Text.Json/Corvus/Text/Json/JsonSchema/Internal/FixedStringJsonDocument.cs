@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -32,6 +31,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
     where T : struct, IJsonElement<T>
 {
     private ReadOnlyMemory<byte> _rawJsonStringValue;
+
     private bool _requiresUnescaping;
 
     internal FixedStringJsonDocument(ReadOnlyMemory<byte> rawJsonStringValue, bool requiresUnescaping)
@@ -62,8 +62,11 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
 #endif
 
     void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) { throw new NotSupportedException();  }
+
     int IJsonDocument.BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking) { throw new NotSupportedException(); }
+
     JsonElement IJsonDocument.CloneElement(int index) => new(this, 0);
+
     TElement IJsonDocument.CloneElement<TElement>(int index)
     {
 #if NET
@@ -148,6 +151,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartObject, JsonTokenType.String);
         return default;
     }
+
     ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes)
     {
         ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType.StartObject, JsonTokenType.String);
@@ -318,6 +322,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         byte[]? otherUtf8TextArray = null;
 
         int length = checked(otherText.Length * JsonConstants.MaxExpansionFactorWhileTranscoding);
+
         // Use unsigned comparison for efficient stackalloc threshold check
         Span<byte> otherUtf8Text = (uint)length <= (uint)JsonConstants.StackallocByteThreshold ?
             stackalloc byte[JsonConstants.StackallocByteThreshold] :
@@ -802,6 +807,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         private sealed class ThreadLocalState
         {
             public readonly FixedStringJsonDocument<T> Document;
+
             public int RentedDocuments;
 
             public ThreadLocalState()

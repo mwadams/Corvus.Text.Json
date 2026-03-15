@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 
 namespace Corvus.Text.Json.Internal;
@@ -63,6 +62,7 @@ internal static class JsonSchemaResultsCollectorCache
     private sealed class ThreadLocalState
     {
         public readonly JsonSchemaResultsCollector Collector;
+
         public int RentedCollectors;
 
         /// <summary>

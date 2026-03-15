@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json.Internal;
 
 #if NET9_0_OR_GREATER
@@ -23,6 +22,7 @@ public readonly struct BuildWithContext<TContext, TBuilder>
     }
 
     public TContext Context { get; }
+
     public TBuilder Build { get; }
 }
 

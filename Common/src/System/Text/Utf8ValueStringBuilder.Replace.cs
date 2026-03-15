@@ -6,7 +6,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See https:// github.com/dotnet/runtime/blob/c1049390d5b33483203f058b0e1457d2a1f62bf4/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 // </license>
-
 namespace Corvus.Text;
 
 internal ref partial struct Utf8ValueStringBuilder
@@ -117,6 +116,7 @@ internal ref partial struct Utf8ValueStringBuilder
             {
                 Grow(growBy);
             }
+
             this._pos += currentRelocationDistance;
 
             // We work from the back of the string when growing to avoid having to

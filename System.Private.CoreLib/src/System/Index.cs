@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
@@ -11,6 +10,7 @@ namespace System
     /// Index is used by the C# compiler to support the new index syntax
     /// <code>
     /// int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
+
     /// int lastElement = someArray[^1]; // lastElement = 5
     /// </code>
     /// </remarks>
@@ -113,9 +113,9 @@ namespace System
                 // offset = length - (~value)
                 // offset = length + (~(~value) + 1)
                 // offset = length + value + 1
-
                 offset += length + 1;
             }
+
             return offset;
         }
 

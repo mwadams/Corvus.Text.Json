@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -103,17 +102,23 @@ internal ref struct JsonRegexValidator
     /// <summary>For categorizing ASCII characters.</summary>
     private static ReadOnlySpan<byte> Category =>
     [
+#pragma warning disable SA1515 // Single-line comment should be preceded by blank line
         // 0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
+#pragma warning restore SA1515
            0, 0, 0, 0, 0, 0, 0, 0, 0, W, W, 0, W, W, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
         // !  "  #  $  %  &  '  (  )  *  +,  -  .  /  0  1  2  3  4  5  6  7  8  9  :;  <  =  >  ?
            W, 0, 0, Z, S, 0, 0, 0, S, S, Q, Q, 0, 0, S, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Q,
+
         // @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, S, S, 0, S, 0,
+
         // '  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o  p  q  r  s  t  u  v  w  x  y  z  {  |  }  ~
            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Q, S, 0, 0, 0
     ];
 
     // flag to skip capturing a parentheses group
+
     /// <summary>
     /// Validates a regular expression pattern with the specified options.
     /// </summary>
@@ -239,6 +244,7 @@ internal ref struct JsonRegexValidator
 
     // # stopper           #
     // whitespace          \t \n \f \r ' '
+
     /// <summary>Returns true for those characters that terminate a string of ordinary chars.</summary>
     private static bool IsSpecial(char ch) => ch <= '|' && Category[ch] >= S;
 
@@ -249,7 +255,6 @@ internal ref struct JsonRegexValidator
     private void AddAlternate()
     {
         // The | parts inside a Testgroup group go directly to the group
-
         if (_group.GetNodeKind(ref this) is JsonRegexNodeKind.ExpressionConditional or JsonRegexNodeKind.BackreferenceConditional)
         {
             _group.AddChild(ref this, _concatenation);
@@ -306,6 +311,7 @@ internal ref struct JsonRegexValidator
                 {
                     _concatenation.AddChild(ref this, CreateNode(JsonRegexNodeKind.One));
                 }
+
                 break;
         }
     }
@@ -349,6 +355,7 @@ internal ref struct JsonRegexValidator
                             return false;
                         }
                     }
+
                     break;
 
                 case '#':
@@ -360,6 +367,7 @@ internal ref struct JsonRegexValidator
                             return false;
                         }
                     }
+
                     break;
 
                 case '[':
@@ -367,6 +375,7 @@ internal ref struct JsonRegexValidator
                     {
                         return false;
                     }
+
                     break;
 
                 case ')':
@@ -374,6 +383,7 @@ internal ref struct JsonRegexValidator
                     {
                         _options = (JsonRegexOptions)_optionsStack.Pop();
                     }
+
                     break;
 
                 case '(':
@@ -397,7 +407,6 @@ internal ref struct JsonRegexValidator
                             if (_pos + 1 < _pattern.Length && (_pattern[_pos] == '<' || _pattern[_pos] == '\''))
                             {
                                 // named group: (?<... or (?'...
-
                                 _pos++;
                                 ch = _pattern[_pos];
 
@@ -426,7 +435,6 @@ internal ref struct JsonRegexValidator
                             else
                             {
                                 // (?...
-
                                 // get the options if it's an option construct (?cimsx-cimsx...)
                                 ScanOptions();
                                 optionsFoundInPattern |= _options;
@@ -713,7 +721,6 @@ internal ref struct JsonRegexValidator
         char ch = _pattern[_pos];
 
         // allow \k<foo> instead of \<foo>, which is now deprecated
-
         if (ch == 'k')
         {
             if (_pos + 1 < _pattern.Length)
@@ -746,7 +753,6 @@ internal ref struct JsonRegexValidator
         }
 
         // Try to parse backreference: \<1>
-
         if (angled && ch >= '0' && ch <= '9')
         {
             if (!ScanDecimal(out int capnum))
@@ -867,7 +873,6 @@ internal ref struct JsonRegexValidator
         }
 
         // Not backreference: must be char code
-
         _pos = backpos;
         if (!ScanCharEscape(out ch))
         {
@@ -998,6 +1003,7 @@ internal ref struct JsonRegexValidator
                                 return false;
                             }
                         }
+
                         continue;
 
                     case 'S':
@@ -1009,6 +1015,7 @@ internal ref struct JsonRegexValidator
                                 return false;
                             }
                         }
+
                         continue;
 
                     case 'W':
@@ -1020,6 +1027,7 @@ internal ref struct JsonRegexValidator
                                 return false;
                             }
                         }
+
                         continue;
 
                     case 'p':
@@ -1048,6 +1056,7 @@ internal ref struct JsonRegexValidator
                                 return false;
                             }
                         }
+
                         continue;
 
                     case '-':
@@ -1068,6 +1077,7 @@ internal ref struct JsonRegexValidator
                                 // NOP
                             }
                         }
+
                         continue;
 
                     default:
@@ -1076,6 +1086,7 @@ internal ref struct JsonRegexValidator
                         {
                             return false;
                         }
+
                         translatedChar = true;
                         break; // this break will only break out of the switch
                 }
@@ -1185,6 +1196,7 @@ internal ref struct JsonRegexValidator
                     result = '\u0007';
                     return true;
                 }
+
                 result = default;
                 return false;
 
@@ -1253,7 +1265,6 @@ internal ref struct JsonRegexValidator
         char ch = _pattern[_pos++];
 
         // \ca interpreted as \cA
-
         if ((uint)(ch - 'a') <= 'z' - 'a')
         {
             ch = (char)(ch - ('a' - 'A'));
@@ -1333,23 +1344,27 @@ internal ref struct JsonRegexValidator
             switch (ch)
             {
                 case ':':
+
                     // noncapturing group
                     nodeType = JsonRegexNodeKind.Group;
                     break;
 
                 case '=':
+
                     // lookahead assertion
                     _options &= ~JsonRegexOptions.RightToLeft;
                     nodeType = JsonRegexNodeKind.PositiveLookaround;
                     break;
 
                 case '!':
+
                     // negative lookahead assertion
                     _options &= ~JsonRegexOptions.RightToLeft;
                     nodeType = JsonRegexNodeKind.NegativeLookaround;
                     break;
 
                 case '>':
+
                     // atomic subexpression
                     nodeType = JsonRegexNodeKind.Atomic;
                     break;
@@ -1395,7 +1410,6 @@ internal ref struct JsonRegexValidator
                             bool proceed = false;
 
                             // grab part before -
-
                             if ((uint)(ch - '0') <= 9)
                             {
                                 if (!ScanDecimal(out capnum))
@@ -1454,7 +1468,6 @@ internal ref struct JsonRegexValidator
                             }
 
                             // grab part after - if any
-
                             if ((capnum != -1 || proceed) && _pos + 1 < _pattern.Length && _pattern[_pos] == '-')
                             {
                                 _pos++;
@@ -1515,19 +1528,20 @@ internal ref struct JsonRegexValidator
                             }
 
                             // actually make the node
-
                             if ((capnum != -1 || uncapnum != -1) && _pos < _pattern.Length && _pattern[_pos++] == close)
                             {
                                 node = CreateNode(JsonRegexNodeKind.Capture);
                                 return true;
                             }
+
                             goto BreakRecognize;
                     }
+
                     break;
 
                 case '(':
-                    // conditional alternation construct (?(...) | )
 
+                    // conditional alternation construct (?(...) | )
                     int parenPos = _pos;
                     if (_pos < _pattern.Length)
                     {
@@ -1572,6 +1586,7 @@ internal ref struct JsonRegexValidator
                             }
                         }
                     }
+
                     // not a backref
                     nodeType = JsonRegexNodeKind.ExpressionConditional;
                     _pos = parenPos - 1;       // jump to the start of the parentheses
@@ -1600,6 +1615,7 @@ internal ref struct JsonRegexValidator
                     --_pos;
 
                     nodeType = JsonRegexNodeKind.Group;
+
                     // Disallow options in the children of a testgroup node
                     if (_group.GetNodeKind(ref this) != JsonRegexNodeKind.ExpressionConditional)
                     {
@@ -1633,8 +1649,8 @@ internal ref struct JsonRegexValidator
 
     BreakRecognize:
         ;
-        // break Recognize comes here
 
+        // break Recognize comes here
         node = JsonRegexNode.Null;
         return false;
     }
@@ -1720,6 +1736,7 @@ internal ref struct JsonRegexValidator
                     'x' => JsonRegexOptions.IgnorePatternWhitespace,
                     _ => JsonRegexOptions.None,
                 };
+
                 if (options == 0)
                 {
                     return;
@@ -1827,6 +1844,7 @@ internal ref struct JsonRegexValidator
 
                     _unit = CreateNode(JsonRegexNodeKind.Set);
                 }
+
                 break;
 
                 case '(':
@@ -1874,6 +1892,7 @@ internal ref struct JsonRegexValidator
                     {
                         goto ContinueOuterScan;
                     }
+
                     break;
 
                 case '\\':
@@ -1911,6 +1930,7 @@ internal ref struct JsonRegexValidator
                     {
                         return false;
                     }
+
                     --_pos;
                     break;
 
@@ -2104,7 +2124,9 @@ internal ref struct JsonRegexValidator
     private readonly struct CapNameToCapNumberRow
     {
         private readonly int _startOffset;
+
         private readonly int _endOffset;
+
         private readonly int _capNum;
 
         /// <summary>
@@ -2148,7 +2170,9 @@ internal ref struct JsonRegexValidator
     private readonly struct CapToPos
     {
         private readonly int _capNum;
+
         private readonly int _pos;
+
         private readonly bool _isExplicit;
 
         /// <summary>
@@ -2188,7 +2212,9 @@ internal ref struct JsonRegexValidator
     private readonly struct NodeDbRow
     {
         private readonly int _parentIdx;
+
         private readonly int _childCount;
+
         private readonly int _nodeKind;
 
         /// <summary>

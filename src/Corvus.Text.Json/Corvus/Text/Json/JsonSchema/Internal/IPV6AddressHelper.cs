@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
@@ -64,11 +63,13 @@ internal static partial class IPv6AddressHelper
     {
         // Number of components in this IPv6 address
         int sequenceCount = 0;
+
         // Length of the component currently being constructed
         int sequenceLength = 0;
         bool haveCompressor = false;
         bool haveIPv4Address = false;
         bool expectingNumber = true;
+
         // Start position of the previous component
         int lastSequence = 1;
 
@@ -109,6 +110,7 @@ internal static partial class IPv6AddressHelper
                 {
                     return false;
                 }
+
                 if (sequenceLength != 0)
                 {
                     ++sequenceCount;
@@ -123,6 +125,7 @@ internal static partial class IPv6AddressHelper
                         {
                             return false;
                         }
+
                         // An IPv6 address is separated from its scope by a '%' character. The scope
                         // is terminated by the natural end of the address, the address end character (']')
                         // or the start of the prefix ('/').
@@ -138,6 +141,7 @@ internal static partial class IPv6AddressHelper
                                 goto case '/';
                             }
                         }
+
                         break;
 
                     case ']':
@@ -145,6 +149,7 @@ internal static partial class IPv6AddressHelper
                         {
                             return false;
                         }
+
                         needsClosingBracket = false;
 
                         // If there's more after the closing bracket, it must be a port.
@@ -180,9 +185,11 @@ internal static partial class IPv6AddressHelper
                                 }
                             }
                         }
+
                         continue;
 
                     case ':':
+
                         // If the next character after a colon is another colon, the address contains a compressor ('::').
                         if ((i > 0) && (name[i - 1] == (byte)':'))
                         {
@@ -191,6 +198,7 @@ internal static partial class IPv6AddressHelper
                                 // can only have one per IPv6 address
                                 return false;
                             }
+
                             haveCompressor = true;
                             expectingNumber = false;
                         }
@@ -198,9 +206,11 @@ internal static partial class IPv6AddressHelper
                         {
                             expectingNumber = true;
                         }
+
                         break;
 
                     case '/':
+
                         // A prefix in an IPv6 address is invalid.
                         return false;
 
@@ -215,6 +225,7 @@ internal static partial class IPv6AddressHelper
                         {
                             return false;
                         }
+
                         // An IPv4 address takes 2 slots in an IPv6 address. One was just counted meeting the '.'
                         ++sequenceCount;
                         lastSequence = i - sequenceLength;
@@ -226,6 +237,7 @@ internal static partial class IPv6AddressHelper
                     default:
                         return false;
                 }
+
                 sequenceLength = 0;
             }
         }
@@ -241,7 +253,6 @@ internal static partial class IPv6AddressHelper
         }
 
         // These sequence counts are -1 because it is implied in end-of-sequence.
-
         const int ExpectedSequenceCount = 8;
         return
             !expectingNumber &&

@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -22,13 +21,14 @@ namespace Corvus.Text.Json
         {
             // Borrowed and modified from SpanHelpers.Byte:
             // https:// github.com/dotnet/corefx/blob/fc169cddedb6820aaabbdb8b7bece2a3df0fd1a5/src/Common/src/CoreLib/System/SpanHelpers.Byte.cs#L473-L604
-
             ref byte searchSpace = ref MemoryMarshal.GetReference(span);
             int length = span.Length;
             Debug.Assert(length >= 0);
 
             const byte Value0 = JsonConstants.Quote;
+
             const byte Value1 = JsonConstants.BackSlash;
+
             const byte LessThan = JsonConstants.Space;
 
             const uint UValue0 = Value0; // Use uint for comparisons to avoid unnecessary 8->32 extensions
@@ -43,6 +43,7 @@ namespace Corvus.Text.Json
                 int unaligned = (int)Unsafe.AsPointer(ref searchSpace) & (Vector<byte>.Count - 1);
                 nLength = (IntPtr)((Vector<byte>.Count - unaligned) & (Vector<byte>.Count - 1));
             }
+
         SequentialScan:
             uint lookUp;
             while ((byte*)nLength >= (byte*)8)
@@ -132,6 +133,7 @@ namespace Corvus.Text.Json
                         index += Vector<byte>.Count;
                         continue;
                     }
+
                     // Find offset of first match
                     return (int)(byte*)index + LocateFirstFoundByte(vMatches);
                 }
@@ -142,6 +144,7 @@ namespace Corvus.Text.Json
                     goto SequentialScan;
                 }
             }
+
             return -1;
         Found: // Workaround for https:// github.com/dotnet/runtime/issues/8795
             return (int)(byte*)index;
@@ -168,6 +171,7 @@ namespace Corvus.Text.Json
             var vector64 = Vector.AsVectorUInt64(match);
             ulong candidate = 0;
             int i = 0;
+
             // Pattern unrolled by jit https:// github.com/dotnet/coreclr/pull/8001
             for (; i < Vector<ulong>.Count; i++)
             {
@@ -187,6 +191,7 @@ namespace Corvus.Text.Json
         {
             // Flag least significant power of two bit
             ulong powerOfTwoFlag = match ^ (match - 1);
+
             // Shift all powers of two into the high byte and extract
             return (int)((powerOfTwoFlag * XorPowerOfTwoToHighByte) >> 57);
         }

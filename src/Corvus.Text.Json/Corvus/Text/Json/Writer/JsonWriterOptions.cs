@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Text.Encodings.Web;
 
 namespace Corvus.Text.Json;
@@ -20,14 +19,23 @@ namespace Corvus.Text.Json;
 public struct JsonWriterOptions
 {
     internal const int DefaultMaxDepth = 1000;
+
     private const int IndentBit = 1;
+
     private const int IndentCharacterBit = 8;
+
     private const int IndentSizeMask = JsonConstants.MaximumIndentSize << OptionsBitCount;
+
     private const int NewLineBit = 4;
+
     private const int OptionsBitCount = 4;
+
     private const int SkipValidationBit = 2;
+
     private static readonly string s_alternateNewLine = Environment.NewLine.Length == 2 ? JsonConstants.NewLineLineFeed : JsonConstants.NewLineCarriageReturnLineFeed;
+
     private int _maxDepth;
+
     private int _optionsMask;
 
     /// <summary>
@@ -64,6 +72,7 @@ public struct JsonWriterOptions
         {
             return (_optionsMask & IndentBit) != 0;
         }
+
         set
         {
             if (value)
@@ -152,6 +161,7 @@ public struct JsonWriterOptions
         {
             return (_optionsMask & SkipValidationBit) != 0;
         }
+
         set
         {
             if (value)

@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -11,12 +10,12 @@ using Xunit.Sdk;
 namespace TestUtilities;
 
 // Based on https:// github.com/xunit/xunit/blob/v2/src/xunit.execution/Sdk/DefaultTestCaseOrderer.cs
-
 public class RandomTestCaseOrderer : ITestCaseOrderer
 {
     public const string RandomSeedEnvironmentVariableName = "XUNIT_RANDOM_ORDER_SEED";
 
     public static readonly Lazy<int> LazySeed = new(GetSeed, LazyThreadSafetyMode.ExecutionAndPublication);
+
     private readonly IMessageSink _diagnosticMessageSink;
 
     public RandomTestCaseOrderer(IMessageSink diagnosticMessageSink)

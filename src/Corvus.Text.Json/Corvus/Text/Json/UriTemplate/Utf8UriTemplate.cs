@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -40,7 +39,6 @@ internal static class Utf8UriTemplate
 {
     // Lookup tables for character classification (Tier 1 optimization)
     // Pre-computed at compile time for maximum performance
-
     // RFC 6570 operators: op-level2 / op-level3 (NOT op-reserve)
     // op-level2 = "+" / "#" (indices 43, 35)
     // op-level3 = "." / "/" / ";" / "?" / "&" (indices 46, 47, 59, 63, 38)
@@ -305,6 +303,7 @@ internal static class Utf8UriTemplate
                 position = dotPosition;
                 break;
             }
+
             // Continue to look for more dot-varchar patterns
         }
 

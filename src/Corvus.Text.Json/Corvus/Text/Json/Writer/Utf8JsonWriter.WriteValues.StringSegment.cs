@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -190,6 +189,7 @@ public sealed partial class Utf8JsonWriter
                 dest[total++] = srcLeft[i];
             }
         }
+
         for (int i = 0; i < srcRight.Length; i++)
         {
             if ((uint)total >= (uint)dest.Length)
@@ -201,6 +201,7 @@ public sealed partial class Utf8JsonWriter
                 dest[total++] = srcRight[i];
             }
         }
+
     Finish:
         return total;
     }
@@ -252,6 +253,7 @@ public sealed partial class Utf8JsonWriter
         else
         {
             Debug.Assert(combinedBuffer.Length is 1 or 2);
+
             // Need more data. If this is a final segment, then the encoder will append '=' as needed.
             Debug.Assert(bytes.Length + partialStringDataBuffer.Length < 3);
             bytes = combinedBuffer;
@@ -424,6 +426,7 @@ public sealed partial class Utf8JsonWriter
             {
                 WriteNewLine(output);
             }
+
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
         }
@@ -477,6 +480,7 @@ public sealed partial class Utf8JsonWriter
             case OperationStatus.NeedMoreData:
                 Debug.Assert(value.Length + partialStringDataBuffer.Length < 2);
                 Debug.Assert(charsConsumed == value.Length + partialStringDataBuffer.Length);
+
                 // Let the encoder deal with the error if this is a final buffer.
                 value = combinedBuffer.Slice(0, charsConsumed);
                 partialStringDataBuffer = [];
@@ -485,6 +489,7 @@ public sealed partial class Utf8JsonWriter
             case OperationStatus.Done:
                 Debug.Assert(charsConsumed > partialStringDataBuffer.Length);
                 Debug.Assert(charsConsumed <= 2);
+
                 // Divide up the code point chars into its own buffer and the remainder of the input buffer.
                 value = value.Slice(charsConsumed - partialStringDataBuffer.Length);
                 partialStringDataBuffer = combinedBuffer.Slice(0, charsConsumed);
@@ -507,7 +512,6 @@ public sealed partial class Utf8JsonWriter
         // Because we have validated above that partialStringDataBuffer will be the next consumed chars during Rune decoding
         // (even if this is because it is invalid), we should pass isFinalSegment = true to indicate to the decoder to
         // parse the code units without extra data.
-
         // This is relevant in the case of having ['\uD800', 'C'], where the validation above would have needed both code units
         // to determine that only the first unit should be consumed (as invalid). So this method will get only ['\uD800'].
         // Because we know more data will not be able to complete this code point, we need to pass isFinalSegment = true
@@ -534,6 +538,7 @@ public sealed partial class Utf8JsonWriter
             case OperationStatus.NeedMoreData:
                 Debug.Assert(utf8Value.Length + partialStringDataBuffer.Length < 4);
                 Debug.Assert(bytesConsumed == utf8Value.Length + partialStringDataBuffer.Length);
+
                 // Let the encoder deal with the error if this is a final buffer.
                 utf8Value = combinedBuffer.Slice(0, bytesConsumed);
                 partialStringDataBuffer = [];
@@ -542,6 +547,7 @@ public sealed partial class Utf8JsonWriter
             case OperationStatus.Done:
                 Debug.Assert(bytesConsumed > partialStringDataBuffer.Length);
                 Debug.Assert(bytesConsumed <= 4);
+
                 // Divide up the code point bytes into its own buffer and the remainder of the input buffer.
                 utf8Value = utf8Value.Slice(bytesConsumed - partialStringDataBuffer.Length);
                 partialStringDataBuffer = combinedBuffer.Slice(0, bytesConsumed);
@@ -564,7 +570,6 @@ public sealed partial class Utf8JsonWriter
         // Because we have validated above that partialStringDataBuffer will be the next consumed bytes during Rune decoding
         // (even if this is because it is invalid), we should pass isFinalSegment = true to indicate to the decoder to
         // parse the code units without extra data.
-
         // This is relevant in the case of having [<3-length prefix code unit>, <continuation>, <ascii>], where the validation
         // above would have needed all 3 code units to determine that only the first 2 units should be consumed (as invalid).
         // So this method will get only <3-size prefix code unit><continuation>. Because we know more data will not be able

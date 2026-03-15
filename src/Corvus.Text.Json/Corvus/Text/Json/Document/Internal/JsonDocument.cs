@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -109,6 +108,7 @@ public abstract partial class JsonDocument
     private int _nullIndex = -1;
 
     private int _trueIndex = -1;
+
     private int _falseIndex = -1;
 
     /// <summary>
@@ -244,6 +244,7 @@ public abstract partial class JsonDocument
         byte[]? otherUtf8TextArray = null;
 
         int length = checked(otherText.Length * JsonConstants.MaxExpansionFactorWhileTranscoding);
+
         // Use unsigned comparison for efficient stackalloc threshold check
         Span<byte> otherUtf8Text = (uint)length <= (uint)JsonConstants.StackallocByteThreshold ?
             stackalloc byte[JsonConstants.StackallocByteThreshold] :
@@ -1276,7 +1277,6 @@ public abstract partial class JsonDocument
         _valueBacking[index++] = JsonConstants.Quote;
 
         // Then write the type information.
-
         uint length = (uint)(written + 2);
         if (length > 0x0FFFFFFF)
         {
@@ -1340,7 +1340,6 @@ public abstract partial class JsonDocument
         _valueBacking[index++] = JsonConstants.Quote;
 
         // Then write the type information.
-
         uint length = (uint)(written + 2);
         if (length > 0x0FFFFFFF)
         {
@@ -1364,12 +1363,14 @@ public abstract partial class JsonDocument
     protected int StoreRawStringValue(ReadOnlySpan<byte> escapedString)
     {
         int offset = _valueOffset;
+
         // We write the value buffer offset here, to save doing it again later.
         _valueOffset += escapedString.Length + 6;
 
         Enlarge(_valueOffset, ref _valueBacking);
 
         uint length = (uint)escapedString.Length + 2;
+
         // Use unsigned comparison for efficient bounds check
         if (length > 0x0FFFFFFF)
         {
@@ -1398,12 +1399,14 @@ public abstract partial class JsonDocument
     {
         JsonWriterHelper.ValidateNumber(unescapedNumberValue);
         int offset = _valueOffset;
+
         // We write the value buffer offset here, to save doing it again later.
         _valueOffset += unescapedNumberValue.Length + 4;
 
         Enlarge(_valueOffset, ref _valueBacking);
 
         uint length = (uint)unescapedNumberValue.Length;
+
         // Use unsigned comparison for efficient bounds check
         if (length > 0x0FFFFFFF)
         {

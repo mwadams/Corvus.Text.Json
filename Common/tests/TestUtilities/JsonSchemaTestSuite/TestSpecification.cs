@@ -1,6 +1,5 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using Corvus.Json;
 
 namespace TestUtilities.JsonSchemaTestSuite;
@@ -14,7 +13,9 @@ namespace TestUtilities.JsonSchemaTestSuite;
 public class TestGroup(string name, string defaultVocabulary, List<TestFile> files)
 {
     public string Name { get; } = name;
+
     public List<TestFile> Files { get; } = files;
+
     public string DefaultVocabulary { get; } = defaultVocabulary;
 }
 
@@ -28,8 +29,11 @@ public class TestGroup(string name, string defaultVocabulary, List<TestFile> fil
 public class TestFile(string baseDirectory, string relativePath, string namespaceRelativePath, List<TestSuite> testSuites)
 {
     public string BaseDirectory { get; } = baseDirectory;
+
     public string RelativePath { get; } = relativePath;
+
     public string NamespaceRelativePath { get; } = namespaceRelativePath;
+
     public List<TestSuite> TestSuites { get; } = testSuites;
 }
 
@@ -47,8 +51,11 @@ public class TestSuite(
     bool validateFormat)
 {
     public string SuiteName { get; } = suiteName;
+
     public List<TestSpecification> TestSpecifications { get; } = testSpecifications;
+
     public bool ValidateFormat { get; } = validateFormat;
+
     public JsonAny Schema { get; } = schema;
 }
 
@@ -64,6 +71,8 @@ public class TestSpecification(
     bool expectation)
 {
     public string TestDescription { get; } = testDescription;
+
     public JsonAny Instance { get; } = instance;
+
     public bool Expectation { get; } = expectation;
 }

@@ -1,6 +1,5 @@
 ﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
@@ -22,14 +21,23 @@ namespace TestUtilities
     public class TestJsonSchemaCodeGenerator
     {
         private static readonly ConcurrentDictionary<string, DynamicJsonType> s_compiledTypesCache = new();
+
         private readonly IDocumentResolver _documentResolver;
+
         private readonly VocabularyRegistry _vocabularyRegistry;
+
         private readonly JsonSchemaTypeBuilder _jsonSchemaTypeBuilder;
+
         private readonly IVocabulary _defaultVocabulary;
+
         private readonly string? _remotesBaseDirectory;
+
         private readonly bool _validateFormat;
+
         private readonly bool _optionalAsNullable;
+
         private readonly bool _useImplicitOperatorString;
+
         private readonly bool _addExplicitUsings;
 
         private TestJsonSchemaCodeGenerator(

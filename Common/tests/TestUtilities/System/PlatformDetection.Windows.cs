@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -16,29 +15,50 @@ namespace System
         // means that one exception anywhere means all tests using PlatformDetection fail. If you feel a value is worth latching,
         // do it in a way that failures don't cascade.
         //
-
         public static bool IsWindows => RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+
         public static bool IsNetFramework => RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.OrdinalIgnoreCase);
+
         public static bool HasWindowsShell => IsWindows && IsNotWindowsServerCore && IsNotWindowsNanoServer && IsNotWindowsIoTCore;
+
         public static bool IsWindows7 => IsWindows && GetWindowsVersion() == 6 && GetWindowsMinorVersion() == 1;
+
         public static bool IsWindows8x => IsWindows && GetWindowsVersion() == 6 && (GetWindowsMinorVersion() == 2 || GetWindowsMinorVersion() == 3);
+
         public static bool IsWindows8xOrLater => IsWindowsVersionOrLater(6, 2);
+
         public static bool IsWindows10OrLater => IsWindowsVersionOrLater(10, 0);
+
         public static bool IsWindowsServer2019 => IsWindows && IsNotWindowsNanoServer && GetWindowsVersion() == 10 && GetWindowsMinorVersion() == 0 && GetWindowsBuildVersion() == 17763;
+
         public static bool IsWindowsServer2022 => IsWindows && IsNotWindowsNanoServer && GetWindowsVersion() == 10 && GetWindowsMinorVersion() == 0 && GetWindowsBuildVersion() == 20348;
+
         public static bool IsWindowsServer2025 => IsWindows && IsNotWindowsNanoServer && GetWindowsVersion() == 10 && GetWindowsMinorVersion() == 0 && GetWindowsBuildVersion() == 26100;
+
         public static bool IsWindowsNanoServer => IsWindows && (IsNotWindowsIoTCore && GetWindowsInstallationType().Equals("Nano Server", StringComparison.OrdinalIgnoreCase));
+
         public static bool IsWindowsServerCore => IsWindows && GetWindowsInstallationType().Equals("Server Core", StringComparison.OrdinalIgnoreCase);
+
         public static int WindowsVersion => IsWindows ? (int)GetWindowsVersion() : -1;
+
         public static bool IsNotWindows7 => !IsWindows7;
+
         public static bool IsNotWindows8x => !IsWindows8x;
+
         public static bool IsNotWindowsNanoServer => !IsWindowsNanoServer;
+
         public static bool IsNotWindowsServerCore => !IsWindowsServerCore;
+
         public static bool IsNotWindowsNanoNorServerCore => IsNotWindowsNanoServer && IsNotWindowsServerCore;
+
         public static bool IsNotWindowsIoTCore => !IsWindowsIoTCore;
+
         public static bool IsNotWindowsHomeEdition => !IsWindowsHomeEdition;
+
         public static bool IsNotInAppContainer => !IsInAppContainer;
+
         public static bool IsSoundPlaySupported => IsWindows && IsNotWindowsNanoServer;
+
         public static bool IsBrowserOnWindows => IsBrowser && Path.DirectorySeparatorChar == '\\';
 
         // >= Windows 10 Anniversary Update
@@ -64,6 +84,7 @@ namespace System
 
         // Windows Server 2022
         public static bool IsWindows10Version20348OrGreater => IsWindowsVersionOrLater(10, 0, 20348);
+
         public static bool IsWindows10Version20348OrLower => IsWindowsVersionOrEarlier(10, 0, 20348);
 
         // Windows 11 aka 21H2
@@ -84,6 +105,7 @@ namespace System
                 {
                     return true;
                 }
+
                 return false;
             }
         }
@@ -138,14 +160,23 @@ namespace System
         }
 
         private const int PRODUCT_IOTUAP = 0x0000007B;
+
         private const int PRODUCT_IOTUAPCOMMERCIAL = 0x00000083;
+
         private const int PRODUCT_CORE = 0x00000065;
+
         private const int PRODUCT_CORE_COUNTRYSPECIFIC = 0x00000063;
+
         private const int PRODUCT_CORE_N = 0x00000062;
+
         private const int PRODUCT_CORE_SINGLELANGUAGE = 0x00000064;
+
         private const int PRODUCT_HOME_BASIC = 0x00000002;
+
         private const int PRODUCT_HOME_BASIC_N = 0x00000005;
+
         private const int PRODUCT_HOME_PREMIUM = 0x00000003;
+
         private const int PRODUCT_HOME_PREMIUM_N = 0x0000001A;
 
         [LibraryImport("kernel32.dll", SetLastError = false)]
@@ -162,6 +193,7 @@ namespace System
         private static partial int GetCurrentApplicationUserModelId(ref uint applicationUserModelIdLength, byte[] applicationUserModelId);
 
         private static volatile Version s_windowsVersionObject;
+
         internal static Version GetWindowsVersionObject()
         {
             if (s_windowsVersionObject is null)
@@ -175,7 +207,9 @@ namespace System
         }
 
         internal static uint GetWindowsVersion() => (uint)GetWindowsVersionObject().Major;
+
         internal static uint GetWindowsMinorVersion() => (uint)GetWindowsVersionObject().Minor;
+
         internal static uint GetWindowsBuildVersion() => (uint)GetWindowsVersionObject().Build;
 
         internal static bool IsWindowsVersionOrLater(int major, int minor, int build = -1)
@@ -189,6 +223,7 @@ namespace System
         }
 
         private static int s_isInAppContainer = -1;
+
         public static bool IsInAppContainer
         {
             // This actually checks whether code is running in a modern app.
@@ -215,12 +250,14 @@ namespace System
                     {
                         case 15703: // APPMODEL_ERROR_NO_APPLICATION
                         case 120:   // ERROR_CALL_NOT_IMPLEMENTED
+
                                     // This function is not supported on this system.
                                     // In example on Windows Nano Server
                             s_isInAppContainer = 0;
                             break;
                         case 0:     // ERROR_SUCCESS
                         case 122:   // ERROR_INSUFFICIENT_BUFFER
+
                                     // Success is actually insufficient buffer as we're really only looking for
                                     // not NO_APPLICATION and we're not actually giving a buffer here. The
                                     // API will always return NO_APPLICATION if we're not running under a

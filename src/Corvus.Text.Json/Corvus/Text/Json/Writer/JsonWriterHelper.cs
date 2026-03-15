@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -158,7 +157,6 @@ internal static partial class JsonWriterHelper
     {
         // This is a simplified version of the number reader from Utf8JsonReader.TryGetNumber,
         // because it doesn't need to deal with "NeedsMoreData", or remembering the format.
-
         // The Debug.Asserts in this method should change to validated ArgumentExceptions if/when
         // writing a formatted number becomes public API.
         Debug.Assert(!utf8FormattedNumber.IsEmpty);

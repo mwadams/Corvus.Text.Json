@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Buffers.Text;
 using System.Diagnostics;
@@ -96,6 +95,7 @@ public sealed partial class Utf8JsonWriter
             {
                 WriteNewLine(output);
             }
+
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
         }
@@ -112,14 +112,12 @@ public sealed partial class Utf8JsonWriter
         // specifier for 'G' nor does it represent other formats such as 'R'. As such, we duplicate
         // the .NET Core 3.0 logic of forwarding to the UTF16 formatter and transcoding it back to UTF8,
         // with some additional changes to remove dependencies on Span APIs which don't exist downlevel.
-
 #if NET
         return Utf8Formatter.TryFormat(value, destination, out bytesWritten);
 #else
         string utf16Text = value.ToString(JsonConstants.SingleFormatString, CultureInfo.InvariantCulture);
 
         // Copy the value to the destination, if it's large enough.
-
         if (utf16Text.Length > destination.Length)
         {
             bytesWritten = 0;

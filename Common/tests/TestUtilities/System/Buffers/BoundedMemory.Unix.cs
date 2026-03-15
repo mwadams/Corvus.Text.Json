@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Runtime.InteropServices;
 
 namespace System.Buffers
@@ -17,7 +16,9 @@ namespace System.Buffers
         private sealed class UnixImplementation<T> : BoundedMemory<T> where T : unmanaged
         {
             private readonly MMapHandle _handle;
+
             private readonly int _elementCount;
+
             private readonly BoundedMemoryManager _memoryManager;
 
             public UnixImplementation(int elementCount, PoisonPagePlacement placement)
@@ -118,6 +119,7 @@ namespace System.Buffers
         private sealed class MMapHandle : SafeHandle
         {
             private IntPtr buffer;
+
             private ulong allocationSize;
 
             // Called by P/Invoke when returning SafeHandles

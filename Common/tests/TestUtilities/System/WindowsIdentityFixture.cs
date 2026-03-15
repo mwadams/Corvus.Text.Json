@@ -1,6 +1,5 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -35,9 +34,13 @@ namespace System
     public sealed partial class WindowsTestAccount : IDisposable
     {
         private readonly string _userName;
+
         private SafeAccessTokenHandle _accountTokenHandle;
+
         public SafeAccessTokenHandle AccountTokenHandle => _accountTokenHandle;
+
         public string AccountName { get; private set; }
+
         public string Password { get; }
 
         public WindowsTestAccount(string userName)
@@ -83,6 +86,7 @@ namespace System
                 {
                     throw new Win32Exception((int)result);
                 }
+
                 result = NetUserAdd(null, 1, ref userInfo, out param_err);
                 if (result != 0)
                 {
@@ -95,6 +99,7 @@ namespace System
             }
 
             const int LOGON32_PROVIDER_DEFAULT = 0;
+
             const int LOGON32_LOGON_INTERACTIVE = 2;
 
             if (!LogonUser(_userName, ".", Password, LOGON32_LOGON_INTERACTIVE, LOGON32_PROVIDER_DEFAULT, out _accountTokenHandle))
@@ -134,12 +139,19 @@ namespace System
         internal struct USER_INFO_1
         {
             public string usri1_name;
+
             public string usri1_password;
+
             public uint usri1_password_age;
+
             public uint usri1_priv;
+
             public string usri1_home_dir;
+
             public string usri1_comment;
+
             public uint usri1_flags;
+
             public string usri1_script_path;
 
 #if NET
@@ -147,19 +159,28 @@ namespace System
             public static class Marshaller
             {
                 public static USER_INFO_1Native ConvertToUnmanaged(USER_INFO_1 managed) => new(managed);
+
                 public static USER_INFO_1 ConvertToManaged(USER_INFO_1Native native) => native.ToManaged();
+
                 public static void Free(USER_INFO_1Native native) => native.FreeNative();
 
                 [StructLayout(LayoutKind.Sequential)]
                 public struct USER_INFO_1Native
                 {
                     private IntPtr usri1_name;
+
                     private IntPtr usri1_password;
+
                     private uint usri1_password_age;
+
                     private uint usri1_priv;
+
                     private IntPtr usri1_home_dir;
+
                     private IntPtr usri1_comment;
+
                     private uint usri1_flags;
+
                     private IntPtr usri1_script_path;
 
                     public USER_INFO_1Native(USER_INFO_1 managed)

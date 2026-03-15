@@ -1,6 +1,5 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -17,7 +16,6 @@ namespace System.Net;
 // and can be written to in order to add data to the end of the buffer.
 // Commit(byteCount) will extend the ActiveSpan by [byteCount] bytes into the AvailableSpan.
 // Discard(byteCount) will discard [byteCount] bytes as the beginning of the ActiveSpan.
-
 [StructLayout(LayoutKind.Auto)]
 internal struct ArrayBuffer : IDisposable
 {
@@ -28,13 +26,15 @@ internal struct ArrayBuffer : IDisposable
 #endif
 
     private readonly bool _usePool;
+
     private byte[] _bytes;
+
     private int _activeStart;
+
     private int _availableStart;
 
     // Invariants:
     // 0 <= _activeStart <= _availableStart <= bytes.Length
-
     public ArrayBuffer(int initialSize, bool usePool = false)
     {
         Debug.Assert(initialSize > 0 || usePool);
@@ -86,17 +86,23 @@ internal struct ArrayBuffer : IDisposable
     }
 
     public int ActiveLength => _availableStart - _activeStart;
+
     public Span<byte> ActiveSpan => new Span<byte>(_bytes, _activeStart, _availableStart - _activeStart);
+
     public ReadOnlySpan<byte> ActiveReadOnlySpan => new ReadOnlySpan<byte>(_bytes, _activeStart, _availableStart - _activeStart);
+
     public Memory<byte> ActiveMemory => new Memory<byte>(_bytes, _activeStart, _availableStart - _activeStart);
 
     public int AvailableLength => _bytes.Length - _availableStart;
+
     public Span<byte> AvailableSpan => _bytes.AsSpan(_availableStart);
+
     public Memory<byte> AvailableMemory => _bytes.AsMemory(_availableStart);
 
     public Memory<byte> AvailableMemorySliced(int length) => new Memory<byte>(_bytes, _availableStart, length);
 
     public int Capacity => _bytes.Length;
+
     public int ActiveStartOffset => _activeStart;
 
     public byte[] DangerousGetUnderlyingBuffer() => _bytes;

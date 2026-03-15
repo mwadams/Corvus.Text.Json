@@ -1,6 +1,5 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-
 namespace System.Reflection
 {
     /// <summary>
@@ -28,18 +27,22 @@ namespace System.Reflection
         /// to which this NullabilityInfo belongs
         /// </summary>
         public Type Type { get; }
+
         /// <summary>
         /// The nullability read state of the member
         /// </summary>
         public NullabilityState ReadState { get; internal set; }
+
         /// <summary>
         /// The nullability write state of the member
         /// </summary>
         public NullabilityState WriteState { get; internal set; }
+
         /// <summary>
         /// If the member type is an array, gives the <see cref="NullabilityInfo" /> of the elements of the array, null otherwise
         /// </summary>
         public NullabilityInfo? ElementType { get; }
+
         /// <summary>
         /// If the member type is a generic type, gives the array of <see cref="NullabilityInfo" /> for each type parameter
         /// </summary>
@@ -60,10 +63,12 @@ namespace System.Reflection
         /// Nullability context not enabled (oblivious)
         /// </summary>
         Unknown,
+
         /// <summary>
         /// Non nullable value or reference type
         /// </summary>
         NotNull,
+
         /// <summary>
         /// Nullable value or reference type
         /// </summary>

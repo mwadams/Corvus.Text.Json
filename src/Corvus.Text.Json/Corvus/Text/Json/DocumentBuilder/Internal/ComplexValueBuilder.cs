@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Numerics;
@@ -63,8 +62,11 @@ public ref struct ComplexValueBuilder
 #endif
 
     private IMutableJsonDocument _parentDocument;
+
     private MetadataDb _parsedData;
+
     private int _memberCount;
+
     private int _rowCount;
 
     private ComplexValueBuilder(IMutableJsonDocument parentDocument, MetadataDb parsedData)
@@ -3301,10 +3303,8 @@ public ref struct ComplexValueBuilder
         // If the array item count is (e.g.) 12 and the number of rows is (e.g.) 13
         // then the extra row is just the EndArray item, so the array was made up
         // of simple values.
-
         // If the off-by-one relationship does not hold, then one of the values was
         // more than one row, making it a complex object.
-
         // This check is similar to tracking the start array and painting it when
         // StartObject or StartArray is encountered, but avoids the mixed state
         // where "UnknownSize" implies "has complex children".

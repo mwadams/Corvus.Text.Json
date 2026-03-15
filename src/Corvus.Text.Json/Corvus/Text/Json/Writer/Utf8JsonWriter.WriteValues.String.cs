@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using Corvus.Text.Json.Internal;
@@ -116,7 +115,6 @@ public sealed partial class Utf8JsonWriter
     internal void WriteNumberValueAsStringUnescaped(ReadOnlySpan<byte> utf8Value)
     {
         // The value has been validated prior to calling this method.
-
         WriteStringByOptions(utf8Value);
 
         SetFlagToAddListSeparatorBeforeNextItem();
@@ -265,6 +263,7 @@ public sealed partial class Utf8JsonWriter
             {
                 WriteNewLine(output);
             }
+
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
         }
@@ -305,6 +304,7 @@ public sealed partial class Utf8JsonWriter
             {
                 WriteNewLine(output);
             }
+
             WriteIndentation(output.Slice(BytesPending), indent);
             BytesPending += indent;
         }
@@ -337,6 +337,7 @@ public sealed partial class Utf8JsonWriter
         {
             output[BytesPending++] = JsonConstants.ListSeparator;
         }
+
         output[BytesPending++] = JsonConstants.Quote;
 
         TranscodeAndWrite(escapedValue, output);
@@ -347,9 +348,13 @@ public sealed partial class Utf8JsonWriter
     //// internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
     //// {
     //// JsonWriterHelper.ValidateValue(utf8Value);
+
     //// WriteStringByOptions(utf8Value);
+
     //// SetFlagToAddListSeparatorBeforeNextItem();
+
     //// _tokenType = JsonTokenType.String;
+
     //// }
     // TODO: https:// github.com/dotnet/runtime/issues/29293
     private void WriteStringMinimized(ReadOnlySpan<byte> escapedValue)
@@ -370,6 +375,7 @@ public sealed partial class Utf8JsonWriter
         {
             output[BytesPending++] = JsonConstants.ListSeparator;
         }
+
         output[BytesPending++] = JsonConstants.Quote;
 
         escapedValue.CopyTo(output.Slice(BytesPending));

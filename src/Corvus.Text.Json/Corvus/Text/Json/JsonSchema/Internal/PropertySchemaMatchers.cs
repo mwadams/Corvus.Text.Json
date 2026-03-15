@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Collections;
 using System.Collections.Generic;
@@ -207,6 +206,7 @@ public class PropertySchemaMatchers<T>
     private byte[]? _entriesBacking;
 
     private List<UnescapedNameProvider> _nameProviders;
+
     private List<T>? _matchers;
 
     /// <summary>

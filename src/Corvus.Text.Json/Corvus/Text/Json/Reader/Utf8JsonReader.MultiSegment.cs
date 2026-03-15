@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 using System.Buffers;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -48,6 +47,7 @@ public ref partial struct Utf8JsonReader
         {
             _readerOptions.MaxDepth = JsonReaderOptions.DefaultMaxDepth;  // If max depth is not set, revert to the default depth.
         }
+
         _bitStack = state._bitStack;
 
         _consumed = 0;
@@ -87,6 +87,7 @@ public ref partial struct Utf8JsonReader
                         _buffer = memory.Span;
                         break;
                     }
+
                     previousNextPosition = _nextPosition;
                 }
             }
@@ -150,6 +151,7 @@ public ref partial struct Utf8JsonReader
             {
                 goto Done;
             }
+
             first = _buffer[_consumed];
         }
 
@@ -195,6 +197,7 @@ public ref partial struct Utf8JsonReader
                     _totalConsumed = prevTotalConsumed;
                     _currentPosition = copy;
                 }
+
                 goto Done;
             }
         }
@@ -272,9 +275,11 @@ public ref partial struct Utf8JsonReader
                 {
                     ValidateStateAtEndOfData();
                 }
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -290,15 +295,18 @@ public ref partial struct Utf8JsonReader
             {
                 ThrowHelper.ThrowJsonReaderException(ref this, resource);
             }
+
             if (!GetNextSpan())
             {
                 if (IsLastSpan)
                 {
                     ThrowHelper.ThrowJsonReaderException(ref this, resource);
                 }
+
                 return false;
             }
         }
+
         return true;
     }
 
@@ -317,10 +325,12 @@ public ref partial struct Utf8JsonReader
                 _isLastSegment = true;
                 return false;
             }
+
             if (memory.Length != 0)
             {
                 break;
             }
+
             // _currentPosition needs to point to last non-empty segment
             // Since memory.Length == 0, we need to revert back to previous.
             _currentPosition = copy;
@@ -368,6 +378,7 @@ public ref partial struct Utf8JsonReader
                 {
                     return false;
                 }
+
                 _tokenType = JsonTokenType.Number;
                 _consumed += numberOfBytes;
             }
@@ -377,8 +388,10 @@ public ref partial struct Utf8JsonReader
             }
 
             _isNotPrimitive = _tokenType is JsonTokenType.StartObject or JsonTokenType.StartArray;
+
             // Intentionally fall out of the if-block to return true
         }
+
         return true;
     }
 
@@ -456,8 +469,10 @@ public ref partial struct Utf8JsonReader
                                 _currentPosition = copy;
                                 return false;
                             }
+
                             return true;
                         }
+
                         break;
 
                     default:
@@ -473,12 +488,14 @@ public ref partial struct Utf8JsonReader
                                     {
                                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.InvalidEndOfJsonNonPrimitive);
                                     }
+
                                     if (!GetNextSpan())
                                     {
                                         if (_isNotPrimitive && IsLastSpan && _tokenType != JsonTokenType.EndArray && _tokenType != JsonTokenType.EndObject)
                                         {
                                             ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.InvalidEndOfJsonNonPrimitive);
                                         }
+
                                         _currentPosition = copy;
                                         return false;
                                     }
@@ -495,6 +512,7 @@ public ref partial struct Utf8JsonReader
                                         _currentPosition = copy;
                                         return false;
                                     }
+
                                     marker = _buffer[_consumed];
                                 }
 
@@ -503,15 +521,20 @@ public ref partial struct Utf8JsonReader
                                 // Skip comments and consume the actual JSON value.
                                 continue;
                             }
+
                             _currentPosition = copy;
                             return false;
                         }
+
                         break;
                 }
+
                 ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfValueNotFound, marker);
             }
+
             break;
         }
+
         return true;
     }
 
@@ -531,6 +554,7 @@ public ref partial struct Utf8JsonReader
             {
                 goto Done;
             }
+
             _consumed = prevConsumed;
             return false;
         }
@@ -591,6 +615,7 @@ public ref partial struct Utf8JsonReader
                     {
                         goto Throw;
                     }
+
                     return false;
                 }
 
@@ -684,6 +709,7 @@ public ref partial struct Utf8JsonReader
                 resource = ExceptionResource.ExpectedNull;
                 break;
         }
+
         return ThrowHelper.GetJsonReaderException(ref this, resource, nextByte: default, bytes: span);
     }
 
@@ -745,6 +771,7 @@ public ref partial struct Utf8JsonReader
             {
                 return false;
             }
+
             first = _buffer[_consumed];
         }
 
@@ -799,6 +826,7 @@ public ref partial struct Utf8JsonReader
                 _bytePositionInLine += localBuffer.Length + 1;  // Account for the start quote
                 ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.EndOfStringNotFound);
             }
+
             return ConsumeStringNextSegment();
         }
     }
@@ -821,6 +849,7 @@ public ref partial struct Utf8JsonReader
                     RollBackState(rollBackState, isError: true);
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.EndOfStringNotFound);
                 }
+
                 RollBackState(rollBackState);
                 return false;
             }
@@ -859,6 +888,7 @@ public ref partial struct Utf8JsonReader
                                 {
                                     goto Done;
                                 }
+
                                 nextCharEscaped = false;
                             }
                             else if (currentByte == JsonConstants.BackSlash)
@@ -891,6 +921,7 @@ public ref partial struct Utf8JsonReader
                                                 RollBackState(rollBackState, isError: true);
                                                 ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.InvalidHexCharacterWithinString, nextByte);
                                             }
+
                                             numberOfHexDigits++;
                                             _bytePositionInLine++;
                                             if (numberOfHexDigits >= 4)
@@ -920,6 +951,7 @@ public ref partial struct Utf8JsonReader
                                         j = 0;
                                     }
                                 }
+
                                 nextCharEscaped = false;
                             }
                             else if (currentByte < JsonConstants.Space)
@@ -938,6 +970,7 @@ public ref partial struct Utf8JsonReader
                                 RollBackState(rollBackState, isError: true);
                                 ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.EndOfStringNotFound);
                             }
+
                             RollBackState(rollBackState);
                             return false;
                         }
@@ -996,6 +1029,7 @@ public ref partial struct Utf8JsonReader
                     {
                         goto Done;
                     }
+
                     nextCharEscaped = false;
                 }
                 else if (currentByte == JsonConstants.BackSlash)
@@ -1028,6 +1062,7 @@ public ref partial struct Utf8JsonReader
                                     RollBackState(rollBackState, isError: true);
                                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.InvalidHexCharacterWithinString, nextByte);
                                 }
+
                                 numberOfHexDigits++;
                                 _bytePositionInLine++;
                                 if (numberOfHexDigits >= 4)
@@ -1062,6 +1097,7 @@ public ref partial struct Utf8JsonReader
                             HasValueSequence = true;
                         }
                     }
+
                     nextCharEscaped = false;
                 }
                 else if (currentByte < JsonConstants.Space)
@@ -1080,6 +1116,7 @@ public ref partial struct Utf8JsonReader
                     RollBackState(rollBackState, isError: true);
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.EndOfStringNotFound);
                 }
+
                 RollBackState(rollBackState);
                 return false;
             }
@@ -1163,6 +1200,7 @@ public ref partial struct Utf8JsonReader
                 RollBackState(rollBackState);
                 return false;
             }
+
             if (result == ConsumeNumberResult.Success)
             {
                 goto Done;
@@ -1179,6 +1217,7 @@ public ref partial struct Utf8JsonReader
                 RollBackState(rollBackState);
                 return false;
             }
+
             if (result == ConsumeNumberResult.Success)
             {
                 goto Done;
@@ -1205,6 +1244,7 @@ public ref partial struct Utf8JsonReader
                 RollBackState(rollBackState);
                 return false;
             }
+
             if (result == ConsumeNumberResult.Success)
             {
                 goto Done;
@@ -1240,6 +1280,7 @@ public ref partial struct Utf8JsonReader
             RollBackState(rollBackState);
             return false;
         }
+
         if (resultExponent == ConsumeNumberResult.Success)
         {
             goto Done;
@@ -1263,6 +1304,7 @@ public ref partial struct Utf8JsonReader
             ValueSpan = data.Slice(0, i);
             consumed = i;
         }
+
         return true;
     }
 
@@ -1282,6 +1324,7 @@ public ref partial struct Utf8JsonReader
                     RollBackState(rollBackState, isError: true);
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundEndOfData);
                 }
+
                 if (!GetNextSpan())
                 {
                     if (IsLastSpan)
@@ -1289,8 +1332,10 @@ public ref partial struct Utf8JsonReader
                         RollBackState(rollBackState, isError: true);
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundEndOfData);
                     }
+
                     return ConsumeNumberResult.NeedMoreData;
                 }
+
                 Debug.Assert(i == 1);
                 _totalConsumed += i;
                 HasValueSequence = true;
@@ -1305,6 +1350,7 @@ public ref partial struct Utf8JsonReader
                 ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundAfterSign, nextByte);
             }
         }
+
         return ConsumeNumberResult.OperationIncomplete;
     }
 
@@ -1339,6 +1385,7 @@ public ref partial struct Utf8JsonReader
                 {
                     return ConsumeNumberResult.Success;
                 }
+
                 return ConsumeNumberResult.NeedMoreData;
             }
 
@@ -1352,6 +1399,7 @@ public ref partial struct Utf8JsonReader
                 return ConsumeNumberResult.Success;
             }
         }
+
         nextByte = data[i];
         if (nextByte != '.' && nextByte != 'E' && nextByte != 'e')
         {
@@ -1375,8 +1423,10 @@ public ref partial struct Utf8JsonReader
             {
                 break;
             }
+
             counter++;
         }
+
         if (i >= data.Length)
         {
             if (IsLastSpan)
@@ -1397,6 +1447,7 @@ public ref partial struct Utf8JsonReader
                         _bytePositionInLine += counter;
                         return ConsumeNumberResult.Success;
                     }
+
                     return ConsumeNumberResult.NeedMoreData;
                 }
 
@@ -1414,6 +1465,7 @@ public ref partial struct Utf8JsonReader
                         break;
                     }
                 }
+
                 _bytePositionInLine += i;
                 if (i >= data.Length)
                 {
@@ -1450,6 +1502,7 @@ public ref partial struct Utf8JsonReader
                 RollBackState(rollBackState, isError: true);
                 ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundEndOfData);
             }
+
             if (!GetNextSpan())
             {
                 if (IsLastSpan)
@@ -1457,19 +1510,23 @@ public ref partial struct Utf8JsonReader
                     RollBackState(rollBackState, isError: true);
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundEndOfData);
                 }
+
                 return ConsumeNumberResult.NeedMoreData;
             }
+
             _totalConsumed += i;
             HasValueSequence = true;
             i = 0;
             data = _buffer;
         }
+
         byte nextByte = data[i];
         if (!JsonHelpers.IsDigit(nextByte))
         {
             RollBackState(rollBackState, isError: true);
             ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundAfterDecimal, nextByte);
         }
+
         i++;
         _bytePositionInLine++;
         return ConsumeIntegerDigitsMultiSegment(ref data, ref i);
@@ -1492,8 +1549,10 @@ public ref partial struct Utf8JsonReader
                     RollBackState(rollBackState, isError: true);
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundEndOfData);
                 }
+
                 return ConsumeNumberResult.NeedMoreData;
             }
+
             _totalConsumed += i;
             HasValueSequence = true;
             i = 0;
@@ -1520,13 +1579,16 @@ public ref partial struct Utf8JsonReader
                         RollBackState(rollBackState, isError: true);
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.RequiredDigitNotFoundEndOfData);
                     }
+
                     return ConsumeNumberResult.NeedMoreData;
                 }
+
                 _totalConsumed += i;
                 HasValueSequence = true;
                 i = 0;
                 data = _buffer;
             }
+
             nextByte = data[i];
         }
 
@@ -1553,6 +1615,7 @@ public ref partial struct Utf8JsonReader
         {
             return true;
         }
+
         if (result == ConsumeTokenResult.NotEnoughDataRollBackState)
         {
             _consumed = prevConsumed;
@@ -1563,6 +1626,7 @@ public ref partial struct Utf8JsonReader
             _currentPosition = prevSequencePosition;
             _trailingCommaBeforeComment = prevTrailingCommaBeforeComment;
         }
+
         return false;
     }
 
@@ -1580,6 +1644,7 @@ public ref partial struct Utf8JsonReader
                 {
                     return SkipOrConsumeCommentMultiSegmentWithRollback() ? ConsumeTokenResult.Success : ConsumeTokenResult.NotEnoughDataRollBackState;
                 }
+
                 if (_tokenType == JsonTokenType.Comment)
                 {
                     return ConsumeNextTokenFromLastNonCommentTokenMultiSegment();
@@ -1615,6 +1680,7 @@ public ref partial struct Utf8JsonReader
                     _bytePositionInLine--;
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyOrValueNotFound);
                 }
+
                 if (!GetNextSpan())
                 {
                     if (IsLastSpan)
@@ -1623,20 +1689,24 @@ public ref partial struct Utf8JsonReader
                         _bytePositionInLine--;
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyOrValueNotFound);
                     }
+
                     return ConsumeTokenResult.NotEnoughDataRollBackState;
                 }
             }
+
             byte first = _buffer[_consumed];
 
             // This check is done as an optimization to avoid calling SkipWhiteSpace when not necessary.
             if (first <= JsonConstants.Space)
             {
                 SkipWhiteSpaceMultiSegment();
+
                 // The next character must be a start of a property name or value.
                 if (!HasMoreDataMultiSegment(ExceptionResource.ExpectedStartOfPropertyOrValueNotFound))
                 {
                     return ConsumeTokenResult.NotEnoughDataRollBackState;
                 }
+
                 first = _buffer[_consumed];
             }
 
@@ -1659,10 +1729,13 @@ public ref partial struct Utf8JsonReader
                             EndObject();
                             return ConsumeTokenResult.Success;
                         }
+
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.TrailingCommaNotAllowedBeforeObjectEnd);
                     }
+
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyNotFound, first);
                 }
+
                 return ConsumePropertyNameMultiSegment() ? ConsumeTokenResult.Success : ConsumeTokenResult.NotEnoughDataRollBackState;
             }
             else
@@ -1674,8 +1747,10 @@ public ref partial struct Utf8JsonReader
                         EndArray();
                         return ConsumeTokenResult.Success;
                     }
+
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.TrailingCommaNotAllowedBeforeArrayEnd);
                 }
+
                 return ConsumeValueMultiSegment(first) ? ConsumeTokenResult.Success : ConsumeTokenResult.NotEnoughDataRollBackState;
             }
         }
@@ -1691,6 +1766,7 @@ public ref partial struct Utf8JsonReader
         {
             ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.FoundInvalidCharacter, marker);
         }
+
         return ConsumeTokenResult.Success;
     }
 
@@ -1725,6 +1801,7 @@ public ref partial struct Utf8JsonReader
             {
                 goto RollBack;
             }
+
             first = _buffer[_consumed];
         }
 
@@ -1761,6 +1838,7 @@ public ref partial struct Utf8JsonReader
                     _bytePositionInLine--;
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyOrValueNotFound);
                 }
+
                 if (!GetNextSpan())
                 {
                     if (IsLastSpan)
@@ -1769,20 +1847,24 @@ public ref partial struct Utf8JsonReader
                         _bytePositionInLine--;
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyOrValueNotFound);
                     }
+
                     goto RollBack;
                 }
             }
+
             first = _buffer[_consumed];
 
             // This check is done as an optimization to avoid calling SkipWhiteSpace when not necessary.
             if (first <= JsonConstants.Space)
             {
                 SkipWhiteSpaceMultiSegment();
+
                 // The next character must be a start of a property name or value.
                 if (!HasMoreDataMultiSegment(ExceptionResource.ExpectedStartOfPropertyOrValueNotFound))
                 {
                     goto RollBack;
                 }
+
                 first = _buffer[_consumed];
             }
 
@@ -1812,11 +1894,13 @@ public ref partial struct Utf8JsonReader
                             EndObject();
                             goto Done;
                         }
+
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.TrailingCommaNotAllowedBeforeObjectEnd);
                     }
 
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyNotFound, first);
                 }
+
                 if (ConsumePropertyNameMultiSegment())
                 {
                     goto Done;
@@ -1835,6 +1919,7 @@ public ref partial struct Utf8JsonReader
                         EndArray();
                         goto Done;
                     }
+
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.TrailingCommaNotAllowedBeforeArrayEnd);
                 }
 
@@ -1889,6 +1974,7 @@ public ref partial struct Utf8JsonReader
                 _totalConsumed = prevTotalConsumed;
                 goto RollBack;
             }
+
             goto Done;
         }
         else if (_tokenType == JsonTokenType.StartArray)
@@ -1898,6 +1984,7 @@ public ref partial struct Utf8JsonReader
             {
                 goto RollBack;
             }
+
             goto Done;
         }
         else if (_tokenType == JsonTokenType.PropertyName)
@@ -1906,6 +1993,7 @@ public ref partial struct Utf8JsonReader
             {
                 goto RollBack;
             }
+
             goto Done;
         }
         else
@@ -1971,6 +2059,7 @@ public ref partial struct Utf8JsonReader
                     {
                         goto IncompleteNoRollback;
                     }
+
                     marker = _buffer[_consumed];
                 }
             }
@@ -1979,6 +2068,7 @@ public ref partial struct Utf8JsonReader
                 goto IncompleteNoRollback;
             }
         }
+
         return true;
 
     IncompleteNoRollback:
@@ -2003,11 +2093,13 @@ public ref partial struct Utf8JsonReader
                 if (marker <= JsonConstants.Space)
                 {
                     SkipWhiteSpaceMultiSegment();
+
                     // The next character must be a start of a property name or value.
                     if (!HasMoreDataMultiSegment(resource))
                     {
                         goto IncompleteRollback;
                     }
+
                     marker = _buffer[_consumed];
                 }
             }
@@ -2016,6 +2108,7 @@ public ref partial struct Utf8JsonReader
                 goto IncompleteRollback;
             }
         }
+
         return true;
 
     IncompleteRollback:
@@ -2060,6 +2153,7 @@ public ref partial struct Utf8JsonReader
                     _currentPosition = copy;
                     goto IncompleteNoRollback;
                 }
+
                 goto Done;
             }
         }
@@ -2075,6 +2169,7 @@ public ref partial struct Utf8JsonReader
                 {
                     goto IncompleteNoRollback;
                 }
+
                 goto Done;
             }
         }
@@ -2084,6 +2179,7 @@ public ref partial struct Utf8JsonReader
             {
                 goto IncompleteNoRollback;
             }
+
             goto Done;
         }
         else if (_bitStack.CurrentDepth == 0)
@@ -2108,6 +2204,7 @@ public ref partial struct Utf8JsonReader
                     _bytePositionInLine--;
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyOrValueNotFound);
                 }
+
                 if (!GetNextSpan())
                 {
                     if (IsLastSpan)
@@ -2116,20 +2213,24 @@ public ref partial struct Utf8JsonReader
                         _bytePositionInLine--;
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyOrValueNotFound);
                     }
+
                     return ConsumeTokenResult.NotEnoughDataRollBackState;
                 }
             }
+
             marker = _buffer[_consumed];
 
             // This check is done as an optimization to avoid calling SkipWhiteSpace when not necessary.
             if (marker <= JsonConstants.Space)
             {
                 SkipWhiteSpaceMultiSegment();
+
                 // The next character must be a start of a property name or value.
                 if (!HasMoreDataMultiSegment(ExceptionResource.ExpectedStartOfPropertyOrValueNotFound))
                 {
                     return ConsumeTokenResult.NotEnoughDataRollBackState;
                 }
+
                 marker = _buffer[_consumed];
             }
 
@@ -2151,11 +2252,13 @@ public ref partial struct Utf8JsonReader
                             EndObject();
                             goto Done;
                         }
+
                         ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.TrailingCommaNotAllowedBeforeObjectEnd);
                     }
 
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.ExpectedStartOfPropertyNotFound, marker);
                 }
+
                 return ConsumePropertyNameMultiSegment() ? ConsumeTokenResult.Success : ConsumeTokenResult.NotEnoughDataRollBackState;
             }
             else
@@ -2167,8 +2270,10 @@ public ref partial struct Utf8JsonReader
                         EndArray();
                         goto Done;
                     }
+
                     ThrowHelper.ThrowJsonReaderException(ref this, ExceptionResource.TrailingCommaNotAllowedBeforeArrayEnd);
                 }
+
                 return ConsumeValueMultiSegment(marker) ? ConsumeTokenResult.Success : ConsumeTokenResult.NotEnoughDataRollBackState;
             }
         }
@@ -2233,6 +2338,7 @@ public ref partial struct Utf8JsonReader
         else
         {
             _totalConsumed = prevTotalConsumed;
+
             // Note: BytesConsumed = _totalConsumed + _consumed
             // Changing _consumed and _totalConsumed to original values might not work correctly
             // since _consumed is tracking position in the current sequence
@@ -2250,6 +2356,7 @@ public ref partial struct Utf8JsonReader
     {
         _consumed++;
         _bytePositionInLine++;
+
         // Create local copy to avoid bounds checks.
         ReadOnlySpan<byte> localBuffer = _buffer.Slice(_consumed);
 
@@ -2480,7 +2587,6 @@ public ref partial struct Utf8JsonReader
         // \u2028 and \u2029 are considered respectively line and paragraph separators
         // UTF-8 representation for them is E2, 80, A8/A9
         // we have already read E2 and maybe 80 we need to check for remaining 1 or 2 bytes
-
         if (localBuffer.IsEmpty)
         {
             return;
@@ -2624,8 +2730,11 @@ public ref partial struct Utf8JsonReader
     private readonly struct PartialStateForRollback
     {
         public readonly long _prevTotalConsumed;
+
         public readonly long _prevBytePositionInLine;
+
         public readonly int _prevConsumed;
+
         public readonly SequencePosition _prevCurrentPosition;
 
         public PartialStateForRollback(long totalConsumed, long bytePositionInLine, int consumed, SequencePosition currentPosition)

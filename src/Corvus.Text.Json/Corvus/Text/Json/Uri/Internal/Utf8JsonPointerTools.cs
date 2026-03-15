@@ -6,7 +6,6 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
-
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>
@@ -50,6 +49,7 @@ internal static class Utf8JsonPointerTools
                     {
                         return false;
                     }
+
                     byte next = span[i + 1];
                     if (next != (byte)'0' && next != (byte)'1')
                     {
@@ -126,6 +126,7 @@ internal static class Utf8JsonPointerTools
         if (i < length && (span[i] == (byte)'+' || span[i] == (byte)'-'))
         {
             i++;
+
             // Must be positive-integer (no leading zero)
             if (i >= length || !IsNonZeroDigit(span[i])) return false;
             i++;
@@ -165,6 +166,7 @@ internal static class Utf8JsonPointerTools
         }
 
         static bool IsDigit(byte b) => b >= (byte)'0' && b <= (byte)'9';
+
         static bool IsNonZeroDigit(byte b) => b >= (byte)'1' && b <= (byte)'9';
     }
 
