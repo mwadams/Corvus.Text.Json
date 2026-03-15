@@ -281,8 +281,9 @@ $docsViewDir = Join-Path $here "theme\corvus\views\docs"
 $docsToInclude = @(
     'ParsedJsonDocument.md',
     'JsonDocumentBuilder.md',
-    'Validator.md',
+    'SourceGenerator.md',
     'CodeGenerator.md',
+    'Validator.md',
     'MigratingFromV4ToV5.md',
     'UsingCopilotForMigration.md'
 )
@@ -390,8 +391,9 @@ foreach ($docFile in $docsToInclude) {
     $navTitle = switch -Wildcard ($baseName) {
         'ParsedJsonDocument'       { 'Parsing & Reading JSON' }
         'JsonDocumentBuilder'      { 'Building & Mutating JSON' }
-        'Validator'                { 'Runtime Schema Validation' }
+        'SourceGenerator'          { 'Source Generator' }
         'CodeGenerator'            { 'CLI Code Generation' }
+        'Validator'                { 'Dynamic Schema Validation' }
         'MigratingFromV4ToV5'      { 'Migrating from V4' }
         'UsingCopilotForMigration' { 'Copilot Migration' }
         default {
@@ -405,8 +407,9 @@ foreach ($docFile in $docsToInclude) {
     $customDescription = switch -Wildcard ($baseName) {
         'ParsedJsonDocument'  { 'Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json''s JsonDocument with generic type support and zero-copy element access.' }
         'JsonDocumentBuilder' { 'Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json''s JsonNode, designed for request/response cycles and data pipelines.' }
-        'Validator'           { 'Dynamically load, compile, and validate JSON documents against JSON Schema at runtime using Roslyn. Ideal for schema registries, configuration validation, and user-supplied schemas.' }
+        'SourceGenerator'     { 'Generate strongly-typed C# from JSON Schema at build time with the Roslyn incremental source generator. Annotate a partial struct, register your schema, and get full IntelliSense immediately.' }
         'CodeGenerator'       { 'Generate strongly-typed C# models from JSON Schema files using the generatejsonschematypes CLI tool. Same output as the source generator, for CI pipelines and pre-generation workflows.' }
+        'Validator'           { 'Dynamically load, compile, and validate JSON documents against JSON Schema at runtime using Roslyn. Ideal for schema registries, configuration validation, and user-supplied schemas.' }
         default               { $null }
     }
 
