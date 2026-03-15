@@ -8,8 +8,6 @@ Title: "Corvus.Globalization Namespace"
 
 | Type | Kind | Description |
 |------|------|-------------|
-| [CharUnicodeInfo](#charunicodeinfo) | class | This class implements a set of methods for retrieving character type information. Character type information is independent of culture and region. |
-| [IdnMapping](#idnmapping) | class |  |
+| [CharUnicodeInfo](/api/corvus-globalization-charunicodeinfo.html) | class | This class implements a set of methods for retrieving character type information. Character type information is independent of culture and region. |
+| [IdnMapping](/api/corvus-globalization-idnmapping.html) | class |  |
 
-
-> Detailed type documentation for each type listed above will be available in future updates.

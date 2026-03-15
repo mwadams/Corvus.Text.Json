@@ -4,6 +4,8 @@ string? xmlPath = null;
 string? assemblyPath = null;
 string? outputPath = null;
 string? taxonomyOutputPath = null;
+string? htmlOutputPath = null;
+string? siteTitleArg = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -21,17 +23,25 @@ for (int i = 0; i < args.Length - 1; i++)
         case "--taxonomy-output":
             taxonomyOutputPath = args[++i];
             break;
+        case "--html-output":
+            htmlOutputPath = args[++i];
+            break;
+        case "--site-title":
+            siteTitleArg = args[++i];
+            break;
     }
 }
 
 if (xmlPath is null || assemblyPath is null || outputPath is null || taxonomyOutputPath is null)
 {
-    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> --output <path> --taxonomy-output <path>");
+    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> --output <path> --taxonomy-output <path> [--html-output <path>] [--site-title <title>]");
     Console.Error.WriteLine();
     Console.Error.WriteLine("  --xml              Path to the XML documentation file (e.g., Corvus.Text.Json.xml)");
     Console.Error.WriteLine("  --assembly         Path to the compiled DLL");
     Console.Error.WriteLine("  --output           Output directory for generated markdown files");
     Console.Error.WriteLine("  --taxonomy-output  Output directory for generated taxonomy YAML files");
+    Console.Error.WriteLine("  --html-output      (Optional) Output directory for standalone per-type HTML pages");
+    Console.Error.WriteLine("  --site-title       (Optional) Site title for standalone HTML pages");
     return 1;
 }
 
@@ -65,13 +75,21 @@ foreach (KeyValuePair<string, NamespaceInfo> ns in namespaces)
 Directory.CreateDirectory(outputPath);
 Directory.CreateDirectory(taxonomyOutputPath);
 
-Console.WriteLine($"Generating markdown to: {outputPath}");
+Console.WriteLine($"Generating namespace markdown to: {outputPath}");
 MarkdownGenerator markdownGen = new(outputPath);
 markdownGen.Generate(namespaces);
 
-Console.WriteLine($"Generating taxonomy to: {taxonomyOutputPath}");
+Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
 TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath);
 taxonomyGen.Generate(namespaces);
+
+if (htmlOutputPath is not null)
+{
+    string title = siteTitleArg ?? "Corvus.Text.Json";
+    Console.WriteLine($"Generating standalone HTML type pages to: {htmlOutputPath}");
+    HtmlPageGenerator htmlGen = new(htmlOutputPath, title);
+    htmlGen.Generate(namespaces);
+}
 
 string searchIndexPath = Path.Combine(outputPath, "search-index.json");
 Console.WriteLine($"Generating search index: {searchIndexPath}");

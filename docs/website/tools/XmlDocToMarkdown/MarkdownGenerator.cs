@@ -37,26 +37,214 @@ public sealed class MarkdownGenerator(string outputDir)
         sb.AppendLine("---");
     }
 
+    /// <summary>
+    /// Generates one markdown file per type, placed flat in the output directory.
+    /// File names use the pattern: {nsSlug}-{typeSlug}.md
+    /// </summary>
+    public void GeneratePerType(Dictionary<string, NamespaceInfo> namespaces)
+    {
+        foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
+        {
+            string ns = kvp.Key;
+            string nsSlug = NamespaceToFileName(ns);
+
+            foreach (TypeInfo type in kvp.Value.Types)
+            {
+                string typeSlug = TypeToSlug(type.Name);
+                string fileName = $"{nsSlug}-{typeSlug}.md";
+                string filePath = Path.Combine(outputDir, fileName);
+
+                StringBuilder sb = new();
+                WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
+                WriteTypeBody(sb, type);
+
+                File.WriteAllText(filePath, sb.ToString());
+                Console.WriteLine($"  Written: {filePath}");
+            }
+        }
+    }
+
     private static void WriteNamespaceContent(StringBuilder sb, NamespaceInfo nsInfo)
     {
+        string nsSlug = NamespaceToFileName(nsInfo.Name);
         sb.AppendLine($"# {nsInfo.Name} Namespace");
         sb.AppendLine();
 
-        // Type summary table
         sb.AppendLine("| Type | Kind | Description |");
         sb.AppendLine("|------|------|-------------|");
         foreach (TypeInfo type in nsInfo.Types)
         {
             string summary = TruncateSummary(type.Documentation?.Summary ?? string.Empty);
-            sb.AppendLine($"| [{type.Name}](#{Anchor(type.Name)}) | {type.Kind} | {summary} |");
+            string typeSlug = TypeToSlug(type.Name);
+            string typeUrl = $"/api/{nsSlug}-{typeSlug}.html";
+            sb.AppendLine($"| [{type.Name}]({typeUrl}) | {type.Kind} | {summary} |");
         }
 
         sb.AppendLine();
+    }
 
-        // Full documentation for each type
-        foreach (TypeInfo type in nsInfo.Types)
+    /// <summary>
+    /// Writes the full body of a type page (no top heading; the view template provides it).
+    /// </summary>
+    private static void WriteTypeBody(StringBuilder sb, TypeInfo type)
+    {
+        sb.AppendLine("```csharp");
+        sb.AppendLine(BuildTypeDeclaration(type));
+        sb.AppendLine("```");
+        sb.AppendLine();
+
+        if (!string.IsNullOrEmpty(type.Documentation?.Summary))
         {
-            WriteTypeSection(sb, type, headingLevel: 2);
+            sb.AppendLine(type.Documentation!.Summary);
+            sb.AppendLine();
+        }
+
+        if (type.GenericParameters.Count > 0 && type.Documentation?.TypeParams.Count > 0)
+        {
+            sb.AppendLine("## Type Parameters");
+            sb.AppendLine();
+            sb.AppendLine("| Parameter | Description |");
+            sb.AppendLine("|-----------|-------------|");
+            foreach (DocParam tp in type.Documentation!.TypeParams)
+            {
+                sb.AppendLine($"| `{tp.Name}` | {tp.Description} |");
+            }
+            sb.AppendLine();
+        }
+
+        if (!string.IsNullOrEmpty(type.Documentation?.Remarks))
+        {
+            sb.AppendLine("## Remarks");
+            sb.AppendLine();
+            sb.AppendLine(type.Documentation!.Remarks);
+            sb.AppendLine();
+        }
+
+        if (type.BaseType is not null || type.Interfaces.Count > 0)
+        {
+            sb.AppendLine("## Inheritance");
+            sb.AppendLine();
+            if (type.BaseType is not null)
+                sb.AppendLine($"- Inherits from: `{type.BaseType}`");
+            foreach (string iface in type.Interfaces)
+                sb.AppendLine($"- Implements: `{iface}`");
+            sb.AppendLine();
+        }
+
+        if (type.Constructors.Count > 0)
+        {
+            sb.AppendLine("## Constructors");
+            sb.AppendLine();
+            foreach (MemberInfo ctor in type.Constructors)
+                WriteMemberSection(sb, ctor, 3);
+        }
+
+        if (type.Properties.Count > 0)
+        {
+            sb.AppendLine("## Properties");
+            sb.AppendLine();
+            sb.AppendLine("| Property | Type | Description |");
+            sb.AppendLine("|----------|------|-------------|");
+            foreach (MemberInfo prop in type.Properties)
+            {
+                string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
+                string staticBadge = prop.IsStatic ? " `static`" : "";
+                sb.AppendLine($"| `{prop.Name}`{staticBadge} | `{prop.ReturnType}` | {summary} |");
+            }
+            sb.AppendLine();
+
+            foreach (MemberInfo prop in type.Properties)
+            {
+                if (!string.IsNullOrEmpty(prop.Documentation?.Remarks) || !string.IsNullOrEmpty(prop.Documentation?.Value))
+                {
+                    sb.AppendLine($"### {prop.Name}");
+                    sb.AppendLine();
+                    sb.AppendLine("```csharp");
+                    sb.AppendLine(prop.Signature);
+                    sb.AppendLine("```");
+                    sb.AppendLine();
+                    if (!string.IsNullOrEmpty(prop.Documentation?.Summary))
+                    {
+                        sb.AppendLine(prop.Documentation!.Summary);
+                        sb.AppendLine();
+                    }
+                    if (!string.IsNullOrEmpty(prop.Documentation?.Value))
+                    {
+                        sb.AppendLine($"**Value:** {prop.Documentation!.Value}");
+                        sb.AppendLine();
+                    }
+                    if (!string.IsNullOrEmpty(prop.Documentation?.Remarks))
+                    {
+                        sb.AppendLine(prop.Documentation!.Remarks);
+                        sb.AppendLine();
+                    }
+                }
+            }
+        }
+
+        if (type.Methods.Count > 0)
+        {
+            sb.AppendLine("## Methods");
+            sb.AppendLine();
+            foreach (MemberInfo method in type.Methods)
+                WriteMemberSection(sb, method, 3);
+        }
+
+        if (type.Fields.Count > 0)
+        {
+            sb.AppendLine("## Fields");
+            sb.AppendLine();
+            sb.AppendLine("| Field | Type | Description |");
+            sb.AppendLine("|-------|------|-------------|");
+            foreach (MemberInfo field in type.Fields)
+            {
+                string summary = TruncateSummary(field.Documentation?.Summary ?? string.Empty);
+                string staticBadge = field.IsStatic ? " `static`" : "";
+                sb.AppendLine($"| `{field.Name}`{staticBadge} | `{field.ReturnType}` | {summary} |");
+            }
+            sb.AppendLine();
+        }
+
+        if (type.Events.Count > 0)
+        {
+            sb.AppendLine("## Events");
+            sb.AppendLine();
+            sb.AppendLine("| Event | Type | Description |");
+            sb.AppendLine("|-------|------|-------------|");
+            foreach (MemberInfo evt in type.Events)
+            {
+                string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
+                sb.AppendLine($"| `{evt.Name}` | `{evt.ReturnType}` | {summary} |");
+            }
+            sb.AppendLine();
+        }
+
+        if (type.NestedTypes.Count > 0)
+        {
+            sb.AppendLine("## Nested Types");
+            sb.AppendLine();
+            foreach (TypeInfo nested in type.NestedTypes)
+                WriteTypeSection(sb, nested, 3);
+        }
+
+        if (!string.IsNullOrEmpty(type.Documentation?.Example))
+        {
+            sb.AppendLine("## Example");
+            sb.AppendLine();
+            sb.AppendLine(type.Documentation!.Example);
+            sb.AppendLine();
+        }
+
+        if (type.Documentation?.SeeAlso.Count > 0)
+        {
+            sb.AppendLine("## See Also");
+            sb.AppendLine();
+            foreach (string seeAlso in type.Documentation!.SeeAlso)
+            {
+                string shortName = XmlDocParser.GetShortTypeName(seeAlso);
+                sb.AppendLine($"- `{shortName}`");
+            }
+            sb.AppendLine();
         }
     }
 
@@ -426,8 +614,19 @@ public sealed class MarkdownGenerator(string outputDir)
 
     internal static string NamespaceToFileName(string ns)
     {
-        // Convert dots to hyphens and lowercase
         return ns.Replace('.', '-').ToLowerInvariant();
+    }
+
+    internal static string TypeToSlug(string typeName)
+    {
+        return typeName
+            .Replace('<', '-')
+            .Replace(">", "")
+            .Replace(", ", "-")
+            .Replace(",", "-")
+            .Replace(' ', '-')
+            .ToLowerInvariant()
+            .TrimEnd('-');
     }
 
     private static string Anchor(string name)

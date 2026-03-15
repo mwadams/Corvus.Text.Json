@@ -46,7 +46,28 @@ if (Test-Path $assetsDest) {
 }
 Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
 
-# Step 2b: Build Lunr search index
+# Step 2b: Generate API documentation
+Write-Host "Generating API documentation..." -ForegroundColor Cyan
+$xmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
+$assemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.dll"
+$apiContentDir = Join-Path $here "content\Api"
+$apiTaxonomyDir = Join-Path $here "taxonomy\api"
+$apiHtmlDir = Join-Path $outputDir "api"
+
+& dotnet run --project (Join-Path $here "tools\XmlDocToMarkdown") -c Release -- `
+    --xml $xmlPath `
+    --assembly $assemblyPath `
+    --output $apiContentDir `
+    --taxonomy-output $apiTaxonomyDir `
+    --html-output $apiHtmlDir `
+    --site-title "Corvus.Text.Json"
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "API doc generation failed — site will build without per-type API pages."
+} else {
+    Write-Host "API documentation generated." -ForegroundColor Green
+}
+
+# Step 2c: Build Lunr search index
 Write-Host "Building search index..." -ForegroundColor Cyan
 $searchIndexOutput = Join-Path $outputDir "search-index.json"
 & node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
@@ -95,3 +116,21 @@ if ($Watch) {
 Write-Host "Running Vellum..." -ForegroundColor Cyan
 Write-Host "  $vellumCmd $($vellumArgs -join ' ')" -ForegroundColor Gray
 & $vellumCmd $vellumArgs
+
+# Step 5: Generate standalone per-type HTML pages (after Vellum, since Vellum may clean output)
+if (!(Test-Path $apiHtmlDir)) {
+    New-Item -ItemType Directory -Path $apiHtmlDir | Out-Null
+}
+Write-Host "Generating per-type API HTML pages..." -ForegroundColor Cyan
+& dotnet run --project (Join-Path $here "tools\XmlDocToMarkdown") -c Release --no-build -- `
+    --xml $xmlPath `
+    --assembly $assemblyPath `
+    --output $apiContentDir `
+    --taxonomy-output $apiTaxonomyDir `
+    --html-output $apiHtmlDir `
+    --site-title "Corvus.Text.Json"
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "Per-type HTML generation failed."
+} else {
+    Write-Host "Per-type API pages generated." -ForegroundColor Green
+}

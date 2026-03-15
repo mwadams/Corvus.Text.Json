@@ -8,7 +8,5 @@ Title: "Corvus.Runtime.InteropServices Namespace"
 
 | Type | Kind | Description |
 |------|------|-------------|
-| [JsonMarshal](#jsonmarshal) | class | An unsafe class that provides a set of methods to access the underlying data representations of JSON types. |
+| [JsonMarshal](/api/corvus-runtime-interopservices-jsonmarshal.html) | class | An unsafe class that provides a set of methods to access the underlying data representations of JSON types. |
 
-
-> Detailed type documentation for each type listed above will be available in future updates.

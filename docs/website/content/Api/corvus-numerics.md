@@ -8,7 +8,5 @@ Title: "Corvus.Numerics Namespace"
 
 | Type | Kind | Description |
 |------|------|-------------|
-| [BigNumber](#bignumber) | struct | Represents an arbitrary-precision decimal number using a significand and exponent. |
+| [BigNumber](/api/corvus-numerics-bignumber.html) | struct | Represents an arbitrary-precision decimal number using a significand and exponent. |
 
-
-> Detailed type documentation for each type listed above will be available in future updates.

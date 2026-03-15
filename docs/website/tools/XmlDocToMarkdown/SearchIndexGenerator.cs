@@ -38,7 +38,9 @@ public sealed class SearchIndexGenerator(string outputPath)
 
     private static void AddTypeEntries(List<SearchEntry> entries, TypeInfo type, string ns, string pageUrl)
     {
-        string anchor = type.Name.Replace('.', '-').Replace('<', '-').Replace('>', '-').ToLowerInvariant().TrimEnd('-');
+        string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
+        string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
+        string typeUrl = $"/api/{nsSlug}-{typeSlug}.html";
 
         // Build keywords from the type
         List<string> keywords = [type.Name, type.Kind, ns];
@@ -74,7 +76,7 @@ public sealed class SearchIndexGenerator(string outputPath)
 
         entries.Add(new SearchEntry
         {
-            Url = $"{pageUrl}#{anchor}",
+            Url = typeUrl,
             Title = type.Name,
             Description = type.Documentation?.Summary ?? string.Empty,
             Keywords = string.Join(" ", keywords),
