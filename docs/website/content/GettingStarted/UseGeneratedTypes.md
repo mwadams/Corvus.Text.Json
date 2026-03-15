@@ -46,12 +46,13 @@ Each schema property generates a typed accessor returning a nested entity struct
 Person person = doc.RootElement;
 
 // Required property — name is a nested PersonName object
+// Strings require an explicit cast (or GetString())
 string familyName = (string)person.Name.FamilyName;
 
-// Optional properties — may be Undefined when absent
+// Value types like int support implicit conversion — no cast needed
 if (person.Age.IsNotUndefined())
 {
-    int age = (int)person.Age;
+    int age = person.Age;
 }
 
 if (person.Email.IsNotUndefined())
