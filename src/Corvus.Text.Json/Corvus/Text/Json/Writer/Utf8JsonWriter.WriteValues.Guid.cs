@@ -87,7 +87,7 @@ public sealed partial class Utf8JsonWriter
 
     private void WriteStringValueMinimized(Guid value)
     {
-        int maxRequired = JsonConstants.MaximumFormatGuidLength + 3; // 2 quotes, and optionally, 1 list separator
+        const int maxRequired = JsonConstants.MaximumFormatGuidLength + 3; // 2 quotes, and optionally, 1 list separator
 
         if (_memory.Length - BytesPending < maxRequired)
         {

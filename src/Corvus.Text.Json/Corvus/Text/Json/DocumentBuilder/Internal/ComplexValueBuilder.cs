@@ -230,7 +230,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         AddStringValue(JsonTokenType.String, utf8String, escapeValue, valueRequiresUnescaping);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -245,7 +245,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         AddStringValue(JsonTokenType.String, value);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -258,7 +258,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         AddStringValue(JsonTokenType.String, value);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -273,7 +273,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         AddStringValue(JsonTokenType.String, value, escapeValue, valueRequiresUnescaping);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -296,7 +296,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny((byte)'e', (byte)'E') >= 0);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -319,7 +319,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: value.IndexOfAny((byte)'e', (byte)'E') >= 0);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -335,7 +335,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         AddStringValue(JsonTokenType.String, value, escape: false, ifNotEscapeRequiresUenscaping: valueRequiresUnescaping);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -358,7 +358,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         AddStringValue(JsonTokenType.String, value, escape: false, ifNotEscapeRequiresUenscaping: valueRequiresUnescaping);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -382,7 +382,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Null, _parentDocument.StoreNullValue(), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -394,7 +394,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Null, _parentDocument.StoreNullValue(), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -420,7 +420,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(value ? JsonTokenType.True : JsonTokenType.False, _parentDocument.StoreBooleanValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -433,7 +433,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(value ? JsonTokenType.True : JsonTokenType.False, _parentDocument.StoreBooleanValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -468,7 +468,7 @@ public ref struct ComplexValueBuilder
         int currentLength = Length;
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += (Length - currentLength) / DbRow.Size;
     }
 
@@ -487,7 +487,7 @@ public ref struct ComplexValueBuilder
         int currentLength = Length;
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += (Length - currentLength) / DbRow.Size;
     }
 
@@ -513,7 +513,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -526,7 +526,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -552,7 +552,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -565,7 +565,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -591,7 +591,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -604,7 +604,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -630,7 +630,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -643,7 +643,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -669,7 +669,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -682,7 +682,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -708,7 +708,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -721,7 +721,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -747,7 +747,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -760,7 +760,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -786,7 +786,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -799,7 +799,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -827,7 +827,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -841,7 +841,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -867,7 +867,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -880,7 +880,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -906,7 +906,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -919,7 +919,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -947,7 +947,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -961,7 +961,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -987,7 +987,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1000,7 +1000,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1028,7 +1028,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1042,7 +1042,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1068,7 +1068,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1081,7 +1081,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1109,7 +1109,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1123,7 +1123,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1149,7 +1149,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1162,7 +1162,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1188,7 +1188,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1201,7 +1201,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1227,7 +1227,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1240,7 +1240,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1266,7 +1266,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1279,7 +1279,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1307,7 +1307,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: value.Exponent != 0);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1326,7 +1326,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: value.Exponent != 0);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1354,7 +1354,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1367,7 +1367,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1395,7 +1395,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1409,7 +1409,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1435,7 +1435,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName, escapeName, nameRequiresUnescaping);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -1448,7 +1448,7 @@ public ref struct ComplexValueBuilder
     {
         AddStringValue(JsonTokenType.PropertyName, propertyName);
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += 2;
     }
 
@@ -2356,8 +2356,8 @@ public ref struct ComplexValueBuilder
     public void AddItem(ReadOnlySpan<byte> utf8String, bool escapeValue, bool requiresUnescaping)
     {
         AddStringValue(JsonTokenType.String, utf8String, escapeValue, requiresUnescaping);
-        _memberCount += 1;
-        _rowCount += 1;
+        _memberCount++;
+        _rowCount++;
     }
 
     /// <summary>
@@ -2367,8 +2367,8 @@ public ref struct ComplexValueBuilder
     public void AddItem(ReadOnlySpan<char> value)
     {
         AddStringValue(JsonTokenType.String, value);
-        _memberCount += 1;
-        _rowCount += 1;
+        _memberCount++;
+        _rowCount++;
     }
 
     /// <summary>
@@ -2379,7 +2379,7 @@ public ref struct ComplexValueBuilder
     public void AddItemRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
     {
         AddStringValue(JsonTokenType.String, value, false, requiresUnescaping);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2424,7 +2424,7 @@ public ref struct ComplexValueBuilder
     public void AddItemNull()
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Null, _parentDocument.StoreNullValue(), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2435,7 +2435,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(bool value)
     {
         _parsedData.AppendDynamicSimpleValue(value ? JsonTokenType.True : JsonTokenType.False, _parentDocument.StoreBooleanValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2446,7 +2446,7 @@ public ref struct ComplexValueBuilder
     public void AddItemFormattedNumber(ReadOnlySpan<byte> value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreRawNumberValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2463,7 +2463,7 @@ public ref struct ComplexValueBuilder
 
         int currentLength = Length;
         value.ParentDocument.AppendElementToMetadataDb(value.ParentDocumentIndex, _parentDocument.Workspace, ref _parsedData);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount += (Length - currentLength) / DbRow.Size;
     }
 
@@ -2474,7 +2474,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(Guid value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2485,7 +2485,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in DateTime value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2496,7 +2496,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in DateTimeOffset value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2507,7 +2507,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in OffsetDateTime value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2518,7 +2518,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in OffsetDate value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2529,7 +2529,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in OffsetTime value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2540,7 +2540,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in LocalDate value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2551,7 +2551,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in Period value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.String, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2563,7 +2563,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(sbyte value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2574,7 +2574,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(byte value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2585,7 +2585,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(int value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2597,7 +2597,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(uint value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2608,7 +2608,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(long value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2620,7 +2620,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(ulong value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2631,7 +2631,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(short value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2643,7 +2643,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(ushort value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2654,7 +2654,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(float value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2665,7 +2665,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(double value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2676,7 +2676,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(decimal value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2688,7 +2688,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in BigNumber value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2699,7 +2699,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(in BigInteger value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2712,7 +2712,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(Int128 value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2724,7 +2724,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(UInt128 value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -2735,7 +2735,7 @@ public ref struct ComplexValueBuilder
     public void AddItem(Half value)
     {
         _parsedData.AppendDynamicSimpleValue(JsonTokenType.Number, _parentDocument.StoreValue(value), requiresUnescapingOrHasExponent: false);
-        _memberCount += 1;
+        _memberCount++;
         _rowCount++;
     }
 
@@ -3286,7 +3286,7 @@ public ref struct ComplexValueBuilder
         _parsedData.RemoveRows(valueIndex - DbRow.Size, rowCountToRemove);
 
         // Then update our local member count and row count.
-        _memberCount -= 1;
+        _memberCount--;
         _rowCount -= rowCountToRemove;
     }
 

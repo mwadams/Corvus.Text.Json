@@ -85,7 +85,7 @@ public sealed partial class Utf8JsonWriter
 
     private void WriteStringValueMinimized(DateTimeOffset value)
     {
-        int maxRequired = JsonConstants.MaximumFormatDateTimeOffsetLength + 3; // 2 quotes, and optionally, 1 list separator
+        const int maxRequired = JsonConstants.MaximumFormatDateTimeOffsetLength + 3; // 2 quotes, and optionally, 1 list separator
 
         if (_memory.Length - BytesPending < maxRequired)
         {

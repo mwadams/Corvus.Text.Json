@@ -444,7 +444,7 @@ internal static partial class JsonReaderHelper
                 }
 
                 fragment[writeIndex + 1] = (byte)'0';
-                readIndex += 1;
+                readIndex++;
                 writeIndex += 2;
             }
             else if (unencodedFragment[readIndex] == '/')
@@ -457,7 +457,7 @@ internal static partial class JsonReaderHelper
                 }
 
                 fragment[writeIndex + 1] = (byte)'1';
-                readIndex += 1;
+                readIndex++;
                 writeIndex += 2;
             }
             else

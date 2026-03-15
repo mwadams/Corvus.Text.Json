@@ -103,7 +103,7 @@ public sealed partial class Utf8JsonWriter
 
     private void WriteNumberValueMinimized(long value)
     {
-        int maxRequired = JsonConstants.MaximumFormatInt64Length + 1; // Optionally, 1 list separator
+        const int maxRequired = JsonConstants.MaximumFormatInt64Length + 1; // Optionally, 1 list separator
 
         if (_memory.Length - BytesPending < maxRequired)
         {

@@ -437,7 +437,7 @@ public sealed partial class Utf8JsonWriter
     private void WriteStringSegmentMinimizedPrologue()
     {
         // One quote and optionally 1 list separator
-        int bytesRequired = 2;
+        const int bytesRequired = 2;
         if (_memory.Length - BytesPending < bytesRequired)
         {
             Grow(bytesRequired);

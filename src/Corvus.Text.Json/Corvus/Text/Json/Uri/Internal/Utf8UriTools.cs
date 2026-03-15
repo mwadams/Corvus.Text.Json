@@ -1955,7 +1955,7 @@ internal static class Utf8UriTools
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool IriParsing(Utf8UriParser? syntax)
     {
-        return syntax is null || syntax.InFact(Utf8UriSyntaxFlags.AllowIriParsing);
+        return syntax?.InFact(Utf8UriSyntaxFlags.AllowIriParsing) != false;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2874,14 +2874,14 @@ internal static class Utf8UriTools
             {
                 break;
             }
-            else if (delim == (byte)'?' && c == (byte)'#' && (syntax != null && syntax.InFact(Utf8UriSyntaxFlags.MayHaveFragment)))
+            else if (delim == (byte)'?' && c == (byte)'#' && (syntax?.InFact(Utf8UriSyntaxFlags.MayHaveFragment) == true))
             {
                 // this is a special case when deciding on Query/Fragment
                 break;
             }
             else if (c == (byte)'?')
             {
-                if (IsImplicitFile(flags) || (syntax != null && !syntax.InFact(Utf8UriSyntaxFlags.MayHaveQuery)
+                if (IsImplicitFile(flags) || (syntax?.InFact(Utf8UriSyntaxFlags.MayHaveQuery) == false
                     && delim != c_EOL))
                 {
                     // If found as reserved this char is not suitable for safe unescaped display
@@ -2894,7 +2894,7 @@ internal static class Utf8UriTools
             else if (c == (byte)'#')
             {
                 needsEscaping = true;
-                if (IsImplicitFile(flags) || (syntax != null && !syntax.InFact(Utf8UriSyntaxFlags.MayHaveFragment)))
+                if (IsImplicitFile(flags) || (syntax?.InFact(Utf8UriSyntaxFlags.MayHaveFragment) == false))
                 {
                     // If found as reserved this char is not suitable for safe unescaped display
                     // Will need to escape it when both escaping and unescaping the string

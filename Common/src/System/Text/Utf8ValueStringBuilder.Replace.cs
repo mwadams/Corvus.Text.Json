@@ -141,7 +141,7 @@ internal ref partial struct Utf8ValueStringBuilder
                 relocationRangeEndIndex = matchIndex + startIndex;
                 matchIndex = rangeBuffer[..matchIndex].LastIndexOf(oldValue);
 
-                matchCount -= 1;
+                matchCount--;
             } while (matchCount > 0);
         }
     }

@@ -39,7 +39,7 @@ public static partial class Ascii
 
     private static unsafe bool IsValidCore(ref byte searchSpace, int length)
     {
-        uint elementsPerUlong = sizeof(ulong);
+        const uint elementsPerUlong = sizeof(ulong);
 
         if (length < elementsPerUlong)
         {

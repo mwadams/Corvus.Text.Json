@@ -420,7 +420,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in OffsetDateTime dateTime, Span<byte> destination, out int bytesWritten)
     {
-        int bytesRequired = JsonConstants.MaximumFormatDateTimeOffsetLength;
+        const int bytesRequired = JsonConstants.MaximumFormatDateTimeOffsetLength;
 
         if (destination.Length < bytesRequired)
         {
@@ -485,7 +485,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in OffsetDate date, Span<byte> destination, out int bytesWritten)
     {
-        int bytesRequired = JsonConstants.MaximumFormatOffsetDateLength;
+        const int bytesRequired = JsonConstants.MaximumFormatOffsetDateLength;
 
         if (destination.Length < bytesRequired)
         {
@@ -540,7 +540,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in LocalDate date, Span<byte> destination, out int bytesWritten)
     {
-        int bytesRequired = JsonConstants.MaximumFormatDateLength;
+        const int bytesRequired = JsonConstants.MaximumFormatDateLength;
 
         if (destination.Length < bytesRequired)
         {
@@ -570,7 +570,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in OffsetTime offsetTime, Span<byte> destination, out int bytesWritten)
     {
-        int bytesRequired = JsonConstants.MaximumFormatOffsetTimeLength;
+        const int bytesRequired = JsonConstants.MaximumFormatOffsetTimeLength;
 
         if (destination.Length < bytesRequired)
         {
@@ -628,7 +628,7 @@ public static partial class JsonElementHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in Period incomingPeriod, Span<byte> destination, out int bytesWritten)
     {
-        int bytesRequired = JsonConstants.MaximumFormatPeriodLength;
+        const int bytesRequired = JsonConstants.MaximumFormatPeriodLength;
 
         if (destination.Length < bytesRequired)
         {

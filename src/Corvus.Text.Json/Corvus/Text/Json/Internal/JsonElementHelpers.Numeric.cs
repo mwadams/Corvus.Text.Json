@@ -3500,13 +3500,13 @@ public static partial class JsonElementHelpers
                 case (byte)'1':
                 case (byte)'4':
                 case (byte)'7':
-                    accumulator += 1;
+                    accumulator++;
                     break;
 
                 case (byte)'2':
                 case (byte)'5':
                 case (byte)'8':
-                    accumulator -= 1;
+                    accumulator--;
                     break;
             }
         }
@@ -3547,13 +3547,13 @@ public static partial class JsonElementHelpers
                 case (byte)'1':
                 case (byte)'4':
                 case (byte)'7':
-                    accumulator += 1;
+                    accumulator++;
                     break;
 
                 case (byte)'2':
                 case (byte)'5':
                 case (byte)'8':
-                    accumulator -= 1;
+                    accumulator--;
                     break;
             }
         }

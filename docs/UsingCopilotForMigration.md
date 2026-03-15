@@ -36,7 +36,7 @@ This repository includes two migration documents:
 | Document | Purpose | Audience |
 |---|---|---|
 | [`MigratingFromV4ToV5.md`](MigratingFromV4ToV5.md) | Comprehensive migration guide with explanations and examples | Developers |
-| [`CopilotMigrationInstructions.md`](CopilotMigrationInstructions.md) | Structured transformation rules optimised for AI consumption | Copilot |
+| [`CopilotMigrationInstructions.md`](copilot/CopilotMigrationInstructions.md) | Structured transformation rules optimised for AI consumption | Copilot |
 
 You don't need to memorise either one. `CopilotMigrationInstructions.md` is designed to be attached to Copilot prompts so it has the full context of every V4 → V5 transformation.
 
@@ -51,7 +51,7 @@ The single most important thing you can do is **give Copilot the migration instr
 Use `#file` to attach the migration instructions:
 
 ```
-#file:docs/CopilotMigrationInstructions.md
+#file:docs/copilot/CopilotMigrationInstructions.md
 
 Migrate this file from Corvus.Json V4 to Corvus.Text.Json V5.
 Follow the transformation rules in the attached document.
@@ -64,7 +64,7 @@ Reference the file in your prompt:
 ```
 Migrate the file src/MyService/PersonHandler.cs from Corvus.Json V4 to
 Corvus.Text.Json V5. Use the transformation rules in
-docs/CopilotMigrationInstructions.md as your reference.
+docs/copilot/CopilotMigrationInstructions.md as your reference.
 ```
 
 ### In GitHub Copilot Workspace
@@ -84,7 +84,7 @@ Migration works best one file at a time. This keeps the scope manageable and mak
 2. **Ask Copilot to migrate it:**
 
    ```
-   #file:docs/CopilotMigrationInstructions.md
+   #file:docs/copilot/CopilotMigrationInstructions.md
    #file:src/MyService/PersonHandler.cs
 
    Migrate PersonHandler.cs from Corvus.Json V4 to Corvus.Text.Json V5.
@@ -104,7 +104,7 @@ Migration works best one file at a time. This keeps the scope manageable and mak
 
 **Simple model usage (parsing, property access):**
 ```
-#file:docs/CopilotMigrationInstructions.md
+#file:docs/copilot/CopilotMigrationInstructions.md
 #file:src/MyService/PersonHandler.cs
 
 Migrate this file from V4 to V5. It mostly does parsing and property
@@ -114,7 +114,7 @@ ensure disposal is correct.
 
 **Mutation-heavy code (With* → Set*):**
 ```
-#file:docs/CopilotMigrationInstructions.md
+#file:docs/copilot/CopilotMigrationInstructions.md
 #file:src/MyService/OrderBuilder.cs
 
 Migrate this file. It uses With*() chains extensively to build up
@@ -124,7 +124,7 @@ Ensure the workspace is created in a using block.
 
 **Validation code:**
 ```
-#file:docs/CopilotMigrationInstructions.md
+#file:docs/copilot/CopilotMigrationInstructions.md
 #file:src/MyService/SchemaValidator.cs
 
 Migrate this file. It uses Validate(ValidationContext, ValidationLevel).
@@ -134,7 +134,7 @@ EvaluateSchema(collector) where detailed results are needed.
 
 **Union/composition code (Match, TryGetAs):**
 ```
-#file:docs/CopilotMigrationInstructions.md
+#file:docs/copilot/CopilotMigrationInstructions.md
 #file:src/MyService/ShapeProcessor.cs
 
 Migrate this file. It uses AsString, AsNumber, Match(), and TryGetAs*().
@@ -223,7 +223,7 @@ to Corvus.Text.Json.JsonElement.
 
 If many files use the parse pattern:
 ```
-#file:docs/CopilotMigrationInstructions.md
+#file:docs/copilot/CopilotMigrationInstructions.md
 
 Find all usages of ParsedValue<T> and convert to
 ParsedJsonDocument<T>. Remember:
@@ -250,7 +250,7 @@ After migrating a group of files:
 
 3. **If tests fail**, give Copilot the error output:
    ```
-   #file:docs/CopilotMigrationInstructions.md
+   #file:docs/copilot/CopilotMigrationInstructions.md
 
    I'm getting this build error after migrating to V5:
 

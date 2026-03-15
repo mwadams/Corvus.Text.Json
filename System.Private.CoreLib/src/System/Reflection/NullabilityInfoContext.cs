@@ -432,7 +432,9 @@ namespace System.Reflection
         private static MemberInfo GetMemberMetadataDefinition(MemberInfo member)
         {
             Type? type = member.DeclaringType;
+#pragma warning disable RCS1146 // Use conditional access
             if ((type != null) && type.IsGenericType && !type.IsGenericTypeDefinition)
+#pragma warning restore RCS1146
             {
                 return type.GetGenericTypeDefinition().GetMemberWithSameMetadataDefinitionAs(member);
             }

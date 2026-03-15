@@ -2624,12 +2624,12 @@ public readonly partial struct JsonElement
             // return None, which then throws the same exception in the return statement.
             JsonTokenType type = TokenType;
 
-#pragma warning disable IDE0075 // Simplify conditional expression
+#pragma warning disable IDE0075, RCS1104 // Simplify conditional expression
             return
-                type == JsonTokenType.True ? true :
-                type == JsonTokenType.False ? false :
-                ThrowJsonElementWrongTypeException(type);
-#pragma warning restore IDE0075 // Simplify conditional expression
+                type == JsonTokenType.True ||
+                (type == JsonTokenType.False ? false :
+                ThrowJsonElementWrongTypeException(type));
+#pragma warning restore IDE0075, RCS1104 // Simplify conditional expression
 
             static bool ThrowJsonElementWrongTypeException(JsonTokenType actualType)
             {

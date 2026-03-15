@@ -210,7 +210,7 @@ internal static class Utf8JsonPointerTools
                 }
 
                 readIndex += 2;
-                writeIndex += 1;
+                writeIndex++;
             }
         }
 

@@ -1662,7 +1662,7 @@ internal ref struct JsonRegexValidator
 
         if (_pos + c <= _pattern.Length)
         {
-            for (; c > 0; c -= 1)
+            for (; c > 0; --c)
             {
                 char ch = _pattern[_pos++];
                 int result = HexConverter.FromChar(ch);
@@ -1692,7 +1692,7 @@ internal ref struct JsonRegexValidator
         int c = Math.Min(3, _pattern.Length - _pos);
         int d;
         int i;
-        for (i = 0; c > 0 && (uint)(d = _pattern[_pos] - '0') <= 7; c -= 1)
+        for (i = 0; c > 0 && (uint)(d = _pattern[_pos] - '0') <= 7; --c)
         {
             _pos++;
             i = (i * 8) + d;
