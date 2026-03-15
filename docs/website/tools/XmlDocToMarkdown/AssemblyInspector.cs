@@ -21,7 +21,10 @@ public sealed class TypeInfo
     public string Namespace { get; set; } = string.Empty;
     public string Kind { get; set; } = string.Empty; // class, struct, interface, enum, delegate
     public string? BaseType { get; set; }
+    public string? BaseTypeFullName { get; set; }
     public List<string> Interfaces { get; set; } = [];
+    public List<(string DisplayName, string? FullName)> InterfacesWithFullNames { get; set; } = [];
+    public List<(string DisplayName, string? FullName)> ImplementedBy { get; set; } = [];
     public List<string> GenericParameters { get; set; } = [];
     public DocMember? Documentation { get; set; }
     public List<MemberInfo> Constructors { get; set; } = [];
@@ -43,6 +46,7 @@ public sealed class MemberInfo
     public string Name { get; set; } = string.Empty;
     public string Signature { get; set; } = string.Empty;
     public string ReturnType { get; set; } = string.Empty;
+    public string? ReturnTypeFullName { get; set; }
     public List<ParameterInfo> Parameters { get; set; } = [];
     public DocMember? Documentation { get; set; }
     public bool IsStatic { get; set; }
@@ -56,6 +60,7 @@ public sealed class ParameterInfo
 {
     public string Name { get; set; } = string.Empty;
     public string Type { get; set; } = string.Empty;
+    public string? TypeFullName { get; set; }
     public bool IsOptional { get; set; }
     public string? DefaultValue { get; set; }
 }
@@ -167,6 +172,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             Namespace = type.Namespace ?? "(global)",
             Kind = GetTypeKind(type),
             BaseType = GetBaseTypeName(type),
+            BaseTypeFullName = GetBaseTypeFullName(type),
             IsStatic = type.IsAbstract && type.IsSealed,
             IsAbstract = type.IsAbstract && !type.IsSealed && !type.IsInterface,
             IsSealed = type.IsSealed && !type.IsAbstract,
@@ -190,6 +196,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             if (iface.IsPublic || iface.IsNestedPublic)
             {
                 typeInfo.Interfaces.Add(FormatTypeName(iface));
+                typeInfo.InterfacesWithFullNames.Add((FormatTypeName(iface), GetTypeFullName(iface)));
             }
         }
 
@@ -237,6 +244,7 @@ public sealed class AssemblyInspector(string assemblyPath)
                 Name = field.Name,
                 Signature = $"{FormatTypeName(field.FieldType)} {field.Name}",
                 ReturnType = FormatTypeName(field.FieldType),
+                ReturnTypeFullName = GetTypeFullName(field.FieldType),
                 Documentation = fieldDocs,
                 IsStatic = field.IsStatic,
                 XmlDocKey = fieldXmlKey,
@@ -253,6 +261,7 @@ public sealed class AssemblyInspector(string assemblyPath)
                 Name = evt.Name ?? string.Empty,
                 Signature = $"event {FormatTypeName(evt.EventHandlerType!)} {evt.Name}",
                 ReturnType = FormatTypeName(evt.EventHandlerType!),
+                ReturnTypeFullName = GetTypeFullName(evt.EventHandlerType!),
                 Documentation = evtDocs,
                 XmlDocKey = evtXmlKey,
             });
@@ -289,6 +298,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             {
                 Name = p.Name ?? string.Empty,
                 Type = FormatTypeName(p.ParameterType),
+                TypeFullName = GetTypeFullName(p.ParameterType),
                 IsOptional = p.IsOptional,
                 DefaultValue = p.HasDefaultValue ? p.RawDefaultValue?.ToString() : null,
             }).ToList(),
@@ -319,6 +329,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             Name = prop.Name,
             Signature = $"{FormatTypeName(prop.PropertyType)} {prop.Name}{accessors}",
             ReturnType = FormatTypeName(prop.PropertyType),
+            ReturnTypeFullName = GetTypeFullName(prop.PropertyType),
             Documentation = docs,
             IsStatic = getter?.IsStatic ?? false,
             XmlDocKey = xmlKey,
@@ -355,10 +366,12 @@ public sealed class AssemblyInspector(string assemblyPath)
             Name = method.Name,
             Signature = $"{FormatTypeName(method.ReturnType)} {method.Name}{genericSuffix}({paramList})",
             ReturnType = FormatTypeName(method.ReturnType),
+            ReturnTypeFullName = GetTypeFullName(method.ReturnType),
             Parameters = parameters.Select(p => new ParameterInfo
             {
                 Name = p.Name ?? string.Empty,
                 Type = FormatTypeName(p.ParameterType),
+                TypeFullName = GetTypeFullName(p.ParameterType),
                 IsOptional = p.IsOptional,
                 DefaultValue = p.HasDefaultValue ? p.RawDefaultValue?.ToString() : null,
             }).ToList(),
@@ -518,6 +531,47 @@ public sealed class AssemblyInspector(string assemblyPath)
         }
 
         return FormatTypeName(type.BaseType);
+    }
+
+    /// <summary>
+    /// Gets the full type name suitable for URL resolution (e.g., System.String, System.Collections.Generic.List`1).
+    /// Returns null for generic parameter types.
+    /// </summary>
+    internal static string? GetTypeFullName(Type type)
+    {
+        if (type.IsGenericParameter)
+        {
+            return null;
+        }
+
+        if (type.IsArray)
+        {
+            return GetTypeFullName(type.GetElementType()!);
+        }
+
+        if (type.IsByRef)
+        {
+            return GetTypeFullName(type.GetElementType()!);
+        }
+
+        if (type.IsGenericType)
+        {
+            Type genericDef = type.GetGenericTypeDefinition();
+            return genericDef.FullName;
+        }
+
+        return type.FullName;
+    }
+
+    private static string? GetBaseTypeFullName(Type type)
+    {
+        if (type.BaseType is null || type.BaseType.FullName == "System.Object" ||
+            type.BaseType.FullName == "System.ValueType" || type.BaseType.FullName == "System.Enum")
+        {
+            return null;
+        }
+
+        return GetTypeFullName(type.BaseType);
     }
 
     private static string GetTypeKind(Type type)

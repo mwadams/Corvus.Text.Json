@@ -118,14 +118,47 @@ public sealed class MarkdownGenerator(string outputDir)
             sb.AppendLine();
         }
 
-        if (type.BaseType is not null || type.Interfaces.Count > 0)
+        // Inheritance chain (for classes with a base type)
+        if (type.BaseType is not null && type.Kind == "class")
         {
             sb.AppendLine("## Inheritance");
             sb.AppendLine();
-            if (type.BaseType is not null)
-                sb.AppendLine($"- Inherits from: `{type.BaseType}`");
-            foreach (string iface in type.Interfaces)
-                sb.AppendLine($"- Implements: `{iface}`");
+            StringBuilder chain = new();
+            chain.Append(ResolveTypeLink("Object", "System.Object"));
+            chain.Append(" \u2192 ");
+            chain.Append(ResolveTypeLink(type.BaseType, type.BaseTypeFullName));
+            chain.Append(" \u2192 ");
+            chain.Append($"**{type.Name}**");
+            sb.AppendLine(chain.ToString());
+            sb.AppendLine();
+        }
+        else if (type.Kind == "class")
+        {
+            sb.AppendLine("## Inheritance");
+            sb.AppendLine();
+            sb.AppendLine($"{ResolveTypeLink("Object", "System.Object")} \u2192 **{type.Name}**");
+            sb.AppendLine();
+        }
+
+        // Implements
+        if (type.InterfacesWithFullNames.Count > 0)
+        {
+            sb.AppendLine("## Implements");
+            sb.AppendLine();
+            string ifaceList = string.Join(", ", type.InterfacesWithFullNames.Select(
+                i => ResolveTypeLink(i.DisplayName, i.FullName)));
+            sb.AppendLine(ifaceList);
+            sb.AppendLine();
+        }
+
+        // Implemented By (for interfaces)
+        if (type.ImplementedBy.Count > 0)
+        {
+            sb.AppendLine("## Implemented By");
+            sb.AppendLine();
+            string implList = string.Join(", ", type.ImplementedBy.Select(
+                i => ResolveTypeLink(i.DisplayName, i.FullName)));
+            sb.AppendLine(implList);
             sb.AppendLine();
         }
 
@@ -147,7 +180,7 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
                 string staticBadge = prop.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{prop.Name}`{staticBadge} | `{prop.ReturnType}` | {summary} |");
+                sb.AppendLine($"| `{prop.Name}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
             }
             sb.AppendLine();
 
@@ -198,7 +231,7 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 string summary = TruncateSummary(field.Documentation?.Summary ?? string.Empty);
                 string staticBadge = field.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{field.Name}`{staticBadge} | `{field.ReturnType}` | {summary} |");
+                sb.AppendLine($"| `{field.Name}`{staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
             }
             sb.AppendLine();
         }
@@ -212,14 +245,13 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (MemberInfo evt in type.Events)
             {
                 string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
-                sb.AppendLine($"| `{evt.Name}` | `{evt.ReturnType}` | {summary} |");
+                sb.AppendLine($"| `{evt.Name}` | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
             }
             sb.AppendLine();
         }
 
         if (type.NestedTypes.Count > 0)
         {
-            sb.AppendLine("## Nested Types");
             sb.AppendLine();
             foreach (TypeInfo nested in type.NestedTypes)
                 WriteTypeSection(sb, nested, 3);
@@ -295,20 +327,46 @@ public sealed class MarkdownGenerator(string outputDir)
         }
 
         // Inheritance and interfaces
-        if (type.BaseType is not null || type.Interfaces.Count > 0)
+        if (type.BaseType is not null && type.Kind == "class")
         {
             sb.AppendLine($"{heading}# Inheritance");
             sb.AppendLine();
-            if (type.BaseType is not null)
-            {
-                sb.AppendLine($"- Inherits from: `{type.BaseType}`");
-            }
+            StringBuilder chain = new();
+            chain.Append(ResolveTypeLink("Object", "System.Object"));
+            chain.Append(" \u2192 ");
+            chain.Append(ResolveTypeLink(type.BaseType, type.BaseTypeFullName));
+            chain.Append(" \u2192 ");
+            chain.Append($"**{type.Name}**");
+            sb.AppendLine(chain.ToString());
+            sb.AppendLine();
+        }
+        else if (type.Kind == "class")
+        {
+            sb.AppendLine($"{heading}# Inheritance");
+            sb.AppendLine();
+            sb.AppendLine($"{ResolveTypeLink("Object", "System.Object")} \u2192 **{type.Name}**");
+            sb.AppendLine();
+        }
 
-            foreach (string iface in type.Interfaces)
-            {
-                sb.AppendLine($"- Implements: `{iface}`");
-            }
+        // Implements
+        if (type.InterfacesWithFullNames.Count > 0)
+        {
+            sb.AppendLine($"{heading}# Implements");
+            sb.AppendLine();
+            string ifaceList = string.Join(", ", type.InterfacesWithFullNames.Select(
+                i => ResolveTypeLink(i.DisplayName, i.FullName)));
+            sb.AppendLine(ifaceList);
+            sb.AppendLine();
+        }
 
+        // Implemented By (for interfaces)
+        if (type.ImplementedBy.Count > 0)
+        {
+            sb.AppendLine($"{heading}# Implemented By");
+            sb.AppendLine();
+            string implList = string.Join(", ", type.ImplementedBy.Select(
+                i => ResolveTypeLink(i.DisplayName, i.FullName)));
+            sb.AppendLine(implList);
             sb.AppendLine();
         }
 
@@ -334,7 +392,7 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
                 string staticBadge = prop.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{prop.Name}`{staticBadge} | `{prop.ReturnType}` | {summary} |");
+                sb.AppendLine($"| `{prop.Name}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
             }
 
             sb.AppendLine();
@@ -395,7 +453,7 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 string summary = TruncateSummary(field.Documentation?.Summary ?? string.Empty);
                 string staticBadge = field.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{field.Name}`{staticBadge} | `{field.ReturnType}` | {summary} |");
+                sb.AppendLine($"| `{field.Name}`{staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
             }
 
             sb.AppendLine();
@@ -411,7 +469,7 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (MemberInfo evt in type.Events)
             {
                 string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
-                sb.AppendLine($"| `{evt.Name}` | `{evt.ReturnType}` | {summary} |");
+                sb.AppendLine($"| `{evt.Name}` | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
             }
 
             sb.AppendLine();
@@ -525,7 +583,7 @@ public sealed class MarkdownGenerator(string outputDir)
                 string desc = member.Documentation?.Params
                     .FirstOrDefault(p => p.Name == param.Name)?.Description ?? string.Empty;
                 string optionalSuffix = param.IsOptional ? " *(optional)*" : "";
-                sb.AppendLine($"| `{param.Name}` | `{param.Type}` | {desc}{optionalSuffix} |");
+                sb.AppendLine($"| `{param.Name}` | {ResolveTypeLink(param.Type, param.TypeFullName)} | {desc}{optionalSuffix} |");
             }
 
             sb.AppendLine();
@@ -535,7 +593,7 @@ public sealed class MarkdownGenerator(string outputDir)
         if (!string.IsNullOrEmpty(member.ReturnType) && member.ReturnType != "void")
         {
             string returnsDesc = member.Documentation?.Returns ?? string.Empty;
-            sb.AppendLine($"**Returns:** `{member.ReturnType}`");
+            sb.AppendLine($"**Returns:** {ResolveTypeLink(member.ReturnType, member.ReturnTypeFullName)}");
             if (!string.IsNullOrEmpty(returnsDesc))
             {
                 sb.AppendLine();
@@ -554,7 +612,8 @@ public sealed class MarkdownGenerator(string outputDir)
             sb.AppendLine("|-----------|-------------|");
             foreach (DocException ex in member.Documentation!.Exceptions)
             {
-                sb.AppendLine($"| `{ex.Type}` | {ex.Description} |");
+                string exShortName = XmlDocParser.GetShortTypeName(ex.Type);
+                sb.AppendLine($"| {ResolveTypeLink(exShortName, ex.Type)} | {ex.Description} |");
             }
 
             sb.AppendLine();
@@ -659,5 +718,44 @@ public sealed class MarkdownGenerator(string outputDir)
     private static string EscapeYamlString(string value)
     {
         return value.Replace("\"", "\\\"");
+    }
+
+    /// <summary>
+    /// Creates a markdown link for a type reference, using local URLs for Corvus types,
+    /// learn.microsoft.com for BCL types, or plain code formatting as a fallback.
+    /// </summary>
+    private static string ResolveTypeLink(string displayName, string? fullName)
+    {
+        string escaped = displayName.Replace("|", "\\|");
+
+        if (fullName is not null)
+        {
+            // Try local type URL first
+            string? localUrl = XmlDocParser.ResolveTypeUrl(fullName);
+            if (localUrl is not null)
+            {
+                return $"[`{escaped}`]({localUrl})";
+            }
+
+            // Try BCL URL for System.* and Microsoft.* types
+            if (fullName.StartsWith("System.", StringComparison.Ordinal) ||
+                fullName.StartsWith("Microsoft.", StringComparison.Ordinal))
+            {
+                string bclUrl = GetBclTypeUrl(fullName);
+                return $"[`{escaped}`]({bclUrl})";
+            }
+        }
+
+        return $"`{escaped}`";
+    }
+
+    /// <summary>
+    /// Generates a learn.microsoft.com URL for a BCL type.
+    /// </summary>
+    private static string GetBclTypeUrl(string fullName)
+    {
+        // System.Collections.Generic.List`1 → system.collections.generic.list-1
+        string urlName = fullName.ToLowerInvariant().Replace('`', '-');
+        return $"https://learn.microsoft.com/dotnet/api/{urlName}";
     }
 }

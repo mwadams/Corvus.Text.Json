@@ -76,6 +76,44 @@ Console.WriteLine($"Inspecting assembly: {assemblyPath}");
 Dictionary<string, NamespaceInfo> namespaces = inspector.Inspect(members);
 Console.WriteLine($"  Found {namespaces.Count} namespace(s) with public types.");
 
+// Build implementedBy reverse map: for each interface, collect which types implement it
+Dictionary<string, TypeInfo> typesByFullName = new(StringComparer.Ordinal);
+List<TypeInfo> allTypes = new();
+foreach (NamespaceInfo nsInfo in namespaces.Values)
+{
+    foreach (TypeInfo typeInfo in nsInfo.Types)
+    {
+        typesByFullName[typeInfo.FullName] = typeInfo;
+        allTypes.Add(typeInfo);
+        // Also index nested types
+        foreach (TypeInfo nested in typeInfo.NestedTypes)
+        {
+            typesByFullName[nested.FullName] = nested;
+            allTypes.Add(nested);
+        }
+    }
+}
+
+foreach (TypeInfo typeInfo in allTypes)
+{
+    foreach ((string displayName, string? fullName) in typeInfo.InterfacesWithFullNames)
+    {
+        if (fullName is not null && typesByFullName.TryGetValue(fullName, out TypeInfo? ifaceInfo) && ifaceInfo.Kind == "interface")
+        {
+            ifaceInfo.ImplementedBy.Add((typeInfo.Name, typeInfo.FullName));
+        }
+    }
+}
+
+// Sort ImplementedBy lists alphabetically
+foreach (TypeInfo typeInfo in allTypes)
+{
+    if (typeInfo.ImplementedBy.Count > 1)
+    {
+        typeInfo.ImplementedBy.Sort((a, b) => string.Compare(a.DisplayName, b.DisplayName, StringComparison.Ordinal));
+    }
+}
+
 foreach (KeyValuePair<string, NamespaceInfo> ns in namespaces)
 {
     Console.WriteLine($"    {ns.Key}: {ns.Value.Types.Count} type(s)");
@@ -87,6 +125,7 @@ Directory.CreateDirectory(taxonomyOutputPath);
 Console.WriteLine($"Generating namespace markdown to: {outputPath}");
 MarkdownGenerator markdownGen = new(outputPath);
 markdownGen.Generate(namespaces);
+markdownGen.GeneratePerType(namespaces);
 
 Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
 TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath);
