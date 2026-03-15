@@ -4,8 +4,6 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Corvus.Text.Json.Internal Namespace"
 ---
-# Corvus.Text.Json.Internal Namespace
-
 | Type | Kind | Description |
 |------|------|-------------|
 | [ArrayEnumerator](/api/corvus-text-json-internal-arrayenumerator.html) | struct | Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document. |

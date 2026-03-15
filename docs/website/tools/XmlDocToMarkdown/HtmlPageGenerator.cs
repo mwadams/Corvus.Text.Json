@@ -442,7 +442,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         sb.AppendLine("            <p class=\"doc__breadcrumb\">");
         sb.AppendLine($"                <a href=\"/api/index.html\">API</a> &rsaquo;");
         sb.AppendLine($"                <a href=\"/api/{currentNsSlug}.html\">{HtmlEncode(currentNsName)}</a> &rsaquo;");
-        sb.AppendLine($"                <span class=\"doc__kind-badge\">{HtmlEncode(typeKind)}</span>");
+        sb.AppendLine($"                <span class=\"doc__kind-badge\">{HtmlEncode(typeKind)}</span> {HtmlEncode(typeName)}");
         sb.AppendLine("            </p>");
         sb.AppendLine($"            <h1>{HtmlEncode(typeName)}</h1>");
         sb.AppendLine(bodyHtml);

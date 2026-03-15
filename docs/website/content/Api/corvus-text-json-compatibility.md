@@ -4,8 +4,6 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Corvus.Text.Json.Compatibility Namespace"
 ---
-# Corvus.Text.Json.Compatibility Namespace
-
 | Type | Kind | Description |
 |------|------|-------------|
 | [Polyfills](/api/corvus-text-json-compatibility-polyfills.html) | class | Provides polyfills for Corvus.JsonSchema API compatibility. |

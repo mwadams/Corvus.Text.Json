@@ -4,8 +4,6 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Corvus.Text.Json Namespace"
 ---
-# Corvus.Text.Json Namespace
-
 | Type | Kind | Description |
 |------|------|-------------|
 | [ArrayEnumerator<TItem>](/api/corvus-text-json-arrayenumerator-titem.html) | struct | Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document. |

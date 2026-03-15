@@ -67,8 +67,6 @@ public sealed class MarkdownGenerator(string outputDir)
     private static void WriteNamespaceContent(StringBuilder sb, NamespaceInfo nsInfo)
     {
         string nsSlug = NamespaceToFileName(nsInfo.Name);
-        sb.AppendLine($"# {nsInfo.Name} Namespace");
-        sb.AppendLine();
 
         sb.AppendLine("| Type | Kind | Description |");
         sb.AppendLine("|------|------|-------------|");
