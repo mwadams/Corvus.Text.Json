@@ -88,24 +88,48 @@ document.addEventListener('DOMContentLoaded', () => {
       // Insert sub-list after the active link's parent <li>
       activeLink.closest('.sidebar__item').appendChild(subList);
 
-      // Scroll-spy: highlight the heading currently in view
+      // Scroll-spy: highlight the heading nearest the top of the viewport.
+      // Uses a scroll listener (throttled via rAF) instead of
+      // IntersectionObserver so clicks that land the heading at the very
+      // top are always detected.
       const tocLinks = subList.querySelectorAll('.sidebar__link--toc');
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              tocLinks.forEach((l) => l.classList.remove('is-current'));
-              const match = subList.querySelector(
-                `a[href="#${entry.target.id}"]`
-              );
-              if (match) match.classList.add('is-current');
-            }
-          });
-        },
-        { rootMargin: '-20% 0px -60% 0px', threshold: 0 }
-      );
+      const headingArr = Array.from(headings);
+      let ticking = false;
 
-      headings.forEach((h) => observer.observe(h));
+      function updateActiveToc() {
+        const scrollY = window.scrollY;
+        const offset = 100; // px below top to count as "current"
+        let current = headingArr[0];
+
+        for (const h of headingArr) {
+          if (h.getBoundingClientRect().top <= offset) {
+            current = h;
+          } else {
+            break;
+          }
+        }
+
+        tocLinks.forEach((l) => l.classList.remove('is-current'));
+        if (current) {
+          const match = subList.querySelector(`a[href="#${current.id}"]`);
+          if (match) {
+            match.classList.add('is-current');
+            // Scroll the sidebar so the active TOC item stays visible
+            match.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        }
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(updateActiveToc);
+        }
+      }, { passive: true });
+
+      // Initial highlight
+      updateActiveToc();
     }
   }
 });
