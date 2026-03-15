@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="AnyOfConstValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -58,19 +64,18 @@ public class AnyOfConstValidationHandler : IChildValidationHandler
 
                 requiresShortCut = true;
 
-                string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true); 
+                string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
 
-                var orderedElements = constDictionary[keyword];
+                JsonElement[] orderedElements = constDictionary[keyword];
 
                 int elementIndex = 1;
                 List<(int, JsonElement)> orderedElementWithIndex = [];
-                foreach (var element in orderedElements)
+                foreach (JsonElement element in orderedElements)
                 {
                     orderedElementWithIndex.Add((elementIndex++, element));
                 }
 
-
-                Dictionary<JsonValueKind, (int, JsonElement)[]> constValues =
+                var constValues =
                     orderedElementWithIndex
                         .OrderBy(k => k.Item2.ValueKind)
                         .GroupBy(k => k.Item2.ValueKind)
@@ -201,7 +206,6 @@ file static class AnyOfConstValidationHandlerExtensions
             string exponentString = exponent.ToString();
             string rawValueString = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(rawValue), true);
 
-
             generator
                 .AppendSeparatorLine()
                 .AppendLineIndent(
@@ -260,8 +264,7 @@ file static class AnyOfConstValidationHandlerExtensions
         foreach ((int index, JsonElement constantValue) in constantValues)
         {
             Debug.Assert(constantValue.ValueKind is JsonValueKind.Object or JsonValueKind.Array);
-
-            string quotedConstantValue = SymbolDisplay.FormatLiteral(constantValue.GetRawText(), true);
+            _ = SymbolDisplay.FormatLiteral(constantValue.GetRawText(), true);
 
             string constPropertyName =
                       generator.GetPropertyNameInScope(

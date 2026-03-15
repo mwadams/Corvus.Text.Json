@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="TypeDeclarationExtensions.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -21,8 +27,8 @@ public readonly struct NumericTypeName
     /// <param name="isNetOnly">A value indicating whether this is a .NET only type.</param>
     public NumericTypeName(string name, bool isNetOnly, string? netStandardFallbackName)
     {
-        this.Name = name;
-        this.IsNetOnly = isNetOnly;
+        Name = name;
+        IsNetOnly = isNetOnly;
         NetStandardFallbackName = netStandardFallbackName;
     }
 
@@ -205,7 +211,7 @@ public static class TypeDeclarationExtensions
     }
 
     /// <summary>
-    /// Gets the types for oneOf/anyOf composition sources that can be created for the the type declaration.
+    /// Gets the types for oneOf/anyOf composition sources that can be created for the type declaration.
     /// </summary>
     /// <param name="typeDeclaration">The type declaration.</param>
     /// <returns>The array of types from which this can be converted.</returns>
@@ -878,7 +884,7 @@ public static class TypeDeclarationExtensions
 
         // If we have more than one keyword of the type we are reducing to,
         // then we cannot reduce.
-        if (locatedSchema.Vocabulary.Keywords.Where(k => k is T && locatedSchema.Schema.HasKeyword(k)).Count() > 1)
+        if (locatedSchema.Vocabulary.Keywords.Count(k => k is T && locatedSchema.Schema.HasKeyword(k)) > 1)
         {
             return false;
         }

@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="StringLengthValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Diagnostics;
 using System.Linq;
@@ -56,7 +62,6 @@ public class StringLengthValidationHandler : IChildValidationHandler
                 continue;
             }
 
-
             generator.
                 AppendStandardStringLengthOperator(typeDeclaration, keyword, op);
 
@@ -107,7 +112,7 @@ public static class StringLengthValidationExtensions
             .AppendSeparatorLine()
             .AppendStringLengthIfNotAppended(typeDeclaration, false)
             .AppendLineIndent(
-                operatorFunction,"(",
+                operatorFunction, "(",
                 expected, ",",
                 "stringLength, ",
                 SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context);");

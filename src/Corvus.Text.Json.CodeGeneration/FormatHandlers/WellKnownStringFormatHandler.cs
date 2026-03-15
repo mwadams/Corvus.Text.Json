@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="WellKnownStringFormatHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -232,6 +238,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static ", operatorKind, " operator NodaTime.LocalDate(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.LocalDate result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "date-time":
@@ -242,6 +249,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static ", operatorKind, " operator NodaTime.OffsetDateTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetDateTime result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "time":
@@ -252,6 +260,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static ", operatorKind, " operator NodaTime.OffsetTime(", typeName, " value) => value._parent.TryGetValue(value._idx, out NodaTime.OffsetTime result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "duration":
@@ -262,6 +271,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static ", operatorKind, " operator Period(", typeName, " value) => value._parent.TryGetValue(value._idx, out Period result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "ipv4":
@@ -278,6 +288,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static ", operatorKind, " operator Guid(", typeName, " value) => value._parent.TryGetValue(value._idx, out Guid result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "uri":
@@ -288,6 +299,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static explicit operator Utf8UriValue(", typeName, " value) => Utf8UriValue.TryGetValue(value._parent, value._idx, out Utf8UriValue result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "uri-reference":
@@ -298,6 +310,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static explicit operator Utf8UriReferenceValue(", typeName, " value) => Utf8UriReferenceValue.TryGetValue(value._parent, value._idx, out Utf8UriReferenceValue result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "iri":
@@ -308,6 +321,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static explicit operator Utf8IriValue(", typeName, " value) => Utf8IriValue.TryGetValue(value._parent, value._idx, out Utf8IriValue result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "iri-reference":
@@ -318,6 +332,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static explicit operator Utf8IriReferenceValue(", typeName, " value) => Utf8IriReferenceValue.TryGetValue(value._parent, value._idx, out Utf8IriReferenceValue result) ? result : throw new FormatException();");
                 }
+
                 return true;
 
             case "regex":
@@ -341,6 +356,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out NodaTime.LocalDate value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
+
                 return true;
 
             case "date-time":
@@ -351,6 +367,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out NodaTime.OffsetDateTime value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
+
                 return true;
 
             case "time":
@@ -361,6 +378,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out NodaTime.OffsetTime value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
+
                 return true;
 
             case "duration":
@@ -371,6 +389,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out Period value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
+
                 return true;
 
             case "ipv4":
@@ -387,6 +406,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out Guid value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
+
                 return true;
 
             case "uri":
@@ -397,6 +417,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out Utf8UriValue value) { CheckValidInstance(); return Utf8UriValue.TryGetValue(_parent, _idx, out value); }");
                 }
+
                 return true;
 
             case "uri-reference":
@@ -407,6 +428,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out Utf8UriReferenceValue value) { CheckValidInstance(); return Utf8UriReferenceValue.TryGetValue(_parent, _idx, out value); }");
                 }
+
                 return true;
 
             case "iri":
@@ -417,6 +439,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out Utf8IriValue value) { CheckValidInstance(); return Utf8IriValue.TryGetValue(_parent, _idx, out value); }");
                 }
+
                 return true;
 
             case "iri-reference":
@@ -427,6 +450,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out Utf8IriReferenceValue value) { CheckValidInstance(); return Utf8IriReferenceValue.TryGetValue(_parent, _idx, out value); }");
                 }
+
                 return true;
 
             case "regex":
@@ -436,7 +460,6 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                 return false;
         }
     }
-
 
     /// <inheritdoc/>
     public bool AppendFormatSourceConstructors(CodeGenerator generator, TypeDeclaration typeDeclaration, string format, HashSet<string> seenConstructorParameters)
@@ -450,6 +473,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                         .AppendLineIndent("private Source(NodaTime.LocalDate value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatLocalDate(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
+
                 return true;
 
             case "date-time":
@@ -466,6 +490,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendSeparatorLine()
                     .AppendLineIndent("private Source(DateTimeOffset value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
+
                 return true;
 
             case "time":
@@ -475,6 +500,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                        .AppendLineIndent("private Source(NodaTime.OffsetTime value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatOffsetTime(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
+
                 return true;
 
             case "duration":
@@ -484,6 +510,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                         .AppendLineIndent("private Source(Period value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => JsonElementHelpers.TryFormatPeriod(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
+
                 return true;
 
             case "ipv4":
@@ -499,6 +526,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                        .AppendLineIndent("private Source(Guid value) { SimpleTypesBacking.Initialize(ref _simpleTypeBacking, value, static (v, buffer, out written) => Utf8Formatter.TryFormat(v, buffer, out written)); _kind = Kind.StringSimpleType; }");
                 }
+
                 return true;
 
             case "uri":
@@ -508,6 +536,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
+
                 return true;
 
             case "uri-reference":
@@ -517,6 +546,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
+
                 return true;
 
             case "iri":
@@ -526,6 +556,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
+
                 return true;
 
             case "iri-reference":
@@ -535,6 +566,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendSeparatorLine()
                        .AppendLineIndent("private Source(Uri value) { _utf16Backing = value.OriginalString.AsSpan(); _kind = Kind.Utf16String; }");
                 }
+
                 return true;
 
             case "regex":
@@ -565,6 +597,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static implicit operator Source(NodaTime.LocalDate value) => new (value);");
                 }
+
                 return true;
 
             case "date-time":
@@ -575,6 +608,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static implicit operator Source(NodaTime.OffsetDateTime value) => new (value);");
                 }
+
                 return true;
 
             case "time":
@@ -585,6 +619,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static implicit operator Source(NodaTime.OffsetTime value) => new (value);");
                 }
+
                 return true;
 
             case "duration":
@@ -595,6 +630,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static implicit operator Source(Period value) => new (value);");
                 }
+
                 return true;
 
             case "ipv4":
@@ -611,6 +647,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static implicit operator Source(Guid value) => new (value);");
                 }
+
                 return true;
 
             case "uri":
@@ -621,6 +658,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
                 }
+
                 return true;
 
             case "uri-reference":
@@ -631,6 +669,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
                 }
+
                 return true;
 
             case "iri":
@@ -641,6 +680,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
                 }
+
                 return true;
 
             case "iri-reference":
@@ -651,6 +691,7 @@ public class WellKnownStringFormatHandler : IStringFormatHandler
                     .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                     .AppendLineIndent("public static implicit operator Source(Uri value) => new (value);");
                 }
+
                 return true;
 
             case "regex":

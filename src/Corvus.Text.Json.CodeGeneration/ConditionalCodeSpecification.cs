@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="ConditionalCodeSpecification.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +34,7 @@ public readonly struct ConditionalCodeSpecification
     {
         this.generationFunction = generationFunction;
         this.condition = condition;
-        this.explicitString = null;
+        explicitString = null;
     }
 
     /// <summary>
@@ -40,7 +46,7 @@ public readonly struct ConditionalCodeSpecification
         string explicitString,
         FrameworkType condition = FrameworkType.All)
     {
-        this.generationFunction = null;
+        generationFunction = null;
         this.explicitString = explicitString;
         this.condition = condition;
     }
@@ -344,7 +350,7 @@ public readonly struct ConditionalCodeSpecification
             generationFunction(generator);
         }
 
-        if (this.explicitString is string name)
+        if (explicitString is string name)
         {
             generator.Append(name);
         }

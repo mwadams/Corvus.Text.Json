@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="CSharpMemberName.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using Corvus.Json.CodeGeneration;
 
@@ -17,6 +23,7 @@ public class CSharpMemberName(
     : MemberName(fullyQualifiedScope, baseName, casing, prefix, suffix)
 {
     private static ReadOnlySpan<char> CamelPrefix => "value".AsSpan();
+
     private static ReadOnlySpan<char> FallbackName => "Value".AsSpan();
 
     private static ReadOnlySpan<char> PascalPrefix => "Value".AsSpan();
@@ -24,17 +31,17 @@ public class CSharpMemberName(
     /// <inheritdoc/>
     public override string BuildName()
     {
-        string baseName = string.IsNullOrWhiteSpace(this.BaseName) ? "Value" : this.BaseName;
+        string baseName = string.IsNullOrWhiteSpace(BaseName) ? "Value" : BaseName;
 
         if (baseName.Length == 1 && !char.IsLetter(baseName[0]))
         {
             baseName = TranslateNonLetterToWord(baseName[0]) ?? "Value";
         }
 
-        string prefix = string.IsNullOrWhiteSpace(this.Prefix) ? string.Empty : this.Prefix;
-        string suffix = string.IsNullOrWhiteSpace(this.Suffix) ? string.Empty : this.Suffix;
+        string prefix = string.IsNullOrWhiteSpace(Prefix) ? string.Empty : Prefix;
+        string suffix = string.IsNullOrWhiteSpace(Suffix) ? string.Empty : Suffix;
 
-        ReadOnlySpan<char> leadingDigitPrefix = this.Casing == Casing.PascalCase ? PascalPrefix : CamelPrefix;
+        ReadOnlySpan<char> leadingDigitPrefix = Casing == Casing.PascalCase ? PascalPrefix : CamelPrefix;
 
         int bufferLength = Formatting.GetBufferLength(baseName.Length + prefix.Length + suffix.Length, leadingDigitPrefix, FallbackName);
 
@@ -43,7 +50,7 @@ public class CSharpMemberName(
         int totalLength = 0;
 
         // Copy the components into the buffer
-        if (this.Casing == Casing.Unmodified)
+        if (Casing == Casing.Unmodified)
         {
             totalLength = prefix.Length + baseName.Length + suffix.Length;
             prefix.AsSpan().CopyTo(buffer);
@@ -52,7 +59,7 @@ public class CSharpMemberName(
         }
         else
         {
-            if (this.Casing == Casing.PascalCase)
+            if (Casing == Casing.PascalCase)
             {
                 int written = 0;
                 if (prefix.Length > 0)
@@ -66,7 +73,7 @@ public class CSharpMemberName(
                 written = Formatting.ToPascalCase(buffer.Slice(totalLength, baseName.Length));
                 totalLength += written;
             }
-            else if (this.Casing == Casing.CamelCase)
+            else if (Casing == Casing.CamelCase)
             {
                 int written = 0;
                 if (prefix.Length > 0)
@@ -100,7 +107,7 @@ public class CSharpMemberName(
             {
                 FallbackName.CopyTo(buffer);
                 totalLength = FallbackName.Length;
-                if (this.Casing == Casing.CamelCase)
+                if (Casing == Casing.CamelCase)
                 {
                     // We are already in PascalCase, so no need to translate for that.
                     totalLength = Formatting.ToCamelCase(buffer[..totalLength]);

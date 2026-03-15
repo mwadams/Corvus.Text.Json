@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="FormatHandlerRegistry.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,17 +34,17 @@ public sealed class FormatHandlerRegistry
     /// <summary>
     /// Gets all format handlers.
     /// </summary>
-    public IReadOnlyList<IFormatHandler> FormatHandlers => this.cachedFormatHandlers ??= this.handlers.OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
+    public IReadOnlyList<IFormatHandler> FormatHandlers => cachedFormatHandlers ??= handlers.OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
 
     /// <summary>
     /// Gets all numeric type format handlers.
     /// </summary>
-    public IReadOnlyList<INumberFormatHandler> NumberFormatHandlers => this.cachedNumberFormatHandlers ??= this.handlers.OfType<INumberFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
+    public IReadOnlyList<INumberFormatHandler> NumberFormatHandlers => cachedNumberFormatHandlers ??= handlers.OfType<INumberFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
 
     /// <summary>
     /// Gets all string type format handlers.
     /// </summary>
-    public IReadOnlyList<IStringFormatHandler> StringFormatHandlers => this.cachedStringFormatHandlers ??= this.handlers.OfType<IStringFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
+    public IReadOnlyList<IStringFormatHandler> StringFormatHandlers => cachedStringFormatHandlers ??= handlers.OfType<IStringFormatHandler>().OrderBy(h => h.Priority).ThenBy(h => h.GetType().Name).ToArray();
 
     /// <summary>
     /// Register a type format handler.
@@ -53,9 +59,9 @@ public sealed class FormatHandlerRegistry
         }
 
         // Invalidate cached lists when handlers change
-        this.cachedFormatHandlers = null;
-        this.cachedNumberFormatHandlers = null;
-        this.cachedStringFormatHandlers = null;
+        cachedFormatHandlers = null;
+        cachedNumberFormatHandlers = null;
+        cachedStringFormatHandlers = null;
 
         return this;
     }

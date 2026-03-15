@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="CSharpLanguageProvider.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Frozen;
 using System.Collections.Generic;
@@ -39,7 +45,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     private IReadOnlyList<INameHeuristic>? cachedNameBeforeSubschemaHeuristics;
     private IReadOnlyList<INameHeuristic>? cachedNameAfterSubschemaHeuristics;
 
-    CSharpLanguageProvider(Options? options = null)
+    private CSharpLanguageProvider(Options? options = null)
     {
         this.options = options ?? Options.Default;
     }
@@ -76,7 +82,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// <returns>The .NET type name.</returns>
     public static string? GetDotnetTypeName(GeneratedCodeFile generatedCodeFile)
     {
-        return generatedCodeFile.TypeDeclaration is TypeDeclaration t ? GetDotnetTypeName(generatedCodeFile.TypeDeclaration) : null;
+        return generatedCodeFile.TypeDeclaration is TypeDeclaration ? GetDotnetTypeName(generatedCodeFile.TypeDeclaration) : null;
     }
 
     /// <summary>
@@ -105,7 +111,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// <returns>The ordered list of name heuristics.</returns>
     public IEnumerable<(string Name, bool IsOptional)> GetNameHeuristicNames()
     {
-        return this.nameHeuristicRegistry.RegisteredHeuristics
+        return nameHeuristicRegistry.RegisteredHeuristics
             .Select(h => (h.GetType().Name, h.IsOptional))
             .Distinct()
             .OrderBy(n => n.IsOptional)
@@ -115,31 +121,31 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// <inheritdoc/>
     public ILanguageProvider RegisterNameHeuristics(params INameHeuristic[] heuristics)
     {
-        this.nameHeuristicRegistry.RegisterNameHeuristics(heuristics);
-        this.cachedBuiltInTypeNameHeuristics = null;
-        this.cachedNameBeforeSubschemaHeuristics = null;
-        this.cachedNameAfterSubschemaHeuristics = null;
+        nameHeuristicRegistry.RegisterNameHeuristics(heuristics);
+        cachedBuiltInTypeNameHeuristics = null;
+        cachedNameBeforeSubschemaHeuristics = null;
+        cachedNameAfterSubschemaHeuristics = null;
         return this;
     }
 
     /// <inheritdoc/>
     public ILanguageProvider RegisterCodeFileBuilders(params ICodeFileBuilder[] builders)
     {
-        this.codeFileBuilderRegistry.RegisterCodeFileBuilders(builders);
+        codeFileBuilderRegistry.RegisterCodeFileBuilders(builders);
         return this;
     }
 
     /// <inheritdoc/>
     public ILanguageProvider RegisterValidationHandlers(params IKeywordValidationHandler[] handlers)
     {
-        this.validationHandlerRegistry.RegisterValidationHandlers(handlers);
+        validationHandlerRegistry.RegisterValidationHandlers(handlers);
         return this;
     }
 
     /// <inheritdoc/>
     public bool TryGetValidationHandlersFor(IKeyword keyword, [NotNullWhen(true)] out IReadOnlyCollection<IKeywordValidationHandler>? validationHandlers)
     {
-        return this.validationHandlerRegistry.TryGetHandlersFor(keyword, out validationHandlers);
+        return validationHandlerRegistry.TryGetHandlersFor(keyword, out validationHandlers);
     }
 
     /// <summary>
@@ -149,7 +155,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// <returns>A reference to the <see cref="ILanguageProvider"/> having completed the operation.</returns>
     public ILanguageProvider RegisterNameCollisionResolvers(params INameCollisionResolver[] resolvers)
     {
-        this.nameCollisionResolverRegistry.RegisterNameCollisionResolvers(resolvers);
+        nameCollisionResolverRegistry.RegisterNameCollisionResolvers(resolvers);
         return this;
     }
 
@@ -159,12 +165,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 #if DEBUG
         Dictionary<string, TypeDeclaration> namesSeen = new(StringComparer.Ordinal);
 #endif
-        CodeGenerator generator = new(this, cancellationToken, lineEndSequence: this.options.LineEndSequence);
+        CodeGenerator generator = new(this, cancellationToken, lineEndSequence: options.LineEndSequence);
 
         // Generate global simple types first. These have DoNotGenerate=true (so
         // ShouldGenerate returns false and the framework sets their parent to null),
         // but the first-seen instance for each canonical name needs to be generated.
-        if (this.simpleCoreTypeHeuristic is { } heuristic)
+        if (simpleCoreTypeHeuristic is { } heuristic)
         {
             foreach (TypeDeclaration globalType in heuristic.GetFirstSeenTypes())
             {
@@ -188,7 +194,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 
                 if (generator.TryBeginTypeDeclaration(globalType))
                 {
-                    foreach (ICodeFileBuilder codeFileBuilder in this.codeFileBuilderRegistry.RegisteredBuilders)
+                    foreach (ICodeFileBuilder codeFileBuilder in codeFileBuilderRegistry.RegisteredBuilders)
                     {
                         if (cancellationToken.IsCancellationRequested)
                         {
@@ -228,7 +234,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 #endif
             if (generator.TryBeginTypeDeclaration(typeDeclaration))
             {
-                foreach (ICodeFileBuilder codeFileBuilder in this.codeFileBuilderRegistry.RegisteredBuilders)
+                foreach (ICodeFileBuilder codeFileBuilder in codeFileBuilderRegistry.RegisteredBuilders)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -249,10 +255,10 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 
         return rootNamespaceGenerator is not null
             ? [
-                .. generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension)),
-                new GeneratedCodeFile($"{Formatting.GlobalDeclarationsFileName}{this.options.FileExtension}", rootNamespaceGenerator.ToString())
+                .. generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), options.FileExtension)),
+                new GeneratedCodeFile($"{Formatting.GlobalDeclarationsFileName}{options.FileExtension}", rootNamespaceGenerator.ToString())
               ]
-            : generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), this.options.FileExtension));
+            : generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), options.FileExtension));
     }
 
     /// <inheritdoc/>
@@ -281,7 +287,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             return;
         }
 
-        typeDeclaration.SetCSharpOptions(this.options);
+        typeDeclaration.SetCSharpOptions(options);
 
         JsonReferenceBuilder reference = GetReferenceWithoutQuery(typeDeclaration);
 
@@ -292,7 +298,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             typeDeclaration,
             reference,
             typeNameBuffer,
-            this.GetBuiltInTypeNameHeuristics(),
+            GetBuiltInTypeNameHeuristics(),
             cancellationToken);
     }
 
@@ -306,27 +312,27 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         }
 
         TypeDeclaration? dynamic = null;
-        if (typeDeclaration.TryGetDynamicSource(out dynamic) && TrySetNameFromOptions(this.options, dynamic, typeDeclaration))
+        if (typeDeclaration.TryGetDynamicSource(out dynamic) && TrySetNameFromOptions(options, dynamic, typeDeclaration))
         {
             return;
         }
 
-        if (TrySetNameFromOptions(this.options, typeDeclaration, typeDeclaration))
+        if (TrySetNameFromOptions(options, typeDeclaration, typeDeclaration))
         {
             return;
         }
 
         Span<char> typeNameBuffer = stackalloc char[Formatting.MaxIdentifierLength];
-        string ns = this.options.GetNamespace(typeDeclaration, dynamic);
+        string ns = options.GetNamespace(typeDeclaration, dynamic);
         JsonReferenceBuilder reference = GetReferenceWithoutQuery(dynamic ?? typeDeclaration);
 
-        this.SetTypeNameWithKeywordHeuristics(
+        SetTypeNameWithKeywordHeuristics(
              typeDeclaration,
              reference,
              typeNameBuffer,
              ns,
              fallbackName,
-             this.GetOrderedNameBeforeSubschemaHeuristics(),
+             GetOrderedNameBeforeSubschemaHeuristics(),
              cancellationToken);
 
         static bool TrySetNameFromOptions(Options options, TypeDeclaration sourceType, TypeDeclaration targetType)
@@ -367,12 +373,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         JsonReferenceBuilder reference = GetReferenceWithoutQuery(typeDeclaration);
 
         Span<char> typeNameBuffer = stackalloc char[Formatting.MaxIdentifierLength];
-        this.UpdateTypeNameWithKeywordHeuristics(
+        UpdateTypeNameWithKeywordHeuristics(
             typeDeclaration,
             existingTypeDeclarations,
             reference,
             typeNameBuffer,
-            this.GetOrderedNameAfterSubschemaHeuristics(),
+            GetOrderedNameAfterSubschemaHeuristics(),
             cancellationToken);
     }
 
@@ -381,6 +387,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     {
         return typeDeclaration.Children();
     }
+
     /// <summary>
     /// Emits a named type into the root namespace, returning its fully qualified name.
     /// </summary>
@@ -396,7 +403,6 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// </remarks>
     public string GetOrEmitNamedTypeInRootNamespace(string name, string key, NamedTypeEmitter emitter)
     {
-        
         if (!namedTypesInRootNamespace.TryGetValue(name, out NamedTypes? namedTypes))
         {
             namedTypes = new NamedTypes();
@@ -407,7 +413,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         {
             return fullyQualifiedName;
         }
-        
+
         if (namedTypes.NamedTypeMap.Count != 0)
         {
             int i = namedTypes.NamedTypeMap.Count;
@@ -429,7 +435,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         {
             rootNamespaceGenerator = new(this, default, lineEndSequence: options.LineEndSequence);
 
-            FrameworkType addExplicitUsings = this.options.AddExplicitUsings ? FrameworkType.All : FrameworkType.NotEmitted;
+            FrameworkType addExplicitUsings = options.AddExplicitUsings ? FrameworkType.All : FrameworkType.NotEmitted;
 
             rootNamespaceGenerator
                 .AppendAutoGeneratedHeader()
@@ -472,8 +478,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         languageProvider.RegisterCodeFileBuilders(
             CorePartial.Instance,
             MutableCorePartial.Instance,
-            JsonSchemaPartial.Instance
-            );
+            JsonSchemaPartial.Instance);
 
         languageProvider.RegisterValidationHandlers(
             TypeValidationHandler.Instance,
@@ -487,8 +492,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             CompositionNotValidationHandler.Instance,
             TernaryIfValidationHandler.Instance,
             ObjectValidationHandler.Instance,
-            ArrayValidationHandler.Instance
-            );
+            ArrayValidationHandler.Instance);
 
         SimpleCoreTypeNameHeuristic simpleCoreTypeHeuristic = new(resolvedOptions);
         languageProvider.simpleCoreTypeHeuristic = simpleCoreTypeHeuristic;
@@ -543,7 +547,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         IEnumerable<INameHeuristic> nameHeuristics,
         CancellationToken cancellationToken)
     {
-        if (!this.options.TryGetTypeName(reference.ToString(), out _))
+        if (!options.TryGetTypeName(reference.ToString(), out _))
         {
             // We only apply the heuristics if we do not have an explicit type name
             foreach (INameHeuristic heuristic in nameHeuristics)
@@ -624,7 +628,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
                         return;
                     }
 
-                    written = this.FixTypeNameForCollisionWithParent(typeDeclaration, typeNameBuffer, written, cancellationToken);
+                    written = FixTypeNameForCollisionWithParent(typeDeclaration, typeNameBuffer, written, cancellationToken);
 
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -649,7 +653,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             !typeDeclaration.IsInDefinitionsContainer() &&
             parent.TryGetDotnetTypeName(out string? name))
         {
-            foreach (INameCollisionResolver resolver in this.nameCollisionResolverRegistry.RegisteredCollisionResolvers)
+            foreach (INameCollisionResolver resolver in nameCollisionResolverRegistry.RegisteredCollisionResolvers)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -668,33 +672,33 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 
     private IReadOnlyList<IBuiltInTypeNameHeuristic> GetBuiltInTypeNameHeuristics()
     {
-        return this.cachedBuiltInTypeNameHeuristics ??= (
-            this.options.UseOptionalNameHeuristics
-                ? this.nameHeuristicRegistry.RegisteredHeuristics
+        return cachedBuiltInTypeNameHeuristics ??= (
+            options.UseOptionalNameHeuristics
+                ? nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<IBuiltInTypeNameHeuristic>()
-                    .Where(h => !this.options.DisabledNamingHeuristics.Contains(h.GetType().Name))
+                    .Where(h => !options.DisabledNamingHeuristics.Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
                     .ThenBy(h => h.GetType().Name)
-                : this.nameHeuristicRegistry.RegisteredHeuristics
+                : nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<IBuiltInTypeNameHeuristic>()
-                    .Where(h => !h.IsOptional && !this.options.DisabledNamingHeuristics.Contains(h.GetType().Name))
+                    .Where(h => !h.IsOptional && !options.DisabledNamingHeuristics.Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
                     .ThenBy(h => h.GetType().Name)).ToArray();
     }
 
     private IReadOnlyList<INameHeuristic> GetOrderedNameBeforeSubschemaHeuristics()
     {
-        return this.cachedNameBeforeSubschemaHeuristics ??= (
-            this.options.UseOptionalNameHeuristics
-                ? this.nameHeuristicRegistry.RegisteredHeuristics
+        return cachedNameBeforeSubschemaHeuristics ??= (
+            options.UseOptionalNameHeuristics
+                ? nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<INameHeuristicBeforeSubschema>()
-                    .Where(h => !this.options.DisabledNamingHeuristics
+                    .Where(h => !options.DisabledNamingHeuristics
                     .Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
                     .ThenBy(h => h.GetType().Name)
-                : this.nameHeuristicRegistry.RegisteredHeuristics
+                : nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<INameHeuristicBeforeSubschema>()
-                    .Where(h => !h.IsOptional && !this.options.DisabledNamingHeuristics
+                    .Where(h => !h.IsOptional && !options.DisabledNamingHeuristics
                     .Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
                     .ThenBy(h => h.GetType().Name)).ToArray();
@@ -702,16 +706,16 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 
     private IReadOnlyList<INameHeuristic> GetOrderedNameAfterSubschemaHeuristics()
     {
-        return this.cachedNameAfterSubschemaHeuristics ??= (
-            this.options.UseOptionalNameHeuristics
-                ? this.nameHeuristicRegistry.RegisteredHeuristics
+        return cachedNameAfterSubschemaHeuristics ??= (
+            options.UseOptionalNameHeuristics
+                ? nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<INameHeuristicAfterSubschema>()
-                    .Where(h => !this.options.DisabledNamingHeuristics.Contains(h.GetType().Name))
+                    .Where(h => !options.DisabledNamingHeuristics.Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
                     .ThenBy(h => h.GetType().Name)
-                : this.nameHeuristicRegistry.RegisteredHeuristics
+                : nameHeuristicRegistry.RegisteredHeuristics
                     .OfType<INameHeuristicAfterSubschema>()
-                    .Where(h => !h.IsOptional && !this.options.DisabledNamingHeuristics.Contains(h.GetType().Name))
+                    .Where(h => !h.IsOptional && !options.DisabledNamingHeuristics.Contains(h.GetType().Name))
                     .OrderBy(h => h.Priority)
                     .ThenBy(h => h.GetType().Name)).ToArray();
     }
@@ -882,14 +886,14 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         /// <returns>The namespace.</returns>
         internal string GetNamespace(TypeDeclaration typeDeclaration, TypeDeclaration? dynamic = null)
         {
-            if (dynamic is TypeDeclaration d && this.TryGetNamespace(d.LocatedSchema.Location, out string? ns))
+            if (dynamic is TypeDeclaration d && TryGetNamespace(d.LocatedSchema.Location, out string? ns))
             {
                 return ns;
             }
 
-            if (!this.TryGetNamespace(typeDeclaration.LocatedSchema.Location, out ns))
+            if (!TryGetNamespace(typeDeclaration.LocatedSchema.Location, out ns))
             {
-                ns = this.DefaultNamespace;
+                ns = DefaultNamespace;
             }
 
             return ns;
@@ -903,7 +907,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         /// <returns><see langword="true"/> if the name was provided.</returns>
         internal bool TryGetTypeName(string reference, [NotNullWhen(true)] out NamedType typeName)
         {
-            return this.namedTypeMap.TryGetValue(reference, out typeName);
+            return namedTypeMap.TryGetValue(reference, out typeName);
         }
 
         /// <summary>
@@ -920,9 +924,10 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
                 return false;
             }
 
-            return this.namespaceMap.TryGetValue(baseUri.Uri.ToString(), out ns);
+            return namespaceMap.TryGetValue(baseUri.Uri.ToString(), out ns);
         }
     }
+
     private class NamedTypes
     {
         // Named types by the unique key identifying the specific type.

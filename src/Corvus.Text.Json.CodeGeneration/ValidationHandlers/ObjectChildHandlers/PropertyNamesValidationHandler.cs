@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="PropertyNamesValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
@@ -32,12 +38,12 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
 
     /// <inheritdoc/>
     public CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration)
-    {        
+    {
         return generator;
     }
 
     public CodeGenerator AppendObjectPropertyValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration)
-    {       
+    {
         if (typeDeclaration.TryGetMetadata(EvaluationPathPropertyKey, out string? evaluationPathProperty) &&
             evaluationPathProperty is not null &&
             typeDeclaration.PropertyNamesSubschemaType() is SingleSubschemaKeywordTypeDeclaration propertyNameType)
@@ -71,7 +77,7 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
                     .AppendLineIndent("context.CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");")
                     .AppendNoCollectorNoMatchShortcutReturn()
                     .AppendSeparatorLine()
-                    .AppendLineIndent("context.EvaluatedKeyword(context.IsMatch, messageProvider: JsonSchemaEvaluation.ExpectedPropertyNameMatchesSchema, " , keywordString, "u8);")
+                    .AppendLineIndent("context.EvaluatedKeyword(context.IsMatch, messageProvider: JsonSchemaEvaluation.ExpectedPropertyNameMatchesSchema, ", keywordString, "u8);")
                 .PopIndent()
                 .AppendLineIndent("}");
         }
@@ -83,7 +89,6 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
 
     /// <inheritdoc/>
     public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => typeDeclaration.PropertyNamesSubschemaType() is not null;
-
 
     public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
@@ -103,6 +108,4 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
     }
 }
 
-public static class PropertyNameValidationExtensions
-{     
-}
+public static class PropertyNameValidationExtensions;

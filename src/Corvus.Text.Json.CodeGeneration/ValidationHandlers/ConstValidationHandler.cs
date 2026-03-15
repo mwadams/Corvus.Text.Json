@@ -1,6 +1,11 @@
-﻿// <copyright file="FormatValidationHandler.cs" company="Endjin Limited">
+﻿// <copyright file="ConstValidationHandler.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -131,7 +136,6 @@ file static class ConstValidationHandlerExtensions
         generator
             .AppendChildValidationCode(typeDeclaration, childHandlers, validationPriority);
 
-
         return generator;
     }
 
@@ -251,7 +255,7 @@ file static class ConstValidationHandlerExtensions
         Debug.Assert(constantValue.ValueKind is JsonValueKind.Object or JsonValueKind.Array);
 
         string quotedConstantValue = SymbolDisplay.FormatLiteral(constantValue.GetRawText(), true);
-        
+
         string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
 
         string constPropertyName = generator.GetPropertyNameInScope(keyword.Keyword, rootScope: generator.ConstantsScope());

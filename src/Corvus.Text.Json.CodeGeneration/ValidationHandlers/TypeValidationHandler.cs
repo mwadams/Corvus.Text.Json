@@ -1,6 +1,11 @@
 ﻿// <copyright file="TypeValidationHandler.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -107,7 +112,6 @@ file static class TypeValidationHandlerExtensions
                     generator
                         .AppendLineIndent("if (!JsonSchemaEvaluation.MatchTypeNumber(tokenType,", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context))");
                 }
-
 
                 generator
                     .AppendLineIndent("{")
@@ -389,7 +393,6 @@ file static class TypeValidationHandlerExtensions
             else
             {
                 allowedTypesBuilder.Append('[');
-
             }
         }
     }
@@ -410,7 +413,6 @@ file static class TypeValidationHandlerExtensions
                 .BeginElseClause();
             createdElseClause = true;
         });
-
 
         foreach (T keywordHandler in
                 typeDeclaration
@@ -470,7 +472,6 @@ file static class TypeValidationHandlerExtensions
             additionalWork(generator, typeDeclaration);
         }
 
-
         bool appendShortcut = false;
         if (generator.Length > currentLength)
         {
@@ -483,7 +484,6 @@ file static class TypeValidationHandlerExtensions
             {
                 generator
                     .AppendNoCollectorNoMatchShortcutReturn();
-
             }
 
             appendShortcut = true;
@@ -717,7 +717,6 @@ file static class TypeValidationHandlerExtensions
                             h.ValidationHandlerPriority >= parentHandler.ValidationHandlerPriority &&
                             !parentHandler.Equals(h)))
         {
-
             // We cannot do this if there are other handlers in between the parent and this one.
             if (typeDeclaration.HasHigherPriorityHandler(generator.LanguageProvider, parentHandler, keywordHandler))
             {
@@ -753,7 +752,6 @@ file static class TypeValidationHandlerExtensions
                             h.ValidationHandlerPriority >= parentHandler.ValidationHandlerPriority &&
                             !parentHandler.Equals(h)))
         {
-
             // We cannot do this if there are other handlers in between the parent and this one.
             if (typeDeclaration.HasHigherPriorityHandler(generator.LanguageProvider, parentHandler, keywordHandler))
             {
@@ -767,7 +765,6 @@ file static class TypeValidationHandlerExtensions
         }
 
         return false;
-
     }
 
     public static CodeGenerator AppendEvaluateCoreTypeFormatKeywords(this CodeGenerator generator, IKeywordValidationHandler parentHandler, TypeDeclaration typeDeclaration, CoreTypes coreTypes)
@@ -780,7 +777,6 @@ file static class TypeValidationHandlerExtensions
                             h.ValidationHandlerPriority >= parentHandler.ValidationHandlerPriority &&
                             !parentHandler.Equals(h)))
         {
-
             // We cannot do this if there are other handlers in between the parent and this one.
             if (typeDeclaration.HasHigherPriorityHandler(generator.LanguageProvider, parentHandler, keywordHandler))
             {

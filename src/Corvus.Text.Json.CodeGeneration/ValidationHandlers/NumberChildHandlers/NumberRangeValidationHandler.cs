@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="NumberRangeValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 #if !NET
 using System.Collections.Generic;
@@ -60,7 +66,6 @@ public class NumberRangeValidationHandler : IChildValidationHandler
             {
                 continue;
             }
-
 
             if (op == Operator.MultipleOf)
             {
@@ -163,6 +168,7 @@ public static class NumberValidationExtensions
 
         string divisor = $"{Formatting.GetTextFromUtf8(integral)}{Formatting.GetTextFromUtf8(fractional)}";
         string divisorValue = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(rawValue), true);
+
         // Does the integral/fractional part represent a value that can be validated as a UInt64 without loss of precision?
         if (IsUInt64(isNegative, integral, fractional, 0))
         {
@@ -198,10 +204,10 @@ public static class NumberValidationExtensions
         const int MinimumUInt64Exponent = 0;
         const bool MinimumUInt64IsNegative = false;
 
-        ReadOnlySpan<byte> MaximumUInt64Fractional = ""u8;
-        ReadOnlySpan<byte> MaximumUInt64Integral = "18446744073709551615"u8;
-        ReadOnlySpan<byte> MinimumUInt64Fractional = ""u8;
-        ReadOnlySpan<byte> MinimumUInt64Integral = ""u8;
+        ReadOnlySpan<byte> maximumUInt64Fractional = ""u8;
+        ReadOnlySpan<byte> maximumUInt64Integral = "18446744073709551615"u8;
+        ReadOnlySpan<byte> minimumUInt64Fractional = ""u8;
+        ReadOnlySpan<byte> minimumUInt64Integral = ""u8;
 
         if (exponent != 0)
         {
@@ -214,8 +220,8 @@ public static class NumberValidationExtensions
             fractional,
             exponent,
             MinimumUInt64IsNegative,
-            MinimumUInt64Integral,
-            MinimumUInt64Fractional,
+            minimumUInt64Integral,
+            minimumUInt64Fractional,
             MinimumUInt64Exponent) < 0)
         {
             return false;
@@ -227,8 +233,8 @@ public static class NumberValidationExtensions
             fractional,
             exponent,
             MaximumUInt64IsNegative,
-            MaximumUInt64Integral,
-            MaximumUInt64Fractional,
+            maximumUInt64Integral,
+            maximumUInt64Fractional,
             MaximumUInt64Exponent) > 0)
         {
             return false;

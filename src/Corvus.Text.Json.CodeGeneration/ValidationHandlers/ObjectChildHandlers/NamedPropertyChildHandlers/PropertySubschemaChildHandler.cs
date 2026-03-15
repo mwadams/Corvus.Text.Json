@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="PropertySubschemaChildHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +52,6 @@ internal class PropertySubschemaChildHandler : INamedPropertyChildHandler
         return false;
     }
 
-
     /// <inheritdoc/>
     public void AppendObjectPropertyValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, PropertyDeclaration property)
     {
@@ -77,7 +82,6 @@ internal class PropertySubschemaChildHandler : INamedPropertyChildHandler
         .AppendSeparatorLine()
         .AppendLineIndent(propertyClassName, ".", jsonSchemaClassName, ".Evaluate(parentDocument, parentDocumentIndex, ref ", childContextName, ");")
         .AppendLineIndent("context.CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");");
-
     }
 
     /// <inheritdoc/>

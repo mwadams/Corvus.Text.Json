@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="PropertiesValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +19,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler2, IJsonSchemaClassSetup
 {
     private const string PropertyValidatorDelegateNameKey = "PropertiesValidationHandler.PropertyValidatorDelegateName";
-    
+
     internal const int MinPropertiesForMap = 1;
 
     private List<INamedPropertyChildHandler> children = [];
@@ -38,7 +44,6 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.AfterComposition + 1;
-
 
     public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
@@ -73,9 +78,7 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
                 .AppendIndent("internal delegate void ", globalName, "(IJsonDocument parentDocument, int parentDocumentIndex, int propertyCount, ref JsonSchemaContext context")
                 .AppendNamedPropertyValidatorParameters(typeDeclaration, children)
                 .AppendLine(");");
-
         });
-
 
         foreach (PropertyDeclaration property in propertiesToGenerate)
         {
@@ -85,7 +88,7 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
 
             propertyAndMethodNames.Add((propertyName, methodName));
 
-            bool requiresAddLocalEvaluatedProperty = children.Any(c => c.WillEmitCodeFor(typeDeclaration) && c.EvaluatesProperty(property));           
+            bool requiresAddLocalEvaluatedProperty = children.Any(c => c.WillEmitCodeFor(typeDeclaration) && c.EvaluatesProperty(property));
 
             generator
                 .AppendSeparatorLine()
@@ -144,7 +147,6 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
             return generator;
         }
 
-
         return generator
             .AppendSeparatorLine()
             .AppendLineIndent("if (TryGetNamedMatcher(objectValidation_unescapedPropertyName.Span, out ", propertyValidatorDelegateName, "? validator))")
@@ -156,7 +158,6 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
             .AppendLineIndent("}");
     }
 
-
     public bool RequiresPropertyNameAsString(TypeDeclaration typeDeclaration) => children.Any(c => c.WillEmitCodeFor(typeDeclaration));
 
     private static string BuildValidatorDelegateKey(TypeDeclaration typeDeclaration, List<INamedPropertyChildHandler> children)
@@ -164,7 +165,7 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
         StringBuilder builder = new("_");
         foreach (INamedPropertyChildHandler child in children)
         {
-            foreach (var parameter in child.GetNamedPropertyValidatorParameters(typeDeclaration))
+            foreach (ObjectPropertyValidatorParameter parameter in child.GetNamedPropertyValidatorParameters(typeDeclaration))
             {
                 builder.Append(parameter.DotnetTypeName);
                 builder.Append('_');
@@ -199,7 +200,7 @@ file static class PropertiesValidationHandlerExtensions
     {
         foreach (INamedPropertyChildHandler child in children)
         {
-            foreach(var parameter in child.GetNamedPropertyValidatorParameters(typeDeclaration))
+            foreach (ObjectPropertyValidatorParameter parameter in child.GetNamedPropertyValidatorParameters(typeDeclaration))
             {
                 generator
                     .Append(", ")
@@ -300,7 +301,6 @@ file static class PropertiesValidationHandlerExtensions
                 .AppendLineIndent("out ", propertyValidatorDelegateName, "? matcher)")
                 .AppendLineIndent("{")
                 .PushIndent();
-
 
             foreach ((string propertyName, string methodName) in propertyAndMethodNames)
             {

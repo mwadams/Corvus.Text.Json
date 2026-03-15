@@ -429,6 +429,13 @@ dotnet_diagnostic.IDE0018.severity = None
 # IDE0071: Simplify interpolation (ReadOnlySpan needs .ToString() on netstandard2.0)
 dotnet_diagnostic.IDE0071.severity = None
 
+# Additional rules suppressed for CodeGeneration project
+dotnet_diagnostic.IDE0150.severity = None
+dotnet_diagnostic.RCS1175.severity = None
+dotnet_diagnostic.RCS1259.severity = None
+dotnet_diagnostic.RCS1021.severity = None
+dotnet_diagnostic.RCS1225.severity = None
+
 # Roslynator rules - suppress for runtime-derived code
 dotnet_diagnostic.RCS1036.severity = None
 dotnet_diagnostic.RCS1089.severity = warning

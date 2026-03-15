@@ -1,5 +1,11 @@
+// <copyright file="CodeGeneratorExtensions.Array.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using Corvus.Json.CodeGeneration;
 
@@ -10,7 +16,6 @@ namespace Corvus.Text.Json.CodeGeneration;
 /// </summary>
 internal static partial class CodeGeneratorExtensions
 {
-
     /// <summary>
     /// Append mutation methods for arrays.
     /// </summary>
@@ -361,7 +366,6 @@ internal static partial class CodeGeneratorExtensions
 
         return generator;
     }
-
 
     /// <summary>
     /// Append the static property which provides the dimension (fixed length) of the array.

@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="ItemsValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Diagnostics;
 using Corvus.Json.CodeGeneration;
@@ -27,6 +33,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.AfterComposition + 1;
+
     public uint ItemHandlerPriority => ValidationHandlerPriority;
 
     private class ValidationConfiguration
@@ -39,9 +46,12 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
         }
 
         public string? TupleEvaluationPathProperty { get; }
+
         public string? UnevaluatedItemsEvaluationPathProperty { get; }
+
         public string? NonTupleEvaluationPathProperty { get; }
     }
+
     public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
         string? tupleEvaluationPathProperty = null;
@@ -61,7 +71,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
 
         if (typeDeclaration.ExplicitUnevaluatedItemsType() is ArrayItemsTypeDeclaration aitd)
         {
-            unevaluatedItemsEvaluationPathProperty = generator.GetPropertyNameInScope("SchemaEvaluationPath", prefix: ((IKeyword)aitd.Keyword).Keyword);            
+            unevaluatedItemsEvaluationPathProperty = generator.GetPropertyNameInScope("SchemaEvaluationPath", prefix: ((IKeyword)aitd.Keyword).Keyword);
             generator
                 .AppendLineIndent(
                     "private static readonly JsonSchemaPathProvider ",
@@ -133,7 +143,7 @@ public class ItemsValidationHandler : IChildArrayItemValidationHandler2, IJsonSc
                     .AppendLineIndent("case ", index.ToString(), ":")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("JsonSchemaContext ", tupleChildContextName, " = ", tupleTypeName, ".", tupleJsonSchemaClassName ,".PushChildContext(")
+                        .AppendLineIndent("JsonSchemaContext ", tupleChildContextName, " = ", tupleTypeName, ".", tupleJsonSchemaClassName, ".PushChildContext(")
                         .PushIndent()
                             .AppendLineIndent("parentDocument,")
                             .AppendLineIndent("arrayValidation_currentIndex,")

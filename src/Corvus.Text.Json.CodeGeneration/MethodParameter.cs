@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="MethodParameter.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using Corvus.Json.CodeGeneration;
 
@@ -23,11 +29,11 @@ public readonly struct MethodParameter
     /// <param name="defaultValue">The (optional) default value for the parameter.</param>
     public MethodParameter(string modifiers, string type, string parameterName, bool typeIsNullable = false, string? defaultValue = null)
     {
-        this.Modifiers = modifiers;
-        this.Type = type;
-        this.specificParameterName = parameterName;
-        this.TypeIsNullable = typeIsNullable;
-        this.DefaultValue = defaultValue;
+        Modifiers = modifiers;
+        Type = type;
+        specificParameterName = parameterName;
+        TypeIsNullable = typeIsNullable;
+        DefaultValue = defaultValue;
     }
 
     /// <summary>
@@ -39,10 +45,10 @@ public readonly struct MethodParameter
     /// <param name="defaultValue">The (optional) default value for the parameter.</param>
     public MethodParameter(string modifiers, string type, MemberName parameterName, string? defaultValue = null)
     {
-        this.Modifiers = modifiers;
-        this.Type = type;
-        this.parameterMemberName = parameterName;
-        this.DefaultValue = defaultValue;
+        Modifiers = modifiers;
+        Type = type;
+        parameterMemberName = parameterName;
+        DefaultValue = defaultValue;
     }
 
     /// <summary>
@@ -58,7 +64,7 @@ public readonly struct MethodParameter
     /// <summary>
     /// Gets a value indicating whether this requires a specifically reserved name in the scope.
     /// </summary>
-    public bool RequiresReservedName => this.specificParameterName is not null;
+    public bool RequiresReservedName => specificParameterName is not null;
 
     /// <summary>
     /// Gets the type for the parameter.
@@ -112,7 +118,7 @@ public readonly struct MethodParameter
     /// <returns>The name for the parameter.</returns>
     public string GetName(CodeGenerator generator, bool isDeclaration = false)
     {
-        if (this.specificParameterName is string specificName)
+        if (specificParameterName is string specificName)
         {
             if (isDeclaration)
             {
@@ -122,7 +128,7 @@ public readonly struct MethodParameter
             return specificName;
         }
 
-        if (this.parameterMemberName is MemberName memberName)
+        if (parameterMemberName is MemberName memberName)
         {
             return generator.GetOrAddMemberName(memberName);
         }

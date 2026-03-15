@@ -1,5 +1,11 @@
+// <copyright file="CodeGeneratorExtensions.Conversions.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +52,7 @@ internal static partial class CodeGeneratorExtensions
                             .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                             .AppendLineIndent("public static ", typeDeclaration.UseImplicitOperatorString() ? "implicit" : "explicit", " operator string(", typeName, " value) => value._parent.GetString(value._idx, JsonTokenType.String) ?? throw new FormatException();");
                     }
+
                     break;
 
                 case CoreTypes.Number:
@@ -97,6 +104,7 @@ internal static partial class CodeGeneratorExtensions
                             .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                             .AppendLineIndent("public static explicit operator decimal(", typeName, " value) => value._parent.TryGetValue(value._idx, out decimal result) ? result : throw new FormatException();");
                     }
+
                     break;
                 case CoreTypes.Boolean:
                     if (seenConversionOperators.Add("bool"))
@@ -128,8 +136,8 @@ internal static partial class CodeGeneratorExtensions
                                 .AppendLineIndent("}")
                             .PopIndent()
                             .AppendLineIndent("}");
-
                     }
+
                     break;
                 default:
                     break;
@@ -320,7 +328,7 @@ internal static partial class CodeGeneratorExtensions
             FormatHandlerRegistry.Instance.StringFormatHandlers.AppendFormatValueGetters(generator, typeDeclaration, format, seenConversionOperators);
         }
 
-        string typeName = typeDeclaration.DotnetTypeName();
+        _ = typeDeclaration.DotnetTypeName();
 
         CoreTypes coreTypes = typeDeclaration.ImpliedCoreTypesOrAny();
 
@@ -396,7 +404,6 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("[MethodImpl(MethodImplOptions.AggressiveInlining)]")
                         .AppendLineIndent("public bool TryGetValue(out uint value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }");
                 }
-
 
                 if (seenConversionOperators.Add("ushort"))
                 {
@@ -485,6 +492,7 @@ internal static partial class CodeGeneratorExtensions
                 }
             }
         }
+
         if ((coreTypes & CoreTypes.Boolean) != 0)
         {
             if (seenConversionOperators.Add("bool"))
@@ -949,7 +957,7 @@ internal static partial class CodeGeneratorExtensions
                     return;
                 }
 
-                var matchType = match.ReducedTypeDeclaration().ReducedType;
+                TypeDeclaration matchType = match.ReducedTypeDeclaration().ReducedType;
                 string matchTypeName = matchType.FullyQualifiedDotnetTypeName();
 
                 if (matchType.IsBuiltInJsonNotAnyType())

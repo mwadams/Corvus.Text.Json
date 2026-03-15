@@ -1,6 +1,11 @@
-﻿// <copyright file="FormatValidationHandler.cs" company="Endjin Limited">
+﻿// <copyright file="CompositionNotValidationHandler.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -86,8 +91,7 @@ file static class CompositionNotValidationHandlerExtensions
         generator
             .PrependChildValidationCode(typeDeclaration, childHandlers, validationPriority);
 
-
-        var keywords =
+        IEnumerable<INotValidationKeyword> keywords =
             typeDeclaration.Keywords()
                 .OfType<INotValidationKeyword>();
 
@@ -141,7 +145,6 @@ file static class CompositionNotValidationHandlerExtensions
                         .AppendLineIndent("context.EvaluatedKeyword(true, JsonSchemaEvaluation.DidNotMatchNotSchema, ", formattedKeyword, "u8);")
                     .PopIndent()
                     .AppendLineIndent("}");
-
 
                 requiresShortCut = true;
             }

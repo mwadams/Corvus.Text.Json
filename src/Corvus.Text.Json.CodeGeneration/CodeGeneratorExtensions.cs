@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="CodeGeneratorExtensions.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,6 +44,7 @@ internal static partial class CodeGeneratorExtensions
 
         return generator;
     }
+
     /// <summary>
     /// Appends a blank line if the previous line ended with a closing brace.
     /// </summary>
@@ -51,7 +58,7 @@ internal static partial class CodeGeneratorExtensions
         }
 
         if ((generator.ScopeType == ScopeType.Type &&
-                generator.EndsWith($";\n")) ||
+                generator.EndsWith(";\n")) ||
                 generator.EndsWith("}\n") ||
                 generator.EndsWith("#endif\n") ||
                 generator.EndsWith(";\r\n") ||
@@ -723,6 +730,7 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent("{")
             .PushIndent();
     }
+
     /// <summary>
     /// Begin a method declaration for an explicit name which will be reserved in the scope, if it is not already reserved
     /// </summary>
@@ -1078,7 +1086,7 @@ internal static partial class CodeGeneratorExtensions
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendJsonSchemaClassSetup(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
-        foreach(IJsonSchemaClassSetup classSetup in typeDeclaration.OrderedValidationHandlers(generator.LanguageProvider).OfType<IJsonSchemaClassSetup>())
+        foreach (IJsonSchemaClassSetup classSetup in typeDeclaration.OrderedValidationHandlers(generator.LanguageProvider).OfType<IJsonSchemaClassSetup>())
         {
             classSetup.AppendJsonSchemaClassSetup(generator, typeDeclaration);
         }
@@ -1196,7 +1204,6 @@ internal static partial class CodeGeneratorExtensions
             {
                 return generator;
             }
-
 
             if (!keyword.TryGetNotType(typeDeclaration, out ReducedTypeDeclaration? reducedType) || reducedType is not ReducedTypeDeclaration rdt)
             {
@@ -1317,8 +1324,6 @@ internal static partial class CodeGeneratorExtensions
             .AppendLineIndent(
                 "public static ReadOnlySpan<byte> SchemaLocationUtf8 => ",
                 SymbolDisplay.FormatLiteral(schemaLocation, true), "u8;");
-
-
     }
 
     /// <summary>
@@ -1383,7 +1388,7 @@ internal static partial class CodeGeneratorExtensions
     /// Append a property which gets the <see cref="JsonValueKind"/> for the instance.
     /// </summary>
     /// <param name="generator">The code generator.</param>
-    /// 
+    ///
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendValueKindProperty(this CodeGenerator generator)
     {
@@ -1403,7 +1408,7 @@ internal static partial class CodeGeneratorExtensions
     /// Append a property which gets the <c>JsonTokenType</c> for the instance.
     /// </summary>
     /// <param name="generator">The code generator.</param>
-    /// 
+    ///
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendTokenTypeProperty(this CodeGenerator generator)
     {
@@ -1506,7 +1511,6 @@ internal static partial class CodeGeneratorExtensions
         {
             return generator;
         }
-
 
         return generator
             .ReserveName("ParseValue")
@@ -1687,7 +1691,6 @@ internal static partial class CodeGeneratorExtensions
                 .AppendLineIndent("return JsonElementHelpers.TryParseValue<", typeDeclaration.DotnetTypeName(), ">(ref reader, out result);")
             .PopIndent()
             .AppendLineIndent("}");
-
     }
 
     /// <summary>
@@ -2011,7 +2014,7 @@ internal static partial class CodeGeneratorExtensions
     /// Append the WriteTo() method.
     /// </summary>
     /// <param name="generator">The code generator.</param>
-    /// 
+    ///
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendWriteToMethod(this CodeGenerator generator)
     {
@@ -2330,7 +2333,7 @@ internal static partial class CodeGeneratorExtensions
     /// <param name="emitter">A function which emits the code for the delegate.</param>
     /// <returns>The fully qualified unqiue type name in the root scope.</returns>
     public static string GetOrEmitNamedTypeInRootNamespace(this CodeGenerator generator, string name, string key, NamedTypeEmitter emitter)
-    {        
+    {
         if (generator.LanguageProvider is CSharpLanguageProvider provider)
         {
             return provider.GetOrEmitNamedTypeInRootNamespace(name, key, emitter);

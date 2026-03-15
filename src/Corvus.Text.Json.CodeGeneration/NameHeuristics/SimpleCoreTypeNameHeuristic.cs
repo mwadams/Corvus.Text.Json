@@ -1,6 +1,11 @@
 // <copyright file="SimpleCoreTypeNameHeuristic.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -54,7 +59,7 @@ internal sealed class SimpleCoreTypeNameHeuristic : IBuiltInTypeNameHeuristic
     /// <param name="options">The language provider options.</param>
     public SimpleCoreTypeNameHeuristic(CSharpLanguageProvider.Options options)
     {
-        this.defaultNamespace = options.DefaultNamespace;
+        defaultNamespace = options.DefaultNamespace;
     }
 
     /// <inheritdoc/>
@@ -76,9 +81,9 @@ internal sealed class SimpleCoreTypeNameHeuristic : IBuiltInTypeNameHeuristic
         string canonicalName = GetCanonicalName(typeDeclaration);
 
         typeDeclaration.SetDotnetTypeName(canonicalName);
-        typeDeclaration.SetDotnetNamespace(this.defaultNamespace);
+        typeDeclaration.SetDotnetNamespace(defaultNamespace);
 
-        if (this.firstSeen.TryAdd(canonicalName, typeDeclaration))
+        if (firstSeen.TryAdd(canonicalName, typeDeclaration))
         {
             // First instance: mark as global simple type so GenerateCodeFor
             // processes it in a dedicated loop (since ShouldGenerate returns false
@@ -99,7 +104,7 @@ internal sealed class SimpleCoreTypeNameHeuristic : IBuiltInTypeNameHeuristic
     /// <returns>The collection of first-seen global simple type declarations.</returns>
     public IEnumerable<TypeDeclaration> GetFirstSeenTypes()
     {
-        return this.firstSeen.Values;
+        return firstSeen.Values;
     }
 
     /// <summary>

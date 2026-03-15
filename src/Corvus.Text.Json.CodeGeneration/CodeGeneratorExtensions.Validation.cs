@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="CodeGeneratorExtensions.Validation.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -28,7 +34,7 @@ internal static partial class CodeGenerationExtensions
 
     public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
-        if (typeDeclaration.TryGetMetadata(NormalizedJsonNumberAppendedKey, out bool? value))
+        if (typeDeclaration.TryGetMetadata(NormalizedJsonNumberAppendedKey, out bool? _))
         {
             return generator;
         }
@@ -48,7 +54,7 @@ internal static partial class CodeGenerationExtensions
 
     public static CodeGenerator AppendStringLengthIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
-        if (typeDeclaration.TryGetMetadata(StringLengthAppendedKey, out bool? value))
+        if (typeDeclaration.TryGetMetadata(StringLengthAppendedKey, out bool? _))
         {
             return generator;
         }
@@ -78,7 +84,7 @@ internal static partial class CodeGenerationExtensions
 
     public static CodeGenerator AppendUnescapedUtf8JsonStringIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
-        if (typeDeclaration.TryGetMetadata(UnescapedUtf8JsonStringAppendedKey, out bool? value))
+        if (typeDeclaration.TryGetMetadata(UnescapedUtf8JsonStringAppendedKey, out bool? _))
         {
             return generator;
         }
@@ -131,7 +137,7 @@ internal static partial class CodeGenerationExtensions
 
     public static CodeGenerator AppendGetRawSimpleValueIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
-        if (typeDeclaration.TryGetMetadata(GetRawSimpleValueAppendedKey, out bool? value))
+        if (typeDeclaration.TryGetMetadata(GetRawSimpleValueAppendedKey, out bool? _))
         {
             return generator;
         }
@@ -445,7 +451,7 @@ internal static partial class CodeGenerationExtensions
             return generator;
         }
 
-        Dictionary<IValidationConstantProviderKeyword, JsonElement[]> requiredConstants = constants.Where(k => !IsNotRequiredInConstantsClass(k.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        var requiredConstants = constants.Where(k => !IsNotRequiredInConstantsClass(k.Key)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         if (requiredConstants.Count == 0)
         {
@@ -796,7 +802,6 @@ internal static partial class CodeGenerationExtensions
         TypeDeclaration typeDeclaration,
         string ignoredMessageProviderName)
     {
-
         return AppendIgnoredCoreTypeFormatKeywords(generator, typeDeclaration, ignoredMessageProviderName, CoreTypes.String, includeElse: true);
     }
 
@@ -820,8 +825,7 @@ internal static partial class CodeGenerationExtensions
 
         foreach (IFormatProviderKeyword keyword in ignoredKeywords)
         {
-            if (((keyword.ImpliesCoreTypes(typeDeclaration) & coreType) != 0)
-                )
+            if (((keyword.ImpliesCoreTypes(typeDeclaration) & coreType) != 0))
             {
                 typeDeclaration.AddIgnoredKeyword(keyword);
 
@@ -880,7 +884,6 @@ internal static partial class CodeGenerationExtensions
         .Keywords()
         .OfType<T>()
         .Any();
-
     }
 
     public static CodeGenerator TryAppendIgnoredCoreTypeKeywords<T>(
@@ -913,6 +916,7 @@ internal static partial class CodeGenerationExtensions
 
         return generator;
     }
+
     private static CodeGenerator AppendArrayValidationConstantField(this CodeGenerator generator, TypeDeclaration typeDeclaration, IKeyword keyword, int? index, in JsonElement value)
     {
         if (generator.IsCancellationRequested)

@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="CodeGeneratorExtensions.Builder.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -203,7 +209,6 @@ internal static partial class CodeGeneratorExtensions
             generator
                 .AppendLineIndent("case Kind.", isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName(), ":")
                 .PushIndent();
-
 
             if (forContext)
             {
@@ -487,8 +492,6 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _jsonElement", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");")
                         .AppendLineIndent("break;")
                     .PopIndent();
-
-
 
             if ((core & CoreTypes.Null) != 0)
             {
@@ -811,7 +814,6 @@ internal static partial class CodeGeneratorExtensions
                                     .AppendLineIndent("valueBuilder.AddProperty(", nameName, ", _", composedBuilder.ObjectInstanceName, "!, static (in b, ref o) => ", composedBuilder.TypeDeclaration.FullyQualifiedDotnetTypeName(), ".", composedBuilder.ObjectBuilderName, ".BuildValue(b, ref o)", includeEscaping ? ", escapeName, nameRequiresUnescaping" : "", ");");
                         }
 
-
                         generator
                                 .AppendLineIndent("break;")
                             .PopIndent();
@@ -1022,7 +1024,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendCreateTuple(typeDeclaration, tupleType, allowsNonPrefixItems);
         }
-        else if(typeDeclaration.ExplicitTupleType() is TupleTypeDeclaration tupleType2 && !HasNotAnyTupleItem(tupleType2))
+        else if (typeDeclaration.ExplicitTupleType() is TupleTypeDeclaration tupleType2 && !HasNotAnyTupleItem(tupleType2))
         {
             hasTuple = true;
             if (allowsNonPrefixItems)
@@ -1037,7 +1039,7 @@ internal static partial class CodeGeneratorExtensions
                 .AppendSeparatorLine()
                 .AppendCreateTuple(typeDeclaration, tupleType2, allowsNonPrefixItems);
         }
-        else if(typeDeclaration.ImplicitTupleType() is TupleTypeDeclaration tupleType3 && !HasNotAnyTupleItem(tupleType3))
+        else if (typeDeclaration.ImplicitTupleType() is TupleTypeDeclaration tupleType3 && !HasNotAnyTupleItem(tupleType3))
         {
             hasTuple = true;
             if (allowsNonPrefixItems)
@@ -1064,7 +1066,6 @@ internal static partial class CodeGeneratorExtensions
             }
 
             string arrayItemsType = arrayItemsTypeDeclaration.FullyQualifiedDotnetTypeName();
-
 
             generator
                 .AppendSeparatorLine()
@@ -1131,7 +1132,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        string gs = """
+        const string gs = """
             #if NET9_0_OR_GREATER
             where TContext : allows ref struct
             #endif
@@ -1169,7 +1170,7 @@ internal static partial class CodeGeneratorExtensions
             return generator;
         }
 
-        if (forObject & !isObject)
+        if (forObject && !isObject)
         {
             return generator;
         }
@@ -1325,7 +1326,6 @@ internal static partial class CodeGeneratorExtensions
             .PopIndent()
             .AppendLineIndent("}");
 
-
         return generator
             .EndClassStructOrEnumDeclaration();
     }
@@ -1339,7 +1339,6 @@ internal static partial class CodeGeneratorExtensions
 
         generator
             .AppendIndent("Create(ref _builder");
-     
 
         for (int i = 0; i < parameters.Length; ++i)
         {
@@ -1357,7 +1356,6 @@ internal static partial class CodeGeneratorExtensions
             .AppendLine(");");
     }
 
-
     private static CodeGenerator AppendCallStaticCreateWithBuilderAndContext(this CodeGenerator generator, MethodParameter[] parameters)
     {
         if (generator.IsCancellationRequested)
@@ -1367,7 +1365,6 @@ internal static partial class CodeGeneratorExtensions
 
         generator
             .AppendIndent("Create(", parameters[0].GetName(generator), ", ref _builder");
-
 
         for (int i = 1; i < parameters.Length; ++i)
         {
@@ -1399,7 +1396,6 @@ internal static partial class CodeGeneratorExtensions
         if ((typeDeclaration.ImpliedCoreTypes() & (CoreTypes.Object | CoreTypes.Array)) != 0)
         {
             // But we allow a default initial capacity of 30 for objects or arrays
-
             if (typeDeclaration.IsFixedSizeNumericArray())
             {
                 // If this is a fixed size array, we use the value buffer size as the initial capacity
@@ -1475,6 +1471,7 @@ internal static partial class CodeGeneratorExtensions
             {
                 AppendEmptyCreateBuilder(generator, initialCapacity, "CreateArrayBuilder", "StartArray", "EndArray");
             }
+
             if (!hasRequiredProperties || hasCompositionTypes)
             {
                 // CreateObjectBuilder uses a distinct method name, so no ambiguity
@@ -1989,7 +1986,7 @@ internal static partial class CodeGeneratorExtensions
     private static CodeGenerator AppendCommonBuild(this CodeGenerator generator, TypeDeclaration typeDeclaration, List<ComposedBuilder> builders)
     {
         // We only expect row for a simple type.
-        int initialCapacity = 1;
+        const int initialCapacity = 1;
 
         CoreTypes core = typeDeclaration.ImpliedCoreTypesOrAny();
 
@@ -2008,7 +2005,7 @@ internal static partial class CodeGeneratorExtensions
 
             if (isObject && (hasFallbackObjectType || !builders.Any(b => b.IsObject)))
             {
-                AppendCreateBuild(generator, initialCapacity, sourceClassName, isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName() );
+                AppendCreateBuild(generator, initialCapacity, sourceClassName, isArray ? generator.ObjectBuilderClassName() : generator.BuilderClassName());
             }
 
             if (isArray && (hasFallbackArrayType || !builders.Any(b => b.IsArray)))
@@ -2690,18 +2687,15 @@ internal static partial class CodeGeneratorExtensions
                 "public",
                 "void",
                 "Create",
-                nonStaticMethodParameters
-                )
+                nonStaticMethodParameters)
                 .AppendCallStaticCreateWithBuilder(nonStaticMethodParameters)
             .EndMethodDeclaration();
-
 
         if ((typeDeclaration.ImpliedCoreTypesOrAny() & (CoreTypes.Object | CoreTypes.Array)) != 0 &&
             typeDeclaration.PropertyDeclarations.Any(p =>
                 p.ReducedPropertyType.SingleConstantValue().ValueKind == JsonValueKind.Undefined &&
                 !p.ReducedPropertyType.IsBuiltInJsonNotAnyType() &&
-                (p.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Object | CoreTypes.Array)) != 0)
-            )
+                (p.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Object | CoreTypes.Array)) != 0))
         {
             MethodParameter[] staticMethodParametersWithContext = BuildMethodParametersWithContext(generator, typeDeclaration);
             MethodParameter[] nonStaticMethodParametersWithContext = [staticMethodParametersWithContext[0], ..staticMethodParametersWithContext.Skip(2)];
@@ -2743,7 +2737,6 @@ internal static partial class CodeGeneratorExtensions
                     nonStaticMethodParametersWithContext)
                     .AppendCallStaticCreateWithBuilderAndContext(nonStaticMethodParametersWithContext)
                 .EndMethodDeclaration();
-
         }
 
         return generator;
@@ -2809,7 +2802,7 @@ internal static partial class CodeGeneratorExtensions
                     builderName,
                     ", escapeName: false);");
         }
-       
+
         return parameterIndex;
     }
 
@@ -2830,7 +2823,6 @@ internal static partial class CodeGeneratorExtensions
                     .AppendLineIndent("_kind = jsonElement.ValueKind == JsonValueKind.Undefined ? Kind.Unknown : Kind.JsonElement;")
                 .PopIndent()
                 .AppendLineIndent("}");
-
 
             if ((core & CoreTypes.String) != 0)
             {
@@ -2928,7 +2920,6 @@ internal static partial class CodeGeneratorExtensions
                         .AppendLineIndent("private ", generator.SourceClassName(), "(Kind kind) { Debug.Assert(kind == Kind.Null); _kind = Kind.Null; }");
                 }
             }
-
 
             generator
                 .AppendNumericArrayConstructors(typeDeclaration, seenNumericArrayTypes);
@@ -3712,7 +3703,6 @@ internal static partial class CodeGeneratorExtensions
                 if (t.LocalEvaluatedPropertyType() is not null ||
                     t.HasPropertyDeclarations)
                 {
-
                     objectKindName = generator.GetUniqueMethodNameInScope(t.DotnetTypeName(), suffix: isArray ? "ObjectBuilder" : "Builder");
                     objectInstanceName = generator.GetUniqueFieldNameInScope(objectKindName, suffix: "Instance");
                     objectBuilderName = isArray ? generator.ObjectBuilderClassName(t.FullyQualifiedDotnetTypeName()) : generator.BuilderClassName(t.FullyQualifiedDotnetTypeName());
@@ -3874,7 +3864,6 @@ internal static partial class CodeGeneratorExtensions
             }
         }
 
-
         CoreTypes rootCore = typeDeclaration.ImpliedCoreTypesOrAny();
 
         bool isRootObject = (rootCore & CoreTypes.Object) != 0;
@@ -3996,17 +3985,29 @@ internal static partial class CodeGeneratorExtensions
         }
 
         public string? ArrayBuilderName { get; }
+
         public string? ArrayInstanceName { get; }
+
         public string? ArrayKindName { get; }
+
         public bool IsArray => ArrayKindName is not null;
+
         public bool IsObject => ObjectKindName is not null;
+
         public string? NumericArrayKindName { get; }
+
         public NumericTypeName? NumericArrayTypeName { get; }
+
         public string? NumericFormat { get; }
+
         public string? ObjectBuilderName { get; }
+
         public string? ObjectInstanceName { get; }
+
         public string? ObjectKindName { get; }
+
         public string? StringFormat { get; }
+
         public TypeDeclaration TypeDeclaration { get; }
     }
 }

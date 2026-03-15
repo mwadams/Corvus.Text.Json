@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="ContainsValidationHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -29,8 +35,8 @@ public class ContainsValidationHandler : IChildArrayItemValidationHandler2, IJso
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority { get; } = ValidationPriorities.AfterComposition + 1;
-    public uint ItemHandlerPriority { get; } = ValidationPriorities.Composition;
 
+    public uint ItemHandlerPriority { get; } = ValidationPriorities.Composition;
 
     private class ValidationConfiguration
     {
@@ -43,16 +49,20 @@ public class ContainsValidationHandler : IChildArrayItemValidationHandler2, IJso
         }
 
         public ArrayItemsTypeDeclaration ArrayItemsTypeDeclaration { get; }
+
         public string ContainsEvaluationPathProperty { get; }
+
         public List<ContainsOperator> ContainsOperators { get; }
+
         public string Keyword { get; }
 
-        public string ContainsCountVariableName { get => field ?? throw new InvalidOperationException("You must set the contains count variable name."); internal set => field = value; }
+        public string ContainsCountVariableName { get => field ?? throw new InvalidOperationException("You must set the contains count variable name."); internal set; }
     }
 
     private class ContainsOperator
     {
         public int ConstantValue { get; internal set; }
+
         public Operator Operator { get; internal set; }
     }
 
@@ -74,7 +84,6 @@ public class ContainsValidationHandler : IChildArrayItemValidationHandler2, IJso
                         SymbolDisplay.FormatLiteral(containsItemsTypeDeclaration.Keyword.GetPathModifier(containsItemsTypeDeclaration), true),
                         "u8, buffer, out written);");
 
-
                 foreach (IArrayContainsCountConstantValidationKeyword keyword in typeDeclaration.Keywords().OfType<IArrayContainsCountConstantValidationKeyword>())
                 {
                     if (keyword.TryGetOperator(typeDeclaration, out Operator op) &&
@@ -89,7 +98,7 @@ public class ContainsValidationHandler : IChildArrayItemValidationHandler2, IJso
                                 throw new InvalidOperationException($"Expected constant value to be a number that can be represented as an int or double. Actual value: {constant}");
                             }
 
-                            value = (int)constantValueAsDouble;                            
+                            value = (int)constantValueAsDouble;
                         }
 
                         containsOperators.Add(new ContainsOperator { ConstantValue = value, Operator = op });
@@ -131,7 +140,7 @@ public class ContainsValidationHandler : IChildArrayItemValidationHandler2, IJso
             return generator;
         }
 
-        foreach (var containsOperator in validationConfiguration.ContainsOperators)
+        foreach (ContainsOperator containsOperator in validationConfiguration.ContainsOperators)
         {
             generator
                 .AppendStandardContainsCountOperator(
@@ -198,7 +207,7 @@ public static class ContainsValidationExtensions
         {
             return generator;
         }
-       
+
         string expected = constantValue.ToString();
         string operatorFunction = op switch
         {

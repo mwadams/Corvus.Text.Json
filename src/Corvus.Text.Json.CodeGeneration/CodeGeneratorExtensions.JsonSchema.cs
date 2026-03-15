@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="CodeGeneratorExtensions.JsonSchema.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Linq;
@@ -86,7 +92,6 @@ internal static partial class CodeGenerationExtensions
                 .PopIndent()
             .PopIndent()
             .AppendLineIndent("}");
-
 
         generator
             .AppendSeparatorLine()
@@ -444,11 +449,11 @@ internal static partial class CodeGenerationExtensions
                     ("IJsonDocument", "parentDocument"),
                     ("int", "parentIndex"),
                     ("ref JsonSchemaContext", "context")
-                ])                
+                ])
                 .ConditionallyAppend(typeDeclaration.RequiresJsonTokenType(),
                 g => g
                     .ReserveName("tokenType")
-                    .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);"))                
+                    .AppendLineIndent("JsonTokenType tokenType = parentDocument.GetJsonTokenType(parentIndex);"))
                 .AppendSeparatorLine()
                 .AppendLineIndent("// You're not allowed to ask about non-value-like entities")
                 .AppendLineIndent("Debug.Assert(parentDocument.GetJsonTokenType(parentIndex) is not")
@@ -465,7 +470,6 @@ internal static partial class CodeGenerationExtensions
         }
 
         // Then append the actual validation code beneath
-
         bool needsShortcut = false;
         foreach (KeywordValidationHandlerBase handler in typeDeclaration.OrderedValidationHandlers<KeywordValidationHandlerBase>(generator.LanguageProvider))
         {
@@ -494,7 +498,6 @@ internal static partial class CodeGenerationExtensions
         generator
             .EndMethodDeclaration()
             .AppendSeparatorLine();
-
 
         // Now append the utility wrapper that reutrn the boolean result derived from the context.
         return generator
@@ -1021,7 +1024,6 @@ internal static partial class CodeGenerationExtensions
         return generator
             .PushMetadata(MutableClassNameKey, (builderClass, generator.GetChildScope(builderClass, null)));
     }
-
 
     /// <summary>
     /// Gets the Source class name for a particular type name.

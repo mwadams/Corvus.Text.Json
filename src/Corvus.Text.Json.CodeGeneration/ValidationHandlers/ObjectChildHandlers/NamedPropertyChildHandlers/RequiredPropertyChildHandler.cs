@@ -1,5 +1,11 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+﻿// <copyright file="RequiredPropertyChildHandler.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -29,7 +35,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
     /// <inheritdoc/>
     public uint ValidationHandlerPriority => ValidationPriorities.AfterComposition + 100; // We are comparatively cheap, so we should go early
-
 
     /// <inheritdoc/>
     public bool EvaluatesProperty(PropertyDeclaration property) => false;
@@ -81,7 +86,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         generator
             .AppendSeparatorLine()
             .AppendLineIndent("requiredBitBuffer[", requirement.OffsetForPropertyName, "] |= ", requirement.BitForPropertyName, ";");
-
     }
 
     /// <inheritdoc/>
@@ -101,7 +105,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
         if (typeDeclaration.TryGetMetadata(RentedRequiredPropertyCountArrayKey, out bool? rentedRequiredPropertyCountArray))
         {
-            if (rentedRequiredPropertyCountArray.HasValue && rentedRequiredPropertyCountArray.Value)
+            if (rentedRequiredPropertyCountArray == true)
             {
                 generator
                     .AppendLineIndent("ArrayPool<int>.Shared.Return(requiredPropertyChildHandler_seenItemsByteArray);");
@@ -125,7 +129,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                 .PushIndent();
         }
 
-        foreach (var propertyDependency in propertyDependencies.Dependencies)
+        foreach (Dependency propertyDependency in propertyDependencies.Dependencies)
         {
             generator
                 .AppendSeparatorLine()
@@ -157,7 +161,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                     .PopIndent()
                     .AppendLineIndent("}");
             }
-
 
             generator
                 .PopIndent()
@@ -205,8 +208,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                 .PopIndent()
                 .AppendLineIndent("}");
         }
-
-
     }
 
     /// <inheritdoc/>
@@ -279,7 +280,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
             dependenciesForProperties,
             ref currentOffset,
             ref currentBitLeftShift);
-
 
         // Add the additional requirements for the property dependencies themselves
         foreach (PropertyDependencies propertyDependencies in dependenciesForProperties)
@@ -375,6 +375,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
                                 currentDependency.AppendSchemaContent(generator);
                                 currentDependency = propertyDependencies.AddDependency(generator, currentOffset);
                             }
+
                             index++;
                         }
 
@@ -447,7 +448,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
     /// A      =    1101
     /// ¬A     =    0010
     /// ¬A ^ M =    0010 != 0 [fail]
-    /// 
+    ///
     /// Example 2
     /// A      =    1110
     /// ¬A     =    0001
@@ -478,8 +479,11 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         public IKeyword Keyword { get; }
 
         public int OffsetForProperty => _requirement?.OffsetForProperty ?? -1;
+
         public uint BitForProperty => _requirement?.BitForProperty ?? 0;
+
         public string? BitForPropertyName => _requirement?.BitForPropertyName;
+
         public string? OffsetForPropertyName => _requirement?.OffsetForPropertyName;
 
         /// <summary>
@@ -489,7 +493,6 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
 
         public Dependency AddDependency(CodeGenerator generator, int currentOffset)
         {
-
             string currentBitmaskName =
                 PropertyName is string p
                     ? generator.GetUniqueStaticReadOnlyPropertyNameInScope($"RequiredBitMask{currentOffset}For", suffix: p, rootScope: generator.JsonSchemaClassScope())
@@ -537,7 +540,9 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         }
 
         public int OffsetForBitMask { get; }
+
         public string BitmaskMaskName { get; }
+
         public List<Requirement> Requirements { get; } = [];
 
         public void AppendSchemaContent(CodeGenerator generator)
@@ -601,15 +606,20 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         }
 
         public string RequiredPropertyPresent { get; }
+
         public string RequiredPropertyNotPresent { get; }
     }
 
     private class Requirement
     {
         public string PropertyName { get; }
+
         public int OffsetForProperty { get; }
+
         public uint BitForProperty { get; }
+
         public string BitForPropertyName { get; }
+
         public string OffsetForPropertyName { get; }
 
         public int? IndexForEvaluationProvider { get; }
@@ -660,6 +670,7 @@ internal class RequiredPropertyChildHandler : INamedPropertyChildHandler
         }
 
         public IReadOnlyDictionary<string, Requirement> RequirementsByRequiredPropertyName { get; }
+
         public IReadOnlyList<PropertyDependencies> Dependencies { get; }
     }
 }
