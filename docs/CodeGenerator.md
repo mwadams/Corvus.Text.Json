@@ -1,4 +1,4 @@
-# Code Generation with generatejsonschematypes
+# CLI Code Generation
 
 ## Overview
 

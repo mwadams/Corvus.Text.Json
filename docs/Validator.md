@@ -1,4 +1,4 @@
-# Dynamic Schema Validation with Corvus.Text.Json.Validator
+# Dynamic Schema Validation
 
 ## Overview
 

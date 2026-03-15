@@ -1,4 +1,4 @@
-# Using Copilot to Migrate from V4 to V5
+# Copilot Migration
 
 This guide shows you how to use GitHub Copilot (in VS Code, Visual Studio, or the CLI) to assist with migrating code from Corvus.Json (V4) to Corvus.Text.Json (V5).
 

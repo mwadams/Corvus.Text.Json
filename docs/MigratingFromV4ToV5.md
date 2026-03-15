@@ -1,4 +1,4 @@
-# Migrating from Corvus.Json (V4) to Corvus.Text.Json (V5)
+# Migrating from V4
 
 This guide helps you migrate code written against the V4 code generator (`Corvus.Json.CodeGeneration`, known informally as "Corvus.Json") to the V5 code generator (`Corvus.Text.Json.CodeGeneration`, known informally as "Corvus.Text.Json").
 

@@ -1,4 +1,4 @@
-# Building JSON Documents with `JsonWorkspace` and `JsonDocumentBuilder`
+# Building & Mutating JSON
 
 This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance.
 
