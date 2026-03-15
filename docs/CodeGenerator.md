@@ -50,7 +50,7 @@ generatejsonschematypes <schemaFile> [OPTIONS]
 | Option | Default | Description |
 |--------|---------|-------------|
 | `--outputPath` | — | Directory for generated `.cs` files |
-| `--outputRootTypeName` | — | Override the .NET type name for the root type |
+| `--outputRootTypeName` | Derived | Override the .NET type name for the root type. If omitted, the name is derived automatically using naming heuristics (see [Naming Heuristics](#naming-heuristics) below). |
 | `--rootPath` | — | JSON Pointer to the root element (e.g., `#/definitions/Person`) |
 | `--rebaseToRootPath` | `false` | Rebase the document as if rooted at `--rootPath` |
 | `--useSchema` | Auto-detect | Fallback schema draft: `Draft4`, `Draft6`, `Draft7`, `Draft201909`, `Draft202012`, `OpenApi30` |
@@ -162,7 +162,7 @@ Each entry in `typesToGenerate` specifies one schema to process:
 | Property | Required | Default | Description |
 |----------|----------|---------|-------------|
 | `schemaFile` | **Yes** | — | Path to the JSON Schema file to process, relative to the config file. |
-| `outputRootTypeName` | No | Derived from schema | The .NET type name for the root type generated from this schema. If omitted, the name is derived from the schema's `title` or `$id`. |
+| `outputRootTypeName` | No | Derived | The .NET type name for the root type generated from this schema. If omitted, the name is derived automatically using the standard naming heuristics — typically from the schema's `title` keyword, `$id` URI fragment, or the schema file name (see [Naming Heuristics](#naming-heuristics)). |
 | `outputRootNamespace` | No | `rootNamespace` | Override the .NET namespace for this schema's root type. Useful when different schemas should go into different namespaces. |
 | `rootPath` | No | — | A JSON Pointer within the schema document to use as the root type. For example, `#/$defs/Address` generates types starting from the `Address` definition rather than the document root. |
 | `rebaseToRootPath` | No | `false` | When `true` (and `rootPath` is set), the document is rebased as if the element at `rootPath` were the document root. This affects how `$ref` references within the extracted subtree are resolved. |
@@ -293,16 +293,66 @@ This is useful for build systems that need to track which files were generated.
 
 ## Naming Heuristics
 
-The tool applies naming heuristics to generate idiomatic C# names from JSON Schema property names and definitions. You can disable specific heuristics if they produce unwanted names:
+When `--outputRootTypeName` is not specified, the tool applies a chain of **naming heuristics** to derive an idiomatic C# type name from the schema. Heuristics are tried in priority order (lowest number first) and the first match wins. The same heuristics are also applied to nested types, sub-schemas, and property types throughout the generated code.
+
+### How the root type name is determined
+
+The tool tries these sources in order:
+
+1. **Explicit name** (`--outputRootTypeName` or `outputRootTypeName` in config) — used as-is, no heuristics applied
+2. **Custom keywords** (priority 100) — the `title` keyword or the last segment of the `$id` URI
+3. **Schema reference** (priority 1000) — the last segment of the JSON Pointer fragment (e.g., `#/$defs/Address` → `Address`) or the schema file name without extension (e.g., `person.json` → `Person`)
+4. **Documentation** (priority 1500, optional) — the schema `description` if it is short (under 64 characters) and unique within its parent
+5. **Fallback** — a name derived from the file path
+
+For example, given this schema in `Schemas/person.json`:
+
+```json
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Person",
+    "type": "object",
+    "properties": {
+        "name": { "type": "string" }
+    }
+}
+```
+
+The root type name is `Person` (from the `title` keyword). If `title` were absent, it would be `Person` (from the file name `person.json`).
+
+### Full heuristic list
+
+Heuristics marked **optional** can be disabled with `--disableOptionalNamingHeuristics` (disables all optional) or `--disableNamingHeuristic <name>` (disables one at a time). Non-optional heuristics are always active.
+
+| Priority | Heuristic | Optional | What it does |
+|----------|-----------|----------|-------------|
+| 1 | `WellKnownTypeNameHeuristic` | No | Maps well-known schema patterns to built-in types (e.g., the "any" schema maps to `JsonElement`). |
+| 2 | `SimpleCoreTypeNameHeuristic` | No | Maps simple schemas with a single core type and optional `format` to global types: `JsonString`, `JsonInt32`, `JsonUuid`, `JsonBoolean`, etc. These types are shared — no per-schema code is generated. |
+| 2 | `BuiltIn*TypeNameHeuristic` | No | A family of heuristics (`BuiltInStringTypeNameHeuristic`, `BuiltInNumberTypeNameHeuristic`, etc.) that map bare `"type": "string"`, `"type": "number"`, `"type": "integer"`, `"type": "boolean"`, `"type": "null"`, `"type": "object"`, and `"type": "array"` schemas to their respective global types. |
+| 100 | `CustomKeywordNameHeuristic` | No | Extracts the name from the `title` keyword or the last segment of the `$id` URI. This is the most common source for root type names. |
+| 1000 | `BaseSchemaNameHeuristic` | No | For root or `$defs`-level schemas: extracts the name from the JSON reference fragment (e.g., `#/$defs/Address` → `Address`) or the schema file name (e.g., `address.json` → `Address`). |
+| 1500 | `DocumentationNameHeuristic` | **Yes** | Uses the schema `description` as the type name if it is short enough (under 64 characters) and unique within its parent. |
+| 1500 | `DefaultValueNameHeuristic` | **Yes** | For schemas with only a `default` keyword: generates names like `DefaultValueTrue` or `DefaultValueActive`. |
+| 1550 | `RequiredPropertyNameHeuristic` | **Yes** | For nested schemas: uses `Required` + property names, e.g., a schema requiring `id` and `name` becomes `RequiredIdAndName`. |
+| 1600 | `ConstPropertyNameHeuristic` | **Yes** | For nested schemas with `const` properties: uses `With` + const values, e.g., `WithStatusActive`. |
+| 1600 | `SingleTypeArrayNameHeuristic` | **Yes** | For array schemas: appends `Array` to the item type name, e.g., an array of `Item` becomes `ItemArray`. |
+| 10000 | `SubschemaNameHeuristic` | No | For inline nested schemas: extracts the name from the JSON reference path segment. |
+| 11000 | `PathNameHeuristic` | No | Final fallback for nested schemas: extracts the name from the last path segment of the JSON reference. |
+
+### Collision resolution
+
+When a derived name collides with its parent type or a sibling, the tool automatically appends a suffix based on the schema kind (`Object`, `Array`, `String`, etc.). For example, if both a parent and child would be named `User`, the child becomes `UserObject`.
+
+### Disabling heuristics
 
 ```bash
-# Disable a specific heuristic
+# Disable a specific heuristic by name
 generatejsonschematypes Schemas/person.json \
     --rootNamespace MyApp.Models \
     --outputPath Generated/ \
-    --disableNamingHeuristic SomeHeuristicName
+    --disableNamingHeuristic DocumentationNameHeuristic
 
-# Disable all optional heuristics
+# Disable all optional heuristics at once
 generatejsonschematypes Schemas/person.json \
     --rootNamespace MyApp.Models \
     --outputPath Generated/ \
