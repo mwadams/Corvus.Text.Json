@@ -273,48 +273,73 @@ public sealed class SourceLinkResolver : IDisposable
         // Replace '+' with '.' for nested types
         key = key.Replace('+', '.');
 
-        // Keep the full key (with generic arity) for parent type fallback
-        string fullKey = key;
-
-        // Strip generic arity for member-level lookup
-        int backtickIdx = key.IndexOf('`');
-        if (backtickIdx >= 0)
-        {
-            key = key[..backtickIdx];
-        }
-
+        // Try with full key first (preserves generic arity)
         if (_sourceUrls.TryGetValue(key, out string? url))
         {
             return url;
         }
 
-        // Try falling back to just the type name (for properties, the PDB has the getter/setter)
-        // Walk up: remove last segment
-        int lastDot = key.LastIndexOf('.');
-        if (lastDot >= 0)
+        // Strip generic arity and try again
+        int backtickIdx = key.IndexOf('`');
+        string keyWithoutArity = backtickIdx >= 0 ? key[..backtickIdx] : key;
+
+        if (backtickIdx >= 0 && _sourceUrls.TryGetValue(keyWithoutArity, out url))
         {
-            string parentKey = key[..lastDot];
-            // For properties, try get_PropertyName or set_PropertyName
-            string memberName = key[(lastDot + 1)..];
-            string getterKey = $"{parentKey}.get_{memberName}";
-            if (_sourceUrls.TryGetValue(getterKey, out url))
-            {
-                return url;
-            }
-
-            string setterKey = $"{parentKey}.set_{memberName}";
-            if (_sourceUrls.TryGetValue(setterKey, out url))
-            {
-                return url;
-            }
-
-            // Fall back to the declaring type's source URL (uses fullKey to preserve arity)
-            int fullLastDot = fullKey.LastIndexOf('.');
-            string parentFullKey = fullLastDot >= 0 ? fullKey[..fullLastDot] : parentKey;
-            return GetTypeSourceUrl(parentFullKey);
+            return url;
         }
 
-        return null;
+        // Extract the member name (last segment) and parent type
+        int lastDot = keyWithoutArity.LastIndexOf('.');
+        if (lastDot < 0)
+        {
+            return null;
+        }
+
+        string parentKey = keyWithoutArity[..lastDot];
+        string memberName = keyWithoutArity[(lastDot + 1)..];
+
+        // Try with generic arity variants on the parent type
+        // e.g. ArrayEnumerator.Dispose → ArrayEnumerator`1.Dispose
+        for (int arity = 1; arity <= 4; arity++)
+        {
+            if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.{memberName}", out url))
+            {
+                return url;
+            }
+        }
+
+        // For properties, try get_/set_ accessor names
+        string getterKey = $"{parentKey}.get_{memberName}";
+        if (_sourceUrls.TryGetValue(getterKey, out url))
+        {
+            return url;
+        }
+
+        string setterKey = $"{parentKey}.set_{memberName}";
+        if (_sourceUrls.TryGetValue(setterKey, out url))
+        {
+            return url;
+        }
+
+        // Try get_/set_ with arity too
+        for (int arity = 1; arity <= 4; arity++)
+        {
+            if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.get_{memberName}", out url))
+            {
+                return url;
+            }
+
+            if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.set_{memberName}", out url))
+            {
+                return url;
+            }
+        }
+
+        // Fall back to the declaring type's source URL
+        // Try parentKey with arity from the original key
+        int origLastDot = key.LastIndexOf('.');
+        string parentFromOrig = origLastDot >= 0 ? key[..origLastDot] : parentKey;
+        return GetTypeSourceUrl(parentFromOrig);
     }
 
     private string? BuildGitHubUrl(string localPath, int lineNumber)
