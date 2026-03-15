@@ -128,7 +128,7 @@
     color: var(--color-white);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 0.04em;
     cursor: pointer;
     border-radius: var(--radius-sm);
@@ -225,9 +225,8 @@
     padding-left: calc(var(--space-md) + var(--space-sm));
     color: var(--color-gray-dark);
     border-left-color: transparent;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
 
     &:hover {
       color: var(--color-white);
