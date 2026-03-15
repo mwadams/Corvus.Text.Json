@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 001: Data Object"
+Navigation:
+  Title: Data Object
+  Description: "Define a simple data object with properties using JSON Schema."
+  Parent: /examples/index.html
+  Url: /examples/data-object.html
+  Rank: 1
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Data Object — Corvus.Text.Json Examples"
+  Description: "Learn how to define a simple data object with typed properties using JSON Schema and generate strongly-typed C# classes with Corvus.Text.Json."
+  Keywords: [data object, properties, JSON Schema, object, strongly-typed, C#, recipe]
+OpenGraph:
+  Title: "Data Object — Corvus.Text.Json Examples"
+  Description: "Define a simple data object with typed properties using JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: DataObject
+    Spec:
+      Path: ../../content/Examples/DataObject.md

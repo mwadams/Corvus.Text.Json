@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: Migrating from V4 to V5
+Navigation:
+  Title: Migrating from V4
+  Description: "Step-by-step guide for upgrading from Corvus.Text.Json v4 to v5."
+  Parent: /docs/index.html
+  Url: /docs/migrating-from-v4.html
+  Rank: 3
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Migrating from V4 to V5 — Corvus.Text.Json"
+  Description: "Step-by-step migration guide covering breaking changes, API updates, and new features when upgrading from Corvus.Text.Json v4 to v5."
+  Keywords: [migration, upgrade, v4, v5, breaking changes, migration guide]
+OpenGraph:
+  Title: "Migrating from V4 to V5 — Corvus.Text.Json"
+  Description: "Step-by-step migration guide for upgrading from Corvus.Text.Json v4 to v5."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: MigratingFromV4ToV5
+    Spec:
+      Path: ../../content/Docs/MigratingFromV4ToV5.md

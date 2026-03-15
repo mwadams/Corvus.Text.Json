@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 003: Reusing Common Types"
+Navigation:
+  Title: Reusing Common Types
+  Description: "Share and reuse type definitions across multiple schemas with $ref."
+  Parent: /examples/index.html
+  Url: /examples/reusing-common-types.html
+  Rank: 3
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Reusing Common Types — Corvus.Text.Json Examples"
+  Description: "Learn how to share and reuse type definitions across multiple JSON schemas using $ref and $defs for DRY schema design."
+  Keywords: [$ref, $defs, reuse, common types, shared definitions, JSON Schema, DRY, recipe]
+OpenGraph:
+  Title: "Reusing Common Types — Corvus.Text.Json Examples"
+  Description: "Share and reuse type definitions across multiple schemas with $ref and $defs."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: ReusingCommonTypes
+    Spec:
+      Path: ../../content/Examples/ReusingCommonTypes.md

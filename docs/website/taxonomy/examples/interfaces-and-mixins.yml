@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 011: Interfaces and Mixins"
+Navigation:
+  Title: Interfaces and Mixins
+  Description: "Compose types from reusable interface-like schema fragments."
+  Parent: /examples/index.html
+  Url: /examples/interfaces-and-mixins.html
+  Rank: 11
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Interfaces and Mixins — Corvus.Text.Json Examples"
+  Description: "Compose types from reusable interface-like schema fragments using allOf and $ref to build mixin-style compositions in JSON Schema."
+  Keywords: [interfaces, mixins, composition, allOf, $ref, reusable, JSON Schema, recipe]
+OpenGraph:
+  Title: "Interfaces and Mixins — Corvus.Text.Json Examples"
+  Description: "Compose types from reusable interface-like schema fragments using allOf and $ref."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: InterfacesAndMixins
+    Spec:
+      Path: ../../content/Examples/InterfacesAndMixins.md

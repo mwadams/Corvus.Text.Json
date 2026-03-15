@@ -1,0 +1,215 @@
+// ==========================================================================
+// API — API reference browser styling
+// ==========================================================================
+
+@use '../abstracts/mixins' as *;
+
+.api {
+  // ---- Search / filter ----
+  &__filter {
+    margin-bottom: var(--space-lg);
+
+    .search__input {
+      max-width: 24rem;
+    }
+  }
+
+  // ---- Namespace grouping ----
+  &__namespace {
+    margin-bottom: var(--space-xl);
+
+    &-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-brand);
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: 1px solid var(--color-border);
+    }
+  }
+
+  // ---- Type tree (sidebar / panel) ----
+  &__tree {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    &-item {
+      margin: 0;
+    }
+
+    &-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+      width: 100%;
+      padding: var(--space-xs) var(--space-sm);
+      background: none;
+      border: none;
+      color: var(--color-gray-med);
+      font-size: var(--font-size-sm);
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      transition: background var(--transition-fast), color var(--transition-fast);
+
+      &:hover {
+        background: var(--color-bg-raised);
+        color: var(--color-white);
+      }
+
+      // Expand/collapse chevron
+      &::before {
+        content: '';
+        display: inline-block;
+        width: 0.4em;
+        height: 0.4em;
+        border-right: 1.5px solid currentColor;
+        border-bottom: 1.5px solid currentColor;
+        transform: rotate(-45deg);
+        transition: transform var(--transition-fast);
+      }
+
+      &.is-expanded::before {
+        transform: rotate(45deg);
+      }
+    }
+
+    &-link {
+      display: block;
+      padding: var(--space-xs) var(--space-sm);
+      padding-left: var(--space-lg);
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-dark);
+      text-decoration: none;
+      border-radius: var(--radius-sm);
+      transition: color var(--transition-fast), background var(--transition-fast);
+
+      &:hover {
+        color: var(--color-white);
+        background: var(--color-bg-raised);
+      }
+
+      &.is-active {
+        color: var(--color-brand);
+        background: rgb(111 177 40 / 0.06);
+      }
+    }
+
+    // Nested tree
+    &-children {
+      list-style: none;
+      padding-left: var(--space-md);
+      margin: 0;
+      overflow: hidden;
+
+      &.is-collapsed {
+        display: none;
+      }
+    }
+  }
+
+  // ---- Type kind badges ----
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.5rem;
+    height: 1.25rem;
+    padding: 0 0.35em;
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-radius: var(--radius-sm);
+    line-height: 1;
+
+    &--class     { background: rgb(97 175 239 / 0.15); color: var(--syntax-function); }
+    &--struct    { background: rgb(229 192 123 / 0.15); color: var(--syntax-type); }
+    &--interface { background: rgb(198 120 221 / 0.15); color: var(--syntax-keyword); }
+    &--enum      { background: rgb(209 154 102 / 0.15); color: var(--syntax-number); }
+    &--delegate  { background: rgb(86 182 194 / 0.15);  color: var(--syntax-operator); }
+  }
+
+  // ---- Member list ----
+  &__members {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-lg);
+  }
+
+  &__member {
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--color-border);
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: rgb(41 42 47 / 0.15);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &-signature {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-light);
+      margin-bottom: var(--space-xs);
+
+      .api__member-name {
+        color: var(--syntax-function);
+        font-weight: var(--font-weight-medium);
+      }
+
+      .api__member-type {
+        color: var(--syntax-type);
+      }
+
+      .api__member-keyword {
+        color: var(--syntax-keyword);
+      }
+    }
+
+    &-summary {
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-dark);
+      line-height: var(--line-height-regular);
+    }
+  }
+
+  // ---- Section headings within API detail ----
+  &__section-title {
+    font-size: var(--font-size-rg);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-med);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  // ---- Inheritance chain ----
+  &__inheritance {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-dark);
+    margin-bottom: var(--space-md);
+
+    &-separator {
+      color: var(--color-border-active);
+    }
+
+    a {
+      color: var(--syntax-type);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 017: Mapping Input to Output"
+Navigation:
+  Title: Mapping Input to Output
+  Description: "Transform data between input and output schemas using generated types."
+  Parent: /examples/index.html
+  Url: /examples/mapping-input-output.html
+  Rank: 17
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Mapping Input to Output — Corvus.Text.Json Examples"
+  Description: "Transform data between input and output schemas using generated C# types, demonstrating mapping patterns with Corvus.Text.Json."
+  Keywords: [mapping, transform, input, output, data transformation, schema, JSON Schema, recipe]
+OpenGraph:
+  Title: "Mapping Input to Output — Corvus.Text.Json Examples"
+  Description: "Transform data between input and output schemas using generated C# types."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: MappingInputOutput
+    Spec:
+      Path: ../../content/Examples/MappingInputOutput.md

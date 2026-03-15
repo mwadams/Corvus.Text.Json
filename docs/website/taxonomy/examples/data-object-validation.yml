@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 002: Data Object Validation"
+Navigation:
+  Title: Data Object Validation
+  Description: "Add validation constraints to a data object using JSON Schema."
+  Parent: /examples/index.html
+  Url: /examples/data-object-validation.html
+  Rank: 2
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Data Object Validation — Corvus.Text.Json Examples"
+  Description: "Add required fields, string lengths, numeric ranges, and pattern constraints to a data object using JSON Schema validation keywords."
+  Keywords: [validation, required, constraints, pattern, minimum, maximum, JSON Schema, recipe]
+OpenGraph:
+  Title: "Data Object Validation — Corvus.Text.Json Examples"
+  Description: "Add validation constraints to a data object using JSON Schema keywords."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: DataObjectValidation
+    Spec:
+      Path: ../../content/Examples/DataObjectValidation.md

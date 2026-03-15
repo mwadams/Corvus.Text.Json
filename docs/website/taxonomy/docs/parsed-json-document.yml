@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: ParsedJsonDocument
+Navigation:
+  Title: ParsedJsonDocument
+  Description: "Pooled-memory, mutable JSON document built on System.Text.Json."
+  Parent: /docs/index.html
+  Url: /docs/parsed-json-document.html
+  Rank: 1
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "ParsedJsonDocument — Corvus.Text.Json"
+  Description: "Learn how ParsedJsonDocument provides pooled-memory, mutable JSON document support on top of System.Text.Json for high-performance .NET applications."
+  Keywords: [ParsedJsonDocument, mutable JSON, pooled memory, System.Text.Json, JsonDocument, high-performance]
+OpenGraph:
+  Title: "ParsedJsonDocument — Corvus.Text.Json"
+  Description: "Pooled-memory, mutable JSON document support built on System.Text.Json."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: ParsedJsonDocument
+    Spec:
+      Path: ../../content/Docs/ParsedJsonDocument.md

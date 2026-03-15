@@ -1,0 +1,123 @@
+// ==========================================================================
+// Sidebar — Documentation navigation
+// ==========================================================================
+
+@use '../abstracts/mixins' as *;
+
+.sidebar {
+  position: sticky;
+  top: calc(var(--header-height) + var(--space-md));
+  align-self: start;
+  width: var(--sidebar-width);
+  max-height: calc(100vh - var(--header-height) - var(--space-lg));
+  overflow-y: auto;
+  padding: var(--space-md) 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+
+  // ---- Section group ----
+  &__section {
+    margin-bottom: var(--space-md);
+  }
+
+  // ---- Section heading (collapsible toggle) ----
+  &__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    background: none;
+    border: none;
+    color: var(--color-white);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-bg-raised);
+    }
+
+    // Chevron indicator
+    &::after {
+      content: '';
+      display: block;
+      width: 0.45em;
+      height: 0.45em;
+      border-right: 2px solid var(--color-gray-dark);
+      border-bottom: 2px solid var(--color-gray-dark);
+      transform: rotate(45deg);
+      transition: transform var(--transition-fast);
+    }
+
+    &.is-collapsed::after {
+      transform: rotate(-45deg);
+    }
+  }
+
+  // ---- Navigation list ----
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--space-xs) 0 0;
+  }
+
+  // ---- Nested list (sub-items) ----
+  &__sublist {
+    list-style: none;
+    padding-left: var(--space-md);
+    margin: 0;
+  }
+
+  // ---- List item ----
+  &__item {
+    margin: 0;
+  }
+
+  // ---- Navigation link ----
+  &__link {
+    display: block;
+    padding: var(--space-xs) var(--space-sm);
+    padding-left: var(--space-md);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-med);
+    border-left: 2px solid transparent;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-white);
+      background: var(--color-bg-raised);
+    }
+
+    // Active state — brand green indicator
+    &.is-active,
+    &[aria-current='page'] {
+      color: var(--color-brand);
+      border-left-color: var(--color-brand);
+      background: rgb(111 177 40 / 0.06);
+      font-weight: var(--font-weight-medium);
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  // ---- Collapsed section body ----
+  &__body {
+    overflow: hidden;
+    transition: max-height var(--transition-base);
+
+    &.is-collapsed {
+      max-height: 0 !important;
+    }
+  }
+}

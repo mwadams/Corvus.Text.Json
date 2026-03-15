@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 016: Maps"
+Navigation:
+  Title: Maps
+  Description: "Model key-value maps using additionalProperties or patternProperties."
+  Parent: /examples/index.html
+  Url: /examples/maps.html
+  Rank: 16
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Maps — Corvus.Text.Json Examples"
+  Description: "Model key-value maps and dictionaries using additionalProperties or patternProperties in JSON Schema, generating typed C# dictionary-like types."
+  Keywords: [map, dictionary, additionalProperties, patternProperties, key-value, JSON Schema, recipe]
+OpenGraph:
+  Title: "Maps — Corvus.Text.Json Examples"
+  Description: "Model key-value maps using additionalProperties or patternProperties in JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: Maps
+    Spec:
+      Path: ../../content/Examples/Maps.md

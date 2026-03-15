@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 007: Strongly-Typed Array"
+Navigation:
+  Title: Strongly-Typed Array
+  Description: "Define arrays with typed items using JSON Schema."
+  Parent: /examples/index.html
+  Url: /examples/strongly-typed-array.html
+  Rank: 7
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Strongly-Typed Array — Corvus.Text.Json Examples"
+  Description: "Define arrays with strongly-typed items using JSON Schema and generate type-safe C# collection types with Corvus.Text.Json."
+  Keywords: [array, items, typed array, collection, JSON Schema, strongly-typed, recipe]
+OpenGraph:
+  Title: "Strongly-Typed Array — Corvus.Text.Json Examples"
+  Description: "Define arrays with strongly-typed items using JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: StronglyTypedArray
+    Spec:
+      Path: ../../content/Examples/StronglyTypedArray.md

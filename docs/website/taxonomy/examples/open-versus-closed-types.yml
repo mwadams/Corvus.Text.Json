@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 004: Open Versus Closed Types"
+Navigation:
+  Title: Open vs Closed Types
+  Description: "Control whether objects accept additional properties beyond those defined."
+  Parent: /examples/index.html
+  Url: /examples/open-versus-closed-types.html
+  Rank: 4
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Open Versus Closed Types — Corvus.Text.Json Examples"
+  Description: "Understand the difference between open and closed object types in JSON Schema and how additionalProperties controls extensibility."
+  Keywords: [additionalProperties, open types, closed types, extensibility, JSON Schema, recipe]
+OpenGraph:
+  Title: "Open Versus Closed Types — Corvus.Text.Json Examples"
+  Description: "Control whether objects accept additional properties beyond those defined in the schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: OpenVersusClosedTypes
+    Spec:
+      Path: ../../content/Examples/OpenVersusClosedTypes.md

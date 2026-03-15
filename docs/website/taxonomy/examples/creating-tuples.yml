@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 010: Creating Tuples"
+Navigation:
+  Title: Creating Tuples
+  Description: "Define fixed-length arrays with per-element types using prefixItems."
+  Parent: /examples/index.html
+  Url: /examples/creating-tuples.html
+  Rank: 10
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Creating Tuples — Corvus.Text.Json Examples"
+  Description: "Define fixed-length arrays with per-element types using prefixItems in JSON Schema and generate tuple-like C# types with Corvus.Text.Json."
+  Keywords: [tuple, prefixItems, fixed-length, array, positional, JSON Schema, recipe]
+OpenGraph:
+  Title: "Creating Tuples — Corvus.Text.Json Examples"
+  Description: "Define fixed-length arrays with per-element types using prefixItems in JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: CreatingTuples
+    Spec:
+      Path: ../../content/Examples/CreatingTuples.md

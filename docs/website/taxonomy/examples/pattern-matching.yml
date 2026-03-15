@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 012: Pattern Matching"
+Navigation:
+  Title: Pattern Matching
+  Description: "Use oneOf and anyOf for pattern-matching-style type discrimination."
+  Parent: /examples/index.html
+  Url: /examples/pattern-matching.html
+  Rank: 12
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Pattern Matching — Corvus.Text.Json Examples"
+  Description: "Use oneOf and anyOf in JSON Schema for pattern-matching-style type discrimination and generate idiomatic C# switch expressions with Corvus.Text.Json."
+  Keywords: [pattern matching, oneOf, anyOf, discrimination, union types, JSON Schema, recipe]
+OpenGraph:
+  Title: "Pattern Matching — Corvus.Text.Json Examples"
+  Description: "Use oneOf and anyOf for pattern-matching-style type discrimination in JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: PatternMatching
+    Spec:
+      Path: ../../content/Examples/PatternMatching.md

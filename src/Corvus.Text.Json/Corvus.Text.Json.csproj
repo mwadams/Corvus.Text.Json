@@ -1,17 +1,29 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="$(EndjinProjectPropsPath)" Condition="$(EndjinProjectPropsPath) != ''" />
+
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0;netstandard2.0</TargetFrameworks>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Use root .editorconfig, not the package's auto-generated one -->
+    <EndjinDisableCreateEditorConfig>true</EndjinDisableCreateEditorConfig>
     <NoWarn>$(NoWarn);CS8969</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <!-- Only upgrade NuGetAudit warnings to errors for official builds. -->
     <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
+    <!-- Duplicate PackageReference from Endjin.RecommendedPractices targets -->
+    <NoWarn>$(NoWarn);NU1504</NoWarn>
     <NoWarn Condition="$(TargetFrameworks.Contains('netstandard'))">$(NoWarn);CA1510;CA1511;CA1512;CA1513;CA1845;CA1846;CA1847</NoWarn>
     <!-- Warnings to always disable -->
     <NoWarn>$(NoWarn);CS8500;CS8969;IDE0065;IDE0290;IDE0079;IDE0130</NoWarn>
+    <!-- XML doc warnings in linked Common/System.Private.CoreLib files we cannot modify -->
+    <NoWarn>$(NoWarn);CS1570;CS1584;CS1658</NoWarn>
+    <!-- XML doc completeness warnings - to be addressed in a later pass -->
+    <NoWarn>$(NoWarn);CS1591;CS1573;CS1574;CS1572;CS0419;CS1571;CS1734;CS1712</NoWarn>
     <IncludeInternalObsoleteAttribute>true</IncludeInternalObsoleteAttribute>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsPackable>true</IsPackable>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <CommonPath>..\..\Common\src\</CommonPath>
     <LibrariesProjectRoot>..\..\</LibrariesProjectRoot>
     <CoreLibSharedDir>..\..\System.Private.CoreLib\src\</CoreLibSharedDir>
@@ -394,6 +406,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.18">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Analyzers" Version="4.13.1">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.CodeAnalysis.ResxSourceGenerator" Version="5.0.0-1.25277.114">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 005: Extending a Base Type"
+Navigation:
+  Title: Extending a Base Type
+  Description: "Use allOf to extend a base schema with additional properties."
+  Parent: /examples/index.html
+  Url: /examples/extending-a-base-type.html
+  Rank: 5
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Extending a Base Type — Corvus.Text.Json Examples"
+  Description: "Learn how to use allOf in JSON Schema to create derived types that extend a base schema with additional properties, similar to class inheritance."
+  Keywords: [allOf, inheritance, base type, extension, composition, JSON Schema, recipe]
+OpenGraph:
+  Title: "Extending a Base Type — Corvus.Text.Json Examples"
+  Description: "Use allOf in JSON Schema to extend a base type with additional properties."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: ExtendingABaseType
+    Spec:
+      Path: ../../content/Examples/ExtendingABaseType.md

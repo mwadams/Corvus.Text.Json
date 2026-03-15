@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 013: Polymorphism with Discriminators"
+Navigation:
+  Title: Polymorphism with Discriminators
+  Description: "Implement polymorphic dispatch using discriminator properties."
+  Parent: /examples/index.html
+  Url: /examples/polymorphism-with-discriminators.html
+  Rank: 13
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Polymorphism with Discriminators — Corvus.Text.Json Examples"
+  Description: "Implement polymorphic type dispatch using discriminator properties in JSON Schema with oneOf and const, generating idiomatic C# code."
+  Keywords: [polymorphism, discriminator, oneOf, const, dispatch, tagged union, JSON Schema, recipe]
+OpenGraph:
+  Title: "Polymorphism with Discriminators — Corvus.Text.Json Examples"
+  Description: "Implement polymorphic dispatch using discriminator properties in JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: PolymorphismWithDiscriminators
+    Spec:
+      Path: ../../content/Examples/PolymorphismWithDiscriminators.md

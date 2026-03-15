@@ -1,0 +1,27 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Recipe 006: Constraining a Base Type"
+Navigation:
+  Title: Constraining a Base Type
+  Description: "Narrow a base type by adding constraints with allOf."
+  Parent: /examples/index.html
+  Url: /examples/constraining-a-base-type.html
+  Rank: 6
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Constraining a Base Type — Corvus.Text.Json Examples"
+  Description: "Learn how to narrow a base type by layering additional validation constraints using allOf in JSON Schema."
+  Keywords: [allOf, constraints, narrowing, base type, validation, JSON Schema, recipe]
+OpenGraph:
+  Title: "Constraining a Base Type — Corvus.Text.Json Examples"
+  Description: "Narrow a base type by adding validation constraints with allOf in JSON Schema."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: ConstrainingABaseType
+    Spec:
+      Path: ../../content/Examples/ConstrainingABaseType.md
