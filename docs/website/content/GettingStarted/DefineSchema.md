@@ -50,11 +50,22 @@ Create a JSON Schema file, for example `Schemas/person.json`:
             "maxLength": 256
         },
         "Address": {
+            "allOf": [
+                { "$ref": "#/$defs/Location" },
+                {
+                    "type": "object",
+                    "properties": {
+                        "street": { "type": "string" },
+                        "zipCode": { "type": "string" }
+                    }
+                }
+            ]
+        },
+        "Location": {
             "type": "object",
             "properties": {
-                "street": { "type": "string" },
                 "city": { "type": "string" },
-                "zipCode": { "type": "string" }
+                "country": { "type": "string" }
             }
         }
     },
@@ -89,7 +100,7 @@ Both draft 2020-12 and draft 2019-09 are supported. If your schema does not decl
 
 ## Understanding the schema
 
-The `Person` type is an object with a required `name` property and several optional properties: `dateOfBirth` (a formatted date string), `age` (an integer from 0 to 150), `email`, `address` (a nested object with `street`, `city`, and `zipCode`), and `hobbies` (an array of strings). The `name` property references a `PersonName` definition via `$ref`.
+The `Person` type is an object with a required `name` property and several optional properties: `dateOfBirth` (a formatted date string), `age` (an integer from 0 to 150), `email`, `address` (a composed object), and `hobbies` (an array of strings). The `name` property references a `PersonName` definition via `$ref`.
 
 `PersonName` has a required `familyName` and optional `givenName` — both constrained to 1–256 character strings via the `PersonNameElement` definition. The `otherNames` property uses `oneOf` to accept *either* a single string *or* an array of strings. This is a common JSON Schema pattern for backwards-compatible API evolution:
 
@@ -99,6 +110,12 @@ The `Person` type is an object with a required `name` property and several optio
 
 // Or an array of strings
 { "familyName": "Oldroyd", "givenName": "Michael", "otherNames": ["Francis", "James"] }
+```
+
+The `Address` type uses `allOf` to compose a base `Location` (with `city` and `country`) with address-specific properties (`street` and `zipCode`). The generated type merges all properties from both schemas into a single struct:
+
+```json
+{ "street": "123 Main St", "zipCode": "SP1 1AA", "city": "Springfield", "country": "UK" }
 ```
 
 ## How generated types work

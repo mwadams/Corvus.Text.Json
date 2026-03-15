@@ -169,6 +169,34 @@ person.Name.SetGivenName(employeeDoc.RootElement.FullName);
 
 > **Important:** Setting a value in the target document does not copy the backing JSON data. Under the covers, it creates a reference to the relevant segment of the original UTF-8 JSON text. This makes cross-document property transfer very efficient for typical document processing pipelines — even for large nested objects or arrays, the cost is constant regardless of the size of the value.
 
+## Composing objects with Apply()
+
+When a schema uses `allOf` to compose multiple object definitions, the generated type exposes an `Apply()` method on its `Mutable` variant. This lets you merge properties from a composed type into the current object.
+
+In our schema, `Address` is composed from a base `Location` (with `city` and `country`) and additional address properties (`street`, `zipCode`). You can build the location separately and apply it:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+using ParsedJsonDocument<Person> doc =
+    ParsedJsonDocument<Person>.Parse(
+        """{"name":{"familyName":"Oldroyd"},"address":{"street":"123 Main St","zipCode":"SP1 1AA"}}""");
+using var builder = doc.RootElement.CreateBuilder(workspace);
+
+// Parse a Location with city and country
+using ParsedJsonDocument<Person.AddressEntity.LocationEntity> locationDoc =
+    ParsedJsonDocument<Person.AddressEntity.LocationEntity>.Parse(
+        """{"city":"Springfield","country":"UK"}""");
+
+// Apply merges the location properties into the address
+Person.Mutable root = builder.RootElement;
+root.Address.Apply(locationDoc.RootElement);
+
+Console.WriteLine(root.Address.ToString());
+// {"street":"123 Main St","zipCode":"SP1 1AA","city":"Springfield","country":"UK"}
+```
+
+`Apply()` iterates the properties of the composed type and merges them into the target object. If a property already exists, it is overwritten. You can call `Apply()` multiple times to layer properties from different composed types — this is the mutable equivalent of JSON Schema's `allOf` composition.
+
 ## Mutating arrays
 
 Array properties on a `Mutable` element support in-place modification:
