@@ -82,7 +82,7 @@
   &__inner {
     height: 100%;
     overflow-y: auto;
-    padding: var(--space-lg) var(--space-sm) var(--space-md);
+    padding: 0;
     scrollbar-width: thin;
     scrollbar-color: var(--color-border) transparent;
   }
