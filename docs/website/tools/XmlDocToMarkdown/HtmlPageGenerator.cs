@@ -365,29 +365,13 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
 
     private static string GetSourceDisplayPath(string url)
     {
-        // Extract the file path from a GitHub blob URL like:
-        // https://github.com/.../blob/<sha>/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L42
-        int blobIdx = url.IndexOf("/blob/", StringComparison.Ordinal);
-        if (blobIdx < 0)
-        {
-            return url;
-        }
-
-        string afterBlob = url[(blobIdx + 6)..]; // skip "/blob/"
-        // Skip the SHA/branch segment
-        int slashIdx = afterBlob.IndexOf('/');
-        if (slashIdx < 0)
-        {
-            return url;
-        }
-
-        string pathWithFragment = afterBlob[(slashIdx + 1)..];
-        // Strip the #L fragment for display
-        int hashIdx = pathWithFragment.IndexOf('#');
-        string filePath = hashIdx >= 0 ? pathWithFragment[..hashIdx] : pathWithFragment;
-        string lineRef = hashIdx >= 0 ? ", " + pathWithFragment[(hashIdx + 1)..].Replace("L", "Line ") : "";
-
-        return $"{filePath}{lineRef}";
+        // Extract just the file name from a GitHub blob URL like:
+        // https://github.com/.../blob/main/src/.../JsonElement.cs#L42
+        // Display text should be just "JsonElement.cs" (matching .NET reference docs style)
+        int hashIdx = url.IndexOf('#');
+        string urlWithoutFragment = hashIdx >= 0 ? url[..hashIdx] : url;
+        int lastSlash = urlWithoutFragment.LastIndexOf('/');
+        return lastSlash >= 0 ? urlWithoutFragment[(lastSlash + 1)..] : urlWithoutFragment;
     }
 
     private static void AppendFeedbackSection(StringBuilder sb)

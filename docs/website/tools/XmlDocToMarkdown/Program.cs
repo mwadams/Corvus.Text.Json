@@ -125,9 +125,9 @@ if (File.Exists(pdbPath))
 {
     Console.WriteLine($"Reading PDB for source links: {pdbPath}");
 
-    // Auto-detect repo root and commit SHA from git
+    // Auto-detect repo root from git
     string repoRoot = RunGit("rev-parse --show-toplevel")?.Trim() ?? "";
-    string commitSha = RunGit("rev-parse HEAD")?.Trim() ?? "main";
+    string branch = "main";
 
     // Auto-detect repo URL from git remote if not provided
     if (repoUrl is null)
@@ -153,8 +153,8 @@ if (File.Exists(pdbPath))
     if (!string.IsNullOrEmpty(repoRoot) && !string.IsNullOrEmpty(repoUrl))
     {
         Console.WriteLine($"  Repo URL: {repoUrl}");
-        Console.WriteLine($"  Commit: {commitSha}");
-        sourceResolver = new SourceLinkResolver(pdbPath, Path.GetFullPath(assemblyPath), repoUrl, commitSha, repoRoot);
+        Console.WriteLine($"  Branch: {branch}");
+        sourceResolver = new SourceLinkResolver(pdbPath, Path.GetFullPath(assemblyPath), repoUrl, branch, repoRoot);
         sourceResolver.Build();
     }
     else
