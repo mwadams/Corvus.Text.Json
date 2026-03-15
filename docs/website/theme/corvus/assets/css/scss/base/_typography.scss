@@ -55,7 +55,7 @@ p {
 // ---- Links ----
 
 .content a,
-.doc__content a,
+.doc__content a:not(.card--link),
 .text-content a,
 a.link {
   color: var(--color-brand);
