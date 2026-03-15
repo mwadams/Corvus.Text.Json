@@ -62,7 +62,7 @@
 .sidebar {
   // Mobile: off-screen drawer
   position: fixed;
-  top: 0;
+  top: var(--header-height);
   left: 0;
   bottom: 2.5rem; // stop above the Browse/Close button
   z-index: 100;
