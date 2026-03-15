@@ -99,16 +99,16 @@ internal static class SidebarBuilder
             sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncode(type.Constructors[0].Name)}(…)</a></li>");
         }
 
-        // Properties
+        // Properties (one entry per overload group — indexers share a name)
         if (type.Properties.Count > 0)
         {
             sb.AppendLine("                                <li class=\"sidebar__category\">Properties</li>");
-            foreach (MemberInfo prop in type.Properties.OrderBy(p => p.Name))
+            foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey).OrderBy(g => g.Key))
             {
-                string memberSlug = MarkdownGenerator.MemberToSlug(prop.GroupKey);
+                string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(prop.Name)}</a></li>");
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(group.Key)}</a></li>");
             }
         }
 
