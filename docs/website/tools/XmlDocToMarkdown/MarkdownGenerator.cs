@@ -221,6 +221,14 @@ public sealed class MarkdownGenerator(string outputDir)
                 WriteMemberSection(sb, method, 3);
         }
 
+        if (type.Operators.Count > 0)
+        {
+            sb.AppendLine("## Operators");
+            sb.AppendLine();
+            foreach (MemberInfo op in type.Operators)
+                WriteMemberSection(sb, op, 3);
+        }
+
         if (type.Fields.Count > 0)
         {
             sb.AppendLine("## Fields");
@@ -439,6 +447,17 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (MemberInfo method in type.Methods)
             {
                 WriteMemberSection(sb, method, headingLevel + 2);
+            }
+        }
+
+        // Operators
+        if (type.Operators.Count > 0)
+        {
+            sb.AppendLine($"{heading}# Operators");
+            sb.AppendLine();
+            foreach (MemberInfo op in type.Operators)
+            {
+                WriteMemberSection(sb, op, headingLevel + 2);
             }
         }
 

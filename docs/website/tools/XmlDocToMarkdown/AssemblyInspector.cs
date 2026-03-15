@@ -30,6 +30,7 @@ public sealed class TypeInfo
     public List<MemberInfo> Constructors { get; set; } = [];
     public List<MemberInfo> Properties { get; set; } = [];
     public List<MemberInfo> Methods { get; set; } = [];
+    public List<MemberInfo> Operators { get; set; } = [];
     public List<MemberInfo> Fields { get; set; } = [];
     public List<MemberInfo> Events { get; set; } = [];
     public List<TypeInfo> NestedTypes { get; set; } = [];
@@ -216,11 +217,18 @@ public sealed class AssemblyInspector(string assemblyPath)
             typeInfo.Properties.Add(BuildPropertyMemberInfo(prop, propDocs, propXmlKey));
         }
 
-        // Methods (excluding property accessors, event accessors, and operator overloads for readability)
+        // Methods and operators (excluding property accessors and event accessors)
         foreach (System.Reflection.MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
         {
             if (method.IsSpecialName)
             {
+                if (method.Name.StartsWith("op_", StringComparison.Ordinal))
+                {
+                    string opXmlKey = BuildOperatorXmlKey(type, method);
+                    xmlDocs.TryGetValue(opXmlKey, out DocMember? opDocs);
+                    typeInfo.Operators.Add(BuildOperatorMemberInfo(method, opDocs, opXmlKey));
+                }
+
                 continue;
             }
 
@@ -415,6 +423,87 @@ public sealed class AssemblyInspector(string assemblyPath)
 
         string paramTypes = string.Join(",", parameters.Select(p => GetXmlDocTypeName(p.ParameterType)));
         return $"M:{fullName}.{methodName}({paramTypes})";
+    }
+
+    private static string BuildOperatorXmlKey(Type type, System.Reflection.MethodInfo method)
+    {
+        string fullName = type.FullName ?? type.Name;
+        System.Reflection.ParameterInfo[] parameters = method.GetParameters();
+        string paramTypes = string.Join(",", parameters.Select(p => GetXmlDocTypeName(p.ParameterType)));
+        string key = $"M:{fullName}.{method.Name}({paramTypes})";
+
+        // Conversion operators (op_Implicit, op_Explicit) include ~ReturnType in the XML doc key
+        if (method.Name is "op_Implicit" or "op_Explicit")
+        {
+            key += $"~{GetXmlDocTypeName(method.ReturnType)}";
+        }
+
+        return key;
+    }
+
+    private static MemberInfo BuildOperatorMemberInfo(System.Reflection.MethodInfo method, DocMember? docs, string xmlKey)
+    {
+        System.Reflection.ParameterInfo[] parameters = method.GetParameters();
+        string displayName = GetOperatorDisplayName(method);
+        string paramList = string.Join(", ", parameters.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"));
+        string signature = method.Name is "op_Implicit" or "op_Explicit"
+            ? $"static {displayName}({paramList})"
+            : $"static {FormatTypeName(method.ReturnType)} {displayName}({paramList})";
+
+        return new MemberInfo
+        {
+            Name = displayName,
+            Signature = signature,
+            ReturnType = FormatTypeName(method.ReturnType),
+            ReturnTypeFullName = GetTypeFullName(method.ReturnType),
+            Parameters = parameters.Select(p => new ParameterInfo
+            {
+                Name = p.Name ?? string.Empty,
+                Type = FormatTypeName(p.ParameterType),
+                TypeFullName = GetTypeFullName(p.ParameterType),
+            }).ToList(),
+            Documentation = docs,
+            IsStatic = true,
+            XmlDocKey = xmlKey,
+        };
+    }
+
+    /// <summary>
+    /// Converts a CLR operator method name to its C# display form.
+    /// </summary>
+    private static string GetOperatorDisplayName(System.Reflection.MethodInfo method)
+    {
+        return method.Name switch
+        {
+            "op_Implicit" => $"implicit operator {FormatTypeName(method.ReturnType)}",
+            "op_Explicit" => $"explicit operator {FormatTypeName(method.ReturnType)}",
+            "op_Addition" => "operator +",
+            "op_Subtraction" => "operator -",
+            "op_Multiply" or "op_Multiplication" => "operator *",
+            "op_Division" => "operator /",
+            "op_Modulus" => "operator %",
+            "op_BitwiseAnd" => "operator &",
+            "op_BitwiseOr" => "operator |",
+            "op_ExclusiveOr" => "operator ^",
+            "op_LeftShift" => "operator <<",
+            "op_RightShift" => "operator >>",
+            "op_UnsignedRightShift" => "operator >>>",
+            "op_Equality" => "operator ==",
+            "op_Inequality" => "operator !=",
+            "op_LessThan" => "operator <",
+            "op_GreaterThan" => "operator >",
+            "op_LessThanOrEqual" => "operator <=",
+            "op_GreaterThanOrEqual" => "operator >=",
+            "op_UnaryPlus" => "operator +",
+            "op_UnaryNegation" => "operator -",
+            "op_LogicalNot" => "operator !",
+            "op_OnesComplement" => "operator ~",
+            "op_Increment" => "operator ++",
+            "op_Decrement" => "operator --",
+            "op_True" => "operator true",
+            "op_False" => "operator false",
+            _ => method.Name,
+        };
     }
 
     private static string GetXmlDocTypeName(Type type)
