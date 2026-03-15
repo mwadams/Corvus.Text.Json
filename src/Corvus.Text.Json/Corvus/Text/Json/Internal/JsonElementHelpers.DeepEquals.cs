@@ -219,7 +219,7 @@ public static partial class JsonElementHelpers
             case JsonTokenType.StartArray:
             {
                 ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
-                ArrayEnumerator<JsonElement> arrayEnumerator1 = new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex);
+                var arrayEnumerator1 = new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex);
                 while (arrayEnumerator1.MoveNext())
                 {
                    if (!arrayEnumerator2.MoveNext())

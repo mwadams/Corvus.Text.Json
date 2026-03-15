@@ -416,7 +416,7 @@ public static partial class JsonElementHelpers
             }
         }
 
-        NumberFormatInfo formatInfo = NumberFormatInfo.GetInstance(provider);
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
 
         return formatType switch
         {
@@ -3227,7 +3227,7 @@ public static partial class JsonElementHelpers
             return true;
         }
 
-        NumberFormatInfo formatInfo = NumberFormatInfo.GetInstance(provider);
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
         char formatType = char.ToUpperInvariant(format[0]);
         int precision = -1;
 
@@ -3701,7 +3701,7 @@ public static partial class JsonElementHelpers
             }
         }
 
-        NumberFormatInfo formatInfo = NumberFormatInfo.GetInstance(provider);
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
 
         return formatType switch
         {
@@ -6348,7 +6348,7 @@ public static partial class JsonElementHelpers
             return true;
         }
 
-        NumberFormatInfo formatInfo = NumberFormatInfo.GetInstance(provider);
+        var formatInfo = NumberFormatInfo.GetInstance(provider);
         char formatType = char.ToUpperInvariant(format[0]);
         int precision = -1;
 

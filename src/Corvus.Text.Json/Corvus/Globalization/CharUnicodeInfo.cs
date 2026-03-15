@@ -75,7 +75,7 @@ public static partial class CharUnicodeInfo
         nuint offset = GetCategoryCasingTableOffsetNoBoundsChecks(codePoint);
 
         // Each entry of the 'CategoryValues' table uses bits 5 - 6 to store the strong bidi information.
-        StrongBidiCategory bidiCategory = (StrongBidiCategory)(Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoriesValues), offset) & 0b_0110_0000);
+        var bidiCategory = (StrongBidiCategory)(Unsafe.AddByteOffset(ref MemoryMarshal.GetReference(CategoriesValues), offset) & 0b_0110_0000);
         Debug.Assert(bidiCategory == StrongBidiCategory.Other || bidiCategory == StrongBidiCategory.StrongLeftToRight || bidiCategory == StrongBidiCategory.StrongRightToLeft, "Unknown StrongBidiCategory value.");
 
         return bidiCategory;

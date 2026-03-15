@@ -1332,7 +1332,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         ReadOnlyMemory<byte> segmentCopy;
         segmentCopy = rawUtf8Json.Span.ToArray();
 
-        ParsedJsonDocument<TElement> newDocument =
+        var newDocument =
             ParsedJsonDocument<TElement>.ParseUnrented(segmentCopy);
 
         return newDocument.RootElement;
@@ -1697,7 +1697,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             estimatedRowCount = GetDbSizeUnsafe(index, true);
         }
 
-        MetadataDb db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
+        var db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
         AppendLocalElement(index, workspace, ref db, workspaceDocumentIndex);
 
         // Note we just orphan this db instance, as we are passing the underlying

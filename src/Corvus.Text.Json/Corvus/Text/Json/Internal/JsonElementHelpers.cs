@@ -41,8 +41,8 @@ public static partial class JsonElementHelpers
         where TValue : struct, IJsonElement<TValue>
     {
         using UnescapedUtf8JsonString name = property.NameSpan;
-        IMutableJsonDocument targetParentDocument = (IMutableJsonDocument)targetElement.ParentDocument;
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(targetParentDocument, 30);
+        var targetParentDocument = (IMutableJsonDocument)targetElement.ParentDocument;
+        var cvb = ComplexValueBuilder.Create(targetParentDocument, 30);
         if (targetElement.ParentDocument.TryGetNamedPropertyValue(targetElement.ParentDocumentIndex, name.Span, out TValue value))
         {
             // We are going to replace just the value
@@ -139,7 +139,7 @@ public static partial class JsonElementHelpers
             return; // Nothing to remove
         }
 
-        IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
+        var parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
         int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
 
         if (startIndex < 0 || startIndex > arrayLength)
@@ -176,7 +176,7 @@ public static partial class JsonElementHelpers
         where TArray : struct, IMutableJsonElement<TArray>
         where T : struct, IJsonElement<T>
     {
-        IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
+        var parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
         int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
 
         if (arrayLength == 0)
@@ -226,7 +226,7 @@ public static partial class JsonElementHelpers
             ThrowHelper.ThrowArgumentNullException(nameof(predicate));
         }
 
-        IMutableJsonDocument parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
+        var parentDocument = (IMutableJsonDocument)arrayElement.ParentDocument;
         int arrayLength = parentDocument.GetArrayLength(arrayElement.ParentDocumentIndex);
 
         if (arrayLength == 0)

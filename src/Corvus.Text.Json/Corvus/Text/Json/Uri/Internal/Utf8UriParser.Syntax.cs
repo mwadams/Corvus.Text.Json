@@ -306,7 +306,7 @@ internal partial class Utf8UriParser
     internal static Utf8UriParser FindOrFetchAsUnknownV1Syntax(string lwrCaseScheme)
     {
         // check may be other thread just added one
-        Utf8UriParser? syntax = (Utf8UriParser?)s_table[lwrCaseScheme];
+        var syntax = (Utf8UriParser?)s_table[lwrCaseScheme];
         if (syntax != null)
         {
             return syntax;

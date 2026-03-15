@@ -296,7 +296,7 @@ public struct MetadataDb : IDisposable
             Enlarge();
         }
 
-        DbRow row = new DbRow(tokenType, startLocation, length);
+        var row = new DbRow(tokenType, startLocation, length);
         MemoryMarshal.Write(_data.AsSpan(Length), ref row);
         Length += DbRow.Size;
     }
@@ -317,7 +317,7 @@ public struct MetadataDb : IDisposable
             Enlarge();
         }
 
-        DbRow row = new DbRow(tokenType, location, requiresUnescapingOrHasExponent ? -1 : 1);
+        var row = new DbRow(tokenType, location, requiresUnescapingOrHasExponent ? -1 : 1);
         MemoryMarshal.Write(_data.AsSpan(Length), ref row);
         Length += DbRow.Size;
     }
@@ -586,7 +586,7 @@ public struct MetadataDb : IDisposable
             Enlarge();
         }
 
-        DbRow row = new DbRow(tokenType, externalIndex, sizeOrLength, workspaceDocumentIndexOrNumberOfRows);
+        var row = new DbRow(tokenType, externalIndex, sizeOrLength, workspaceDocumentIndexOrNumberOfRows);
         MemoryMarshal.Write(_data.AsSpan(Length), ref row);
         Length += DbRow.Size;
     }

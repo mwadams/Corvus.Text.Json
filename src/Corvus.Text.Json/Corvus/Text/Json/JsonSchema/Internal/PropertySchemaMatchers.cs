@@ -276,7 +276,7 @@ public class PropertySchemaMatchers<T>
 
         int propertyIndex = 0;
 
-        foreach (var nameProvider in _nameProviders)
+        foreach (UnescapedNameProvider nameProvider in _nameProviders)
         {
             ReadOnlySpan<byte> unescapedName = nameProvider();
             ulong hashCode = PropertyMap.GetHashCode(unescapedName);

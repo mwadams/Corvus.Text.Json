@@ -1521,7 +1521,7 @@ public readonly partial struct JsonElement
         }
 
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        var cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         source.AddAsItem(ref cvb);
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -1544,7 +1544,7 @@ public readonly partial struct JsonElement
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        var cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ArrayBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -1567,7 +1567,7 @@ public readonly partial struct JsonElement
     {
         // Create the document builder without a MetadataDb
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        var cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.AddItem(BuildWithContext.Create(context, builder), static (in b, ref o) => ObjectBuilder.BuildValue(b.Context, b.Build, ref o));
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
@@ -1583,7 +1583,7 @@ public readonly partial struct JsonElement
     public static JsonDocumentBuilder<Mutable> CreateArrayBuilder(JsonWorkspace workspace, int estimatedMemberCount = 30)
     {
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        var cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.StartArray();
         cvb.EndArray();
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -1600,7 +1600,7 @@ public readonly partial struct JsonElement
     public static JsonDocumentBuilder<Mutable> CreateObjectBuilder(JsonWorkspace workspace, int estimatedMemberCount = 30)
     {
         JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
-        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
+        var cvb = ComplexValueBuilder.Create(documentBuilder, estimatedMemberCount);
         cvb.StartObject();
         cvb.EndObject();
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
@@ -4367,7 +4367,7 @@ public readonly partial struct JsonElement
                 return;
             }
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 source.AddAsItem(ref cvb);
@@ -4412,7 +4412,7 @@ public readonly partial struct JsonElement
                 return;
             }
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 source.AddAsItem(ref cvb);
@@ -4522,7 +4522,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4576,7 +4576,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4625,7 +4625,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4679,7 +4679,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4791,7 +4791,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4845,7 +4845,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4894,7 +4894,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -4949,7 +4949,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -5021,7 +5021,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            var cvb = ComplexValueBuilder.Create(_parent, 1);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -5067,7 +5067,7 @@ public readonly partial struct JsonElement
         {
             CheckValidInstance();
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            var cvb = ComplexValueBuilder.Create(_parent, 1);
             if (_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
             {
                 // We are going to replace just the value
@@ -5156,7 +5156,7 @@ public readonly partial struct JsonElement
                 return;
             }
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             source.AddAsItem(ref cvb);
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
@@ -5200,7 +5200,7 @@ public readonly partial struct JsonElement
         public void SetItem(int itemIndex, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(objectValue, static (in objectValue, ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
@@ -5249,7 +5249,7 @@ public readonly partial struct JsonElement
 #endif
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
@@ -5293,7 +5293,7 @@ public readonly partial struct JsonElement
         public void SetItem(int itemIndex, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
@@ -5342,7 +5342,7 @@ public readonly partial struct JsonElement
 #endif
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(BuildWithContext.Create(context, arrayValue), static (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
@@ -5378,7 +5378,7 @@ public readonly partial struct JsonElement
         public void SetItemNull(int itemIndex)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            var cvb = ComplexValueBuilder.Create(_parent, 1);
             cvb.AddItemNull();
             int arrayLength = GetArrayLength();
             if (itemIndex == arrayLength)
@@ -5409,7 +5409,7 @@ public readonly partial struct JsonElement
                 return;
             }
 
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             source.AddAsItem(ref cvb);
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
@@ -5443,7 +5443,7 @@ public readonly partial struct JsonElement
         public void InsertItem(int itemIndex, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(objectValue, static (in objectValue, ref o) => ObjectBuilder.BuildValue(objectValue, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
@@ -5482,7 +5482,7 @@ public readonly partial struct JsonElement
 #endif
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(BuildWithContext.Create(context, objectValue), static (in context, ref o) => ObjectBuilder.BuildValue(context.Context, context.Build, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
@@ -5516,7 +5516,7 @@ public readonly partial struct JsonElement
         public void InsertItem(int itemIndex, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(arrayValue, static (in arrayValue, ref o) => ArrayBuilder.BuildValue(arrayValue, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
@@ -5553,7 +5553,7 @@ public readonly partial struct JsonElement
 #endif
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            var cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
             cvb.AddItem(BuildWithContext.Create(context, arrayValue), static (in context, ref o) => ArrayBuilder.BuildValue(context.Context, context.Build, ref o));
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
@@ -5579,7 +5579,7 @@ public readonly partial struct JsonElement
         public void InsertItemNull(int itemIndex)
         {
             CheckValidInstance();
-            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 1);
+            var cvb = ComplexValueBuilder.Create(_parent, 1);
             cvb.AddItemNull();
             _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
             _documentVersion = _parent.Version;
@@ -5814,7 +5814,7 @@ public readonly partial struct JsonElement
                 JsonElement current = enumerator.Current;
                 if (JsonElementHelpers.DeepEquals(in current, in oldItem))
                 {
-                    ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, 30);
+                    var cvb = ComplexValueBuilder.Create(_parent, 30);
                     newItem.AddAsItem(ref cvb);
 
                     int elementStart = ((IJsonElement)current).ParentDocumentIndex;

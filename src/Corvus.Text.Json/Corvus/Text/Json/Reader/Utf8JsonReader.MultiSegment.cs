@@ -628,8 +628,8 @@ public ref partial struct Utf8JsonReader
                 if (span.StartsWith(leftToMatch))
                 {
                     HasValueSequence = true;
-                    SequencePosition start = new SequencePosition(startPosition.GetObject(), startPosition.GetInteger() + startConsumed);
-                    SequencePosition end = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + leftToMatch.Length);
+                    var start = new SequencePosition(startPosition.GetObject(), startPosition.GetInteger() + startConsumed);
+                    var end = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + leftToMatch.Length);
                     ValueSequence = _sequence.Slice(start, end);
                     consumed = leftToMatch.Length;
                     return true;
@@ -1295,7 +1295,7 @@ public ref partial struct Utf8JsonReader
         if (HasValueSequence)
         {
             SequencePosition start = rollBackState.GetStartPosition();
-            SequencePosition end = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + i);
+            var end = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + i);
             ValueSequence = _sequence.Slice(start, end);
             consumed = i;
         }
@@ -2301,7 +2301,7 @@ public ref partial struct Utf8JsonReader
     private bool SkipOrConsumeCommentMultiSegmentWithRollback()
     {
         long prevTotalConsumed = BytesConsumed;
-        SequencePosition start = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + _consumed);
+        var start = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + _consumed);
         bool skipSucceeded = SkipCommentMultiSegment(out int tailBytesToIgnore);
 
         if (skipSucceeded)
@@ -2312,7 +2312,7 @@ public ref partial struct Utf8JsonReader
 
             if (_readerOptions.CommentHandling == JsonCommentHandling.Allow)
             {
-                SequencePosition end = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + _consumed);
+                var end = new SequencePosition(_currentPosition.GetObject(), _currentPosition.GetInteger() + _consumed);
 
                 ReadOnlySequence<byte> commentSequence = _sequence.Slice(start, end);
                 commentSequence = commentSequence.Slice(2, commentSequence.Length - 2 - tailBytesToIgnore);

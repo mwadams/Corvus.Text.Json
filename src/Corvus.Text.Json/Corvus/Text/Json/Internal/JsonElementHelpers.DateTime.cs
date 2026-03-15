@@ -329,7 +329,7 @@ public static partial class JsonElementHelpers
     /// <returns>The constructed offset date time.</returns>
     public static OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
     {
-        OffsetDateTime value = new OffsetDateTime(
+        var value = new OffsetDateTime(
             new LocalDateTime(year, month, day, hours, minutes, seconds, milliseconds),
             Offset.FromSeconds(offsetSeconds));
         if (microseconds != 0 || nanoseconds != 0)
@@ -354,7 +354,7 @@ public static partial class JsonElementHelpers
     /// <returns>The constructed offset date time.</returns>
     public static OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
     {
-        OffsetDateTime value = new OffsetDateTime(
+        var value = new OffsetDateTime(
             new LocalDateTime(year, month, day, hours, minutes, seconds, milliseconds),
             Offset.FromSeconds(offsetSeconds));
 

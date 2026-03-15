@@ -1451,7 +1451,7 @@ public abstract partial class JsonDocument
         // The first 4 bytes are the type and length
         uint length = BitConverter.ToUInt32(_valueBacking!, offset);
 
-        DynamicValueType valueType = (DynamicValueType)(length & 0xF);
+        var valueType = (DynamicValueType)(length & 0xF);
         Debug.Assert(valueType is DynamicValueType.QuotedUtf8String or DynamicValueType.Number or DynamicValueType.Boolean or DynamicValueType.Null, $"Expected simple value at {offset}");
 
         length >>= 4;
@@ -1481,7 +1481,7 @@ public abstract partial class JsonDocument
         // The first 4 bytes are the type and length
         uint length = BitConverter.ToUInt32(_valueBacking!, offset);
 
-        DynamicValueType valueType = (DynamicValueType)(length & 0xF);
+        var valueType = (DynamicValueType)(length & 0xF);
         Debug.Assert(valueType is DynamicValueType.QuotedUtf8String or DynamicValueType.Number or DynamicValueType.Boolean or DynamicValueType.Null, $"Expected simple value at {offset}");
 
         length >>= 4;

@@ -37,7 +37,7 @@ public static partial class JsonElementHelpers
     public static T ParseValue<T>(ReadOnlySpan<byte> span, JsonDocumentOptions options = default)
         where T : struct, IJsonElement<T>
     {
-        ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(span, options);
+        var document = ParsedJsonDocument<T>.ParseValue(span, options);
         return document.RootElement;
     }
 
@@ -62,7 +62,7 @@ public static partial class JsonElementHelpers
     public static T ParseValue<T>(ReadOnlySpan<char> span, JsonDocumentOptions options = default)
         where T : struct, IJsonElement<T>
     {
-        ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(span, options);
+        var document = ParsedJsonDocument<T>.ParseValue(span, options);
         return document.RootElement;
     }
 
@@ -87,7 +87,7 @@ public static partial class JsonElementHelpers
     public static T ParseValue<T>(string text, JsonDocumentOptions options = default)
         where T : struct, IJsonElement<T>
     {
-        ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(text, options);
+        var document = ParsedJsonDocument<T>.ParseValue(text, options);
         return document.RootElement;
     }
 

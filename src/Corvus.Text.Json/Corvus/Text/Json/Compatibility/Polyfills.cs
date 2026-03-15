@@ -75,7 +75,7 @@ public static class Polyfills
         public static T Parse(string value, JsonDocumentOptions options = default)
         {
             // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value, options);
+            var document = ParsedJsonDocument<T>.ParseValue(value, options);
             return document.RootElement;
         }
 
@@ -88,7 +88,7 @@ public static class Polyfills
         public static T Parse(Stream value, JsonDocumentOptions options = default)
         {
             // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value, options);
+            var document = ParsedJsonDocument<T>.ParseValue(value, options);
             return document.RootElement;
         }
 
@@ -101,7 +101,7 @@ public static class Polyfills
         public static T Parse(ReadOnlyMemory<byte> value, JsonDocumentOptions options = default)
         {
             // This is the unrented path/
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value.Span, options);
+            var document = ParsedJsonDocument<T>.ParseValue(value.Span, options);
             return document.RootElement;
         }
 
@@ -114,7 +114,7 @@ public static class Polyfills
         public static T Parse(ReadOnlyMemory<char> value, JsonDocumentOptions options = default)
         {
             // This is the unrented path
-            ParsedJsonDocument<T> document = ParsedJsonDocument<T>.ParseValue(value.Span, options);
+            var document = ParsedJsonDocument<T>.ParseValue(value.Span, options);
             return document.RootElement;
         }
 

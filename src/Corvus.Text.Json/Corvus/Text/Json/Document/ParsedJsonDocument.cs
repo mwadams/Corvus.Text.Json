@@ -1426,7 +1426,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     /// </remarks>
     internal static ParsedJsonDocument<T> ParseUnrented(ReadOnlyMemory<byte> utf8Json, JsonReaderOptions? options = null)
     {
-        MetadataDb db = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: true);
+        var db = MetadataDb.CreateRented(utf8Json.Length, convertToAlloc: true);
         var stack = new StackRowStack(JsonDocumentOptions.DefaultMaxDepth * StackRow.Size);
         try
         {
@@ -1810,7 +1810,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
             estimatedRowCount = row.NumberOfRows + 1;
         }
 
-        MetadataDb db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
+        var db = MetadataDb.CreateRented(estimatedRowCount * DbRow.Size, false);
         AppendElement(index, ref db, workspaceDocumentIndex);
 
         // Note we just orphan this db instance, as we are passing the underlying
