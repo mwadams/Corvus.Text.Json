@@ -20,147 +20,23 @@ This class uses a hash-based approach to enable O(1) average-case lookups of pro
 
 ## Constructors
 
-### UniqueItemsHashSet
-
-```csharp
-UniqueItemsHashSet(IJsonDocument parentDocument, int itemsCount, Span<int> buckets, Span<byte> entries)
-```
-
-Creates a validator map for efficient property lookup based on the provided matchers.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) | The parent document for the unique items map. |
-| `itemsCount` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of items to be added to the map. |
-| `buckets` | [`Span<int>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `entries` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | A working buffer for the buckets. |
+| Constructor | Description |
+|-------------|-------------|
+| [UniqueItemsHashSet(IJsonDocument, int, Span&lt;int&gt;, Span&lt;byte&gt;)](/api/corvus-text-json-internal-uniqueitemshashset.ctor.html#uniqueitemshashset-ijsondocument-parentdocument-int-itemscount-span-int-buckets-span-byte-entries) | Creates a validator map for efficient property lookup based on the provided matchers. |
 
 ## Methods
 
-### AddItemIfNotExists
-
-```csharp
-bool AddItemIfNotExists(int parentDocumentIndex)
-```
-
-Adds the item identified by the parent document index to the map if it does not already exist, returning true if it was added and false if it already existed.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the value in the document. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetHashCode
-
-```csharp
-int GetHashCode(int documentIndex)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `documentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
-
-### ValueEquals
-
-```csharp
-bool ValueEquals(int leftIndex, int rightIndex)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `leftIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `rightIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### Dispose
-
-```csharp
-void Dispose()
-```
+| Method | Description |
+|--------|-------------|
+| [AddItemIfNotExists(int)](/api/corvus-text-json-internal-uniqueitemshashset.additemifnotexists.html#bool-additemifnotexists-int-parentdocumentindex) | Adds the item identified by the parent document index to the map if it does not already exist, returning true if it was added and false if it already existed. |
+| [Dispose()](/api/corvus-text-json-internal-uniqueitemshashset.dispose.html#void-dispose) |  |
+| [GetHashCode(int)](/api/corvus-text-json-internal-uniqueitemshashset.gethashcode.html#int-gethashcode-int-documentindex) |  |
+| [ValueEquals(int, int)](/api/corvus-text-json-internal-uniqueitemshashset.valueequals.html#bool-valueequals-int-leftindex-int-rightindex) |  |
 
 ## Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `StackAllocBucketSize` `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The recommended size for a stack allocated bucket buffer. |
-| `StackAllocEntrySize` `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The recommended size for a stack allocated entries buffer. |
-
-
-### UniqueItemsHashSet.UnescapedNameProvider (delegate)
-
-```csharp
-public delegate UniqueItemsHashSet.UnescapedNameProvider : MulticastDelegate, ICloneable, ISerializable
-```
-
-#### Implements
-
-[`ICloneable`](https://learn.microsoft.com/dotnet/api/system.icloneable), [`ISerializable`](https://learn.microsoft.com/dotnet/api/system.runtime.serialization.iserializable)
-
-#### Constructors
-
-##### UniqueItemsHashSet.UnescapedNameProvider
-
-```csharp
-UniqueItemsHashSet.UnescapedNameProvider(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
-
-#### Methods
-
-##### Invoke `virtual`
-
-```csharp
-ReadOnlySpan<byte> Invoke()
-```
-
-**Returns:** [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1)
-
-##### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-##### EndInvoke `virtual`
-
-```csharp
-ReadOnlySpan<byte> EndInvoke(IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
-
-**Returns:** [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1)
-
----
+| [StackAllocBucketSize](/api/corvus-text-json-internal-uniqueitemshashset.stackallocbucketsize.html) `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The recommended size for a stack allocated bucket buffer. |
+| [StackAllocEntrySize](/api/corvus-text-json-internal-uniqueitemshashset.stackallocentrysize.html) `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The recommended size for a stack allocated entries buffer. |
 

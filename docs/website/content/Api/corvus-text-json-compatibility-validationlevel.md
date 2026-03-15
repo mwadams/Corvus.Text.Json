@@ -18,8 +18,8 @@ The validation level.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Flag` `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.1. Flag. |
-| `Basic` `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.2. Basic. |
-| `Detailed` `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.3. Detailed. |
-| `Verbose` `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.4. Verbose. |
+| [Flag](/api/corvus-text-json-compatibility-validationlevel.flag.html) `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.1. Flag. |
+| [Basic](/api/corvus-text-json-compatibility-validationlevel.basic.html) `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.2. Basic. |
+| [Detailed](/api/corvus-text-json-compatibility-validationlevel.detailed.html) `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.3. Detailed. |
+| [Verbose](/api/corvus-text-json-compatibility-validationlevel.verbose.html) `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.4. Verbose. |
 

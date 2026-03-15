@@ -14,53 +14,8 @@ public static class EnumeratorCreator
 
 ## Methods
 
-### CreateArrayEnumerator `static`
-
-```csharp
-ArrayEnumerator<T> CreateArrayEnumerator<T>(IJsonDocument parent, int index)
-```
-
-Creates an enumerator for the items of a JSON array.
-
-**Type Parameters:**
-
-| Parameter | Description |
-|-----------|-------------|
-| `T` | The type of the JSON element. |
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parent` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) | The parent JSON document. |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the array in the document. |
-
-**Returns:** [`ArrayEnumerator<T>`](/api/corvus-text-json-arrayenumerator-titem.html)
-
-An [`ArrayEnumerator`](/api/corvus-text-json-arrayenumerator-titem.html) for the array.
-
-### CreateObjectEnumerator `static`
-
-```csharp
-ObjectEnumerator<T> CreateObjectEnumerator<T>(IJsonDocument parent, int index)
-```
-
-Creates an enumerator for the properties of a JSON object.
-
-**Type Parameters:**
-
-| Parameter | Description |
-|-----------|-------------|
-| `T` | The type of the JSON element. |
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parent` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) | The parent JSON document. |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the object in the document. |
-
-**Returns:** [`ObjectEnumerator<T>`](/api/corvus-text-json-objectenumerator-tvalue.html)
-
-An [`ObjectEnumerator`](/api/corvus-text-json-objectenumerator-tvalue.html) for the object.
+| Method | Description |
+|--------|-------------|
+| [CreateArrayEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createarrayenumerator.html#arrayenumerator-t-createarrayenumerator-t-ijsondocument-parent-int-index) `static` | Creates an enumerator for the items of a JSON array. |
+| [CreateObjectEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createobjectenumerator.html#objectenumerator-t-createobjectenumerator-t-ijsondocument-parent-int-index) `static` | Creates an enumerator for the properties of a JSON object. |
 

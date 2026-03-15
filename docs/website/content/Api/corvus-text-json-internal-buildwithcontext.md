@@ -14,18 +14,7 @@ public static class BuildWithContext
 
 ## Methods
 
-### Create `static`
-
-```csharp
-BuildWithContext<TContext, TBuilder> Create<TContext, TBuilder>(ref TContext context, TBuilder build)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `context` | `ref TContext` |  |
-| `build` | `TBuilder` |  |
-
-**Returns:** [`BuildWithContext<TContext, TBuilder>`](/api/corvus-text-json-internal-buildwithcontext.html)
+| Method | Description |
+|--------|-------------|
+| [Create(ref TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext.create.html#buildwithcontext-tcontext-tbuilder-create-tcontext-tbuilder-ref-tcontext-context-tbuilder-build) `static` |  |
 

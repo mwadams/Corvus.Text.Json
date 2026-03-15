@@ -18,13 +18,13 @@ Specifies the data type used in code generation scenarios.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Boolean` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a boolean value. |
-| `DateOnly` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a date-only value. |
-| `DateTime` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a date and time value. |
-| `DateTimeOffset` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a date and time with offset value. |
-| `TimeOnly` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a time-only value. |
-| `TimeSpan` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a time span value. |
-| `Base64String` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a base64-encoded string. |
-| `Guid` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a GUID value. |
-| `Version` `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a version value. |
+| [Boolean](/api/corvus-text-json-internal-codegendatatype.boolean.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a boolean value. |
+| [DateOnly](/api/corvus-text-json-internal-codegendatatype.dateonly.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a date-only value. |
+| [DateTime](/api/corvus-text-json-internal-codegendatatype.datetime.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a date and time value. |
+| [DateTimeOffset](/api/corvus-text-json-internal-codegendatatype.datetimeoffset.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a date and time with offset value. |
+| [TimeOnly](/api/corvus-text-json-internal-codegendatatype.timeonly.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a time-only value. |
+| [TimeSpan](/api/corvus-text-json-internal-codegendatatype.timespan.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a time span value. |
+| [Base64String](/api/corvus-text-json-internal-codegendatatype.base64string.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a base64-encoded string. |
+| [Guid](/api/corvus-text-json-internal-codegendatatype.guid.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a GUID value. |
+| [Version](/api/corvus-text-json-internal-codegendatatype.version.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a version value. |
 

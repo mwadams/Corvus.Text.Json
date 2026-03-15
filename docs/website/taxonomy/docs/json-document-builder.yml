@@ -1,5 +1,5 @@
 ﻿ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder"
+Title: "Building & Mutating JSON"
 Navigation:
   Title: Building & Mutating JSON
   Description: "Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json's JsonNode, designed for request/response cycles and data pipelines."
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder — Corvus.Text.Json"
-  Description: "This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance."
+  Title: "Building & Mutating JSON — Corvus.Text.Json"
+  Description: "Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json's JsonNode, designed for request/response cycles and data pipelines."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder — Corvus.Text.Json"
-  Description: "This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance."
+  Title: "Building & Mutating JSON — Corvus.Text.Json"
+  Description: "Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json's JsonNode, designed for request/response cycles and data pipelines."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

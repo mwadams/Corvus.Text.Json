@@ -22,63 +22,15 @@ A predicate for a JSON value.
 
 ## Constructors
 
-### JsonPredicate
-
-```csharp
-JsonPredicate(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [JsonPredicate(object, IntPtr)](/api/corvus-text-json-jsonpredicate-t.ctor.html#jsonpredicate-object-object-intptr-method) |  |
 
 ## Methods
 
-### Invoke `virtual`
-
-```csharp
-bool Invoke(ref T item)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `item` | `ref T` |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(ref T item, AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `item` | `ref T` |  |
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-### EndInvoke `virtual`
-
-```csharp
-bool EndInvoke(ref T item, IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `item` | `ref T` |  |
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+| Method | Description |
+|--------|-------------|
+| [BeginInvoke(ref T, AsyncCallback, object)](/api/corvus-text-json-jsonpredicate-t.begininvoke.html#iasyncresult-begininvoke-ref-t-item-asynccallback-callback-object-object) |  |
+| [EndInvoke(ref T, IAsyncResult)](/api/corvus-text-json-jsonpredicate-t.endinvoke.html#bool-endinvoke-ref-t-item-iasyncresult-result) |  |
+| [Invoke(ref T)](/api/corvus-text-json-jsonpredicate-t.invoke.html#bool-invoke-ref-t-item) |  |
 

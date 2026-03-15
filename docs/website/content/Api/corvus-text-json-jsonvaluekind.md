@@ -18,12 +18,12 @@ Specifies the data type of a JSON value.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Undefined` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-jsonvaluekind.html)). |
-| `Object` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON object. |
-| `Array` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON array. |
-| `String` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON string. |
-| `Number` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON number. |
-| `True` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `true`. |
-| `False` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `false`. |
-| `Null` `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `null`. |
+| [Undefined](/api/corvus-text-json-jsonvaluekind.undefined.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-jsonvaluekind.html#null)). |
+| [Object](/api/corvus-text-json-jsonvaluekind.object.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON object. |
+| [Array](/api/corvus-text-json-jsonvaluekind.array.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON array. |
+| [String](/api/corvus-text-json-jsonvaluekind.string.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON string. |
+| [Number](/api/corvus-text-json-jsonvaluekind.number.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is a JSON number. |
+| [True](/api/corvus-text-json-jsonvaluekind.true.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `true`. |
+| [False](/api/corvus-text-json-jsonvaluekind.false.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `false`. |
+| [Null](/api/corvus-text-json-jsonvaluekind.null.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `null`. |
 

@@ -2,40 +2,11 @@
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "Migrating from Corvus.Json (V4) to Corvus.Text.Json (V5)"
+Title: "Migrating from V4"
 ---
 This guide helps you migrate code written against the V4 code generator (`Corvus.Json.CodeGeneration`, known informally as "Corvus.Json") to the V5 code generator (`Corvus.Text.Json.CodeGeneration`, known informally as "Corvus.Text.Json").
 
 V5 is a ground-up rewrite. The generated types are still readonly structs backed by JSON Schema, but the underlying architecture — memory management, mutation, and code generation — is fundamentally different. Most V4 patterns have a direct V5 equivalent, but some require rethinking.
-
-## Table of Contents
-
-- [Overview of Changes](#overview-of-changes)
-- [Package and Namespace Changes](#package-and-namespace-changes)
-- [Strongly-Typed Value Types](#strongly-typed-value-types)
-- [Parsing](#parsing)
-- [Property Access](#property-access)
-- [JSON Property Names](#json-property-names)
-- [Serialization (ToString / WriteTo)](#serialization)
-- [Formatting (IFormattable, ISpanFormattable, IUtf8SpanFormattable)](#formatting-iformattable-ispanformattable-iutf8spanformattable)
-- [Equality and Comparison](#equality-and-comparison)
-- [Validation](#validation)
-- [Creating Objects from Scratch](#creating-objects-from-scratch)
-- [Building Nested Objects and Arrays](#building-nested-objects-and-arrays)
-- [Mutating Object Properties](#mutating-object-properties)
-- [Removing Properties](#removing-properties)
-- [Default Property Values](#default-property-values)
-- [Arrays](#arrays)
-- [Numeric Arrays (Vectors)](#numeric-arrays-vectors)
-- [Tuples](#tuples)
-- [Core Type Accessors](#core-type-accessors)
-- [Composition Types (`oneOf`, `anyOf`, `allOf`)](#composition-types-oneof-anyof-allof)
-- [Enum Types](#enum-types)
-- [Memory Management](#memory-management)
-- [Code Generation](#code-generation)
-- [Quick Reference Table](#quick-reference-table)
-
----
 
 ## Overview of Changes
 

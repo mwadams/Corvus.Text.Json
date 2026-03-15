@@ -26,5 +26,5 @@ Note that mutable elements are ephemeral. If their underlying document is modifi
 
 ## Implemented By
 
-`JsonElement.Mutable`, `JsonElementForBooleanFalseSchema.Mutable`
+[`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html), [`JsonElementForBooleanFalseSchema.Mutable`](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.html)
 

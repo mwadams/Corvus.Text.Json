@@ -1,0 +1,64 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "IMutableJsonDocument.EscapeAndStoreRawStringValue Method — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## Overloads
+
+| Method | Description |
+|--------|-------------|
+| [EscapeAndStoreRawStringValue(ReadOnlySpan&lt;char&gt;, ref bool)](#int-escapeandstorerawstringvalue-readonlyspan-char-value-ref-bool-requiredescaping) | Escapes and stores a raw string value in the document. |
+| [EscapeAndStoreRawStringValue(ReadOnlySpan&lt;byte&gt;, ref bool)](#int-escapeandstorerawstringvalue-readonlyspan-byte-value-ref-bool-requiredescaping) | Escapes and stores a raw string value in the document. |
+
+## EscapeAndStoreRawStringValue `abstract`
+
+```csharp
+int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, ref bool requiredEscaping)
+```
+
+Escapes and stores a raw string value in the document.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The string value to escape and store. |
+| `requiredEscaping` | [`ref bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Set to `true` if escaping was required. |
+
+### Returns
+
+[`int`](https://learn.microsoft.com/dotnet/api/system.int32)
+
+The index of the stored value.
+
+---
+
+## EscapeAndStoreRawStringValue `abstract`
+
+```csharp
+int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, ref bool requiredEscaping)
+```
+
+Escapes and stores a raw string value in the document.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 string value to escape and store. |
+| `requiredEscaping` | [`ref bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Set to `true` if escaping was required. |
+
+### Returns
+
+[`int`](https://learn.microsoft.com/dotnet/api/system.int32)
+
+The index of the stored value.
+
+---
+

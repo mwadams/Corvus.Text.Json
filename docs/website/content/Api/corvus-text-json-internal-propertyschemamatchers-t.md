@@ -20,105 +20,13 @@ This class uses a hash-based approach to enable O(1) average-case lookups of pro
 
 ## Constructors
 
-### PropertySchemaMatchers
-
-```csharp
-PropertySchemaMatchers(List<ValueTuple<PropertySchemaMatchers<T>.UnescapedNameProvider<T>, T>> matchers)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `matchers` | [`List<ValueTuple<PropertySchemaMatchers<T>.UnescapedNameProvider<T>, T>>`](https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [PropertySchemaMatchers(List&lt;ValueTuple&lt;PropertySchemaMatchers&lt;T&gt;.UnescapedNameProvider&lt;T&gt;, T&gt;&gt;)](/api/corvus-text-json-internal-propertyschemamatchers-t.ctor.html#propertyschemamatchers-list-valuetuple-propertyschemamatchers-t-unescapednameprovider-t-t-matchers) |  |
 
 ## Methods
 
-### TryGetNamedMatcher
-
-```csharp
-bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, ref T matcher)
-```
-
-Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `unescapedUtf8Name` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The unescaped UTF-8 property name to search for. |
-| `matcher` | `ref T` | When this method returns, contains the matcher, otherwise null. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the property was found; otherwise, `false`.
-
-This method implements an efficient hash table lookup algorithm for property names in JSON objects. The lookup process follows these steps: 1. **Property Map Loading**: Reads the PropertyMap structure from the backing buffer to get metadata including bucket and entry offsets, counts, and sizes. 2. **Hash Calculation**: Computes a hash code for the target property name using an optimized algorithm that varies based on the property name length for maximum distribution. 3. **Bucket Selection**: Uses modulo operation to map the hash code to a specific bucket in the hash table, providing O(1) initial access. 4. **Chain Traversal**: Follows the linked chain of entries in the selected bucket: - Bucket values are 1-based, so the initial index is decremented - Each entry contains a Next field pointing to the next entry in the collision chain - Bounds checking prevents array access violations 5. **Hash and Key Comparison**: For each entry in the chain: - First compares hash codes for fast rejection of non-matches - For hash matches, performs optimized key comparison: * Short keys (< HashLength) with no hash collision bits can skip full comparison * Otherwise, retrieves the actual property name and performs byte-wise comparison 6. **Key Retrieval**: Property names are retrieved differently based on storage: - Simple properties: Read directly from the original JSON data - Escaped properties: Read from the dynamic value buffer after unescaping 7. **Collision Handling**: The algorithm includes safeguards against infinite loops by tracking collision count and ensuring it doesn't exceed the total entry count. This implementation provides O(1) average-case lookup performance with graceful handling of hash collisions through separate chaining, while minimizing memory allocations and cache misses through efficient data layout.
-
-
-### PropertySchemaMatchers<T>.UnescapedNameProvider<T> (delegate)
-
-```csharp
-public delegate PropertySchemaMatchers<T>.UnescapedNameProvider<T> : MulticastDelegate, ICloneable, ISerializable
-```
-
-#### Implements
-
-[`ICloneable`](https://learn.microsoft.com/dotnet/api/system.icloneable), [`ISerializable`](https://learn.microsoft.com/dotnet/api/system.runtime.serialization.iserializable)
-
-#### Constructors
-
-##### PropertySchemaMatchers
-
-```csharp
-PropertySchemaMatchers(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
-
-#### Methods
-
-##### Invoke `virtual`
-
-```csharp
-ReadOnlySpan<byte> Invoke()
-```
-
-**Returns:** [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1)
-
-##### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-##### EndInvoke `virtual`
-
-```csharp
-ReadOnlySpan<byte> EndInvoke(IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
-
-**Returns:** [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1)
-
----
+| Method | Description |
+|--------|-------------|
+| [TryGetNamedMatcher(ReadOnlySpan&lt;byte&gt;, ref T)](/api/corvus-text-json-internal-propertyschemamatchers-t.trygetnamedmatcher.html#bool-trygetnamedmatcher-readonlyspan-byte-unescapedutf8name-ref-t-matcher) | Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup. |
 

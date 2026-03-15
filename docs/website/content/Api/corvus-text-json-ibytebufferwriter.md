@@ -16,15 +16,13 @@ public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Capacity` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `WrittenMemory` | [`ReadOnlyMemory<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1) |  |
-| `WrittenSpan` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
+| [Capacity](/api/corvus-text-json-ibytebufferwriter.capacity.html) | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
+| [WrittenMemory](/api/corvus-text-json-ibytebufferwriter.writtenmemory.html) | [`ReadOnlyMemory<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1) |  |
+| [WrittenSpan](/api/corvus-text-json-ibytebufferwriter.writtenspan.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
 ## Methods
 
-### ClearAndReturnBuffers `abstract`
-
-```csharp
-void ClearAndReturnBuffers()
-```
+| Method | Description |
+|--------|-------------|
+| [ClearAndReturnBuffers()](/api/corvus-text-json-ibytebufferwriter.clearandreturnbuffers.html#void-clearandreturnbuffers) |  |
 

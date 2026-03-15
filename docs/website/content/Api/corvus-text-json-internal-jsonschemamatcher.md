@@ -16,63 +16,15 @@ A matcher for a JSON schema.
 
 ## Constructors
 
-### JsonSchemaMatcher
-
-```csharp
-JsonSchemaMatcher(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [JsonSchemaMatcher(object, IntPtr)](/api/corvus-text-json-internal-jsonschemamatcher.ctor.html#jsonschemamatcher-object-object-intptr-method) |  |
 
 ## Methods
 
-### Invoke `virtual`
-
-```csharp
-void Invoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) |  |
-| `parentDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
-
-### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) |  |
-| `parentDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-### EndInvoke `virtual`
-
-```csharp
-void EndInvoke(ref JsonSchemaContext context, IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
+| Method | Description |
+|--------|-------------|
+| [BeginInvoke(IJsonDocument, int, ref JsonSchemaContext, AsyncCallback, object)](/api/corvus-text-json-internal-jsonschemamatcher.begininvoke.html#iasyncresult-begininvoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-asynccallback-callback-object-object) |  |
+| [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcher.endinvoke.html#void-endinvoke-ref-jsonschemacontext-context-iasyncresult-result) |  |
+| [Invoke(IJsonDocument, int, ref JsonSchemaContext)](/api/corvus-text-json-internal-jsonschemamatcher.invoke.html#void-invoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context) |  |
 

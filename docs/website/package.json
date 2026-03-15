@@ -9,6 +9,7 @@
     "js-yaml": "^4.1.0"
   },
   "devDependencies": {
-    "sass": "^1.98.0"
+    "sass": "^1.98.0",
+    "vellum": "^0.4.55"
   }
 }

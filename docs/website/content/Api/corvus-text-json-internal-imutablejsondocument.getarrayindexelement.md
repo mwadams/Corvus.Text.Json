@@ -1,0 +1,60 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "IMutableJsonDocument.GetArrayIndexElement Method — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## Overloads
+
+| Method | Description |
+|--------|-------------|
+| [GetArrayIndexElement(int, int)](#jsonelement-mutable-getarrayindexelement-int-currentindex-int-arrayindex) | Gets the array element at the specified index as a mutable JSON element. |
+| [GetArrayIndexElement(int, int, ref IMutableJsonDocument, ref int)](#void-getarrayindexelement-int-currentindex-int-arrayindex-ref-imutablejsondocument-parentdocument-ref-int-parentdocumentindex) | Gets the element at the specified array index within the current index. |
+
+## GetArrayIndexElement `abstract`
+
+```csharp
+JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex)
+```
+
+Gets the array element at the specified index as a mutable JSON element.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `currentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The current index in the document. |
+| `arrayIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index within the array. |
+
+### Returns
+
+[`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
+
+The mutable JSON element at the specified array index.
+
+---
+
+## GetArrayIndexElement `abstract`
+
+```csharp
+void GetArrayIndexElement(int currentIndex, int arrayIndex, ref IMutableJsonDocument parentDocument, ref int parentDocumentIndex)
+```
+
+Gets the element at the specified array index within the current index.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `currentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The current index. |
+| `arrayIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The array index. |
+| `parentDocument` | [`ref IMutableJsonDocument`](/api/corvus-text-json-internal-imutablejsondocument.html) | Produces the parent document of the result. |
+| `parentDocumentIndex` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | Produces the parent document index. |
+
+---
+

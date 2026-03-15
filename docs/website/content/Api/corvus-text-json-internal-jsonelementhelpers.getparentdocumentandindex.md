@@ -1,0 +1,37 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "JsonElementHelpers.GetParentDocumentAndIndex Method — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## GetParentDocumentAndIndex `static`
+
+```csharp
+ValueTuple<IJsonDocument, int> GetParentDocumentAndIndex<TElement>(TElement value)
+```
+
+Gets the parent document and document index for a JSON element.
+
+### Type Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| `TElement` | The type of the JSON element. |
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | `TElement` | The JSON element value. |
+
+### Returns
+
+[`ValueTuple<IJsonDocument, int>`](https://learn.microsoft.com/dotnet/api/system.valuetuple-2)
+
+A tuple containing the parent document and the document index.
+

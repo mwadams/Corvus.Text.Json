@@ -23,63 +23,15 @@ A callback for a pattern match method.
 
 ## Constructors
 
-### Matcher
-
-```csharp
-Matcher(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [Matcher(object, IntPtr)](/api/corvus-text-json-matcher-tmatch-tout.ctor.html#matcher-object-object-intptr-method) |  |
 
 ## Methods
 
-### Invoke `virtual`
-
-```csharp
-TOut Invoke(ref TMatch match)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `match` | `ref TMatch` |  |
-
-**Returns:** `TOut`
-
-### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(ref TMatch match, AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `match` | `ref TMatch` |  |
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-### EndInvoke `virtual`
-
-```csharp
-TOut EndInvoke(ref TMatch match, IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `match` | `ref TMatch` |  |
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
-
-**Returns:** `TOut`
+| Method | Description |
+|--------|-------------|
+| [BeginInvoke(ref TMatch, AsyncCallback, object)](/api/corvus-text-json-matcher-tmatch-tout.begininvoke.html#iasyncresult-begininvoke-ref-tmatch-match-asynccallback-callback-object-object) |  |
+| [EndInvoke(ref TMatch, IAsyncResult)](/api/corvus-text-json-matcher-tmatch-tout.endinvoke.html#tout-endinvoke-ref-tmatch-match-iasyncresult-result) |  |
+| [Invoke(ref TMatch)](/api/corvus-text-json-matcher-tmatch-tout.invoke.html#tout-invoke-ref-tmatch-match) |  |
 

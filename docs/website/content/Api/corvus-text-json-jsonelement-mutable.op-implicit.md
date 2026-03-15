@@ -1,0 +1,27 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "JsonElement.Mutable.Implicit Operator — Corvus.Text.Json"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll
+
+## implicit operator JsonElement `static`
+
+```csharp
+static implicit operator JsonElement(JsonElement.Mutable value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html) |  |
+
+### Returns
+
+[`JsonElement`](/api/corvus-text-json-jsonelement.html)
+

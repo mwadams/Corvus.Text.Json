@@ -1,0 +1,27 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "JsonRegexOptions.NonBacktracking Field — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## NonBacktracking `static`
+
+```csharp
+JsonRegexOptions NonBacktracking
+```
+
+Enable matching using an approach that avoids backtracking and guarantees linear-time processing in the length of the input.
+
+### Returns
+
+[`JsonRegexOptions`](/api/corvus-text-json-internal-jsonregexoptions.html)
+
+### Remarks
+
+Certain features aren't available when this option is set, including balancing groups, backreferences, positive and negative lookaheads and lookbehinds, and atomic groups. Capture groups are also ignored, such that the only capture available is that for the top-level match.
+

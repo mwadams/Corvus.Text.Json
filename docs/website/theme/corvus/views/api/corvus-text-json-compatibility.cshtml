@@ -5,15 +5,19 @@
 <div class="layout-docs container">
     <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false"></button>
     <div class="sidebar-backdrop"></div>
-    <aside class="sidebar">
+    <aside class="sidebar" data-has-member-nav>
         <div class="sidebar__inner">
             <div class="sidebar__section">
                 <button class="sidebar__heading is-collapsed">Corvus.Globalization</button>
                 <div class="sidebar__body is-collapsed">
                     <ul class="sidebar__list">
                         <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-globalization.html"><strong>Overview</strong></a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-globalization-charunicodeinfo.html">CharUnicodeInfo</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-globalization-idnmapping.html">IdnMapping</a></li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-globalization-charunicodeinfo.html">CharUnicodeInfo</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-globalization-idnmapping.html">IdnMapping</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -22,7 +26,9 @@
                 <div class="sidebar__body is-collapsed">
                     <ul class="sidebar__list">
                         <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-numerics.html"><strong>Overview</strong></a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-numerics-bignumber.html">BigNumber</a></li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-numerics-bignumber.html">BigNumber</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -31,7 +37,9 @@
                 <div class="sidebar__body is-collapsed">
                     <ul class="sidebar__list">
                         <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-runtime-interopservices.html"><strong>Overview</strong></a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-runtime-interopservices-jsonmarshal.html">JsonMarshal</a></li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-runtime-interopservices-jsonmarshal.html">JsonMarshal</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -40,50 +48,180 @@
                 <div class="sidebar__body is-collapsed">
                     <ul class="sidebar__list">
                         <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-text-json.html"><strong>Overview</strong></a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-arrayenumerator-titem.html">ArrayEnumerator&lt;TItem&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-ibytebufferwriter.html">IByteBufferWriter</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-ijsonschemaresultscollector.html">IJsonSchemaResultsCollector</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsoncommenthandling.html">JsonCommentHandling</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsondocumentbuilder-t.html">JsonDocumentBuilder&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsondocumentoptions.html">JsonDocumentOptions</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonelement.html">JsonElement</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonelementextensions.html">JsonElementExtensions</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonelementforbooleanfalseschema.html">JsonElementForBooleanFalseSchema</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonencodedtext.html">JsonEncodedText</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonexception.html">JsonException</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonpredicate-t.html">JsonPredicate&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonproperty-tvalue.html">JsonProperty&lt;TValue&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonreaderoptions.html">JsonReaderOptions</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonreaderstate.html">JsonReaderState</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonschemamessageprovider.html">JsonSchemaMessageProvider</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonschemamessageprovider-tcontext.html">JsonSchemaMessageProvider&lt;TContext&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonschemapathprovider.html">JsonSchemaPathProvider</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonschemapathprovider-tcontext.html">JsonSchemaPathProvider&lt;TContext&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonschemaresultscollector.html">JsonSchemaResultsCollector</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonschemaresultslevel.html">JsonSchemaResultsLevel</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonvaluekind.html">JsonValueKind</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonworkspace.html">JsonWorkspace</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-jsonwriteroptions.html">JsonWriterOptions</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-matcher-tmatch-tcontext-tresult.html">Matcher&lt;TMatch, TContext, TResult&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-matcher-tmatch-tout.html">Matcher&lt;TMatch, TOut&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-objectenumerator-tvalue.html">ObjectEnumerator&lt;TValue&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-parsedjsondocument-t.html">ParsedJsonDocument&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-period.html">Period</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-periodbuilder.html">PeriodBuilder</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-rawutf8jsonstring.html">RawUtf8JsonString</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-unescapedutf16jsonstring.html">UnescapedUtf16JsonString</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-unescapedutf8jsonstring.html">UnescapedUtf8JsonString</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8iri.html">Utf8Iri</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8irireference.html">Utf8IriReference</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8irireferencevalue.html">Utf8IriReferenceValue</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8irivalue.html">Utf8IriValue</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8jsonpointer.html">Utf8JsonPointer</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8jsonreader.html">Utf8JsonReader</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8jsonwriter.html">Utf8JsonWriter</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8uri.html">Utf8Uri</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8urireference.html">Utf8UriReference</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8urireferencevalue.html">Utf8UriReferenceValue</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-utf8urivalue.html">Utf8UriValue</a></li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-arrayenumerator-titem.html">ArrayEnumerator&lt;TItem&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-ibytebufferwriter.html">IByteBufferWriter</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-ijsonschemaresultscollector.html">IJsonSchemaResultsCollector</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsoncommenthandling.html">JsonCommentHandling</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsondocumentbuilder-t.html">JsonDocumentBuilder&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsondocumentoptions.html">JsonDocumentOptions</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement.html">JsonElement</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-arraybuilder.html">JsonElement.ArrayBuilder</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-arraybuilder-build.html">JsonElement.ArrayBuilder.Build</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-arraybuilder-build-t.html">JsonElement.ArrayBuilder.Build&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-jsonschema.html">JsonElement.JsonSchema</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-mutable.html">JsonElement.Mutable</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-objectbuilder.html">JsonElement.ObjectBuilder</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-objectbuilder-build.html">JsonElement.ObjectBuilder.Build</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-objectbuilder-build-t.html">JsonElement.ObjectBuilder.Build&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-source.html">JsonElement.Source</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelement-source-tcontext.html">JsonElement.Source&lt;TContext&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelementextensions.html">JsonElementExtensions</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelementforbooleanfalseschema.html">JsonElementForBooleanFalseSchema</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelementforbooleanfalseschema-jsonschema.html">JsonElementForBooleanFalseSchema.JsonSchema</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.html">JsonElementForBooleanFalseSchema.Mutable</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonencodedtext.html">JsonEncodedText</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonexception.html">JsonException</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonpredicate-t.html">JsonPredicate&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonproperty-tvalue.html">JsonProperty&lt;TValue&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonreaderoptions.html">JsonReaderOptions</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonreaderstate.html">JsonReaderState</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemamessageprovider.html">JsonSchemaMessageProvider</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemamessageprovider-tcontext.html">JsonSchemaMessageProvider&lt;TContext&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemapathprovider.html">JsonSchemaPathProvider</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemapathprovider-tcontext.html">JsonSchemaPathProvider&lt;TContext&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemaresultscollector.html">JsonSchemaResultsCollector</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemaresultscollector-result.html">JsonSchemaResultsCollector.Result</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.html">JsonSchemaResultsCollector.ResultsEnumerator</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonschemaresultslevel.html">JsonSchemaResultsLevel</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonvaluekind.html">JsonValueKind</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonworkspace.html">JsonWorkspace</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-jsonwriteroptions.html">JsonWriterOptions</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-matcher-tmatch-tcontext-tresult.html">Matcher&lt;TMatch, TContext, TResult&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-matcher-tmatch-tout.html">Matcher&lt;TMatch, TOut&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-objectenumerator-tvalue.html">ObjectEnumerator&lt;TValue&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-parsedjsondocument-t.html">ParsedJsonDocument&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-period.html">Period</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-periodbuilder.html">PeriodBuilder</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-rawutf8jsonstring.html">RawUtf8JsonString</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-unescapedutf16jsonstring.html">UnescapedUtf16JsonString</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-unescapedutf8jsonstring.html">UnescapedUtf8JsonString</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8iri.html">Utf8Iri</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8irireference.html">Utf8IriReference</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8irireferencevalue.html">Utf8IriReferenceValue</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8irivalue.html">Utf8IriValue</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8jsonpointer.html">Utf8JsonPointer</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8jsonreader.html">Utf8JsonReader</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8jsonwriter.html">Utf8JsonWriter</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8uri.html">Utf8Uri</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8urireference.html">Utf8UriReference</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8urireferencevalue.html">Utf8UriReferenceValue</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-utf8urivalue.html">Utf8UriValue</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -92,10 +230,21 @@
                 <div class="sidebar__body">
                     <ul class="sidebar__list">
                         <li class="sidebar__item"><a class="sidebar__link is-active" href="/api/corvus-text-json-compatibility.html"><strong>Overview</strong></a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-compatibility-polyfills.html">Polyfills</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-compatibility-validationcontext.html">ValidationContext</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-compatibility-validationlevel.html">ValidationLevel</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-compatibility-validationresult.html">ValidationResult</a></li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-compatibility-polyfills.html">Polyfills</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-compatibility-validationcontext.html">ValidationContext</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-compatibility-validationlevel.html">ValidationLevel</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-compatibility-validationresult.html">ValidationResult</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-compatibility-validationresult-locationtuple.html">ValidationResult.LocationTuple</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -104,41 +253,135 @@
                 <div class="sidebar__body is-collapsed">
                     <ul class="sidebar__list">
                         <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-text-json-internal.html"><strong>Overview</strong></a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-arrayenumerator.html">ArrayEnumerator</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-arrayreverseenumerator.html">ArrayReverseEnumerator</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-bigintegerpolyfills.html">BigIntegerPolyfills</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-buildwithcontext.html">BuildWithContext</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.html">BuildWithContext&lt;TContext, TBuilder&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-codegendatatype.html">CodeGenDataType</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-codegennumerictype.html">CodeGenNumericType</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-codegenthrowhelper.html">CodeGenThrowHelper</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-complexvaluebuilder.html">ComplexValueBuilder</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-enumeratorcreator.html">EnumeratorCreator</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-fixedstringjsondocument-t.html">FixedStringJsonDocument&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-ijsondocument.html">IJsonDocument</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-ijsonelement.html">IJsonElement</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-ijsonelement-t.html">IJsonElement&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-imutablejsondocument.html">IMutableJsonDocument</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-imutablejsonelement-t.html">IMutableJsonElement&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsondocument.html">JsonDocument</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonelementhelpers.html">JsonElementHelpers</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonelementtensorhelpers.html">JsonElementTensorHelpers</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonregexoptions.html">JsonRegexOptions</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonschemacontext.html">JsonSchemaContext</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonschemaevaluation.html">JsonSchemaEvaluation</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonschemamatcher.html">JsonSchemaMatcher</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.html">JsonSchemaMatcherWithRequiredBitBuffer</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-jsontokentype.html">JsonTokenType</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-metadatadb.html">MetadataDb</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-normalizedjsonnumber.html">NormalizedJsonNumber</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-objectenumerator.html">ObjectEnumerator</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-propertyschemamatchers-t.html">PropertySchemaMatchers&lt;T&gt;</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-rentedbacking.html">RentedBacking</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-simpletypesbacking.html">SimpleTypesBacking</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-uniqueitemshashset.html">UniqueItemsHashSet</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-utf8uricomponents.html">Utf8UriComponents</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-utf8uriformat.html">Utf8UriFormat</a></li>
-                        <li class="sidebar__item"><a class="sidebar__link sidebar__link--toc" href="/api/corvus-text-json-internal-utf8urikind.html">Utf8UriKind</a></li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-arrayenumerator.html">ArrayEnumerator</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-arrayreverseenumerator.html">ArrayReverseEnumerator</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-bigintegerpolyfills.html">BigIntegerPolyfills</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-buildwithcontext.html">BuildWithContext</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.html">BuildWithContext&lt;TContext, TBuilder&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-codegendatatype.html">CodeGenDataType</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-codegennumerictype.html">CodeGenNumericType</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-codegenthrowhelper.html">CodeGenThrowHelper</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-complexvaluebuilder.html">ComplexValueBuilder</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-complexvaluebuilder-complexvaluehandle.html">ComplexValueBuilder.ComplexValueHandle</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.html">ComplexValueBuilder.ValueBuilderAction</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.html">ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-enumeratorcreator.html">EnumeratorCreator</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-fixedstringjsondocument-t.html">FixedStringJsonDocument&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-ijsondocument.html">IJsonDocument</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-ijsonelement.html">IJsonElement</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-ijsonelement-t.html">IJsonElement&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-imutablejsondocument.html">IMutableJsonDocument</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-imutablejsonelement-t.html">IMutableJsonElement&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsondocument.html">JsonDocument</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonelementhelpers.html">JsonElementHelpers</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonelementtensorhelpers.html">JsonElementTensorHelpers</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonregexoptions.html">JsonRegexOptions</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonschemacontext.html">JsonSchemaContext</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonschemacontext-evaluatedindexbuffer.html">JsonSchemaContext.EvaluatedIndexBuffer</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonschemaevaluation.html">JsonSchemaEvaluation</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonschemamatcher.html">JsonSchemaMatcher</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.html">JsonSchemaMatcherWithRequiredBitBuffer</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-jsontokentype.html">JsonTokenType</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-metadatadb.html">MetadataDb</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-normalizedjsonnumber.html">NormalizedJsonNumber</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-objectenumerator.html">ObjectEnumerator</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-propertyschemamatchers-t.html">PropertySchemaMatchers&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.html">PropertySchemaMatchers&lt;T&gt;.UnescapedNameProvider&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-rentedbacking.html">RentedBacking</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-rentedbacking-writer-t.html">RentedBacking.Writer&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-simpletypesbacking.html">SimpleTypesBacking</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-simpletypesbacking-writer-t.html">SimpleTypesBacking.Writer&lt;T&gt;</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-uniqueitemshashset.html">UniqueItemsHashSet</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.html">UniqueItemsHashSet.UnescapedNameProvider</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-utf8uricomponents.html">Utf8UriComponents</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-utf8uriformat.html">Utf8UriFormat</a>
+                        </li>
+                        <li class="sidebar__item">
+                            <a class="sidebar__link sidebar__link--type" href="/api/corvus-text-json-internal-utf8urikind.html">Utf8UriKind</a>
+                        </li>
                     </ul>
                 </div>
             </div>

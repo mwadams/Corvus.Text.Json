@@ -28,45 +28,12 @@ A mutable JSON document builder that provides functionality to construct and mod
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `RootElement` | `T` | Gets the root element of the JSON document. |
-
-### RootElement
-
-```csharp
-T RootElement { get; }
-```
-
-Gets the root element of the JSON document.
-
-**Value:** The mutable root element of the document.
+| [RootElement](/api/corvus-text-json-jsondocumentbuilder-t.rootelement.html) | `T` | Gets the root element of the JSON document. |
 
 ## Methods
 
-### WriteTo
-
-```csharp
-void WriteTo(Utf8JsonWriter writer)
-```
-
-Write the document into the provided writer as a JSON value.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `writer` | [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) |  |
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | The `writer` parameter is `null`. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | This [`RootElement`](/api/corvus-text-json-jsondocumentbuilder-t.html)'s [`ValueKind`](/api/corvus-text-json-jsonelement.html) would result in an invalid JSON. |
-| [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
-
-### Dispose
-
-```csharp
-void Dispose()
-```
+| Method | Description |
+|--------|-------------|
+| [Dispose()](/api/corvus-text-json-jsondocumentbuilder-t.dispose.html#void-dispose) |  |
+| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsondocumentbuilder-t.writeto.html#void-writeto-utf8jsonwriter-writer) | Write the document into the provided writer as a JSON value. |
 

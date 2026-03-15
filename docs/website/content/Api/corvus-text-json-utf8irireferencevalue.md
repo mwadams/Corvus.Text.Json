@@ -22,41 +22,12 @@ This type should be used in a using declaration to ensure that the underlying me
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `IriReference` | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) | Gets the UTF-8 IRI reference value. |
+| [IriReference](/api/corvus-text-json-utf8irireferencevalue.irireference.html) | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) | Gets the UTF-8 IRI reference value. |
 
 ## Methods
 
-### TryGetValue `static`
-
-```csharp
-bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8IriReferenceValue value)
-```
-
-Tries to get the value of the element at the specified index as a [`Utf8IriReferenceValue`](/api/corvus-text-json-utf8irireferencevalue.html).
-
-**Type Parameters:**
-
-| Parameter | Description |
-|-----------|-------------|
-| `T` | The type of the document. |
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `jsonDocument` | `ref T` |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the element. |
-| `value` | [`ref Utf8IriReferenceValue`](/api/corvus-text-json-utf8irireferencevalue.html) | The [`Utf8IriReferenceValue`](/api/corvus-text-json-utf8irireferencevalue.html) value. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the value was retrieved; otherwise, `false`.
-
-### Dispose
-
-```csharp
-void Dispose()
-```
-
-Disposes the underlying resources used to store the UTF-8 string backing the IRI reference value.
+| Method | Description |
+|--------|-------------|
+| [Dispose()](/api/corvus-text-json-utf8irireferencevalue.dispose.html#void-dispose) | Disposes the underlying resources used to store the UTF-8 string backing the IRI reference value. |
+| [TryGetValue(ref T, int, ref Utf8IriReferenceValue)](/api/corvus-text-json-utf8irireferencevalue.trygetvalue.html#bool-trygetvalue-t-ref-t-jsondocument-int-index-ref-utf8irireferencevalue-value) `static` | Tries to get the value of the element at the specified index as a [`Utf8IriReferenceValue`](/api/corvus-text-json-utf8irireferencevalue.html). |
 

@@ -14,24 +14,7 @@ Represents the result of a single JSON schema validation, including validity, me
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Location` | `ValidationResult.LocationTuple` | Gets the location information for this validation result. |
-| `Message` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | Gets the validation message for this result, if any. |
-| `Valid` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether the validation result is valid. |
-
-
-### ValidationResult.LocationTuple (struct)
-
-```csharp
-public readonly struct ValidationResult.LocationTuple
-```
-
-#### Properties
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `DocumentLocation` | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) |  |
-| `SchemaLocation` | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) |  |
-| `ValidationLocation` | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) |  |
-
----
+| [Location](/api/corvus-text-json-compatibility-validationresult.location.html) | [`ValidationResult.LocationTuple`](/api/corvus-text-json-compatibility-validationresult-locationtuple.html) | Gets the location information for this validation result. |
+| [Message](/api/corvus-text-json-compatibility-validationresult.message.html) | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | Gets the validation message for this result, if any. |
+| [Valid](/api/corvus-text-json-compatibility-validationresult.valid.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether the validation result is valid. |
 

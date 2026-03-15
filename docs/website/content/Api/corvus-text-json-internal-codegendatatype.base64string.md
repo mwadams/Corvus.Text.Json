@@ -1,0 +1,23 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "CodeGenDataType.Base64String Field — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## Base64String `static`
+
+```csharp
+CodeGenDataType Base64String
+```
+
+Represents a base64-encoded string.
+
+### Returns
+
+[`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html)
+

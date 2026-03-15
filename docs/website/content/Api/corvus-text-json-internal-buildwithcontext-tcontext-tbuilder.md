@@ -10,23 +10,14 @@ public readonly struct BuildWithContext<TContext, TBuilder>
 
 ## Constructors
 
-### BuildWithContext
-
-```csharp
-BuildWithContext(TContext context, TBuilder build)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `context` | `TContext` |  |
-| `build` | `TBuilder` |  |
+| Constructor | Description |
+|-------------|-------------|
+| [BuildWithContext(TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.ctor.html#buildwithcontext-tcontext-context-tbuilder-build) |  |
 
 ## Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Context` | `TContext` |  |
-| `Build` | `TBuilder` |  |
+| [Build](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.build.html) | `TBuilder` |  |
+| [Context](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.context.html) | `TContext` |  |
 

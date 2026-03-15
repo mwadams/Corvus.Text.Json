@@ -1,0 +1,23 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "JsonSchemaEvaluation.DidNotMatchNotSchema Field — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## DidNotMatchNotSchema `static`
+
+```csharp
+JsonSchemaMessageProvider DidNotMatchNotSchema
+```
+
+Message provider for validation errors when a value (correctly) did not match a not schema in a composition constraint.
+
+### Returns
+
+[`JsonSchemaMessageProvider`](/api/corvus-text-json-jsonschemamessageprovider.html)
+

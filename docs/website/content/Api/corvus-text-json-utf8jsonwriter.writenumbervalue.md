@@ -1,0 +1,205 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "Utf8JsonWriter.WriteNumberValue Method — Corvus.Text.Json"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll
+
+## Overloads
+
+| Method | Description |
+|--------|-------------|
+| [WriteNumberValue(decimal)](#void-writenumbervalue-decimal-value) | Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as an element of a JSON array. |
+| [WriteNumberValue(double)](#void-writenumbervalue-double-value) | Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as an element of a JSON array. |
+| [WriteNumberValue(float)](#void-writenumbervalue-float-value) | Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as an element of a JSON array. |
+| [WriteNumberValue(int)](#void-writenumbervalue-int-value) | Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as an element of a JSON array. |
+| [WriteNumberValue(long)](#void-writenumbervalue-long-value) | Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as an element of a JSON array. |
+| [WriteNumberValue(uint)](#void-writenumbervalue-uint-value) | Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as an element of a JSON array. |
+| [WriteNumberValue(ulong)](#void-writenumbervalue-ulong-value) | Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as an element of a JSON array. |
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(decimal value)
+```
+
+Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G').
+
+---
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(double value)
+```
+
+Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`double`](https://learn.microsoft.com/dotnet/api/system.double) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) on .NET Core 3 or higher and 'G17' on any other framework.
+
+---
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(float value)
+```
+
+Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`float`](https://learn.microsoft.com/dotnet/api/system.single) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) on .NET Core 3 or higher and 'G9' on any other framework.
+
+---
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(int value)
+```
+
+Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
+
+---
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(long value)
+```
+
+Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`long`](https://learn.microsoft.com/dotnet/api/system.int64) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
+
+---
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(uint value)
+```
+
+Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`uint`](https://learn.microsoft.com/dotnet/api/system.uint32) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
+
+---
+
+## WriteNumberValue
+
+```csharp
+void WriteNumberValue(ulong value)
+```
+
+Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as an element of a JSON array.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`ulong`](https://learn.microsoft.com/dotnet/api/system.uint64) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
+
+---
+

@@ -1,0 +1,35 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "Utf8JsonReader.TryGetBytesFromBase64 Method — Corvus.Text.Json"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll
+
+## TryGetBytesFromBase64
+
+```csharp
+bool TryGetBytesFromBase64(ref byte[] value)
+```
+
+Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes. Returns `true` if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes. Returns `false` otherwise.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`ref byte[]`](https://learn.microsoft.com/dotnet/api/system.byte) |  |
+
+### Returns
+
+[`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if trying to get the value of a JSON token that is not a [`String`](/api/corvus-text-json-internal-jsontokentype.html#string). |
+

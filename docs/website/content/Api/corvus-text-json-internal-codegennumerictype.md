@@ -18,18 +18,18 @@ Specifies the numeric type used in code generation scenarios.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Byte` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents an 8-bit unsigned integer. |
-| `SByte` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents an 8-bit signed integer. |
-| `Int16` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 16-bit signed integer. |
-| `Int32` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 32-bit signed integer. |
-| `Int64` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit signed integer. |
-| `Int128` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit signed integer. |
-| `UInt16` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 16-bit unsigned integer. |
-| `UInt32` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 32-bit unsigned integer. |
-| `UInt64` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit unsigned integer. |
-| `UInt128` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit unsigned integer. |
-| `Half` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 16-bit floating point number. |
-| `Single` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 32-bit floating point number. |
-| `Double` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit floating point number. |
-| `Decimal` `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit decimal number. |
+| [Byte](/api/corvus-text-json-internal-codegennumerictype.byte.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents an 8-bit unsigned integer. |
+| [SByte](/api/corvus-text-json-internal-codegennumerictype.sbyte.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents an 8-bit signed integer. |
+| [Int16](/api/corvus-text-json-internal-codegennumerictype.int16.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 16-bit signed integer. |
+| [Int32](/api/corvus-text-json-internal-codegennumerictype.int32.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 32-bit signed integer. |
+| [Int64](/api/corvus-text-json-internal-codegennumerictype.int64.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit signed integer. |
+| [Int128](/api/corvus-text-json-internal-codegennumerictype.int128.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit signed integer. |
+| [UInt16](/api/corvus-text-json-internal-codegennumerictype.uint16.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 16-bit unsigned integer. |
+| [UInt32](/api/corvus-text-json-internal-codegennumerictype.uint32.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 32-bit unsigned integer. |
+| [UInt64](/api/corvus-text-json-internal-codegennumerictype.uint64.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit unsigned integer. |
+| [UInt128](/api/corvus-text-json-internal-codegennumerictype.uint128.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit unsigned integer. |
+| [Half](/api/corvus-text-json-internal-codegennumerictype.half.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 16-bit floating point number. |
+| [Single](/api/corvus-text-json-internal-codegennumerictype.single.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 32-bit floating point number. |
+| [Double](/api/corvus-text-json-internal-codegennumerictype.double.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit floating point number. |
+| [Decimal](/api/corvus-text-json-internal-codegennumerictype.decimal.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit decimal number. |
 

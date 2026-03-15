@@ -24,47 +24,14 @@ Provides an enumerator and enumerable for iterating over the elements of a JSON 
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Current` | `TItem` | Gets the current element in the collection. |
+| [Current](/api/corvus-text-json-arrayenumerator-titem.current.html) | `TItem` | Gets the current element in the collection. |
 
 ## Methods
 
-### GetEnumerator
-
-```csharp
-ArrayEnumerator<TItem> GetEnumerator()
-```
-
-Returns an enumerator that iterates through the JSON array.
-
-**Returns:** [`ArrayEnumerator<TItem>`](/api/corvus-text-json-arrayenumerator-titem.html)
-
-An [`ArrayEnumerator`](/api/corvus-text-json-arrayenumerator-titem.html) value that can be used to iterate through the array.
-
-### Dispose
-
-```csharp
-void Dispose()
-```
-
-Releases resources used by the enumerator.
-
-### Reset
-
-```csharp
-void Reset()
-```
-
-Sets the enumerator to its initial position, which is before the first element in the collection.
-
-### MoveNext
-
-```csharp
-bool MoveNext()
-```
-
-Advances the enumerator to the next element of the collection.
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the enumerator was successfully advanced to the next element; `false` if the enumerator has passed the end of the collection.
+| Method | Description |
+|--------|-------------|
+| [Dispose()](/api/corvus-text-json-arrayenumerator-titem.dispose.html#void-dispose) | Releases resources used by the enumerator. |
+| [GetEnumerator()](/api/corvus-text-json-arrayenumerator-titem.getenumerator.html#arrayenumerator-titem-getenumerator) | Returns an enumerator that iterates through the JSON array. |
+| [MoveNext()](/api/corvus-text-json-arrayenumerator-titem.movenext.html#bool-movenext) | Advances the enumerator to the next element of the collection. |
+| [Reset()](/api/corvus-text-json-arrayenumerator-titem.reset.html#void-reset) | Sets the enumerator to its initial position, which is before the first element in the collection. |
 

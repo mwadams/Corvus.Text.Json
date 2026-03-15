@@ -24,66 +24,15 @@ A callback for a pattern match method.
 
 ## Constructors
 
-### Matcher
-
-```csharp
-Matcher(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [Matcher(object, IntPtr)](/api/corvus-text-json-matcher-tmatch-tcontext-tresult.ctor.html#matcher-object-object-intptr-method) |  |
 
 ## Methods
 
-### Invoke `virtual`
-
-```csharp
-TResult Invoke(ref TMatch match, ref TContext context)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `match` | `ref TMatch` |  |
-| `context` | `ref TContext` |  |
-
-**Returns:** `TResult`
-
-### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(ref TMatch match, ref TContext context, AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `match` | `ref TMatch` |  |
-| `context` | `ref TContext` |  |
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-### EndInvoke `virtual`
-
-```csharp
-TResult EndInvoke(ref TMatch match, ref TContext context, IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `match` | `ref TMatch` |  |
-| `context` | `ref TContext` |  |
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
-
-**Returns:** `TResult`
+| Method | Description |
+|--------|-------------|
+| [BeginInvoke(ref TMatch, ref TContext, AsyncCallback, object)](/api/corvus-text-json-matcher-tmatch-tcontext-tresult.begininvoke.html#iasyncresult-begininvoke-ref-tmatch-match-ref-tcontext-context-asynccallback-callback-object-object) |  |
+| [EndInvoke(ref TMatch, ref TContext, IAsyncResult)](/api/corvus-text-json-matcher-tmatch-tcontext-tresult.endinvoke.html#tresult-endinvoke-ref-tmatch-match-ref-tcontext-context-iasyncresult-result) |  |
+| [Invoke(ref TMatch, ref TContext)](/api/corvus-text-json-matcher-tmatch-tcontext-tresult.invoke.html#tresult-invoke-ref-tmatch-match-ref-tcontext-context) |  |
 

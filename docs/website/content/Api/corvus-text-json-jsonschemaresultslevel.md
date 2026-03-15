@@ -18,7 +18,7 @@ The level of result to collect for an [`IJsonSchemaResultsCollector`](/api/corvu
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Basic` `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes basic location and message information about schema matching failures. |
-| `Detailed` `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes detailed location and message information about schema matching failures. |
-| `Verbose` `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes full location and message information for schema matching. |
+| [Basic](/api/corvus-text-json-jsonschemaresultslevel.basic.html) `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes basic location and message information about schema matching failures. |
+| [Detailed](/api/corvus-text-json-jsonschemaresultslevel.detailed.html) `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes detailed location and message information about schema matching failures. |
+| [Verbose](/api/corvus-text-json-jsonschemaresultslevel.verbose.html) `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes full location and message information for schema matching. |
 

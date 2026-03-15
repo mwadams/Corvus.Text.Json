@@ -18,7 +18,7 @@ Defines the kind of URI, controlling whether absolute or relative URIs are used.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `RelativeOrAbsolute` `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The kind of URI is indeterminate. The URI can be either relative or absolute. |
-| `Absolute` `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is an absolute URI. |
-| `Relative` `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is a relative URI. |
+| [RelativeOrAbsolute](/api/corvus-text-json-internal-utf8urikind.relativeorabsolute.html) `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The kind of URI is indeterminate. The URI can be either relative or absolute. |
+| [Absolute](/api/corvus-text-json-internal-utf8urikind.absolute.html) `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is an absolute URI. |
+| [Relative](/api/corvus-text-json-internal-utf8urikind.relative.html) `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is a relative URI. |
 

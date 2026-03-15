@@ -22,26 +22,11 @@ Implemented by JsonElement-derived types.
 
 ## Implemented By
 
-[`IMutableJsonElement<T>`](/api/corvus-text-json-internal-imutablejsonelement-t.html), [`JsonElement`](/api/corvus-text-json-jsonelement.html), `JsonElement.Mutable`, [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html), `JsonElementForBooleanFalseSchema.Mutable`
+[`IMutableJsonElement<T>`](/api/corvus-text-json-internal-imutablejsonelement-t.html), [`JsonElement`](/api/corvus-text-json-jsonelement.html), [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html), [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html), [`JsonElementForBooleanFalseSchema.Mutable`](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.html)
 
 ## Methods
 
-### CreateInstance `static` `abstract`
-
-```csharp
-T CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex)
-```
-
-Creates an instance of the element from the parent document and the handle of the element in the parent document.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) | The parent document instance. |
-| `parentDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The handle of the element in the parent document. |
-
-**Returns:** `T`
-
-An instance of the implementing element type.
+| Method | Description |
+|--------|-------------|
+| [CreateInstance(IJsonDocument, int)](/api/corvus-text-json-internal-ijsonelement-t.createinstance.html#t-createinstance-ijsondocument-parentdocument-int-parentdocumentindex) `static` | Creates an instance of the element from the parent document and the handle of the element in the parent document. |
 

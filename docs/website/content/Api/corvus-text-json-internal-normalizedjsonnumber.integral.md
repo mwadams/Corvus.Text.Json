@@ -1,0 +1,23 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "NormalizedJsonNumber.Integral Property — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## Integral
+
+```csharp
+ReadOnlySpan<byte> Integral { get; }
+```
+
+The normalized integral part of the original JSON representation of the number.
+
+### Returns
+
+[`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1)
+

@@ -14,194 +14,31 @@ public sealed class IdnMapping
 
 ## Constructors
 
-### IdnMapping
-
-```csharp
-IdnMapping()
-```
+| Constructor | Description |
+|-------------|-------------|
+| [IdnMapping()](/api/corvus-globalization-idnmapping.ctor.html#idnmapping) |  |
 
 ## Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Default` `static` | [`IdnMapping`](/api/corvus-globalization-idnmapping.html) |  |
-| `AllowUnassigned` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
-| `UseStd3AsciiRules` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
+| [AllowUnassigned](/api/corvus-globalization-idnmapping.allowunassigned.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
+| [Default](/api/corvus-globalization-idnmapping.default.html) `static` | [`IdnMapping`](/api/corvus-globalization-idnmapping.html) |  |
+| [UseStd3AsciiRules](/api/corvus-globalization-idnmapping.usestd3asciirules.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
 
 ## Methods
 
-### GetUnicode
-
-```csharp
-bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `ascii` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetUnicode
-
-```csharp
-bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `ascii` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetUnicode
-
-```csharp
-bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `ascii` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `count` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetUnicode
-
-```csharp
-bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `ascii` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetUnicode
-
-```csharp
-bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `ascii` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetUnicode
-
-```csharp
-bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `ascii` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `count` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetAscii
-
-```csharp
-bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `unicode` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetAscii
-
-```csharp
-bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `unicode` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetAscii
-
-```csharp
-bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `unicode` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `outputBuffer` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `count` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### Equals `virtual`
-
-```csharp
-bool Equals(object obj)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `obj` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetHashCode `virtual`
-
-```csharp
-int GetHashCode()
-```
-
-**Returns:** [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
+| Method | Description |
+|--------|-------------|
+| [Equals(object)](/api/corvus-globalization-idnmapping.equals.html#bool-equals-object-obj) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](/api/corvus-globalization-idnmapping.getascii.html#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-ref-int-written) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getascii.html#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-int-index-ref-int-written) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getascii.html#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-int-index-int-count-ref-int-written) |  |
+| [GetHashCode()](/api/corvus-globalization-idnmapping.gethashcode.html#int-gethashcode) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-ref-int-written) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-int-index-ref-int-written) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-int-index-int-count-ref-int-written) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-ref-int-written) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-int-index-ref-int-written) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-int-index-int-count-ref-int-written) |  |
 

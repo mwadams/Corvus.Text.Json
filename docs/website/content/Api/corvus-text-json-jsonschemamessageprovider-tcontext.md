@@ -22,67 +22,15 @@ Provides a message for a JSON Schema validation result, using a context value.
 
 ## Constructors
 
-### JsonSchemaMessageProvider
-
-```csharp
-JsonSchemaMessageProvider(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [JsonSchemaMessageProvider(object, IntPtr)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.ctor.html#jsonschemamessageprovider-object-object-intptr-method) |  |
 
 ## Methods
 
-### Invoke `virtual`
-
-```csharp
-bool Invoke(TContext context, Span<byte> buffer, ref int written)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `context` | `TContext` |  |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(TContext context, Span<byte> buffer, ref int written, AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `context` | `TContext` |  |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-### EndInvoke `virtual`
-
-```csharp
-bool EndInvoke(ref int written, IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+| Method | Description |
+|--------|-------------|
+| [BeginInvoke(TContext, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.begininvoke.html#iasyncresult-begininvoke-tcontext-context-span-byte-buffer-ref-int-written-asynccallback-callback-object-object) |  |
+| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.endinvoke.html#bool-endinvoke-ref-int-written-iasyncresult-result) |  |
+| [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.invoke.html#bool-invoke-tcontext-context-span-byte-buffer-ref-int-written) |  |
 

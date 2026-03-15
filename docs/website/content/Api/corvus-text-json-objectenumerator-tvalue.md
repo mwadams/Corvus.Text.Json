@@ -18,41 +18,14 @@ An enumerable and enumerator for the properties of a JSON object.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Current` | [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html) |  |
+| [Current](/api/corvus-text-json-objectenumerator-tvalue.current.html) | [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html) |  |
 
 ## Methods
 
-### GetEnumerator
-
-```csharp
-ObjectEnumerator<TValue> GetEnumerator()
-```
-
-Returns an enumerator that iterates the properties of an object.
-
-**Returns:** [`ObjectEnumerator<TValue>`](/api/corvus-text-json-objectenumerator-tvalue.html)
-
-An [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) value that can be used to iterate through the object.
-
-The enumerator will enumerate the properties in the order they are declared, and when an object has multiple definitions of a single property they will all individually be returned (each in the order they appear in the content).
-
-### Dispose
-
-```csharp
-void Dispose()
-```
-
-### Reset
-
-```csharp
-void Reset()
-```
-
-### MoveNext
-
-```csharp
-bool MoveNext()
-```
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+| Method | Description |
+|--------|-------------|
+| [Dispose()](/api/corvus-text-json-objectenumerator-tvalue.dispose.html#void-dispose) |  |
+| [GetEnumerator()](/api/corvus-text-json-objectenumerator-tvalue.getenumerator.html#objectenumerator-tvalue-getenumerator) | Returns an enumerator that iterates the properties of an object. |
+| [MoveNext()](/api/corvus-text-json-objectenumerator-tvalue.movenext.html#bool-movenext) |  |
+| [Reset()](/api/corvus-text-json-objectenumerator-tvalue.reset.html#void-reset) |  |
 

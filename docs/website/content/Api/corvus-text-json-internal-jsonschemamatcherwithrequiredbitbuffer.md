@@ -16,65 +16,15 @@ A matcher for a JSON schema that requires a bit buffer for tracking required pro
 
 ## Constructors
 
-### JsonSchemaMatcherWithRequiredBitBuffer
-
-```csharp
-JsonSchemaMatcherWithRequiredBitBuffer(object object, IntPtr method)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-| `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [JsonSchemaMatcherWithRequiredBitBuffer(object, IntPtr)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.ctor.html#jsonschemamatcherwithrequiredbitbuffer-object-object-intptr-method) |  |
 
 ## Methods
 
-### Invoke `virtual`
-
-```csharp
-void Invoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) |  |
-| `parentDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
-| `requiredBitBuffer` | [`Span<int>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-
-### BeginInvoke `virtual`
-
-```csharp
-IAsyncResult BeginInvoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer, AsyncCallback callback, object object)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `parentDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) |  |
-| `parentDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
-| `requiredBitBuffer` | [`Span<int>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `callback` | [`AsyncCallback`](https://learn.microsoft.com/dotnet/api/system.asynccallback) |  |
-| `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult)
-
-### EndInvoke `virtual`
-
-```csharp
-void EndInvoke(ref JsonSchemaContext context, IAsyncResult result)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
-| `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
+| Method | Description |
+|--------|-------------|
+| [BeginInvoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;, AsyncCallback, object)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.begininvoke.html#iasyncresult-begininvoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-span-int-requiredbitbuffer-asynccallback-callback-object-object) |  |
+| [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.endinvoke.html#void-endinvoke-ref-jsonschemacontext-context-iasyncresult-result) |  |
+| [Invoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.invoke.html#void-invoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-span-int-requiredbitbuffer) |  |
 

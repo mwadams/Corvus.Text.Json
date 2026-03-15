@@ -1,0 +1,21 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "Polyfills.get_Null Method — Corvus.Text.Json.Compatibility"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Compatibility  
+**Assembly:** Corvus.Text.Json.dll
+
+## get_Null `static`
+
+```csharp
+T get_Null<T>()
+```
+
+### Returns
+
+`T`
+

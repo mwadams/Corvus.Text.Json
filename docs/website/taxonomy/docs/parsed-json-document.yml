@@ -1,5 +1,5 @@
 ﻿ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "ParsedJsonDocument Usage Guide"
+Title: "Parsing & Reading JSON"
 Navigation:
   Title: Parsing & Reading JSON
   Description: "Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json's JsonDocument with generic type support and zero-copy element access."
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "ParsedJsonDocument Usage Guide — Corvus.Text.Json"
-  Description: "ParsedJsonDocument Usage Guide"
+  Title: "Parsing & Reading JSON — Corvus.Text.Json"
+  Description: "Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json's JsonDocument with generic type support and zero-copy element access."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "ParsedJsonDocument Usage Guide — Corvus.Text.Json"
-  Description: "ParsedJsonDocument Usage Guide"
+  Title: "Parsing & Reading JSON — Corvus.Text.Json"
+  Description: "Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json's JsonDocument with generic type support and zero-copy element access."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

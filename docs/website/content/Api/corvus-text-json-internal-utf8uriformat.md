@@ -18,7 +18,7 @@ Specifies the format options for URI string representation.
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `UriEscaped` `static` | [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html) | The URI is represented with URI escaping applied. |
-| `Unescaped` `static` | [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html) | The URI is completely unescaped. |
-| `SafeUnescaped` `static` | [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html) | The URI is canonically unescaped, allowing the same URI to be reconstructed from the output. If the unescaped sequence results in a new escaped sequence, it will revert to the original sequence. |
+| [UriEscaped](/api/corvus-text-json-internal-utf8uriformat.uriescaped.html) `static` | [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html) | The URI is represented with URI escaping applied. |
+| [Unescaped](/api/corvus-text-json-internal-utf8uriformat.unescaped.html) `static` | [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html) | The URI is completely unescaped. |
+| [SafeUnescaped](/api/corvus-text-json-internal-utf8uriformat.safeunescaped.html) `static` | [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html) | The URI is canonically unescaped, allowing the same URI to be reconstructed from the output. If the unescaped sequence results in a new escaped sequence, it will revert to the original sequence. |
 

@@ -18,252 +18,42 @@ A UTF-8 IRI.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Authority` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the authority component of the reference. |
-| `Fragment` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the fragment component of the reference. |
-| `HasAuthority` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has an authority. |
-| `HasFragment` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a fragment. |
-| `HasHost` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a host. |
-| `HasPath` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a path. |
-| `HasPort` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a port. |
-| `HasQuery` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a query. |
-| `HasScheme` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a scheme. |
-| `HasUser` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a user. |
-| `Host` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the host component of the reference (includes both host and port). |
-| `IsDefaultPort` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this is the default port for the scheme. |
-| `IsRelative` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this is a relative IRI. |
-| `IsValid` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this is a valid IRI. |
-| `OriginalIri` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the original (fully encoded) string. |
-| `Path` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the path component of the IRI. |
-| `Port` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the port component of the IRI as a byte span. |
-| `PortValue` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | Gets the port value as an integer. |
-| `Query` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the query component of the IRI. |
-| `Scheme` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the scheme component of the IRI. |
-| `User` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the user component of the IRI. |
+| [Authority](/api/corvus-text-json-utf8iri.authority.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the authority component of the reference. |
+| [Fragment](/api/corvus-text-json-utf8iri.fragment.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the fragment component of the reference. |
+| [HasAuthority](/api/corvus-text-json-utf8iri.hasauthority.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has an authority. |
+| [HasFragment](/api/corvus-text-json-utf8iri.hasfragment.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a fragment. |
+| [HasHost](/api/corvus-text-json-utf8iri.hashost.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a host. |
+| [HasPath](/api/corvus-text-json-utf8iri.haspath.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a path. |
+| [HasPort](/api/corvus-text-json-utf8iri.hasport.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a port. |
+| [HasQuery](/api/corvus-text-json-utf8iri.hasquery.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a query. |
+| [HasScheme](/api/corvus-text-json-utf8iri.hasscheme.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a scheme. |
+| [HasUser](/api/corvus-text-json-utf8iri.hasuser.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this reference has a user. |
+| [Host](/api/corvus-text-json-utf8iri.host.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the host component of the reference (includes both host and port). |
+| [IsDefaultPort](/api/corvus-text-json-utf8iri.isdefaultport.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this is the default port for the scheme. |
+| [IsRelative](/api/corvus-text-json-utf8iri.isrelative.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this is a relative IRI. |
+| [IsValid](/api/corvus-text-json-utf8iri.isvalid.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether this is a valid IRI. |
+| [OriginalIri](/api/corvus-text-json-utf8iri.originaliri.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the original (fully encoded) string. |
+| [Path](/api/corvus-text-json-utf8iri.path.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the path component of the IRI. |
+| [Port](/api/corvus-text-json-utf8iri.port.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the port component of the IRI as a byte span. |
+| [PortValue](/api/corvus-text-json-utf8iri.portvalue.html) | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | Gets the port value as an integer. |
+| [Query](/api/corvus-text-json-utf8iri.query.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the query component of the IRI. |
+| [Scheme](/api/corvus-text-json-utf8iri.scheme.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the scheme component of the IRI. |
+| [User](/api/corvus-text-json-utf8iri.user.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | Gets the user component of the IRI. |
 
 ## Methods
 
-### CreateIri `static`
-
-```csharp
-Utf8Iri CreateIri(ReadOnlySpan<byte> iri)
-```
-
-Creates a new UTF-8 IRI from the specified IRI bytes.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `iri` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The IRI bytes from which to create the UTF-8 IRI. |
-
-**Returns:** [`Utf8Iri`](/api/corvus-text-json-utf8iri.html)
-
-A new UTF-8 IRI.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the IRI is invalid. |
-
-### TryCreateIri `static`
-
-```csharp
-bool TryCreateIri(ReadOnlySpan<byte> iri, ref Utf8Iri utf8Iri)
-```
-
-Tries to create a new UTF-8 IRI from the specified IRI bytes.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `iri` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The IRI bytes from which to create the UTF-8 IRI. |
-| `utf8Iri` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | When this method returns, contains the created UTF-8 IRI if successful; otherwise, the default value. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the UTF-8 IRI was created successfully; otherwise, `false`.
-
-### GetUri
-
-```csharp
-Uri GetUri()
-```
-
-Gets the value as a `Uri`.
-
-**Returns:** [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri)
-
-The URI representation of the UTF-8 IRI.
-
-### TryFormatDisplay
-
-```csharp
-bool TryFormatDisplay(Span<byte> buffer, ref int writtenBytes)
-```
-
-Gets the IRI in canonical form for display.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer into which to write the result in canonical form with the encoded characters decoded for display. |
-| `writtenBytes` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of bytes written. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written to the buffer; otherwise, `false`.
-
-### TryFormatCanonical
-
-```csharp
-bool TryFormatCanonical(Span<byte> buffer, ref int writtenBytes)
-```
-
-Gets the IRI in canonical form.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer into which to write the result in canonical form with reserved characters encoded. |
-| `writtenBytes` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of bytes written. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written to the buffer; otherwise, `false`.
-
-### TryApply
-
-```csharp
-bool TryApply(ref Utf8Iri iri, Span<byte> buffer, ref Utf8Iri result)
-```
-
-Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `iri` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | The IRI to apply. |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that of the resulting reference. |
-| `result` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | The resulting IRI. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
-
-### TryApply
-
-```csharp
-bool TryApply(ref Utf8IriReference iriReference, Span<byte> buffer, ref Utf8Iri result)
-```
-
-Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `iriReference` | [`ref Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) | The IRI reference to apply. |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that of the resulting reference. |
-| `result` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | The resulting IRI. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
-
-### TryApply
-
-```csharp
-bool TryApply(ref Utf8UriReference uriReference, Span<byte> buffer, ref Utf8Iri result)
-```
-
-Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `uriReference` | [`ref Utf8UriReference`](/api/corvus-text-json-utf8urireference.html) | The IRI to apply. |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that of the resulting reference. |
-| `result` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | The resulting IRI. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
-
-### TryApply
-
-```csharp
-bool TryApply(ref Utf8Uri uri, Span<byte> buffer, ref Utf8Iri result)
-```
-
-Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `uri` | [`ref Utf8Uri`](/api/corvus-text-json-utf8uri.html) | The IRI to apply. |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that of the resulting reference. |
-| `result` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | The resulting IRI. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
-
-### TryMakeRelative
-
-```csharp
-bool TryMakeRelative(ref Utf8Iri targetIri, Span<byte> buffer, ref Utf8IriReference result)
-```
-
-Makes a relative IRI reference from the current (base) IRI to the target IRI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target IRI is returned.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `targetIri` | [`ref Utf8Iri`](/api/corvus-text-json-utf8iri.html) | The target IRI to make relative. |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that of the resulting reference. |
-| `result` | [`ref Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) | The resulting IRI reference (relative or absolute). |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written; otherwise, `false`.
-
-### TryMakeRelative
-
-```csharp
-bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8IriReference result)
-```
-
-Makes a relative IRI reference from the current (base) IRI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `targetUri` | [`ref Utf8Uri`](/api/corvus-text-json-utf8uri.html) | The target URI to make relative. |
-| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer to which to write the backing for the result. This needs to have a lifetime scoped to that of the resulting reference. |
-| `result` | [`ref Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) | The resulting IRI reference (relative or absolute). |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the result was successfully written; otherwise, `false`.
-
-### ToString `virtual`
-
-```csharp
-string ToString()
-```
-
-Returns a string representation of the IRI in display format.
-
-**Returns:** [`string`](https://learn.microsoft.com/dotnet/api/system.string)
-
-A string representation of the IRI.
+| Method | Description |
+|--------|-------------|
+| [CreateIri(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-utf8iri.createiri.html#utf8iri-createiri-readonlyspan-byte-iri) `static` | Creates a new UTF-8 IRI from the specified IRI bytes. |
+| [GetUri()](/api/corvus-text-json-utf8iri.geturi.html#uri-geturi) | Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri). |
+| [ToString()](/api/corvus-text-json-utf8iri.tostring.html#string-tostring) | Returns a string representation of the IRI in display format. |
+| [TryApply(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8Iri)](/api/corvus-text-json-utf8iri.tryapply.html#bool-tryapply-ref-utf8iri-iri-span-byte-buffer-ref-utf8iri-result) | Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including hand... |
+| [TryApply(ref Utf8IriReference, Span&lt;byte&gt;, ref Utf8Iri)](/api/corvus-text-json-utf8iri.tryapply.html#bool-tryapply-ref-utf8irireference-irireference-span-byte-buffer-ref-utf8iri-result) | Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
+| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Iri)](/api/corvus-text-json-utf8iri.tryapply.html#bool-tryapply-ref-utf8urireference-urireference-span-byte-buffer-ref-utf8iri-result) | Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
+| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Iri)](/api/corvus-text-json-utf8iri.tryapply.html#bool-tryapply-ref-utf8uri-uri-span-byte-buffer-ref-utf8iri-result) | Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
+| [TryCreateIri(ReadOnlySpan&lt;byte&gt;, ref Utf8Iri)](/api/corvus-text-json-utf8iri.trycreateiri.html#bool-trycreateiri-readonlyspan-byte-iri-ref-utf8iri-utf8iri) `static` | Tries to create a new UTF-8 IRI from the specified IRI bytes. |
+| [TryFormatCanonical(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8iri.tryformatcanonical.html#bool-tryformatcanonical-span-byte-buffer-ref-int-writtenbytes) | Gets the IRI in canonical form. |
+| [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8iri.tryformatdisplay.html#bool-tryformatdisplay-span-byte-buffer-ref-int-writtenbytes) | Gets the IRI in canonical form for display. |
+| [TryMakeRelative(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8IriReference)](/api/corvus-text-json-utf8iri.trymakerelative.html#bool-trymakerelative-ref-utf8iri-targetiri-span-byte-buffer-ref-utf8irireference-result) | Makes a relative IRI reference from the current (base) IRI to the target IRI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target IRI is returned. |
+| [TryMakeRelative(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8IriReference)](/api/corvus-text-json-utf8iri.trymakerelative.html#bool-trymakerelative-ref-utf8uri-targeturi-span-byte-buffer-ref-utf8irireference-result) | Makes a relative IRI reference from the current (base) IRI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned. |
 

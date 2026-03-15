@@ -2,7 +2,7 @@
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "Building JSON Documents with JsonWorkspace and JsonDocumentBuilder"
+Title: "Building & Mutating JSON"
 ---
 This guide shows you how to build and modify JSON documents efficiently, with minimal allocations and excellent performance.
 
@@ -1166,6 +1166,15 @@ System.Text.Json.JsonElement element = doc.RootElement.FromSTJsonElement();
 
 #### 5. **Use Case Recommendations**
 
+**Choose JsonDocumentBuilder when**:
+- High-throughput scenarios (web services, message processing)
+- Memory efficiency is critical
+- Building or transforming JSON from external APIs
+- Performing repeated operations where allocation costs matter
+- Processing large JSON documents in memory
+- You are going to go on to validate the document against JSON Schema
+- You need to construct JSON dynamically from heterogeneous sources (databases, APIs, config) rather than serializing a single object graph
+
 **Choose JsonNode when**:
 - Working with small JSON documents
 - Prioritizing code simplicity and readability
@@ -1173,10 +1182,11 @@ System.Text.Json.JsonElement element = doc.RootElement.FromSTJsonElement();
 - Making occasional modifications
 - Integrating with APIs that expect JsonNode
 
-**Choose JsonDocumentBuilder when**:
-- High-throughput scenarios (web services, message processing)
-- Memory efficiency is critical
-- Building or transforming JSON from external APIs
-- Performing repeated operations where allocation costs matter
-- Processing large JSON documents in memory
-- You are going to go on to validate the document against JSON Schema.
+**Choose POCO objects with `System.Text.Json` serialization when**:
+- You have small, pre-existing .NET object hierarchies that already model your domain
+- Computational speed is the priority (the serializer's code-gen path is heavily optimised)
+- You do not need JSON Schema validation
+- The shape of your JSON is fixed and well-known at compile time
+- You are already using `JsonSerializer` throughout your codebase and want consistency
+
+> **Tip**: POCO serialization is the fastest way to produce JSON when you already have .NET objects in hand. The `System.Text.Json` source generator (`JsonSerializerContext`) can outperform any DOM-based approach for simple serialize/deserialize cycles. Reach for `JsonDocumentBuilder` or `JsonNode` when you need to *construct* or *transform* JSON dynamically, or when you need schema validation.

@@ -18,7 +18,7 @@ This enum defines the various ways the [`Utf8JsonReader`](/api/corvus-text-json-
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `Disallow` `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | By default, do no allow comments within the JSON input. Comments are treated as invalid JSON if found and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown. |
-| `Skip` `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | Allow comments within the JSON input and ignore them. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) will behave as if no comments were present. |
-| `Allow` `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | Allow comments within the JSON input and treat them as valid tokens. While reading, the caller will be able to access the comment values. |
+| [Disallow](/api/corvus-text-json-jsoncommenthandling.disallow.html) `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | By default, do no allow comments within the JSON input. Comments are treated as invalid JSON if found and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown. |
+| [Skip](/api/corvus-text-json-jsoncommenthandling.skip.html) `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | Allow comments within the JSON input and ignore them. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) will behave as if no comments were present. |
+| [Allow](/api/corvus-text-json-jsoncommenthandling.allow.html) `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | Allow comments within the JSON input and treat them as valid tokens. While reading, the caller will be able to access the comment values. |
 

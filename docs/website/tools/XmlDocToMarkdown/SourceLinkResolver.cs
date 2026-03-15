@@ -1,12 +1,18 @@
 using System.Reflection.Metadata;
 using System.Reflection.Metadata.Ecma335;
 using System.Reflection.PortableExecutable;
+using System.Text.Json;
 
 namespace XmlDocToMarkdown;
 
 /// <summary>
 /// Reads a portable PDB to extract source file paths and line numbers for types and members.
-/// Maps local file paths to GitHub URLs using a repository root prefix and branch.
+/// Uses three PDB features for maximum coverage:
+/// <list type="bullet">
+///   <item>SourceLink JSON — maps local paths to GitHub repository URLs</item>
+///   <item>TypeDefinitionDocuments — maps interfaces, enums, and delegates to their source documents</item>
+///   <item>EmbeddedSource — enables scanning for precise type/member declaration line numbers</item>
+/// </list>
 /// </summary>
 public sealed class SourceLinkResolver : IDisposable
 {
@@ -21,23 +27,39 @@ public sealed class SourceLinkResolver : IDisposable
     /// </summary>
     private readonly Dictionary<string, string> _sourceUrls = new(StringComparer.Ordinal);
 
+    /// <summary>
+    /// Fallback URL base (from --repo-url + git) for files not covered by SourceLink.
+    /// </summary>
     private readonly string _repoBaseUrl;
     private readonly string _localPathPrefix;
 
     /// <summary>
+    /// SourceLink mappings parsed from the PDB: local path prefix → URL template.
+    /// The URL template has a '*' wildcard replaced by the relative file path.
+    /// </summary>
+    private readonly List<(string LocalPrefix, string UrlTemplate)> _sourceLinkMappings = [];
+
+    /// <summary>
+    /// Maps PDB document handles to file paths.
+    /// </summary>
+    private readonly Dictionary<DocumentHandle, string> _documentPaths = [];
+
+    /// <summary>
+    /// Maps PDB document paths to their embedded source lines (from EmbedAllSources).
+    /// </summary>
+    private readonly Dictionary<string, string[]> _embeddedSourceCache = new(StringComparer.OrdinalIgnoreCase);
+
+    // Portable PDB custom debug info GUIDs
+    private static readonly Guid SourceLinkGuid = new("CC110556-A091-4D38-9FEC-25AB9A351A6A");
+    private static readonly Guid EmbeddedSourceGuid = new("0E8A571B-6926-466E-B4AD-8AB04611F5FE");
+    private static readonly Guid TypeDefinitionDocumentsGuid = new("932E74BC-DBA9-4478-8D46-0F32A7BAB3D3");
+
+    /// <summary>
     /// Creates a new resolver by reading the PDB and PE metadata.
     /// </summary>
-    /// <param name="pdbPath">Path to the portable PDB file.</param>
-    /// <param name="assemblyPath">Path to the corresponding assembly DLL.</param>
-    /// <param name="repoUrl">GitHub repository URL (e.g. "https://github.com/mwadams/Corvus.Text.Json").</param>
-    /// <param name="branch">Branch name for source links (e.g. "main").</param>
-    /// <param name="repoRoot">Local repository root path. File paths in the PDB that start with this
-    /// prefix are converted to relative paths for the GitHub URL.</param>
     public SourceLinkResolver(string pdbPath, string assemblyPath, string repoUrl, string branch, string repoRoot)
     {
         _repoBaseUrl = $"{repoUrl.TrimEnd('/')}/blob/{branch}/";
-
-        // Normalise the local path prefix: ensure trailing separator, use forward slashes for matching
         _localPathPrefix = repoRoot.TrimEnd('\\', '/').Replace('\\', '/') + "/";
 
         // Open PDB
@@ -45,20 +67,22 @@ public sealed class SourceLinkResolver : IDisposable
         _pdbProvider = MetadataReaderProvider.FromPortablePdbStream(pdbStream, MetadataStreamOptions.PrefetchMetadata);
         _pdbReader = _pdbProvider.GetMetadataReader();
 
-        // Open PE (assembly) via PEReader for type/method metadata
+        // Open PE (assembly) via PEReader
         FileStream peStream = File.OpenRead(assemblyPath);
         _peReader = new PEReader(peStream);
         _peMetadata = _peReader.GetMetadataReader();
     }
 
     /// <summary>
-    /// Scans all method debug information in the PDB and builds the source URL map.
-    /// Call this once after construction, before querying.
+    /// Scans the PDB and builds the source URL map.
+    /// Call once after construction, before querying.
     /// </summary>
     public void Build()
     {
-        // Build a cache of document handles → file paths
-        Dictionary<DocumentHandle, string> documentPaths = [];
+        // Step 0: Parse SourceLink JSON from PDB
+        ParseSourceLink();
+
+        // Step 1: Build document path cache and load embedded source
         foreach (DocumentHandle docHandle in _pdbReader.Documents)
         {
             Document doc = _pdbReader.GetDocument(docHandle);
@@ -68,11 +92,14 @@ public sealed class SourceLinkResolver : IDisposable
             }
 
             string path = _pdbReader.GetString(doc.Name);
-            documentPaths[docHandle] = path;
+            _documentPaths[docHandle] = path;
+            LoadEmbeddedSource(docHandle, path);
         }
 
-        // Build a map of TypeDefinition token → type full name (from PE)
-        Dictionary<int, string> typeTokenToName = [];
+        Console.WriteLine($"  Loaded {_embeddedSourceCache.Count} embedded source documents from PDB.");
+
+        // Step 2: Build type token → (full name, short name) map from PE metadata
+        Dictionary<int, (string FullName, string ShortName, TypeDefinitionHandle Handle)> typeTokenToInfo = [];
         foreach (TypeDefinitionHandle typeHandle in _peMetadata.TypeDefinitions)
         {
             TypeDefinition typeDef = _peMetadata.GetTypeDefinition(typeHandle);
@@ -84,16 +111,23 @@ public sealed class SourceLinkResolver : IDisposable
                 continue;
             }
 
-            // Handle nested types: walk DeclaringType chain
             string fullName = BuildFullTypeName(typeDef, ns, name);
-            typeTokenToName[MetadataTokens.GetToken(typeHandle)] = fullName;
+            string shortName = name;
+            int backtick = shortName.IndexOf('`');
+            if (backtick >= 0)
+            {
+                shortName = shortName[..backtick];
+            }
+
+            typeTokenToInfo[MetadataTokens.GetToken(typeHandle)] = (fullName, shortName, typeHandle);
         }
 
-        // For each type, track the first (lowest line number) source location we find
-        // Key: type full name, Value: (filePath, lineNumber)
-        Dictionary<string, (string File, int Line)> typeLocations = new(StringComparer.Ordinal);
+        // Step 3: Walk method debug info — build member URLs and identify type→file mappings
+        // Key: type full name, Value: preferred source file path
+        Dictionary<string, string> typeFileMap = new(StringComparer.Ordinal);
+        // Track all files per type (for primary file selection)
+        Dictionary<string, List<string>> typeAllFiles = new(StringComparer.Ordinal);
 
-        // Walk all MethodDebugInformation entries in the PDB
         foreach (MethodDebugInformationHandle mdiHandle in _pdbReader.MethodDebugInformation)
         {
             MethodDebugInformation mdi = _pdbReader.GetMethodDebugInformation(mdiHandle);
@@ -102,12 +136,12 @@ public sealed class SourceLinkResolver : IDisposable
                 continue;
             }
 
-            if (!documentPaths.TryGetValue(mdi.Document, out string? filePath))
+            if (!_documentPaths.TryGetValue(mdi.Document, out string? filePath))
             {
                 continue;
             }
 
-            // Get the first sequence point with a real line number
+            // Get the first non-hidden sequence point line
             int firstLine = int.MaxValue;
             foreach (SequencePoint sp in mdi.GetSequencePoints())
             {
@@ -122,92 +156,167 @@ public sealed class SourceLinkResolver : IDisposable
                 continue;
             }
 
-            // Map this debug info back to the corresponding MethodDefinition in the PE
-            // The method token for MethodDebugInformation N corresponds to MethodDefinition N
+            // Map back to MethodDefinition in PE
             MethodDefinitionHandle methodHandle = MetadataTokens.MethodDefinitionHandle(
                 MetadataTokens.GetRowNumber(mdiHandle));
-
             if (methodHandle.IsNil)
             {
                 continue;
             }
 
             MethodDefinition methodDef = _peMetadata.GetMethodDefinition(methodHandle);
-            TypeDefinitionHandle declaringTypeHandle = methodDef.GetDeclaringType();
-            int typeToken = MetadataTokens.GetToken(declaringTypeHandle);
-
-            if (!typeTokenToName.TryGetValue(typeToken, out string? typeName))
+            int typeToken = MetadataTokens.GetToken(methodDef.GetDeclaringType());
+            if (!typeTokenToInfo.TryGetValue(typeToken, out var typeInfo))
             {
                 continue;
             }
 
-            // Build the member key: "TypeFullName.MethodName" (matching XmlDocKey minus prefix)
+            // Store member-level source URL (using PDB sequence point line)
             string methodName = _peMetadata.GetString(methodDef.Name);
-
-            // Store member-level source URL
             string memberKey = methodName == ".ctor"
-                ? $"{typeName}.#ctor"
-                : $"{typeName}.{methodName}";
+                ? $"{typeInfo.FullName}.#ctor"
+                : $"{typeInfo.FullName}.{methodName}";
 
             if (!_sourceUrls.ContainsKey(memberKey))
             {
-                string? url = BuildGitHubUrl(filePath, firstLine);
+                string? url = BuildSourceUrl(filePath, firstLine);
                 if (url is not null)
                 {
                     _sourceUrls[memberKey] = url;
                 }
             }
 
-            // Track the earliest line for the type itself (the type page links to the primary file)
-            if (!typeLocations.TryGetValue(typeName, out (string File, int Line) existing) ||
-                IsPreferredTypeLocation(filePath, firstLine, existing.File, existing.Line, typeName))
+            // Track files for this type
+            if (!typeAllFiles.TryGetValue(typeInfo.FullName, out List<string>? files))
             {
-                typeLocations[typeName] = (filePath, firstLine);
+                files = [];
+                typeAllFiles[typeInfo.FullName] = files;
+            }
+
+            if (!files.Contains(filePath))
+            {
+                files.Add(filePath);
             }
         }
 
-        // Store type-level source URLs
-        foreach (KeyValuePair<string, (string File, int Line)> kvp in typeLocations)
+        // Select primary file for each type found via methods
+        foreach (var kvp in typeAllFiles)
         {
-            string? url = BuildGitHubUrl(kvp.Value.File, kvp.Value.Line);
-            if (url is not null)
-            {
-                _sourceUrls[kvp.Key] = url;
-            }
-        }
-
-        // For types with no method debug info (enums, static-field-only types),
-        // try to match by file name against the PDB document list
-        Dictionary<string, string> fileNameToPath = [];
-        foreach (string docPath in documentPaths.Values)
-        {
-            string fileName = Path.GetFileNameWithoutExtension(docPath);
-            // Only store the first match per filename (prefer primary files)
-            fileNameToPath.TryAdd(fileName, docPath);
-        }
-
-        foreach (KeyValuePair<int, string> kvp in typeTokenToName)
-        {
-            if (_sourceUrls.ContainsKey(kvp.Value))
+            string typeName = kvp.Key;
+            if (!typeTokenToInfo.Values.Any(t => t.FullName == typeName))
             {
                 continue;
             }
 
-            // Extract the short type name (without namespace, without generic arity)
-            string shortName = kvp.Value;
-            int lastDot = shortName.LastIndexOf('.');
-            if (lastDot >= 0)
+            var info = typeTokenToInfo.Values.First(t => t.FullName == typeName);
+            typeFileMap[typeName] = SelectPrimaryFile(kvp.Value, info.ShortName);
+        }
+
+        // Step 4: Use TypeDefinitionDocuments for types without method debug info
+        foreach (var kvp in typeTokenToInfo)
+        {
+            if (typeFileMap.ContainsKey(kvp.Value.FullName))
             {
-                shortName = shortName[(lastDot + 1)..];
+                continue;
             }
 
-            // Try exact filename match (e.g. "ValidationLevel" → ValidationLevel.cs)
-            if (fileNameToPath.TryGetValue(shortName, out string? matchedPath))
+            string? docPath = GetTypeDefinitionDocument(kvp.Value.Handle, kvp.Value.ShortName);
+            if (docPath is not null)
             {
-                string? url = BuildGitHubUrl(matchedPath, 1);
-                if (url is not null)
+                typeFileMap[kvp.Value.FullName] = docPath;
+            }
+        }
+
+        // Step 4b: For types still not in typeFileMap, walk up the declaring type chain
+        foreach (var kvp in typeTokenToInfo)
+        {
+            if (typeFileMap.ContainsKey(kvp.Value.FullName))
+            {
+                continue;
+            }
+
+            TypeDefinition typeDef = _peMetadata.GetTypeDefinition(kvp.Value.Handle);
+            TypeDefinitionHandle parentHandle = typeDef.GetDeclaringType();
+            while (!parentHandle.IsNil)
+            {
+                int parentToken = MetadataTokens.GetToken(parentHandle);
+                if (typeTokenToInfo.TryGetValue(parentToken, out var parentInfo) &&
+                    typeFileMap.TryGetValue(parentInfo.FullName, out string? parentFile))
                 {
-                    _sourceUrls[kvp.Value] = url;
+                    typeFileMap[kvp.Value.FullName] = parentFile;
+                    break;
+                }
+
+                TypeDefinition parentDef = _peMetadata.GetTypeDefinition(parentHandle);
+                parentHandle = parentDef.GetDeclaringType();
+            }
+        }
+
+        // Step 5: Build type-level URLs by scanning embedded source for declaration lines
+        foreach (var kvp in typeTokenToInfo)
+        {
+            string typeName = kvp.Value.FullName;
+            string shortName = kvp.Value.ShortName;
+
+            if (!typeFileMap.TryGetValue(typeName, out string? typeFile))
+            {
+                continue;
+            }
+
+            int declLine = FindTypeDeclarationLine(typeFile, shortName);
+            int line = declLine > 0 ? declLine : 1;
+            string? url = BuildSourceUrl(typeFile, line);
+            if (url is not null)
+            {
+                _sourceUrls[typeName] = url;
+            }
+        }
+
+        // Step 6: Resolve members without PDB sequence points (interface/abstract members)
+        foreach (var kvp in typeTokenToInfo)
+        {
+            string typeName = kvp.Value.FullName;
+
+            if (!typeFileMap.TryGetValue(typeName, out string? typeFile))
+            {
+                continue;
+            }
+
+            TypeDefinition typeDef = _peMetadata.GetTypeDefinition(kvp.Value.Handle);
+
+            foreach (MethodDefinitionHandle methodHandle in typeDef.GetMethods())
+            {
+                MethodDefinition methodDef = _peMetadata.GetMethodDefinition(methodHandle);
+                string methodName = _peMetadata.GetString(methodDef.Name);
+
+                string memberKey = methodName == ".ctor"
+                    ? $"{typeName}.#ctor"
+                    : $"{typeName}.{methodName}";
+
+                if (_sourceUrls.ContainsKey(memberKey))
+                {
+                    continue; // Already resolved from sequence points
+                }
+
+                // Scan embedded source for the member declaration
+                string scanName = methodName;
+                if (methodName.StartsWith("get_") || methodName.StartsWith("set_"))
+                {
+                    scanName = methodName[4..];
+                }
+                else if (methodName.StartsWith("add_") || methodName.StartsWith("remove_"))
+                {
+                    scanName = methodName[(methodName.IndexOf('_') + 1)..];
+                }
+
+                int memberLine = FindMemberDeclarationLine(typeFile, scanName);
+                if (memberLine > 0)
+                {
+                    string? url = BuildSourceUrl(typeFile, memberLine);
+                    if (url is not null)
+                    {
+                        _sourceUrls[memberKey] = url;
+                    }
                 }
             }
         }
@@ -218,10 +327,8 @@ public sealed class SourceLinkResolver : IDisposable
     /// <summary>
     /// Returns the GitHub source URL for a type, or null if not found.
     /// </summary>
-    /// <param name="typeFullName">Full type name using '+' or '.' for nested types.</param>
     public string? GetTypeSourceUrl(string typeFullName)
     {
-        // Try as-is, then with '+' replaced by '.'
         if (_sourceUrls.TryGetValue(typeFullName, out string? url))
         {
             return url;
@@ -233,14 +340,8 @@ public sealed class SourceLinkResolver : IDisposable
             return url;
         }
 
-        // Try with generic arity variants (e.g. ArrayEnumerator → ArrayEnumerator`1)
-        string nameWithoutArity = dotForm;
-        int backtick = nameWithoutArity.IndexOf('`');
-        if (backtick >= 0)
-        {
-            nameWithoutArity = nameWithoutArity[..backtick];
-        }
-
+        // Try with generic arity variants
+        string nameWithoutArity = StripGenericArity(dotForm);
         for (int arity = 1; arity <= 4; arity++)
         {
             if (_sourceUrls.TryGetValue($"{nameWithoutArity}`{arity}", out url))
@@ -255,7 +356,6 @@ public sealed class SourceLinkResolver : IDisposable
     /// <summary>
     /// Returns the GitHub source URL for a member, or null if not found.
     /// </summary>
-    /// <param name="xmlDocKey">The XmlDocKey from MemberInfo (e.g. "M:Corvus.Text.Json.JsonElement.Parse(...)").</param>
     public string? GetMemberSourceUrl(string xmlDocKey)
     {
         // Strip the prefix (M:, P:, F:, E:)
@@ -263,32 +363,29 @@ public sealed class SourceLinkResolver : IDisposable
             ? xmlDocKey[2..]
             : xmlDocKey;
 
-        // Strip parameters for lookup
+        // Strip parameters
         int parenIdx = key.IndexOf('(');
         if (parenIdx >= 0)
         {
             key = key[..parenIdx];
         }
 
-        // Replace '+' with '.' for nested types
         key = key.Replace('+', '.');
 
-        // Try with full key first (preserves generic arity)
+        // Try exact key
         if (_sourceUrls.TryGetValue(key, out string? url))
         {
             return url;
         }
 
-        // Strip generic arity marker (e.g. `1) while preserving member name after it
-        // "Corvus.Text.Json.ArrayEnumerator`1.Current" → "Corvus.Text.Json.ArrayEnumerator.Current"
+        // Strip generic arity while preserving member name
         string keyWithoutArity = StripGenericArity(key);
-
         if (keyWithoutArity != key && _sourceUrls.TryGetValue(keyWithoutArity, out url))
         {
             return url;
         }
 
-        // Extract the member name (last segment) and parent type
+        // Extract parent type and member name
         int lastDot = keyWithoutArity.LastIndexOf('.');
         if (lastDot < 0)
         {
@@ -298,8 +395,7 @@ public sealed class SourceLinkResolver : IDisposable
         string parentKey = keyWithoutArity[..lastDot];
         string memberName = keyWithoutArity[(lastDot + 1)..];
 
-        // Try with generic arity variants on the parent type
-        // e.g. ArrayEnumerator.Dispose → ArrayEnumerator`1.Dispose
+        // Try arity variants on parent
         for (int arity = 1; arity <= 4; arity++)
         {
             if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.{memberName}", out url))
@@ -308,60 +404,355 @@ public sealed class SourceLinkResolver : IDisposable
             }
         }
 
-        // For properties, try get_/set_ accessor names
-        string getterKey = $"{parentKey}.get_{memberName}";
-        if (_sourceUrls.TryGetValue(getterKey, out url))
+        // Try property accessor names (get_/set_)
+        foreach (string prefix in new[] { "get_", "set_" })
         {
-            return url;
-        }
-
-        string setterKey = $"{parentKey}.set_{memberName}";
-        if (_sourceUrls.TryGetValue(setterKey, out url))
-        {
-            return url;
-        }
-
-        // Try get_/set_ with arity too
-        for (int arity = 1; arity <= 4; arity++)
-        {
-            if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.get_{memberName}", out url))
+            if (_sourceUrls.TryGetValue($"{parentKey}.{prefix}{memberName}", out url))
             {
                 return url;
             }
 
-            if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.set_{memberName}", out url))
+            for (int arity = 1; arity <= 4; arity++)
             {
-                return url;
+                if (_sourceUrls.TryGetValue($"{parentKey}`{arity}.{prefix}{memberName}", out url))
+                {
+                    return url;
+                }
             }
         }
 
-        // Fall back to the declaring type's source URL
-        // Try parentKey with arity from the original key
+        // Fall back to declaring type URL
         int origLastDot = key.LastIndexOf('.');
         string parentFromOrig = origLastDot >= 0 ? key[..origLastDot] : parentKey;
         return GetTypeSourceUrl(parentFromOrig);
     }
 
-    private string? BuildGitHubUrl(string localPath, int lineNumber)
-    {
-        // Normalise to forward slashes for matching
-        string normalised = localPath.Replace('\\', '/');
+    // ─── SourceLink JSON parsing ──────────────────────────────────────
 
-        if (!normalised.StartsWith(_localPathPrefix, StringComparison.OrdinalIgnoreCase))
+    /// <summary>
+    /// Reads the SourceLink JSON blob from the PDB's module-level custom debug info.
+    /// Maps local path prefixes to GitHub URL templates.
+    /// </summary>
+    private void ParseSourceLink()
+    {
+        // SourceLink is stored as a custom debug info on the module (row 1 of the Module table)
+        EntityHandle moduleHandle = MetadataTokens.EntityHandle(0x00000001); // Module row 1
+        foreach (CustomDebugInformationHandle cdiHandle in _pdbReader.GetCustomDebugInformation(moduleHandle))
         {
-            return null;
+            CustomDebugInformation cdi = _pdbReader.GetCustomDebugInformation(cdiHandle);
+            if (_pdbReader.GetGuid(cdi.Kind) != SourceLinkGuid)
+            {
+                continue;
+            }
+
+            byte[] blob = _pdbReader.GetBlobBytes(cdi.Value);
+            string json = System.Text.Encoding.UTF8.GetString(blob);
+
+            try
+            {
+                using JsonDocument doc = JsonDocument.Parse(json);
+                if (doc.RootElement.TryGetProperty("documents", out JsonElement documents))
+                {
+                    foreach (JsonProperty prop in documents.EnumerateObject())
+                    {
+                        // Key: "D:\\source\\mwadams\\Corvus.Text.Json\\*"
+                        // Value: "https://raw.githubusercontent.com/mwadams/Corvus.Text.Json/COMMIT/*"
+                        string localPattern = prop.Name.Replace('\\', '/');
+                        string urlPattern = prop.Value.GetString() ?? "";
+
+                        // Strip the trailing '*' wildcard
+                        if (localPattern.EndsWith('*') && urlPattern.EndsWith('*'))
+                        {
+                            _sourceLinkMappings.Add((
+                                localPattern[..^1],
+                                urlPattern[..^1]));
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // If SourceLink JSON is malformed, fall back to git-based URLs
+            }
+
+            Console.WriteLine($"  Parsed SourceLink JSON with {_sourceLinkMappings.Count} mappings.");
+            break;
+        }
+    }
+
+    // ─── Embedded source loading ──────────────────────────────────────
+
+    private void LoadEmbeddedSource(DocumentHandle docHandle, string path)
+    {
+        foreach (CustomDebugInformationHandle cdiHandle in _pdbReader.GetCustomDebugInformation(docHandle))
+        {
+            CustomDebugInformation cdi = _pdbReader.GetCustomDebugInformation(cdiHandle);
+            if (_pdbReader.GetGuid(cdi.Kind) != EmbeddedSourceGuid)
+            {
+                continue;
+            }
+
+            byte[] blob = _pdbReader.GetBlobBytes(cdi.Value);
+            if (blob.Length < 4)
+            {
+                continue;
+            }
+
+            int uncompressedSize = BitConverter.ToInt32(blob, 0);
+            string sourceText;
+
+            if (uncompressedSize == 0)
+            {
+                sourceText = System.Text.Encoding.UTF8.GetString(blob, 4, blob.Length - 4);
+            }
+            else
+            {
+                using var compressed = new MemoryStream(blob, 4, blob.Length - 4);
+                using var deflate = new System.IO.Compression.DeflateStream(
+                    compressed, System.IO.Compression.CompressionMode.Decompress);
+                using var reader = new StreamReader(deflate, System.Text.Encoding.UTF8);
+                sourceText = reader.ReadToEnd();
+            }
+
+            _embeddedSourceCache[path] = sourceText.Split('\n');
+            break;
+        }
+    }
+
+    // ─── TypeDefinitionDocuments ───────────────────────────────────────
+
+    /// <summary>
+    /// Reads the TypeDefinitionDocuments custom debug info for a type handle.
+    /// Returns the preferred source document path, or null.
+    /// </summary>
+    private string? GetTypeDefinitionDocument(TypeDefinitionHandle typeHandle, string shortTypeName)
+    {
+        foreach (CustomDebugInformationHandle cdiHandle in _pdbReader.GetCustomDebugInformation(typeHandle))
+        {
+            CustomDebugInformation cdi = _pdbReader.GetCustomDebugInformation(cdiHandle);
+            if (_pdbReader.GetGuid(cdi.Kind) != TypeDefinitionDocumentsGuid)
+            {
+                continue;
+            }
+
+            // Blob contains a sequence of compressed document handle row numbers
+            BlobReader reader = _pdbReader.GetBlobReader(cdi.Value);
+            List<string> docPaths = [];
+
+            while (reader.RemainingBytes > 0)
+            {
+                int docRowNumber = reader.ReadCompressedInteger();
+                DocumentHandle docHandle = MetadataTokens.DocumentHandle(docRowNumber);
+                if (_documentPaths.TryGetValue(docHandle, out string? path))
+                {
+                    docPaths.Add(path);
+                }
+            }
+
+            if (docPaths.Count > 0)
+            {
+                return SelectPrimaryFile(docPaths, shortTypeName);
+            }
         }
 
-        string relativePath = normalised[_localPathPrefix.Length..];
-        return $"{_repoBaseUrl}{relativePath}#L{lineNumber}";
+        return null;
+    }
+
+    // ─── URL construction ─────────────────────────────────────────────
+
+    /// <summary>
+    /// Builds a GitHub browsable URL from a local file path and line number.
+    /// Tries SourceLink mapping first (raw.githubusercontent → github.com/blob),
+    /// falls back to git-based repo URL.
+    /// </summary>
+    private string? BuildSourceUrl(string localPath, int lineNumber)
+    {
+        string normalised = localPath.Replace('\\', '/');
+
+        // Try SourceLink mappings: convert raw.githubusercontent.com URL to github.com/blob URL
+        foreach (var (localPrefix, urlTemplate) in _sourceLinkMappings)
+        {
+            if (normalised.StartsWith(localPrefix, StringComparison.OrdinalIgnoreCase))
+            {
+                string relativePath = normalised[localPrefix.Length..];
+                string rawUrl = $"{urlTemplate}{relativePath}";
+
+                // Convert raw.githubusercontent.com/owner/repo/COMMIT/path
+                // to github.com/owner/repo/blob/main/path
+                string browsableUrl = ConvertToGitHubBlobUrl(rawUrl);
+                return $"{browsableUrl}#L{lineNumber}";
+            }
+        }
+
+        // Fallback: git-based URL
+        if (normalised.StartsWith(_localPathPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            string relativePath = normalised[_localPathPrefix.Length..];
+            return $"{_repoBaseUrl}{relativePath}#L{lineNumber}";
+        }
+
+        return null;
     }
 
     /// <summary>
-    /// Strips generic arity markers (e.g. `1, `2) from a key while preserving
-    /// any member name after the arity. For example:
-    /// "Ns.Type`1.Member" → "Ns.Type.Member"
-    /// "Ns.Type`2" → "Ns.Type"
+    /// Converts a raw.githubusercontent.com URL to a github.com/blob/main URL.
+    /// Input:  https://raw.githubusercontent.com/owner/repo/COMMITSHA/path/to/file.cs
+    /// Output: https://github.com/owner/repo/blob/main/path/to/file.cs
     /// </summary>
+    private static string ConvertToGitHubBlobUrl(string rawUrl)
+    {
+        // raw.githubusercontent.com/owner/repo/commit/path
+        const string rawPrefix = "https://raw.githubusercontent.com/";
+        if (!rawUrl.StartsWith(rawPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            return rawUrl;
+        }
+
+        string afterPrefix = rawUrl[rawPrefix.Length..];
+        // Split: owner/repo/commit/rest...
+        string[] parts = afterPrefix.Split('/', 4);
+        if (parts.Length < 4)
+        {
+            return rawUrl;
+        }
+
+        string owner = parts[0];
+        string repo = parts[1];
+        // parts[2] = commit SHA — replace with 'main'
+        string filePath = parts[3];
+
+        return $"https://github.com/{owner}/{repo}/blob/main/{filePath}";
+    }
+
+    // ─── Source scanning ──────────────────────────────────────────────
+
+    private static readonly string[] TypeKeywords = ["class", "struct", "interface", "enum", "record", "delegate"];
+
+    /// <summary>
+    /// Scans embedded source for a type declaration line (e.g. "struct BigNumber").
+    /// Returns 1-based line number, or 0 if not found.
+    /// </summary>
+    private int FindTypeDeclarationLine(string filePath, string shortTypeName)
+    {
+        if (!_embeddedSourceCache.TryGetValue(filePath, out string[]? lines))
+        {
+            return 0;
+        }
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i];
+
+            foreach (string keyword in TypeKeywords)
+            {
+                int kwIdx = line.IndexOf(keyword, StringComparison.Ordinal);
+                if (kwIdx < 0)
+                {
+                    continue;
+                }
+
+                if (kwIdx > 0 && char.IsLetterOrDigit(line[kwIdx - 1]))
+                {
+                    continue;
+                }
+
+                int afterKeyword = kwIdx + keyword.Length;
+                int nameIdx = line.IndexOf(shortTypeName, afterKeyword, StringComparison.Ordinal);
+                if (nameIdx < 0)
+                {
+                    continue;
+                }
+
+                int afterName = nameIdx + shortTypeName.Length;
+                if (afterName < line.Length &&
+                    (char.IsLetterOrDigit(line[afterName]) || line[afterName] == '_'))
+                {
+                    continue;
+                }
+
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
+
+    /// <summary>
+    /// Scans embedded source for a member declaration line.
+    /// Used for interface/abstract members without PDB sequence points.
+    /// Returns 1-based line number, or 0 if not found.
+    /// </summary>
+    private int FindMemberDeclarationLine(string filePath, string memberName)
+    {
+        if (!_embeddedSourceCache.TryGetValue(filePath, out string[]? lines))
+        {
+            return 0;
+        }
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string line = lines[i].TrimStart();
+
+            if (line.StartsWith("//") || line.StartsWith("/*") || line.StartsWith("*") || line.StartsWith("#"))
+            {
+                continue;
+            }
+
+            int nameIdx = line.IndexOf(memberName, StringComparison.Ordinal);
+            if (nameIdx < 0)
+            {
+                continue;
+            }
+
+            if (nameIdx > 0 && (char.IsLetterOrDigit(line[nameIdx - 1]) || line[nameIdx - 1] == '_'))
+            {
+                continue;
+            }
+
+            int afterName = nameIdx + memberName.Length;
+            if (afterName < line.Length &&
+                (char.IsLetterOrDigit(line[afterName]) || line[afterName] == '_'))
+            {
+                continue;
+            }
+
+            if (afterName >= line.Length)
+            {
+                return i + 1;
+            }
+
+            char nextChar = line[afterName];
+            if (nextChar == '(' || nextChar == '<' || nextChar == '{' || nextChar == ';' ||
+                nextChar == ' ' || nextChar == '\t')
+            {
+                return i + 1;
+            }
+        }
+
+        return 0;
+    }
+
+    // ─── Helper methods ───────────────────────────────────────────────
+
+    /// <summary>
+    /// Selects the primary file for a type from a list of candidate files.
+    /// Prefers a file whose name matches the type name exactly (e.g. "BigNumber.cs" over "BigNumber.Parse.cs").
+    /// </summary>
+    private static string SelectPrimaryFile(List<string> files, string shortTypeName)
+    {
+        foreach (string file in files)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(file);
+            if (string.Equals(fileName, shortTypeName, StringComparison.OrdinalIgnoreCase))
+            {
+                return file;
+            }
+        }
+
+        // No exact match — return the first file
+        return files[0];
+    }
+
     private static string StripGenericArity(string key)
     {
         int backtickIdx = key.IndexOf('`');
@@ -370,56 +761,13 @@ public sealed class SourceLinkResolver : IDisposable
             return key;
         }
 
-        // Find the end of the arity digits after the backtick
         int endIdx = backtickIdx + 1;
         while (endIdx < key.Length && char.IsDigit(key[endIdx]))
         {
             endIdx++;
         }
 
-        // Splice: everything before backtick + everything after the arity digits
         return key[..backtickIdx] + key[endIdx..];
-    }
-
-    /// <summary>
-    /// Prefers the "primary" partial file for a type: the file whose name matches the type name
-    /// (without dot-separated concern suffixes like ".Parse.cs", ".Mutable.cs").
-    /// </summary>
-    private static bool IsPreferredTypeLocation(string newFile, int newLine, string existingFile, int existingLine, string typeName)
-    {
-        // Extract the short type name (last segment after dots, without generic arity)
-        string shortName = typeName;
-        int lastDot = shortName.LastIndexOf('.');
-        if (lastDot >= 0)
-        {
-            shortName = shortName[(lastDot + 1)..];
-        }
-
-        int backtick = shortName.IndexOf('`');
-        if (backtick >= 0)
-        {
-            shortName = shortName[..backtick];
-        }
-
-        // Check if the new file is the "primary" file (TypeName.cs, not TypeName.Something.cs)
-        string newFileName = Path.GetFileNameWithoutExtension(newFile);
-        string existingFileName = Path.GetFileNameWithoutExtension(existingFile);
-
-        bool newIsPrimary = string.Equals(newFileName, shortName, StringComparison.OrdinalIgnoreCase);
-        bool existingIsPrimary = string.Equals(existingFileName, shortName, StringComparison.OrdinalIgnoreCase);
-
-        if (newIsPrimary && !existingIsPrimary)
-        {
-            return true;
-        }
-
-        if (!newIsPrimary && existingIsPrimary)
-        {
-            return false;
-        }
-
-        // Both primary or both non-primary: prefer the one with the lower line number
-        return newLine < existingLine;
     }
 
     private string BuildFullTypeName(TypeDefinition typeDef, string ns, string name)

@@ -32,78 +32,14 @@ This type uses an internal cache to avoid allocations for evaluatoin of string v
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `RootElement` | `T` |  |
+| [RootElement](/api/corvus-text-json-internal-fixedstringjsondocument-t.rootelement.html) | `T` |  |
 
 ## Methods
 
-### Parse `static`
-
-```csharp
-FixedStringJsonDocument<T> Parse(ReadOnlyMemory<byte> rawJsonStringValue, bool requiresUnescaping)
-```
-
-Parse an instance of the fixed string to a document, using caching.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `rawJsonStringValue` | [`ReadOnlyMemory<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1) | The raw JSON string value, including quotes. |
-| `requiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
-
-**Returns:** [`FixedStringJsonDocument<T>`](/api/corvus-text-json-internal-fixedstringjsondocument-t.html)
-
-A fixed string document representing the value, from the cache.
-
-### TryFormat
-
-```csharp
-bool TryFormat(int index, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `destination` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `charsWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `format` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `formatProvider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### TryFormat
-
-```csharp
-bool TryFormat(int index, Span<byte> destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `destination` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `bytesWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `format` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `formatProvider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### ToString
-
-```csharp
-string ToString(int index, string format, IFormatProvider formatProvider)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `format` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
-| `formatProvider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
-
-**Returns:** [`string`](https://learn.microsoft.com/dotnet/api/system.string)
+| Method | Description |
+|--------|-------------|
+| [Parse(ReadOnlyMemory&lt;byte&gt;, bool)](/api/corvus-text-json-internal-fixedstringjsondocument-t.parse.html#fixedstringjsondocument-t-parse-readonlymemory-byte-rawjsonstringvalue-bool-requiresunescaping) `static` | Parse an instance of the fixed string to a document, using caching. |
+| [ToString(int, string, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tostring.html#string-tostring-int-index-string-format-iformatprovider-formatprovider) |  |
+| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#bool-tryformat-int-index-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-formatprovider) |  |
+| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#bool-tryformat-int-index-span-byte-destination-ref-int-byteswritten-readonlyspan-char-format-iformatprovider-formatprovider) |  |
 

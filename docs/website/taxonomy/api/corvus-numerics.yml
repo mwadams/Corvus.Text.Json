@@ -17,4 +17,4 @@ OpenGraph:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md
     Spec:
-      Path: ../../content/api/corvus-numerics.md
+      Path: ../../content/Api/corvus-numerics.md

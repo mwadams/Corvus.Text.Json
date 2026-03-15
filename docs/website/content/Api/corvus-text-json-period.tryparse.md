@@ -1,0 +1,32 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "Period.TryParse Method — Corvus.Text.Json"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll
+
+## TryParse `static`
+
+```csharp
+bool TryParse(ReadOnlySpan<byte> value, ref Period result)
+```
+
+Parses a string into a Period.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The string to parse. |
+| `result` | [`ref Period`](/api/corvus-text-json-period.html) | The resulting period. |
+
+### Returns
+
+[`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+`true` if the period could be parsed from the string.
+

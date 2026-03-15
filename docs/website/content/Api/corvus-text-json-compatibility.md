@@ -10,4 +10,5 @@ Title: "Corvus.Text.Json.Compatibility Namespace"
 | [ValidationContext](/api/corvus-text-json-compatibility-validationcontext.html) | struct | Represents the context for a JSON schema validation operation, including validity and results. |
 | [ValidationLevel](/api/corvus-text-json-compatibility-validationlevel.html) | enum | The validation level. |
 | [ValidationResult](/api/corvus-text-json-compatibility-validationresult.html) | struct | Represents the result of a single JSON schema validation, including validity, message, and locations. |
+| [ValidationResult.LocationTuple](/api/corvus-text-json-compatibility-validationresult-locationtuple.html) | struct |  |
 

@@ -16,98 +16,17 @@ Provides helper methods for throwing exceptions in code generation and runtime s
 
 ## Methods
 
-### ThrowArgumentException_ArrayBufferLength `static`
-
-```csharp
-void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
-```
-
-Throws an `ArgumentException` when an array buffer has an incorrect length.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `paramName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The name of the parameter that caused the exception. |
-| `expectedLength` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The expected length of the array buffer. |
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Always thrown. |
-
-### ThrowFormatException `static`
-
-```csharp
-void ThrowFormatException()
-```
-
-Throws a generic `FormatException` for format-related errors.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | Always thrown. |
-
-### ThrowFormatException `static`
-
-```csharp
-void ThrowFormatException(CodeGenNumericType numericType)
-```
-
-Throws a `FormatException` for numeric type formatting errors.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `numericType` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | The numeric type that failed to format. |
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | Always thrown. |
-
-### ThrowInvalidOperationException_SetRequiredPropertyToUndefined `static`
-
-```csharp
-void ThrowInvalidOperationException_SetRequiredPropertyToUndefined(string propertyName)
-```
-
-Throws an `InvalidOperationException` when attempting to set a required property to an undefined value.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The name of the required property. |
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Always thrown. |
-
-### ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst `static`
-
-```csharp
-void ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()
-```
-
-Throws an `InvalidOperationException` when attempting to set a required property to an undefined value.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Always thrown. |
+| Method | Description |
+|--------|-------------|
+| [ThrowArgumentException_ArrayBufferLength(string, int)](/api/corvus-text-json-internal-codegenthrowhelper.throwargumentexception-arraybufferlength.html#void-throwargumentexception-arraybufferlength-string-paramname-int-expectedlength) `static` | Throws an [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) when an array buffer has an incorrect length. |
+| [ThrowFormatException()](/api/corvus-text-json-internal-codegenthrowhelper.throwformatexception.html#void-throwformatexception) `static` | Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for format-related errors. |
+| [ThrowFormatException(CodeGenNumericType)](/api/corvus-text-json-internal-codegenthrowhelper.throwformatexception.html#void-throwformatexception-codegennumerictype-numerictype) `static` | Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for numeric type formatting errors. |
+| [ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()](/api/corvus-text-json-internal-codegenthrowhelper.throwinvalidoperationexception-prefixtuplemustbecreatedfirst.html#void-throwinvalidoperationexception-prefixtuplemustbecreatedfirst) `static` | Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) when attempting to set a required property to an undefined value. |
+| [ThrowInvalidOperationException_SetRequiredPropertyToUndefined(string)](/api/corvus-text-json-internal-codegenthrowhelper.throwinvalidoperationexception-setrequiredpropertytoundefined.html#void-throwinvalidoperationexception-setrequiredpropertytoundefined-string-propertyname) `static` | Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) when attempting to set a required property to an undefined value. |
 
 ## Fields
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `ExceptionSourceValueToRethrowAsJsonException` `static` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
+| [ExceptionSourceValueToRethrowAsJsonException](/api/corvus-text-json-internal-codegenthrowhelper.exceptionsourcevaluetorethrowasjsonexception.html) `static` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
 

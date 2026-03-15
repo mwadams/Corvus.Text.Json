@@ -1,0 +1,32 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "Utf8UriReference.TryFormatCanonical Method — Corvus.Text.Json"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll
+
+## TryFormatCanonical
+
+```csharp
+bool TryFormatCanonical(Span<byte> buffer, ref int writtenBytes)
+```
+
+Gets the URI reference in canonical form.
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The buffer into which to write the result in canonical form with reserved characters encoded. |
+| `writtenBytes` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of bytes written. |
+
+### Returns
+
+[`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+`true` if the result was successfully written to the buffer; otherwise, `false`.
+

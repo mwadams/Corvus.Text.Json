@@ -12,27 +12,16 @@ Represents a normalized JSON number.
 
 ## Constructors
 
-### NormalizedJsonNumber
-
-```csharp
-NormalizedJsonNumber(bool isNegative, byte[] integral, byte[] fractional, int exponent)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `isNegative` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
-| `integral` | [`byte[]`](https://learn.microsoft.com/dotnet/api/system.byte) |  |
-| `fractional` | [`byte[]`](https://learn.microsoft.com/dotnet/api/system.byte) |  |
-| `exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
+| Constructor | Description |
+|-------------|-------------|
+| [NormalizedJsonNumber(bool, byte\[\], byte\[\], int)](/api/corvus-text-json-internal-normalizedjsonnumber.ctor.html#normalizedjsonnumber-bool-isnegative-byte-integral-byte-fractional-int-exponent) |  |
 
 ## Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `IsNegative` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Indicates whether the number is negative. |
-| `Integral` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The normalized integral part of the original JSON representation of the number. |
-| `Fractional` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The normalized fractional part of the original JSON representation of the number. |
-| `Exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The exponent to apply after concatenating the integral and fractional parts. |
+| [Exponent](/api/corvus-text-json-internal-normalizedjsonnumber.exponent.html) | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The exponent to apply after concatenating the integral and fractional parts. |
+| [Fractional](/api/corvus-text-json-internal-normalizedjsonnumber.fractional.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The normalized fractional part of the original JSON representation of the number. |
+| [Integral](/api/corvus-text-json-internal-normalizedjsonnumber.integral.html) | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The normalized integral part of the original JSON representation of the number. |
+| [IsNegative](/api/corvus-text-json-internal-normalizedjsonnumber.isnegative.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Indicates whether the number is negative. |
 

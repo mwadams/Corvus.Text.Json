@@ -12,7 +12,7 @@ Represents an arbitrary-precision decimal number using a significand and exponen
 
 ## Remarks
 
-Internally represented as: value = significand × 10^exponent where significand is a `BigInteger` and exponent is a `Int32`. This type provides equivalent functionality to `Decimal` but with arbitrary precision, similar to how `BigInteger` extends integer arithmetic beyond fixed sizes.
+Internally represented as: value = significand × 10^exponent where significand is a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) and exponent is a [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). This type provides equivalent functionality to [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) but with arbitrary precision, similar to how [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) extends integer arithmetic beyond fixed sizes.
 
 ## Implements
 
@@ -20,697 +20,91 @@ Internally represented as: value = significand × 10^exponent where significand 
 
 ## Constructors
 
-### BigNumber
-
-```csharp
-BigNumber(BigInteger significand, int exponent)
-```
-
-Initializes a new instance of the [`BigNumber`](/api/corvus-numerics-bignumber.html) struct.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `significand` | [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) | The significand. |
-| `exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The exponent (power of 10). |
+| Constructor | Description |
+|-------------|-------------|
+| [BigNumber(BigInteger, int)](/api/corvus-numerics-bignumber.ctor.html#bignumber-biginteger-significand-int-exponent) | Initializes a new instance of the [`BigNumber`](/api/corvus-numerics-bignumber.html) struct. |
 
 ## Properties
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Significand` | [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) | Gets the significand of the number. |
-| `Exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | Gets the exponent (power of 10) of the number. |
-| `Zero` `static` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | Gets a value representing zero. |
-| `One` `static` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | Gets a value representing one. |
-| `MinusOne` `static` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | Gets a value representing minus one. |
-| `Radix` `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | Gets the radix (base) of the number system. |
+| [Exponent](/api/corvus-numerics-bignumber.exponent.html) | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | Gets the exponent (power of 10) of the number. |
+| [MinusOne](/api/corvus-numerics-bignumber.minusone.html) `static` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | Gets a value representing minus one. |
+| [One](/api/corvus-numerics-bignumber.one.html) `static` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | Gets a value representing one. |
+| [Radix](/api/corvus-numerics-bignumber.radix.html) `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | Gets the radix (base) of the number system. |
+| [Significand](/api/corvus-numerics-bignumber.significand.html) | [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) | Gets the significand of the number. |
+| [Zero](/api/corvus-numerics-bignumber.zero.html) `static` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | Gets a value representing zero. |
 
 ## Methods
 
-### Normalize
-
-```csharp
-BigNumber Normalize()
-```
-
-Returns a normalized copy of this number with trailing zeros removed from the significand.
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-A normalized [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-### IsInteger
-
-```csharp
-bool IsInteger()
-```
-
-Determines whether this instance represents an integer value.
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the value is an integer; otherwise, `false`.
-
-### Equals
-
-```csharp
-bool Equals(BigNumber other)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `other` | [`BigNumber`](/api/corvus-numerics-bignumber.html) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### Equals `virtual`
-
-```csharp
-bool Equals(object obj)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `obj` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### GetHashCode `virtual`
-
-```csharp
-int GetHashCode()
-```
-
-**Returns:** [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
-
-### CompareTo
-
-```csharp
-int CompareTo(BigNumber other)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `other` | [`BigNumber`](/api/corvus-numerics-bignumber.html) |  |
-
-**Returns:** [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
-
-### CompareTo
-
-```csharp
-int CompareTo(object obj)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `obj` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
-
-**Returns:** [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
-
-### ToString `virtual`
-
-```csharp
-string ToString()
-```
-
-**Returns:** [`string`](https://learn.microsoft.com/dotnet/api/system.string)
-
-### ToString
-
-```csharp
-string ToString(string format, IFormatProvider formatProvider)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `format` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
-| `formatProvider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
-
-**Returns:** [`string`](https://learn.microsoft.com/dotnet/api/system.string)
-
-### TryGetMinimumFormatBufferLength
-
-```csharp
-bool TryGetMinimumFormatBufferLength(ref int minimumLength)
-```
-
-Gets the minimum format buffer length.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `minimumLength` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | The minimum length for a text buffer to format the number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the buffer length required for the number can be safely allocated.
-
-### TryFormat
-
-```csharp
-bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `destination` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `charsWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `format` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### TryFormat
-
-```csharp
-bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8Destination` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `bytesWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-| `format` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### TryFormat
-
-```csharp
-bool TryFormat(Span<char> destination, ref int charsWritten)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `destination` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `charsWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### TryFormat
-
-```csharp
-bool TryFormat(Span<byte> destination, ref int bytesWritten)
-```
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `destination` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
-| `bytesWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-### Parse `static`
-
-```csharp
-BigNumber Parse(string s, IFormatProvider provider)
-```
-
-Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The string to parse. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. *(optional)* |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The parsed number.
-
-### Parse `static`
-
-```csharp
-BigNumber Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider)
-```
-
-Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The span to parse. |
-| `style` | [`NumberStyles`](https://learn.microsoft.com/dotnet/api/system.globalization.numberstyles) | Number styles. *(optional)* |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. *(optional)* |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The parsed number.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(string s, ref BigNumber result)
-```
-
-Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The string to parse. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(string s, IFormatProvider provider, ref BigNumber result)
-```
-
-Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The string to parse. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(ReadOnlySpan<char> s, IFormatProvider provider, ref BigNumber result)
-```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The span to parse. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(ReadOnlySpan<char> s, ref BigNumber result)
-```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The span to parse. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, ref BigNumber result)
-```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The span to parse. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(ReadOnlySpan<byte> s, ref BigNumber result)
-```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The span to parse. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider, ref BigNumber result)
-```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `s` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The span to parse. |
-| `style` | [`NumberStyles`](https://learn.microsoft.com/dotnet/api/system.globalization.numberstyles) | Number styles. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### Parse `static`
-
-```csharp
-BigNumber Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
-```
-
-Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8Text` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 bytes to parse. |
-| `style` | [`NumberStyles`](https://learn.microsoft.com/dotnet/api/system.globalization.numberstyles) | Number styles. *(optional)* |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. *(optional)* |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The parsed number.
-
-### TryParse `static`
-
-```csharp
-bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider, ref BigNumber result)
-```
-
-Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8Text` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 bytes to parse. |
-| `style` | [`NumberStyles`](https://learn.microsoft.com/dotnet/api/system.globalization.numberstyles) | Number styles. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | Format provider. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed number. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-### Divide `static`
-
-```csharp
-BigNumber Divide(BigNumber dividend, BigNumber divisor, int precision)
-```
-
-Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with specified precision.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `dividend` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The dividend. |
-| `divisor` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The divisor. |
-| `precision` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of decimal places of precision. |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The quotient.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`DivideByZeroException`](https://learn.microsoft.com/dotnet/api/system.dividebyzeroexception) | Thrown when divisor is zero. |
-| [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when precision is negative. |
-
-### Abs `static`
-
-```csharp
-BigNumber Abs(BigNumber value)
-```
-
-Returns the absolute value.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) |  |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-### Sign `static`
-
-```csharp
-int Sign(BigNumber value)
-```
-
-Returns the sign of the number.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The value. |
-
-**Returns:** [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
-
--1 for negative, 0 for zero, 1 for positive.
-
-### Pow `static`
-
-```csharp
-BigNumber Pow(BigNumber value, int exponent)
-```
-
-Raises a BigNumber to an integer power.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The base value. |
-| `exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The integer exponent. |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The value raised to the specified power.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when exponent is negative. |
-
-### Sqrt `static`
-
-```csharp
-BigNumber Sqrt(BigNumber value, int precision)
-```
-
-Computes the square root of a BigNumber using Newton's method.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The value to find the square root of. |
-| `precision` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of decimal places of precision. |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The square root.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when value is negative. |
-| [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when precision is negative. |
-
-### Round `static`
-
-```csharp
-BigNumber Round(BigNumber value, int decimals, MidpointRounding mode)
-```
-
-Rounds a value to a specified number of decimal places.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The value to round. |
-| `decimals` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of decimal places. |
-| `mode` | [`MidpointRounding`](https://learn.microsoft.com/dotnet/api/system.midpointrounding) | The rounding mode. *(optional)* |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The rounded value.
-
-**Exceptions:**
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when decimals is negative. |
-
-### Floor `static`
-
-```csharp
-BigNumber Floor(BigNumber value)
-```
-
-Returns the largest integer less than or equal to the specified number.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The value to floor. |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The floor of the value.
-
-### Ceiling `static`
-
-```csharp
-BigNumber Ceiling(BigNumber value)
-```
-
-Returns the smallest integer greater than or equal to the specified number.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The value to ceiling. |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The ceiling of the value.
-
-### Truncate `static`
-
-```csharp
-BigNumber Truncate(BigNumber value)
-```
-
-Truncates a value to an integer by removing the fractional part.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `value` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The value to truncate. |
-
-**Returns:** [`BigNumber`](/api/corvus-numerics-bignumber.html)
-
-The truncated value.
-
-### TryFormatOptimized
-
-```csharp
-bool TryFormatOptimized(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
-```
-
-Tries to format this instance into the provided UTF-16 span with zero allocations.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `destination` | [`Span<char>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The destination span. |
-| `charsWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of characters written. |
-| `format` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The format string. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | The format provider. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if formatting succeeded; otherwise, `false`.
-
-### TryFormatUtf8Optimized
-
-```csharp
-bool TryFormatUtf8Optimized(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
-```
-
-Tries to format this instance into the provided UTF-8 span with zero allocations.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8Destination` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | The destination span. |
-| `bytesWritten` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of bytes written. |
-| `format` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The format string. |
-| `provider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | The format provider. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if formatting succeeded; otherwise, `false`.
-
-### TryParseJsonUtf8 `static`
-
-```csharp
-bool TryParseJsonUtf8(ReadOnlySpan<byte> utf8Source, ref BigNumber result)
-```
-
-Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations.
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8Source` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 bytes to parse. |
-| `result` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) | The parsed BigNumber. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if parsing succeeded; otherwise, `false`.
-
-This method is optimized for parsing JSON-formatted numbers with InvariantCulture semantics. It expects input in formats like: "123", "-456", "1234E-3", "1234E2", "0". The method parses directly from UTF-8 bytes without conversion to chars, maintaining zero heap allocations for typical numbers.
+| Method | Description |
+|--------|-------------|
+| [Abs(BigNumber)](/api/corvus-numerics-bignumber.abs.html#bignumber-abs-bignumber-value) `static` | Returns the absolute value. |
+| [Ceiling(BigNumber)](/api/corvus-numerics-bignumber.ceiling.html#bignumber-ceiling-bignumber-value) `static` | Returns the smallest integer greater than or equal to the specified number. |
+| [CompareTo(BigNumber)](/api/corvus-numerics-bignumber.compareto.html#int-compareto-bignumber-other) |  |
+| [CompareTo(object)](/api/corvus-numerics-bignumber.compareto.html#int-compareto-object-obj) |  |
+| [Divide(BigNumber, BigNumber, int)](/api/corvus-numerics-bignumber.divide.html#bignumber-divide-bignumber-dividend-bignumber-divisor-int-precision) `static` | Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with specified precision. |
+| [Equals(BigNumber)](/api/corvus-numerics-bignumber.equals.html#bool-equals-bignumber-other) |  |
+| [Equals(object)](/api/corvus-numerics-bignumber.equals.html#bool-equals-object-obj) |  |
+| [Floor(BigNumber)](/api/corvus-numerics-bignumber.floor.html#bignumber-floor-bignumber-value) `static` | Returns the largest integer less than or equal to the specified number. |
+| [GetHashCode()](/api/corvus-numerics-bignumber.gethashcode.html#int-gethashcode) |  |
+| [IsInteger()](/api/corvus-numerics-bignumber.isinteger.html#bool-isinteger) | Determines whether this instance represents an integer value. |
+| [Normalize()](/api/corvus-numerics-bignumber.normalize.html#bignumber-normalize) | Returns a normalized copy of this number with trailing zeros removed from the significand. |
+| [Parse(string, IFormatProvider)](/api/corvus-numerics-bignumber.parse.html#bignumber-parse-string-s-iformatprovider-provider) `static` | Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider)](/api/corvus-numerics-bignumber.parse.html#bignumber-parse-readonlyspan-char-s-numberstyles-style-iformatprovider-provider) `static` | Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider)](/api/corvus-numerics-bignumber.parse.html#bignumber-parse-readonlyspan-byte-utf8text-numberstyles-style-iformatprovider-provider) `static` | Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Pow(BigNumber, int)](/api/corvus-numerics-bignumber.pow.html#bignumber-pow-bignumber-value-int-exponent) `static` | Raises a BigNumber to an integer power. |
+| [Round(BigNumber, int, MidpointRounding)](/api/corvus-numerics-bignumber.round.html#bignumber-round-bignumber-value-int-decimals-midpointrounding-mode) `static` | Rounds a value to a specified number of decimal places. |
+| [Sign(BigNumber)](/api/corvus-numerics-bignumber.sign.html#int-sign-bignumber-value) `static` | Returns the sign of the number. |
+| [Sqrt(BigNumber, int)](/api/corvus-numerics-bignumber.sqrt.html#bignumber-sqrt-bignumber-value-int-precision) `static` | Computes the square root of a BigNumber using Newton's method. |
+| [ToString()](/api/corvus-numerics-bignumber.tostring.html#string-tostring) |  |
+| [ToString(string, IFormatProvider)](/api/corvus-numerics-bignumber.tostring.html#string-tostring-string-format-iformatprovider-formatprovider) |  |
+| [Truncate(BigNumber)](/api/corvus-numerics-bignumber.truncate.html#bignumber-truncate-bignumber-value) `static` | Truncates a value to an integer by removing the fractional part. |
+| [TryFormat(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformat.html#bool-tryformat-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-provider) |  |
+| [TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformat.html#bool-tryformat-span-byte-utf8destination-ref-int-byteswritten-readonlyspan-char-format-iformatprovider-provider) |  |
+| [TryFormat(Span&lt;char&gt;, ref int)](/api/corvus-numerics-bignumber.tryformat.html#bool-tryformat-span-char-destination-ref-int-charswritten) |  |
+| [TryFormat(Span&lt;byte&gt;, ref int)](/api/corvus-numerics-bignumber.tryformat.html#bool-tryformat-span-byte-destination-ref-int-byteswritten) |  |
+| [TryFormatOptimized(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformatoptimized.html#bool-tryformatoptimized-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-provider) | Tries to format this instance into the provided UTF-16 span with zero allocations. |
+| [TryFormatUtf8Optimized(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformatutf8optimized.html#bool-tryformatutf8optimized-span-byte-utf8destination-ref-int-byteswritten-readonlyspan-char-format-iformatprovider-provider) | Tries to format this instance into the provided UTF-8 span with zero allocations. |
+| [TryGetMinimumFormatBufferLength(ref int)](/api/corvus-numerics-bignumber.trygetminimumformatbufferlength.html#bool-trygetminimumformatbufferlength-ref-int-minimumlength) | Gets the minimum format buffer length. |
+| [TryParse(string, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-string-s-ref-bignumber-result) `static` | Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(string, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-string-s-iformatprovider-provider-ref-bignumber-result) `static` | Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(ReadOnlySpan&lt;char&gt;, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-readonlyspan-char-s-iformatprovider-provider-ref-bignumber-result) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(ReadOnlySpan&lt;char&gt;, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-readonlyspan-char-s-ref-bignumber-result) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(ReadOnlySpan&lt;byte&gt;, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-readonlyspan-byte-s-iformatprovider-provider-ref-bignumber-result) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(ReadOnlySpan&lt;byte&gt;, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-readonlyspan-byte-s-ref-bignumber-result) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-readonlyspan-char-s-numberstyles-style-iformatprovider-provider-ref-bignumber-result) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#bool-tryparse-readonlyspan-byte-utf8text-numberstyles-style-iformatprovider-provider-ref-bignumber-result) `static` | Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParseJsonUtf8(ReadOnlySpan&lt;byte&gt;, ref BigNumber)](/api/corvus-numerics-bignumber.tryparsejsonutf8.html#bool-tryparsejsonutf8-readonlyspan-byte-utf8source-ref-bignumber-result) `static` | Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations. |
+
+## Operators
+
+| Operator | Description |
+|----------|-------------|
+| [operator +(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-addition.html#static-bignumber-operator-bignumber-left-bignumber-right) | Adds two [`BigNumber`](/api/corvus-numerics-bignumber.html) values. |
+| [operator --(BigNumber)](/api/corvus-numerics-bignumber.op-decrement.html#static-bignumber-operator-bignumber-value) | Decrements a value by one. |
+| [operator /(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-division.html#static-bignumber-operator-bignumber-dividend-bignumber-divisor) | Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with default precision. |
+| [operator ==(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-equality.html#static-bool-operator-bignumber-left-bignumber-right) | Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are equal. |
+| [explicit operator decimal(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#static-explicit-operator-decimal-bignumber-value) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
+| [explicit operator double(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#static-explicit-operator-double-bignumber-value) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). |
+| [explicit operator float(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#static-explicit-operator-float-bignumber-value) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). |
+| [explicit operator long(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#static-explicit-operator-long-bignumber-value) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). |
+| [explicit operator ulong(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#static-explicit-operator-ulong-bignumber-value) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). |
+| [operator &gt;(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-greaterthan.html#static-bool-operator-bignumber-left-bignumber-right) | Determines whether one value is greater than another. |
+| [operator &gt;=(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-greaterthanorequal.html#static-bool-operator-bignumber-left-bignumber-right) | Determines whether one value is greater than or equal to another. |
+| [implicit operator BigNumber(int)](/api/corvus-numerics-bignumber.op-implicit.html#static-implicit-operator-bignumber-int-value) | Converts an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(long)](/api/corvus-numerics-bignumber.op-implicit.html#static-implicit-operator-bignumber-long-value) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(ulong)](/api/corvus-numerics-bignumber.op-implicit.html#static-implicit-operator-bignumber-ulong-value) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(BigInteger)](/api/corvus-numerics-bignumber.op-implicit.html#static-implicit-operator-bignumber-biginteger-value) | Converts a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(decimal)](/api/corvus-numerics-bignumber.op-implicit.html#static-implicit-operator-bignumber-decimal-value) | Converts a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(double)](/api/corvus-numerics-bignumber.op-implicit.html#static-implicit-operator-bignumber-double-value) | Converts a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [operator ++(BigNumber)](/api/corvus-numerics-bignumber.op-increment.html#static-bignumber-operator-bignumber-value) | Increments a value by one. |
+| [operator !=(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-inequality.html#static-bool-operator-bignumber-left-bignumber-right) | Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are not equal. |
+| [operator &lt;(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-lessthan.html#static-bool-operator-bignumber-left-bignumber-right) | Determines whether one value is less than another. |
+| [operator &lt;=(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-lessthanorequal.html#static-bool-operator-bignumber-left-bignumber-right) | Determines whether one value is less than or equal to another. |
+| [operator %(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-modulus.html#static-bignumber-operator-bignumber-left-bignumber-right) | Computes the remainder of division. |
+| [operator *(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-multiply.html#static-bignumber-operator-bignumber-left-bignumber-right) | Multiplies two [`BigNumber`](/api/corvus-numerics-bignumber.html) values. |
+| [operator -(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-subtraction.html#static-bignumber-operator-bignumber-left-bignumber-right) | Subtracts one [`BigNumber`](/api/corvus-numerics-bignumber.html) from another. |
+| [operator -(BigNumber)](/api/corvus-numerics-bignumber.op-unarynegation.html#static-bignumber-operator-bignumber-value) | Negates a value. |
+| [operator +(BigNumber)](/api/corvus-numerics-bignumber.op-unaryplus.html#static-bignumber-operator-bignumber-value) | Returns the value unchanged (unary plus). |
 

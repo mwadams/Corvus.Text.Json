@@ -22,41 +22,12 @@ This type should be used in a using declaration to ensure that the underlying me
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `Iri` | [`Utf8Iri`](/api/corvus-text-json-utf8iri.html) | Gets the UTF-8 IRI value. |
+| [Iri](/api/corvus-text-json-utf8irivalue.iri.html) | [`Utf8Iri`](/api/corvus-text-json-utf8iri.html) | Gets the UTF-8 IRI value. |
 
 ## Methods
 
-### TryGetValue `static`
-
-```csharp
-bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8IriValue value)
-```
-
-Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html).
-
-**Type Parameters:**
-
-| Parameter | Description |
-|-----------|-------------|
-| `T` | The type of the document. |
-
-**Parameters:**
-
-| Name | Type | Description |
-|------|------|-------------|
-| `jsonDocument` | `ref T` |  |
-| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the element. |
-| `value` | [`ref Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html) | The [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html) value. |
-
-**Returns:** [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
-
-`true` if the value was retrieved; otherwise, `false`.
-
-### Dispose
-
-```csharp
-void Dispose()
-```
-
-Disposes the underlying resources used to store the UTF-8 string backing the IRI value.
+| Method | Description |
+|--------|-------------|
+| [Dispose()](/api/corvus-text-json-utf8irivalue.dispose.html#void-dispose) | Disposes the underlying resources used to store the UTF-8 string backing the IRI value. |
+| [TryGetValue(ref T, int, ref Utf8IriValue)](/api/corvus-text-json-utf8irivalue.trygetvalue.html#bool-trygetvalue-t-ref-t-jsondocument-int-index-ref-utf8irivalue-value) `static` | Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html). |
 

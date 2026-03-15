@@ -1,0 +1,58 @@
+---
+ContentType: "application/vnd.endjin.ssg.content+md"
+PublicationStatus: Published
+Date: 2026-03-15T00:00:00.0+00:00
+Title: "IMutableJsonDocument.TryGetNamedPropertyValue Method — Corvus.Text.Json.Internal"
+---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll
+
+## Overloads
+
+| Method | Description |
+|--------|-------------|
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref JsonElement.Mutable)](#bool-trygetnamedpropertyvalue-int-index-readonlyspan-char-propertyname-ref-jsonelement-mutable-value) |  |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable)](#bool-trygetnamedpropertyvalue-int-index-readonlyspan-byte-propertyname-ref-jsonelement-mutable-value) |  |
+
+## TryGetNamedPropertyValue `abstract`
+
+```csharp
+bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref JsonElement.Mutable value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
+| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
+| `value` | [`ref JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html) |  |
+
+### Returns
+
+[`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+---
+
+## TryGetNamedPropertyValue `abstract`
+
+```csharp
+bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, ref JsonElement.Mutable value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
+| `propertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
+| `value` | [`ref JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html) |  |
+
+### Returns
+
+[`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+---
+

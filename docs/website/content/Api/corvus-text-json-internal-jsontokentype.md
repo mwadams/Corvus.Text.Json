@@ -18,16 +18,16 @@ This enum defines the various JSON tokens that make up a JSON text and is used b
 
 | Field | Type | Description |
 |-------|------|-------------|
-| `None` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-internal-jsontokentype.html)). |
-| `StartObject` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the start of a JSON object. |
-| `EndObject` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the end of a JSON object. |
-| `StartArray` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the start of a JSON array. |
-| `EndArray` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the end of a JSON array. |
-| `PropertyName` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is a JSON property name. |
-| `Comment` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the comment string. |
-| `String` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is a JSON string. |
-| `Number` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is a JSON number. |
-| `True` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `true`. |
-| `False` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `false`. |
-| `Null` `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `null`. |
+| [None](/api/corvus-text-json-internal-jsontokentype.none.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-internal-jsontokentype.html#null)). |
+| [StartObject](/api/corvus-text-json-internal-jsontokentype.startobject.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the start of a JSON object. |
+| [EndObject](/api/corvus-text-json-internal-jsontokentype.endobject.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the end of a JSON object. |
+| [StartArray](/api/corvus-text-json-internal-jsontokentype.startarray.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the start of a JSON array. |
+| [EndArray](/api/corvus-text-json-internal-jsontokentype.endarray.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the end of a JSON array. |
+| [PropertyName](/api/corvus-text-json-internal-jsontokentype.propertyname.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is a JSON property name. |
+| [Comment](/api/corvus-text-json-internal-jsontokentype.comment.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the comment string. |
+| [String](/api/corvus-text-json-internal-jsontokentype.string.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is a JSON string. |
+| [Number](/api/corvus-text-json-internal-jsontokentype.number.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is a JSON number. |
+| [True](/api/corvus-text-json-internal-jsontokentype.true.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `true`. |
+| [False](/api/corvus-text-json-internal-jsontokentype.false.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `false`. |
+| [Null](/api/corvus-text-json-internal-jsontokentype.null.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `null`. |
 
