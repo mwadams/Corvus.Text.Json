@@ -311,40 +311,42 @@ $docViewTemplate = @'
     var currentUrl = Model.PageContext.Navigation?.Url;
 }
 <div class="layout-docs container">
-    <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false"></button>
     <div class="sidebar-backdrop"></div>
     <aside class="sidebar">
-        <div class="sidebar__section">
-            <button class="sidebar__heading">Getting Started</button>
-            <div class="sidebar__body">
-                <ul class="sidebar__list">
-                    <li class="sidebar__item"><a class="sidebar__link" href="/getting-started/index.html">Tutorial</a></li>
-                </ul>
+        <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false"></button>
+        <div class="sidebar__inner">
+            <div class="sidebar__section">
+                <button class="sidebar__heading">Getting Started</button>
+                <div class="sidebar__body">
+                    <ul class="sidebar__list">
+                        <li class="sidebar__item"><a class="sidebar__link" href="/getting-started/index.html">Tutorial</a></li>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="sidebar__section">
-            <button class="sidebar__heading">Documentation</button>
-            <div class="sidebar__body">
-                <ul class="sidebar__list">
-                    @if (docPages != null)
-                    {
-                        @foreach (var doc in docPages)
+            <div class="sidebar__section">
+                <button class="sidebar__heading">Documentation</button>
+                <div class="sidebar__body">
+                    <ul class="sidebar__list">
+                        @if (docPages != null)
                         {
-                            var isActive = currentUrl != null && Vellum.Cli.Domain.Url.AreEquivalent(doc.Url, currentUrl);
-                            <li class="sidebar__item">
-                                <a class="sidebar__link @(isActive ? "is-active" : "")" href="@doc.Url">@doc.Title</a>
-                            </li>
+                            @foreach (var doc in docPages)
+                            {
+                                var isActive = currentUrl != null && Vellum.Cli.Domain.Url.AreEquivalent(doc.Url, currentUrl);
+                                <li class="sidebar__item">
+                                    <a class="sidebar__link @(isActive ? "is-active" : "")" href="@doc.Url">@doc.Title</a>
+                                </li>
+                            }
                         }
-                    }
-                </ul>
+                    </ul>
+                </div>
             </div>
-        </div>
-        <div class="sidebar__section">
-            <button class="sidebar__heading">Examples</button>
-            <div class="sidebar__body">
-                <ul class="sidebar__list">
-                    <li class="sidebar__item"><a class="sidebar__link" href="/examples/index.html">All Recipes</a></li>
-                </ul>
+            <div class="sidebar__section">
+                <button class="sidebar__heading">Examples</button>
+                <div class="sidebar__body">
+                    <ul class="sidebar__list">
+                        <li class="sidebar__item"><a class="sidebar__link" href="/examples/index.html">All Recipes</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </aside>
