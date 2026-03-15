@@ -4,6 +4,13 @@
 
 @use '../abstracts/mixins' as *;
 
+// ---- Page content wrapper (below footer in stacking order) ----
+
+.page-content {
+  position: relative;
+  z-index: 1;
+}
+
 // ---- Container ----
 
 .container {
