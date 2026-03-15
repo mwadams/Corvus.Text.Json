@@ -144,3 +144,50 @@ The standard mutation workflow is:
 3. Get the `Mutable` root element from the builder
 4. Call `Set*()` / `Remove*()` methods on the mutable element
 5. Serialize via `root.WriteTo(writer)`, `root.ToString()`, or convert to immutable via `.Clone()`
+
+## Serialization
+
+```csharp
+// To a JSON string (allocates)
+string json = person.ToString();
+```
+
+For high-throughput scenarios, rent a `Utf8JsonWriter` and buffer from the workspace to avoid allocations and share common writer options:
+
+```csharp
+using JsonWorkspace workspace = JsonWorkspace.Create();
+
+Utf8JsonWriter writer = workspace.RentWriterAndBuffer(
+    defaultBufferSize: 1024,
+    out IByteBufferWriter bufferWriter);
+try
+{
+    person.WriteTo(writer);
+    writer.Flush();
+
+    // bufferWriter.WrittenSpan contains the UTF-8 JSON bytes
+    ReadOnlySpan<byte> utf8Json = bufferWriter.WrittenSpan;
+}
+finally
+{
+    workspace.ReturnWriterAndBuffer(writer, bufferWriter);
+}
+```
+
+If you already have your own `IBufferWriter<byte>`, you can rent just the writer:
+
+```csharp
+var buffer = new ArrayBufferWriter<byte>();
+Utf8JsonWriter writer = workspace.RentWriter(buffer);
+try
+{
+    person.WriteTo(writer);
+    writer.Flush();
+}
+finally
+{
+    workspace.ReturnWriter(writer);
+}
+```
+
+The workspace caches writers on the current thread, so repeated rent/return cycles are allocation-free. Writer options (e.g. indentation) are configured once on the workspace and applied to every rented writer automatically.
