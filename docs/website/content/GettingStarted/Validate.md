@@ -44,9 +44,9 @@ if (!isValid)
 | Level | Description |
 |---|---|
 | *(no collector)* | Fastest — returns only `bool` |
-| `JsonSchemaResultsLevel.Basic` | Failure messages only |
-| `JsonSchemaResultsLevel.Detailed` | Failure messages with schema and document locations |
-| `JsonSchemaResultsLevel.Verbose` | All events including successful validations |
+| `JsonSchemaResultsLevel.Basic` | Records failures with location information, but without error messages |
+| `JsonSchemaResultsLevel.Detailed` | Records failures with location information and error messages |
+| `JsonSchemaResultsLevel.Verbose` | Records all events — successes, failures, and ignored keywords — with full messages |
 
 ## Example: validating input
 
