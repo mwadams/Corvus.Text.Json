@@ -14,6 +14,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Mobile sidebar drawer toggle
+  const sidebarToggle = document.querySelector('.sidebar-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const backdrop = document.querySelector('.sidebar-backdrop');
+
+  function closeSidebar() {
+    sidebar?.classList.remove('is-open');
+    backdrop?.classList.remove('is-visible');
+    sidebarToggle?.setAttribute('aria-expanded', 'false');
+  }
+
+  if (sidebarToggle && sidebar) {
+    sidebarToggle.addEventListener('click', () => {
+      const opening = !sidebar.classList.contains('is-open');
+      sidebar.classList.toggle('is-open');
+      backdrop?.classList.toggle('is-visible');
+      sidebarToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    });
+
+    backdrop?.addEventListener('click', closeSidebar);
+
+    // Close drawer when a sidebar link is clicked (mobile)
+    sidebar.querySelectorAll('.sidebar__link').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 960) closeSidebar();
+      });
+    });
+  }
+
   // Sidebar collapsible sections
   document.querySelectorAll('.sidebar__heading').forEach((toggle) => {
     toggle.addEventListener('click', () => {

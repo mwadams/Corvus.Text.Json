@@ -311,6 +311,10 @@ $docViewTemplate = @'
     var currentUrl = Model.PageContext.Navigation?.Url;
 }
 <div class="layout-docs container">
+    <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="sidebar-toggle__icon"></span>
+    </button>
+    <div class="sidebar-backdrop"></div>
     <aside class="sidebar">
         <div class="sidebar__section">
             <button class="sidebar__heading">Getting Started</button>
