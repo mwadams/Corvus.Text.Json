@@ -35,11 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     backdrop?.addEventListener('click', closeSidebar);
 
-    // Close drawer when a sidebar link is clicked (mobile)
-    sidebar.querySelectorAll('.sidebar__link').forEach((link) => {
-      link.addEventListener('click', () => {
-        if (window.innerWidth < 960) closeSidebar();
-      });
+    // Close drawer when any link inside the sidebar is clicked (mobile)
+    sidebar.addEventListener('click', (e) => {
+      if (e.target.closest('a') && window.innerWidth < 960) {
+        closeSidebar();
+      }
     });
   }
 
