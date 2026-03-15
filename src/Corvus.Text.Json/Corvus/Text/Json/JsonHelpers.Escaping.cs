@@ -111,4 +111,4 @@ internal static partial class JsonHelpers
 
         return propertySection;
     }
-}
+}

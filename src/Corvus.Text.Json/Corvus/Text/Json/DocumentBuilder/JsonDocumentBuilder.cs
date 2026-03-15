@@ -2092,4 +2092,4 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
                 return false;
         }
     }
-}
+}

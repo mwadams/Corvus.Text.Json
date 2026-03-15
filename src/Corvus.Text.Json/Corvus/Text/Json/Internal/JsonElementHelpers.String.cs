@@ -29,4 +29,4 @@ public static partial class JsonElementHelpers
 
         return count;
     }
-}
+}

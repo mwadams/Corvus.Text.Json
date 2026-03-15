@@ -287,4 +287,4 @@ public sealed partial class Utf8JsonWriter
 
         SetFlagToAddListSeparatorBeforeNextItem();
     }
-}
+}

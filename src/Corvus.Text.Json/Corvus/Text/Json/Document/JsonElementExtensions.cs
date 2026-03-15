@@ -94,4 +94,4 @@ public static class JsonElementExtensions
     {
         return value.ParentDocument is null || value.TokenType is JsonTokenType.None;
     }
-}
+}

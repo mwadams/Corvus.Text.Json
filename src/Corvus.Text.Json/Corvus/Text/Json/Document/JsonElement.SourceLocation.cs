@@ -101,4 +101,4 @@ public readonly partial struct JsonElement
 
         return _parent.TryGetLine(lineNumber, out line);
     }
-}
+}

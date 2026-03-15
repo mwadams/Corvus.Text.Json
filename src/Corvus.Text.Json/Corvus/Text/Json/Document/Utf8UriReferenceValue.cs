@@ -80,4 +80,4 @@ public readonly struct Utf8UriReferenceValue
             ArrayPool<byte>.Shared.Return(_extraRentedArrayPoolBytes);
         }
     }
-}
+}

@@ -87,4 +87,4 @@ internal static class Utf8UriHelper
 
         return (char)((a << 4) | b);
     }
-}
+}

@@ -349,4 +349,4 @@ public interface IMutableJsonDocument : IJsonDocument
     /// <param name="membersToOverwrite">The number of members to overwrite.</param>
     /// <param name="cvb">The <see cref="ComplexValueBuilder"/> to overwrite and dispose.</param>
     void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int membersToOverwrite, ref ComplexValueBuilder cvb);
-}
+}

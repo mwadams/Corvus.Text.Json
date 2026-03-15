@@ -481,4 +481,4 @@ public sealed partial class IdnMapping
 
         return true;
     }
-}
+}

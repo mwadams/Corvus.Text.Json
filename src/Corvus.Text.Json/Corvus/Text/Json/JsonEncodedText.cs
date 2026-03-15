@@ -195,4 +195,4 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
 
         return encodedText;
     }
-}
+}

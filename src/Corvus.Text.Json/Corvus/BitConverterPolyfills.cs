@@ -53,4 +53,4 @@ public static class BitConverterPolyfills
             return true;
         }
     }
-}
+}

@@ -157,4 +157,4 @@ internal static partial class Strings
 
         return resourceFormat;
     }
-}
+}

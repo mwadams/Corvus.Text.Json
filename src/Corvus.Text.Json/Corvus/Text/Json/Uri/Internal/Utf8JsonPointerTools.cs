@@ -216,4 +216,4 @@ internal static class Utf8JsonPointerTools
 
         return writeIndex;
     }
-}
+}

@@ -70,4 +70,4 @@ namespace System.Diagnostics.CodeAnalysis
         /// <summary>The syntax identifier for strings containing XML.</summary>
         public const string Xml = nameof(Xml);
     }
-}
+}

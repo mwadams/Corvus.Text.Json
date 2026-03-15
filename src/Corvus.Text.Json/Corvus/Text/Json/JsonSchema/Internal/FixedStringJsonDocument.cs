@@ -816,4 +816,4 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
             }
         }
     }
-}
+}

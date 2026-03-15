@@ -8,4 +8,4 @@ namespace TestUtilities.JsonSchemaTestSuite;
 /// Represents the schema for the json-schema-test-suite.
 /// </summary>
 [JsonSchemaTypeGenerator("./test-schema.json")]
-public readonly partial struct TestFileModel;
+public readonly partial struct TestFileModel;

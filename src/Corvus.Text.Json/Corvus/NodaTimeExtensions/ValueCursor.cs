@@ -561,4 +561,4 @@ internal ref struct ValueCursor
             return c < '0' || c > '9' ? -1 : c - '0';
         }
     }
-}
+}

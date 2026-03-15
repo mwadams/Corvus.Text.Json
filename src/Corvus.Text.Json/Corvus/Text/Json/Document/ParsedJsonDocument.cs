@@ -1881,4 +1881,4 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         db.AppendExternal(complexObjectRow.TokenType, index, entityLength, complexObjectRow.NumberOfRows);
         return count;
     }
-}
+}

@@ -183,4 +183,4 @@ public static partial class CharUnicodeInfo
 
         return codePoint;
     }
-}
+}

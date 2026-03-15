@@ -97,4 +97,4 @@ public static partial class JsonSchemaEvaluation
     /// Message provider for validation errors when a value matches the corresponding then clause for a binary or ternary if.
     /// </summary>
     public static readonly JsonSchemaMessageProvider MatchedElse = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedElse.AsSpan(), buffer, out written);
-}
+}

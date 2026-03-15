@@ -107,4 +107,4 @@ public readonly struct ValidationResult
         /// </summary>
         public Utf8IriReference ValidationLocation => Utf8IriReference.CreateIriReference(_validationLocation);
     }
-}
+}

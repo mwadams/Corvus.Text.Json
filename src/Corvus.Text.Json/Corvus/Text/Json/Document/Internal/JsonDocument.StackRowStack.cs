@@ -107,4 +107,4 @@ public abstract partial class JsonDocument
             ArrayPool<byte>.Shared.Return(toReturn);
         }
     }
-}
+}

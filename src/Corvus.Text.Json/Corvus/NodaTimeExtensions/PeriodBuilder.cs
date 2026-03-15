@@ -158,4 +158,4 @@ public struct PeriodBuilder
 
         return new Period(this.Years, this.Months, 0 /* weeks */, days, hours, minutes, seconds, milliseconds, 0 /* ticks */, nanoseconds);
     }
-}
+}

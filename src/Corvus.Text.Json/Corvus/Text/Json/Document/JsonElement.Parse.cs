@@ -140,4 +140,4 @@ public readonly partial struct JsonElement
     {
         return JsonElementHelpers.TryParseValue(ref reader, out element);
     }
-}
+}

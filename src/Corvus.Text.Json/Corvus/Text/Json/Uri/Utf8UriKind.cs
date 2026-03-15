@@ -27,4 +27,4 @@ public enum Utf8UriKind
     /// The URI is a relative URI.
     /// </summary>
     Relative = 2
-}
+}

@@ -73,4 +73,4 @@ internal static class JsonSchemaResultsCollectorCache
             Collector = JsonSchemaResultsCollector.CreateEmptyInstanceForCaching();
         }
     }
-}
+}

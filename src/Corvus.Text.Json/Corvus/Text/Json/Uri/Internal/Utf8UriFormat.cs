@@ -31,4 +31,4 @@ public enum Utf8UriFormat
 
     // This value is reserved for the default ToString() format that is historically none of the above.
     // V1ToStringUnescape = 0x7FFF
-}
+}

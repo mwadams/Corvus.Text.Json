@@ -25,4 +25,4 @@ public delegate void JsonSchemaMatcherWithRequiredBitBuffer(IJsonDocument parent
 /// <param name="parentDocumentIndex">The index of the element within the parent document.</param>
 /// <param name="context">The schema evaluation context.</param>
 [CLSCompliant(false)]
-public delegate void JsonSchemaMatcher(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context);
+public delegate void JsonSchemaMatcher(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context);

@@ -586,4 +586,4 @@ public static partial class JsonSchemaEvaluation
     {
         return JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_ExpectedBooleanFalseValue.AsSpan(), buffer, out written);
     }
-}
+}

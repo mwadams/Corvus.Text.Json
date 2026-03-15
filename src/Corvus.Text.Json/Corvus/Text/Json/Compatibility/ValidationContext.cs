@@ -93,4 +93,4 @@ public readonly struct ValidationContext
 
         return new ReadOnlyCollection<ValidationResult>(result);
     }
-}
+}

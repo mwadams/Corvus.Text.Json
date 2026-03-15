@@ -44,4 +44,4 @@ public readonly struct NormalizedJsonNumber
     /// The exponent to apply after concatenating the integral and fractional parts.
     /// </summary>
     public int Exponent { get; }
-}
+}

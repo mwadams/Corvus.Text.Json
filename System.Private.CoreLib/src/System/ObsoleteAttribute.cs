@@ -38,4 +38,4 @@ namespace System
 
         public string? UrlFormat { get; set; }
     }
-}
+}

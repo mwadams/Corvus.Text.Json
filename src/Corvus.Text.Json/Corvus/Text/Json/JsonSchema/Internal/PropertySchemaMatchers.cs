@@ -388,4 +388,4 @@ public class PropertySchemaMatchers<T>
     {
         return _nameProviders[entry.ValueIndex]();
     }
-}
+}

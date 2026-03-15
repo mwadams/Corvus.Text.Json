@@ -1392,4 +1392,4 @@ public static partial class JsonSchemaEvaluation
 
         return AppendSingleQuotedValue(value, buffer, ref written);
     }
-}
+}

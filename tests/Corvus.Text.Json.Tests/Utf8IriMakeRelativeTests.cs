@@ -194,6 +194,3 @@ public class Utf8IriMakeRelativeTests
         byte[] expectedBytes = Encoding.UTF8.GetBytes(expectedRelative); Assert.True(result.OriginalIriReference.SequenceEqual(expectedBytes), $"Expected: {expectedRelative}, Actual: {JsonReaderHelper.GetTextFromUtf8(result.OriginalIriReference)}");
     }
 }
-
-
-

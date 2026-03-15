@@ -290,4 +290,4 @@ public readonly ref struct Utf8UriReference
 
         return string.Empty;
     }
-}
+}

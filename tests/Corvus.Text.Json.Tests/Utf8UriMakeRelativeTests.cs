@@ -289,5 +289,3 @@ public class Utf8UriMakeRelativeTests
             $"Expected: {expectedRelative}, Actual: {JsonReaderHelper.GetTextFromUtf8(result.OriginalUriReference)}");
     }
 }
-
-

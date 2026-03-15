@@ -593,4 +593,4 @@ public static partial class JsonSchemaEvaluation
         written = bytesWritten;
         return true;
     }
-}
+}

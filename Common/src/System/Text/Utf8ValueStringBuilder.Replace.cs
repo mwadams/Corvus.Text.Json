@@ -145,4 +145,4 @@ internal ref partial struct Utf8ValueStringBuilder
             } while (matchCount > 0);
         }
     }
-}
+}

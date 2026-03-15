@@ -111,4 +111,4 @@ internal static partial class HashHelpers
 
         return candidate == 2;
     }
-}
+}

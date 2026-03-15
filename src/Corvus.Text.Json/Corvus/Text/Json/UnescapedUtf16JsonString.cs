@@ -76,4 +76,4 @@ public ref struct UnescapedUtf16JsonString
             }
         }
     }
-}
+}

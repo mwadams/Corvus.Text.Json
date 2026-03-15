@@ -45,4 +45,3 @@ string ProcessDiscriminatedUnion(in DiscriminatedUnionByType value)
         static (in DiscriminatedUnionByType.People value) => $"It was an array of people. {value.GetArrayLength()}",
         static (in DiscriminatedUnionByType unknownValue) => throw new InvalidOperationException($"Unexpected instance {unknownValue}"));
 }
-

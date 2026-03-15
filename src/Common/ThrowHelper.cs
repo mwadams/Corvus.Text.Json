@@ -11,4 +11,4 @@ internal static partial class ThrowHelper
     {
         throw new ArgumentNullException(parameterName);
     }
-}
+}

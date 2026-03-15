@@ -119,4 +119,4 @@ public struct ObjectEnumerator<TValue> : IEnumerable<JsonProperty<TValue>>, IEnu
 
         return _curIdx < _endIdxOrVersion;
     }
-}
+}

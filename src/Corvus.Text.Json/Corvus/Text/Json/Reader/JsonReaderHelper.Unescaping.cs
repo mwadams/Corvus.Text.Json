@@ -796,4 +796,4 @@ internal static partial class JsonReaderHelper
     DestinationTooShort:
         return false;
     }
-}
+}

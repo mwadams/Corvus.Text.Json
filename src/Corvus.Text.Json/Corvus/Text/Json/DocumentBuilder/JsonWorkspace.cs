@@ -269,4 +269,4 @@ public class JsonWorkspace : IDisposable
     /// </summary>
     /// <returns>An empty workspace instance suitable for caching.</returns>
     internal static JsonWorkspace CreateEmptyInstanceForCaching() => new(true);
-}
+}

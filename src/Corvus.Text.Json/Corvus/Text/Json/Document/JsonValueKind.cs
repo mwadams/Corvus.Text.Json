@@ -52,4 +52,4 @@ public enum JsonValueKind : byte
     /// Indicates that a value is the JSON value <c>null</c>.
     /// </summary>
     Null,
-}
+}

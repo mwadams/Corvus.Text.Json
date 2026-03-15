@@ -19,4 +19,4 @@ namespace Corvus.Text.Json.Internal;
 public interface IMutableJsonElement<T> : IJsonElement<T>
     where T : struct, IJsonElement<T>
 {
-}
+}

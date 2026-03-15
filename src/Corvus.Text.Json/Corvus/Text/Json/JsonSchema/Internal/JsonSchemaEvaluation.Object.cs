@@ -381,4 +381,4 @@ public static partial class JsonSchemaEvaluation
 
         return AppendSingleQuotedValue(propertyName, buffer, ref written);
     }
-}
+}

@@ -40,4 +40,4 @@ internal enum Utf8UriParsingError
 
     // The user requested only a relative Uri, but an absolute Uri was parsed.
     CannotCreateRelative = 12
-}
+}

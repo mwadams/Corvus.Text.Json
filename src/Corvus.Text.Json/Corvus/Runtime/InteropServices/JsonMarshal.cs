@@ -57,4 +57,4 @@ public static class JsonMarshal
         element.CheckValidInstance();
         return element.ParentDocument.GetRawValue(element.ParentDocumentIndex, includeQuotes: true);
     }
-}
+}

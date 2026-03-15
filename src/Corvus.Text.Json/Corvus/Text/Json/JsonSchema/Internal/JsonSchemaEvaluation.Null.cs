@@ -41,4 +41,4 @@ public static partial class JsonSchemaEvaluation
 
         return true;
     }
-}
+}

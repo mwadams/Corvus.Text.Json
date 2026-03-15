@@ -319,4 +319,4 @@ internal ref partial struct ValueStringBuilder
             ArrayPool<char>.Shared.Return(toReturn);
         }
     }
-}
+}

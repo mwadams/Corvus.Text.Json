@@ -4087,4 +4087,4 @@ internal static class Utf8UriTools
         return true;
 #endif
     }
-}
+}

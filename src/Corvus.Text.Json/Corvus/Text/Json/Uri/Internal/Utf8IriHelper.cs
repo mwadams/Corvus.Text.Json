@@ -48,4 +48,4 @@ internal class Utf8IriHelper
                 && (isQuery || value < 0xF0000);
         }
     }
-}
+}

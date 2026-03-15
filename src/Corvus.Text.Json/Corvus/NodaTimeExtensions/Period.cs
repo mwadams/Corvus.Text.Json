@@ -845,4 +845,4 @@ public readonly struct Period : IEquatable<Period>
                     .PlusNanoseconds(y.Nanoseconds));
         }
     }
-}
+}

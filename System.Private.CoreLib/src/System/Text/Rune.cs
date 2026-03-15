@@ -1455,4 +1455,4 @@ namespace System.Text
             throw new ArgumentException(SR.Arg_MustBeRune);
         }
     }
-}
+}

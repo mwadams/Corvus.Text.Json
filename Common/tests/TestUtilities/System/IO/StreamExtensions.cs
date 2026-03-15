@@ -20,4 +20,4 @@ namespace System.IO
             return buffer[0];
         }
     }
-}
+}

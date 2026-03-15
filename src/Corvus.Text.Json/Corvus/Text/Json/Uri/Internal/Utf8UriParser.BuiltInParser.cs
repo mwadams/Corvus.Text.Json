@@ -29,4 +29,4 @@ internal partial class Utf8UriParser
             _port = defaultPort;
         }
     }
-}
+}

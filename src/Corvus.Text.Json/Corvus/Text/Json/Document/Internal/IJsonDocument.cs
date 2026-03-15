@@ -679,4 +679,4 @@ public interface IJsonDocument : IDisposable
     /// <param name="line">When this method returns, contains the line text if successful.</param>
     /// <returns><see langword="true"/> if the line was successfully retrieved; otherwise, <see langword="false"/>.</returns>
     bool TryGetLine(int lineNumber, [NotNullWhen(true)] out string? line);
-}
+}

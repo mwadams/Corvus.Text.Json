@@ -25,4 +25,4 @@ public enum JsonCommentHandling : byte
     /// While reading, the caller will be able to access the comment values.
     /// </summary>
     Allow = 2,
-}
+}

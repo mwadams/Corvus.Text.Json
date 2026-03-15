@@ -48,4 +48,4 @@ internal enum Utf8UriSyntaxFlags
     AllowIriParsing = 0x10000000,   // Iri parsing. String is normalized, bidi control
 
                                     // characters are removed, unicode char limits are checked etc.
-}
+}

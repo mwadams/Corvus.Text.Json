@@ -581,4 +581,4 @@ public sealed partial class Utf8JsonWriter
 
         WriteStringSegmentEscape(utf8Value, isFinalSegment);
     }
-}
+}

@@ -6595,4 +6595,4 @@ public static partial class JsonElementHelpers
         bytesWritten = requiredLength;
         return true;
     }
-}
+}

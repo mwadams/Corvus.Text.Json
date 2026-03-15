@@ -326,4 +326,4 @@ internal static partial class JsonWriterHelper
         }
 #endif
     }
-}
+}

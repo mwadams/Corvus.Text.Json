@@ -291,4 +291,4 @@ namespace System
 
         public static bool IsWindowsX86OrX64 => PlatformDetection.IsWindows && (PlatformDetection.IsX86Process || PlatformDetection.IsX64Process);
     }
-}
+}

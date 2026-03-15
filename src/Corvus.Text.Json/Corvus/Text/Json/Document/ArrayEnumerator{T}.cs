@@ -117,4 +117,4 @@ public struct ArrayEnumerator<TItem> : IEnumerable<TItem>, IEnumerator<TItem>
 
         return _curIdx < _endIdxOrVersion;
     }
-}
+}

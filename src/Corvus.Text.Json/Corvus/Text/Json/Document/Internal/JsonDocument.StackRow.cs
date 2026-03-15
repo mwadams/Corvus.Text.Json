@@ -51,4 +51,4 @@ public abstract partial class JsonDocument
             NumberOfRows = numberOfRows;
         }
     }
-}
+}

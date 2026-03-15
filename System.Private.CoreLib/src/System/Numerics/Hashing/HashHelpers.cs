@@ -12,4 +12,4 @@ namespace System.Numerics.Hashing
             return ((int)rol5 + h1) ^ h2;
         }
     }
-}
+}

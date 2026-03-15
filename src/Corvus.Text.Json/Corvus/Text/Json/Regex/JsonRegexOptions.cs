@@ -60,4 +60,4 @@ public enum JsonRegexOptions
     /// the top-level match.
     /// </remarks>
     NonBacktracking = 0x0400,
-}
+}

@@ -73,4 +73,4 @@ public ref struct RentedBacking
 
         return _buffer.AsSpan(0, _length);
     }
-}
+}

@@ -24,4 +24,4 @@ internal partial struct ValueStack<T>
         _pos--;
         return Span[_pos];
     }
-}
+}

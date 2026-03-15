@@ -52,4 +52,4 @@ namespace Corvus.Text.Json
                 isEnabled: out bool value)
             ? value : false;
     }
-}
+}

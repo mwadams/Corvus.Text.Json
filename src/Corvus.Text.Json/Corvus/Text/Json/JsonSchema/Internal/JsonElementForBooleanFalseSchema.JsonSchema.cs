@@ -173,4 +173,4 @@ public readonly partial struct JsonElementForBooleanFalseSchema
             return false;
         }
     }
-}
+}

@@ -353,4 +353,4 @@ internal partial class Utf8UriParser
     {
         return (_flags & flags) == expected;
     }
-}
+}

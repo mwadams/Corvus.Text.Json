@@ -252,4 +252,4 @@ internal partial struct ValueStack<T>
         buffer.AsSpan(0, _pos).CopyTo(Span);
 #endif
     }
-}
+}

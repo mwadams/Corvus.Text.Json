@@ -521,4 +521,4 @@ public abstract partial class JsonDocument
             return GetRawSimpleValueUnsafe(entry.ValueIndex - DbRow.Size, false).Span;
         }
     }
-}
+}

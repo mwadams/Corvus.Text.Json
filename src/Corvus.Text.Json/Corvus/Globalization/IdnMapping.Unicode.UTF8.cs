@@ -641,4 +641,4 @@ public sealed partial class IdnMapping
     /* forced to lowercase (if possible).  ASCII code points are      */
     /* output already in the proper case, but their flags will be set */
     /* appropriately so that applying the flags would be harmless.    */
-}
+}

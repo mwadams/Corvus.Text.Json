@@ -244,4 +244,4 @@ internal static partial class JsonConstants
     public const int MinimumIndentSize = 0;
 
     public const int MaximumIndentSize = 127; // If this value is changed, the impact on the options masking used in the JsonWriterOptions struct must be checked carefully.
-}
+}

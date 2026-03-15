@@ -84,4 +84,4 @@ public struct JsonDocumentOptions
             MaxDepth = MaxDepth
         };
     }
-}
+}

@@ -85,4 +85,4 @@ public struct JsonReaderOptions
             _maxDepth = value;
         }
     }
-}
+}

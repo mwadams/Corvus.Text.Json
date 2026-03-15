@@ -32,4 +32,4 @@ public enum ValidationLevel
     /// 10.4.4. Verbose.
     /// </summary>
     Verbose,
-}
+}

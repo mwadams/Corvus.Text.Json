@@ -374,4 +374,4 @@ internal static class JsonRegexCharClass
 
         return false;
     }
-}
+}

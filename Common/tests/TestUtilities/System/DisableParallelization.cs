@@ -8,4 +8,4 @@ namespace System
     // So please use "Compile Include" in the project file to include this class.
     [CollectionDefinition(nameof(DisableParallelization), DisableParallelization = true)]
     public class DisableParallelization { }
-}
+}

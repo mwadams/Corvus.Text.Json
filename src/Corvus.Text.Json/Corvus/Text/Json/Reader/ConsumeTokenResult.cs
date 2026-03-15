@@ -30,4 +30,4 @@ internal enum ConsumeTokenResult : byte
     /// Return false, but do not roll-back anything since nothing changed.
     /// </summary>
     IncompleteNoRollBackNecessary,
-}
+}

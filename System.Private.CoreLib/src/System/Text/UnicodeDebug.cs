@@ -71,4 +71,4 @@ namespace System.Text
             return FormattableString.Invariant($"U+{codePoint:X4}");
         }
     }
-}
+}

@@ -373,4 +373,4 @@ public sealed partial class Utf8JsonWriter
         Debug.Assert(result);
         BytesPending += bytesWritten;
     }
-}
+}

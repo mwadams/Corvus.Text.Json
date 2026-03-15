@@ -51,4 +51,4 @@ public interface IJsonElement
     /// </summary>
     /// <param name="writer">The writer to which to write the element.</param>
     void WriteTo(Utf8JsonWriter writer);
-}
+}

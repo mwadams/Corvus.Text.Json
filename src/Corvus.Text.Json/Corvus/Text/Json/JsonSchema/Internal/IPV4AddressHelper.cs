@@ -320,4 +320,4 @@ internal static partial class IPv4AddressHelper
                 return Invalid;
         }
     }
-}
+}

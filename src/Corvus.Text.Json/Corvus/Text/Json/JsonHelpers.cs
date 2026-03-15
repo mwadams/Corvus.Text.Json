@@ -154,4 +154,4 @@ internal static partial class JsonHelpers
 #else
     private static Regex CreateIntegerRegex() => new(IntegerRegexPattern, RegexOptions.Compiled, TimeSpan.FromMilliseconds(IntegerRegexTimeoutMs));
 #endif
-}
+}

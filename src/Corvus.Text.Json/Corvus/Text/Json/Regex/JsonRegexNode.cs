@@ -140,4 +140,4 @@ internal readonly struct JsonRegexNode
         currentKind += kind - JsonRegexNodeKind.One;
         validator.SetKind(_idx, currentKind);
     }
-}
+}

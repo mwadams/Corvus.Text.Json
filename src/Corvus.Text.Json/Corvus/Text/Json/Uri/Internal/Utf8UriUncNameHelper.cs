@@ -134,4 +134,4 @@ internal static class Utf8UriUncNameHelper
         returnedEnd = end;
         return true;
     }
-}
+}

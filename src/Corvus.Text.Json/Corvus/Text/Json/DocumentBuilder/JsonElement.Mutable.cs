@@ -5987,4 +5987,4 @@ public readonly partial struct JsonElement
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly JsonValueKind IJsonElement.ValueKind => ValueKind;
     }
-}
+}

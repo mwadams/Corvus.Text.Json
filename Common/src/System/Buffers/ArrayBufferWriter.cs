@@ -249,4 +249,4 @@ namespace System.Buffers
             throw new OutOfMemoryException(SR.Format(SR.BufferMaximumSizeExceeded, capacity));
         }
     }
-}
+}

@@ -133,4 +133,4 @@ internal readonly struct DbRow
     internal bool IsSimpleValue => TokenType >= JsonTokenType.PropertyName;
 
     internal bool HasPropertyMap => _sizeLengthOrPropertyMapIndexUnion <= 0;
-}
+}

@@ -338,4 +338,4 @@ public ref struct UniqueItemsHashSet
             ArrayPool<byte>.Shared.Return(eb);
         }
     }
-}
+}

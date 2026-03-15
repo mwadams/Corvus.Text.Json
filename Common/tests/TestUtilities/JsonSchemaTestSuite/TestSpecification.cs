@@ -75,4 +75,4 @@ public class TestSpecification(
     public JsonAny Instance { get; } = instance;
 
     public bool Expectation { get; } = expectation;
-}
+}

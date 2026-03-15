@@ -886,4 +886,4 @@ public struct MetadataDb : IDisposable
         Debug.Assert(Length <= destination.Length - targetIndex);
         Buffer.BlockCopy(_data, 0, destination._data, targetIndex, Length);
     }
-}
+}

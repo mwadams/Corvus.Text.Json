@@ -88,4 +88,4 @@ public struct ArrayEnumerator
     {
         _curIdx = -1;
     }
-}
+}

@@ -17,4 +17,4 @@ internal enum StrongBidiCategory
     Other = 0x00,
     StrongLeftToRight = 0x20,
     StrongRightToLeft = 0x40,
-}
+}

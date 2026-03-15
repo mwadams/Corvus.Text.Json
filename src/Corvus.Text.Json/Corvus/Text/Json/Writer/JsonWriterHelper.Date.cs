@@ -108,4 +108,4 @@ internal static partial class JsonWriterHelper
         TrimDateTimeOffset(tempSpan.Slice(0, bytesWritten), out bytesWritten);
         tempSpan.Slice(0, bytesWritten).CopyTo(buffer);
     }
-}
+}

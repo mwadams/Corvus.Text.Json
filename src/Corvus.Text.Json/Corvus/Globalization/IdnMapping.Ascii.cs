@@ -731,4 +731,4 @@ public sealed partial class IdnMapping
         // 0-25 map to a-z or A-Z
         return (char)(d + 'a');
     }
-}
+}

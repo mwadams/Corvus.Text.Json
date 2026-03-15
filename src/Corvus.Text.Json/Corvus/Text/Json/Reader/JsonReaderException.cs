@@ -14,4 +14,4 @@ internal sealed class JsonReaderException : JsonException
         : base(message, path: null, lineNumber, bytePositionInLine)
     {
     }
-}
+}

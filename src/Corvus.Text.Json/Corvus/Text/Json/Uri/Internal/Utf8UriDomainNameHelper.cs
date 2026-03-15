@@ -212,4 +212,4 @@ internal class Utf8UriDomainNameHelper
 
     private static bool IsInInclusiveRange(uint value, uint min, uint max)
             => (value - min) <= (max - min);
-}
+}

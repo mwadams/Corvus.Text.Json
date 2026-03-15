@@ -100,4 +100,4 @@ public enum Utf8UriComponents
     /// The path and query components.
     /// </summary>
     PathAndQuery = Path | Query,
-}
+}

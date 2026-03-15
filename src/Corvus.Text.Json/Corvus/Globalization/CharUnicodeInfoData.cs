@@ -2494,4 +2494,4 @@ public static partial class CharUnicodeInfo
         Debug.Assert(level2BitCount == 5, "Unexpected level 2 bit count.");
         Debug.Assert(level3BitCount == 4, "Unexpected level 3 bit count.");
     }
-}
+}

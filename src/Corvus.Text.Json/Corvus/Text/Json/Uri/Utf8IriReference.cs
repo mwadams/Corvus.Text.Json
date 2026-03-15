@@ -332,4 +332,4 @@ public readonly ref struct Utf8IriReference
 
         return string.Empty;
     }
-}
+}

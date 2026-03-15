@@ -442,4 +442,4 @@ internal ref partial struct Utf8ValueStringBuilder
             _bytes = _arrayToReturnToPool;
         }
     }
-}
+}

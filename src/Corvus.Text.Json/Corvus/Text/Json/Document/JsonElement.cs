@@ -2163,4 +2163,4 @@ public readonly partial struct JsonElement
     /// <inheritdoc/>
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
-}
+}

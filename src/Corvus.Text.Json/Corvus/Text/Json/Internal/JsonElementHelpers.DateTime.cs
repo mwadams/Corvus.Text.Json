@@ -748,4 +748,4 @@ public static partial class JsonElementHelpers
         bytesWritten = index;
         return true;
     }
-}
+}

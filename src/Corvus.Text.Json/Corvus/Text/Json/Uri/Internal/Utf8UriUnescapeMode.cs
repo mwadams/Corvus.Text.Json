@@ -20,4 +20,4 @@ internal enum Utf8UriUnescapeMode
     EscapeUnescape = Unescape | Escape,      // does both escaping control+reserved and unescaping of safe characters
     V1ToStringFlag = 0x4,                    // Only used as V1.0 ToString() compatibility mode, assumes DontEscape level also
     UnescapeAll = 0x8,                       // just unescape everything, leave bad escaped sequences as is
-}
+}

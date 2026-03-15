@@ -60,4 +60,4 @@ internal struct Utf8UriOffset
     /// The offset to the end of the URI string.
     /// </summary>
     public ushort End;
-}
+}

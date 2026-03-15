@@ -372,4 +372,4 @@ public static partial class JsonElementHelpers
                 ArrayPool<byte>.Shared.Return(rentedBuffer);
         }
     }
-}
+}

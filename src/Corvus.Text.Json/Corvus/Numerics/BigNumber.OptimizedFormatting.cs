@@ -568,4 +568,4 @@ public readonly partial struct BigNumber
             _ => digits + 10
         };
     }
-}
+}

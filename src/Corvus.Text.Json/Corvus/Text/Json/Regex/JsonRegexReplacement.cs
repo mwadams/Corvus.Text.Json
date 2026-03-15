@@ -32,4 +32,4 @@ internal static class JsonRegexReplacement
     /// Represents the entire input string.
     /// </summary>
     public const int WholeString = -4;
-}
+}

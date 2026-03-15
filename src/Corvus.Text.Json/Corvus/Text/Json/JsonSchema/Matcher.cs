@@ -36,4 +36,4 @@ public delegate TResult Matcher<TMatch, TContext, TResult>(in TMatch match, in T
 /// <returns>The result of processing the match.</returns>
 [CLSCompliant(false)]
 public delegate TOut Matcher<TMatch, TOut>(in TMatch match)
-    where TMatch : struct, IJsonElement<TMatch>;
+    where TMatch : struct, IJsonElement<TMatch>;

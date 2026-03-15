@@ -204,4 +204,4 @@ namespace Corvus.Text.Json
                                                0x02ul << 40 |
                                                0x01ul << 48) + 1;
     }
-}
+}

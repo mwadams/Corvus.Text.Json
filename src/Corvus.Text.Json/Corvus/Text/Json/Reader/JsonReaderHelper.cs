@@ -471,4 +471,4 @@ internal static partial class JsonReaderHelper
         written = writeIndex;
         return readIndex == unencodedFragment.Length;
     }
-}
+}

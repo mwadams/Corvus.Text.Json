@@ -2750,4 +2750,4 @@ public ref partial struct Utf8JsonReader
             return new SequencePosition(_prevCurrentPosition.GetObject(), _prevCurrentPosition.GetInteger() + _prevConsumed + offset);
         }
     }
-}
+}

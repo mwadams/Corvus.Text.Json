@@ -167,4 +167,4 @@ public static class Polyfills
             return new(isMatch && context.IsValid, collector);
         }
     }
-}
+}

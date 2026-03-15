@@ -99,4 +99,4 @@ public readonly struct JsonReaderState
     /// to the JSON specification, which is the default behavior.
     /// </summary>
     public JsonReaderOptions Options => _readerOptions;
-}
+}

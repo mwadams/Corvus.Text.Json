@@ -95,4 +95,4 @@ public struct ObjectEnumerator
     {
         _curIdx = -1;
     }
-}
+}

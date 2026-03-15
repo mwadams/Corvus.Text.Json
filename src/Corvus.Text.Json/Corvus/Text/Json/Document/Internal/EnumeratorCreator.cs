@@ -41,4 +41,4 @@ public static class EnumeratorCreator
     {
         return new ObjectEnumerator<T>(parent, index);
     }
-}
+}

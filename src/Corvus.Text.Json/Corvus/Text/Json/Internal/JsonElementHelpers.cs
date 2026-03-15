@@ -417,4 +417,4 @@ public static partial class JsonElementHelpers
         value.CheckValidInstance();
         return (value.ParentDocument, value.ParentDocumentIndex);
     }
-}
+}

@@ -184,4 +184,4 @@ public static partial class JsonElementHelpers
         element = document?.RootElement;
         return ret;
     }
-}
+}

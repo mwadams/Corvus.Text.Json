@@ -27,4 +27,4 @@ public enum JsonSchemaResultsLevel
     /// Includes full location and message information for schema matching.
     /// </summary>
     Verbose,
-}
+}

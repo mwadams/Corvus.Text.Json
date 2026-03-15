@@ -508,4 +508,4 @@ namespace TestUtilities
 
             return expectedValue.Equals(actualValue);
         }
-    }
+    }

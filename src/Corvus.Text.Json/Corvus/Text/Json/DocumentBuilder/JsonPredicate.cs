@@ -18,4 +18,4 @@ namespace Corvus.Text.Json;
 /// <returns>The result of evaluating the predicate, <see langword="true"/> of <see langword="false"/>.</returns>
 [CLSCompliant(false)]
 public delegate bool JsonPredicate<T>(in T item)
-    where T : struct, IJsonElement<T>;
+    where T : struct, IJsonElement<T>;

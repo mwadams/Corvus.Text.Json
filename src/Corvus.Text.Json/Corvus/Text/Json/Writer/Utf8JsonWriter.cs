@@ -1321,4 +1321,4 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
         /// </summary>
         Base64StringSequence = 0x40,
     }
-}
+}

@@ -1076,4 +1076,3 @@ internal static partial class CodeGenerationExtensions
         return generator;
     }
 }
-

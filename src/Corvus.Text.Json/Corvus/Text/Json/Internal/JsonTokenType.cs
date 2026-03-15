@@ -82,4 +82,4 @@ public enum JsonTokenType : byte
     /// Indicates that the token type is the JSON literal <c>null</c>.
     /// </summary>
     Null = 11,
-}
+}

@@ -28,4 +28,4 @@ public interface IJsonElement<T> : IJsonElement
     static abstract T CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex);
 
 #endif
-}
+}

@@ -878,4 +878,4 @@ namespace System
                 && isBinaryFormatterEnabled;
         }
     }
-}
+}

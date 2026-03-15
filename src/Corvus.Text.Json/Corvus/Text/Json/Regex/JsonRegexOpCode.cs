@@ -299,4 +299,4 @@ internal enum JsonRegexOpCode
 
     /// <summary>Indicates that we're case-insensitive.</summary>
     CaseInsensitive = 512,
-}
+}

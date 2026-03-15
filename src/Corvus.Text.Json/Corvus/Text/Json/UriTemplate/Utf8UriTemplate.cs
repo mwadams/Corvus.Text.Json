@@ -466,4 +466,4 @@ internal static class Utf8UriTemplate
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool IsDigit(byte b) => b >= (byte)'0' && b <= (byte)'9';
-}
+}

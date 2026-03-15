@@ -2400,4 +2400,4 @@ public readonly partial struct BigNumber :
         var yAbs = BigInteger.Abs(y.Significand);
         return xAbs < yAbs ? x : y;
     }
-}
+}

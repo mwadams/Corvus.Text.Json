@@ -181,4 +181,4 @@ public readonly struct JsonProperty<TValue>
         Value.ParentDocument.WritePropertyName(Value.ParentDocumentIndex, writer);
         Value.ParentDocument.WriteElementTo(Value.ParentDocumentIndex, writer);
     }
-}
+}

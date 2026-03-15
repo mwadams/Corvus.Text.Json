@@ -23,4 +23,4 @@ internal static partial class JsonReaderHelper
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static int IndexOfQuoteOrAnyControlOrBackSlash(this ReadOnlySpan<byte> span) =>
         span.IndexOfAny(s_controlQuoteBackslash);
-}
+}

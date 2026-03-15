@@ -131,4 +131,4 @@ internal enum ExceptionResource
     Argument_CannotExtractScalar,
     ArgumentOutOfRange_IndexMustBeLess,
     PrecisionMustBeBetween0And255
-}
+}

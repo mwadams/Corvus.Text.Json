@@ -1719,4 +1719,4 @@ public static partial class JsonSchemaEvaluation
             }
         }
     }
-}
+}

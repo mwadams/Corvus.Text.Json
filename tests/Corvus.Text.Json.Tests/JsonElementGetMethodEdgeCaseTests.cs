@@ -409,5 +409,3 @@ namespace Corvus.Text.Json.Tests
         #endregion
     }
 }
-
-

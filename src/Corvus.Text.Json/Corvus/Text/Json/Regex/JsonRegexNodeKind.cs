@@ -205,4 +205,4 @@ internal enum JsonRegexNodeKind : byte
     /// to match if the positive lookahead assertion was unsuccessful.
     /// </remarks>
     ExpressionConditional = 34,
-}
+}

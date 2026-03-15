@@ -311,4 +311,4 @@ public readonly ref struct Utf8Uri
 
         return string.Empty;
     }
-}
+}

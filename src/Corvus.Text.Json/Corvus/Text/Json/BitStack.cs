@@ -215,4 +215,4 @@ internal struct BitStack
 
         _array[elementIndex] = newValue;
     }
-}
+}

@@ -1095,4 +1095,4 @@ public struct JsonSchemaContext
     }
 
 #endif
-}
+}

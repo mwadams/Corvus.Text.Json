@@ -3,6 +3,9 @@
 ###############################################################################
 * text=auto
 
+# Ensure C# files are always treated as text with CRLF line endings
+*.cs text eol=crlf
+
 ###############################################################################
 # Set default behavior for command prompt diff.
 #

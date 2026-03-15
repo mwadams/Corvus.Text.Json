@@ -2255,4 +2255,4 @@ internal ref struct JsonRegexValidator
         /// </summary>
         public int ParentIndex => _parentIdx;
     }
-}
+}

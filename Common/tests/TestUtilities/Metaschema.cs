@@ -84,4 +84,4 @@ internal static class Metaschema
 
         return documentResolver;
     }
-}
+}

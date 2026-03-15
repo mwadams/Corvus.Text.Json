@@ -417,4 +417,4 @@ public static partial class JsonElementHelpers
         int significandLength = integral.Length + fractional.Length;
         return exponent >= 0 ? significandLength + exponent : significandLength;
     }
-}
+}

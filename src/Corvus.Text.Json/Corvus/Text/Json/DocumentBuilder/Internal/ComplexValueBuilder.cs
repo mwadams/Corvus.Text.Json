@@ -3484,4 +3484,4 @@ public ref struct ComplexValueBuilder
         int location = _parentDocument.EscapeAndStoreRawStringValue(stringValue, out bool requiredEscaping);
         _parsedData.AppendDynamicSimpleValue(tokenType, location, requiresUnescapingOrHasExponent: requiredEscaping);
     }
-}
+}

@@ -98,4 +98,4 @@ namespace System.IO.Tests
             wrapped.Write(buffer, offset, count);
         }
     }
-}
+}

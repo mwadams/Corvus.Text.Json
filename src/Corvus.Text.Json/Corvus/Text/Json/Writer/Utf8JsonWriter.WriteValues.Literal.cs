@@ -123,4 +123,4 @@ public sealed partial class Utf8JsonWriter
         utf8Value.CopyTo(output.Slice(BytesPending));
         BytesPending += utf8Value.Length;
     }
-}
+}

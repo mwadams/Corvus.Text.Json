@@ -30,4 +30,4 @@ internal enum ConsumeNumberResult : byte
     /// Return false if we have more data to follow. Otherwise throw.
     /// </summary>
     NeedMoreData,
-}
+}

@@ -87,4 +87,4 @@ public readonly ref struct Utf8JsonPointer
 
         return jsonElement.ParentDocument.TryGetLineAndOffsetForPointer(_jsonPointer, jsonElement.ParentDocumentIndex, out line, out charOffset, out lineByteOffset);
     }
-}
+}

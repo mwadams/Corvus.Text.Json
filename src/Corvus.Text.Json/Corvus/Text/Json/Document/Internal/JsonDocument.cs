@@ -2012,4 +2012,4 @@ public abstract partial class JsonDocument
         code.Add(Guid.NewGuid());
         return code.ToHashCode();
     }
-}
+}

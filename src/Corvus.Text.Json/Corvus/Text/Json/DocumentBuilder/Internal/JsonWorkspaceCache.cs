@@ -70,4 +70,4 @@ internal static class JsonWorkspaceCache
             Workspace = JsonWorkspace.CreateEmptyInstanceForCaching();
         }
     }
-}
+}

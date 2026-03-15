@@ -130,4 +130,4 @@ public sealed partial class ParsedJsonDocument<T>
         elementParent = null;
         return false;
     }
-}
+}

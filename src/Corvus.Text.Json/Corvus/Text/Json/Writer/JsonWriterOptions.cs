@@ -183,4 +183,4 @@ public struct JsonWriterOptions
     };
 
     // Equivalent to: Indented || !SkipValidation;
-}
+}

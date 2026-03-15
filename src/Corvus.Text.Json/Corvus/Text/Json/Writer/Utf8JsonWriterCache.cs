@@ -401,4 +401,4 @@ internal static class Utf8JsonWriterCache
             Writer = Utf8JsonWriter.CreateEmptyInstanceForCaching();
         }
     }
-}
+}

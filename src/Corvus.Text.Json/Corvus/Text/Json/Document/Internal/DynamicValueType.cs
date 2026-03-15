@@ -37,4 +37,4 @@ internal enum DynamicValueType : uint
     /// A null value.
     /// </summary>
     Null
-}
+}

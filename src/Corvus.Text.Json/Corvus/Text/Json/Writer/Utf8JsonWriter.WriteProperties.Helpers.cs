@@ -231,4 +231,4 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.KeyValueSeparator;
         output[BytesPending++] = token;
     }
-}
+}

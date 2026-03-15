@@ -288,4 +288,4 @@ public static partial class JsonElementHelpers
     {
         return v < '0' || v > '9';
     }
-}
+}

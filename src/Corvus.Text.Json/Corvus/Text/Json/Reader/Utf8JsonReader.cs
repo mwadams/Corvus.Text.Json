@@ -2699,4 +2699,4 @@ public ref partial struct Utf8JsonReader
             JsonTokenType.True => nameof(JsonTokenType.True),
             _ => ((byte)TokenType).ToString()
         };
-}
+}

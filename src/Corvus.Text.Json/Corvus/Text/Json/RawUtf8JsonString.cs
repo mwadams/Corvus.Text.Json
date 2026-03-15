@@ -76,4 +76,4 @@ public ref struct RawUtf8JsonString
             }
         }
     }
-}
+}

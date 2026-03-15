@@ -1208,4 +1208,4 @@ public ref partial struct Utf8JsonReader
         Debug.Assert(bytesWritten < source.Length, "source buffer must contain at least one escape sequence");
         return success;
     }
-}
+}

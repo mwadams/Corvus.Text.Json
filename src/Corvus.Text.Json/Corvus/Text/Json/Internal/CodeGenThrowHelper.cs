@@ -238,4 +238,4 @@ public enum CodeGenDataType
 
     /// <summary>Represents a version value.</summary>
     Version,
-}
+}

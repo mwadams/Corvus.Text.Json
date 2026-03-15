@@ -44,4 +44,4 @@ internal enum JsonRegexCaseBehavior
     /// on this behavior and with the additional mapping of: \u0069 => \u0131. This mode will be used when CurrentCulture is any of the tr/az cultures.
     /// </summary>
     Turkish
-}
+}
