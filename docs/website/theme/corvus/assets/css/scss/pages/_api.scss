@@ -213,3 +213,77 @@
     }
   }
 }
+
+// ---- API Feedback banner ----
+.api-feedback {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--color-border);
+
+  &__inner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--color-bg-raised);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+  }
+
+  &__logo {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    opacity: 0.85;
+  }
+
+  &__text {
+    h3 {
+      font-size: var(--font-size-rg);
+      font-weight: var(--font-weight-medium);
+      color: var(--color-white);
+      margin: 0 0 var(--space-xs);
+    }
+
+    p {
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-dark);
+      line-height: var(--line-height-regular);
+      margin: 0 0 var(--space-md);
+
+      a {
+        color: var(--color-brand);
+        text-decoration: none;
+
+        &:hover {
+          color: var(--color-brand-hover);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  &__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-brand);
+    text-decoration: none;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-brand-muted);
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast), color var(--transition-fast);
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      background: rgb(111 177 40 / 0.1);
+      color: var(--color-brand-hover);
+    }
+  }
+}
