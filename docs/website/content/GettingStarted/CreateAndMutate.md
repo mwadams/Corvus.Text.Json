@@ -199,12 +199,18 @@ The standard mutation workflow is:
 
 ## Serialization
 
+Any generated type — whether parsed, built from scratch, or mutated — can be written back to JSON. The simplest approach allocates a `string`:
+
 ```csharp
 // To a JSON string (allocates)
 string json = person.ToString();
 ```
 
-For high-throughput scenarios, rent a `Utf8JsonWriter` and buffer from the workspace to avoid allocations and share common writer options:
+This is convenient for logging, debugging, or any situation where a managed `string` is required.
+
+### Zero-allocation writing with pooled writers
+
+For high-throughput scenarios where you want to avoid allocating strings, rent a `Utf8JsonWriter` and buffer from the workspace. The workspace manages a thread-local cache of writers and buffers, so repeated rent/return cycles are allocation-free:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
@@ -226,7 +232,11 @@ finally
 }
 ```
 
-If you already have your own `IBufferWriter<byte>`, you can rent just the writer:
+Always return the writer and buffer in a `finally` block to ensure they are returned to the cache even if an exception occurs.
+
+### Bring your own buffer
+
+If you already have your own `IBufferWriter<byte>` (e.g. writing directly to a network stream or a pipeline), you can rent just the writer:
 
 ```csharp
 var buffer = new ArrayBufferWriter<byte>();
@@ -242,4 +252,4 @@ finally
 }
 ```
 
-The workspace caches writers on the current thread, so repeated rent/return cycles are allocation-free. Writer options (e.g. indentation) are configured once on the workspace and applied to every rented writer automatically.
+Writer options such as indentation are configured once on the workspace via its `Options` property and applied to every rented writer automatically — no need to pass `JsonWriterOptions` each time.
