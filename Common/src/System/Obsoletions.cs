@@ -198,4 +198,4 @@ namespace System
         // When adding a new diagnostic ID, add it to the table in docs\project\list-of-diagnostics.md as well.
         // Keep new const identifiers above this comment.
     }
-}
+}

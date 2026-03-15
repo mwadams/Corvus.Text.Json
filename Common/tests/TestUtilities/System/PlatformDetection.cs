@@ -536,7 +536,6 @@ namespace System
         {
             if (IsWindows)
             {
-
                 // Missing key. If we're pre-20H1 then assume SSL3 is enabled.
                 // Otherwise, disabled. (See comments on https://github.com/dotnet/runtime/issues/1166)
                 // Alternatively the returned values must have been some other types.
@@ -545,7 +544,6 @@ namespace System
 #pragma warning disable CS0618 // Ssl2 and Ssl3 are obsolete
                 return GetProtocolSupportFromWindowsRegistry(SslProtocols.Ssl3, ssl3DefaultSupport);
 #pragma warning restore CS0618
-
             }
 
             return (IsOSX || (IsLinux && OpenSslVersion < new Version(1, 0, 2) && !IsDebian));
@@ -642,7 +640,6 @@ namespace System
 #else
                 return GetProtocolSupportFromWindowsRegistry(SslProtocols.Tls13, defaultProtocolSupport);
 #endif
-
             }
             else if (IsOSX || IsMacCatalyst || IsiOS || IstvOS)
             {
@@ -757,4 +754,4 @@ namespace System
                 && isBinaryFormatterEnabled;
         }
     }
-}
+}

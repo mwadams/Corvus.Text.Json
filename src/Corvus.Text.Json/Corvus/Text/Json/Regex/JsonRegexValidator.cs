@@ -479,7 +479,6 @@ internal ref struct JsonRegexValidator
         return TryGetCapturePos(i, requireExplicit, out int pos);
     }
 
-
     private readonly bool IsTrueQuantifier()
     {
         Debug.Assert(_pos < _pattern.Length, "The current reading position must not be at the end of the pattern");

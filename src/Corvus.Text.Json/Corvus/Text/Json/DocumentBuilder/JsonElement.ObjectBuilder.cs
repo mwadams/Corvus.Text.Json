@@ -18,7 +18,6 @@ namespace Corvus.Text.Json;
 
 public readonly partial struct JsonElement
 {
-
     /// <summary>
     /// Provides a high-performance, low-allocation builder for constructing JSON objects
     /// within an <see cref="IMutableJsonDocument"/>.
@@ -169,7 +168,6 @@ public readonly partial struct JsonElement
                 nameRequiresUnescaping);
         }
 
-
         /// <summary>
         /// Adds a property with a JSON array value to the current object using a builder delegate.
         /// </summary>
@@ -187,7 +185,6 @@ public readonly partial struct JsonElement
                 escapeName,
                 nameRequiresUnescaping);
         }
-
 
         /// <summary>
         /// Adds a property with a JSON array value to the current object using a builder delegate.

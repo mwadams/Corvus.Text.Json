@@ -166,8 +166,6 @@ public static partial class JsonElementHelpers
         return exponent >= 0;
     }
 
-
-
     /// <summary>
     /// Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
     /// </summary>
@@ -2319,7 +2317,6 @@ public static partial class JsonElementHelpers
         return true;
     }
 
-
     internal static bool TryFormatGeneral(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, Span<char> destination, out int charsWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
         int totalLength = integral.Length + fractional.Length;
@@ -2488,7 +2485,6 @@ public static partial class JsonElementHelpers
 
         if (scientificExponent >= 0)
         {
-
             formatInfo.PositiveSign.AsSpan().CopyTo(destination.Slice(pos));
             pos += formatInfo.PositiveSign.Length;
         }
@@ -4137,7 +4133,6 @@ public static partial class JsonElementHelpers
         return DecimalToBinaryVirtualizedUtf8(integral, fractional, exponent, totalLength, destination, out bytesWritten, precision);
     }
 
-
     internal static bool TryFormatCurrency(
         bool isNegative,
         ReadOnlySpan<byte> integral,
@@ -4838,7 +4833,6 @@ public static partial class JsonElementHelpers
         int precision,
         NumberFormatInfo formatInfo)
     {
-
         // Format as 0.xxx
 
         int requiredSize = 1 + (precision > 0 ? Encoding.UTF8.GetByteCount(formatInfo.CurrencyDecimalSeparator) + precision : 0);
@@ -5061,7 +5055,6 @@ public static partial class JsonElementHelpers
         }
     }
 
-
     internal static bool TryFormatFixedPointWithSeparator(
         bool isNegative,
         ReadOnlySpan<byte> integral,
@@ -5283,7 +5276,6 @@ public static partial class JsonElementHelpers
         bytesWritten = pos;
         return true;
     }
-
 
     internal static bool TryFormatGeneral(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, Span<byte> destination, out int bytesWritten, int precision, char exponentChar, NumberFormatInfo formatInfo)
     {
@@ -6400,5 +6392,4 @@ public static partial class JsonElementHelpers
         bytesWritten = requiredLength;
         return true;
     }
-
 }

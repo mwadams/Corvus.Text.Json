@@ -205,7 +205,6 @@ internal partial class Utf8UriParser
     private const Utf8UriSyntaxFlags UnixFileSyntaxFlags =
                                     FileSyntaxFlags & ~Utf8UriSyntaxFlags.ConvertPathSlashes;
 
-
     // Various Uri scheme syntax flags
 
     private const Utf8UriSyntaxFlags UnknownV1SyntaxFlags =
@@ -274,7 +273,6 @@ internal partial class Utf8UriParser
 
     private int _port;
     private string _scheme;
-
 
     // Internal .ctor, any ctor eventually goes through this one
 

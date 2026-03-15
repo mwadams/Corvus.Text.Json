@@ -173,7 +173,6 @@ public static partial class JsonSchemaEvaluation
         return true;
     }
 
-
     /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>

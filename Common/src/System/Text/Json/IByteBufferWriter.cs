@@ -12,4 +12,4 @@ public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
     ReadOnlySpan<byte> WrittenSpan { get; }
 
     void ClearAndReturnBuffers();
-}
+}

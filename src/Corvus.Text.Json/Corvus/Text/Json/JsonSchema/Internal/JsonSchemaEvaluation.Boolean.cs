@@ -19,7 +19,6 @@ public static partial class JsonSchemaEvaluation
     public static readonly JsonSchemaMessageProvider ExpectedBooleanTrue = static (buffer, out written) => ExpectedBooleanTrueValue(buffer, out written);
     public static readonly JsonSchemaMessageProvider ExpectedBooleanFalse = static (buffer, out written) => ExpectedBooleanFalseValue(buffer, out written);
 
-
     /// <summary>
     /// Matches a JSON token type against the "boolean" type constraint.
     /// </summary>

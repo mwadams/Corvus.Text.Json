@@ -4284,7 +4284,6 @@ public readonly partial struct JsonElement
             _documentVersion = _parent.Version;
         }
 
-
         /// <summary>
         ///   Sets a JSON object property on this element using a value Source.
         /// </summary>

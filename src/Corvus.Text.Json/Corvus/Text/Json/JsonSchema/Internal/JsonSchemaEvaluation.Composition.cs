@@ -24,7 +24,6 @@ public static partial class JsonSchemaEvaluation
     /// </summary>
     public static readonly JsonSchemaMessageProvider MatchedNoSchema = static (buffer, out written) => JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_MatchedNoSchema.AsSpan(), buffer, out written);
 
-
     /// <summary>
     /// Message provider for validation errors when all schemas match in a composition constraint.
     /// </summary>

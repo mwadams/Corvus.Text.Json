@@ -27,7 +27,6 @@ public static partial class JsonSchemaEvaluation
     /// </summary>
     public static readonly JsonSchemaPathProvider<int> ItemIndex = static (index, buffer, out written) => AppendIndex(index, buffer, out written);
 
-
     /// <summary>
     /// Message provider for expected "array type" validation messages.
     /// </summary>
@@ -445,8 +444,6 @@ public static partial class JsonSchemaEvaluation
 
         return AppendQuotedInteger(value, buffer, ref written);
     }
-
-
 
     /// <summary>
     /// Validates that a contains count equals the given value.

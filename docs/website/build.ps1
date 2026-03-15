@@ -56,9 +56,25 @@ if ($LASTEXITCODE -ne 0) {
     Write-Host "Search index written to $searchIndexOutput" -ForegroundColor Green
 }
 
-# Step 3: Run Vellum
-$vellumCmd = "vellum"
+# Step 3: Install Vellum (from endjin/Endjin.StaticSiteGen GitHub releases)
+$vellumVersion = "2.0.9"
+$vellumDir = Join-Path $here ".endjin"
+$vellumCmd = Join-Path $vellumDir "vellum"
 
+if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
+    Write-Host "Installing Vellum $vellumVersion..." -ForegroundColor Cyan
+    if (!(Test-Path $vellumDir)) {
+        New-Item -ItemType Directory -Path $vellumDir | Out-Null
+    }
+    & gh release download -R endjin/Endjin.StaticSiteGen $vellumVersion -p "vellum.$vellumVersion.nupkg" -D $vellumDir --clobber
+    & dotnet tool install vellum --version $vellumVersion --tool-path $vellumDir --add-source $vellumDir
+    if ($LASTEXITCODE -ne 0) {
+        throw "Failed to install Vellum"
+    }
+    Write-Host "Vellum installed." -ForegroundColor Green
+}
+
+# Step 4: Run Vellum
 $vellumArgs = @(
     "content"
     "generate"

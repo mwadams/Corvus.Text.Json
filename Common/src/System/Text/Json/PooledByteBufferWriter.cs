@@ -92,4 +92,4 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
     public override void CancelPendingFlush() => throw new NotImplementedException();
 
     public override void Complete(Exception? exception = null) => throw new NotImplementedException();
-}
+}

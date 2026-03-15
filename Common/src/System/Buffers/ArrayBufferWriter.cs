@@ -24,7 +24,6 @@ namespace System.Buffers
         private T[] _buffer;
         private int _index;
 
-
         /// <summary>
         /// Creates an instance of an <see cref="ArrayBufferWriter{T}"/>, in which data can be written to,
         /// with the default initial capacity.
@@ -250,4 +249,4 @@ namespace System.Buffers
             throw new OutOfMemoryException(SR.Format(SR.BufferMaximumSizeExceeded, capacity));
         }
     }
-}
+}

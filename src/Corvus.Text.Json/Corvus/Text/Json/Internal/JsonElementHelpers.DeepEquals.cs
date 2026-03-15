@@ -228,7 +228,6 @@ public static partial class JsonElementHelpers
                         return false;
                     }
 
-
                     if (!DeepEqualsNoParentDocumentCheck(arrayEnumerator1.Current, arrayEnumerator2.Current))
                     {
                         return false;

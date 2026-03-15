@@ -1546,7 +1546,6 @@ public readonly partial struct JsonElement
         return value;
     }
 
-
     /// <summary>
     ///   Gets the value of the element as a <see cref="OffsetDateTime"/>.
     /// </summary>

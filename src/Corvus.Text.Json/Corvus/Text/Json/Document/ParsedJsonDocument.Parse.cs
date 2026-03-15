@@ -29,7 +29,6 @@ public sealed partial class ParsedJsonDocument<T>
 
     private const int UnseekableStreamInitialRentSize = 4096;
 
-
     /// <summary>
     /// Gets the null instance.
     /// </summary>
@@ -974,5 +973,4 @@ public sealed partial class ParsedJsonDocument<T>
             return db;
         }
     }
-
 }

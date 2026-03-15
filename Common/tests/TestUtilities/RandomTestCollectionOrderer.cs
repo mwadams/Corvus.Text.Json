@@ -24,4 +24,4 @@ public class RandomTestCollectionOrderer : ITestCollectionOrderer
         => RandomTestCaseOrderer.TryRandomize(testCollections.ToList(), _diagnosticMessageSink, out List<ITestCollection>? randomizedTests)
                     ? randomizedTests
                     : testCollections;
-}
+}

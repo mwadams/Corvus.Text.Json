@@ -107,7 +107,6 @@ internal static partial class JsonConstants
     public static byte[] ZeroValueArray { get; } = ZeroValue.ToArray();
     public static byte[] OneValueArray { get; } = OneValue.ToArray();
 
-
     public static ReadOnlySpan<byte> NaNValue => "NaN"u8;
     public static ReadOnlySpan<byte> PositiveInfinityValue => "Infinity"u8;
     public static ReadOnlySpan<byte> NegativeInfinityValue => "-Infinity"u8;

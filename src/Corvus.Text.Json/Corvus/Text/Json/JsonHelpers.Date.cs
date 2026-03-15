@@ -180,7 +180,6 @@ internal static partial class JsonHelpers
         // Note: 5.2.2.2 "Representations with reduced precision" allows for
         // just [year]["-"][month] (a) and just [year] (b), but we currently
         // don't permit it.
-
         {
             uint digit1 = source[0] - (uint)'0';
             uint digit2 = source[1] - (uint)'0';

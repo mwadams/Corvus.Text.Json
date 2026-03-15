@@ -248,4 +248,4 @@ internal ref partial struct ValueListBuilder<T>
         buffer.AsSpan(0, _pos).CopyTo(_span);
 #endif
     }
-}
+}

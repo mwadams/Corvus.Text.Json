@@ -12,7 +12,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace System;
 
-
 // The convention for this enum is using the argument name as the enum name
 
 internal enum ExceptionArgument
@@ -127,7 +126,6 @@ internal static class ThrowHelper
         }
     }
 }
-
 
 // The convention for this enum is using the resource name as the enum name
 

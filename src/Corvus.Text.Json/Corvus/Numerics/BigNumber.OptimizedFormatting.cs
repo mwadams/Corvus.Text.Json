@@ -127,8 +127,6 @@ public readonly partial struct BigNumber
         return true;
     }
 
-
-
     /// <summary>
     /// Tries to format this instance into the provided UTF-8 span with zero allocations.
     /// </summary>
@@ -273,7 +271,6 @@ public readonly partial struct BigNumber
         // Number of chars required is always <= number of bytes in destination
         // We can fail early if destination is too small for even a char buffer
         int bufferSize = destination.Length;
-
 
         char[]? rentedBuffer = null;
         try

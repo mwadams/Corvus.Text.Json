@@ -15,4 +15,4 @@ namespace System.Runtime.CompilerServices
 #endif
         sealed class RequiredMemberAttribute : Attribute
     { }
-}
+}

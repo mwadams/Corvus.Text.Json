@@ -228,7 +228,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
     }
 
-
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetDbSize(int index, bool includeEndElement)
@@ -236,7 +235,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         CheckNotDisposed();
         return GetDbSizeUnsafe(index, includeEndElement);
     }
-
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -370,7 +368,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         DbRow row = _parsedData.Get(index);
 
         JsonTokenType tokenType = row.TokenType;
-
 
         if (expectedType != tokenType)
         {
@@ -534,7 +531,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         }
     }
 
-
     private bool TryGetUnescapedUtf8JsonStringUnsafe(int index, Span<byte> destination, JsonTokenType expectedType, out int bytesWritten)
     {
         DbRow row = _parsedData.Get(index);
@@ -569,7 +565,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         bytesWritten = 0;
         return false;
     }
-
 
     /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1210,7 +1205,6 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
                 return string.Empty;
         }
     }
-
 
     string IJsonDocument.ToString(int index, string? format, IFormatProvider? formatProvider)
     {

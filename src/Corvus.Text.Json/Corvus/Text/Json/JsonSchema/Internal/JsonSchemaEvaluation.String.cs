@@ -66,7 +66,6 @@ public static partial class JsonSchemaEvaluation
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThan = static (length, buffer, out written) => ExpectedLengthGreaterThan(length, buffer, out written);
     private static readonly JsonSchemaMessageProvider<int> ExpectedStringLengthGreaterThanOrEquals = static (length, buffer, out written) => ExpectedLengthGreaterThanOrEquals(length, buffer, out written);
 
-
     /// <summary>
     /// Gets the allowed characters for the local part of an email address.
     /// </summary>
@@ -1122,8 +1121,6 @@ public static partial class JsonSchemaEvaluation
             return false;
         }
 
-
-
         return true;
     }
 
@@ -1500,7 +1497,6 @@ public static partial class JsonSchemaEvaluation
         for (int i = 0; i < segment.Length; i++)
         {
             byte c = segment[i];
-
 
             if (c == (byte)'.')
             {

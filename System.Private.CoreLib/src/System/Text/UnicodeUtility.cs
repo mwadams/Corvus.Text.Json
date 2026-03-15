@@ -182,4 +182,4 @@ namespace System.Text
             return ((value - 0x110000u) ^ 0xD800u) >= 0xFFEF0800u;
         }
     }
-}
+}

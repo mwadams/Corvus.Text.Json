@@ -70,7 +70,6 @@ public readonly struct Period : IEquatable<Period>
     /// <value>A period containing the minimum value for all properties.</value>
     public static Period MinValue { get; } = new Period(int.MinValue, int.MinValue, int.MinValue, int.MinValue, long.MinValue, long.MinValue, long.MinValue, long.MinValue, long.MinValue, long.MinValue);
 
-
     /// <summary>
     /// Creates a new period from the given values.
     /// </summary>

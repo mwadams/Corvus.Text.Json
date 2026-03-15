@@ -323,16 +323,6 @@ dotnet_diagnostic.SA1516.severity = None
 dotnet_diagnostic.SA1512.severity = None
 # SA1514: Element documentation header should be preceded by blank line
 dotnet_diagnostic.SA1514.severity = None
-# SA1507: Code should not contain multiple blank lines in a row
-dotnet_diagnostic.SA1507.severity = None
-# SA1505: Opening brace should not be followed by blank line
-dotnet_diagnostic.SA1505.severity = None
-# SA1508: Closing brace should not be preceded by blank line
-dotnet_diagnostic.SA1508.severity = None
-# SA1509: Opening brace should not be preceded by blank line
-dotnet_diagnostic.SA1509.severity = None
-# SA1518: File may not end with a newline character
-dotnet_diagnostic.SA1518.severity = None
 # SA1519: Braces should not be omitted from multi-line child statement
 dotnet_diagnostic.SA1519.severity = None
 # SA1520: Use braces consistently
@@ -437,8 +427,6 @@ dotnet_diagnostic.SA1208.severity = None
 # SA1210: Using directives should be ordered alphabetically by namespace
 dotnet_diagnostic.SA1210.severity = None
 
-# SA1510: Chained statement blocks should not be preceded by blank line
-dotnet_diagnostic.SA1510.severity = None
 
 # Documentation rules for linked/shared files
 # SA1602: Enumeration items should be documented

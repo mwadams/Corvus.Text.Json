@@ -98,7 +98,6 @@ public static partial class JsonSchemaEvaluation
             return false;
         }
 
-
         if (buffer[written - 1] != (byte)'/')
         {
             if (buffer.Length <= written)
@@ -266,7 +265,6 @@ public static partial class JsonSchemaEvaluation
         buffer[written++] = (byte)'\'';
         return true;
     }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool AppendValueAndExponent(ulong value, int exponent, Span<byte> buffer, ref int written)
@@ -548,7 +546,6 @@ public static partial class JsonSchemaEvaluation
 
         return AppendSingleQuotedValue(expectedValue, buffer, ref written);
     }
-
 
     /// <summary>
     /// Tries to write a message indicating the expected value was null.

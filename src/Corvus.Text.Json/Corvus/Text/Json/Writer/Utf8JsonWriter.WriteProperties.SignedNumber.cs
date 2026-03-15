@@ -185,7 +185,6 @@ public sealed partial class Utf8JsonWriter
     public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, int value)
         => WriteNumber(utf8PropertyName, (long)value);
 
-
     private void WriteNumberByOptions(ReadOnlySpan<char> propertyName, long value)
     {
         ValidateWritingProperty();

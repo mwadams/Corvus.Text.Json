@@ -181,7 +181,6 @@ public sealed partial class IdnMapping
         int iOutputAfterLastDot = 0;
         while (iNextDot < ascii.Length)
         {
-
             // Find end of this segment
             iNextDot = FindDot(ascii.Slice(iAfterLastDot));
             if (iNextDot < 0 || iNextDot > ascii.Length)

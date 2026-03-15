@@ -44,7 +44,6 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
 
     bool IJsonDocument.IsImmutable => true;
 
-
     /// <summary>
     /// Parse an instance of the fixed string to a document, using caching.
     /// </summary>
@@ -601,7 +600,6 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         return JsonReaderHelper.TryGetValue(_rawJsonStringValue.Span[1..^1], _requiresUnescaping, out value);
     }
 
-
 #if NET
     bool IJsonDocument.TryGetValue(int index, out DateOnly value)
     {
@@ -812,5 +810,4 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
             }
         }
     }
-
 }

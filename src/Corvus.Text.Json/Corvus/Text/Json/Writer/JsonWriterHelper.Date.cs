@@ -17,7 +17,6 @@ internal static partial class JsonWriterHelper
 {
     private static readonly StandardFormat s_dateTimeStandardFormat = new StandardFormat('O');
 
-
     // Trims roundtrippable DateTime(Offset) input.
     // If the milliseconds part of the date is zero, we omit the fraction part of the date,
     // else we write the fraction up to 7 decimal places with no trailing zeros. i.e. the output format is

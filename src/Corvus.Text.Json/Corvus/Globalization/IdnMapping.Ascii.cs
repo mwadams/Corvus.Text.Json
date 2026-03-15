@@ -120,9 +120,7 @@ public sealed partial class IdnMapping
     public override int GetHashCode() =>
         (_allowUnassigned ? 100 : 200) + (_useStd3AsciiRules ? 1000 : 2000);
 
-
     // Invariant implementation
-
 
     private const char c_delimiter = '-';
     private static ReadOnlySpan<char> c_strAcePrefix => "xn--";

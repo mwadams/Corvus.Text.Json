@@ -14,4 +14,4 @@ internal static partial class JsonConstants
     public const int StackallocCharThreshold = StackallocByteThreshold / 2;
     public const int StackallocNonRecursiveByteThreshold = 4096;
     public const int StackallocNonRecursiveCharThreshold = StackallocNonRecursiveByteThreshold / 2;
-}
+}

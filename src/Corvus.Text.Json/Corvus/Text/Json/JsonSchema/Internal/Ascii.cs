@@ -110,6 +110,5 @@ namespace Corvus.Text.Json.Internal
 
             return (value & UInt32HighBitsOnlyMask) == 0;
         }
-
     }
 }

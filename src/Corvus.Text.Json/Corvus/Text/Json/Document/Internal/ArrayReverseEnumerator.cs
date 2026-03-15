@@ -74,7 +74,6 @@ public struct ArrayReverseEnumerator
             _curEndIdx = _curIdx - DbRow.Size;
         }
 
-
         if (_curEndIdx <= _arrayDocumentIndex)
         {
             return false;

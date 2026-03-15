@@ -457,7 +457,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
         JsonTokenType tokenType = row.TokenType;
 
-
         if (expectedType != tokenType)
         {
             result = null;
@@ -646,7 +645,6 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         bytesWritten = 0;
         return false;
     }
-
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)

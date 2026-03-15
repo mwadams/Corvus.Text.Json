@@ -1,4 +1,4 @@
-ContentType: application/vnd.endjin.ssg.homepage+yaml
+ContentType: application/vnd.endjin.ssg.page+yaml
 Title: Corvus.Text.Json
 Navigation:
   Title: Home

@@ -164,7 +164,6 @@ public static partial class JsonElementHelpers
         parentDocument.RemoveRange(arrayElement.ParentDocumentIndex, rangeStartIndex, rangeEndIndex, count);
     }
 
-
     /// <summary>
     /// Removes the first array element that equals the specified item.
     /// </summary>

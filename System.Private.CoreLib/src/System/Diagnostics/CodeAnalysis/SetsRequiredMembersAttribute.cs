@@ -15,4 +15,4 @@ namespace System.Diagnostics.CodeAnalysis
 #endif
         sealed class SetsRequiredMembersAttribute : Attribute
     { }
-}
+}

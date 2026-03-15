@@ -23,4 +23,4 @@ namespace System
             return expected.Replace("\r\n", "\n").Replace("\n", Environment.NewLine);
         }
     }
-}
+}

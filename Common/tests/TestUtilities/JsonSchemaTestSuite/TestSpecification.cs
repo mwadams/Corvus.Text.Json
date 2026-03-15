@@ -66,4 +66,4 @@ public class TestSpecification(
     public string TestDescription { get; } = testDescription;
     public JsonAny Instance { get; } = instance;
     public bool Expectation { get; } = expectation;
-}
+}

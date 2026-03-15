@@ -22,4 +22,4 @@ namespace System.Buffers
         /// </summary>
         Before,
     }
-}
+}

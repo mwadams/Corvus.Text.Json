@@ -153,7 +153,6 @@ namespace TestUtilities
                 useImplicitOperatorString: useImplicitOperatorString,
                 addExplicitUsings: addExplicitUsings);
 
-
             GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
@@ -199,7 +198,6 @@ namespace TestUtilities
                 optionalAsNullable: optionalAsNullable,
                 useImplicitOperatorString: useImplicitOperatorString,
                 addExplicitUsings: addExplicitUsings);
-
 
             GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
@@ -248,12 +246,10 @@ namespace TestUtilities
                 useImplicitOperatorString: useImplicitOperatorString,
                 addExplicitUsings: addExplicitUsings);
 
-
             GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
-
 
         /// <summary>
         /// Generate the JSON type for the given test suite entry.
@@ -296,7 +292,6 @@ namespace TestUtilities
                 optionalAsNullable: optionalAsNullable,
                 useImplicitOperatorString: useImplicitOperatorString,
                 addExplicitUsings: addExplicitUsings);
-
 
             GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
             DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
@@ -345,7 +340,6 @@ namespace TestUtilities
 
             return GenerateCodeForRootType(languageProvider, rootType);
         }
-
 
         /// <summary>
         /// Generates code for the given schema with the specified virutal file name.
@@ -401,7 +395,6 @@ namespace TestUtilities
             int length = Formatting.ToPascalCase(buffer);
             return buffer.Slice(0, length).ToString();
         }
-
         }
 
         /// <summary>
@@ -507,4 +500,4 @@ namespace TestUtilities
 
             return expectedValue.Equals(actualValue);
         }
-    }
+    }

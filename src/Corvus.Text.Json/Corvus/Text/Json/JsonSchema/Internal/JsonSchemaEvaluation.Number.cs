@@ -161,7 +161,6 @@ public static partial class JsonSchemaEvaluation
     private static ReadOnlySpan<byte> MinimumUInt64Fractional => ""u8;
     private static ReadOnlySpan<byte> MinimumUInt64Integral => ""u8;
 
-
     /// <summary>
     /// Matches a JSON number as a multiple of the given divisor.
     /// </summary>
@@ -198,7 +197,6 @@ public static partial class JsonSchemaEvaluation
 
         return true;
     }
-
 
     /// <summary>
     /// Matches a JSON number equals.
@@ -404,7 +402,6 @@ public static partial class JsonSchemaEvaluation
 
         return true;
     }
-
 
     /// <summary>
     /// Matches a JSON number as a multiple of the given divisor.

@@ -12,4 +12,4 @@ namespace System
         // Fixed DateTime, to avoid the use of DateTime.(Utc)Now in situations that simply require a value be present.
         public static DateTime FixedDateTimeValue => FixedDateTimeOffsetValue.UtcDateTime;
     }
-}
+}

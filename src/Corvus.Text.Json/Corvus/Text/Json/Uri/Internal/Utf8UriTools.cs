@@ -2140,7 +2140,6 @@ internal static class Utf8UriTools
 
             // V1 compat issue
             // We should support relative Uris of the form c:\bla or c:/bla
-
             else if (uriKind != Utf8UriKind.Absolute && InFact(flags, Flags.DosPath))
             {
                 flags &= Flags.UserEscaped; // the only flag that makes sense for a relative uri
@@ -2268,7 +2267,6 @@ internal static class Utf8UriTools
 
                 // V1 compat issue
                 // We should support relative Uris of the form c:\bla or c:/bla
-
                 else if (uriKind != Utf8UriKind.Absolute && InFact(flags, Flags.DosPath))
                 {
                     syntax = null!; //make it be relative Uri
@@ -2348,8 +2346,6 @@ internal static class Utf8UriTools
         Debug.Assert((flags & Flags.MinimalUriInfoSet) == 0);
         return CreateUriInfo(syntax, ref flags, uriString);
     }
-
-
 
     // The method is called when we have to access info members.
     // This will create the info based on the copied parser context.
@@ -2541,7 +2537,6 @@ internal static class Utf8UriTools
         return info;
     }
 
-
     // This method does:
     //  - Creates info member
     //  - checks all components up to path on their canonical representation
@@ -2614,7 +2609,6 @@ internal static class Utf8UriTools
         }
 
         // We have already checked on the port in EnsureUriInfo() that calls CreateUriInfo
-
 
         // Parsing the Path if any
 
@@ -2727,9 +2721,7 @@ internal static class Utf8UriTools
             cF |= Flags.PathIriCanonical;
         }
 
-
         // Now we've got to parse the Query if any. Note that Query requires the presence of '?'
-
 
         info.Query = (ushort)idx;
 
@@ -2801,7 +2793,6 @@ internal static class Utf8UriTools
         uriInfo = info;
         return (IriParsing(syntax) && ((cF & Flags.IriCanonical) != 0)) || (cF & Flags.E_NonCanonical) == 0;
     }
-
 
     // Used by ParseRemaining
 
@@ -3219,7 +3210,6 @@ internal static class Utf8UriTools
         return false;
     }
 
-
     //  This method is called first to figure out the scheme or a simple file path
     //  Is called only at the .ctor time
 
@@ -3451,8 +3441,6 @@ internal static class Utf8UriTools
         // through to here
         return Utf8UriParser.FindOrFetchAsUnknownV1Syntax(Utf8UriHelper.AsciiSchemeToLowerInvariantString(scheme));
     }
-
-
 
     //  This method tries to parse the minimal information needed to certify the validity
     //  of a uri string
@@ -3692,7 +3680,6 @@ internal static class Utf8UriTools
         return Utf8UriParsingError.None;
     }
 
-
     // Checks the syntax of an authority component. It may also get a userInfo if present
     // Returns an error if no/malformed authority found
     // Does not NOT touch info
@@ -3785,7 +3772,6 @@ internal static class Utf8UriTools
         }
         else if ((syntaxFlags & Utf8UriSyntaxFlags.AllowUncHost) != 0)
         {
-
             // This must remain as the last check before BasicHost type
 
             if (Utf8UriUncNameHelper.IsValid(pString, start, ref end, NotAny(flags, Flags.ImplicitFile)))
@@ -3872,7 +3858,6 @@ internal static class Utf8UriTools
             }
             else
             {
-
                 // ATTN V1 compat: V1 supports hostnames like ".." and ".", and so we do but only for unknown schemes.
 
                 if (syntax.InFact(Utf8UriSyntaxFlags.MustHaveAuthority) ||

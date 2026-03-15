@@ -1,0 +1,44 @@
+@model SiteViewModel
+@{
+    Layout = "../Shared/_Layout.cshtml";
+    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
+}
+<!-- API Namespace page -->
+<div class="docs-layout container">
+    <!-- Sidebar navigation -->
+    <aside class="docs-sidebar" aria-label="API namespace navigation">
+        <nav class="docs-sidebar__nav">
+            <h2 class="docs-sidebar__title">API Reference</h2>
+            <ul class="docs-sidebar__list">
+                @foreach (var sibling in Model.SiteContext.Navigation.Children
+                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/api/"))
+                    .SelectMany(x => x.Children)
+                    .Where(x => x.Header.Visible)
+                    .OrderBy(x => x.Rank))
+                {
+                    var isActive = Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(sibling.Url, Model.PageContext.Navigation.Url);
+                    <li class="docs-sidebar__item @(isActive ? "docs-sidebar__item--active" : "")">
+                        <a class="docs-sidebar__link" href="@sibling.Url"
+                           @(isActive ? "aria-current=page" : "")>@sibling.Title</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main id="main-content" class="docs-content">
+        <article class="text-content">
+            <header class="page-header">
+                <h1 class="page-header__title">@Model.PageContext.Title</h1>
+            </header>
+            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
+            {
+                <section class="content-section" id="@contentFragment.Id.ToLower()">
+                    @Html.Raw(contentFragment.Body)
+                </section>
+            }
+        </article>
+    </main>
+</div>
+<!-- /API Namespace page -->

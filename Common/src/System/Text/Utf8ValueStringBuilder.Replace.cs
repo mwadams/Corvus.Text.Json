@@ -119,7 +119,6 @@ internal ref partial struct Utf8ValueStringBuilder
             }
             this._pos += currentRelocationDistance;
 
-
             // We work from the back of the string when growing to avoid having to
             // shift anything more than once.
             do
@@ -146,4 +145,4 @@ internal ref partial struct Utf8ValueStringBuilder
             } while (matchCount > 0);
         }
     }
-}
+}

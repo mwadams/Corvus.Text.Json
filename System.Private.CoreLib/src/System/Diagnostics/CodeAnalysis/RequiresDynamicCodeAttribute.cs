@@ -41,4 +41,4 @@ namespace System.Diagnostics.CodeAnalysis
         /// </summary>
         public string? Url { get; set; }
     }
-}
+}

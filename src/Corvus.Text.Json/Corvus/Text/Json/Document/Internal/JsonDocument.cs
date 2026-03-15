@@ -18,7 +18,6 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Corvus.Numerics;
 
-
 #if NET
 
 using System.Globalization;
@@ -1881,7 +1880,6 @@ public abstract partial class JsonDocument
         ReadOnlySpan<byte> value = GetRawSimpleValueUnsafe(index, false).Span;
         return GetHashCodeForString(value);
     }
-
 
     /// <summary>
     /// Gets the HashCode for a string value.

@@ -24,4 +24,4 @@ namespace System
         private static void ThrowArgumentNullException(string? paramName) =>
             throw new ArgumentNullException(paramName);
     }
-}
+}

@@ -10,4 +10,4 @@ internal static partial class Interop
 
         public const string SystemNative = "libSystem.Native";
     }
-}
+}

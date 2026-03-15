@@ -194,4 +194,4 @@ internal struct ArrayBuffer : IDisposable
             ArrayPool<byte>.Shared.Return(buffer);
         }
     }
-}
+}
