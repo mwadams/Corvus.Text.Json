@@ -91,6 +91,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ── Sidebar / footer interaction (desktop) ──────────────────────────────
+  // When the footer scrolls into view, switch the sidebar from sticky to
+  // relative so it scrolls away with the page instead of overlapping.
+  const sidebarEl = document.querySelector('.sidebar');
+  const footer = document.querySelector('.site-footer');
+
+  if (sidebarEl && footer && window.matchMedia('(min-width: 60rem)').matches) {
+    const footerObserver = new IntersectionObserver(
+      ([entry]) => {
+        sidebarEl.classList.toggle('is-docked', entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+    footerObserver.observe(footer);
+  }
+
   // ── On-page TOC in sidebar ──────────────────────────────────────────────
   // For doc pages: extract h2 headings, insert as a sub-list under the
   // active sidebar link, and highlight the current section on scroll.
