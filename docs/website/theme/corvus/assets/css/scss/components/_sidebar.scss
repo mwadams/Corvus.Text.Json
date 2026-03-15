@@ -100,7 +100,7 @@
     background: transparent;
     border-right: none;
     transform: none;
-    transition: none;
+    transition: transform 0.25s ease;
     z-index: 10;
 
     .sidebar__inner {
