@@ -25,7 +25,7 @@ Roslyn incremental source generator. Generates C# from JSON Schema at build time
 
 ### Corvus.Text.Json.CodeGenerator
 
-CLI tool for ahead-of-time code generation. Produces the same output as the source generator.
+CLI tool for ahead-of-time code generation. Produces the same output as the source generator, for CI pipelines and pre-generation workflows. See the [CLI Code Generation](/docs/code-generator.html) guide.
 
 ```bash
 dotnet tool install --global Corvus.Text.Json.CodeGenerator
@@ -33,8 +33,8 @@ dotnet tool install --global Corvus.Text.Json.CodeGenerator
 
 ### Corvus.Text.Json.Validator
 
-Standalone schema validation tool. Validate JSON documents against JSON Schema from the command line.
+Library for dynamically loading, compiling, and validating JSON against JSON Schema at runtime using Roslyn. Ideal for schema registries, configuration validation, and user-supplied schemas. See the [Runtime Schema Validation](/docs/validator.html) guide.
 
 ```bash
-dotnet tool install --global Corvus.Text.Json.Validator
+dotnet add package Corvus.Text.Json.Validator
 ```
