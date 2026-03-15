@@ -443,7 +443,7 @@ public abstract partial class JsonDocument
     /// </summary>
     /// <param name="v">The minimum size required.</param>
     /// <param name="intArray">The integer array to enlarge (passed by reference).</param>
-    protected void Enlarge(int v, ref int[] intArray)
+    protected static void Enlarge(int v, ref int[] intArray)
     {
         int[] toReturn = intArray;
 

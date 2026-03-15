@@ -398,14 +398,9 @@ internal static partial class JsonHelpers
             }
 
             // Ensure we have enough for ":mm"
-            if (offsetData.Length != 5
-                || offsetData[2] != JsonConstants.Colon
-                || !TryGetNextTwoDigits(offsetData.Slice(3), ref parseData.OffsetMinutes))
-            {
-                return false;
-            }
-
-            return true;
+            return offsetData.Length == 5
+                && offsetData[2] == JsonConstants.Colon
+                && TryGetNextTwoDigits(offsetData.Slice(3), ref parseData.OffsetMinutes);
         }
     }
 

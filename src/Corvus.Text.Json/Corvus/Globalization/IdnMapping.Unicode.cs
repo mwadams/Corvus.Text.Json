@@ -39,7 +39,9 @@ public sealed partial class IdnMapping
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable CA1822 // Mark members as static - public API
     public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
+#pragma warning restore CA1822
     {
         if (index < 0)
         {
@@ -77,7 +79,7 @@ public sealed partial class IdnMapping
             return false;
         }
 
-        return GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
+        return IdnMapping.GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
     }
 
     private static bool ConvertFromUtf32AndInsert(Span<char> outputBuffer, int index, int utf32, ref int written)
@@ -457,7 +459,7 @@ public sealed partial class IdnMapping
         return true;
     }
 
-    private bool GetUnicodeInvariant(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
+    private static bool GetUnicodeInvariant(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, out int written)
     {
         if (index > 0 || count < ascii.Length)
         {

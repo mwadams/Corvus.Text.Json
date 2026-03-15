@@ -316,7 +316,7 @@ public abstract partial class JsonDocument
         }
         else
         {
-            Enlarge(_bucketOffset + size, ref _bucketsBacking);
+            JsonDocument.Enlarge(_bucketOffset + size, ref _bucketsBacking);
         }
 
         // Make sure we have space for the property map

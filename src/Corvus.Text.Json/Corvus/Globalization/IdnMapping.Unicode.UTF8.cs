@@ -42,7 +42,9 @@ public sealed partial class IdnMapping
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#pragma warning disable CA1822 // Mark members as static - public API
     public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
+#pragma warning restore CA1822
     {
         if (index < 0)
         {
@@ -80,7 +82,7 @@ public sealed partial class IdnMapping
             return false;
         }
 
-        return GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
+        return IdnMapping.GetUnicodeInvariant(ascii, outputBuffer, index, count, out written);
     }
 
     internal static bool EqualAcePrefix(ReadOnlySpan<byte> readOnlySpan)
@@ -189,12 +191,7 @@ public sealed partial class IdnMapping
         if (ascii.Length > 1)
         {
             Rune.DecodeLastFromUtf8(ascii, out Rune rune, out _);
-            if (rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61)
-            {
-                return true;
-            }
-
-            return false;
+            return rune.Value == 0x3002 || rune.Value == 0xFF0E || rune.Value == 0xFF61;
         }
 
         return false;
@@ -600,7 +597,7 @@ public sealed partial class IdnMapping
             (c == (byte)'-' && bNextToDot));
     }
 
-    private bool GetUnicodeInvariant(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
+    private static bool GetUnicodeInvariant(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, out int written)
     {
         if (index > 0 || count < ascii.Length)
         {

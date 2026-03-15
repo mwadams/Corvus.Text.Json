@@ -1039,12 +1039,7 @@ public static partial class JsonSchemaEvaluation
             }
         }
 
-        if (!MatchHostname(segment))
-        {
-            return false;
-        }
-
-        return true;
+        return MatchHostname(segment);
     }
 
     /// <summary>
@@ -1180,12 +1175,7 @@ public static partial class JsonSchemaEvaluation
         // Domain part
         segment = value.Slice(atIndex + 1);
 
-        if (!MatchIdnHostname(segment))
-        {
-            return false;
-        }
-
-        return true;
+        return MatchIdnHostname(segment);
     }
 
     /// <summary>
@@ -1284,12 +1274,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchIriReference(ReadOnlySpan<byte> value)
     {
-        if (!Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false))
-        {
-            return false;
-        }
-
-        return true;
+        return Utf8UriTools.Validate(value, Utf8UriKind.RelativeOrAbsolute, requireAbsolute: false, allowIri: true, allowUNCPath: false);
     }
 
     /// <summary>
@@ -1300,12 +1285,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchJsonPointer(ReadOnlySpan<byte> value)
     {
-        if (!Utf8JsonPointerTools.Validate(value))
-        {
-            return false;
-        }
-
-        return true;
+        return Utf8JsonPointerTools.Validate(value);
     }
 
     /// <summary>
@@ -1328,12 +1308,7 @@ public static partial class JsonSchemaEvaluation
         {
             written = JsonReaderHelper.TranscodeHelper(value, buffer);
 
-            if (!JsonRegexValidator.Validate(buffer.Slice(0, written), JsonRegexOptions.ECMAScript))
-            {
-                return false;
-            }
-
-            return true;
+            return JsonRegexValidator.Validate(buffer.Slice(0, written), JsonRegexOptions.ECMAScript);
         }
         finally
         {
@@ -1358,12 +1333,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value)
     {
-        if (!Utf8JsonPointerTools.ValidateRelative(value))
-        {
-            return false;
-        }
-
-        return true;
+        return Utf8JsonPointerTools.ValidateRelative(value);
     }
 
     /// <summary>
@@ -1422,12 +1392,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool MatchUriTemplate(ReadOnlySpan<byte> value)
     {
-        if (!Utf8UriTemplate.Validate(value))
-        {
-            return false;
-        }
-
-        return true;
+        return Utf8UriTemplate.Validate(value);
     }
 
     /// <summary>
@@ -1534,12 +1499,7 @@ public static partial class JsonSchemaEvaluation
             {
                 // This is an end comment.
                 int closeBracket = segment.IndexOf((byte)')');
-                if (closeBracket < 0 || closeBracket != segment.Length - 1)
-                {
-                    return false;
-                }
-
-                return true;
+                return closeBracket >= 0 && closeBracket == segment.Length - 1;
             }
             else if (AllowedLocalCharacters.IndexOf(c) < 0)
             {
@@ -1593,12 +1553,7 @@ public static partial class JsonSchemaEvaluation
             {
                 // This is an end comment.
                 int closeBracket = segment.IndexOf((byte)')');
-                if (closeBracket < 0 || closeBracket != segment.Length - 1)
-                {
-                    return false;
-                }
-
-                return true;
+                return closeBracket >= 0 && closeBracket == segment.Length - 1;
             }
             else if (AllowedLocalCharacters.IndexOf(c) < 0)
             {

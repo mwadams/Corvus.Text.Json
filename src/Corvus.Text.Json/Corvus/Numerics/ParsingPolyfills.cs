@@ -109,12 +109,7 @@ internal static class ParsingPolyfills
         value = (int)(result * sign);
 
         // Check for negative overflow
-        if (sign == -1 && result > -(long)int.MinValue)
-        {
-            return false;
-        }
-
-        return true;
+        return sign != -1 || result <= -(long)int.MinValue;
     }
 
     /// <summary>

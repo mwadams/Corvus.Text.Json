@@ -227,6 +227,7 @@ namespace System.Reflection
 
         private bool IsPrivateOrInternalMethodAndAnnotationDisabled(MethodBase method)
         {
+#pragma warning disable RCS1073 // Convert 'if' to 'return' statement
             if ((method.IsPrivate || method.IsFamilyAndAssembly || method.IsAssembly) &&
                IsPublicOnly(method.IsPrivate, method.IsFamilyAndAssembly, method.IsAssembly, method.Module))
             {
@@ -234,6 +235,7 @@ namespace System.Reflection
             }
 
             return false;
+#pragma warning restore RCS1073
         }
 
         /// <summary>
@@ -272,6 +274,7 @@ namespace System.Reflection
 
         private bool IsPrivateOrInternalFieldAndAnnotationDisabled(FieldInfo fieldInfo)
         {
+#pragma warning disable RCS1073 // Convert 'if' to 'return' statement
             if ((fieldInfo.IsPrivate || fieldInfo.IsFamilyAndAssembly || fieldInfo.IsAssembly) &&
                 IsPublicOnly(fieldInfo.IsPrivate, fieldInfo.IsFamilyAndAssembly, fieldInfo.IsAssembly, fieldInfo.Module))
             {
@@ -279,6 +282,7 @@ namespace System.Reflection
             }
 
             return false;
+#pragma warning restore RCS1073
         }
 
         private bool IsPublicOnly(bool isPrivate, bool isFamilyAndAssembly, bool isAssembly, Module module)
@@ -294,6 +298,7 @@ namespace System.Reflection
                 return false;
             }
 
+#pragma warning disable RCS1073 // Convert 'if' to 'return' statement
             if ((isPrivate || isFamilyAndAssembly) && value.HasFlag(NotAnnotatedStatus.Private) ||
                  isAssembly && value.HasFlag(NotAnnotatedStatus.Internal))
             {
@@ -301,6 +306,7 @@ namespace System.Reflection
             }
 
             return false;
+#pragma warning restore RCS1073
         }
 
         private static NotAnnotatedStatus PopulateAnnotationInfo(IList<CustomAttributeData> customAttributes)

@@ -743,13 +743,8 @@ public ref partial struct Utf8JsonReader
         // - For an ASCII UTF-16 characters, transcoding = 1x,
         // - For non-ASCII UTF-16 characters within the BMP, transcoding = 2-3x,
         // - For non-ASCII UTF-16 characters outside of the BMP, transcoding = 2x, (surrogate pairs - 2 characters transcode to 4 UTF-8 bytes)
-        if (sourceLength < charTextLength
-            || sourceLength / (ValueIsEscaped ? JsonConstants.MaxExpansionFactorWhileEscaping : JsonConstants.MaxExpansionFactorWhileTranscoding) > charTextLength)
-        {
-            return true;
-        }
-
-        return false;
+        return sourceLength < charTextLength
+            || sourceLength / (ValueIsEscaped ? JsonConstants.MaxExpansionFactorWhileEscaping : JsonConstants.MaxExpansionFactorWhileTranscoding) > charTextLength;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -757,13 +752,8 @@ public ref partial struct Utf8JsonReader
     {
         long sourceLength = ValueSequence.Length;
 
-        if (sourceLength < charTextLength
-            || sourceLength / (ValueIsEscaped ? JsonConstants.MaxExpansionFactorWhileEscaping : JsonConstants.MaxExpansionFactorWhileTranscoding) > charTextLength)
-        {
-            return true;
-        }
-
-        return false;
+        return sourceLength < charTextLength
+            || sourceLength / (ValueIsEscaped ? JsonConstants.MaxExpansionFactorWhileEscaping : JsonConstants.MaxExpansionFactorWhileTranscoding) > charTextLength;
     }
 
     private void StartObject()

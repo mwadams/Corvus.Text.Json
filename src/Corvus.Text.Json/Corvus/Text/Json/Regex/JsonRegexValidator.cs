@@ -1149,12 +1149,7 @@ internal ref struct JsonRegexValidator
             }
         }
 
-        if (!closed)
-        {
-            return false;
-        }
-
-        return true;
+        return closed;
     }
 
     /// <summary>Scans \ code for escape codes that map to single Unicode chars.</summary>

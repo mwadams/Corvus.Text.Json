@@ -1,4 +1,4 @@
-﻿// Derived from code licensed to the .NET Foundation under one or more agreements.
+// Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -162,7 +162,7 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
             GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
-            DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
+            DynamicJsonType result = Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
 
@@ -208,7 +208,7 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
             GeneratedCode generatedCode = await generator.GenerateCodeAsync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
-            DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
+            DynamicJsonType result = Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
 
@@ -255,7 +255,7 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
             GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
-            DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
+            DynamicJsonType result = Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
 
@@ -302,7 +302,7 @@ namespace TestUtilities
                 addExplicitUsings: addExplicitUsings);
 
             GeneratedCode generatedCode = generator.GenerateCodeSync(virtualFilename, schemaText, defaultNamespace: ToPascalCase(defaultNamespace));
-            DynamicJsonType result = generator.Compile(generatedCode, hostAssembly);
+            DynamicJsonType result = Compile(generatedCode, hostAssembly);
             return s_compiledTypesCache.GetOrAdd(key, _ => result);
         }
 
@@ -312,7 +312,7 @@ namespace TestUtilities
         /// <param name="code">The generated code.</param>
         /// <param name="hostAssembly">The assembly hosting the generator to use for build metadata context.</param>
         /// <returns>A <see cref="Task"/>, which, when complete, provides the <see cref="Type"/> of the instance.</returns>
-        private DynamicJsonType Compile(GeneratedCode code, Assembly hostAssembly)
+        private static DynamicJsonType Compile(GeneratedCode code, Assembly hostAssembly)
         {
             // Need to establish if the output type is JsonElement
             if (code.RootType.IsBuiltInJsonAnyType())

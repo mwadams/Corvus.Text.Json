@@ -406,12 +406,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IgnoredUnrecognizedFormat(Span<byte> buffer, out int written)
     {
-        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredUnrecognizedFormat.AsSpan(), buffer, out written))
-        {
-            return false;
-        }
-
-        return true;
+        return JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredUnrecognizedFormat.AsSpan(), buffer, out written);
     }
 
     /// <summary>
@@ -423,12 +418,7 @@ public static partial class JsonSchemaEvaluation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool IgnoredFormatNotAsserted(Span<byte> buffer, out int written)
     {
-        if (!JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredFormatNotAsserted.AsSpan(), buffer, out written))
-        {
-            return false;
-        }
-
-        return true;
+        return JsonReaderHelper.TryGetUtf8FromText(SR.JsonSchema_IgnoredFormatNotAsserted.AsSpan(), buffer, out written);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
