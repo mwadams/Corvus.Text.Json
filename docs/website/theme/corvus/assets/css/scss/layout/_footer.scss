@@ -17,6 +17,7 @@
   @media (min-width: 60rem) {
     .page-content:has(.layout-docs) + & {
       margin-top: -15rem;
+      min-height: 15rem;
       box-shadow: 0 -6px 20px rgb(0 0 0 / 0.35);
     }
   }
