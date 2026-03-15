@@ -192,7 +192,7 @@ This is the most concise approach and works for all value types.
 string familyName = (string)person.Name.FamilyName;
 ```
 
-> **Tip:** You can opt in to implicit `string` conversion via the `--optionalStringImplicit` flag on the CLI tool, or the `OptionalStringImplicit` property on the source generator attribute. This trades allocation safety for convenience — use it when you know you need the string and are not in a hot path.
+> **Tip:** You can opt in to implicit `string` conversion via the `--optionalStringImplicit` flag on the CLI tool, or the `CorvusJsonSchemaOptionalStringImplicit` MSBuild property in your `.csproj` for the source generator. This trades allocation safety for convenience — use it when you know you need the string and are not in a hot path.
 
 ### TryGetValue
 
