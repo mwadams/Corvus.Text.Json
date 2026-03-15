@@ -132,21 +132,40 @@ Person.Mutable target = targetBuilder.RootElement;
 target.SetName(sourceDoc.RootElement.Name);
 ```
 
-When the source and target types are structurally compatible but different generated types (e.g. from different schemas), use `TTarget.From()` to coerce the value:
+In practice, you often need to map between types generated from *different* schemas. Imagine a CRM system that defines its own `Employee` schema:
+
+```json
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "employeeId": { "type": "integer", "format": "int32" },
+        "fullName": { "type": "string" },
+        "workEmail": { "type": "string", "format": "email" },
+        "department": { "type": "string" }
+    },
+    "required": ["employeeId", "fullName", "workEmail"]
+}
+```
+
+Both schemas happen to have an email property typed as `"type": "string", "format": "email"`, but the code generator produces separate types for each: `Employee.WorkEmailEntity` and `Person.EmailEntity`. Because the underlying JSON is structurally identical, you can use `TTarget.From()` to reinterpret the value without copying:
 
 ```csharp
 using ParsedJsonDocument<Employee> employeeDoc =
     ParsedJsonDocument<Employee>.Parse(employeeJson);
-using var contactBuilder = contactDoc.RootElement.CreateBuilder(workspace);
+using var personBuilder = personDoc.RootElement.CreateBuilder(workspace);
 
-Contact.Mutable contact = contactBuilder.RootElement;
+Person.Mutable person = personBuilder.RootElement;
 
-// Employee.EmailEntity and Contact.EmailEntity are different types
-// but both wrap a "type": "string", "format": "email"
-contact.SetEmail(Contact.EmailEntity.From(employeeDoc.RootElement.Email));
+// Employee.WorkEmailEntity and Person.EmailEntity are different C# types
+// but both wrap "type": "string", "format": "email" — From() bridges them
+person.SetEmail(Person.EmailEntity.From(employeeDoc.RootElement.WorkEmail));
+
+// Simple string values can also be assigned directly via implicit conversion
+person.Name.SetGivenName(employeeDoc.RootElement.FullName);
 ```
 
-`From()` performs a zero-copy reinterpretation of the underlying JSON — no parsing or allocation occurs.
+`From()` performs a zero-copy reinterpretation of the underlying JSON — no parsing or allocation occurs. It works for any structurally compatible types, including nested objects and arrays.
 
 ## Mutating arrays
 
