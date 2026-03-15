@@ -74,6 +74,19 @@ a.link {
   }
 }
 
+// External link indicator — small icon after links to external sites
+.doc__content a[href^="https://"],
+.doc__content a[href^="http://"] {
+  &::after {
+    content: "\2009\2197"; // thin space + ↗
+    font-size: 0.75em;
+    vertical-align: super;
+    text-decoration: none;
+    display: inline;
+    opacity: 0.6;
+  }
+}
+
 // ---- Lists ----
 
 ul, ol {

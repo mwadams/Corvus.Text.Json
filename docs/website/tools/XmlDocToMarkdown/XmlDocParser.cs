@@ -155,15 +155,35 @@ public sealed partial class XmlDocParser(string xmlPath)
                 if (cref is not null)
                 {
                     string stripped = StripMemberPrefix(cref);
-                    string typeName = GetShortTypeName(stripped);
+                    char memberType = cref.Length > 1 && cref[1] == ':' ? cref[0] : 'T';
                     string? url = ResolveTypeUrl(stripped);
-                    if (url is not null)
+
+                    if (memberType is 'M' or 'P' or 'F' or 'E')
                     {
-                        sb.Append($"[`{typeName}`]({url})");
+                        // Member reference — display the member name and link to type#anchor
+                        string memberName = GetMemberDisplayName(stripped);
+                        if (url is not null)
+                        {
+                            string anchor = GetMemberAnchor(stripped, memberType);
+                            sb.Append($"[`{memberName}`]({url}#{anchor})");
+                        }
+                        else
+                        {
+                            sb.Append($"`{memberName}`");
+                        }
                     }
                     else
                     {
-                        sb.Append($"`{typeName}`");
+                        // Type reference — display the short type name
+                        string typeName = GetShortTypeName(stripped);
+                        if (url is not null)
+                        {
+                            sb.Append($"[`{typeName}`]({url})");
+                        }
+                        else
+                        {
+                            sb.Append($"`{typeName}`");
+                        }
                     }
                 }
                 else
@@ -332,6 +352,65 @@ public sealed partial class XmlDocParser(string xmlPath)
     {
         string shortName = GetShortTypeName(fullName);
         return shortName.Replace('.', '-');
+    }
+
+    /// <summary>
+    /// Extracts the member name from a full cref like "Corvus.Text.Json.JsonElement.Parse(System.String)".
+    /// Returns "Parse" — the last segment before any parentheses.
+    /// </summary>
+    internal static string GetMemberDisplayName(string fullName)
+    {
+        string name = fullName;
+
+        // Strip parameters
+        int parenIdx = name.IndexOf('(');
+        if (parenIdx >= 0)
+            name = name[..parenIdx];
+
+        // Strip generic arity
+        int backtickIdx = name.IndexOf('`');
+        if (backtickIdx >= 0)
+            name = name[..backtickIdx];
+
+        // Take the last segment (the member name)
+        int lastDot = name.LastIndexOf('.');
+        if (lastDot >= 0)
+            name = name[(lastDot + 1)..];
+
+        // Handle constructor references: #ctor → the type name
+        if (name == "#ctor")
+        {
+            string withoutMember = fullName;
+            int ctorDot = withoutMember.LastIndexOf(".#ctor", StringComparison.Ordinal);
+            if (ctorDot >= 0)
+            {
+                withoutMember = withoutMember[..ctorDot];
+                int lastTypeDot = withoutMember.LastIndexOf('.');
+                if (lastTypeDot >= 0)
+                    return withoutMember[(lastTypeDot + 1)..];
+                return withoutMember;
+            }
+        }
+
+        return name;
+    }
+
+    /// <summary>
+    /// Generates a markdown-compatible anchor ID for a member.
+    /// Must match the anchors that Markdig generates from heading text like "### Parse `static`".
+    /// Pattern: lowercase member name, with modifiers stripped (Markdig adds -static, -virtual, etc.).
+    /// We use just the lowercase name since the exact heading anchor depends on duplicates.
+    /// </summary>
+    internal static string GetMemberAnchor(string fullName, char memberType)
+    {
+        string memberName = GetMemberDisplayName(fullName);
+
+        // Lowercase and replace non-alphanumeric with hyphens (matching Markdig's auto-ID)
+        return memberName.ToLowerInvariant()
+            .Replace('<', '-')
+            .Replace(">", "")
+            .Replace(' ', '-')
+            .TrimEnd('-');
     }
 
     [GeneratedRegex(@"\s+")]
