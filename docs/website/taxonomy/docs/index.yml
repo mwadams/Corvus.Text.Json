@@ -1,7 +1,7 @@
 ContentType: application/vnd.endjin.ssg.page+yaml
 Title: Documentation
 Navigation:
-  Title: Docs
+  Title: Documentation
   Description: "In-depth documentation for Corvus.Text.Json components and migration guides."
   Parent: /
   Url: /docs/index.html
