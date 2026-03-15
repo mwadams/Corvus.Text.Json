@@ -92,11 +92,11 @@ public sealed class MarkdownGenerator(string outputDir)
                 $"{type.Name} Constructors", "Constructor", type.Constructors);
         }
 
-        // Properties (each on its own page)
-        foreach (MemberInfo prop in type.Properties)
+        // Properties (grouped by name — indexer overloads share one page)
+        foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey))
         {
-            WriteMemberPageFile(ns, nsSlug, type, typeSlug, prop.Name, MemberToSlug(prop.GroupKey),
-                $"{type.Name}.{prop.Name} Property", "Property", [prop]);
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, group.Key, MemberToSlug(group.Key),
+                $"{type.Name}.{group.Key} Property", "Property", group.ToList());
         }
 
         // Methods (grouped by name — all overloads on one page)
@@ -274,18 +274,23 @@ public sealed class MarkdownGenerator(string outputDir)
             sb.AppendLine();
             sb.AppendLine("| Property | Type | Description |");
             sb.AppendLine("|----------|------|-------------|");
-            foreach (MemberInfo prop in type.Properties)
+            foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey).OrderBy(g => g.Key))
             {
-                string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
-                string staticBadge = prop.IsStatic ? " `static`" : "";
-                if (hasLinks)
+                string? propUrl = hasLinks
+                    ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
+                    : null;
+                foreach (MemberInfo prop in group)
                 {
-                    string propUrl = $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(prop.GroupKey))}.html";
-                    sb.AppendLine($"| [{prop.Name}]({propUrl}){staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
-                }
-                else
-                {
-                    sb.AppendLine($"| `{prop.Name}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
+                    string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
+                    string staticBadge = prop.IsStatic ? " `static`" : "";
+                    if (propUrl is not null)
+                    {
+                        sb.AppendLine($"| [{EscapeTableCell(prop.Name)}]({propUrl}){staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
+                    }
+                    else
+                    {
+                        sb.AppendLine($"| `{EscapeTableCell(prop.Name)}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
+                    }
                 }
             }
             sb.AppendLine();
@@ -446,7 +451,7 @@ public sealed class MarkdownGenerator(string outputDir)
         sb.AppendLine("## Overloads");
         sb.AppendLine();
         sb.AppendLine($"| {memberCategory} | Description |");
-        sb.AppendLine("|{new string('-', memberCategory.Length + 2)}|-------------|");
+        sb.AppendLine($"|{new string('-', memberCategory.Length + 2)}|-------------|");
         foreach (MemberInfo member in members)
         {
             string sig = FormatShortSignature(member);

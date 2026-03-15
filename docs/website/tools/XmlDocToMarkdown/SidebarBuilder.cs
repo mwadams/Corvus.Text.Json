@@ -108,7 +108,9 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(group.Key)}</a></li>");
+                // For indexers (multiple overloads sharing "Item"), show "Item[]"
+                string displayName = group.Count() > 1 && group.Key == "Item" ? "Item[]" : group.First().Name;
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(displayName)}</a></li>");
             }
         }
 

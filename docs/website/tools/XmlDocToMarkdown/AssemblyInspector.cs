@@ -252,7 +252,18 @@ public sealed class AssemblyInspector(string assemblyPath)
         // Properties
         foreach (System.Reflection.PropertyInfo prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
         {
-            string propXmlKey = $"P:{fullName}.{prop.Name}";
+            System.Reflection.ParameterInfo[] indexParams = prop.GetIndexParameters();
+            string propXmlKey;
+            if (indexParams.Length > 0)
+            {
+                string paramTypes = string.Join(",", indexParams.Select(p => GetXmlDocTypeName(p.ParameterType)));
+                propXmlKey = $"P:{fullName}.{prop.Name}({paramTypes})";
+            }
+            else
+            {
+                propXmlKey = $"P:{fullName}.{prop.Name}";
+            }
+
             xmlDocs.TryGetValue(propXmlKey, out DocMember? propDocs);
             typeInfo.Properties.Add(BuildPropertyMemberInfo(prop, propDocs, propXmlKey));
         }
@@ -379,17 +390,48 @@ public sealed class AssemblyInspector(string assemblyPath)
             accessors = " { set; }";
         }
 
+        System.Reflection.ParameterInfo[] indexParams = prop.GetIndexParameters();
+        bool isIndexer = indexParams.Length > 0;
+
+        // Build display name: "this[int]" for indexers, "Name" for regular props
+        string displayName = prop.Name;
+        string signature;
+        var parameters = new List<ParameterInfo>();
+
+        if (isIndexer)
+        {
+            string paramList = string.Join(", ", indexParams.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"));
+            displayName = $"this[{string.Join(", ", indexParams.Select(p => FormatTypeName(p.ParameterType)))}]";
+            signature = $"{FormatTypeName(prop.PropertyType)} this[{paramList}]{accessors}";
+
+            foreach (System.Reflection.ParameterInfo p in indexParams)
+            {
+                parameters.Add(new ParameterInfo
+                {
+                    Name = p.Name ?? "index",
+                    Type = FormatTypeName(p.ParameterType),
+                    TypeFullName = GetTypeFullName(p.ParameterType),
+                    IsOptional = p.IsOptional,
+                });
+            }
+        }
+        else
+        {
+            signature = $"{FormatTypeName(prop.PropertyType)} {prop.Name}{accessors}";
+        }
+
         System.Reflection.MethodInfo? getter = prop.GetGetMethod();
         return new MemberInfo
         {
-            Name = prop.Name,
+            Name = displayName,
             GroupKey = prop.Name,
-            Signature = $"{FormatTypeName(prop.PropertyType)} {prop.Name}{accessors}",
+            Signature = signature,
             ReturnType = FormatTypeName(prop.PropertyType),
             ReturnTypeFullName = GetTypeFullName(prop.PropertyType),
             Documentation = docs,
             IsStatic = getter?.IsStatic ?? false,
             XmlDocKey = xmlKey,
+            Parameters = parameters,
         };
     }
 

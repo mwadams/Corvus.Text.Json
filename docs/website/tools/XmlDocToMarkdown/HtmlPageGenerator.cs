@@ -137,10 +137,10 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
             EmitMemberPage(type.Name, "ctor", "Constructor", type.Constructors);
         }
 
-        // Properties
-        foreach (MemberInfo prop in type.Properties)
+        // Properties (grouped by name — indexer overloads share one page)
+        foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey))
         {
-            EmitMemberPage(prop.Name, MarkdownGenerator.MemberToSlug(prop.GroupKey), "Property", [prop]);
+            EmitMemberPage(group.First().Name, MarkdownGenerator.MemberToSlug(group.Key), "Property", group.ToList());
         }
 
         // Methods (grouped by name)
