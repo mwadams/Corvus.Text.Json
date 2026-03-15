@@ -4,11 +4,10 @@
 
 @use '../abstracts/mixins' as *;
 
-// ---- Page content wrapper (sticks at bottom so footer scrolls over it) ----
+// ---- Page content wrapper (layered below footer) ----
 
 .page-content {
-  position: sticky;
-  bottom: 0;
+  position: relative;
   z-index: 1;
   background: var(--color-bg);
 }
@@ -57,6 +56,12 @@
 .layout-docs__main {
   min-width: 0; // Prevent grid blowout with code blocks
   max-width: 52rem;
+
+  // Extra padding extends the grid row so the sidebar stays
+  // sticky while the footer slides up over this zone.
+  @include breakpoint-md {
+    padding-bottom: 15rem;
+  }
 }
 
 // ---- Card grid layout (examples / recipes) ----
