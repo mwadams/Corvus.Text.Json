@@ -91,6 +91,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // ── Footer overlay ────────────────────────────────────────────────────
+  // On docs/examples pages, extend the layout grid by the footer's height
+  // and pull the footer up by the same amount. Combined with z-index
+  // layering (.page-content z:1, .site-footer z:10) this makes the footer
+  // scroll up *over* the content and sidebar instead of pushing them away.
+  const footer = document.querySelector('.site-footer');
+  const layoutDocs = document.querySelector('.layout-docs');
+
+  if (footer && layoutDocs) {
+    function applyFooterOverlap() {
+      const h = footer.offsetHeight;
+      layoutDocs.style.paddingBottom = h + 'px';
+      footer.style.marginTop = -h + 'px';
+    }
+    applyFooterOverlap();
+    window.addEventListener('resize', applyFooterOverlap, { passive: true });
+  }
+
   // ── On-page TOC in sidebar ──────────────────────────────────────────────
   // For doc pages: extract h2 headings, insert as a sub-list under the
   // active sidebar link, and highlight the current section on scroll.
