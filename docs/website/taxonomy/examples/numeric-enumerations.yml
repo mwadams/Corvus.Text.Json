@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 015: Numeric Enumerations"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Numeric Enumerations"
 Navigation:
   Title: Numeric Enumerations
-  Description: "Define constrained numeric values using the enum keyword."
+  Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with numeric values to create type-safe numeric enumerations."
   Parent: /examples/index.html
   Url: /examples/numeric-enumerations.html
   Rank: 15
@@ -14,11 +14,11 @@ Navigation:
     Link: False
 MetaData:
   Title: "Numeric Enumerations — Corvus.Text.Json Examples"
-  Description: "Define constrained numeric values using the JSON Schema enum keyword and generate type-safe C# numeric enumerations with Corvus.Text.Json."
-  Keywords: [enum, numeric, integer, enumeration, constrained values, JSON Schema, recipe]
+  Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with numeric values to create type-safe numeric enumerations."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
   Title: "Numeric Enumerations — Corvus.Text.Json Examples"
-  Description: "Define constrained numeric values using the JSON Schema enum keyword."
+  Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with numeric values to create type-safe numeric enumerations."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 005: Extending a Base Type"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Extending a Base Type"
 Navigation:
   Title: Extending a Base Type
-  Description: "Use allOf to extend a base schema with additional properties."
+  Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."
   Parent: /examples/index.html
   Url: /examples/extending-a-base-type.html
   Rank: 5
@@ -14,11 +14,11 @@ Navigation:
     Link: False
 MetaData:
   Title: "Extending a Base Type — Corvus.Text.Json Examples"
-  Description: "Learn how to use allOf in JSON Schema to create derived types that extend a base schema with additional properties, similar to class inheritance."
-  Keywords: [allOf, inheritance, base type, extension, composition, JSON Schema, recipe]
+  Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
   Title: "Extending a Base Type — Corvus.Text.Json Examples"
-  Description: "Use allOf in JSON Schema to extend a base type with additional properties."
+  Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

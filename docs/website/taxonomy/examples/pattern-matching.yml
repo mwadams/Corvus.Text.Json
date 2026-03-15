@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 012: Pattern Matching"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Pattern Matching and Discriminated Unions"
 Navigation:
-  Title: Pattern Matching
-  Description: "Use oneOf and anyOf for pattern-matching-style type discrimination."
+  Title: Pattern Matching and Discriminated Unions
+  Description: "This recipe demonstrates how to use JSON Schema `oneOf` to create discriminated unions that support pattern matching in .NET."
   Parent: /examples/index.html
   Url: /examples/pattern-matching.html
   Rank: 12
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Pattern Matching — Corvus.Text.Json Examples"
-  Description: "Use oneOf and anyOf in JSON Schema for pattern-matching-style type discrimination and generate idiomatic C# switch expressions with Corvus.Text.Json."
-  Keywords: [pattern matching, oneOf, anyOf, discrimination, union types, JSON Schema, recipe]
+  Title: "Pattern Matching and Discriminated Unions — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `oneOf` to create discriminated unions that support pattern matching in .NET."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
-  Title: "Pattern Matching — Corvus.Text.Json Examples"
-  Description: "Use oneOf and anyOf for pattern-matching-style type discrimination in JSON Schema."
+  Title: "Pattern Matching and Discriminated Unions — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `oneOf` to create discriminated unions that support pattern matching in .NET."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

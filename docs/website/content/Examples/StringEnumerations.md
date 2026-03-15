@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "String Enumerations"
+Title: "String Enumerations and Pattern Matching"
 ---
-
-# JSON Schema Patterns in .NET - String Enumerations and Pattern Matching
-
 This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support.
 
 ## The Pattern
@@ -100,7 +97,7 @@ Console.WriteLine(ConvertToRgb(red, brightnessFactor));
 // Output: RGB(204, 0, 0)
 ```
 
-> **Tip:** JSON Schema `enum` with all-string values is the simplest way to model string enumerations. For richer semantics (titles, descriptions per value), use the `oneOf`+`const` pattern shown in [Numeric Enumerations](/examples/numeric-enumerations.html).
+> **Tip:** JSON Schema `enum` with all-string values is the simplest way to model string enumerations. For richer semantics (titles, descriptions per value), use the `oneOf`+`const` pattern shown in [Recipe 015](../015-NumericEnumerations/).
 
 ## Key Differences from V4
 
@@ -136,6 +133,19 @@ string desc = red.Match(
 - The `Match()` API (including the context parameter overload), `EnumValues` constants, and exhaustive handling work the same way in both versions
 - V5 uses `ParsedJsonDocument<T>` for parsing from external JSON input
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/014-StringEnumerations
+dotnet run
+```
+
+## Related Patterns
+
+- [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with `oneOf`
+- [013-PolymorphismWithDiscriminators](../013-PolymorphismWithDiscriminators/) - Using `const` for discrimination
+- [015-NumericEnumerations](../015-NumericEnumerations/) - Enumerations with numeric values and documentation
+
 ## Frequently Asked Questions
 
 ### Q: What happens if I parse a value not in the enum?
@@ -144,18 +154,12 @@ string desc = red.Match(
 
 ### Q: Can I use `enum` with mixed types (strings and numbers)?
 
-**A:** JSON Schema's `enum` keyword accepts an array of any JSON values, so mixed types are technically valid. However, homogeneous enum arrays are easier to understand and work with. For heterogeneous enumerations, `oneOf` with `const` values is a better approach — it lets you document each variant individually and provides clearer discrimination (see [Pattern Matching](/examples/pattern-matching.html)).
+**A:** JSON Schema's `enum` keyword accepts an array of any JSON values, so mixed types are technically valid. However, homogeneous enum arrays are easier to understand and work with. For heterogeneous enumerations, `oneOf` with `const` values is a better approach — it lets you document each variant individually and provides clearer discrimination (see [Recipe 012](../012-PatternMatching/)).
 
 ### Q: When should I use `enum` vs `oneOf` + `const`?
 
-**A:** Use `enum` for simple value lists where you just need to constrain a property to a known set of values — it's more concise and produces cleaner schemas. Use `oneOf` + `const` when you need per-value documentation, named constant instances, or when your enum values are numeric (see [Numeric Enumerations](/examples/numeric-enumerations.html)).
+**A:** Use `enum` for simple value lists where you just need to constrain a property to a known set of values — it's more concise and produces cleaner schemas. Use `oneOf` + `const` when you need per-value documentation, named constant instances, or when your enum values are numeric (see [Recipe 015](../015-NumericEnumerations/)).
 
 ### Q: Is pattern matching over enums exhaustive at compile time?
 
 **A:** The generated `Match()` method requires a handler for every enum value plus a `defaultMatch` fallback, so you won't miss a case at compile time. However, if you add new values to the schema and regenerate, existing code will get a compile error for the missing handler — which is exactly the safety net you want.
-
-## Related Patterns
-
-- [Pattern Matching](/examples/pattern-matching.html) - Discriminated unions with `oneOf`
-- [Polymorphism with Discriminators](/examples/polymorphism-with-discriminators.html) - Using `const` for discrimination
-- [Numeric Enumerations](/examples/numeric-enumerations.html) - Enumerations with numeric values and documentation

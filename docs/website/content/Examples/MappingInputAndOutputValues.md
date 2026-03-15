@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Mapping Input and Output Values"
 ---
-
-# JSON Schema Patterns in .NET - Mapping Input and Output Values
-
 This recipe demonstrates how to efficiently convert between different schema representations of similar entities - a common pattern in layered architectures where data transforms between API, domain, and persistence layers.
 
 ## The Problem
@@ -249,6 +246,20 @@ TargetType target = targetBuilder.RootElement;
 - V5 uses `CreateBuilder()` with named parameters for zero-allocation mapping
 - V5 makes allocation lifetime explicit through `using` declarations
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/017-MappingInputAndOutputValues
+dotnet run
+```
+
+## Related Patterns
+
+- [001-DataObject](../001-DataObject/) - Creating and manipulating data objects
+- [004-OpenVersusClosedTypes](../004-OpenVersusClosedTypes/) - Mutable operations on open types
+- [016-Maps](../016-Maps/) - Working with dynamic property sets
+- [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Type composition with `allOf`
+
 ## Real-World Scenarios
 
 This pattern is especially useful for:
@@ -276,10 +287,3 @@ This pattern is especially useful for:
 ### Q: How does this compare to AutoMapper?
 
 **A:** Unlike AutoMapper, which uses reflection and creates intermediate objects, the `From()` pattern operates directly on the JSON buffer with no reflection, no intermediate allocations, and no runtime configuration. The mapping is determined at compile time by the schema structure. This makes it significantly faster but limited to structural conversions — complex business logic transformations still require explicit code.
-
-## Related Patterns
-
-- [Simple Data Objects](/examples/data-object.html) - Creating and manipulating data objects
-- [Open Versus Closed Types](/examples/open-versus-closed-types.html) - Mutable operations on open types
-- [Maps](/examples/maps.html) - Working with dynamic property sets
-- [Interfaces and Mix-In Types](/examples/interfaces-and-mixins.html) - Type composition with `allOf`

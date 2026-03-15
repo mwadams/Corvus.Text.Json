@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "Maps"
+Title: "Maps of Strings to Strongly Typed Values"
 ---
-
-# JSON Schema Patterns in .NET - Maps of Strings to Strongly Typed Values
-
 This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values.
 
 ## The Pattern
@@ -202,6 +199,19 @@ using var doc = StringToIntMap.CreateBuilder(workspace,
 - V5 uses the builder pattern instead of `FromProperties()` for constructing maps
 - V5 uses `ParsedJsonDocument<T>` for parsing from external JSON input
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/016-Maps
+dotnet run
+```
+
+## Related Patterns
+
+- [004-OpenVersusClosedTypes](../004-OpenVersusClosedTypes/) - Objects with `unevaluatedProperties: false`
+- [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composing object types
+- [017-MappingInputAndOutputValues](../017-MappingInputAndOutputValues/) - Converting between different schemas
+
 ## Frequently Asked Questions
 
 ### Q: Can map values be complex types (objects, arrays)?
@@ -218,10 +228,4 @@ using var doc = StringToIntMap.CreateBuilder(workspace,
 
 ### Q: Can I use maps with known and unknown property combinations?
 
-**A:** Yes. Define your known properties in the `properties` keyword and use `additionalProperties` to constrain the type of any extra properties. This gives you strongly-typed accessors for known properties while still allowing dynamic key-value entries. See [Open Versus Closed Types](/examples/open-versus-closed-types.html) for more on open versus closed types.
-
-## Related Patterns
-
-- [Open Versus Closed Types](/examples/open-versus-closed-types.html) - Objects with `unevaluatedProperties: false`
-- [Interfaces and Mix-In Types](/examples/interfaces-and-mixins.html) - Composing object types
-- [Mapping Input and Output Values](/examples/mapping-input-output.html) - Converting between different schemas
+**A:** Yes. Define your known properties in the `properties` keyword and use `additionalProperties` to constrain the type of any extra properties. This gives you strongly-typed accessors for known properties while still allowing dynamic key-value entries. See [Recipe 004](../004-OpenVersusClosedTypes/) for more on open versus closed types.

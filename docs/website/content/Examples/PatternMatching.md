@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "Pattern Matching"
+Title: "Pattern Matching and Discriminated Unions"
 ---
-
-# JSON Schema Patterns in .NET - Pattern Matching and Discriminated Unions
-
 This recipe demonstrates how to use JSON Schema `oneOf` to create discriminated unions that support pattern matching in .NET.
 
 ## The Pattern
@@ -114,7 +111,7 @@ In our example, we are discriminating between a `string`, an `int32`, an `object
 
 In this example, we have an entirely heterogeneous set of schemas in our discriminated union.
 
-In the [next recipe (Polymorphism with Discriminators)](/examples/polymorphism-with-discriminators.html), we will look at a tagged union of schemas, discriminated by a property that indicates type, similar to that found in [OpenAPI's polymorphism feature](https://swagger.io/docs/specification/data-models/inheritance-and-polymorphism/), and `System.Text.Json`'s [polymorphic serialization](https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-8-0).
+In the [next recipe (013-PolymorphismWithDiscriminators)](../013-PolymorphismWithDiscriminators/), we will look at a tagged union of schemas, discriminated by a property that indicates type, similar to that found in [OpenAPI's polymorphism feature](https://swagger.io/docs/specification/data-models/inheritance-and-polymorphism/), and `System.Text.Json`'s [polymorphic serialization](https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/polymorphism?pivots=dotnet-8-0).
 
 ## Generated Code
 
@@ -210,7 +207,20 @@ DiscriminatedUnionByType union = DiscriminatedUnionByType.From(JsonAny.Parse("\"
 - V4 additionally supported implicit conversion from .NET built-in literals (strings, integers); in V5 you use `From()` or parse for those cases
 - The `Match()` method, handler signatures, and exhaustive matching behaviour are unchanged
 
-See [Polymorphism with Discriminators](/examples/polymorphism-with-discriminators.html) for pattern matching with discriminator properties, which is the more common approach in real APIs.
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/012-PatternMatching
+dotnet run
+```
+
+See [Recipe 013](../013-PolymorphismWithDiscriminators/) for pattern matching with discriminator properties, which is the more common approach in real APIs.
+
+## Related Patterns
+
+- [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composition with `allOf`
+- [013-PolymorphismWithDiscriminators](../013-PolymorphismWithDiscriminators/) - Discriminated unions with type properties
+- [014-StringEnumerations](../014-StringEnumerations/) - Pattern matching over string enums
 
 ## Frequently Asked Questions
 
@@ -220,7 +230,7 @@ See [Polymorphism with Discriminators](/examples/polymorphism-with-discriminator
 
 ### Q: Can I use `oneOf` with variants of the same JSON type?
 
-**A:** Yes, but you need a way to distinguish them. If multiple variants are objects, add a discriminator property with a `const` value to each variant (see [Polymorphism with Discriminators](/examples/polymorphism-with-discriminators.html)). Without a discriminator, variants of the same JSON type risk ambiguous matching, which would cause validation failures.
+**A:** Yes, but you need a way to distinguish them. If multiple variants are objects, add a discriminator property with a `const` value to each variant (see [Recipe 013](../013-PolymorphismWithDiscriminators/)). Without a discriminator, variants of the same JSON type risk ambiguous matching, which would cause validation failures.
 
 ### Q: Why does the code generator use `OneOf0Entity`/`OneOf1Entity` names?
 
@@ -236,9 +246,3 @@ Note that simple types may be reduced to global types like `JsonString` or `Json
 ### Q: What is the `defaultMatch` handler for?
 
 **A:** The `defaultMatch` handler is called when no other variant matches. In a well-validated schema this shouldn't happen, but it provides a safety net for cases where the JSON data hasn't been validated against the schema. It follows the same pattern as a `default` case in a C# `switch` expression, ensuring exhaustive handling.
-
-## Related Patterns
-
-- [Interfaces and Mix-In Types](/examples/interfaces-and-mixins.html) - Composition with `allOf`
-- [Polymorphism with Discriminators](/examples/polymorphism-with-discriminators.html) - Discriminated unions with type properties
-- [String Enumerations](/examples/string-enumerations.html) - Pattern matching over string enums

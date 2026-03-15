@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Numeric Enumerations"
 ---
-
-# JSON Schema Patterns in .NET - Numeric Enumerations
-
 This recipe demonstrates how to use JSON Schema `enum` keyword with numeric values to create type-safe numeric enumerations.
 
 ## The Pattern
@@ -172,6 +169,8 @@ The `oneOf` + `const` pattern shown in this recipe provides:
 - Type-safe pattern matching with named parameters
 - Prevents implicit numeric conversions, improving type safety
 
+For more details on this pattern, see the [blog post](https://endjin.com/blog/2024/05/json-schema-patterns-dotnet-numeric-enumerations-and-pattern-matching).
+
 ## Key Differences from V4
 
 The `oneOf` + `const` pattern and its `Match()` API are essentially the same between V4 and V5. Both generate variant types with `ConstInstance` properties and exhaustive pattern matching.
@@ -206,6 +205,19 @@ string desc = status.Match(
 - The `Match()` API (including the context parameter overload), `ConstInstance` properties, and exhaustive handling work the same way in both versions
 - V5 uses `ParsedJsonDocument<T>` for parsing from external JSON input
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/015-NumericEnumerations
+dotnet run
+```
+
+## Related Patterns
+
+- [014-StringEnumerations](../014-StringEnumerations/) - String-based enumerations
+- [013-PolymorphismWithDiscriminators](../013-PolymorphismWithDiscriminators/) - Using `const` for discrimination
+- [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with `oneOf`
+
 ## Frequently Asked Questions
 
 ### Q: Why use `oneOf` + `const` instead of a simple `enum` array?
@@ -223,9 +235,3 @@ string desc = status.Match(
 ### Q: Are `ConstInstance` values allocated on the heap?
 
 **A:** No. `ConstInstance` properties return a struct-based JSON element backed by a static, pre-parsed byte buffer. There is no heap allocation when accessing them. This makes them ideal for comparisons and for constructing new instances from known values without any runtime parsing cost.
-
-## Related Patterns
-
-- [String Enumerations](/examples/string-enumerations.html) - String-based enumerations
-- [Polymorphism with Discriminators](/examples/polymorphism-with-discriminators.html) - Using `const` for discrimination
-- [Pattern Matching](/examples/pattern-matching.html) - Discriminated unions with `oneOf`

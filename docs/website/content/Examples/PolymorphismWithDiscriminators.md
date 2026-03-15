@@ -1,17 +1,14 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "Polymorphism with Discriminators"
+Title: "Polymorphism with Discriminator Properties"
 ---
-
-# JSON Schema Patterns in .NET - Polymorphism with Discriminator Properties
-
 This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties to create polymorphic types with discriminators - a pattern similar to OpenAPI's polymorphism feature and `System.Text.Json`'s polymorphic serialization.
 
 ## The Pattern
 
-In the [previous recipe (Pattern Matching)](/examples/pattern-matching.html), we looked at *untagged* discriminated unions — types discriminated by their fundamental structure (string vs. integer vs. object vs. array). That works well when the variants differ in JSON type, but most real-world APIs use *tagged* unions where all variants are objects and a specific property value identifies which variant you have. This recipe shows that more common pattern.
+In the [previous recipe (012-PatternMatching)](../012-PatternMatching/), we looked at *untagged* discriminated unions — types discriminated by their fundamental structure (string vs. integer vs. object vs. array). That works well when the variants differ in JSON type, but most real-world APIs use *tagged* unions where all variants are objects and a specific property value identifies which variant you have. This recipe shows that more common pattern.
 
 Here, each variant in a `oneOf` extends a common base and constrains a shared property (the discriminator) to a unique `const` value. This is the approach used by:
 - [JSON Patch (RFC 6902)](https://jsonpatch.com/) — each patch operation (`add`, `remove`, `replace`, `move`, `copy`, `test`) has an `op` property constrained to a unique `const` value
@@ -152,6 +149,19 @@ string desc = shape.Match(
 - V5 requires explicit `From()` conversion to access variant-specific properties
 - V5 pattern matching uses named parameters based on the variant type names
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/013-PolymorphismWithDiscriminators
+dotnet run
+```
+
+## Related Patterns
+
+- [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with heterogeneous types
+- [014-StringEnumerations](../014-StringEnumerations/) - Enumerations and pattern matching
+- [015-NumericEnumerations](../015-NumericEnumerations/) - Documented numeric enums with `const`
+
 ## Frequently Asked Questions
 
 ### Q: Why are variant types named by required properties (e.g. `RequiredRadiusAndType`)?
@@ -176,9 +186,3 @@ public readonly partial struct Circle;
 ### Q: How does this relate to OpenAPI's discriminator?
 
 **A:** This pattern is the JSON Schema equivalent of OpenAPI's `discriminator` object. Both use a property with a fixed value to identify which variant applies. The key difference is that JSON Schema uses `oneOf` + `const` for structural validation, while OpenAPI's discriminator is a hint for code generators. The Corvus.Text.Json generator recognizes the `oneOf` + `const` pattern and produces idiomatic match methods.
-
-## Related Patterns
-
-- [Pattern Matching](/examples/pattern-matching.html) - Discriminated unions with heterogeneous types
-- [String Enumerations](/examples/string-enumerations.html) - Enumerations and pattern matching
-- [Numeric Enumerations](/examples/numeric-enumerations.html) - Documented numeric enums with `const`

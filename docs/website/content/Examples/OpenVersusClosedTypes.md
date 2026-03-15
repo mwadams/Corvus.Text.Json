@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Open Versus Closed Types"
 ---
-
-# JSON Schema Patterns in .NET - Open Versus Closed Types
-
 This recipe demonstrates how to use `unevaluatedProperties` to control whether a JSON Schema object type is open (extensible) or closed (strict), and how that affects validation and mutation in generated .NET code.
 
 ## The Pattern
@@ -116,6 +113,8 @@ This generates:
 ## Generated Code Usage
 
 ### Validating open vs closed types
+
+[Example code](./Program.cs)
 
 ```csharp
 using Corvus.Text.Json;
@@ -242,6 +241,19 @@ PersonClosed personClosed = PersonClosed.From(fixedDoc.RootElement);
 - V5 uses `From()` for explicit type conversion instead of `As<T>()`
 - V5 uses UTF-8 byte literals (`"jobRole"u8`) for zero-allocation property access
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/004-OpenVersusClosedTypes
+dotnet run
+```
+
+## Related Patterns
+
+- [005-ExtendingABaseType](../005-ExtendingABaseType/) - Adding properties to an open base type
+- [006-ConstrainingABaseType](../006-ConstrainingABaseType/) - Adding constraints to a base type
+- [016-Maps](../016-Maps/) - Using `additionalProperties` for map/dictionary structures
+
 ## Frequently Asked Questions
 
 ### When should I use an open type vs a closed type?
@@ -259,9 +271,3 @@ Yes. The generated .NET type for a closed schema still has the generic `TryGetPr
 ### How does open/closed affect API versioning?
 
 With **open types**, a v2 document that adds a new `email` property is still valid against the v1 schema — older consumers simply ignore the extra field. With **closed types**, the v1 schema rejects the v2 document because `email` is not declared. This forces you to publish a new schema (e.g., `person-v2-closed.json`) with its own name and version, making the version boundary explicit.
-
-## Related Patterns
-
-- [Extending a Base Type](/examples/extending-a-base-type.html) - Adding properties to an open base type
-- [Constraining a Base Type](/examples/constraining-a-base-type.html) - Adding constraints to a base type
-- [Maps](/examples/maps.html) - Using `additionalProperties` for map/dictionary structures

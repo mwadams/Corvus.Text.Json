@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Interfaces and Mix-In Types"
 ---
-
-# JSON Schema Patterns in .NET - Interfaces and Mix-In Types
-
 This recipe demonstrates how to compose multiple JSON Schema definitions using `allOf`, creating types that behave like .NET interfaces or mix-ins.
 
 ## The Pattern
@@ -210,6 +207,19 @@ if (!documentation.Description.IsUndefined())
 - V5 uses `IsUndefined()` instead of V4's `IsNotUndefined()`
 - Implicit conversion to `allOf` constituents works the same in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/011-InterfacesAndMixInTypes
+dotnet run
+```
+
+## Related Patterns
+
+- [003-ReusingCommonTypes](../003-ReusingCommonTypes/) - Using `$ref` and `$defs` for shared types
+- [005-ExtendingABaseType](../005-ExtendingABaseType/) - Inheritance via `allOf` with a single base
+- [012-PatternMatching](../012-PatternMatching/) - Discriminated unions with `oneOf`
+
 ## Frequently Asked Questions
 
 ### Q: Is `allOf` composition the same as multiple inheritance?
@@ -226,10 +236,4 @@ if (!documentation.Description.IsUndefined())
 
 ### Q: How does `allOf` differ from `$ref` for type extension?
 
-**A:** A `$ref` imports a single schema definition, effectively creating a type alias or base type reference. `allOf` combines multiple schemas together, requiring the value to satisfy all of them. Use `$ref` when you want to extend one base type with additional properties (see [Extending a Base Type](/examples/extending-a-base-type.html)), and `allOf` when you want to mix in capabilities from multiple independent schemas.
-
-## Related Patterns
-
-- [Reusing Common Types](/examples/reusing-common-types.html) - Using `$ref` and `$defs` for shared types
-- [Extending a Base Type](/examples/extending-a-base-type.html) - Inheritance via `allOf` with a single base
-- [Pattern Matching](/examples/pattern-matching.html) - Discriminated unions with `oneOf`
+**A:** A `$ref` imports a single schema definition, effectively creating a type alias or base type reference. `allOf` combines multiple schemas together, requiring the value to satisfy all of them. Use `$ref` when you want to extend one base type with additional properties (see [Recipe 005](../005-ExtendingABaseType/)), and `allOf` when you want to mix in capabilities from multiple independent schemas.

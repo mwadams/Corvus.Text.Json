@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Extending a Base Type"
 ---
-
-# JSON Schema Patterns in .NET - Extending a Base Type
-
 This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages.
 
 ## The Pattern
@@ -68,8 +65,10 @@ File: `person-open.json`
 }
 ```
 
-> In draft 6 and draft 7, `$ref` cannot be used in this way. It acts as a reference to the target type and *ignores* the adjacent values. This is often a bit surprising! Instead, you can use `allOf` with a single value to get the same effect. It is a little clunkier to read, but works in the same way.
-> `{ "allOf": [{"$ref": "./person-closed.json"}]}`
+:::aside
+In draft 6 and draft 7, `$ref` cannot be used in this way. It acts as a reference to the target type and *ignores* the adjacent values. This is often a bit surprising! Instead, you can use `allOf` with a single value to get the same effect. It is a little clunkier to read, but works in the same way.
+`{ "allOf": [{"$ref": "./person-closed.json"}]}`
+:::
 
 The code generator generates types for both `PersonOpen` and `PersonWealthy`. When it encounters the `$ref` in `person-wealthy.json`, it follows the reference to `person-open.json`, resolves all the properties defined there, and composes them into the `PersonWealthy` type alongside its own declared properties.
 
@@ -85,6 +84,8 @@ The code generator generates types for both `PersonOpen` and `PersonWealthy`. Wh
 ## Generated Code Usage
 
 ### Creating an extended type
+
+[Example code](./Program.cs)
 
 ```csharp
 using Corvus.Text.Json;
@@ -200,6 +201,20 @@ if (basePerson.TryGetProperty("wealth"u8, out JsonElement wealthElement))
 - V5 uses `From()` for type conversion instead of `As<T>()`
 - Property access via strongly-typed properties and `TryGetProperty` works the same in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/005-ExtendingABaseType
+dotnet run
+```
+
+## Related Patterns
+
+- [003-ReusingCommonTypes](../003-ReusingCommonTypes/) - Using `$ref` and `$defs` for shared type definitions
+- [004-OpenVersusClosedTypes](../004-OpenVersusClosedTypes/) - Understanding open vs closed types
+- [006-ConstrainingABaseType](../006-ConstrainingABaseType/) - Narrowing constraints instead of adding properties
+- [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composing multiple schemas with `allOf`
+
 ## Frequently Asked Questions
 
 ### How is `$ref` like inheritance in OOP?
@@ -216,15 +231,8 @@ Use `TryGetProperty` when you have converted to a base type (e.g., `PersonOpen.F
 
 ### Does the base type need to be open for extension to work?
 
-Yes. If the base type has `unevaluatedProperties: false` (closed), then any document with properties not declared in that schema will fail validation against the base. You can still *compose* schemas using `$ref` on a closed type (see [Constraining a Base Type](/examples/constraining-a-base-type.html)), but you cannot add new properties — only narrow existing constraints.
+Yes. If the base type has `unevaluatedProperties: false` (closed), then any document with properties not declared in that schema will fail validation against the base. You can still *compose* schemas using `$ref` on a closed type (see [006-ConstrainingABaseType](../006-ConstrainingABaseType/)), but you cannot add new properties — only narrow existing constraints.
 
 ### What about draft 6/7 where `$ref` ignores adjacent keywords?
 
 In draft 6 and 7, `$ref` replaces the entire schema object — sibling keywords like `properties` and `required` are silently ignored. The workaround is to wrap the reference in an `allOf`: `{ "allOf": [{"$ref": "./person-open.json"}], "properties": { ... } }`. This achieves the same composition but is less readable. Draft 2019-09 and later allow `$ref` alongside other keywords, which is what this recipe uses.
-
-## Related Patterns
-
-- [Reusing Common Types](/examples/reusing-common-types.html) - Using `$ref` and `$defs` for shared type definitions
-- [Open Versus Closed Types](/examples/open-versus-closed-types.html) - Understanding open vs closed types
-- [Constraining a Base Type](/examples/constraining-a-base-type.html) - Narrowing constraints instead of adding properties
-- [Interfaces and Mix-In Types](/examples/interfaces-and-mixins.html) - Composing multiple schemas with `allOf`

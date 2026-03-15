@@ -240,7 +240,11 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (string seeAlso in type.Documentation!.SeeAlso)
             {
                 string shortName = XmlDocParser.GetShortTypeName(seeAlso);
-                sb.AppendLine($"- `{shortName}`");
+                string? url = XmlDocParser.ResolveTypeUrl(seeAlso);
+                if (url is not null)
+                    sb.AppendLine($"- [`{shortName}`]({url})");
+                else
+                    sb.AppendLine($"- `{shortName}`");
             }
             sb.AppendLine();
         }
@@ -441,8 +445,11 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (string seeAlso in type.Documentation!.SeeAlso)
             {
                 string shortName = XmlDocParser.GetShortTypeName(seeAlso);
-                string anchor = XmlDocParser.GetTypeAnchor(seeAlso);
-                sb.AppendLine($"- [{shortName}](#{anchor})");
+                string? url = XmlDocParser.ResolveTypeUrl(seeAlso);
+                if (url is not null)
+                    sb.AppendLine($"- [`{shortName}`]({url})");
+                else
+                    sb.AppendLine($"- `{shortName}`");
             }
 
             sb.AppendLine();

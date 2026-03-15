@@ -1,17 +1,14 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Constraining a Base Type"
 ---
-
-# JSON Schema Patterns in .NET - Constraining a Base Type
-
 This recipe demonstrates how to use `$ref` to base a new schema on an existing type and add tighter constraints to its properties, showing how JSON Schema composes constraints from both base and derived schemas.
 
 ## The Pattern
 
-Whether a type is [open or closed](/examples/open-versus-closed-types.html), you can further constrain it in a schema.
+Whether a type is [open or closed](../004-OpenVersusClosedTypes/), you can further constrain it in a schema.
 
 Remember that a closed type in JSON Schema is not like a "sealed" type in an OO language like C#. You can still base another schema on that type - it's just that it will not allow extra properties that are not present on the base type.
 
@@ -19,7 +16,9 @@ In this case, we will use `$ref` to declare that we are basing our new schema on
 
 Notice how we can reference schema in external documents, not just the local schema document.
 
-> This would work equally well with the `person-open.json` we used when [extending a base type.](/examples/extending-a-base-type.html)
+:::aside
+This would work equally well with the `person-open.json` we used when [extending a base type.](../005-ExtendingABaseType/)
+:::
 
 We then constrain it by defining a new version of the `height` property.
 
@@ -46,8 +45,10 @@ File: `person-tall.json`
 }
 ```
 
-> In draft 6 and draft 7, `$ref` cannot be used in this way. It acts as a reference to the target type and *ignores* the adjacent values. This is often a bit surprising! Instead, you can use `allOf` with a single value to get the same effect. It is a little clunkier to read, but works in the same way.
-> `{ "allOf": [{"$ref": "./person-closed.json"}]}`
+:::aside
+In draft 6 and draft 7, `$ref` cannot be used in this way. It acts as a reference to the target type and *ignores* the adjacent values. This is often a bit surprising! Instead, you can use `allOf` with a single value to get the same effect. It is a little clunkier to read, but works in the same way.
+`{ "allOf": [{"$ref": "./person-closed.json"}]}`
+:::
 
 File: `person-closed.json`
 
@@ -107,6 +108,8 @@ The code generator produces both `PersonTall` and `PersonClosed`; each has its o
 ## Generated Code Usage
 
 ### Creating a constrained type and validating
+
+[Example code](./Program.cs)
 
 ```csharp
 using Corvus.Text.Json;
@@ -203,6 +206,19 @@ PersonClosed personClosed = PersonClosed.From(personTall);
 - V5 uses `From()` for type conversion instead of `As<T>()`
 - V5 uses `ParsedJsonDocument<T>.Parse()` for parsing JSON strings
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/006-ConstrainingABaseType
+dotnet run
+```
+
+## Related Patterns
+
+- [002-DataObjectValidation](../002-DataObjectValidation/) - Schema validation fundamentals
+- [004-OpenVersusClosedTypes](../004-OpenVersusClosedTypes/) - Understanding open vs closed types
+- [005-ExtendingABaseType](../005-ExtendingABaseType/) - Adding properties to a base type instead of constraints
+
 ## Frequently Asked Questions
 
 ### How does constraint composition work in JSON Schema?
@@ -220,9 +236,3 @@ The `$ref` to the base property's schema is not strictly necessary for validatio
 ### Can I constrain a closed type even though it has `unevaluatedProperties: false`?
 
 Yes. A closed type prevents *new properties* from being added, but you can still narrow existing property constraints. This recipe does exactly that: `person-closed.json` has `unevaluatedProperties: false`, and `person-tall.json` references it while adding a `minimum: 2.0` constraint to the existing `height` property. No new properties are introduced, so the closed-type restriction is not violated.
-
-## Related Patterns
-
-- [Data Object Validation](/examples/data-object-validation.html) - Schema validation fundamentals
-- [Open Versus Closed Types](/examples/open-versus-closed-types.html) - Understanding open vs closed types
-- [Extending a Base Type](/examples/extending-a-base-type.html) - Adding properties to a base type instead of constraints

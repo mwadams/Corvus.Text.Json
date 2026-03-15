@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Simple Data Objects"
 ---
-
-# JSON Schema Patterns in .NET - Simple Data Objects
-
 This recipe demonstrates how to define a simple data object composed of primitive values using JSON Schema, and how the Corvus.Text.Json code generator produces strongly-typed .NET types with rich property accessors, zero-allocation comparisons, and NodaTime integration.
 
 ## The Pattern
@@ -50,6 +47,8 @@ The generated .NET properties are:
 - `Height` — of type `Person.HeightEntity` (a number type)
 
 ## Generated Code Usage
+
+[Example code](./Program.cs)
 
 ### Creating a Person from .NET values
 
@@ -236,6 +235,19 @@ root.SetBirthDate(new LocalDate(1984, 6, 3));
 - V5 mutation uses a mutable builder pattern (`SetProperty()`) instead of V4's immutable `WithProperty()` methods
 - Property access patterns (`TryGetValue()`, `ValueEquals()`, `IsUndefined()`, implicit conversions) are the same in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/001-DataObject
+dotnet run
+```
+
+## Related Patterns
+
+- [002-DataObjectValidation](../002-DataObjectValidation/) - Adding validation constraints to data objects
+- [003-ReusingCommonTypes](../003-ReusingCommonTypes/) - Sharing property types with `$ref` and `$defs`
+- [005-ExtendingABaseType](../005-ExtendingABaseType/) - Inheritance via `allOf` with a single base
+
 ## Frequently Asked Questions
 
 ### How are JSON Schema property types mapped to .NET types?
@@ -257,9 +269,3 @@ JSON Schema date/time formats (`date`, `date-time`, `time`) map naturally to Nod
 ### When should I use the builder pattern vs. parsing from JSON?
 
 Use `CreateBuilder(workspace, ...)` when you are constructing a new instance from .NET values — for example, building a response object in an API handler. Use `ParsedJsonDocument<T>.Parse(...)` when you receive JSON data from an external source (HTTP request body, file, message queue). The builder pattern requires a `JsonWorkspace` for pooled memory management, while parsing produces an immutable document that owns its own memory.
-
-## Related Patterns
-
-- [Data Object Validation](/examples/data-object-validation.html) - Adding validation constraints to data objects
-- [Reusing Common Types](/examples/reusing-common-types.html) - Sharing property types with `$ref` and `$defs`
-- [Extending a Base Type](/examples/extending-a-base-type.html) - Inheritance via `allOf` with a single base

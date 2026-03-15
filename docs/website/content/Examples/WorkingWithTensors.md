@@ -1,17 +1,14 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Working with Tensors"
 ---
-
-# JSON Schema Patterns in .NET - Working with Tensors
-
 This recipe demonstrates how to construct and manipulate fixed-size numeric arrays as tensors in .NET, including span-based construction, `TryGetNumericValues()` extraction, and integration with APIs like `System.Numerics.Tensors`.
 
 ## The Pattern
 
-[We have seen how to create arrays of higher rank with fixed size](/examples/higher-rank-array.html).
+[We have seen how to create arrays of higher rank with fixed size](../008-CreatingAnArrayOfHigherRank/).
 
 The array could contain any item type that you can define in schema. However, our previous example used a numeric type: we constrained it using the type `number` and the format `double`.
 
@@ -67,6 +64,8 @@ File: `tensor-rank-3.json`
 ```
 
 ## Generated Code Usage
+
+[Example code](./Program.cs)
 
 ### Parsing and accessing tensor elements
 
@@ -213,6 +212,19 @@ mutableDoc.RootElement[3][0].SetItem(1, 3.4);
 - V5 requires a `JsonWorkspace` for all construction and mutation operations
 - Indexer chaining, `TryGetNumericValues()`, and tensor metadata (`Rank`, `Dimension`, `ValueBufferSize`) are the same in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/009-WorkingWithTensors
+dotnet run
+```
+
+## Related Patterns
+
+- [007-CreatingAStronglyTypedArray](../007-CreatingAStronglyTypedArray/) - Single-dimensional strongly-typed arrays
+- [008-CreatingAnArrayOfHigherRank](../008-CreatingAnArrayOfHigherRank/) - Multi-dimensional array construction
+- [010-CreatingTuples](../010-CreatingTuples/) - Fixed-length heterogeneous arrays (tuples)
+
 ## Frequently Asked Questions
 
 ### How does the tensor API integrate with `System.Numerics.Tensors`?
@@ -234,9 +246,3 @@ For fixed-size tensors, the span must contain exactly `ValueBufferSize` elements
 ### Why can't I use collection expressions to create tensors in V5?
 
 V5 generated types do not support implicit conversions from collection expressions (e.g., `[[1.0, 2.0], ...]`). This is by design — V5 emphasizes explicit resource management through `JsonWorkspace` and the builder pattern. Use `Build(span)` or `CreateBuilder(workspace, span)` for efficient construction from raw data, or `ParsedJsonDocument<T>.Parse()` for construction from JSON strings.
-
-## Related Patterns
-
-- [Strongly Typed Arrays](/examples/strongly-typed-array.html) - Single-dimensional strongly-typed arrays
-- [Higher Rank Arrays](/examples/higher-rank-array.html) - Multi-dimensional array construction
-- [Creating Tuples](/examples/creating-tuples.html) - Fixed-length heterogeneous arrays (tuples)

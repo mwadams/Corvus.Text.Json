@@ -39,6 +39,11 @@ public sealed class DocException
 /// </summary>
 public sealed partial class XmlDocParser(string xmlPath)
 {
+    /// <summary>
+    /// When set, resolves type crefs to page URLs instead of anchor links.
+    /// Key: full type name (e.g. "Corvus.Text.Json.JsonElement"), Value: page URL.
+    /// </summary>
+    public static Dictionary<string, string>? TypeUrlMap { get; set; }
     public Dictionary<string, DocMember> Parse()
     {
         Dictionary<string, DocMember> members = new(StringComparer.Ordinal);
@@ -149,9 +154,17 @@ public sealed partial class XmlDocParser(string xmlPath)
                 string? cref = el.Attribute("cref")?.Value;
                 if (cref is not null)
                 {
-                    string typeName = GetShortTypeName(StripMemberPrefix(cref));
-                    string anchor = GetTypeAnchor(StripMemberPrefix(cref));
-                    sb.Append($"[`{typeName}`](#{anchor})");
+                    string stripped = StripMemberPrefix(cref);
+                    string typeName = GetShortTypeName(stripped);
+                    string? url = ResolveTypeUrl(stripped);
+                    if (url is not null)
+                    {
+                        sb.Append($"[`{typeName}`]({url})");
+                    }
+                    else
+                    {
+                        sb.Append($"`{typeName}`");
+                    }
                 }
                 else
                 {
@@ -271,6 +284,48 @@ public sealed partial class XmlDocParser(string xmlPath)
         }
 
         return name;
+    }
+
+    /// <summary>
+    /// Resolves a full or partial type name to its API page URL, or null if not found.
+    /// Handles both full names (Corvus.Text.Json.JsonElement) and member references
+    /// (Corvus.Text.Json.JsonElement.Parse) by walking up the name hierarchy.
+    /// </summary>
+    internal static string? ResolveTypeUrl(string fullName)
+    {
+        if (TypeUrlMap is null || TypeUrlMap.Count == 0)
+            return null;
+
+        // Strip method parameters: Corvus.Text.Json.JsonElement.Parse(System.String) → Corvus.Text.Json.JsonElement.Parse
+        string name = fullName;
+        int parenIdx = name.IndexOf('(');
+        if (parenIdx >= 0)
+            name = name[..parenIdx];
+
+        // Strip generic arity: Corvus.Text.Json.JsonDocumentBuilder`1 → Corvus.Text.Json.JsonDocumentBuilder
+        int backtickIdx = name.IndexOf('`');
+        if (backtickIdx >= 0)
+            name = name[..backtickIdx];
+
+        // Try exact match first, then walk up dots to find the enclosing type
+        while (name.Contains('.'))
+        {
+            if (TypeUrlMap.TryGetValue(name, out string? url))
+                return url;
+
+            // Also try with generic arity variants
+            foreach (int arity in new[] { 1, 2, 3, 4 })
+            {
+                if (TypeUrlMap.TryGetValue($"{name}`{arity}", out url))
+                    return url;
+            }
+
+            // Walk up: Corvus.Text.Json.JsonElement.Parse → Corvus.Text.Json.JsonElement
+            int lastDot = name.LastIndexOf('.');
+            name = name[..lastDot];
+        }
+
+        return null;
     }
 
     internal static string GetTypeAnchor(string fullName)

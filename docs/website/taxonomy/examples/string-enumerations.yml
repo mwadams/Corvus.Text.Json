@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 014: String Enumerations"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "String Enumerations and Pattern Matching"
 Navigation:
-  Title: String Enumerations
-  Description: "Define constrained string values using the enum keyword."
+  Title: String Enumerations and Pattern Matching
+  Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
   Parent: /examples/index.html
   Url: /examples/string-enumerations.html
   Rank: 14
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "String Enumerations — Corvus.Text.Json Examples"
-  Description: "Define constrained string values using the JSON Schema enum keyword and generate type-safe C# string enumerations with Corvus.Text.Json."
-  Keywords: [enum, string, enumeration, constrained values, const, JSON Schema, recipe]
+  Title: "String Enumerations and Pattern Matching — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
-  Title: "String Enumerations — Corvus.Text.Json Examples"
-  Description: "Define constrained string values using the JSON Schema enum keyword."
+  Title: "String Enumerations and Pattern Matching — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

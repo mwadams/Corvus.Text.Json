@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 009: Working with Tensors"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Working with Tensors"
 Navigation:
   Title: Working with Tensors
-  Description: "Represent tensor data structures using JSON Schema arrays."
+  Description: "This recipe demonstrates how to construct and manipulate fixed-size numeric arrays as tensors in .NET, including span-based construction, `TryGetNumericValues()` extraction, and integration with APIs like `System.Numerics.Tensors`."
   Parent: /examples/index.html
   Url: /examples/working-with-tensors.html
   Rank: 9
@@ -14,11 +14,11 @@ Navigation:
     Link: False
 MetaData:
   Title: "Working with Tensors — Corvus.Text.Json Examples"
-  Description: "Represent tensor and n-dimensional numeric data structures using JSON Schema arrays and generate efficient C# types with Corvus.Text.Json."
-  Keywords: [tensor, n-dimensional, numeric, array, scientific computing, JSON Schema, recipe]
+  Description: "This recipe demonstrates how to construct and manipulate fixed-size numeric arrays as tensors in .NET, including span-based construction, `TryGetNumericValues()` extraction, and integration with APIs like `System.Numerics.Tensors`."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
   Title: "Working with Tensors — Corvus.Text.Json Examples"
-  Description: "Represent tensor data structures using JSON Schema arrays."
+  Description: "This recipe demonstrates how to construct and manipulate fixed-size numeric arrays as tensors in .NET, including span-based construction, `TryGetNumericValues()` extraction, and integration with APIs like `System.Numerics.Tensors`."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

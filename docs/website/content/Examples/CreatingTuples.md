@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Creating Tuples"
 ---
-
-# JSON Schema Patterns in .NET - Creating Tuples
-
 This recipe demonstrates how to use JSON Schema `prefixItems` and `unevaluatedItems` to create strongly-typed tuple representations in .NET.
 
 ## The Pattern
@@ -172,6 +169,19 @@ bool item3 = threeTuple.Item3;
 
 **Important:** V5 does not provide implicit conversions to/from `ValueTuple`. This is by design - the generated types support direct formatting and property access, eliminating the need for tuple conversions in most scenarios.
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/010-CreatingTuples
+dotnet run
+```
+
+## Related Patterns
+
+- [007-CreatingAStronglyTypedArray](../007-CreatingAStronglyTypedArray/) - Arrays with uniform item types
+- [008-CreatingAnArrayOfHigherRank](../008-CreatingAnArrayOfHigherRank/) - Multi-dimensional arrays
+- [011-InterfacesAndMixInTypes](../011-InterfacesAndMixInTypes/) - Composing types with `allOf`
+
 ## Frequently Asked Questions
 
 ### Q: What's the difference between a tuple and a fixed-size array?
@@ -189,9 +199,3 @@ bool item3 = threeTuple.Item3;
 ### Q: Can tuple items be complex types (objects, arrays)?
 
 **A:** Absolutely. Each position in `prefixItems` can reference any valid JSON Schema, including objects with properties, nested arrays, `$ref` references to shared definitions, or even other tuples. The generated code will provide strongly-typed access to each item using the appropriate generated type.
-
-## Related Patterns
-
-- [Strongly Typed Arrays](/examples/strongly-typed-array.html) - Arrays with uniform item types
-- [Higher Rank Arrays](/examples/higher-rank-array.html) - Multi-dimensional arrays
-- [Interfaces and Mix-In Types](/examples/interfaces-and-mixins.html) - Composing types with `allOf`

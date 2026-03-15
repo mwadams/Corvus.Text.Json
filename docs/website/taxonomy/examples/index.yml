@@ -5,7 +5,7 @@ Navigation:
   Description: "Practical recipes showing common JSON Schema patterns and their generated C# types."
   Parent: /
   Url: /examples/index.html
-  Rank: 2
+  Rank: 3
   Header:
     Visible: True
     Link: True

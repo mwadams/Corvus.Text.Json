@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 013: Polymorphism with Discriminators"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Polymorphism with Discriminator Properties"
 Navigation:
-  Title: Polymorphism with Discriminators
-  Description: "Implement polymorphic dispatch using discriminator properties."
+  Title: Polymorphism with Discriminator Properties
+  Description: "This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties to create polymorphic types with discriminators - a pattern similar to OpenAPI's polymorphism feature and `System.Text.Json`'s polymorphic serialization."
   Parent: /examples/index.html
   Url: /examples/polymorphism-with-discriminators.html
   Rank: 13
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Polymorphism with Discriminators — Corvus.Text.Json Examples"
-  Description: "Implement polymorphic type dispatch using discriminator properties in JSON Schema with oneOf and const, generating idiomatic C# code."
-  Keywords: [polymorphism, discriminator, oneOf, const, dispatch, tagged union, JSON Schema, recipe]
+  Title: "Polymorphism with Discriminator Properties — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties to create polymorphic types with discriminators - a pattern similar to OpenAPI's polymorphism feature and `System.Text.Json`'s polymorphic serialization."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
-  Title: "Polymorphism with Discriminators — Corvus.Text.Json Examples"
-  Description: "Implement polymorphic dispatch using discriminator properties in JSON Schema."
+  Title: "Polymorphism with Discriminator Properties — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties to create polymorphic types with discriminators - a pattern similar to OpenAPI's polymorphism feature and `System.Text.Json`'s polymorphic serialization."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

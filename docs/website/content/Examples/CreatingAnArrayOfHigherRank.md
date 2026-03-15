@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
-Title: "Higher Rank Arrays"
+Title: "Multi-Dimensional Arrays"
 ---
-
-# JSON Schema Patterns in .NET - Multi-Dimensional Arrays
-
 This recipe demonstrates how to define multi-dimensional (higher-rank) JSON arrays in .NET by nesting array schemas, giving you strongly-typed indexers and tensor operations for fixed-size numeric arrays.
 
 ## The Pattern
@@ -27,7 +24,7 @@ To retrieve a value we need to provide 2 indices:
 double value = values[1][0];
 ```
 
-We have seen how JSON schema allows you to [define an array that contains items of a particular type](/examples/strongly-typed-array.html) using its `items` property.
+We have seen how JSON schema allows you to [define an array that contains items of a particular type](../007-CreatingAStronglyTypedArray/) using its `items` property.
 
 This was an array of rank 1. Only one index was required to retrieve the value.
 
@@ -81,6 +78,8 @@ Fixed-size numeric arrays are recognized as **tensor types** and gain additional
 - `TryGetNumericValues(Span<double>, out int)` — extract all values into a flat buffer
 
 ## Generated Code Usage
+
+[Example code](./Program.cs)
 
 ### Parsing and accessing elements
 
@@ -181,6 +180,19 @@ matrix.TryGetNumericValues(buffer, out int written);
 - V5 requires `ParsedJsonDocument<T>.Parse()` with `using` for explicit lifetime management
 - Indexer chaining and tensor extraction APIs are the same in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/008-CreatingAnArrayOfHigherRank
+dotnet run
+```
+
+## Related Patterns
+
+- [007-CreatingAStronglyTypedArray](../007-CreatingAStronglyTypedArray/) - Single-dimensional strongly-typed arrays
+- [009-WorkingWithTensors](../009-WorkingWithTensors/) - Tensor construction and span-based operations
+- [010-CreatingTuples](../010-CreatingTuples/) - Fixed-length heterogeneous arrays (tuples)
+
 ## Frequently Asked Questions
 
 ### What's the difference between rank and dimension?
@@ -198,9 +210,3 @@ No. Tensor operations (`TryGetNumericValues`, `Build(span)`, `Rank`, `Dimension`
 ### How do I access nested elements without intermediate variables?
 
 Chain the indexers directly: `matrix[2][1]` returns the scalar value at row 2, column 1. For mutable operations, the same chaining works: `root[2].SetItem(1, 3.4)` sets the value at `[2][1]` in-place.
-
-## Related Patterns
-
-- [Strongly Typed Arrays](/examples/strongly-typed-array.html) - Single-dimensional strongly-typed arrays
-- [Working with Tensors](/examples/working-with-tensors.html) - Tensor construction and span-based operations
-- [Creating Tuples](/examples/creating-tuples.html) - Fixed-length heterogeneous arrays (tuples)

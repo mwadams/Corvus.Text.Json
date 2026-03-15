@@ -1,17 +1,14 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Reusing Common Types"
 ---
-
-# JSON Schema Patterns in .NET - Reusing Common Types
-
 This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types.
 
 ## The Pattern
 
-In our [previous example](/examples/data-object-validation.html), we constrained all of our string properties to a string of length 1–256. Each property had its own inline definition, which created separate types: `GivenNameEntity`, `FamilyNameEntity`, and `OtherNamesEntity`.
+In our [previous example](../002-DataObjectValidation/), we constrained all of our string properties to a string of length 1–256. Each property had its own inline definition, which created separate types: `GivenNameEntity`, `FamilyNameEntity`, and `OtherNamesEntity`.
 
 We can simplify this by re-using a reference to a common schema with the `$ref` keyword. Instead of three separate types for the string properties, the code generator produces a single type: `PersonCommonSchema.ConstrainedString`.
 
@@ -29,7 +26,7 @@ Instead of generating three separate entity types (`GivenNameEntity`, `FamilyNam
 - **Zero-allocation conversions**: If you have multiple schemas using the same `$ref`, their property entity types are compatible and can be converted using `.From()` without extracting to primitives
 - **Shared operations**: All the same methods, formatting, and validation logic apply uniformly
 
-This compatibility is essential for mapping between different schemas that share common sub-schemas, as demonstrated in [Mapping Input and Output Values](/examples/mapping-input-output.html).
+This compatibility is essential for mapping between different schemas that share common sub-schemas, as demonstrated in [Recipe 017 - Mapping Input and Output Values](../017-MappingInputAndOutputValues/).
 
 ## The Schema
 
@@ -75,6 +72,8 @@ The generated types are:
 The `GivenName`, `FamilyName`, and `OtherNames` properties all return the *same* `ConstrainedString` type.
 
 ## Generated Code Usage
+
+[Example code](./Program.cs)
 
 ### Creating an instance with shared types
 
@@ -162,6 +161,19 @@ givenName.ValueEquals("Anne"u8);
 - Shared type behaviour is identical: `$ref` produces the same `ConstrainedString` type in both versions
 - `From()` conversions and zero-allocation comparisons work the same way in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/003-ReusingCommonTypes
+dotnet run
+```
+
+## Related Patterns
+
+- [001-DataObject](../001-DataObject/) - Simple data objects without shared types
+- [005-ExtendingABaseType](../005-ExtendingABaseType/) - Inheritance via `allOf` with a single base
+- [017-MappingInputAndOutputValues](../017-MappingInputAndOutputValues/) - Using `From()` for zero-allocation mapping between schemas
+
 ## Frequently Asked Questions
 
 ### What is the difference between using `$ref` and defining properties inline?
@@ -178,10 +190,4 @@ Yes. When two or more properties reference the same `$ref` target (whether via `
 
 ### How does `From()` work for converting between compatible entity types?
 
-`From()` is a static method on generated entity types that creates a zero-allocation view over the underlying JSON data of a compatible source entity. For example, if schema A has `NameEntity` and schema B has `FullNameEntity`, and both are `$ref`-compatible strings, you can write `B.FullNameEntity.From(sourceA.Name)` to convert without extracting to a .NET `string`. This is the foundation of the mapping pattern shown in [Mapping Input and Output Values](/examples/mapping-input-output.html).
-
-## Related Patterns
-
-- [Simple Data Objects](/examples/data-object.html) - Simple data objects without shared types
-- [Extending a Base Type](/examples/extending-a-base-type.html) - Inheritance via `allOf` with a single base
-- [Mapping Input and Output Values](/examples/mapping-input-output.html) - Using `From()` for zero-allocation mapping between schemas
+`From()` is a static method on generated entity types that creates a zero-allocation view over the underlying JSON data of a compatible source entity. For example, if schema A has `NameEntity` and schema B has `FullNameEntity`, and both are `$ref`-compatible strings, you can write `B.FullNameEntity.From(sourceA.Name)` to convert without extracting to a .NET `string`. This is the foundation of the mapping pattern shown in [Recipe 017](../017-MappingInputAndOutputValues/).

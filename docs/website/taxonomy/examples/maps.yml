@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 016: Maps"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Maps of Strings to Strongly Typed Values"
 Navigation:
-  Title: Maps
-  Description: "Model key-value maps using additionalProperties or patternProperties."
+  Title: Maps of Strings to Strongly Typed Values
+  Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."
   Parent: /examples/index.html
   Url: /examples/maps.html
   Rank: 16
@@ -13,12 +13,12 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Maps — Corvus.Text.Json Examples"
-  Description: "Model key-value maps and dictionaries using additionalProperties or patternProperties in JSON Schema, generating typed C# dictionary-like types."
-  Keywords: [map, dictionary, additionalProperties, patternProperties, key-value, JSON Schema, recipe]
+  Title: "Maps of Strings to Strongly Typed Values — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
-  Title: "Maps — Corvus.Text.Json Examples"
-  Description: "Model key-value maps using additionalProperties or patternProperties in JSON Schema."
+  Title: "Maps of Strings to Strongly Typed Values — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

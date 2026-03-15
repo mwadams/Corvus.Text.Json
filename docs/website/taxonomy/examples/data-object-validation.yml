@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 002: Data Object Validation"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Data Object Validation"
 Navigation:
   Title: Data Object Validation
-  Description: "Add validation constraints to a data object using JSON Schema."
+  Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."
   Parent: /examples/index.html
   Url: /examples/data-object-validation.html
   Rank: 2
@@ -14,11 +14,11 @@ Navigation:
     Link: False
 MetaData:
   Title: "Data Object Validation — Corvus.Text.Json Examples"
-  Description: "Add required fields, string lengths, numeric ranges, and pattern constraints to a data object using JSON Schema validation keywords."
-  Keywords: [validation, required, constraints, pattern, minimum, maximum, JSON Schema, recipe]
+  Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
   Title: "Data Object Validation — Corvus.Text.Json Examples"
-  Description: "Add validation constraints to a data object using JSON Schema keywords."
+  Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

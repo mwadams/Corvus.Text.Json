@@ -1,8 +1,8 @@
-ContentType: application/vnd.endjin.ssg.page+yaml
-Title: "Recipe 003: Reusing Common Types"
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Reusing Common Types"
 Navigation:
   Title: Reusing Common Types
-  Description: "Share and reuse type definitions across multiple schemas with $ref."
+  Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."
   Parent: /examples/index.html
   Url: /examples/reusing-common-types.html
   Rank: 3
@@ -14,11 +14,11 @@ Navigation:
     Link: False
 MetaData:
   Title: "Reusing Common Types — Corvus.Text.Json Examples"
-  Description: "Learn how to share and reuse type definitions across multiple JSON schemas using $ref and $defs for DRY schema design."
-  Keywords: [$ref, $defs, reuse, common types, shared definitions, JSON Schema, DRY, recipe]
+  Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."
+  Keywords: [recipe, JSON Schema, C#]
 OpenGraph:
   Title: "Reusing Common Types — Corvus.Text.Json Examples"
-  Description: "Share and reuse type definitions across multiple schemas with $ref and $defs."
+  Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md

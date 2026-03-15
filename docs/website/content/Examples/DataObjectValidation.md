@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Data Object Validation"
 ---
-
-# JSON Schema Patterns in .NET - Data Object Validation
-
 This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`.
 
 ## The Pattern
@@ -26,7 +23,7 @@ Essentially, you can dynamically apply your business rules to the document in so
 
 ## The Schema
 
-We build on the `Person` schema from [Simple Data Objects](/examples/data-object.html), adding constraints. We require `familyName`, `givenName`, and `birthDate`. String lengths are constrained to 1–256 characters. Height is constrained to a positive double with a maximum of 3.0.
+We build on the `Person` schema from [Recipe 001](../001-DataObject/), adding constraints. We require `familyName`, `givenName`, and `birthDate`. String lengths are constrained to 1–256 characters. Height is constrained to a positive double with a maximum of 3.0.
 
 File: `person-constraints.json`
 
@@ -79,6 +76,8 @@ These can be used as "specialized" versions of the primitive types on which they
 Because `Height` has `"format": "double"`, an implicit conversion to `double` is available (no explicit cast needed).
 
 ## Generated Code Usage
+
+[Example code](./Program.cs)
 
 ### Creating an instance with invalid data
 
@@ -203,6 +202,19 @@ foreach (JsonSchemaResultsCollector.Result result in collector.EnumerateResults(
 - V5 results collector is disposable and uses `using` for deterministic cleanup
 - Both versions support a two-phase validation pattern: fast boolean check first, detailed diagnostics only on failure
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/002-DataObjectValidation
+dotnet run
+```
+
+## Related Patterns
+
+- [001-DataObject](../001-DataObject/) - Simple data objects without constraints
+- [004-OpenVersusClosedTypes](../004-OpenVersusClosedTypes/) - Open vs. closed types and `unevaluatedProperties`
+- [006-ConstrainingABaseType](../006-ConstrainingABaseType/) - Applying constraints via `allOf`
+
 ## Frequently Asked Questions
 
 ### How fast is schema validation compared to manual property checks?
@@ -224,9 +236,3 @@ Structural validation (handled by JSON Schema) checks that the data conforms to 
 ### Can I add custom validation constraints beyond what JSON Schema supports?
 
 JSON Schema does not support non-local constraints (database lookups, cross-property comparisons, etc.), but you can layer your own validation on top. First call `EvaluateSchema()` to ensure structural validity, then run your custom business rules against the typed properties. This two-phase approach keeps your custom validation code simple because you can rely on the structural guarantees already established by the schema.
-
-## Related Patterns
-
-- [Simple Data Objects](/examples/data-object.html) - Simple data objects without constraints
-- [Open Versus Closed Types](/examples/open-versus-closed-types.html) - Open vs. closed types and `unevaluatedProperties`
-- [Constraining a Base Type](/examples/constraining-a-base-type.html) - Applying constraints via `allOf`

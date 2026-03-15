@@ -1,12 +1,9 @@
----
+﻿---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Strongly Typed Arrays"
 ---
-
-# JSON Schema Patterns in .NET - Strongly Typed Arrays
-
 This recipe demonstrates how to define strongly-typed JSON arrays in .NET using JSON Schema's `items`, `minItems`, and `maxItems` keywords, giving you compile-time type safety, IntelliSense support, and standard LINQ operators for array elements.
 
 ## The Pattern
@@ -79,6 +76,8 @@ File: `person-closed.json`
 
 ## Generated Code Usage
 
+[Example code](./Program.cs)
+
 ### Parsing and accessing array elements
 
 ```csharp
@@ -93,7 +92,7 @@ string peopleArrayJson =
       {"familyName":"Smith","givenName":"John","otherNames":"Edward,Michael","birthDate":"2004-01-01","height":1.8},
       {"familyName":"Johnson","givenName":"Alice","birthDate":"2000-02-02","height":1.6},
       {"familyName":"Williams","givenName":"Robert","otherNames":"James,Thomas","birthDate":"1995-03-03","height":1.7}
-      // ... 27 more person objects
+      // ... 27 more person objects (see Program.cs for full array)
     ]
     """;
 
@@ -232,11 +231,24 @@ foreach (PersonClosed p in mutableDoc.RootElement.EnumerateArray())
 - V5 requires a `JsonWorkspace` for mutable operations, providing pooled memory management
 - Enumeration and indexing APIs are the same in both versions
 
+## Running the Example
+
+```bash
+cd docs/ExampleRecipes/007-CreatingAStronglyTypedArray
+dotnet run
+```
+
+## Related Patterns
+
+- [008-CreatingAnArrayOfHigherRank](../008-CreatingAnArrayOfHigherRank/) - Multi-dimensional arrays
+- [009-WorkingWithTensors](../009-WorkingWithTensors/) - Working with tensors and numeric spans
+- [010-CreatingTuples](../010-CreatingTuples/) - Creating tuples with `prefixItems`
+
 ## Frequently Asked Questions
 
 ### What's the difference between an array and a tuple in JSON Schema?
 
-An **array** (using `items`) defines a uniform collection where every element conforms to the same schema. A **tuple** (using `prefixItems`) defines a fixed-length, ordered collection where each position has its own schema. Use arrays when all elements are the same type; use tuples when you need heterogeneous, positional elements — see [Creating Tuples](/examples/creating-tuples.html).
+An **array** (using `items`) defines a uniform collection where every element conforms to the same schema. A **tuple** (using `prefixItems`) defines a fixed-length, ordered collection where each position has its own schema. Use arrays when all elements are the same type; use tuples when you need heterogeneous, positional elements — see [Recipe 010](../010-CreatingTuples/).
 
 ### How do I enumerate array elements?
 
@@ -249,9 +261,3 @@ Use the **immutable** parsed document when you only need to read and validate da
 ### What do `minItems` and `maxItems` actually enforce?
 
 These keywords constrain the array length at **validation** time, not at the type level. You can always mutate an array to have fewer or more items than the schema allows — `EvaluateSchema()` will simply return `false`. Setting both to the same value (e.g., 30) means the array must contain *exactly* that many items to be valid. The code generator also uses matching `minItems`/`maxItems` to recognize fixed-size arrays for tensor operations.
-
-## Related Patterns
-
-- [Higher Rank Arrays](/examples/higher-rank-array.html) - Multi-dimensional arrays
-- [Working with Tensors](/examples/working-with-tensors.html) - Working with tensors and numeric spans
-- [Creating Tuples](/examples/creating-tuples.html) - Creating tuples with `prefixItems`
