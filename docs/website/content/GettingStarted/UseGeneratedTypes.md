@@ -138,29 +138,37 @@ JSON Schema supports composition keywords like `oneOf`, `anyOf`, and `allOf` tha
 }
 ```
 
-The generated type exposes `As*` properties for each variant and `Is*` methods for type testing. Use pattern matching to handle each case:
+The generated type provides a `Match()` method that dispatches to a typed delegate for each variant. Each variant gets its own named parameter, and a `defaultMatch` fallback handles values that don't conform to any variant:
 
 ```csharp
 if (person.Name.OtherNames.IsNotUndefined())
 {
-    // Match on the shape of the data
-    if (person.Name.OtherNames.AsPersonNameElementArray.IsValid())
-    {
-        // It's an array of names
-        foreach (var name in person.Name.OtherNames.AsPersonNameElementArray.EnumerateArray())
-        {
-            Console.WriteLine((string)name);
-        }
-    }
-    else if (person.Name.OtherNames.AsPersonNameElement.IsValid())
-    {
-        // It's a single name string
-        Console.WriteLine((string)person.Name.OtherNames.AsPersonNameElement);
-    }
+    string result = person.Name.OtherNames.Match(
+        matchPersonNameElement: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementEntity v)
+            => $"Single name: {(string)v}",
+        matchPersonNameElementArray: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementArrayEntity v)
+            => $"Multiple names: {string.Join(", ", v.EnumerateArray().Select(n => (string)n))}",
+        defaultMatch: static (in Person.PersonNameEntity.OtherNamesEntity _)
+            => "Unknown format");
+
+    Console.WriteLine(result);
 }
 ```
 
-This pattern works for any `oneOf` or `anyOf` composition: the underlying JSON data is the same, but each `As*` accessor interprets it through a different schema lens. `IsValid()` checks whether the data actually conforms to that variant's schema.
+`Match()` evaluates each variant's schema in order, calls the first matching delegate, and returns the result. All delegates must return the same type (`TResult`), which the compiler infers from usage.
+
+There is also a context-passing overload for when you need to pass state into the matchers without capturing:
+
+```csharp
+string result = person.Name.OtherNames.Match(
+    separator,  // context passed to each matcher
+    matchPersonNameElement: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementEntity v, in string sep)
+        => (string)v,
+    matchPersonNameElementArray: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementArrayEntity v, in string sep)
+        => string.Join(sep, v.EnumerateArray().Select(n => (string)n)),
+    defaultMatch: static (in Person.PersonNameEntity.OtherNamesEntity _, in string sep)
+        => string.Empty);
+```
 
 ## Converting to .NET types
 
