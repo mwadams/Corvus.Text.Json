@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Copy code button
   document.querySelectorAll('pre code').forEach((block) => {
     const wrapper = block.parentElement;
-    wrapper.style.position = 'relative';
+    wrapper.classList.add('code-block');
     const button = document.createElement('button');
     button.className = 'code-block__copy';
     button.textContent = 'Copy';
