@@ -142,12 +142,10 @@ The generated type provides a `Match()` method that dispatches to a typed delega
 
 ```csharp
 string result = person.Name.OtherNames.Match(
-    matchPersonNameElement: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementEntity v)
-        => $"Single name: {(string)v}",
-    matchPersonNameElementArray: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementArrayEntity v)
+    matchPersonNameElement: static (v) => $"Single name: {(string)v}",
+    matchPersonNameElementArray: static (v)
         => $"Multiple names: {string.Join(", ", v.EnumerateArray().Select(n => (string)n))}",
-    defaultMatch: static (in Person.PersonNameEntity.OtherNamesEntity _)
-        => "Unknown format");
+    defaultMatch: static (_) => "Unknown format");
 
 Console.WriteLine(result);
 ```
@@ -159,12 +157,10 @@ There is also a context-passing overload for when you need to pass state into th
 ```csharp
 string result = person.Name.OtherNames.Match(
     separator,  // context passed to each matcher
-    matchPersonNameElement: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementEntity v, in string sep)
-        => (string)v,
-    matchPersonNameElementArray: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementArrayEntity v, in string sep)
+    matchPersonNameElement: static (v, sep) => (string)v,
+    matchPersonNameElementArray: static (v, sep)
         => string.Join(sep, v.EnumerateArray().Select(n => (string)n)),
-    defaultMatch: static (in Person.PersonNameEntity.OtherNamesEntity _, in string sep)
-        => string.Empty);
+    defaultMatch: static (_, sep) => string.Empty);
 ```
 
 ## Converting to .NET types
