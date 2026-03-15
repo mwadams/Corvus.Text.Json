@@ -94,10 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── On-page TOC in sidebar ──────────────────────────────────────────────
   // For doc pages: extract h2 headings, insert as a sub-list under the
   // active sidebar link, and highlight the current section on scroll.
+  // Skip when the sidebar has server-side member navigation (API pages).
+  const hasMemberNav = document.querySelector('[data-has-member-nav]');
   const activeLink = document.querySelector('.sidebar__link.is-active');
   const docContent = document.querySelector('.doc__content');
 
-  if (activeLink && docContent) {
+  if (activeLink && docContent && !hasMemberNav) {
     const headings = docContent.querySelectorAll('h2[id]');
     if (headings.length > 1) {
       const subList = document.createElement('ul');

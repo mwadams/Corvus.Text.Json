@@ -124,6 +124,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
                 type: type,
                 typeSlug: typeSlug,
                 typeFileBase: typeFileBase,
+                memberFileBase: fileBase,
                 memberDisplayName: memberDisplayName,
                 memberCategory: category);
 
@@ -191,6 +192,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         TypeInfo type,
         string typeSlug,
         string typeFileBase,
+        string memberFileBase,
         string memberDisplayName,
         string memberCategory)
     {
@@ -223,7 +225,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         }
 
         sb.AppendLine("<div class=\"layout-docs container\">");
-        SidebarBuilder.AppendSidebar(sb, namespaces, nsSlug, typeFileBase);
+        SidebarBuilder.AppendSidebar(sb, namespaces, nsSlug, typeFileBase, memberFileBase);
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
         sb.AppendLine("            <p class=\"doc__breadcrumb\">");

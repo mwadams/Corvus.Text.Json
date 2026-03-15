@@ -239,4 +239,72 @@
       background: rgb(111 177 40 / 0.04);
     }
   }
+
+  // ---- Type link (may expand to show members) ----
+  &__link--type {
+    font-size: var(--font-size-sm);
+    padding-left: var(--space-md);
+
+    // "Current" parent type on member pages: highlighted but not brand-green
+    &.is-current {
+      color: var(--color-white);
+      font-weight: var(--font-weight-medium);
+      border-left-color: var(--color-border);
+      background: var(--color-bg-raised);
+    }
+  }
+
+  // ---- Member sub-tree (under the active type) ----
+  &__members {
+    list-style: none;
+    margin: var(--space-xs) 0 0;
+    padding: 0 0 0 var(--space-sm);
+  }
+
+  // ---- Member category header (Properties, Methods, etc.) ----
+  &__category {
+    display: block;
+    padding: var(--space-xs) var(--space-sm);
+    padding-left: var(--space-md);
+    margin-top: var(--space-xs);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    list-style: none;
+  }
+
+  // ---- Individual member link ----
+  &__member {
+    list-style: none;
+  }
+
+  &__link--member {
+    display: block;
+    padding: 0.15em var(--space-sm);
+    padding-left: calc(var(--space-md) + var(--space-sm));
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-med);
+    border-left: 2px solid transparent;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    white-space: normal;
+    word-break: break-word;
+    transition:
+      color var(--transition-fast),
+      background var(--transition-fast),
+      border-color var(--transition-fast);
+
+    &:hover {
+      color: var(--color-white);
+      background: var(--color-bg-raised);
+    }
+
+    &.is-active {
+      color: var(--color-brand);
+      border-left-color: var(--color-brand);
+      background: rgb(111 177 40 / 0.06);
+      font-weight: var(--font-weight-medium);
+    }
+  }
 }
