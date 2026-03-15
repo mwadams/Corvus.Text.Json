@@ -87,23 +87,25 @@
     scrollbar-color: var(--color-border) transparent;
   }
 
-  // Desktop: sticky sidebar as before
+  // Desktop: fixed sidebar that doesn't scroll with footer
   @include breakpoint-md {
-    position: sticky;
+    position: fixed;
     top: calc(var(--header-height) + var(--space-md));
-    bottom: auto;
-    align-self: start;
-    height: auto;
-    max-height: calc(100vh - var(--header-height) - var(--space-lg));
-    overflow: visible;
+    bottom: 0;
+    left: auto; // let grid column positioning work
+    width: var(--sidebar-width);
+    max-height: none;
+    overflow: hidden;
     background: transparent;
     border-right: none;
     transform: none;
     transition: none;
+    z-index: 10;
 
     .sidebar__inner {
-      height: auto;
+      height: 100%;
       max-height: calc(100vh - var(--header-height) - var(--space-lg));
+      overflow-y: auto;
       padding: var(--space-md) 0;
     }
   }
