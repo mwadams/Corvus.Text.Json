@@ -176,6 +176,42 @@ public sealed class SourceLinkResolver : IDisposable
             }
         }
 
+        // For types with no method debug info (enums, static-field-only types),
+        // try to match by file name against the PDB document list
+        Dictionary<string, string> fileNameToPath = [];
+        foreach (string docPath in documentPaths.Values)
+        {
+            string fileName = Path.GetFileNameWithoutExtension(docPath);
+            // Only store the first match per filename (prefer primary files)
+            fileNameToPath.TryAdd(fileName, docPath);
+        }
+
+        foreach (KeyValuePair<int, string> kvp in typeTokenToName)
+        {
+            if (_sourceUrls.ContainsKey(kvp.Value))
+            {
+                continue;
+            }
+
+            // Extract the short type name (without namespace, without generic arity)
+            string shortName = kvp.Value;
+            int lastDot = shortName.LastIndexOf('.');
+            if (lastDot >= 0)
+            {
+                shortName = shortName[(lastDot + 1)..];
+            }
+
+            // Try exact filename match (e.g. "ValidationLevel" → ValidationLevel.cs)
+            if (fileNameToPath.TryGetValue(shortName, out string? matchedPath))
+            {
+                string? url = BuildGitHubUrl(matchedPath, 1);
+                if (url is not null)
+                {
+                    _sourceUrls[kvp.Value] = url;
+                }
+            }
+        }
+
         Console.WriteLine($"  Built source URL map with {_sourceUrls.Count} entries.");
     }
 
@@ -195,6 +231,22 @@ public sealed class SourceLinkResolver : IDisposable
         if (_sourceUrls.TryGetValue(dotForm, out url))
         {
             return url;
+        }
+
+        // Try with generic arity variants (e.g. ArrayEnumerator → ArrayEnumerator`1)
+        string nameWithoutArity = dotForm;
+        int backtick = nameWithoutArity.IndexOf('`');
+        if (backtick >= 0)
+        {
+            nameWithoutArity = nameWithoutArity[..backtick];
+        }
+
+        for (int arity = 1; arity <= 4; arity++)
+        {
+            if (_sourceUrls.TryGetValue($"{nameWithoutArity}`{arity}", out url))
+            {
+                return url;
+            }
         }
 
         return null;
@@ -218,15 +270,18 @@ public sealed class SourceLinkResolver : IDisposable
             key = key[..parenIdx];
         }
 
-        // Strip generic arity
+        // Replace '+' with '.' for nested types
+        key = key.Replace('+', '.');
+
+        // Keep the full key (with generic arity) for parent type fallback
+        string fullKey = key;
+
+        // Strip generic arity for member-level lookup
         int backtickIdx = key.IndexOf('`');
         if (backtickIdx >= 0)
         {
             key = key[..backtickIdx];
         }
-
-        // Replace '+' with '.' for nested types
-        key = key.Replace('+', '.');
 
         if (_sourceUrls.TryGetValue(key, out string? url))
         {
@@ -252,6 +307,11 @@ public sealed class SourceLinkResolver : IDisposable
             {
                 return url;
             }
+
+            // Fall back to the declaring type's source URL (uses fullKey to preserve arity)
+            int fullLastDot = fullKey.LastIndexOf('.');
+            string parentFullKey = fullLastDot >= 0 ? fullKey[..fullLastDot] : parentKey;
+            return GetTypeSourceUrl(parentFullKey);
         }
 
         return null;
