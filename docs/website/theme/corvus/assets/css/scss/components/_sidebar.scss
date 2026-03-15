@@ -4,43 +4,45 @@
 
 @use '../abstracts/mixins' as *;
 
-// ---- Mobile toggle button (fixed tab at left edge) ----
+// ---- Mobile toggle button (floating pill, bottom-right) ----
 .sidebar-toggle {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.35rem;
   position: fixed;
-  top: calc(var(--header-height) + var(--space-md));
-  left: 0;
-  z-index: 101; // above sidebar (100)
-  width: 2.25rem;
-  height: 2.5rem;
-  border: 1px solid var(--color-border);
-  border-left: none;
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: var(--color-bg-code); // darker raised surface for contrast
-  color: var(--color-brand);
+  bottom: var(--space-lg);
+  right: var(--space-md);
+  z-index: 101;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--color-brand);
+  border-radius: 2rem;
+  background: var(--color-brand);
+  color: var(--color-bg);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  box-shadow: 2px 0 6px rgb(0 0 0 / 0.4);
-  transition: left 0.25s ease, background var(--transition-fast);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.4);
+  transition: background var(--transition-fast), transform var(--transition-fast);
 
   &:hover {
-    background: var(--color-bg-raised);
-    color: var(--color-white);
+    transform: scale(1.05);
   }
 
-  // Slide with the sidebar when open
-  &[aria-expanded='true'] {
-    left: var(--sidebar-width);
+  // Label text
+  &::before {
+    content: 'Menu';
   }
 
-  // Chevron: › when closed, ‹ when open
+  // Chevron
   &::after {
     content: '›';
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 1.1rem;
     line-height: 1;
     transition: transform 0.2s;
+  }
+
+  &[aria-expanded='true']::before {
+    content: 'Close';
   }
 
   &[aria-expanded='true']::after {
