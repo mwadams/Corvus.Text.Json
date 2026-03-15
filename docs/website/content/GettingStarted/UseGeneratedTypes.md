@@ -125,44 +125,6 @@ var first = person.Hobbies[0];
 string firstHobby = (string)first;
 ```
 
-## Composition types and pattern matching
-
-JSON Schema supports composition keywords like `oneOf`, `anyOf`, and `allOf` that let a value match one of several shapes. In our schema, `OtherNames` uses `oneOf` — it can be *either* a single `PersonNameElement` string *or* a `PersonNameElementArray`:
-
-```json
-"OtherNames": {
-    "oneOf": [
-        { "$ref": "#/$defs/PersonNameElement" },
-        { "$ref": "#/$defs/PersonNameElementArray" }
-    ]
-}
-```
-
-The generated type provides a `Match()` method that dispatches to a typed delegate for each variant. Each variant gets its own named parameter, and a `defaultMatch` fallback handles values that don't conform to any variant:
-
-```csharp
-string result = person.Name.OtherNames.Match(
-    matchPersonNameElement: static (v) => $"Single name: {(string)v}",
-    matchPersonNameElementArray: static (v)
-        => $"Multiple names: {string.Join(", ", v.EnumerateArray().Select(n => (string)n))}",
-    defaultMatch: static (_) => "Unknown format");
-
-Console.WriteLine(result);
-```
-
-`Match()` evaluates each variant's schema in order, calls the first matching delegate, and returns the result. All delegates must return the same type (`TResult`), which the compiler infers from usage.
-
-There is also a context-passing overload for when you need to pass state into the matchers without capturing:
-
-```csharp
-string result = person.Name.OtherNames.Match(
-    separator,  // context passed to each matcher
-    matchPersonNameElement: static (v, sep) => (string)v,
-    matchPersonNameElementArray: static (v, sep)
-        => string.Join(sep, v.EnumerateArray().Select(n => (string)n)),
-    defaultMatch: static (_, sep) => string.Empty);
-```
-
 ## How schema properties map to .NET types
 
 ### String types
@@ -313,4 +275,42 @@ Person b = Person.ParseValue(json);
 
 bool equal = a.Equals(b);  // true — deep JSON equality
 bool same  = a == b;        // operator overload
+```
+
+## Composition types and pattern matching
+
+JSON Schema supports composition keywords like `oneOf`, `anyOf`, and `allOf` that let a value match one of several shapes. In our schema, `OtherNames` uses `oneOf` — it can be *either* a single `PersonNameElement` string *or* a `PersonNameElementArray`:
+
+```json
+"OtherNames": {
+    "oneOf": [
+        { "$ref": "#/$defs/PersonNameElement" },
+        { "$ref": "#/$defs/PersonNameElementArray" }
+    ]
+}
+```
+
+The generated type provides a `Match()` method that dispatches to a typed delegate for each variant. Each variant gets its own named parameter, and a `defaultMatch` fallback handles values that don't conform to any variant:
+
+```csharp
+string result = person.Name.OtherNames.Match(
+    matchPersonNameElement: static (v) => $"Single name: {(string)v}",
+    matchPersonNameElementArray: static (v)
+        => $"Multiple names: {string.Join(", ", v.EnumerateArray().Select(n => (string)n))}",
+    defaultMatch: static (_) => "Unknown format");
+
+Console.WriteLine(result);
+```
+
+`Match()` evaluates each variant's schema in order, calls the first matching delegate, and returns the result. All delegates must return the same type (`TResult`), which the compiler infers from usage.
+
+There is also a context-passing overload for when you need to pass state into the matchers without capturing:
+
+```csharp
+string result = person.Name.OtherNames.Match(
+    separator,  // context passed to each matcher
+    matchPersonNameElement: static (v, sep) => (string)v,
+    matchPersonNameElementArray: static (v, sep)
+        => string.Join(sep, v.EnumerateArray().Select(n => (string)n)),
+    defaultMatch: static (_, sep) => string.Empty);
 ```
