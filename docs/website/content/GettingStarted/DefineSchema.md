@@ -115,6 +115,8 @@ The code generator walks the schema tree from the root type and generates C# for
 
 ## How schema properties map to .NET types
 
+### String types
+
 | Schema type | Format | .NET type |
 |---|---|---|
 | `"type": "string"` | *(none)* | `string` via `GetString()` or explicit cast |
@@ -124,10 +126,50 @@ The code generator walks the schema tree from the root type and generates C# for
 | `"type": "string"` | `duration` | `Period` (NodaTime) |
 | `"type": "string"` | `uuid` | `Guid` |
 | `"type": "string"` | `uri` | `Utf8UriValue` |
+| `"type": "string"` | `uri-reference` | `Utf8UriReferenceValue` |
+| `"type": "string"` | `uri-template` | `string` |
+| `"type": "string"` | `iri` | `Utf8IriValue` |
+| `"type": "string"` | `iri-reference` | `Utf8IriReferenceValue` |
+| `"type": "string"` | `email` | `string` (RFC 5322 validated) |
+| `"type": "string"` | `idn-email` | `string` (internationalized email) |
+| `"type": "string"` | `hostname` | `string` (RFC 1123 validated) |
+| `"type": "string"` | `idn-hostname` | `string` (internationalized hostname) |
+| `"type": "string"` | `ipv4` | `string` (IPv4 validated) |
+| `"type": "string"` | `ipv6` | `string` (IPv6 validated) |
+| `"type": "string"` | `json-pointer` | `string` (RFC 6901 validated) |
+| `"type": "string"` | `relative-json-pointer` | `string` |
+| `"type": "string"` | `regex` | `string` (ECMAScript regex) |
+
+### Integer types
+
+| Schema type | Format | .NET type |
+|---|---|---|
+| `"type": "integer"` | *(none)* | `long` via `GetInt64()` |
+| `"type": "integer"` | `byte` | `byte` |
+| `"type": "integer"` | `sbyte` | `sbyte` |
+| `"type": "integer"` | `int16` | `short` |
 | `"type": "integer"` | `int32` | `int` |
 | `"type": "integer"` | `int64` | `long` |
-| `"type": "integer"` | *(none)* | `long` via `GetInt64()` |
+| `"type": "integer"` | `int128` | `Int128` (.NET 7+) |
+| `"type": "integer"` | `uint16` | `ushort` |
+| `"type": "integer"` | `uint32` | `uint` |
+| `"type": "integer"` | `uint64` | `ulong` |
+| `"type": "integer"` | `uint128` | `UInt128` (.NET 7+) |
+
+### Number types
+
+| Schema type | Format | .NET type |
+|---|---|---|
 | `"type": "number"` | *(none)* | `double` via `GetDouble()` |
+| `"type": "number"` | `half` | `Half` (.NET 5+) |
+| `"type": "number"` | `single` | `float` |
+| `"type": "number"` | `double` | `double` |
+| `"type": "number"` | `decimal` | `decimal` |
+
+### Other types
+
+| Schema type | Format | .NET type |
+|---|---|---|
 | `"type": "boolean"` | *(none)* | `bool` |
 | `"type": "object"` | *(none)* | Generated nested struct |
 | `"type": "array"` | *(none)* | Generated array type with enumeration |
