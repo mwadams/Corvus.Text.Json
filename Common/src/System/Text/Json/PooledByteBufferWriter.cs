@@ -22,7 +22,8 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
         _buffer = new ArrayBuffer(initialCapacity, usePool: true);
     }
 
-    public PooledByteBufferWriter(int initialCapacity, Stream stream) : this(initialCapacity)
+    public PooledByteBufferWriter(int initialCapacity, Stream stream)
+        : this(initialCapacity)
     {
         _stream = stream;
     }

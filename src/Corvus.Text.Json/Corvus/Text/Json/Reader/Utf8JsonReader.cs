@@ -207,8 +207,7 @@ public ref partial struct Utf8JsonReader
     /// across async/await boundaries and hence this type is required to provide support for reading
     /// in more data asynchronously before continuing with a new instance of the <see cref="Utf8JsonReader"/>.
     /// </summary>
-    public readonly JsonReaderState CurrentState => new JsonReaderState
-    (
+    public readonly JsonReaderState CurrentState => new JsonReaderState(
         lineNumber: _lineNumber,
         bytePositionInLine: _bytePositionInLine,
         inObject: _inObject,

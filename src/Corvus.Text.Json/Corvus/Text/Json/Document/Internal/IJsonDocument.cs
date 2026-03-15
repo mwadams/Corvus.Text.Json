@@ -72,7 +72,8 @@ public interface IJsonDocument : IDisposable
     /// <param name="currentIndex">The current index.</param>
     /// <param name="arrayIndex">The array index.</param>
     /// <returns>The JSON element.</returns>
-    TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex) where TElement : struct, IJsonElement<TElement>;
+    TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
+        where TElement : struct, IJsonElement<TElement>;
 
     /// <summary>
     /// Gets the element at the specified array index within the current index.
@@ -132,7 +133,8 @@ public interface IJsonDocument : IDisposable
     /// <param name="propertyName">The name of the property.</param>
     /// <param name="value">The value of the property.</param>
     /// <returns><c>true</c> if the property value was retrieved; otherwise, <c>false</c>.</returns>
-    bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value) where TElement : struct, IJsonElement<TElement>;
+    bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
+        where TElement : struct, IJsonElement<TElement>;
 
     /// <summary>
     /// Tries to get the value of a named property as a JSON element.
@@ -142,7 +144,8 @@ public interface IJsonDocument : IDisposable
     /// <param name="propertyName">The name of the property.</param>
     /// <param name="value">The value of the property.</param>
     /// <returns><c>true</c> if the property value was retrieved; otherwise, <c>false</c>.</returns>
-    bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value) where TElement : struct, IJsonElement<TElement>;
+    bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
+        where TElement : struct, IJsonElement<TElement>;
 
     /// <summary>
     /// Tries to get the value of a named property as a mutable JSON element.
@@ -561,7 +564,8 @@ public interface IJsonDocument : IDisposable
     /// <typeparam name="TElement">The type of the JSON element.</typeparam>
     /// <param name="index">The index of the element.</param>
     /// <returns>The cloned JSON element.</returns>
-    TElement CloneElement<TElement>(int index) where TElement : struct, IJsonElement<TElement>;
+    TElement CloneElement<TElement>(int index)
+        where TElement : struct, IJsonElement<TElement>;
 
     /// <summary>
     /// Gets the size of the database for the element at the specified index.

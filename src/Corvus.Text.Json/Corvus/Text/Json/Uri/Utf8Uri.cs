@@ -40,7 +40,8 @@ public readonly ref struct Utf8Uri
         IsValid = Utf8UriTools.ParseUriInfo(_originalUri, Utf8UriKind.Absolute, requireAbsolute: true, allowIri: false, out _offsets, out _flags);
     }
 
-    private Utf8Uri(ReadOnlyMemory<byte> originalUri, Utf8UriOffset offsets, Utf8UriTools.Flags flags) : this()
+    private Utf8Uri(ReadOnlyMemory<byte> originalUri, Utf8UriOffset offsets, Utf8UriTools.Flags flags)
+        : this()
     {
         _offsets = offsets;
         _flags = flags;

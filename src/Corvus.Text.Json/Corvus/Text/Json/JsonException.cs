@@ -29,7 +29,8 @@ public class JsonException : Exception
     /// <remarks>
     /// Note that the <paramref name="bytePositionInLine"/> counts the number of bytes (i.e. UTF-8 code units) and not characters or scalars.
     /// </remarks>
-    public JsonException(string? message, string? path, long? lineNumber, long? bytePositionInLine, Exception? innerException) : base(message, innerException)
+    public JsonException(string? message, string? path, long? lineNumber, long? bytePositionInLine, Exception? innerException)
+        : base(message, innerException)
     {
         _message = message;
         LineNumber = lineNumber;
@@ -47,7 +48,8 @@ public class JsonException : Exception
     /// <remarks>
     /// Note that the <paramref name="bytePositionInLine"/> counts the number of bytes (i.e. UTF-8 code units) and not characters or scalars.
     /// </remarks>
-    public JsonException(string? message, string? path, long? lineNumber, long? bytePositionInLine) : base(message)
+    public JsonException(string? message, string? path, long? lineNumber, long? bytePositionInLine)
+        : base(message)
     {
         _message = message;
         LineNumber = lineNumber;
@@ -60,7 +62,8 @@ public class JsonException : Exception
     /// </summary>
     /// <param name="message">The context specific error message.</param>
     /// <param name="innerException">The exception that caused the current exception.</param>
-    public JsonException(string? message, Exception? innerException) : base(message, innerException)
+    public JsonException(string? message, Exception? innerException)
+        : base(message, innerException)
     {
         _message = message;
     }
@@ -69,7 +72,8 @@ public class JsonException : Exception
     /// Initializes a new instance of the <see cref="JsonException"/> class with a specified error message.
     /// </summary>
     /// <param name="message">The context specific error message.</param>
-    public JsonException(string? message) : base(message)
+    public JsonException(string? message)
+        : base(message)
     {
         _message = message;
     }
@@ -77,7 +81,10 @@ public class JsonException : Exception
     /// <summary>
     /// Initializes a new instance of the <see cref="JsonException"/> class.
     /// </summary>
-    public JsonException() : base() { }
+    public JsonException()
+        : base()
+    {
+    }
 
     /// <summary>
     /// Gets the number of bytes read within the current line before the exception (starting at 0).

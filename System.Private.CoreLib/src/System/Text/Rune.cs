@@ -159,9 +159,11 @@ namespace System.Text
             string.Create(
                 CultureInfo.InvariantCulture,
 #else
+#pragma warning disable SA1114 // Parameter list should follow declaration
             FormattableString.Invariant(
 #endif
                 $"U+{_value:X4} '{(IsValid(_value) ? ToString() : "\uFFFD")}'");
+#pragma warning restore SA1114
 
         /// <summary>
         /// Returns true if and only if this scalar value is ASCII ([ U+0000..U+007F ])

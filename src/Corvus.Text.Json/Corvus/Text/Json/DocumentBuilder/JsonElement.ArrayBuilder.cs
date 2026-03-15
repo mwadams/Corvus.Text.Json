@@ -59,7 +59,8 @@ public readonly partial struct JsonElement
         /// Initializes a new instance of the <see cref="ArrayBuilder"/> struct.
         /// </summary>
         /// <param name="builder">The underlying <see cref="ComplexValueBuilder"/> to use.</param>
-        internal ArrayBuilder(ComplexValueBuilder builder) : this() => _builder = builder;
+        internal ArrayBuilder(ComplexValueBuilder builder)
+            : this() => _builder = builder;
 
         /// <summary>
         /// Builds a JSON array value using the provided delegate and value builder.

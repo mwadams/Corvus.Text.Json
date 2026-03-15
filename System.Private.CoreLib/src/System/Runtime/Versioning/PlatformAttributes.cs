@@ -34,7 +34,8 @@ namespace System.Runtime.Versioning
 #endif
         sealed class TargetPlatformAttribute : OSPlatformAttribute
     {
-        public TargetPlatformAttribute(string platformName) : base(platformName)
+        public TargetPlatformAttribute(string platformName)
+            : base(platformName)
         {
         }
     }
@@ -68,7 +69,8 @@ namespace System.Runtime.Versioning
 #endif
         sealed class SupportedOSPlatformAttribute : OSPlatformAttribute
     {
-        public SupportedOSPlatformAttribute(string platformName) : base(platformName)
+        public SupportedOSPlatformAttribute(string platformName)
+            : base(platformName)
         {
         }
     }
@@ -99,11 +101,13 @@ namespace System.Runtime.Versioning
 #endif
         sealed class UnsupportedOSPlatformAttribute : OSPlatformAttribute
     {
-        public UnsupportedOSPlatformAttribute(string platformName) : base(platformName)
+        public UnsupportedOSPlatformAttribute(string platformName)
+            : base(platformName)
         {
         }
 
-        public UnsupportedOSPlatformAttribute(string platformName, string? message) : base(platformName)
+        public UnsupportedOSPlatformAttribute(string platformName, string? message)
+            : base(platformName)
         {
             Message = message;
         }
@@ -136,11 +140,13 @@ namespace System.Runtime.Versioning
 #endif
         sealed class ObsoletedOSPlatformAttribute : OSPlatformAttribute
     {
-        public ObsoletedOSPlatformAttribute(string platformName) : base(platformName)
+        public ObsoletedOSPlatformAttribute(string platformName)
+            : base(platformName)
         {
         }
 
-        public ObsoletedOSPlatformAttribute(string platformName, string? message) : base(platformName)
+        public ObsoletedOSPlatformAttribute(string platformName, string? message)
+            : base(platformName)
         {
             Message = message;
         }
@@ -171,7 +177,8 @@ namespace System.Runtime.Versioning
 #endif
         sealed class SupportedOSPlatformGuardAttribute : OSPlatformAttribute
     {
-        public SupportedOSPlatformGuardAttribute(string platformName) : base(platformName)
+        public SupportedOSPlatformGuardAttribute(string platformName)
+            : base(platformName)
         {
         }
     }
@@ -197,7 +204,8 @@ namespace System.Runtime.Versioning
 #endif
         sealed class UnsupportedOSPlatformGuardAttribute : OSPlatformAttribute
     {
-        public UnsupportedOSPlatformGuardAttribute(string platformName) : base(platformName)
+        public UnsupportedOSPlatformGuardAttribute(string platformName)
+            : base(platformName)
         {
         }
     }

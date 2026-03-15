@@ -19,7 +19,8 @@ namespace Corvus.Text.Json.Internal
     public static partial class JsonElementHelpers
     {
         // Creation delegate
-        private delegate T CreateJsonElementInstance<T>(IJsonDocument document, int index) where T : struct, IJsonElement<T>;
+        private delegate T CreateJsonElementInstance<T>(IJsonDocument document, int index)
+            where T : struct, IJsonElement<T>;
 
         private static readonly ConcurrentDictionary<Type, object> Creators = [];
 

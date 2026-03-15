@@ -2380,7 +2380,7 @@ internal static class Utf8UriTools
     // If multi-threading, this method may do duplicated yet harmless work.
     private static unsafe Utf8UriOffset CreateUriInfo(Utf8UriParser syntax, ref Flags flags, ReadOnlySpan<byte> uriString)
     {
-        Utf8UriOffset info = new Utf8UriOffset();
+        Utf8UriOffset info = default;
 
         // This will be revisited in ParseRemaining but for now just have it at least uriString.Length
         info.End = (ushort)uriString.Length;
