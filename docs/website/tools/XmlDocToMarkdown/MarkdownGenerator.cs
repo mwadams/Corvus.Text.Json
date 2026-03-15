@@ -187,7 +187,7 @@ public sealed class MarkdownGenerator(string outputDir)
             sb.AppendLine("|-----------|-------------|");
             foreach (DocParam tp in type.Documentation!.TypeParams)
             {
-                sb.AppendLine($"| `{tp.Name}` | {tp.Description} |");
+                sb.AppendLine($"| `{tp.Name}` | {EscapeDescriptionForTable(tp.Description)} |");
             }
             sb.AppendLine();
         }
@@ -504,7 +504,7 @@ public sealed class MarkdownGenerator(string outputDir)
             sb.AppendLine("|-----------|-------------|");
             foreach (DocParam tp in member.Documentation!.TypeParams)
             {
-                sb.AppendLine($"| `{tp.Name}` | {tp.Description} |");
+                sb.AppendLine($"| `{tp.Name}` | {EscapeDescriptionForTable(tp.Description)} |");
             }
             sb.AppendLine();
         }
@@ -521,7 +521,7 @@ public sealed class MarkdownGenerator(string outputDir)
                 string desc = member.Documentation?.Params
                     .FirstOrDefault(p => p.Name == param.Name)?.Description ?? string.Empty;
                 string optionalSuffix = param.IsOptional ? " *(optional)*" : "";
-                sb.AppendLine($"| `{param.Name}` | {ResolveTypeLink(param.Type, param.TypeFullName)} | {desc}{optionalSuffix} |");
+                sb.AppendLine($"| `{param.Name}` | {ResolveTypeLink(param.Type, param.TypeFullName)} | {EscapeDescriptionForTable(desc)}{optionalSuffix} |");
             }
             sb.AppendLine();
         }
@@ -562,7 +562,7 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (DocException ex in member.Documentation!.Exceptions)
             {
                 string exShortName = XmlDocParser.GetShortTypeName(ex.Type);
-                sb.AppendLine($"| {ResolveTypeLink(exShortName, ex.Type)} | {ex.Description} |");
+                sb.AppendLine($"| {ResolveTypeLink(exShortName, ex.Type)} | {EscapeDescriptionForTable(ex.Description)} |");
             }
             sb.AppendLine();
         }
@@ -676,6 +676,12 @@ public sealed class MarkdownGenerator(string outputDir)
     /// </summary>
     private static string FormatShortSignature(MemberInfo member)
     {
+        // For indexers, the Name already contains the parameter types (e.g. "this[int]")
+        if (member.Name.StartsWith("this[", StringComparison.Ordinal))
+        {
+            return member.Name;
+        }
+
         string paramTypes = string.Join(", ", member.Parameters.Select(p => p.Type));
         return member.Parameters.Count > 0
             ? $"{member.Name}({paramTypes})"
@@ -683,11 +689,91 @@ public sealed class MarkdownGenerator(string outputDir)
     }
 
     /// <summary>
-    /// Escapes pipe characters in table cell content.
+    /// Escapes characters that would break markdown table cells or link syntax.
     /// </summary>
     private static string EscapeTableCell(string text)
     {
-        return text.Replace("|", "\\|");
+        return text
+            .Replace("|", "\\|")
+            .Replace("[", "\\[")
+            .Replace("]", "\\]")
+            .Replace("<", "&lt;")
+            .Replace(">", "&gt;");
+    }
+
+    /// <summary>
+    /// Escapes bare brackets in description text that already contains markdown links.
+    /// Preserves existing [...](url) and [`code`](url) patterns from see-cref resolution,
+    /// but escapes standalone [ and ] that would confuse the markdown parser.
+    /// </summary>
+    private static string EscapeDescriptionForTable(string text)
+    {
+        // Replace | for table cell safety
+        text = text.Replace("|", "\\|");
+
+        // Match markdown links: [`code`](url) or [text](url) where text has no unbalanced brackets.
+        // Process right-to-left so indices remain valid after replacement.
+        var links = new List<(int Start, int Length, string Value)>();
+        // Match backtick-wrapped links first: [`...`](url)
+        foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(
+            text, @"\[`[^`]+`\]\([^)]+\)"))
+        {
+            links.Add((m.Index, m.Length, m.Value));
+        }
+
+        // Mark matched ranges to avoid re-matching
+        bool[] matched = new bool[text.Length];
+        foreach (var link in links)
+        {
+            for (int i = link.Start; i < link.Start + link.Length; i++)
+                matched[i] = true;
+        }
+
+        // Match plain text links: [text](url) where text contains no [ or ]
+        foreach (System.Text.RegularExpressions.Match m in System.Text.RegularExpressions.Regex.Matches(
+            text, @"\[([^\[\]]+)\]\([^)]+\)"))
+        {
+            if (!matched[m.Index])
+            {
+                links.Add((m.Index, m.Length, m.Value));
+            }
+        }
+
+        // Sort by position descending so we can replace from end to start
+        links.Sort((a, b) => b.Start.CompareTo(a.Start));
+
+        // Replace links with placeholders
+        char[] chars = text.ToCharArray();
+        var sb = new StringBuilder(text.Length);
+        int pos = 0;
+        // Re-sort ascending for forward iteration
+        links.Sort((a, b) => a.Start.CompareTo(b.Start));
+
+        foreach (var link in links)
+        {
+            // Append and escape text before this link
+            for (int i = pos; i < link.Start; i++)
+            {
+                char c = chars[i];
+                if (c == '[') sb.Append("\\[");
+                else if (c == ']') sb.Append("\\]");
+                else sb.Append(c);
+            }
+            // Append the link unchanged
+            sb.Append(link.Value);
+            pos = link.Start + link.Length;
+        }
+
+        // Append and escape remaining text
+        for (int i = pos; i < chars.Length; i++)
+        {
+            char c = chars[i];
+            if (c == '[') sb.Append("\\[");
+            else if (c == ']') sb.Append("\\]");
+            else sb.Append(c);
+        }
+
+        return sb.ToString();
     }
 
     /// <summary>
@@ -720,24 +806,34 @@ public sealed class MarkdownGenerator(string outputDir)
 
     private static string Anchor(string name)
     {
-        // GitHub-style anchor: lowercase, replace non-alphanumeric with hyphens
-        return name
-            .Replace('.', '-')
-            .Replace('<', '-')
-            .Replace('>', '-')
-            .Replace(' ', '-')
-            .ToLowerInvariant()
-            .TrimEnd('-');
+        // Produce a clean URL-safe anchor: lowercase, collapse non-alphanumeric to single hyphens
+        StringBuilder sb = new();
+        bool lastWasHyphen = false;
+        foreach (char c in name.ToLowerInvariant())
+        {
+            if (char.IsLetterOrDigit(c))
+            {
+                sb.Append(c);
+                lastWasHyphen = false;
+            }
+            else if (!lastWasHyphen)
+            {
+                sb.Append('-');
+                lastWasHyphen = true;
+            }
+        }
+
+        return sb.ToString().Trim('-');
     }
 
     private static string TruncateSummary(string summary)
     {
         if (summary.Length <= 200)
         {
-            return summary.Replace("|", "\\|");
+            return EscapeDescriptionForTable(summary);
         }
 
-        return summary[..197].Replace("|", "\\|") + "...";
+        return EscapeDescriptionForTable(summary[..197]) + "...";
     }
 
     private static string EscapeYamlString(string value)
