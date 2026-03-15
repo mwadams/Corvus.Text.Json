@@ -83,14 +83,27 @@ if (person.TryGetProperty("email"u8, out JsonElement email))
 
 ## Converting to .NET types
 
-### Explicit cast operators
+### Implicit conversions (value types)
 
-The most concise approach — cast directly to the target primitive:
+For .NET value types (`int`, `double`, `bool`, `DateTime`, etc.), the generated types support **implicit** conversion — no cast syntax needed:
+
+```csharp
+int age = person.Age;
+double score = person.Score;
+bool isActive = person.IsActive;
+```
+
+This is the most concise approach and works for all value types.
+
+### Explicit cast (strings)
+
+`string` requires an **explicit** cast by default, because every conversion allocates a new `string`:
 
 ```csharp
 string familyName = (string)person.Name.FamilyName;
-int age = (int)person.Age;
 ```
+
+> **Tip:** You can opt in to implicit `string` conversion via the `--optionalStringImplicit` flag on the CLI tool, or the `OptionalStringImplicit` property on the source generator attribute. This trades allocation safety for convenience — use it when you know you need the string and are not in a hot path.
 
 ### TryGetValue
 
