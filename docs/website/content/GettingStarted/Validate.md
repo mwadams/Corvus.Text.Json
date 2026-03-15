@@ -4,6 +4,8 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Schema Validation"
 ---
+## Why validate?
+
 JSON Schema uses a duck-typing model rather than a rigid type system. It describes the *shape* of valid data with constraints like "it must have these properties", "it must match one of these shapes", or "this value must be between 0 and 150". When you construct a generated type from JSON data, you can safely use it through that type **if and only if** the data is valid according to the schema.
 
 Constructing a generated type from invalid JSON does **not** throw — the type is permissive. You can still access the parts of the data that *are* present. This is valuable for error reporting, diagnostics, and self-healing systems where you need to inspect malformed data.
