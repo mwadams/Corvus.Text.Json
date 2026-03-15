@@ -110,8 +110,6 @@ Optional properties can be removed from mutable instances:
 root.RemoveEmail();
 ```
 
-## Cloning
-
 The standard mutation workflow is:
 
 1. Parse JSON into a `ParsedJsonDocument<T>`
