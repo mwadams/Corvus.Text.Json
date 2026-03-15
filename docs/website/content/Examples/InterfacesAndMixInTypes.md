@@ -237,3 +237,44 @@ dotnet run
 ### Q: How does `allOf` differ from `$ref` for type extension?
 
 **A:** A `$ref` imports a single schema definition, effectively creating a type alias or base type reference. `allOf` combines multiple schemas together, requiring the value to satisfy all of them. Use `$ref` when you want to extend one base type with additional properties (see [Recipe 005](../005-ExtendingABaseType/)), and `allOf` when you want to mix in capabilities from multiple independent schemas.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: Is `allOf` composition the same as multiple inheritance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Not exactly. allOf is structural composition — the generated type must satisfy all of the composed schemas simultaneously, similar to implementing multiple interfaces in C#. Unlike class inheritance, there is no method resolution order or diamond problem. Each constituent schema contributes its properties and constraints, and the generated type provides implicit conversions to access each \"facet.\""
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: What happens if two composed schemas define the same property?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Both constraints apply. If two allOf constituents define a property with the same name, the value must satisfy both schemas simultaneously during validation. In the generated code, each constituent type provides its own accessor for the property, but they operate on the same underlying JSON data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I add constraints when composing schemas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes. You can add additional properties and constraints alongside the allOf keyword in the composite schema. These extra constraints apply on top of whatever the composed schemas require. This is how you create a type that combines existing schemas while adding its own unique requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: How does `allOf` differ from `$ref` for type extension?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** A $ref imports a single schema definition, effectively creating a type alias or base type reference. allOf combines multiple schemas together, requiring the value to satisfy all of them. Use $ref when you want to extend one base type with additional properties (see [Recipe 005](../005-ExtendingABaseType/)), and allOf when you want to mix in capabilities from multiple independent schemas."
+      }
+    }
+  ]
+}
+</script>

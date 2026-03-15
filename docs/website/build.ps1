@@ -161,23 +161,56 @@ foreach ($dir in $recipeDirs) {
         $description = $title
     }
 
-    # Extract FAQ questions from ### headings inside the FAQ section
+    # Extract FAQ Q&A pairs from the FAQ section
     $faqQuestions = @()
+    $faqPairs = @()
     if ($raw -match '(?s)## Frequently Asked Questions(.+?)(?=\n## |\z)') {
         $faqSection = $Matches[1]
-        $faqQuestions = [regex]::Matches($faqSection, '###\s+(.+)') |
-            ForEach-Object { $_.Groups[1].Value.Trim() -replace '"', '\"' -replace '`', '' }
+        # Split on ### headings to get Q&A pairs
+        $parts = $faqSection -split '(?=### )'
+        foreach ($part in $parts) {
+            $part = $part.Trim()
+            if ($part -match '^###\s+(.+?)[\r\n]+(.+)') {
+                $question = $Matches[1].Trim()
+                $answer = ($Matches[2].Trim() -replace '[\r\n]+', ' ').Trim()
+                $faqQuestions += ($question -replace '`', '')
+                # Escape for JSON
+                $qJson = $question -replace '\\', '\\' -replace '"', '\"'
+                $aJson = $answer -replace '\\', '\\' -replace '"', '\"' -replace '`', ''
+                $faqPairs += @{ q = $qJson; a = $aJson }
+            }
+        }
     }
 
-    # Build Keywords array: base keywords + FAQ questions
+    # Build Keywords array: base keywords + FAQ question text
     $keywordItems = @('recipe', 'JSON Schema', 'C#')
     $keywordItems += $faqQuestions
-    $keywordsYaml = ($keywordItems | ForEach-Object { "`"$_`"" }) -join ', '
+    $keywordsYaml = ($keywordItems | ForEach-Object { "`"$($_ -replace '"', '\"')`"" }) -join ', '
 
-    # 1) Content markdown with Vellum frontmatter
+    # Build FAQPage JSON-LD structured data
+    $faqJsonLd = ''
+    if ($faqPairs.Count -gt 0) {
+        $mainEntity = ($faqPairs | ForEach-Object {
+            "    {`n      `"@type`": `"Question`",`n      `"name`": `"$($_.q)`",`n      `"acceptedAnswer`": {`n        `"@type`": `"Answer`",`n        `"text`": `"$($_.a)`"`n      }`n    }"
+        }) -join ",`n"
+        $faqJsonLd = @"
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+$mainEntity
+  ]
+}
+</script>
+"@
+    }
+
+    # 1) Content markdown with Vellum frontmatter + FAQ JSON-LD
     $contentPath = Join-Path $recipesContentDir "$pascalName.md"
     $frontmatter = "---`nContentType: `"application/vnd.endjin.ssg.content+md`"`nPublicationStatus: Published`nDate: 2026-03-15T00:00:00.0+00:00`nTitle: `"$title`"`n---`n"
-    $contentMd = $frontmatter + $body
+    $contentMd = $frontmatter + $body + $faqJsonLd
     [System.IO.File]::WriteAllText($contentPath, $contentMd, [System.Text.Encoding]::UTF8)
 
     # 2) Taxonomy YAML

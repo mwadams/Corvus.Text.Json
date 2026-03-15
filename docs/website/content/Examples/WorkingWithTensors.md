@@ -246,3 +246,51 @@ For fixed-size tensors, the span must contain exactly `ValueBufferSize` elements
 ### Why can't I use collection expressions to create tensors in V5?
 
 V5 generated types do not support implicit conversions from collection expressions (e.g., `[[1.0, 2.0], ...]`). This is by design — V5 emphasizes explicit resource management through `JsonWorkspace` and the builder pattern. Use `Build(span)` or `CreateBuilder(workspace, span)` for efficient construction from raw data, or `ParsedJsonDocument<T>.Parse()` for construction from JSON strings.
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the tensor API integrate with `System.Numerics.Tensors`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use TryGetNumericValues() to extract all tensor values into a flat Span<double>, which you can then pass directly to System.Numerics.Tensors APIs (e.g., TensorPrimitives.Sum(), TensorPrimitives.Multiply()). To go the other direction, use Build(span) or CreateBuilder(workspace, span) to construct a tensor from a flat span after performing numeric operations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the span from `TryGetNumericValues()` safe to use after the document is disposed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes. TryGetNumericValues() *copies* the values into the Span<T> you provide, so the data has no dependency on the document once the call returns. You can safely dispose the document and continue using the buffer. The only constraint is the normal span lifetime rule: don't return a stackalloc span from a method."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What's the difference between variable-length and fixed-length numeric arrays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fixed-length arrays (with matching minItems/maxItems) gain tensor metadata (Rank, Dimension, ValueBufferSize) and CreateTensor() on the builder. Variable-length arrays still get Build(span) and CreateBuilder(workspace, span) for construction, but the span can be any length and there is no ValueBufferSize constant."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I pass the wrong number of elements to `Build(span)`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For fixed-size tensors, the span must contain exactly ValueBufferSize elements. Passing more or fewer throws ArgumentException. For variable-length numeric arrays, any span length is accepted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why can't I use collection expressions to create tensors in V5?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "V5 generated types do not support implicit conversions from collection expressions (e.g., [[1.0, 2.0], ...]). This is by design — V5 emphasizes explicit resource management through JsonWorkspace and the builder pattern. Use Build(span) or CreateBuilder(workspace, span) for efficient construction from raw data, or ParsedJsonDocument<T>.Parse() for construction from JSON strings."
+      }
+    }
+  ]
+}
+</script>

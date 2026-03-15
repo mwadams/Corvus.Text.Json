@@ -271,3 +271,44 @@ Yes. The generated .NET type for a closed schema still has the generic `TryGetPr
 ### How does open/closed affect API versioning?
 
 With **open types**, a v2 document that adds a new `email` property is still valid against the v1 schema — older consumers simply ignore the extra field. With **closed types**, the v1 schema rejects the v2 document because `email` is not declared. This forces you to publish a new schema (e.g., `person-v2-closed.json`) with its own name and version, making the version boundary explicit.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "When should I use an open type vs a closed type?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use **open types** when you want forwards compatibility — consumers that understand an older version of the schema will still accept documents that include properties added in newer versions. This is the default in JSON Schema and is ideal for evolving APIs. Use **closed types** (unevaluatedProperties: false) when you need strict validation — for example, when unknown properties indicate a client error, or when you use parallel versioning with distinct schema names for each version."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between `unevaluatedProperties` and `additionalProperties`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both can close a type, but they differ in scope. additionalProperties only considers properties declared directly in the same schema's properties and patternProperties keywords. unevaluatedProperties (introduced in draft 2020-12) considers properties evaluated by *any* applicator keyword in the schema — including allOf, oneOf, anyOf, if/then/else, and $ref. This means unevaluatedProperties: false works correctly with composed schemas, whereas additionalProperties: false can accidentally reject properties declared in referenced schemas. Prefer unevaluatedProperties in draft 2020-12 and later."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I still access undeclared properties on a closed type?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The generated .NET type for a closed schema still has the generic TryGetProperty() method, so you can read any property present in the underlying JSON. However, the document will fail EvaluateSchema() if it contains properties not declared in the schema. Closing a type is a *validation* concern, not a data-access concern."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does open/closed affect API versioning?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "With **open types**, a v2 document that adds a new email property is still valid against the v1 schema — older consumers simply ignore the extra field. With **closed types**, the v1 schema rejects the v2 document because email is not declared. This forces you to publish a new schema (e.g., person-v2-closed.json) with its own name and version, making the version boundary explicit."
+      }
+    }
+  ]
+}
+</script>

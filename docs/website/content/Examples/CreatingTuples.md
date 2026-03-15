@@ -199,3 +199,44 @@ dotnet run
 ### Q: Can tuple items be complex types (objects, arrays)?
 
 **A:** Absolutely. Each position in `prefixItems` can reference any valid JSON Schema, including objects with properties, nested arrays, `$ref` references to shared definitions, or even other tuples. The generated code will provide strongly-typed access to each item using the appropriate generated type.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: What's the difference between a tuple and a fixed-size array?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** A tuple uses prefixItems to define a specific type for each positional element (e.g., [int, string, bool]), while a fixed-size array uses items to constrain all elements to a single type. Tuples give you strongly-typed access to each item via Item1, Item2, etc., whereas arrays provide uniform element access through indexing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I create open tuples that allow additional items?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes. By default, JSON Schema arrays allow additional items beyond those listed in prefixItems. To create a closed tuple that rejects extra items, add \"unevaluatedItems\": false to your schema. Without that constraint, additional items of any type are permitted after the defined prefix items."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Why doesn't V5 support implicit conversion to/from ValueTuple?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** This is by design. V5 generated types support direct formatting and strongly-typed property access (Item1, Item2, etc.), which eliminates the need for ValueTuple conversions in most scenarios. Removing implicit conversions avoids hidden allocations and keeps the API surface explicit about when data copying occurs."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can tuple items be complex types (objects, arrays)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Absolutely. Each position in prefixItems can reference any valid JSON Schema, including objects with properties, nested arrays, $ref references to shared definitions, or even other tuples. The generated code will provide strongly-typed access to each item using the appropriate generated type."
+      }
+    }
+  ]
+}
+</script>

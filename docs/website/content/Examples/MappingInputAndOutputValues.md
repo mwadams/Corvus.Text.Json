@@ -287,3 +287,44 @@ This pattern is especially useful for:
 ### Q: How does this compare to AutoMapper?
 
 **A:** Unlike AutoMapper, which uses reflection and creates intermediate objects, the `From()` pattern operates directly on the JSON buffer with no reflection, no intermediate allocations, and no runtime configuration. The mapping is determined at compile time by the schema structure. This makes it significantly faster but limited to structural conversions — complex business logic transformations still require explicit code.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: Does `From()` copy the underlying JSON data?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** No. From() performs a zero-copy type conversion — it reinterprets the same underlying JSON buffer as the target type. No data is duplicated or re-serialized. This is what makes From() so efficient for mapping between types that share structural compatibility. Actual data copying only happens when you mutate values through a JsonDocumentBuilder."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I map between types in different assemblies?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes, as long as both types are generated from schemas with compatible structures. The From() method works on the underlying JSON representation, not on .NET type identity. You can reference generated types from separate projects and convert between them using the same From() pattern."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: When should I use `From()` vs `TryGetValue()`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Use From() when you're converting an entire entity to a different schema representation without modifying values — it's zero-allocation and zero-copy. Use TryGetValue() when you need to extract a primitive value for transformation (e.g., converting a string to uppercase or reformatting a date) before building the output."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: How does this compare to AutoMapper?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Unlike AutoMapper, which uses reflection and creates intermediate objects, the From() pattern operates directly on the JSON buffer with no reflection, no intermediate allocations, and no runtime configuration. The mapping is determined at compile time by the schema structure. This makes it significantly faster but limited to structural conversions — complex business logic transformations still require explicit code."
+      }
+    }
+  ]
+}
+</script>

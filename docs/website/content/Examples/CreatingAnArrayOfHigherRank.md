@@ -210,3 +210,43 @@ No. Tensor operations (`TryGetNumericValues`, `Build(span)`, `Rank`, `Dimension`
 ### How do I access nested elements without intermediate variables?
 
 Chain the indexers directly: `matrix[2][1]` returns the scalar value at row 2, column 1. For mutable operations, the same chaining works: `root[2].SetItem(1, 3.4)` sets the value at `[2][1]` in-place.
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What's the difference between rank and dimension?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**Rank** is the number of indices needed to access a scalar value (e.g., a 2D matrix has rank 2). **Dimension** is the length at a particular rank level (e.g., a 4×2 matrix has dimension 4 at the outer level and dimension 2 at the inner level). The static properties Matrix2d.Rank and Matrix2d.Dimension report these values."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I create ragged (jagged) multi-dimensional arrays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Omit minItems and/or maxItems from the inner array schema to allow rows of different lengths. However, ragged arrays will not be recognized as tensor types, so you won't get TryGetNumericValues(), Build(span), or ValueBufferSize. Only fixed-size numeric arrays gain tensor operations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are tensor operations available on all multi-dimensional arrays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Tensor operations (TryGetNumericValues, Build(span), Rank, Dimension, ValueBufferSize) are only generated when **all** dimensions have matching minItems/maxItems **and** the innermost items have a numeric type with a format (e.g., double, int32). Arrays of objects or variable-length arrays don't qualify."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I access nested elements without intermediate variables?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Chain the indexers directly: matrix[2][1] returns the scalar value at row 2, column 1. For mutable operations, the same chaining works: root[2].SetItem(1, 3.4) sets the value at [2][1] in-place."
+      }
+    }
+  ]
+}
+</script>

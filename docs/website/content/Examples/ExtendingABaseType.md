@@ -236,3 +236,52 @@ Yes. If the base type has `unevaluatedProperties: false` (closed), then any docu
 ### What about draft 6/7 where `$ref` ignores adjacent keywords?
 
 In draft 6 and 7, `$ref` replaces the entire schema object — sibling keywords like `properties` and `required` are silently ignored. The workaround is to wrap the reference in an `allOf`: `{ "allOf": [{"$ref": "./person-open.json"}], "properties": { ... } }`. This achieves the same composition but is less readable. Draft 2019-09 and later allow `$ref` alongside other keywords, which is what this recipe uses.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is `$ref` like inheritance in OOP?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Think of $ref as single inheritance: the base schema defines a set of properties and constraints, and the extending schema adds its own on top. The key difference from OOP is that JSON Schema composes *constraints* — you can't \"override\" a base property to weaken its constraints, only add more. The extending schema's properties are merged with those from the referenced schema, and all constraints from both apply during validation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I access base-type properties on the extended type?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. When the code generator encounters $ref, it follows the reference and composes all properties from the base schema into the generated type. PersonWealthy has strongly-typed properties for both its own Wealth and all of PersonOpen's properties (FamilyName, GivenName, BirthDate, etc.). You access them the same way — wealthyPerson.FamilyName."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use `TryGetProperty` instead of a strongly-typed property?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use TryGetProperty when you have converted to a base type (e.g., PersonOpen.From(wealthyPerson)) and need to access a property that exists in the JSON but is not declared on the base .NET type. The property is still present in the underlying JSON data; TryGetProperty with a UTF-8 byte literal (\"wealth\"u8) gives you zero-allocation access to it. Use the strongly-typed property whenever it is available on the type you are working with."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the base type need to be open for extension to work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. If the base type has unevaluatedProperties: false (closed), then any document with properties not declared in that schema will fail validation against the base. You can still *compose* schemas using $ref on a closed type (see [006-ConstrainingABaseType](../006-ConstrainingABaseType/)), but you cannot add new properties — only narrow existing constraints."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What about draft 6/7 where `$ref` ignores adjacent keywords?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In draft 6 and 7, $ref replaces the entire schema object — sibling keywords like properties and required are silently ignored. The workaround is to wrap the reference in an allOf: { \"allOf\": [{\"$ref\": \"./person-open.json\"}], \"properties\": { ... } }. This achieves the same composition but is less readable. Draft 2019-09 and later allow $ref alongside other keywords, which is what this recipe uses."
+      }
+    }
+  ]
+}
+</script>

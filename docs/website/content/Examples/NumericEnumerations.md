@@ -235,3 +235,44 @@ dotnet run
 ### Q: Are `ConstInstance` values allocated on the heap?
 
 **A:** No. `ConstInstance` properties return a struct-based JSON element backed by a static, pre-parsed byte buffer. There is no heap allocation when accessing them. This makes them ideal for comparisons and for constructing new instances from known values without any runtime parsing cost.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: Why use `oneOf` + `const` instead of a simple `enum` array?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** The oneOf + const pattern gives each numeric value a name, a title, and a description in the schema. This produces named constant instances (e.g., Status.Pending.ConstInstance) and descriptive match handler parameters in the generated code. A simple enum array like [0, 1, 2] provides no documentation or named access."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I combine numeric and string enumerations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Each oneOf variant can use any const type, so you could technically mix them. In practice, it's better to keep enumerations homogeneous — use numeric values for status codes and bitfields, and string values for human-readable identifiers. Mixing types makes pattern matching and TryGetValue() extraction more complex."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: How do I add a new enum value without breaking existing code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Add a new entry to the oneOf array in your schema and regenerate the types. The generated Match() method will gain a new handler parameter, causing a compile error in every call site that hasn't been updated. This is intentional — it ensures you handle the new value everywhere rather than silently ignoring it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Are `ConstInstance` values allocated on the heap?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** No. ConstInstance properties return a struct-based JSON element backed by a static, pre-parsed byte buffer. There is no heap allocation when accessing them. This makes them ideal for comparisons and for constructing new instances from known values without any runtime parsing cost."
+      }
+    }
+  ]
+}
+</script>

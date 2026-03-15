@@ -229,3 +229,44 @@ dotnet run
 ### Q: Can I use maps with known and unknown property combinations?
 
 **A:** Yes. Define your known properties in the `properties` keyword and use `additionalProperties` to constrain the type of any extra properties. This gives you strongly-typed accessors for known properties while still allowing dynamic key-value entries. See [Recipe 004](../004-OpenVersusClosedTypes/) for more on open versus closed types.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: Can map values be complex types (objects, arrays)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes. The additionalProperties keyword accepts any valid JSON Schema, so values can be objects, arrays, nested maps, or any other type. The generated code provides strongly-typed access to each value through TryGetProperty(), returning the value as the appropriate generated type."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: How do I validate map keys against a pattern?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Use patternProperties instead of (or alongside) additionalProperties. With patternProperties, you define a regex pattern for the keys and a schema for the corresponding values. For example, \"^[a-z]+$\": { \"type\": \"integer\" } requires all matching keys to have integer values."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: What's the difference between `additionalProperties` and `patternProperties`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** additionalProperties applies to all properties not explicitly defined by properties or matched by patternProperties. patternProperties applies only to keys matching specific regex patterns. You can combine both — use patternProperties for keys with known patterns and additionalProperties for everything else (or set it to false to disallow unmatched keys)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I use maps with known and unknown property combinations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes. Define your known properties in the properties keyword and use additionalProperties to constrain the type of any extra properties. This gives you strongly-typed accessors for known properties while still allowing dynamic key-value entries. See [Recipe 004](../004-OpenVersusClosedTypes/) for more on open versus closed types."
+      }
+    }
+  ]
+}
+</script>

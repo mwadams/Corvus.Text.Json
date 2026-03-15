@@ -236,3 +236,44 @@ The `$ref` to the base property's schema is not strictly necessary for validatio
 ### Can I constrain a closed type even though it has `unevaluatedProperties: false`?
 
 Yes. A closed type prevents *new properties* from being added, but you can still narrow existing property constraints. This recipe does exactly that: `person-closed.json` has `unevaluatedProperties: false`, and `person-tall.json` references it while adding a `minimum: 2.0` constraint to the existing `height` property. No new properties are introduced, so the closed-type restriction is not violated.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does constraint composition work in JSON Schema?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When you use $ref to base a new schema on an existing one, all constraints from both schemas are applied together during validation. For example, if the base defines exclusiveMinimum: 0.0 and maximum: 3.0 for height, and the derived schema adds minimum: 2.0, then a valid height must satisfy *all three*: greater than 0, at most 3.0, and at least 2.0. You cannot \"turn off\" base constraints — they always compose additively."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if I define incompatible constraints?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JSON Schema does not prevent you from writing contradictory constraints (e.g., requiring a value to be both a string and an object). The code generator will produce valid, compilable C# code. However, no JSON document will ever satisfy both constraints simultaneously, so EvaluateSchema() will always return false. Always ensure your derived constraints are a subset of the base constraints — narrowing the valid range, not contradicting it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why use `$ref` to the base property when just adding a new constraint would also validate correctly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The $ref to the base property's schema is not strictly necessary for validation — the constraints compose regardless. However, $ref tells the code generator that the derived HeightEntity is based on the base HeightEntity, so the generated type inherits all the characteristics (format, type mappings, helper methods) from the original. Without the $ref, the code generator treats the new constraint as an independent definition and may not carry over the base type's code-generation behaviour."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I constrain a closed type even though it has `unevaluatedProperties: false`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. A closed type prevents *new properties* from being added, but you can still narrow existing property constraints. This recipe does exactly that: person-closed.json has unevaluatedProperties: false, and person-tall.json references it while adding a minimum: 2.0 constraint to the existing height property. No new properties are introduced, so the closed-type restriction is not violated."
+      }
+    }
+  ]
+}
+</script>

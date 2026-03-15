@@ -246,3 +246,44 @@ Note that simple types may be reduced to global types like `JsonString` or `Json
 ### Q: What is the `defaultMatch` handler for?
 
 **A:** The `defaultMatch` handler is called when no other variant matches. In a well-validated schema this shouldn't happen, but it provides a safety net for cases where the JSON data hasn't been validated against the schema. It follows the same pattern as a `default` case in a C# `switch` expression, ensuring exhaustive handling.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: What happens if more than one `oneOf` variant matches?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Validation fails. The oneOf keyword requires that exactly one of the subschemas matches. If zero or more than one match, the value is invalid according to the schema. This is what makes oneOf suitable for discriminated unions — each value must belong to precisely one variant."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I use `oneOf` with variants of the same JSON type?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes, but you need a way to distinguish them. If multiple variants are objects, add a discriminator property with a const value to each variant (see [Recipe 013](../013-PolymorphismWithDiscriminators/)). Without a discriminator, variants of the same JSON type risk ambiguous matching, which would cause validation failures."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Why does the code generator use `OneOf0Entity`/`OneOf1Entity` names?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** The oneOf subschemas don't have inherent names — they are anonymous entries in an array, so the code generator assigns ordinal names. With discriminator properties, variants are named by their required properties instead (e.g., RequiredRadiusAndType). You can always provide explicit names, either via CLI generator configuration or by adding a model type for the schema location:"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: What is the `defaultMatch` handler for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** The defaultMatch handler is called when no other variant matches. In a well-validated schema this shouldn't happen, but it provides a safety net for cases where the JSON data hasn't been validated against the schema. It follows the same pattern as a default case in a C# switch expression, ensuring exhaustive handling."
+      }
+    }
+  ]
+}
+</script>

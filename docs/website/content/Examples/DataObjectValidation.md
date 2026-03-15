@@ -236,3 +236,52 @@ Structural validation (handled by JSON Schema) checks that the data conforms to 
 ### Can I add custom validation constraints beyond what JSON Schema supports?
 
 JSON Schema does not support non-local constraints (database lookups, cross-property comparisons, etc.), but you can layer your own validation on top. First call `EvaluateSchema()` to ensure structural validity, then run your custom business rules against the typed properties. This two-phase approach keeps your custom validation code simple because you can rely on the structural guarantees already established by the schema.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How fast is schema validation compared to manual property checks?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The boolean-only EvaluateSchema() overload is optimized for the fast path: it performs zero allocations and short-circuits on the first failure. For most documents, it is comparable in cost to hand-written if checks. The detailed EvaluateSchema(collector) overload is more expensive because it must collect diagnostics for every constraint — use it only after the fast path indicates failure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use `Basic` vs. `Detailed` vs. `Verbose` results levels?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use Basic in production when you only need failure messages (e.g., to return a 400 response). Use Detailed when diagnosing validation failures during development or in error-reporting middleware — it includes the JSON Pointer path to the failing property and the schema location of the constraint. Use Verbose only for debugging, as it logs every constraint evaluation including successes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between structural validation and semantic validation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Structural validation (handled by JSON Schema) checks that the data conforms to type, format, and range constraints — e.g., \"is familyName a string between 1 and 256 characters?\" Semantic validation (handled by your application code) checks business rules that require external context — e.g., \"is this email address unique in the database?\" or \"is the birth date in the past?\" Always perform structural validation first, then apply semantic rules to structurally valid data."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Corvus.Text.Json validate `format` keywords automatically?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Yes. When a property has a format keyword (e.g., \"format\": \"date\", \"format\": \"double\", \"format\": \"uuid\"), EvaluateSchema() validates that the value conforms to that format. Note that Corvus.Text.Json enables format *assertion* by default, even though the JSON Schema 2020-12 specification treats format as an *annotation* (not an assertion) by default. This means invalid formats will cause validation to fail out of the box. If you need the spec-compliant annotation-only behaviour, you can disable format assertion via configuration options."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I add custom validation constraints beyond what JSON Schema supports?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JSON Schema does not support non-local constraints (database lookups, cross-property comparisons, etc.), but you can layer your own validation on top. First call EvaluateSchema() to ensure structural validity, then run your custom business rules against the typed properties. This two-phase approach keeps your custom validation code simple because you can rely on the structural guarantees already established by the schema."
+      }
+    }
+  ]
+}
+</script>

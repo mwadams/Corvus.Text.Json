@@ -261,3 +261,43 @@ Use the **immutable** parsed document when you only need to read and validate da
 ### What do `minItems` and `maxItems` actually enforce?
 
 These keywords constrain the array length at **validation** time, not at the type level. You can always mutate an array to have fewer or more items than the schema allows — `EvaluateSchema()` will simply return `false`. Setting both to the same value (e.g., 30) means the array must contain *exactly* that many items to be valid. The code generator also uses matching `minItems`/`maxItems` to recognize fixed-size arrays for tensor operations.
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What's the difference between an array and a tuple in JSON Schema?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An **array** (using items) defines a uniform collection where every element conforms to the same schema. A **tuple** (using prefixItems) defines a fixed-length, ordered collection where each position has its own schema. Use arrays when all elements are the same type; use tuples when you need heterogeneous, positional elements — see [Recipe 010](../010-CreatingTuples/)."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I enumerate array elements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Call EnumerateArray() to get a strongly-typed enumerator over the array elements. This works on both immutable (Person1dArray) and mutable (Person1dArray.Mutable) views. The generated type also implements IEnumerable<T>, so you can use standard LINQ operators."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use the mutable builder versus working with immutable arrays?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the **immutable** parsed document when you only need to read and validate data — it's the most efficient path. Switch to the **mutable builder** (CreateBuilder(workspace)) when you need to add, remove, replace, or reorder elements. The builder operates in-place on pooled memory, avoiding the allocation overhead of creating a new document for each change."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do `minItems` and `maxItems` actually enforce?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "These keywords constrain the array length at **validation** time, not at the type level. You can always mutate an array to have fewer or more items than the schema allows — EvaluateSchema() will simply return false. Setting both to the same value (e.g., 30) means the array must contain *exactly* that many items to be valid. The code generator also uses matching minItems/maxItems to recognize fixed-size arrays for tensor operations."
+      }
+    }
+  ]
+}
+</script>

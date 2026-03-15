@@ -163,3 +163,44 @@ dotnet run
 ### Q: Is pattern matching over enums exhaustive at compile time?
 
 **A:** The generated `Match()` method requires a handler for every enum value plus a `defaultMatch` fallback, so you won't miss a case at compile time. However, if you add new values to the schema and regenerate, existing code will get a compile error for the missing handler — which is exactly the safety net you want.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Q: What happens if I parse a value not in the enum?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Parsing succeeds — the value is still a valid JSON string. However, schema validation via EvaluateSchema() will report it as invalid. The Match() method will route non-matching values to the defaultMatch handler. This design lets you handle unexpected values gracefully rather than throwing exceptions during parsing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Can I use `enum` with mixed types (strings and numbers)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** JSON Schema's enum keyword accepts an array of any JSON values, so mixed types are technically valid. However, homogeneous enum arrays are easier to understand and work with. For heterogeneous enumerations, oneOf with const values is a better approach — it lets you document each variant individually and provides clearer discrimination (see [Recipe 012](../012-PatternMatching/))."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: When should I use `enum` vs `oneOf` + `const`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** Use enum for simple value lists where you just need to constrain a property to a known set of values — it's more concise and produces cleaner schemas. Use oneOf + const when you need per-value documentation, named constant instances, or when your enum values are numeric (see [Recipe 015](../015-NumericEnumerations/))."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Q: Is pattern matching over enums exhaustive at compile time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "**A:** The generated Match() method requires a handler for every enum value plus a defaultMatch fallback, so you won't miss a case at compile time. However, if you add new values to the schema and regenerate, existing code will get a compile error for the missing handler — which is exactly the safety net you want."
+      }
+    }
+  ]
+}
+</script>

@@ -191,3 +191,44 @@ Yes. When two or more properties reference the same `$ref` target (whether via `
 ### How does `From()` work for converting between compatible entity types?
 
 `From()` is a static method on generated entity types that creates a zero-allocation view over the underlying JSON data of a compatible source entity. For example, if schema A has `NameEntity` and schema B has `FullNameEntity`, and both are `$ref`-compatible strings, you can write `B.FullNameEntity.From(sourceA.Name)` to convert without extracting to a .NET `string`. This is the foundation of the mapping pattern shown in [Recipe 017](../017-MappingInputAndOutputValues/).
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between using `$ref` and defining properties inline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Inline definitions create a separate generated type for each property — so three string properties with identical constraints produce three distinct entity types (GivenNameEntity, FamilyNameEntity, OtherNamesEntity). Using $ref to point all three properties at the same $defs entry produces a single shared type (ConstrainedString). The shared type reduces code size and, crucially, makes the property values type-compatible so you can compare or convert between them without extracting to .NET primitives."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I share types across multiple schema files?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. $ref supports relative file paths (e.g., { \"$ref\": \"./common/constrained-string.json\" }), so you can define a shared type in one file and reference it from any number of other schema files. The code generator resolves these references at generation time. This is the recommended approach for large projects with many schemas that share common definitions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are properties with the same `$ref` target truly type-compatible?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. When two or more properties reference the same $ref target (whether via $defs in the same file or a shared external file), the code generator produces a single .NET type. All properties using that $ref return the same type, so you can compare them directly with Equals(), pass them to the same methods, and convert between entity types from different schemas using From() — all without allocating .NET strings or other primitives."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does `From()` work for converting between compatible entity types?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "From() is a static method on generated entity types that creates a zero-allocation view over the underlying JSON data of a compatible source entity. For example, if schema A has NameEntity and schema B has FullNameEntity, and both are $ref-compatible strings, you can write B.FullNameEntity.From(sourceA.Name) to convert without extracting to a .NET string. This is the foundation of the mapping pattern shown in [Recipe 017](../017-MappingInputAndOutputValues/)."
+      }
+    }
+  ]
+}
+</script>

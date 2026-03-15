@@ -269,3 +269,52 @@ JSON Schema date/time formats (`date`, `date-time`, `time`) map naturally to Nod
 ### When should I use the builder pattern vs. parsing from JSON?
 
 Use `CreateBuilder(workspace, ...)` when you are constructing a new instance from .NET values — for example, building a response object in an API handler. Use `ParsedJsonDocument<T>.Parse(...)` when you receive JSON data from an external source (HTTP request body, file, message queue). The builder pattern requires a `JsonWorkspace` for pooled memory management, while parsing produces an immutable document that owns its own memory.
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How are JSON Schema property types mapped to .NET types?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Each property in the schema gets its own generated entity type (e.g., Person.FamilyNameEntity for a string property). These entity types provide implicit or explicit conversions to .NET primitives: string for \"type\": \"string\", double for \"type\": \"number\", int for \"type\": \"integer\", \"format\": \"int32\", and so on. When a format keyword is present (e.g., \"format\": \"date\"), the entity type may also provide conversions to richer .NET types like NodaTime.LocalDate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between `IsUndefined()` and `IsNull()`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "IsUndefined() returns true when a property was not present in the JSON document at all — the key is absent. IsNull() returns true when the property is present but its value is the JSON literal null. This distinction matters because JSON Schema treats missing properties and null values differently. For optional properties, always check IsUndefined() before accessing the value to avoid exceptions."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does Corvus.Text.Json use NodaTime instead of `System.DateTime`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "JSON Schema date/time formats (date, date-time, time) map naturally to NodaTime types (LocalDate, OffsetDateTime, LocalTime) because NodaTime distinguishes between dates, times, and date-times with explicit offset handling — matching the semantics of the corresponding JSON Schema formats. System.DateTime conflates these concepts, which can lead to subtle timezone bugs. The generated types provide implicit conversions to the appropriate NodaTime types."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does zero-allocation string comparison work with `ValueEquals()`?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ValueEquals() compares the underlying JSON UTF-8 bytes directly against the provided string or ReadOnlySpan<byte> without allocating a .NET string from the JSON data. This is especially useful in hot paths where you need to check property values (e.g., routing, filtering) without the cost of string allocation. Use ValueEquals(\"value\"u8) with a UTF-8 string literal for the best performance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use the builder pattern vs. parsing from JSON?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use CreateBuilder(workspace, ...) when you are constructing a new instance from .NET values — for example, building a response object in an API handler. Use ParsedJsonDocument<T>.Parse(...) when you receive JSON data from an external source (HTTP request body, file, message queue). The builder pattern requires a JsonWorkspace for pooled memory management, while parsing produces an immutable document that owns its own memory."
+      }
+    }
+  ]
+}
+</script>
