@@ -214,6 +214,23 @@
   }
 }
 
+// ---- Source link (like .NET reference docs) ----
+.api-source {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-dark);
+  margin: calc(-1 * var(--space-sm)) 0 var(--space-lg);
+
+  a {
+    color: var(--color-brand);
+    text-decoration: none;
+
+    &:hover {
+      color: var(--color-brand-hover);
+      text-decoration: underline;
+    }
+  }
+}
+
 // ---- API Feedback banner ----
 .api-feedback {
   margin-top: var(--space-xl);

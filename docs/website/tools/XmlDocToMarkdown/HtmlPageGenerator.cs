@@ -7,7 +7,7 @@ namespace XmlDocToMarkdown;
 /// Generates standalone HTML pages for each type, bypassing Vellum's taxonomy system.
 /// These are complete HTML files that use the same CSS as the Vellum-generated site.
 /// </summary>
-public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
+public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, SourceLinkResolver? sourceResolver = null)
 {
     private static readonly MarkdownPipeline Pipeline = new MarkdownPipelineBuilder()
         .UseAdvancedExtensions()
@@ -73,7 +73,8 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
                     currentNsName: ns,
                     currentTypeFileBase: fileBase,
                     typeKind: type.Kind,
-                    typeName: type.Name);
+                    typeName: type.Name,
+                    typeFullName: type.FullName);
 
                 File.WriteAllText(htmlPath, fullHtml);
                 Console.WriteLine($"  Written: {htmlPath}");
@@ -126,7 +127,8 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
                 typeFileBase: typeFileBase,
                 memberFileBase: fileBase,
                 memberDisplayName: memberDisplayName,
-                memberCategory: category);
+                memberCategory: category,
+                memberXmlDocKey: members[0].XmlDocKey);
 
             File.WriteAllText(htmlPath, fullHtml);
         }
@@ -194,7 +196,8 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         string typeFileBase,
         string memberFileBase,
         string memberDisplayName,
-        string memberCategory)
+        string memberCategory,
+        string memberXmlDocKey)
     {
         StringBuilder sb = new();
 
@@ -235,6 +238,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         sb.AppendLine($"                <span class=\"doc__kind-badge\">{HtmlEncode(memberCategory)}</span> {HtmlEncode(memberDisplayName)}");
         sb.AppendLine("            </p>");
         sb.AppendLine($"            <h1>{HtmlEncode(type.Name)}.{HtmlEncode(memberDisplayName)}</h1>");
+        AppendSourceLink(sb, sourceResolver?.GetMemberSourceUrl(memberXmlDocKey));
         sb.AppendLine(bodyHtml);
         sb.AppendLine("        </div>");
         AppendFeedbackSection(sb);
@@ -266,7 +270,8 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         string currentNsName,
         string currentTypeFileBase,
         string typeKind,
-        string typeName)
+        string typeName,
+        string typeFullName)
     {
         StringBuilder sb = new();
 
@@ -317,6 +322,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         sb.AppendLine($"                <span class=\"doc__kind-badge\">{HtmlEncode(typeKind)}</span> {HtmlEncode(typeName)}");
         sb.AppendLine("            </p>");
         sb.AppendLine($"            <h1>{HtmlEncode(typeName)}</h1>");
+        AppendSourceLink(sb, sourceResolver?.GetTypeSourceUrl(typeFullName));
         sb.AppendLine(bodyHtml);
         sb.AppendLine("        </div>");
         AppendFeedbackSection(sb);
@@ -345,6 +351,43 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         }
 
         return sb.ToString();
+    }
+
+    private static void AppendSourceLink(StringBuilder sb, string? sourceUrl)
+    {
+        if (sourceUrl is null)
+        {
+            return;
+        }
+
+        sb.AppendLine($"            <p class=\"api-source\">Source: <a href=\"{HtmlEncode(sourceUrl)}\" target=\"_blank\" rel=\"noopener noreferrer\">{HtmlEncode(GetSourceDisplayPath(sourceUrl))}</a></p>");
+    }
+
+    private static string GetSourceDisplayPath(string url)
+    {
+        // Extract the file path from a GitHub blob URL like:
+        // https://github.com/.../blob/<sha>/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L42
+        int blobIdx = url.IndexOf("/blob/", StringComparison.Ordinal);
+        if (blobIdx < 0)
+        {
+            return url;
+        }
+
+        string afterBlob = url[(blobIdx + 6)..]; // skip "/blob/"
+        // Skip the SHA/branch segment
+        int slashIdx = afterBlob.IndexOf('/');
+        if (slashIdx < 0)
+        {
+            return url;
+        }
+
+        string pathWithFragment = afterBlob[(slashIdx + 1)..];
+        // Strip the #L fragment for display
+        int hashIdx = pathWithFragment.IndexOf('#');
+        string filePath = hashIdx >= 0 ? pathWithFragment[..hashIdx] : pathWithFragment;
+        string lineRef = hashIdx >= 0 ? ", " + pathWithFragment[(hashIdx + 1)..].Replace("L", "Line ") : "";
+
+        return $"{filePath}{lineRef}";
     }
 
     private static void AppendFeedbackSection(StringBuilder sb)

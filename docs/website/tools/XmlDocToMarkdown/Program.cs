@@ -7,6 +7,7 @@ string? taxonomyOutputPath = null;
 string? htmlOutputPath = null;
 string? siteTitleArg = null;
 string? apiViewsDir = null;
+string? repoUrl = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -33,12 +34,15 @@ for (int i = 0; i < args.Length - 1; i++)
         case "--api-views-dir":
             apiViewsDir = args[++i];
             break;
+        case "--repo-url":
+            repoUrl = args[++i];
+            break;
     }
 }
 
 if (xmlPath is null || assemblyPath is null || outputPath is null || taxonomyOutputPath is null)
 {
-    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> --output <path> --taxonomy-output <path> [--html-output <path>] [--site-title <title>]");
+    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> --output <path> --taxonomy-output <path> [--html-output <path>] [--site-title <title>] [--repo-url <url>]");
     Console.Error.WriteLine();
     Console.Error.WriteLine("  --xml              Path to the XML documentation file (e.g., Corvus.Text.Json.xml)");
     Console.Error.WriteLine("  --assembly         Path to the compiled DLL");
@@ -46,6 +50,7 @@ if (xmlPath is null || assemblyPath is null || outputPath is null || taxonomyOut
     Console.Error.WriteLine("  --taxonomy-output  Output directory for generated taxonomy YAML files");
     Console.Error.WriteLine("  --html-output      (Optional) Output directory for standalone per-type HTML pages");
     Console.Error.WriteLine("  --site-title       (Optional) Site title for standalone HTML pages");
+    Console.Error.WriteLine("  --repo-url         (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
     return 1;
 }
 
@@ -113,6 +118,55 @@ foreach (KeyValuePair<string, NamespaceInfo> ns in namespaces)
     Console.WriteLine($"    {ns.Key}: {ns.Value.Types.Count} type(s)");
 }
 
+// Build source URL map from PDB if possible
+SourceLinkResolver? sourceResolver = null;
+string pdbPath = Path.ChangeExtension(Path.GetFullPath(assemblyPath), ".pdb");
+if (File.Exists(pdbPath))
+{
+    Console.WriteLine($"Reading PDB for source links: {pdbPath}");
+
+    // Auto-detect repo root and commit SHA from git
+    string repoRoot = RunGit("rev-parse --show-toplevel")?.Trim() ?? "";
+    string commitSha = RunGit("rev-parse HEAD")?.Trim() ?? "main";
+
+    // Auto-detect repo URL from git remote if not provided
+    if (repoUrl is null)
+    {
+        string? remoteUrl = RunGit("remote get-url origin")?.Trim();
+        if (remoteUrl is not null)
+        {
+            // Normalise SSH → HTTPS and strip .git suffix
+            if (remoteUrl.StartsWith("git@github.com:", StringComparison.OrdinalIgnoreCase))
+            {
+                remoteUrl = "https://github.com/" + remoteUrl["git@github.com:".Length..];
+            }
+
+            if (remoteUrl.EndsWith(".git", StringComparison.OrdinalIgnoreCase))
+            {
+                remoteUrl = remoteUrl[..^4];
+            }
+
+            repoUrl = remoteUrl;
+        }
+    }
+
+    if (!string.IsNullOrEmpty(repoRoot) && !string.IsNullOrEmpty(repoUrl))
+    {
+        Console.WriteLine($"  Repo URL: {repoUrl}");
+        Console.WriteLine($"  Commit: {commitSha}");
+        sourceResolver = new SourceLinkResolver(pdbPath, Path.GetFullPath(assemblyPath), repoUrl, commitSha, repoRoot);
+        sourceResolver.Build();
+    }
+    else
+    {
+        Console.WriteLine("  Warning: Could not detect git repo root or URL — source links disabled.");
+    }
+}
+else
+{
+    Console.WriteLine("  No PDB found — source links disabled.");
+}
+
 Directory.CreateDirectory(outputPath);
 Directory.CreateDirectory(taxonomyOutputPath);
 
@@ -138,7 +192,7 @@ if (htmlOutputPath is not null)
 {
     string title = siteTitleArg ?? "Corvus.Text.Json";
     Console.WriteLine($"Generating standalone HTML type pages to: {htmlOutputPath}");
-    HtmlPageGenerator htmlGen = new(htmlOutputPath, title);
+    HtmlPageGenerator htmlGen = new(htmlOutputPath, title, sourceResolver);
 
     // Try to load template from a Vellum-rendered namespace page
     string referencePagePath = Path.Combine(htmlOutputPath, "corvus-text-json.html");
@@ -162,4 +216,32 @@ SearchIndexGenerator searchGen = new(searchIndexPath);
 searchGen.Generate(namespaces);
 
 Console.WriteLine("Done.");
+sourceResolver?.Dispose();
 return 0;
+
+static string? RunGit(string arguments)
+{
+    try
+    {
+        using System.Diagnostics.Process proc = new()
+        {
+            StartInfo = new()
+            {
+                FileName = "git",
+                Arguments = arguments,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+            },
+        };
+        proc.Start();
+        string output = proc.StandardOutput.ReadToEnd();
+        proc.WaitForExit(5000);
+        return proc.ExitCode == 0 ? output : null;
+    }
+    catch
+    {
+        return null;
+    }
+}
