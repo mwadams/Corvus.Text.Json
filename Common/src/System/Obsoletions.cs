@@ -4,7 +4,7 @@ namespace System
 {
     internal static class Obsoletions
     {
-        internal const string SharedUrlFormat = "https:// aka.ms/dotnet-warnings/{0}";
+        internal const string SharedUrlFormat = "https://aka.ms/dotnet-warnings/{0}";
 
         // Please see docs\project\list-of-diagnostics.md for instructions on the steps required
         // to introduce a new obsoletion, apply it to downlevel builds, claim a diagnostic id,

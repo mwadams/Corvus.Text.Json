@@ -1,4 +1,4 @@
-﻿// <copyright file="Metaschema.cs" company="Endjin Limited">
+// <copyright file="Metaschema.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 using System.IO;
@@ -15,71 +15,71 @@ internal static class Metaschema
     internal static IDocumentResolver AddMetaschema(this IDocumentResolver documentResolver)
     {
         documentResolver.AddDocument(
-            "http:// json-schema.org/draft-04/schema",
+            "http://json-schema.org/draft-04/schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft4/schema.json")));
 
         documentResolver.AddDocument(
-            "http:// json-schema.org/draft-06/schema",
+            "http://json-schema.org/draft-06/schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft6/schema.json")));
 
         documentResolver.AddDocument(
-            "http:// json-schema.org/draft-07/schema",
+            "http://json-schema.org/draft-07/schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft7/schema.json")));
 
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/schema",
+            "https://json-schema.org/draft/2019-09/schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/schema.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/applicator",
+            "https://json-schema.org/draft/2019-09/meta/applicator",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/applicator.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/content",
+            "https://json-schema.org/draft/2019-09/meta/content",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/content.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/core",
+            "https://json-schema.org/draft/2019-09/meta/core",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/core.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/format",
+            "https://json-schema.org/draft/2019-09/meta/format",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/format.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/hyper-schema",
+            "https://json-schema.org/draft/2019-09/meta/hyper-schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/hyper-schema.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/meta-data",
+            "https://json-schema.org/draft/2019-09/meta/meta-data",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/meta-data.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2019-09/meta/validation",
+            "https://json-schema.org/draft/2019-09/meta/validation",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2019-09/meta/validation.json")));
 
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/schema",
+            "https://json-schema.org/draft/2020-12/schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/schema.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/applicator",
+            "https://json-schema.org/draft/2020-12/meta/applicator",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/applicator.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/content",
+            "https://json-schema.org/draft/2020-12/meta/content",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/content.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/core",
+            "https://json-schema.org/draft/2020-12/meta/core",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/core.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/format-annotation",
+            "https://json-schema.org/draft/2020-12/meta/format-annotation",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/format-annotation.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/format-assertion",
+            "https://json-schema.org/draft/2020-12/meta/format-assertion",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/format-assertion.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/hyper-schema",
+            "https://json-schema.org/draft/2020-12/meta/hyper-schema",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/hyper-schema.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/meta-data",
+            "https://json-schema.org/draft/2020-12/meta/meta-data",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/meta-data.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/unevaluated",
+            "https://json-schema.org/draft/2020-12/meta/unevaluated",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/unevaluated.json")));
         documentResolver.AddDocument(
-            "https:// json-schema.org/draft/2020-12/meta/validation",
+            "https://json-schema.org/draft/2020-12/meta/validation",
             JsonDocument.Parse(File.ReadAllText("./metaschema/draft2020-12/meta/validation.json")));
 
         return documentResolver;
