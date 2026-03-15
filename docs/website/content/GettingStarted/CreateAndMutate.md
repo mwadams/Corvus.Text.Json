@@ -77,7 +77,12 @@ Generated types are immutable by default. To mutate, create a `JsonDocumentBuild
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using ParsedJsonDocument<Person> doc =
     ParsedJsonDocument<Person>.Parse(
-        """{"name":{"familyName":"Oldroyd","givenName":"Michael"},"age":30}""");
+        """
+        {
+          "name": { "familyName": "Oldroyd", "givenName": "Michael" },
+          "age": 30
+        }
+        """);
 using var builder = doc.RootElement.CreateBuilder(workspace);
 
 Person.Mutable root = builder.RootElement;
@@ -179,13 +184,23 @@ In our schema, `Address` is composed from a base `Location` (with `city` and `co
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using ParsedJsonDocument<Person> doc =
     ParsedJsonDocument<Person>.Parse(
-        """{"name":{"familyName":"Oldroyd"},"address":{"street":"123 Main St","zipCode":"SP1 1AA"}}""");
+        """
+        {
+          "name": { "familyName": "Oldroyd" },
+          "address": { "street": "123 Main St", "zipCode": "SP1 1AA" }
+        }
+        """);
 using var builder = doc.RootElement.CreateBuilder(workspace);
 
 // Parse a Location with city and country
 using ParsedJsonDocument<Person.AddressEntity.LocationEntity> locationDoc =
     ParsedJsonDocument<Person.AddressEntity.LocationEntity>.Parse(
-        """{"city":"Springfield","country":"UK"}""");
+        """
+        {
+          "city": "Springfield",
+          "country": "UK"
+        }
+        """);
 
 // Apply merges the location properties into the address
 Person.Mutable root = builder.RootElement;
