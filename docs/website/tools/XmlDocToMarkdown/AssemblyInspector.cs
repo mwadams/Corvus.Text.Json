@@ -160,13 +160,36 @@ public sealed class AssemblyInspector(string assemblyPath)
             nsInfo.Types.Add(typeInfo);
         }
 
-        // Sort types within each namespace
+        // Sort types within each namespace, then flatten nested types as peers
         foreach (NamespaceInfo ns in namespaces.Values)
         {
+            List<TypeInfo> flattened = [];
+            foreach (TypeInfo type in ns.Types)
+            {
+                flattened.Add(type);
+                FlattenNestedTypes(flattened, type);
+                type.NestedTypes.Clear();
+            }
+
+            ns.Types = flattened;
             ns.Types.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
         }
 
         return namespaces;
+    }
+
+    /// <summary>
+    /// Recursively collects all nested types into a flat list, then clears
+    /// each parent's NestedTypes so they are only represented as peers.
+    /// </summary>
+    private static void FlattenNestedTypes(List<TypeInfo> target, TypeInfo parent)
+    {
+        foreach (TypeInfo nested in parent.NestedTypes)
+        {
+            target.Add(nested);
+            FlattenNestedTypes(target, nested);
+            nested.NestedTypes.Clear();
+        }
     }
 
     private static TypeInfo BuildTypeInfo(Type type, Dictionary<string, DocMember> xmlDocs, MetadataLoadContext mlc)

@@ -85,12 +85,6 @@ foreach (NamespaceInfo nsInfo in namespaces.Values)
     {
         typesByFullName[typeInfo.FullName] = typeInfo;
         allTypes.Add(typeInfo);
-        // Also index nested types
-        foreach (TypeInfo nested in typeInfo.NestedTypes)
-        {
-            typesByFullName[nested.FullName] = nested;
-            allTypes.Add(nested);
-        }
     }
 }
 

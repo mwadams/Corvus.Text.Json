@@ -50,28 +50,17 @@ public sealed class MarkdownGenerator(string outputDir)
 
             foreach (TypeInfo type in kvp.Value.Types)
             {
-                GenerateTypeFile(ns, nsSlug, type);
+                string typeSlug = TypeToSlug(type.Name);
+                string fileName = $"{nsSlug}-{typeSlug}.md";
+                string filePath = Path.Combine(outputDir, fileName);
+
+                StringBuilder sb = new();
+                WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
+                WriteTypeBody(sb, type);
+
+                File.WriteAllText(filePath, sb.ToString());
+                Console.WriteLine($"  Written: {filePath}");
             }
-        }
-    }
-
-    private void GenerateTypeFile(string ns, string nsSlug, TypeInfo type)
-    {
-        string typeSlug = TypeToSlug(type.Name);
-        string fileName = $"{nsSlug}-{typeSlug}.md";
-        string filePath = Path.Combine(outputDir, fileName);
-
-        StringBuilder sb = new();
-        WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
-        WriteTypeBody(sb, type);
-
-        File.WriteAllText(filePath, sb.ToString());
-        Console.WriteLine($"  Written: {filePath}");
-
-        // Generate standalone pages for nested types
-        foreach (TypeInfo nested in type.NestedTypes)
-        {
-            GenerateTypeFile(ns, nsSlug, nested);
         }
     }
 
@@ -266,21 +255,6 @@ public sealed class MarkdownGenerator(string outputDir)
                 string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
                 sb.AppendLine($"| `{evt.Name}` | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
             }
-            sb.AppendLine();
-        }
-
-        if (type.NestedTypes.Count > 0)
-        {
-            sb.AppendLine("## Nested Types");
-            sb.AppendLine();
-            sb.AppendLine("| Type | Kind | Description |");
-            sb.AppendLine("|------|------|-------------|");
-            foreach (TypeInfo nested in type.NestedTypes)
-            {
-                string summary = TruncateSummary(nested.Documentation?.Summary ?? string.Empty);
-                sb.AppendLine($"| {ResolveTypeLink(nested.Name, nested.FullName)} | {nested.Kind} | {summary} |");
-            }
-
             sb.AppendLine();
         }
 

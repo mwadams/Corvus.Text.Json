@@ -58,37 +58,26 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
 
             foreach (TypeInfo type in kvp.Value.Types)
             {
-                GenerateTypePage(type, ns, nsSlug, namespaces);
+                string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
+                string fileBase = $"{nsSlug}-{typeSlug}";
+                string htmlPath = Path.Combine(htmlOutputDir, fileBase + ".html");
+
+                string markdownBody = GenerateTypeMarkdown(type);
+                string bodyHtml = Markdig.Markdown.ToHtml(markdownBody, Pipeline);
+
+                string fullHtml = BuildFullPage(
+                    title: $"{type.Name} \u2014 {ns}",
+                    bodyHtml: bodyHtml,
+                    namespaces: namespaces,
+                    currentNsSlug: nsSlug,
+                    currentNsName: ns,
+                    currentTypeFileBase: fileBase,
+                    typeKind: type.Kind,
+                    typeName: type.Name);
+
+                File.WriteAllText(htmlPath, fullHtml);
+                Console.WriteLine($"  Written: {htmlPath}");
             }
-        }
-    }
-
-    private void GenerateTypePage(TypeInfo type, string ns, string nsSlug, Dictionary<string, NamespaceInfo> namespaces)
-    {
-        string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
-        string fileBase = $"{nsSlug}-{typeSlug}";
-        string htmlPath = Path.Combine(htmlOutputDir, fileBase + ".html");
-
-        string markdownBody = GenerateTypeMarkdown(type);
-        string bodyHtml = Markdig.Markdown.ToHtml(markdownBody, Pipeline);
-
-        string fullHtml = BuildFullPage(
-            title: $"{type.Name} \u2014 {ns}",
-            bodyHtml: bodyHtml,
-            namespaces: namespaces,
-            currentNsSlug: nsSlug,
-            currentNsName: ns,
-            currentTypeFileBase: fileBase,
-            typeKind: type.Kind,
-            typeName: type.Name);
-
-        File.WriteAllText(htmlPath, fullHtml);
-        Console.WriteLine($"  Written: {htmlPath}");
-
-        // Generate standalone pages for nested types
-        foreach (TypeInfo nested in type.NestedTypes)
-        {
-            GenerateTypePage(nested, ns, nsSlug, namespaces);
         }
     }
 
