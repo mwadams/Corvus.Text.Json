@@ -22,13 +22,13 @@ OpenGraph:
   Image:
 ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md
-    Id: Setup
-    Spec:
-      Path: ../../content/GettingStarted/Setup.md
-  - ContentType: application/vnd.endjin.ssg.content+md
     Id: DefineSchema
     Spec:
       Path: ../../content/GettingStarted/DefineSchema.md
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: Setup
+    Spec:
+      Path: ../../content/GettingStarted/Setup.md
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: UseGeneratedTypes
     Spec:

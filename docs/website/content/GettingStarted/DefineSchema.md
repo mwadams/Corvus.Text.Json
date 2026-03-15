@@ -4,6 +4,10 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Define a JSON Schema"
 ---
+## Our example schema
+
+This is the JSON Schema file we will work with throughout this Getting Started guide. It defines a `Person` type with nested structures, constrained values, and formatted strings — a realistic example that exercises many of the features Corvus.Text.Json provides.
+
 Create a JSON Schema file, for example `Schemas/person.json`:
 
 ```json
