@@ -1,10 +1,17 @@
 <#
 .SYNOPSIS
-    Runs the build process for generating the Corvus.Text.Json documentation website.
+    Builds the Corvus.Text.Json documentation website.
 .DESCRIPTION
-    This script generates the static documentation site using the Vellum static site generator.
+    End-to-end build pipeline:
+      1. Build Corvus.Text.Json (generates XML doc + assembly)
+      2. Generate API namespace markdown & taxonomy from XML docs
+      3. Install Vellum SSG (if not present)
+      4. Run Vellum to render the core site (32 pages)
+      5. Compile SCSS to CSS
+      6. Generate standalone per-type API HTML pages (87 pages)
+      7. Build Lunr search index
 .PARAMETER Preview
-    Generates the site and allows you to view it locally via http://localhost:5000.
+    Launches a local preview server after building.
 .PARAMETER Watch
     Monitors for file changes and auto-regenerates.
 #>
@@ -21,118 +28,79 @@ $ErrorActionPreference = 'Stop'
 $InformationPreference = 'Continue'
 
 $here = Split-Path -Parent $PSCommandPath
-$repoRoot = Resolve-Path (Join-Path $here "..\..") 
-
-# Step 1: Build Corvus.Text.Json to generate XML documentation
-Write-Host "Building Corvus.Text.Json to generate XML documentation..." -ForegroundColor Cyan
-$mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
-& dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
-if ($LASTEXITCODE -ne 0) {
-    throw "Failed to build Corvus.Text.Json"
-}
-Write-Host "XML documentation generated." -ForegroundColor Green
-
-# Step 2: Copy assets to output
+$repoRoot = Resolve-Path (Join-Path $here "..\..")
 $outputDir = Join-Path $here ".output"
-if (!(Test-Path $outputDir)) {
-    New-Item -ItemType Directory -Path $outputDir | Out-Null
-}
 
-Write-Host "Copying theme assets..." -ForegroundColor Cyan
-$assetsSource = Join-Path $here "theme\corvus\assets"
-$assetsDest = Join-Path $outputDir "assets"
-if (Test-Path $assetsDest) {
-    Remove-Item $assetsDest -Recurse -Force
-}
-Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
-
-# Step 2a: Compile SCSS to CSS
-Write-Host "Compiling SCSS..." -ForegroundColor Cyan
-$scssPath = Join-Path $assetsSource "css\scss\main.scss"
-$cssOutputPath = Join-Path $outputDir "main.css"
-& npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
-if ($LASTEXITCODE -ne 0) {
-    throw "SCSS compilation failed"
-}
-Write-Host "CSS compiled to $cssOutputPath" -ForegroundColor Green
-
-# Step 2b: Generate API documentation
-Write-Host "Generating API documentation..." -ForegroundColor Cyan
+# Paths used by multiple steps
 $xmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
 $assemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.dll"
 $apiContentDir = Join-Path $here "content\Api"
 $apiTaxonomyDir = Join-Path $here "taxonomy\api"
-$apiHtmlDir = Join-Path $outputDir "api"
+$toolProject = Join-Path $here "tools\XmlDocToMarkdown"
 
-& dotnet run --project (Join-Path $here "tools\XmlDocToMarkdown") -c Release -- `
+# ── Step 1: Build Corvus.Text.Json ──────────────────────────────────────────
+Write-Host "`n[1/7] Building Corvus.Text.Json..." -ForegroundColor Cyan
+$mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
+& dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
+if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json" }
+Write-Host "  XML documentation generated." -ForegroundColor Green
+
+# ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
+Write-Host "`n[2/7] Generating API namespace pages & taxonomy..." -ForegroundColor Cyan
+& dotnet run --project $toolProject -c Release -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
     --output $apiContentDir `
-    --taxonomy-output $apiTaxonomyDir `
-    --html-output $apiHtmlDir `
-    --site-title "Corvus.Text.Json"
-if ($LASTEXITCODE -ne 0) {
-    Write-Warning "API doc generation failed — site will build without per-type API pages."
-} else {
-    Write-Host "API documentation generated." -ForegroundColor Green
-}
+    --taxonomy-output $apiTaxonomyDir
+if ($LASTEXITCODE -ne 0) { throw "API namespace generation failed" }
+Write-Host "  Namespace markdown & taxonomy generated." -ForegroundColor Green
 
-# Step 2c: Build Lunr search index
-Write-Host "Building search index..." -ForegroundColor Cyan
-$searchIndexOutput = Join-Path $outputDir "search-index.json"
-& node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
-if ($LASTEXITCODE -ne 0) {
-    Write-Warning "Search index generation failed — site will build without search."
-} else {
-    Write-Host "Search index written to $searchIndexOutput" -ForegroundColor Green
-}
-
-# Step 3: Install Vellum (from endjin/Endjin.StaticSiteGen GitHub releases)
+# ── Step 3: Install Vellum ──────────────────────────────────────────────────
 $vellumVersion = "2.0.9"
 $vellumDir = Join-Path $here ".endjin"
 $vellumCmd = Join-Path $vellumDir "vellum"
 
 if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
-    Write-Host "Installing Vellum $vellumVersion..." -ForegroundColor Cyan
+    Write-Host "`n[3/7] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
     if (!(Test-Path $vellumDir)) {
         New-Item -ItemType Directory -Path $vellumDir | Out-Null
     }
     & gh release download -R endjin/Endjin.StaticSiteGen $vellumVersion -p "vellum.$vellumVersion.nupkg" -D $vellumDir --clobber
     & dotnet tool install vellum --version $vellumVersion --tool-path $vellumDir --add-source $vellumDir
-    if ($LASTEXITCODE -ne 0) {
-        throw "Failed to install Vellum"
-    }
-    Write-Host "Vellum installed." -ForegroundColor Green
+    if ($LASTEXITCODE -ne 0) { throw "Failed to install Vellum" }
+    Write-Host "  Vellum installed." -ForegroundColor Green
+} else {
+    Write-Host "`n[3/7] Vellum already installed." -ForegroundColor DarkGray
 }
 
-# Step 4: Run Vellum
-$vellumArgs = @(
-    "content"
-    "generate"
-    "-t"
-    (Join-Path $here "site.yml")
-    "-o"
-    $outputDir
-)
+# ── Step 4: Run Vellum ──────────────────────────────────────────────────────
+Write-Host "`n[4/7] Running Vellum..." -ForegroundColor Cyan
 
-if ($Preview) {
-    $vellumArgs += "--preview"
-}
+# Prepare output directory
+if (Test-Path $outputDir) { Remove-Item $outputDir -Recurse -Force }
+$assetsSource = Join-Path $here "theme\corvus\assets"
+$assetsDest = Join-Path $outputDir "assets"
+Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
 
-if ($Watch) {
-    $vellumArgs += "--watch"
-}
-
-Write-Host "Running Vellum..." -ForegroundColor Cyan
-Write-Host "  $vellumCmd $($vellumArgs -join ' ')" -ForegroundColor Gray
+$vellumArgs = @("content", "generate", "-t", (Join-Path $here "site.yml"), "-o", $outputDir)
+if ($Preview) { $vellumArgs += "--preview" }
+if ($Watch)   { $vellumArgs += "--watch" }
 & $vellumCmd $vellumArgs
+if ($LASTEXITCODE -ne 0) { throw "Vellum generation failed" }
+Write-Host "  Site rendered." -ForegroundColor Green
 
-# Step 5: Generate standalone per-type HTML pages (after Vellum, since Vellum may clean output)
-if (!(Test-Path $apiHtmlDir)) {
-    New-Item -ItemType Directory -Path $apiHtmlDir | Out-Null
-}
-Write-Host "Generating per-type API HTML pages..." -ForegroundColor Cyan
-& dotnet run --project (Join-Path $here "tools\XmlDocToMarkdown") -c Release --no-build -- `
+# ── Step 5: Compile SCSS ────────────────────────────────────────────────────
+Write-Host "`n[5/7] Compiling SCSS..." -ForegroundColor Cyan
+$scssPath = Join-Path $assetsSource "css\scss\main.scss"
+$cssOutputPath = Join-Path $outputDir "main.css"
+& npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
+if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
+Write-Host "  CSS written to $cssOutputPath" -ForegroundColor Green
+
+# ── Step 6: Generate per-type API HTML pages ────────────────────────────────
+Write-Host "`n[6/7] Generating per-type API pages..." -ForegroundColor Cyan
+$apiHtmlDir = Join-Path $outputDir "api"
+& dotnet run --project $toolProject -c Release --no-build -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
     --output $apiContentDir `
@@ -140,7 +108,20 @@ Write-Host "Generating per-type API HTML pages..." -ForegroundColor Cyan
     --html-output $apiHtmlDir `
     --site-title "Corvus.Text.Json"
 if ($LASTEXITCODE -ne 0) {
-    Write-Warning "Per-type HTML generation failed."
+    Write-Warning "Per-type HTML generation failed — namespace summary pages still available."
 } else {
-    Write-Host "Per-type API pages generated." -ForegroundColor Green
+    $count = (Get-ChildItem $apiHtmlDir -Filter "*.html" | Where-Object { $_.Name -match '-.*-' }).Count
+    Write-Host "  $count per-type API pages generated." -ForegroundColor Green
 }
+
+# ── Step 7: Build search index ──────────────────────────────────────────────
+Write-Host "`n[7/7] Building search index..." -ForegroundColor Cyan
+$searchIndexOutput = Join-Path $outputDir "search-index.json"
+& node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
+if ($LASTEXITCODE -ne 0) {
+    Write-Warning "Search index generation failed — site will build without search."
+} else {
+    Write-Host "  Search index written." -ForegroundColor Green
+}
+
+Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green
