@@ -114,18 +114,24 @@ if (person.Age.TryGetValue(out int age)) { ... }
 if (person.Name.FamilyName.TryGetValue(out string? name)) { ... }
 ```
 
-### GetString and GetUtf8String
+### GetString, GetUtf8String, and GetUtf16String
 
 For string-valued properties:
 
 ```csharp
-// As a .NET string
+// As a .NET string (allocates)
 string familyName = person.Name.FamilyName.GetString();
 
 // As an UnescapedUtf8JsonString (avoids allocation — always dispose)
 using UnescapedUtf8JsonString utf8Name = person.Name.FamilyName.GetUtf8String();
 ReadOnlySpan<byte> bytes = utf8Name.Span;
+
+// As an UnescapedUtf16JsonString (avoids allocation — always dispose)
+using UnescapedUtf16JsonString utf16Name = person.Name.FamilyName.GetUtf16String();
+ReadOnlySpan<char> chars = utf16Name.Span;
 ```
+
+`GetUtf8String()` gives you the raw UTF-8 bytes without allocating a `string`. `GetUtf16String()` gives you a `char` span — useful when you need to interop with APIs that expect `ReadOnlySpan<char>` without paying for a `string` allocation. Both return disposable types that must be disposed to return their buffers to the pool.
 
 ## Values, Null, and Undefined
 
