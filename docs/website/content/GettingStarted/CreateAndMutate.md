@@ -141,14 +141,14 @@ In practice, you often need to map between types generated from *different* sche
     "properties": {
         "employeeId": { "type": "integer", "format": "int32" },
         "fullName": { "type": "string" },
-        "workEmail": { "type": "string", "format": "email" },
+        "workEmail": { "type": "string", "format": "email", "maxLength": 254 },
         "department": { "type": "string" }
     },
     "required": ["employeeId", "fullName", "workEmail"]
 }
 ```
 
-Both schemas happen to have an email property typed as `"type": "string", "format": "email"`, but the code generator produces separate types for each: `Employee.WorkEmailEntity` and `Person.EmailEntity`. Because the underlying JSON is structurally identical, you can use `TTarget.From()` to reinterpret the value without copying:
+Both schemas have an email property based on `"type": "string", "format": "email"`, but the Employee schema adds a `maxLength` constraint. That extra constraint means the code generator produces a distinct `Employee.WorkEmailEntity` type rather than reusing the shared global email type. Because the underlying JSON is structurally compatible, you can use `TTarget.From()` to reinterpret the value without copying:
 
 ```csharp
 using ParsedJsonDocument<Employee> employeeDoc =
