@@ -4,49 +4,37 @@
 
 @use '../abstracts/mixins' as *;
 
-// ---- Mobile toggle button (floating pill, bottom-right) ----
+// ---- Mobile toggle button (flush bottom-left) ----
 .sidebar-toggle {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
   position: fixed;
-  bottom: var(--space-lg);
-  right: var(--space-md);
+  bottom: 0;
+  left: 0;
   z-index: 101;
-  padding: 0.6rem 1rem;
-  border: 1px solid var(--color-brand);
-  border-radius: 2rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 var(--radius-sm) 0 0;
   background: var(--color-brand);
   color: var(--color-bg);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.4);
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  box-shadow: 0 -2px 8px rgb(0 0 0 / 0.3);
+  transition: background var(--transition-fast);
 
   &:hover {
-    transform: scale(1.05);
+    background: var(--color-brand-light, #8bc34a);
   }
 
-  // Label text
   &::before {
-    content: 'Menu';
-  }
-
-  // Chevron
-  &::after {
-    content: '›';
-    font-size: 1.1rem;
-    line-height: 1;
-    transition: transform 0.2s;
+    content: 'Browse \203A';
   }
 
   &[aria-expanded='true']::before {
-    content: 'Close';
-  }
-
-  &[aria-expanded='true']::after {
-    transform: scaleX(-1);
+    content: 'Close \2039';
   }
 
   @include breakpoint-md {
