@@ -279,11 +279,11 @@ public sealed class SourceLinkResolver : IDisposable
             return url;
         }
 
-        // Strip generic arity and try again
-        int backtickIdx = key.IndexOf('`');
-        string keyWithoutArity = backtickIdx >= 0 ? key[..backtickIdx] : key;
+        // Strip generic arity marker (e.g. `1) while preserving member name after it
+        // "Corvus.Text.Json.ArrayEnumerator`1.Current" → "Corvus.Text.Json.ArrayEnumerator.Current"
+        string keyWithoutArity = StripGenericArity(key);
 
-        if (backtickIdx >= 0 && _sourceUrls.TryGetValue(keyWithoutArity, out url))
+        if (keyWithoutArity != key && _sourceUrls.TryGetValue(keyWithoutArity, out url))
         {
             return url;
         }
@@ -354,6 +354,31 @@ public sealed class SourceLinkResolver : IDisposable
 
         string relativePath = normalised[_localPathPrefix.Length..];
         return $"{_repoBaseUrl}{relativePath}#L{lineNumber}";
+    }
+
+    /// <summary>
+    /// Strips generic arity markers (e.g. `1, `2) from a key while preserving
+    /// any member name after the arity. For example:
+    /// "Ns.Type`1.Member" → "Ns.Type.Member"
+    /// "Ns.Type`2" → "Ns.Type"
+    /// </summary>
+    private static string StripGenericArity(string key)
+    {
+        int backtickIdx = key.IndexOf('`');
+        if (backtickIdx < 0)
+        {
+            return key;
+        }
+
+        // Find the end of the arity digits after the backtick
+        int endIdx = backtickIdx + 1;
+        while (endIdx < key.Length && char.IsDigit(key[endIdx]))
+        {
+            endIdx++;
+        }
+
+        // Splice: everything before backtick + everything after the arity digits
+        return key[..backtickIdx] + key[endIdx..];
     }
 
     /// <summary>
