@@ -84,7 +84,7 @@ public sealed class MarkdownGenerator(string outputDir)
     /// <summary>
     /// Writes the full body of a type page (no top heading; the view template provides it).
     /// </summary>
-    private static void WriteTypeBody(StringBuilder sb, TypeInfo type)
+    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type)
     {
         sb.AppendLine("```csharp");
         sb.AppendLine(BuildTypeDeclaration(type));
