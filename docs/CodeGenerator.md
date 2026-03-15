@@ -93,7 +93,7 @@ Generate types from a configuration file that specifies multiple schemas and sha
 generatejsonschematypes config myconfig.json [--engine V5]
 ```
 
-**Configuration file format:**
+#### Example configuration file
 
 ```json
 {
@@ -109,7 +109,8 @@ generatejsonschematypes config myconfig.json [--engine V5]
         },
         {
             "schemaFile": "Schemas/order.json",
-            "outputRootTypeName": "Order"
+            "outputRootTypeName": "Order",
+            "outputRootNamespace": "MyApp.Models.Orders"
         }
     ],
     "additionalFiles": [
@@ -120,15 +121,72 @@ generatejsonschematypes config myconfig.json [--engine V5]
     ],
     "namedTypes": [
         {
-            "reference": "https://example.com/schemas/person.json#/definitions/Name",
+            "reference": "https://example.com/schemas/person.json#/$defs/Name",
             "dotnetTypeName": "PersonName",
             "dotnetNamespace": "MyApp.Models"
         }
-    ]
+    ],
+    "namespaces": {
+        "https://example.com/schemas/": "MyApp.ExternalModels"
+    }
 }
 ```
 
 The `config` command is ideal when you have multiple schemas to generate from, shared `$ref` dependencies, or you want to explicitly name generated types.
+
+#### Root-level properties
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `rootNamespace` | **Yes** | — | The default .NET namespace for all generated types. Individual schemas can override this with `outputRootNamespace`. |
+| `typesToGenerate` | **Yes** | — | Array of schemas to process. Each entry specifies a schema file and optional overrides (see below). |
+| `outputPath` | No | — | Directory where generated `.cs` files are written. |
+| `outputMapFile` | No | — | Path for a JSON manifest listing every generated file, useful for build systems that need to track outputs. |
+| `useSchema` | No | `Draft202012` | Fallback schema draft when vocabulary analysis cannot determine the draft from the `$schema` keyword. Values: `Draft4`, `Draft6`, `Draft7`, `Draft201909`, `Draft202012`, `OpenApi30`. |
+| `assertFormat` | No | `true` | When `true`, the `format` keyword is enforced as a validation assertion. When `false`, `format` is treated as an annotation only (per the JSON Schema specification). |
+| `optionalAsNullable` | No | `None` | Controls how optional properties are represented in generated types. `None`: optional properties use the same type as required properties — you check for `Undefined` explicitly. `NullOrUndefined`: optional properties generate as .NET nullable types (`T?`), and both JSON `null` and missing properties map to C# `null`. |
+| `additionalFiles` | No | — | Pre-load external schema files so `$ref` references can resolve without network access (see below). |
+| `namedTypes` | No | — | Explicitly assign .NET names to specific schema definitions that would otherwise get auto-generated names (see below). |
+| `namespaces` | No | — | A dictionary mapping schema base URIs to .NET namespaces. Any schema whose canonical URI starts with a given key is generated into the corresponding namespace. For example, `"https://example.com/schemas/": "MyApp.External"` places all schemas under that URI prefix into `MyApp.External`. |
+| `disableOptionalNameHeuristics` | No | `false` | When `true`, disables all optional naming heuristics at once. Cannot be combined with `disabledNamingHeuristics`. |
+| `disabledNamingHeuristics` | No | — | An array of specific naming heuristic names to disable. Use `generatejsonschematypes listNameHeuristics` to see available names. Cannot be combined with `disableOptionalNameHeuristics`. |
+| `useImplicitOperatorString` | No | `false` | When `true`, conversion operators to `string` are implicit rather than explicit. Use with care — implicit conversions can cause unintended string allocations. |
+| `useUnixLineEndings` | No | `false` | When `true`, generated files use Unix line endings (`\n`) instead of Windows (`\r\n`). |
+| `supportYaml` | No | `false` | When `true`, enables YAML support. Schema and document files can be YAML, JSON, or a mixture. |
+| `addExplicitUsings` | No | `false` | When `true`, generated files include `using` statements for standard implicit usings. Enable this if your project does not use implicit usings. |
+
+#### `typesToGenerate` entries
+
+Each entry in `typesToGenerate` specifies one schema to process:
+
+| Property | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `schemaFile` | **Yes** | — | Path to the JSON Schema file to process, relative to the config file. |
+| `outputRootTypeName` | No | Derived from schema | The .NET type name for the root type generated from this schema. If omitted, the name is derived from the schema's `title` or `$id`. |
+| `outputRootNamespace` | No | `rootNamespace` | Override the .NET namespace for this schema's root type. Useful when different schemas should go into different namespaces. |
+| `rootPath` | No | — | A JSON Pointer within the schema document to use as the root type. For example, `#/$defs/Address` generates types starting from the `Address` definition rather than the document root. |
+| `rebaseToRootPath` | No | `false` | When `true` (and `rootPath` is set), the document is rebased as if the element at `rootPath` were the document root. This affects how `$ref` references within the extracted subtree are resolved. |
+
+#### `additionalFiles` entries
+
+Pre-load schema files that other schemas reference via `$ref`. This avoids network calls during generation and ensures deterministic, reproducible builds — particularly important in CI/CD environments:
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `canonicalUri` | **Yes** | The canonical URI that other schemas use in their `$ref` to reference this file. Must match the URI used in `$ref` exactly. |
+| `contentPath` | **Yes** | Local file path to the schema, relative to the config file. |
+
+For example, if `person.json` contains `"$ref": "https://example.com/schemas/address.json"`, add an entry with that URI pointing to your local copy of the address schema.
+
+#### `namedTypes` entries
+
+By default, the generator derives .NET type names from the schema structure. Use `namedTypes` to override specific types with explicit names — useful when the auto-generated name is awkward or when you need a type to live in a specific namespace:
+
+| Property | Required | Description |
+|----------|----------|-------------|
+| `reference` | **Yes** | The fully-qualified schema reference (base URI + JSON Pointer fragment), e.g. `https://example.com/schemas/person.json#/$defs/Name`. |
+| `dotnetTypeName` | **Yes** | The .NET type name to use, e.g. `PersonName`. |
+| `dotnetNamespace` | No | When set, the type is generated directly in this namespace rather than as a nested type of its containing schema type. |
 
 ### `validateDocument`
 
