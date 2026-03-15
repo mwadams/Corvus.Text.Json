@@ -1,8 +1,8 @@
 ﻿ContentType: application/vnd.endjin.ssg.page+yaml
 Title: "ParsedJsonDocument Usage Guide"
 Navigation:
-  Title: ParsedJsonDocument
-  Description: "ParsedJsonDocument Usage Guide"
+  Title: Parsing & Reading JSON
+  Description: "Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json's JsonDocument with generic type support and zero-copy element access."
   Parent: /docs/index.html
   Url: /docs/parsed-json-document.html
   Rank: 1

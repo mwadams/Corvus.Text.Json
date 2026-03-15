@@ -384,17 +384,28 @@ foreach ($docFile in $docsToInclude) {
         $docDescription = $docTitle
     }
 
-    # Short nav title (trim if too long)
-    $navTitle = $docTitle
-    if ($navTitle.Length -gt 30) {
-        # Use a shorter form for sidebar
-        $navTitle = switch -Wildcard ($baseName) {
-            'ParsedJsonDocument'       { 'ParsedJsonDocument' }
-            'JsonDocumentBuilder'      { 'JsonDocumentBuilder' }
-            'MigratingFromV4ToV5'      { 'Migrating from V4' }
-            'UsingCopilotForMigration' { 'Copilot Migration' }
-            default                    { $docTitle.Substring(0, 27) + '...' }
+    # Friendly nav titles and card descriptions (goal-oriented, referencing STJ counterparts)
+    $navTitle = switch -Wildcard ($baseName) {
+        'ParsedJsonDocument'       { 'Parsing & Reading JSON' }
+        'JsonDocumentBuilder'      { 'Building & Mutating JSON' }
+        'MigratingFromV4ToV5'      { 'Migrating from V4' }
+        'UsingCopilotForMigration' { 'Copilot Migration' }
+        default {
+            $t = $docTitle
+            if ($t.Length -gt 30) { $t = $t.Substring(0, 27) + '...' }
+            $t
         }
+    }
+
+    # Custom card descriptions for key pages (others fall through to first-sentence extraction)
+    $customDescription = switch -Wildcard ($baseName) {
+        'ParsedJsonDocument'  { 'Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json''s JsonDocument with generic type support and zero-copy element access.' }
+        'JsonDocumentBuilder' { 'Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json''s JsonNode, designed for request/response cycles and data pipelines.' }
+        default               { $null }
+    }
+
+    if ($customDescription) {
+        $docDescription = $customDescription
     }
 
     # 1) Content markdown
