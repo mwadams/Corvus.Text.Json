@@ -50,17 +50,28 @@ public sealed class MarkdownGenerator(string outputDir)
 
             foreach (TypeInfo type in kvp.Value.Types)
             {
-                string typeSlug = TypeToSlug(type.Name);
-                string fileName = $"{nsSlug}-{typeSlug}.md";
-                string filePath = Path.Combine(outputDir, fileName);
-
-                StringBuilder sb = new();
-                WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
-                WriteTypeBody(sb, type);
-
-                File.WriteAllText(filePath, sb.ToString());
-                Console.WriteLine($"  Written: {filePath}");
+                GenerateTypeFile(ns, nsSlug, type);
             }
+        }
+    }
+
+    private void GenerateTypeFile(string ns, string nsSlug, TypeInfo type)
+    {
+        string typeSlug = TypeToSlug(type.Name);
+        string fileName = $"{nsSlug}-{typeSlug}.md";
+        string filePath = Path.Combine(outputDir, fileName);
+
+        StringBuilder sb = new();
+        WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
+        WriteTypeBody(sb, type);
+
+        File.WriteAllText(filePath, sb.ToString());
+        Console.WriteLine($"  Written: {filePath}");
+
+        // Generate standalone pages for nested types
+        foreach (TypeInfo nested in type.NestedTypes)
+        {
+            GenerateTypeFile(ns, nsSlug, nested);
         }
     }
 
@@ -260,9 +271,17 @@ public sealed class MarkdownGenerator(string outputDir)
 
         if (type.NestedTypes.Count > 0)
         {
+            sb.AppendLine("## Nested Types");
             sb.AppendLine();
+            sb.AppendLine("| Type | Kind | Description |");
+            sb.AppendLine("|------|------|-------------|");
             foreach (TypeInfo nested in type.NestedTypes)
-                WriteTypeSection(sb, nested, 3);
+            {
+                string summary = TruncateSummary(nested.Documentation?.Summary ?? string.Empty);
+                sb.AppendLine($"| {ResolveTypeLink(nested.Name, nested.FullName)} | {nested.Kind} | {summary} |");
+            }
+
+            sb.AppendLine();
         }
 
         if (!string.IsNullOrEmpty(type.Documentation?.Example))
@@ -703,6 +722,7 @@ public sealed class MarkdownGenerator(string outputDir)
     internal static string TypeToSlug(string typeName)
     {
         return typeName
+            .Replace('.', '-')
             .Replace('<', '-')
             .Replace(">", "")
             .Replace(", ", "-")
@@ -763,6 +783,13 @@ public sealed class MarkdownGenerator(string outputDir)
                 string bclUrl = GetBclTypeUrl(fullName);
                 return $"[`{escaped}`]({bclUrl})";
             }
+
+            // Try NodaTime URL
+            if (fullName.StartsWith("NodaTime.", StringComparison.Ordinal))
+            {
+                string nodaUrl = GetNodaTimeTypeUrl(fullName);
+                return $"[`{escaped}`]({nodaUrl})";
+            }
         }
 
         return $"`{escaped}`";
@@ -776,5 +803,18 @@ public sealed class MarkdownGenerator(string outputDir)
         // System.Collections.Generic.List`1 → system.collections.generic.list-1
         string urlName = fullName.ToLowerInvariant().Replace('`', '-');
         return $"https://learn.microsoft.com/dotnet/api/{urlName}";
+    }
+
+    /// <summary>
+    /// Generates a nodatime.org API URL for a NodaTime type.
+    /// </summary>
+    private static string GetNodaTimeTypeUrl(string fullName)
+    {
+        // NodaTime.Period → NodaTime.Period.html
+        // NodaTime.Text.OffsetDateTimePattern → NodaTime.Text.OffsetDateTimePattern.html
+        // Strip generic arity suffix if present: NodaTime.SomeType`1 → NodaTime.SomeType
+        int backtick = fullName.IndexOf('`');
+        string cleanName = backtick >= 0 ? fullName[..backtick] : fullName;
+        return $"https://www.nodatime.org/3.3.x/api/{cleanName}.html";
     }
 }

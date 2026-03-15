@@ -158,6 +158,9 @@ public sealed partial class XmlDocParser(string xmlPath)
                     char memberType = cref.Length > 1 && cref[1] == ':' ? cref[0] : 'T';
                     string? url = ResolveTypeUrl(stripped);
 
+                    // Fall back to external documentation URLs
+                    url ??= ResolveExternalTypeUrl(stripped);
+
                     if (memberType is 'M' or 'P' or 'F' or 'E')
                     {
                         // Member reference — display the member name and link to type#anchor
@@ -415,4 +418,31 @@ public sealed partial class XmlDocParser(string xmlPath)
 
     [GeneratedRegex(@"\s+")]
     private static partial Regex CollapseWhitespace();
+
+    /// <summary>
+    /// Returns an external documentation URL for well-known type prefixes
+    /// (System.*, Microsoft.*, NodaTime.*), or <c>null</c> if not recognised.
+    /// </summary>
+    internal static string? ResolveExternalTypeUrl(string fullName)
+    {
+        // Strip method parameters and generic arity for URL resolution
+        int parenIdx = fullName.IndexOf('(');
+        string name = parenIdx >= 0 ? fullName[..parenIdx] : fullName;
+
+        if (name.StartsWith("System.", StringComparison.Ordinal) ||
+            name.StartsWith("Microsoft.", StringComparison.Ordinal))
+        {
+            string urlName = name.ToLowerInvariant().Replace('`', '-');
+            return $"https://learn.microsoft.com/dotnet/api/{urlName}";
+        }
+
+        if (name.StartsWith("NodaTime.", StringComparison.Ordinal))
+        {
+            int backtick = name.IndexOf('`');
+            string cleanName = backtick >= 0 ? name[..backtick] : name;
+            return $"https://www.nodatime.org/3.3.x/api/{cleanName}.html";
+        }
+
+        return null;
+    }
 }

@@ -89,7 +89,7 @@ public sealed class AssemblyInspector(string assemblyPath)
 
         foreach (Type type in assembly.GetExportedTypes())
         {
-            if (type.Name.StartsWith('<') || type.FullName is null || type.IsNested)
+            if (type.Name.StartsWith('<') || type.Name.Contains('$') || type.FullName is null)
             {
                 continue;
             }
@@ -99,7 +99,15 @@ public sealed class AssemblyInspector(string assemblyPath)
             string typeName = FormatTypeName(type);
             string typeSlug = MarkdownGenerator.TypeToSlug(typeName);
             string url = $"/api/{nsSlug}-{typeSlug}.html";
+
+            // Map by FullName (uses '+' for nested types, e.g. "Corvus.Text.Json.JsonElement+Source")
             map[type.FullName] = url;
+
+            // Also map by dot-separated form used in XML docs (e.g. "Corvus.Text.Json.JsonElement.Source")
+            if (type.IsNested && type.FullName.Contains('+'))
+            {
+                map[type.FullName.Replace('+', '.')] = url;
+            }
         }
 
         return map;
@@ -119,7 +127,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         foreach (Type type in assembly.GetExportedTypes())
         {
             // Skip compiler-generated types
-            if (type.Name.StartsWith('<') || type.FullName is null)
+            if (type.Name.StartsWith('<') || type.Name.Contains('$') || type.FullName is null)
             {
                 continue;
             }
@@ -275,9 +283,14 @@ public sealed class AssemblyInspector(string assemblyPath)
             });
         }
 
-        // Nested types
+        // Nested types (skip compiler-generated types with '<' or '$' in the name)
         foreach (Type nested in type.GetNestedTypes(BindingFlags.Public))
         {
+            if (nested.Name.Contains('<') || nested.Name.Contains('$'))
+            {
+                continue;
+            }
+
             typeInfo.NestedTypes.Add(BuildTypeInfo(nested, xmlDocs, mlc));
         }
 

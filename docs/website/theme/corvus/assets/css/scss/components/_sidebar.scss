@@ -160,6 +160,12 @@
     list-style: none;
     margin: 0;
     padding: var(--space-xs) 0 0;
+
+    // Nested type sub-list
+    &--nested {
+      padding-left: var(--space-md);
+      padding-top: 0;
+    }
   }
 
   // ---- Nested list (sub-items) ----

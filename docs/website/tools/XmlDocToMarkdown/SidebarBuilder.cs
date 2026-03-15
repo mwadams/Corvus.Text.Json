@@ -47,7 +47,24 @@ internal static class SidebarBuilder
                 string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
                 string fileBase = $"{nsSlug}-{typeSlug}";
                 string typeActive = fileBase == currentTypeFileBase ? " is-active" : "";
-                sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link sidebar__link--toc{typeActive}\" href=\"/api/{fileBase}.html\">{HtmlEncode(type.Name)}</a></li>");
+                sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link sidebar__link--toc{typeActive}\" href=\"/api/{fileBase}.html\">{HtmlEncode(type.Name)}</a>");
+
+                // Nested types as indented sub-items
+                if (type.NestedTypes.Count > 0)
+                {
+                    sb.AppendLine("                            <ul class=\"sidebar__list sidebar__list--nested\">");
+                    foreach (TypeInfo nested in type.NestedTypes.OrderBy(t => t.Name))
+                    {
+                        string nestedSlug = MarkdownGenerator.TypeToSlug(nested.Name);
+                        string nestedFileBase = $"{nsSlug}-{nestedSlug}";
+                        string nestedActive = nestedFileBase == currentTypeFileBase ? " is-active" : "";
+                        sb.AppendLine($"                                <li class=\"sidebar__item\"><a class=\"sidebar__link sidebar__link--toc{nestedActive}\" href=\"/api/{nestedFileBase}.html\">{HtmlEncode(nested.Name)}</a></li>");
+                    }
+
+                    sb.AppendLine("                            </ul>");
+                }
+
+                sb.AppendLine("                        </li>");
             }
 
             sb.AppendLine("                    </ul>");

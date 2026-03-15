@@ -14,7 +14,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// A JSON element that represents an instance value that is matched to a boolean 'false' schema.
+/// Represents a placeholder for the <c>false</c> boolean schema which disallows any value.
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<JsonElementForBooleanFalseSchema>

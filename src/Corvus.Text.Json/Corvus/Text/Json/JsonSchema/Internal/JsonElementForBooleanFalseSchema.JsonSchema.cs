@@ -13,7 +13,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-/// Represents a specific JSON value within a <see cref="JsonDocument"/>.
+/// Represents a placeholder for the <c>false</c> boolean schema which disallows any value.
 /// </summary>
 public readonly partial struct JsonElementForBooleanFalseSchema
 {
