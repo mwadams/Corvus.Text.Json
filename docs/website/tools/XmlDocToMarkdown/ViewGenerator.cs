@@ -13,12 +13,6 @@ public sealed class ViewGenerator(string viewsOutputDir)
     /// </summary>
     public void Generate(Dictionary<string, NamespaceInfo> namespaces)
     {
-        // Build the list of all namespaces for the sidebar
-        List<(string nsSlug, string nsName)> allNamespaces = namespaces
-            .OrderBy(n => n.Key)
-            .Select(n => (MarkdownGenerator.NamespaceToFileName(n.Key), n.Key))
-            .ToList();
-
         foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
         {
             string ns = kvp.Key;
@@ -29,7 +23,7 @@ public sealed class ViewGenerator(string viewsOutputDir)
                 string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
                 string fileBase = $"{nsSlug}-{typeSlug}";
                 string viewPath = Path.Combine(viewsOutputDir, fileBase + ".cshtml");
-                string content = BuildTypeView(allNamespaces, nsSlug, ns, type.Kind);
+                string content = BuildTypeView(namespaces, nsSlug, ns, fileBase, type.Kind);
                 File.WriteAllText(viewPath, content);
                 Console.WriteLine($"  Written: {viewPath}");
             }
@@ -37,9 +31,10 @@ public sealed class ViewGenerator(string viewsOutputDir)
     }
 
     private static string BuildTypeView(
-        List<(string nsSlug, string nsName)> allNamespaces,
+        Dictionary<string, NamespaceInfo> namespaces,
         string currentNsSlug,
         string currentNsName,
+        string currentTypeFileBase,
         string typeKind)
     {
         StringBuilder sb = new();
@@ -48,21 +43,7 @@ public sealed class ViewGenerator(string viewsOutputDir)
         sb.AppendLine("    Layout = \"../Shared/_Layout.cshtml\";");
         sb.AppendLine("}");
         sb.AppendLine("<div class=\"layout-docs container\">");
-        sb.AppendLine("    <aside class=\"sidebar\">");
-        sb.AppendLine("        <div class=\"sidebar__section\">");
-        sb.AppendLine("            <button class=\"sidebar__heading\">Namespaces</button>");
-        sb.AppendLine("            <div class=\"sidebar__body\">");
-        sb.AppendLine("                <ul class=\"sidebar__list\">");
-        foreach ((string nsSlug, string nsName) in allNamespaces)
-        {
-            string activeClass = nsSlug == currentNsSlug ? " is-active" : "";
-            sb.AppendLine($"                    <li class=\"sidebar__item\"><a class=\"sidebar__link{activeClass}\" href=\"/api/{nsSlug}.html\">{nsName}</a></li>");
-        }
-
-        sb.AppendLine("                </ul>");
-        sb.AppendLine("            </div>");
-        sb.AppendLine("        </div>");
-        sb.AppendLine("    </aside>");
+        SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug, currentTypeFileBase);
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
         sb.AppendLine("            <p class=\"doc__breadcrumb\">");

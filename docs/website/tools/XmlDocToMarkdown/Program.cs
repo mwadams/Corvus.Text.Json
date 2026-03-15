@@ -6,6 +6,7 @@ string? outputPath = null;
 string? taxonomyOutputPath = null;
 string? htmlOutputPath = null;
 string? siteTitleArg = null;
+string? apiViewsDir = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -28,6 +29,9 @@ for (int i = 0; i < args.Length - 1; i++)
             break;
         case "--site-title":
             siteTitleArg = args[++i];
+            break;
+        case "--api-views-dir":
+            apiViewsDir = args[++i];
             break;
     }
 }
@@ -87,6 +91,13 @@ markdownGen.Generate(namespaces);
 Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
 TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath);
 taxonomyGen.Generate(namespaces);
+
+if (apiViewsDir is not null)
+{
+    Console.WriteLine($"Generating API views to: {apiViewsDir}");
+    Directory.CreateDirectory(apiViewsDir);
+    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces);
+}
 
 if (htmlOutputPath is not null)
 {
