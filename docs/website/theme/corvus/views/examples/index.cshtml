@@ -1,28 +1,78 @@
 @model SiteViewModel
 @{
     Layout = "../Shared/_Layout.cshtml";
+    var docsParent = Model.SiteContext.Navigation?.Children?
+        .FirstOrDefault(x => x.Url?.ToString()?.Contains("/docs/") == true);
+    var docPages = docsParent?.Children?.OrderBy(x => x.Rank).ToList();
     var recipesParent = Model.SiteContext.Navigation?.Children?
         .FirstOrDefault(x => x.Url?.ToString()?.Contains("/examples/") == true);
     var recipes = recipesParent?.Children?.OrderBy(x => x.Rank).ToList();
+    var currentUrl = Model.PageContext.Navigation?.Url;
 }
-<section class="hero hero--compact">
-    <div class="hero__content">
-        <h1 class="hero__title">Example Recipes</h1>
-        <p class="hero__subtitle">Runnable examples demonstrating JSON Schema patterns with the V5 code generator</p>
-    </div>
-</section>
-<div class="container section">
-    <div class="card-grid">
-        @if (recipes != null)
-        {
-            @foreach (var recipe in recipes)
-            {
-                <a class="card card--link" href="@recipe.Url">
-                    <span class="card__tag">@($"{recipe.Rank:D3}")</span>
-                    <h3 class="card__title">@recipe.Title</h3>
-                    <p class="card__body">@recipe.Description</p>
-                </a>
-            }
-        }
-    </div>
+<div class="layout-docs container">
+    <button class="sidebar-toggle" aria-label="Toggle navigation" aria-expanded="false"></button>
+    <div class="sidebar-backdrop"></div>
+    <aside class="sidebar">
+        <div class="sidebar__inner">
+            <div class="sidebar__section">
+                <button class="sidebar__heading">Getting Started</button>
+                <div class="sidebar__body">
+                    <ul class="sidebar__list">
+                        <li class="sidebar__item"><a class="sidebar__link" href="/getting-started/index.html">Tutorial</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="sidebar__section">
+                <button class="sidebar__heading">Documentation</button>
+                <div class="sidebar__body">
+                    <ul class="sidebar__list">
+                        @if (docPages != null)
+                        {
+                            @foreach (var doc in docPages)
+                            {
+                                <li class="sidebar__item">
+                                    <a class="sidebar__link" href="@doc.Url">@doc.Title</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="sidebar__section">
+                <button class="sidebar__heading">Examples</button>
+                <div class="sidebar__body">
+                    <ul class="sidebar__list">
+                        @if (recipes != null)
+                        {
+                            @foreach (var recipe in recipes)
+                            {
+                                <li class="sidebar__item">
+                                    <a class="sidebar__link" href="@recipe.Url">@recipe.Title</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <main id="main-content" class="layout-docs__main">
+        <div class="doc__content">
+            <h1>Example Recipes</h1>
+            <p>Runnable examples demonstrating JSON Schema patterns with the V5 code generator.</p>
+            <div class="card-grid" style="margin-top:var(--space-lg)">
+                @if (recipes != null)
+                {
+                    @foreach (var recipe in recipes)
+                    {
+                        <a class="card card--link" href="@recipe.Url">
+                            <span class="card__tag">@($"{recipe.Rank:D3}")</span>
+                            <h3 class="card__title">@recipe.Title</h3>
+                            <p class="card__body">@recipe.Description</p>
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+    </main>
 </div>
