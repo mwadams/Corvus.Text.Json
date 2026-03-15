@@ -185,9 +185,7 @@ public static partial class JsonElementHelpers
         }
 
         ArrayEnumerator<T> enumerator = new(parentDocument, arrayElement.ParentDocumentIndex);
-        int logicalIndex = 0;
-
-        while (enumerator.MoveNext())
+        for (int logicalIndex = 0; enumerator.MoveNext(); logicalIndex++)
         {
             T current = enumerator.Current;
             if (DeepEquals(in current, in item))
@@ -195,8 +193,6 @@ public static partial class JsonElementHelpers
                 RemoveRangeUnsafe(arrayElement, logicalIndex, 1);
                 return true;
             }
-
-            logicalIndex++;
         }
 
         return false;

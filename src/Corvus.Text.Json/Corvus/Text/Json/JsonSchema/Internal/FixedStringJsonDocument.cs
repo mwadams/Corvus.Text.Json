@@ -654,7 +654,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
         writer.WriteRawValue(_rawJsonStringValue.Span);
     }
 
-    void IJsonDocument.WritePropertyName(int index, Utf8JsonWriter writer) => Debug.Assert(false);
+    void IJsonDocument.WritePropertyName(int index, Utf8JsonWriter writer) => Debug.Fail("");
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Reset(ReadOnlyMemory<byte> rawJsonStringValue, bool requiresUnescaping)

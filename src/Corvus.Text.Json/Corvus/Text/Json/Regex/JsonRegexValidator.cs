@@ -1326,13 +1326,8 @@ internal ref struct JsonRegexValidator
 
         _pos++;
 
-        while (true)
+        while (_pos != _pattern.Length)
         {
-            if (_pos == _pattern.Length)
-            {
-                break;
-            }
-
             JsonRegexNodeKind nodeType;
             char close = '>';
             char ch = _pattern[_pos++];

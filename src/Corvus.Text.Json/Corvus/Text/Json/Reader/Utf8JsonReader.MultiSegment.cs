@@ -397,7 +397,7 @@ public ref partial struct Utf8JsonReader
 
     private void SkipWhiteSpaceMultiSegment()
     {
-        while (true)
+        do
         {
             SkipWhiteSpace();
 
@@ -405,12 +405,8 @@ public ref partial struct Utf8JsonReader
             {
                 break;
             }
-
-            if (!GetNextSpan())
-            {
-                break;
-            }
         }
+        while (GetNextSpan());
     }
 
     /// <summary>

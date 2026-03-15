@@ -251,7 +251,7 @@ internal static class JsonRegexCharClass
         return (uint)chDiv8 < (uint)ascii.Length ?
             (ascii[chDiv8] & (1 << (ch & 0x7))) != 0 :
             ((WordCategoriesMask & (1 << (int)CharUnicodeInfo.GetUnicodeCategory(ch))) != 0 ||
-             (ch == ZeroWidthJoiner | ch == ZeroWidthNonJoiner));
+             (ch == ZeroWidthJoiner || ch == ZeroWidthNonJoiner));
     }
 
     /// <summary>Gets whether the specified span participates in case conversion.</summary>

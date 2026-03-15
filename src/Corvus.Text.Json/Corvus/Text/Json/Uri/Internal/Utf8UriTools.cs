@@ -3263,12 +3263,12 @@ internal static class Utf8UriTools
         if (StartsWithAsciiOrdinalIgnoreCase(uriString, "https:"u8))
         {
             syntax = Utf8UriParser.HttpsUri;
-            flags |= (Flags)6;
+            flags |= Flags.UserNotCanonical | Flags.HostNotCanonical;
         }
         else if (StartsWithAsciiOrdinalIgnoreCase(uriString, "http:"u8))
         {
             syntax = Utf8UriParser.HttpUri;
-            flags |= (Flags)5;
+            flags |= Flags.SchemeNotCanonical | Flags.HostNotCanonical;
         }
         else
         {
@@ -3297,13 +3297,9 @@ internal static class Utf8UriTools
         int length = uriString.Length;
 
         // Optimized whitespace skipping - first check if we even have whitespace
-        if ((uint)i < (uint)length && Utf8UriHelper.IsLWS(uriString[i]))
+        while ((uint)i < (uint)length && Utf8UriHelper.IsLWS(uriString[i]))
         {
-            do
-            {
-                i++;
-            }
-            while ((uint)i < (uint)length && Utf8UriHelper.IsLWS(uriString[i]));
+            i++;
         }
 
 #if NET

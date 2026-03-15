@@ -2518,11 +2518,9 @@ public static partial class JsonElementHelpers
         }
 
         // Remove trailing zeros
-        int trailingZeros = 0;
-        while (pos > significandStart + 1 && destination[pos - 1] == '0')
+        for (int trailingZeros = 0; pos > significandStart + 1 && destination[pos - 1] == '0'; trailingZeros++)
         {
             pos--;
-            trailingZeros++;
         }
 
         // Insert decimal point after first digit (if there are more digits)
@@ -5559,11 +5557,9 @@ public static partial class JsonElementHelpers
         }
 
         // Remove trailing zeros
-        int trailingZeros = 0;
-        while (pos > significandStart + 1 && destination[pos - 1] == '0')
+        for (int trailingZeros = 0; pos > significandStart + 1 && destination[pos - 1] == '0'; trailingZeros++)
         {
             pos--;
-            trailingZeros++;
         }
 
         // Insert decimal point after first digit (if there are more digits)

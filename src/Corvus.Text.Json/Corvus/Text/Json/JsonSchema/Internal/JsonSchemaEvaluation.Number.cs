@@ -311,7 +311,7 @@ public static partial class JsonSchemaEvaluation
     /// </para>
     /// <para>
     /// The divisor is normalized so it provides the integral form of the divisor, with an appropriate exponent. Normalization means
-    /// the the exponent is the minmax value for the divisor, and the divisor will not be divisible by 10.
+    /// the exponent is the minmax value for the divisor, and the divisor will not be divisible by 10.
     /// </para>
     /// </remarks>
     [CLSCompliant(false)]
@@ -553,7 +553,7 @@ public static partial class JsonSchemaEvaluation
     /// </para>
     /// <para>
     /// The divisor is normalized so it provides the integral form of the divisor, with an appropriate exponent. Normalization means
-    /// the the exponent is the minmax value for the divisor, and the divisor will not be divisible by 10.
+    /// the exponent is the minmax value for the divisor, and the divisor will not be divisible by 10.
     /// </para>
     /// </remarks>
     [CLSCompliant(false)]

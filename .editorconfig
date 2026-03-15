@@ -445,30 +445,33 @@ dotnet_diagnostic.RCS1085.severity = None
 dotnet_diagnostic.RCS1169.severity = None
 dotnet_diagnostic.RCS1154.severity = None
 dotnet_diagnostic.RCS1146.severity = warning
-dotnet_diagnostic.RCS1243.severity = None
-dotnet_diagnostic.RCS1239.severity = None
+dotnet_diagnostic.RCS1243.severity = warning
+dotnet_diagnostic.RCS1239.severity = warning
 dotnet_diagnostic.RCS1234.severity = None
 dotnet_diagnostic.RCS1104.severity = warning
 dotnet_diagnostic.RCS1212.severity = None
-dotnet_diagnostic.RCS1218.severity = None
+dotnet_diagnostic.RCS1218.severity = warning
 dotnet_diagnostic.RCS1205.severity = None
-dotnet_diagnostic.RCS1233.severity = None
-dotnet_diagnostic.RCS1257.severity = None
+dotnet_diagnostic.RCS1233.severity = warning
+dotnet_diagnostic.RCS1257.severity = warning
 dotnet_diagnostic.RCS1135.severity = None
 dotnet_diagnostic.RCS1213.severity = None
 dotnet_diagnostic.RCS1001.severity = None
-dotnet_diagnostic.RCS1206.severity = None
+dotnet_diagnostic.RCS1206.severity = warning
 dotnet_diagnostic.RCS1187.severity = None
 dotnet_diagnostic.RCS1179.severity = None
 dotnet_diagnostic.RCS1232.severity = None
-dotnet_diagnostic.RCS1235.severity = None
+dotnet_diagnostic.RCS1235.severity = warning
 dotnet_diagnostic.RCS1158.severity = None
-dotnet_diagnostic.RCS1251.severity = None
+dotnet_diagnostic.RCS1251.severity = warning
 
 # CA rules - suppress for runtime-derived code
 dotnet_diagnostic.CA1069.severity = None
 dotnet_diagnostic.CA1822.severity = None
 dotnet_diagnostic.CA2231.severity = None
+
+# SA1406 - Debug.Fail without message is a runtime code pattern
+dotnet_diagnostic.SA1406.severity = None
 
 # C++ Files
 [*.{cpp,h,in}]

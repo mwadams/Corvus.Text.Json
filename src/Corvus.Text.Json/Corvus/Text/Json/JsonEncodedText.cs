@@ -139,7 +139,7 @@ public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
     /// Returns 0 on a default instance of <see cref="JsonEncodedText"/>.
     /// </remarks>
     public override int GetHashCode()
-        => _value == null ? 0 : _value.GetHashCode();
+        => (_value?.GetHashCode()) ?? 0;
 
     /// <summary>
     /// Converts the value of this instance to a <see cref="string"/>.

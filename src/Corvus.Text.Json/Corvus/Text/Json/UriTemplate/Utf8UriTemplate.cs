@@ -12,6 +12,7 @@ using System.Text;
 
 namespace Corvus.Text.Json.Internal;
 
+#pragma warning disable RCS1243 // Duplicate word in a comment - ABNF grammar
 /// <summary>
 /// Provides validation functionality for URI Templates as defined in RFC 6570.
 ///
@@ -35,6 +36,7 @@ namespace Corvus.Text.Json.Internal;
 /// max-length   = %x31-39 0*3DIGIT; positive integer up to 9999
 /// pct-encoded  = "%" HEXDIG HEXDIG
 /// </summary>
+#pragma warning restore RCS1243
 internal static class Utf8UriTemplate
 {
     // Lookup tables for character classification (Tier 1 optimization)
@@ -378,21 +380,22 @@ internal static class Utf8UriTemplate
             return false;
 
         position++;
-        int digitCount = 1;
 
         // Up to 3 additional digits (0*3DIGIT)
-        while (position < input.Length && IsDigit(input[position]) && digitCount < 4)
+        for (int digitCount = 1; position < input.Length && IsDigit(input[position]) && digitCount < 4; digitCount++)
         {
             position++;
-            digitCount++;
         }
 
         return true;
     }
 
+#pragma warning disable RCS1243 // Duplicate word in a comment - ABNF grammar
+
     /// <summary>
-    /// Parses pct-encoded = "%" HEXDIG HEXDIG
+    /// Parses pct-encoded = "%" HEXDIG HEXDIG.
     /// </summary>
+#pragma warning restore RCS1243
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ParsePctEncoded(ReadOnlySpan<byte> input, ref int position)
     {
