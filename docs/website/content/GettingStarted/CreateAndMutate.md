@@ -167,6 +167,8 @@ person.Name.SetGivenName(employeeDoc.RootElement.FullName);
 
 `From()` performs a zero-copy reinterpretation of the underlying JSON — no parsing or allocation occurs. It works for any structurally compatible types, including nested objects and arrays.
 
+> **Important:** Setting a value in the target document does not copy the backing JSON data. Under the covers, it creates a reference to the relevant segment of the original UTF-8 JSON text. This makes cross-document property transfer very efficient for typical document processing pipelines — even for large nested objects or arrays, the cost is constant regardless of the size of the value.
+
 ## Mutating arrays
 
 Array properties on a `Mutable` element support in-place modification:
