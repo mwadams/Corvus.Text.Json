@@ -46,6 +46,16 @@ if (Test-Path $assetsDest) {
 }
 Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
 
+# Step 2a: Compile SCSS to CSS
+Write-Host "Compiling SCSS..." -ForegroundColor Cyan
+$scssPath = Join-Path $assetsSource "css\scss\main.scss"
+$cssOutputPath = Join-Path $outputDir "main.css"
+& npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
+if ($LASTEXITCODE -ne 0) {
+    throw "SCSS compilation failed"
+}
+Write-Host "CSS compiled to $cssOutputPath" -ForegroundColor Green
+
 # Step 2b: Generate API documentation
 Write-Host "Generating API documentation..." -ForegroundColor Cyan
 $xmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
