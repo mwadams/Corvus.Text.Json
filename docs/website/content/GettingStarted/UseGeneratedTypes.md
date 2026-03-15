@@ -125,6 +125,43 @@ var first = person.Hobbies[0];
 string firstHobby = (string)first;
 ```
 
+## Composition types and pattern matching
+
+JSON Schema supports composition keywords like `oneOf`, `anyOf`, and `allOf` that let a value match one of several shapes. In our schema, `OtherNames` uses `oneOf` — it can be *either* a single `PersonNameElement` string *or* a `PersonNameElementArray`:
+
+```json
+"OtherNames": {
+    "oneOf": [
+        { "$ref": "#/$defs/PersonNameElement" },
+        { "$ref": "#/$defs/PersonNameElementArray" }
+    ]
+}
+```
+
+The generated type exposes `As*` properties for each variant and `Is*` methods for type testing. Use pattern matching to handle each case:
+
+```csharp
+if (person.Name.OtherNames.IsNotUndefined())
+{
+    // Match on the shape of the data
+    if (person.Name.OtherNames.AsPersonNameElementArray.IsValid())
+    {
+        // It's an array of names
+        foreach (var name in person.Name.OtherNames.AsPersonNameElementArray.EnumerateArray())
+        {
+            Console.WriteLine((string)name);
+        }
+    }
+    else if (person.Name.OtherNames.AsPersonNameElement.IsValid())
+    {
+        // It's a single name string
+        Console.WriteLine((string)person.Name.OtherNames.AsPersonNameElement);
+    }
+}
+```
+
+This pattern works for any `oneOf` or `anyOf` composition: the underlying JSON data is the same, but each `As*` accessor interprets it through a different schema lens. `IsValid()` checks whether the data actually conforms to that variant's schema.
+
 ## Converting to .NET types
 
 ### Implicit conversions (value types)
