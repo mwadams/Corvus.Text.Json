@@ -141,18 +141,15 @@ JSON Schema supports composition keywords like `oneOf`, `anyOf`, and `allOf` tha
 The generated type provides a `Match()` method that dispatches to a typed delegate for each variant. Each variant gets its own named parameter, and a `defaultMatch` fallback handles values that don't conform to any variant:
 
 ```csharp
-if (person.Name.OtherNames.IsNotUndefined())
-{
-    string result = person.Name.OtherNames.Match(
-        matchPersonNameElement: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementEntity v)
-            => $"Single name: {(string)v}",
-        matchPersonNameElementArray: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementArrayEntity v)
-            => $"Multiple names: {string.Join(", ", v.EnumerateArray().Select(n => (string)n))}",
-        defaultMatch: static (in Person.PersonNameEntity.OtherNamesEntity _)
-            => "Unknown format");
+string result = person.Name.OtherNames.Match(
+    matchPersonNameElement: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementEntity v)
+        => $"Single name: {(string)v}",
+    matchPersonNameElementArray: static (in Person.PersonNameEntity.OtherNamesEntity.PersonNameElementArrayEntity v)
+        => $"Multiple names: {string.Join(", ", v.EnumerateArray().Select(n => (string)n))}",
+    defaultMatch: static (in Person.PersonNameEntity.OtherNamesEntity _)
+        => "Unknown format");
 
-    Console.WriteLine(result);
-}
+Console.WriteLine(result);
 ```
 
 `Match()` evaluates each variant's schema in order, calls the first matching delegate, and returns the result. All delegates must return the same type (`TResult`), which the compiler infers from usage.
