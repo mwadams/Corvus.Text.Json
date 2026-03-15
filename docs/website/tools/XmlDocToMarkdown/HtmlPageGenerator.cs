@@ -62,7 +62,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
                 string fileBase = $"{nsSlug}-{typeSlug}";
                 string htmlPath = Path.Combine(htmlOutputDir, fileBase + ".html");
 
-                string markdownBody = GenerateTypeMarkdown(type);
+                string markdownBody = GenerateTypeMarkdown(type, nsSlug, typeSlug);
                 string bodyHtml = Markdig.Markdown.ToHtml(markdownBody, Pipeline);
 
                 string fullHtml = BuildFullPage(
@@ -81,12 +81,178 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         }
     }
 
-    private static string GenerateTypeMarkdown(TypeInfo type)
+    /// <summary>
+    /// Generates one HTML file per member group (method overloads, property, etc.).
+    /// File names use: {nsSlug}-{typeSlug}.{memberSlug}.html
+    /// </summary>
+    public void GenerateMemberPages(Dictionary<string, NamespaceInfo> namespaces)
     {
-        // Delegate to the shared MarkdownGenerator logic so type links,
-        // inheritance chains, and all formatting stay in one place.
+        foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
+        {
+            string ns = kvp.Key;
+            string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
+
+            foreach (TypeInfo type in kvp.Value.Types)
+            {
+                string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
+                GenerateMemberPagesForType(namespaces, ns, nsSlug, type, typeSlug);
+            }
+        }
+    }
+
+    private void GenerateMemberPagesForType(
+        Dictionary<string, NamespaceInfo> namespaces,
+        string ns, string nsSlug, TypeInfo type, string typeSlug)
+    {
+        string typeFileBase = $"{nsSlug}-{typeSlug}";
+
+        void EmitMemberPage(string memberDisplayName, string memberSlug, string category, List<MemberInfo> members)
+        {
+            string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
+            string htmlPath = Path.Combine(htmlOutputDir, fileBase + ".html");
+
+            StringBuilder sb = new();
+            MarkdownGenerator.WriteMemberPageBody(sb, ns, nsSlug, type, typeSlug, memberDisplayName, category, members);
+            string bodyHtml = Markdig.Markdown.ToHtml(sb.ToString(), Pipeline);
+
+            string fullHtml = BuildMemberPage(
+                title: $"{type.Name}.{memberDisplayName} {category}",
+                bodyHtml: bodyHtml,
+                namespaces: namespaces,
+                ns: ns,
+                nsSlug: nsSlug,
+                type: type,
+                typeSlug: typeSlug,
+                typeFileBase: typeFileBase,
+                memberDisplayName: memberDisplayName,
+                memberCategory: category);
+
+            File.WriteAllText(htmlPath, fullHtml);
+        }
+
+        // Constructors
+        if (type.Constructors.Count > 0)
+        {
+            EmitMemberPage(type.Name, "ctor", "Constructor", type.Constructors);
+        }
+
+        // Properties
+        foreach (MemberInfo prop in type.Properties)
+        {
+            EmitMemberPage(prop.Name, MarkdownGenerator.MemberToSlug(prop.GroupKey), "Property", [prop]);
+        }
+
+        // Methods (grouped by name)
+        foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey))
+        {
+            EmitMemberPage(group.Key, MarkdownGenerator.MemberToSlug(group.Key), "Method", group.ToList());
+        }
+
+        // Operators (grouped by CLR name)
+        foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey))
+        {
+            string displayName = GetOperatorGroupDisplayName(group.Key);
+            EmitMemberPage(displayName, MarkdownGenerator.MemberToSlug(group.Key), "Operator", group.ToList());
+        }
+
+        // Fields
+        foreach (MemberInfo field in type.Fields)
+        {
+            EmitMemberPage(field.Name, MarkdownGenerator.MemberToSlug(field.GroupKey), "Field", [field]);
+        }
+
+        // Events
+        foreach (MemberInfo evt in type.Events)
+        {
+            EmitMemberPage(evt.Name, MarkdownGenerator.MemberToSlug(evt.GroupKey), "Event", [evt]);
+        }
+    }
+
+    private static string GetOperatorGroupDisplayName(string clrName) => clrName switch
+    {
+        "op_Implicit" => "Implicit",
+        "op_Explicit" => "Explicit",
+        _ => clrName.Replace("op_", ""),
+    };
+
+    private static string GenerateTypeMarkdown(TypeInfo type, string nsSlug, string typeSlug)
+    {
         StringBuilder sb = new();
-        MarkdownGenerator.WriteTypeBody(sb, type);
+        MarkdownGenerator.WriteTypeBody(sb, type, nsSlug, typeSlug);
+        return sb.ToString();
+    }
+
+    private string BuildMemberPage(
+        string title,
+        string bodyHtml,
+        Dictionary<string, NamespaceInfo> namespaces,
+        string ns,
+        string nsSlug,
+        TypeInfo type,
+        string typeSlug,
+        string typeFileBase,
+        string memberDisplayName,
+        string memberCategory)
+    {
+        StringBuilder sb = new();
+
+        if (_templateBefore is not null)
+        {
+            string before = _templateBefore;
+            before = System.Text.RegularExpressions.Regex.Replace(
+                before,
+                @"<title>[^<]*</title>",
+                $"<title>{HtmlEncode(title)} \u2014 {HtmlEncode(siteTitle)}</title>");
+            before = System.Text.RegularExpressions.Regex.Replace(
+                before,
+                @"<meta name=""description"" content=""[^""]*""",
+                $"<meta name=\"description\" content=\"{HtmlEncode(memberCategory)} documentation for {HtmlEncode(type.Name)}.{HtmlEncode(memberDisplayName)}\"");
+            sb.Append(before);
+        }
+        else
+        {
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("    <meta charset=\"UTF-8\" />");
+            sb.AppendLine("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />");
+            sb.AppendLine($"    <title>{HtmlEncode(title)} \u2014 {HtmlEncode(siteTitle)}</title>");
+            sb.AppendLine("    <link rel=\"stylesheet\" href=\"/main.css\" />");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+        }
+
+        sb.AppendLine("<div class=\"layout-docs container\">");
+        SidebarBuilder.AppendSidebar(sb, namespaces, nsSlug, typeFileBase);
+        sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
+        sb.AppendLine("        <div class=\"doc__content\">");
+        sb.AppendLine("            <p class=\"doc__breadcrumb\">");
+        sb.AppendLine($"                <a href=\"/api/index.html\">API</a> &rsaquo;");
+        sb.AppendLine($"                <a href=\"/api/{nsSlug}.html\">{HtmlEncode(ns)}</a> &rsaquo;");
+        sb.AppendLine($"                <a href=\"/api/{typeFileBase}.html\">{HtmlEncode(type.Name)}</a> &rsaquo;");
+        sb.AppendLine($"                <span class=\"doc__kind-badge\">{HtmlEncode(memberCategory)}</span> {HtmlEncode(memberDisplayName)}");
+        sb.AppendLine("            </p>");
+        sb.AppendLine($"            <h1>{HtmlEncode(type.Name)}.{HtmlEncode(memberDisplayName)}</h1>");
+        sb.AppendLine(bodyHtml);
+        sb.AppendLine("        </div>");
+        sb.AppendLine("    </main>");
+        sb.AppendLine("</div>");
+
+        if (_templateAfter is not null)
+        {
+            sb.Append(_templateAfter);
+        }
+        else
+        {
+            sb.AppendLine("<footer class=\"site-footer\">");
+            sb.AppendLine("    <div class=\"site-footer__inner\">");
+            sb.AppendLine("        <div class=\"site-footer__sponsor\">Sponsored by <a href=\"https://endjin.com\" target=\"_blank\">endjin</a></div>");
+            sb.AppendLine("    </div>");
+            sb.AppendLine("</footer>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+        }
+
         return sb.ToString();
     }
 

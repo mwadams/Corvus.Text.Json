@@ -56,12 +56,93 @@ public sealed class MarkdownGenerator(string outputDir)
 
                 StringBuilder sb = new();
                 WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
-                WriteTypeBody(sb, type);
+                WriteTypeBody(sb, type, nsSlug, typeSlug);
 
                 File.WriteAllText(filePath, sb.ToString());
                 Console.WriteLine($"  Written: {filePath}");
             }
         }
+    }
+
+    /// <summary>
+    /// Generates one markdown file per member group (method overloads, property, etc.).
+    /// File names use: {nsSlug}-{typeSlug}.{memberSlug}.md
+    /// </summary>
+    public void GenerateMemberPages(Dictionary<string, NamespaceInfo> namespaces)
+    {
+        foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
+        {
+            string ns = kvp.Key;
+            string nsSlug = NamespaceToFileName(ns);
+
+            foreach (TypeInfo type in kvp.Value.Types)
+            {
+                string typeSlug = TypeToSlug(type.Name);
+                GenerateMemberPagesForType(ns, nsSlug, type, typeSlug);
+            }
+        }
+    }
+
+    private void GenerateMemberPagesForType(string ns, string nsSlug, TypeInfo type, string typeSlug)
+    {
+        // Constructors (all on one page)
+        if (type.Constructors.Count > 0)
+        {
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, ".ctor", "ctor",
+                $"{type.Name} Constructors", "Constructor", type.Constructors);
+        }
+
+        // Properties (each on its own page)
+        foreach (MemberInfo prop in type.Properties)
+        {
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, prop.Name, MemberToSlug(prop.GroupKey),
+                $"{type.Name}.{prop.Name} Property", "Property", [prop]);
+        }
+
+        // Methods (grouped by name — all overloads on one page)
+        foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey))
+        {
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, group.Key, MemberToSlug(group.Key),
+                $"{type.Name}.{group.Key} Method", "Method", group.ToList());
+        }
+
+        // Operators (grouped by CLR name — e.g. all op_Implicit on one page)
+        foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey))
+        {
+            string displayGroupName = GetOperatorGroupDisplayName(group.Key);
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, displayGroupName, MemberToSlug(group.Key),
+                $"{type.Name}.{displayGroupName} Operator", "Operator", group.ToList());
+        }
+
+        // Fields (each on its own page)
+        foreach (MemberInfo field in type.Fields)
+        {
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, field.Name, MemberToSlug(field.GroupKey),
+                $"{type.Name}.{field.Name} Field", "Field", [field]);
+        }
+
+        // Events (each on its own page)
+        foreach (MemberInfo evt in type.Events)
+        {
+            WriteMemberPageFile(ns, nsSlug, type, typeSlug, evt.Name, MemberToSlug(evt.GroupKey),
+                $"{type.Name}.{evt.Name} Event", "Event", [evt]);
+        }
+    }
+
+    private void WriteMemberPageFile(
+        string ns, string nsSlug, TypeInfo type, string typeSlug,
+        string memberDisplayName, string memberSlug,
+        string pageTitle, string memberCategory,
+        List<MemberInfo> members)
+    {
+        string fileBase = GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
+        string filePath = Path.Combine(outputDir, fileBase + ".md");
+
+        StringBuilder sb = new();
+        WriteFrontmatter(sb, $"{pageTitle} \u2014 {ns}");
+        WriteMemberPageBody(sb, ns, nsSlug, type, typeSlug, memberDisplayName, memberCategory, members);
+
+        File.WriteAllText(filePath, sb.ToString());
     }
 
     private static void WriteNamespaceContent(StringBuilder sb, NamespaceInfo nsInfo)
@@ -82,9 +163,10 @@ public sealed class MarkdownGenerator(string outputDir)
     }
 
     /// <summary>
-    /// Writes the full body of a type page (no top heading; the view template provides it).
+    /// Writes the body of a type summary page — declaration, summary, inheritance,
+    /// and summary tables for each member category linking to dedicated member pages.
     /// </summary>
-    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type)
+    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string? nsSlug = null, string? typeSlug = null)
     {
         sb.AppendLine("```csharp");
         sb.AppendLine(BuildTypeDeclaration(type));
@@ -162,14 +244,30 @@ public sealed class MarkdownGenerator(string outputDir)
             sb.AppendLine();
         }
 
+        // ── Member summary tables ──────────────────────────────────────────
+        bool hasLinks = nsSlug is not null && typeSlug is not null;
+
+        // Constructors
         if (type.Constructors.Count > 0)
         {
+            string? ctorUrl = hasLinks ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, "ctor")}.html" : null;
             sb.AppendLine("## Constructors");
             sb.AppendLine();
+            sb.AppendLine("| Constructor | Description |");
+            sb.AppendLine("|-------------|-------------|");
             foreach (MemberInfo ctor in type.Constructors)
-                WriteMemberSection(sb, ctor, 3);
+            {
+                string sig = FormatShortSignature(ctor);
+                string summary = TruncateSummary(ctor.Documentation?.Summary ?? string.Empty);
+                if (ctorUrl is not null)
+                    sb.AppendLine($"| [{EscapeTableCell(sig)}]({ctorUrl}#{Anchor(ctor.Signature)}) | {summary} |");
+                else
+                    sb.AppendLine($"| `{EscapeTableCell(sig)}` | {summary} |");
+            }
+            sb.AppendLine();
         }
 
+        // Properties
         if (type.Properties.Count > 0)
         {
             sb.AppendLine("## Properties");
@@ -180,55 +278,71 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
                 string staticBadge = prop.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{prop.Name}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
-            }
-            sb.AppendLine();
-
-            foreach (MemberInfo prop in type.Properties)
-            {
-                if (!string.IsNullOrEmpty(prop.Documentation?.Remarks) || !string.IsNullOrEmpty(prop.Documentation?.Value))
+                if (hasLinks)
                 {
-                    sb.AppendLine($"### {prop.Name}");
-                    sb.AppendLine();
-                    sb.AppendLine("```csharp");
-                    sb.AppendLine(prop.Signature);
-                    sb.AppendLine("```");
-                    sb.AppendLine();
-                    if (!string.IsNullOrEmpty(prop.Documentation?.Summary))
-                    {
-                        sb.AppendLine(prop.Documentation!.Summary);
-                        sb.AppendLine();
-                    }
-                    if (!string.IsNullOrEmpty(prop.Documentation?.Value))
-                    {
-                        sb.AppendLine($"**Value:** {prop.Documentation!.Value}");
-                        sb.AppendLine();
-                    }
-                    if (!string.IsNullOrEmpty(prop.Documentation?.Remarks))
-                    {
-                        sb.AppendLine(prop.Documentation!.Remarks);
-                        sb.AppendLine();
-                    }
+                    string propUrl = $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(prop.GroupKey))}.html";
+                    sb.AppendLine($"| [{prop.Name}]({propUrl}){staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
+                }
+                else
+                {
+                    sb.AppendLine($"| `{prop.Name}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
                 }
             }
+            sb.AppendLine();
         }
 
+        // Methods (grouped by name — all overloads shown, linking to same page)
         if (type.Methods.Count > 0)
         {
             sb.AppendLine("## Methods");
             sb.AppendLine();
-            foreach (MemberInfo method in type.Methods)
-                WriteMemberSection(sb, method, 3);
+            sb.AppendLine("| Method | Description |");
+            sb.AppendLine("|--------|-------------|");
+            foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey).OrderBy(g => g.Key))
+            {
+                string? methodUrl = hasLinks
+                    ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
+                    : null;
+                foreach (MemberInfo method in group)
+                {
+                    string sig = FormatShortSignature(method);
+                    string summary = TruncateSummary(method.Documentation?.Summary ?? string.Empty);
+                    string modifiers = method.IsStatic ? " `static`" : "";
+                    if (methodUrl is not null)
+                        sb.AppendLine($"| [{EscapeTableCell(sig)}]({methodUrl}#{Anchor(method.Signature)}){modifiers} | {summary} |");
+                    else
+                        sb.AppendLine($"| `{EscapeTableCell(sig)}`{modifiers} | {summary} |");
+                }
+            }
+            sb.AppendLine();
         }
 
+        // Operators (grouped by CLR name)
         if (type.Operators.Count > 0)
         {
             sb.AppendLine("## Operators");
             sb.AppendLine();
-            foreach (MemberInfo op in type.Operators)
-                WriteMemberSection(sb, op, 3);
+            sb.AppendLine("| Operator | Description |");
+            sb.AppendLine("|----------|-------------|");
+            foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey).OrderBy(g => g.Key))
+            {
+                string? opUrl = hasLinks
+                    ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
+                    : null;
+                foreach (MemberInfo op in group)
+                {
+                    string sig = FormatShortSignature(op);
+                    string summary = TruncateSummary(op.Documentation?.Summary ?? string.Empty);
+                    if (opUrl is not null)
+                        sb.AppendLine($"| [{EscapeTableCell(sig)}]({opUrl}#{Anchor(op.Signature)}) | {summary} |");
+                    else
+                        sb.AppendLine($"| `{EscapeTableCell(sig)}` | {summary} |");
+                }
+            }
+            sb.AppendLine();
         }
 
+        // Fields
         if (type.Fields.Count > 0)
         {
             sb.AppendLine("## Fields");
@@ -239,11 +353,20 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 string summary = TruncateSummary(field.Documentation?.Summary ?? string.Empty);
                 string staticBadge = field.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{field.Name}`{staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
+                if (hasLinks)
+                {
+                    string fieldUrl = $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(field.GroupKey))}.html";
+                    sb.AppendLine($"| [{field.Name}]({fieldUrl}){staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
+                }
+                else
+                {
+                    sb.AppendLine($"| `{field.Name}`{staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
+                }
             }
             sb.AppendLine();
         }
 
+        // Events
         if (type.Events.Count > 0)
         {
             sb.AppendLine("## Events");
@@ -253,7 +376,15 @@ public sealed class MarkdownGenerator(string outputDir)
             foreach (MemberInfo evt in type.Events)
             {
                 string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
-                sb.AppendLine($"| `{evt.Name}` | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
+                if (hasLinks)
+                {
+                    string evtUrl = $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(evt.GroupKey))}.html";
+                    sb.AppendLine($"| [{evt.Name}]({evtUrl}) | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
+                }
+                else
+                {
+                    sb.AppendLine($"| `{evt.Name}` | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
+                }
             }
             sb.AppendLine();
         }
@@ -283,276 +414,68 @@ public sealed class MarkdownGenerator(string outputDir)
         }
     }
 
-    private static void WriteTypeSection(StringBuilder sb, TypeInfo type, int headingLevel)
+    /// <summary>
+    /// Writes the body of a member detail page. For member groups with multiple
+    /// overloads, shows an overload summary table followed by individual sections.
+    /// </summary>
+    internal static void WriteMemberPageBody(
+        StringBuilder sb,
+        string ns,
+        string nsSlug,
+        TypeInfo type,
+        string typeSlug,
+        string memberDisplayName,
+        string memberCategory,
+        List<MemberInfo> members)
     {
-        string heading = new('#', headingLevel);
-
-        sb.AppendLine($"{heading} {type.Name} ({type.Kind})");
+        // Definition metadata
+        sb.AppendLine("## Definition");
+        sb.AppendLine();
+        sb.AppendLine($"**Namespace:** {ns}  ");
+        sb.AppendLine($"**Assembly:** Corvus.Text.Json.dll");
         sb.AppendLine();
 
-        // Type declaration
-        sb.AppendLine("```csharp");
-        sb.AppendLine(BuildTypeDeclaration(type));
-        sb.AppendLine("```");
+        // For single members, show the detail directly
+        if (members.Count == 1)
+        {
+            WriteMemberDetail(sb, members[0], 2);
+            return;
+        }
+
+        // For multiple overloads, show an overloads summary table first
+        sb.AppendLine("## Overloads");
+        sb.AppendLine();
+        sb.AppendLine($"| {memberCategory} | Description |");
+        sb.AppendLine("|{new string('-', memberCategory.Length + 2)}|-------------|");
+        foreach (MemberInfo member in members)
+        {
+            string sig = FormatShortSignature(member);
+            string summary = TruncateSummary(member.Documentation?.Summary ?? string.Empty);
+            sb.AppendLine($"| [{EscapeTableCell(sig)}](#{Anchor(member.Signature)}) | {summary} |");
+        }
         sb.AppendLine();
 
-        // Summary
-        if (!string.IsNullOrEmpty(type.Documentation?.Summary))
+        // Then show each overload in detail
+        foreach (MemberInfo member in members)
         {
-            sb.AppendLine(type.Documentation!.Summary);
+            WriteMemberDetail(sb, member, 2);
+            sb.AppendLine("---");
             sb.AppendLine();
         }
-
-        // Type parameters
-        if (type.GenericParameters.Count > 0 && type.Documentation?.TypeParams.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Type Parameters");
-            sb.AppendLine();
-            sb.AppendLine("| Parameter | Description |");
-            sb.AppendLine("|-----------|-------------|");
-            foreach (DocParam tp in type.Documentation!.TypeParams)
-            {
-                sb.AppendLine($"| `{tp.Name}` | {tp.Description} |");
-            }
-
-            sb.AppendLine();
-        }
-
-        // Remarks
-        if (!string.IsNullOrEmpty(type.Documentation?.Remarks))
-        {
-            sb.AppendLine($"{heading}# Remarks");
-            sb.AppendLine();
-            sb.AppendLine(type.Documentation!.Remarks);
-            sb.AppendLine();
-        }
-
-        // Inheritance and interfaces
-        if (type.BaseType is not null && type.Kind == "class")
-        {
-            sb.AppendLine($"{heading}# Inheritance");
-            sb.AppendLine();
-            StringBuilder chain = new();
-            chain.Append(ResolveTypeLink("Object", "System.Object"));
-            chain.Append(" \u2192 ");
-            chain.Append(ResolveTypeLink(type.BaseType, type.BaseTypeFullName));
-            chain.Append(" \u2192 ");
-            chain.Append($"**{type.Name}**");
-            sb.AppendLine(chain.ToString());
-            sb.AppendLine();
-        }
-        else if (type.Kind == "class")
-        {
-            sb.AppendLine($"{heading}# Inheritance");
-            sb.AppendLine();
-            sb.AppendLine($"{ResolveTypeLink("Object", "System.Object")} \u2192 **{type.Name}**");
-            sb.AppendLine();
-        }
-
-        // Implements
-        if (type.InterfacesWithFullNames.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Implements");
-            sb.AppendLine();
-            string ifaceList = string.Join(", ", type.InterfacesWithFullNames.Select(
-                i => ResolveTypeLink(i.DisplayName, i.FullName)));
-            sb.AppendLine(ifaceList);
-            sb.AppendLine();
-        }
-
-        // Implemented By (for interfaces)
-        if (type.ImplementedBy.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Implemented By");
-            sb.AppendLine();
-            string implList = string.Join(", ", type.ImplementedBy.Select(
-                i => ResolveTypeLink(i.DisplayName, i.FullName)));
-            sb.AppendLine(implList);
-            sb.AppendLine();
-        }
-
-        // Constructors
-        if (type.Constructors.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Constructors");
-            sb.AppendLine();
-            foreach (MemberInfo ctor in type.Constructors)
-            {
-                WriteMemberSection(sb, ctor, headingLevel + 2);
-            }
-        }
-
-        // Properties
-        if (type.Properties.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Properties");
-            sb.AppendLine();
-            sb.AppendLine("| Property | Type | Description |");
-            sb.AppendLine("|----------|------|-------------|");
-            foreach (MemberInfo prop in type.Properties)
-            {
-                string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
-                string staticBadge = prop.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{prop.Name}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
-            }
-
-            sb.AppendLine();
-
-            // Detailed property docs
-            foreach (MemberInfo prop in type.Properties)
-            {
-                if (!string.IsNullOrEmpty(prop.Documentation?.Remarks) ||
-                    !string.IsNullOrEmpty(prop.Documentation?.Value))
-                {
-                    sb.AppendLine($"{heading}## {prop.Name}");
-                    sb.AppendLine();
-                    sb.AppendLine("```csharp");
-                    sb.AppendLine(prop.Signature);
-                    sb.AppendLine("```");
-                    sb.AppendLine();
-
-                    if (!string.IsNullOrEmpty(prop.Documentation?.Summary))
-                    {
-                        sb.AppendLine(prop.Documentation!.Summary);
-                        sb.AppendLine();
-                    }
-
-                    if (!string.IsNullOrEmpty(prop.Documentation?.Value))
-                    {
-                        sb.AppendLine($"**Value:** {prop.Documentation!.Value}");
-                        sb.AppendLine();
-                    }
-
-                    if (!string.IsNullOrEmpty(prop.Documentation?.Remarks))
-                    {
-                        sb.AppendLine(prop.Documentation!.Remarks);
-                        sb.AppendLine();
-                    }
-                }
-            }
-        }
-
-        // Methods
-        if (type.Methods.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Methods");
-            sb.AppendLine();
-            foreach (MemberInfo method in type.Methods)
-            {
-                WriteMemberSection(sb, method, headingLevel + 2);
-            }
-        }
-
-        // Operators
-        if (type.Operators.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Operators");
-            sb.AppendLine();
-            foreach (MemberInfo op in type.Operators)
-            {
-                WriteMemberSection(sb, op, headingLevel + 2);
-            }
-        }
-
-        // Fields
-        if (type.Fields.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Fields");
-            sb.AppendLine();
-            sb.AppendLine("| Field | Type | Description |");
-            sb.AppendLine("|-------|------|-------------|");
-            foreach (MemberInfo field in type.Fields)
-            {
-                string summary = TruncateSummary(field.Documentation?.Summary ?? string.Empty);
-                string staticBadge = field.IsStatic ? " `static`" : "";
-                sb.AppendLine($"| `{field.Name}`{staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
-            }
-
-            sb.AppendLine();
-        }
-
-        // Events
-        if (type.Events.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Events");
-            sb.AppendLine();
-            sb.AppendLine("| Event | Type | Description |");
-            sb.AppendLine("|-------|------|-------------|");
-            foreach (MemberInfo evt in type.Events)
-            {
-                string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
-                sb.AppendLine($"| `{evt.Name}` | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
-            }
-
-            sb.AppendLine();
-        }
-
-        // Nested types
-        if (type.NestedTypes.Count > 0)
-        {
-            sb.AppendLine($"{heading}# Nested Types");
-            sb.AppendLine();
-            foreach (TypeInfo nested in type.NestedTypes)
-            {
-                WriteTypeSection(sb, nested, headingLevel + 1);
-            }
-        }
-
-        // Example
-        if (!string.IsNullOrEmpty(type.Documentation?.Example))
-        {
-            sb.AppendLine($"{heading}# Example");
-            sb.AppendLine();
-            sb.AppendLine(type.Documentation!.Example);
-            sb.AppendLine();
-        }
-
-        // See Also
-        if (type.Documentation?.SeeAlso.Count > 0)
-        {
-            sb.AppendLine($"{heading}# See Also");
-            sb.AppendLine();
-            foreach (string seeAlso in type.Documentation!.SeeAlso)
-            {
-                string shortName = XmlDocParser.GetShortTypeName(seeAlso);
-                string? url = XmlDocParser.ResolveTypeUrl(seeAlso);
-                if (url is not null)
-                    sb.AppendLine($"- [`{shortName}`]({url})");
-                else
-                    sb.AppendLine($"- `{shortName}`");
-            }
-
-            sb.AppendLine();
-        }
-
-        sb.AppendLine("---");
-        sb.AppendLine();
     }
 
-    private static void WriteMemberSection(StringBuilder sb, MemberInfo member, int headingLevel)
+    /// <summary>
+    /// Writes the detail for a single member (one overload of a method, a property, etc.).
+    /// </summary>
+    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel)
     {
         string heading = new('#', headingLevel);
 
         string modifiers = "";
-        if (member.IsStatic)
-        {
-            modifiers += " `static`";
-        }
-
-        if (member.IsAbstract)
-        {
-            modifiers += " `abstract`";
-        }
-
-        if (member.IsVirtual && !member.IsAbstract)
-        {
-            modifiers += " `virtual`";
-        }
-
-        if (member.IsOverride)
-        {
-            modifiers += " `override`";
-        }
+        if (member.IsStatic) modifiers += " `static`";
+        if (member.IsAbstract) modifiers += " `abstract`";
+        if (member.IsVirtual && !member.IsAbstract) modifiers += " `virtual`";
+        if (member.IsOverride) modifiers += " `override`";
 
         sb.AppendLine($"{heading} {member.Name}{modifiers}");
         sb.AppendLine();
@@ -570,7 +493,7 @@ public sealed class MarkdownGenerator(string outputDir)
         // Type parameters
         if (member.Documentation?.TypeParams.Count > 0)
         {
-            sb.AppendLine("**Type Parameters:**");
+            sb.AppendLine($"{heading}# Type Parameters");
             sb.AppendLine();
             sb.AppendLine("| Parameter | Description |");
             sb.AppendLine("|-----------|-------------|");
@@ -578,26 +501,23 @@ public sealed class MarkdownGenerator(string outputDir)
             {
                 sb.AppendLine($"| `{tp.Name}` | {tp.Description} |");
             }
-
             sb.AppendLine();
         }
 
         // Parameters table
         if (member.Parameters.Count > 0)
         {
-            sb.AppendLine("**Parameters:**");
+            sb.AppendLine($"{heading}# Parameters");
             sb.AppendLine();
             sb.AppendLine("| Name | Type | Description |");
             sb.AppendLine("|------|------|-------------|");
             foreach (ParameterInfo param in member.Parameters)
             {
-                // Look up the doc param description
                 string desc = member.Documentation?.Params
                     .FirstOrDefault(p => p.Name == param.Name)?.Description ?? string.Empty;
                 string optionalSuffix = param.IsOptional ? " *(optional)*" : "";
                 sb.AppendLine($"| `{param.Name}` | {ResolveTypeLink(param.Type, param.TypeFullName)} | {desc}{optionalSuffix} |");
             }
-
             sb.AppendLine();
         }
 
@@ -605,20 +525,32 @@ public sealed class MarkdownGenerator(string outputDir)
         if (!string.IsNullOrEmpty(member.ReturnType) && member.ReturnType != "void")
         {
             string returnsDesc = member.Documentation?.Returns ?? string.Empty;
-            sb.AppendLine($"**Returns:** {ResolveTypeLink(member.ReturnType, member.ReturnTypeFullName)}");
+            sb.AppendLine($"{heading}# Returns");
+            sb.AppendLine();
+            sb.AppendLine(ResolveTypeLink(member.ReturnType, member.ReturnTypeFullName));
             if (!string.IsNullOrEmpty(returnsDesc))
             {
                 sb.AppendLine();
                 sb.AppendLine(returnsDesc);
             }
+            sb.AppendLine();
+        }
 
+        // Property value (for properties, shows the value description)
+        if (!string.IsNullOrEmpty(member.Documentation?.Value))
+        {
+            sb.AppendLine($"{heading}# Property Value");
+            sb.AppendLine();
+            sb.AppendLine(ResolveTypeLink(member.ReturnType, member.ReturnTypeFullName));
+            sb.AppendLine();
+            sb.AppendLine(member.Documentation!.Value);
             sb.AppendLine();
         }
 
         // Exceptions
         if (member.Documentation?.Exceptions.Count > 0)
         {
-            sb.AppendLine("**Exceptions:**");
+            sb.AppendLine($"{heading}# Exceptions");
             sb.AppendLine();
             sb.AppendLine("| Exception | Description |");
             sb.AppendLine("|-----------|-------------|");
@@ -627,13 +559,14 @@ public sealed class MarkdownGenerator(string outputDir)
                 string exShortName = XmlDocParser.GetShortTypeName(ex.Type);
                 sb.AppendLine($"| {ResolveTypeLink(exShortName, ex.Type)} | {ex.Description} |");
             }
-
             sb.AppendLine();
         }
 
         // Remarks
         if (!string.IsNullOrEmpty(member.Documentation?.Remarks))
         {
+            sb.AppendLine($"{heading}# Remarks");
+            sb.AppendLine();
             sb.AppendLine(member.Documentation!.Remarks);
             sb.AppendLine();
         }
@@ -704,6 +637,80 @@ public sealed class MarkdownGenerator(string outputDir)
             .Replace(' ', '-')
             .ToLowerInvariant()
             .TrimEnd('-');
+    }
+
+    /// <summary>
+    /// Converts a member group key to a URL-safe slug.
+    /// </summary>
+    internal static string MemberToSlug(string groupKey)
+    {
+        return groupKey
+            .Replace(".", "")
+            .Replace("_", "-")
+            .Replace('<', '-')
+            .Replace(">", "")
+            .Replace(", ", "-")
+            .Replace(",", "-")
+            .Replace(' ', '-')
+            .ToLowerInvariant()
+            .TrimEnd('-');
+    }
+
+    /// <summary>
+    /// Builds the file base name for a member detail page (without extension).
+    /// Pattern: {nsSlug}-{typeSlug}.{memberSlug}
+    /// </summary>
+    internal static string GetMemberPageFileBase(string nsSlug, string typeSlug, string memberSlug)
+    {
+        return $"{nsSlug}-{typeSlug}.{memberSlug}";
+    }
+
+    /// <summary>
+    /// Formats a short signature for use in summary tables.
+    /// Example: "Parse(String, JsonDocumentOptions)" or "implicit operator Source(Mutable)"
+    /// </summary>
+    private static string FormatShortSignature(MemberInfo member)
+    {
+        string paramTypes = string.Join(", ", member.Parameters.Select(p => p.Type));
+        return member.Parameters.Count > 0
+            ? $"{member.Name}({paramTypes})"
+            : $"{member.Name}()";
+    }
+
+    /// <summary>
+    /// Escapes pipe characters in table cell content.
+    /// </summary>
+    private static string EscapeTableCell(string text)
+    {
+        return text.Replace("|", "\\|");
+    }
+
+    /// <summary>
+    /// Gets a human-readable group display name for an operator CLR method name.
+    /// </summary>
+    private static string GetOperatorGroupDisplayName(string clrName)
+    {
+        return clrName switch
+        {
+            "op_Implicit" => "Implicit",
+            "op_Explicit" => "Explicit",
+            "op_Equality" => "Equality",
+            "op_Inequality" => "Inequality",
+            "op_LessThan" => "LessThan",
+            "op_GreaterThan" => "GreaterThan",
+            "op_LessThanOrEqual" => "LessThanOrEqual",
+            "op_GreaterThanOrEqual" => "GreaterThanOrEqual",
+            "op_Addition" => "Addition",
+            "op_Subtraction" => "Subtraction",
+            "op_Multiply" or "op_Multiplication" => "Multiply",
+            "op_Division" => "Division",
+            "op_Modulus" => "Modulus",
+            "op_UnaryPlus" => "UnaryPlus",
+            "op_UnaryNegation" => "UnaryNegation",
+            "op_Increment" => "Increment",
+            "op_Decrement" => "Decrement",
+            _ => clrName.Replace("op_", ""),
+        };
     }
 
     private static string Anchor(string name)

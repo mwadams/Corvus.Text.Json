@@ -83,10 +83,73 @@ public sealed class SearchIndexGenerator(string outputPath)
             Body = body.ToString().Trim(),
         });
 
+        // Add member page entries
+        AddMemberEntries(entries, type, ns, nsSlug, typeSlug);
+
         // Add entries for each nested type
         foreach (TypeInfo nested in type.NestedTypes)
         {
             AddTypeEntries(entries, nested, ns, pageUrl);
+        }
+    }
+
+    private static void AddMemberEntries(List<SearchEntry> entries, TypeInfo type, string ns, string nsSlug, string typeSlug)
+    {
+        // Constructors
+        if (type.Constructors.Count > 0)
+        {
+            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, "ctor")}.html";
+            entries.Add(new SearchEntry
+            {
+                Url = memberUrl,
+                Title = $"{type.Name} Constructor",
+                Description = type.Constructors[0].Documentation?.Summary ?? string.Empty,
+                Keywords = $"{type.Name} constructor new {ns}",
+                Body = string.Join(" ", type.Constructors.Select(c => c.Documentation?.Summary ?? "")),
+            });
+        }
+
+        // Properties
+        foreach (MemberInfo prop in type.Properties)
+        {
+            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(prop.GroupKey))}.html";
+            entries.Add(new SearchEntry
+            {
+                Url = memberUrl,
+                Title = $"{type.Name}.{prop.Name}",
+                Description = prop.Documentation?.Summary ?? string.Empty,
+                Keywords = $"{type.Name} {prop.Name} property {ns}",
+                Body = prop.Documentation?.Summary ?? "",
+            });
+        }
+
+        // Methods (grouped by name)
+        foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey))
+        {
+            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(group.Key))}.html";
+            entries.Add(new SearchEntry
+            {
+                Url = memberUrl,
+                Title = $"{type.Name}.{group.Key}",
+                Description = group.First().Documentation?.Summary ?? string.Empty,
+                Keywords = $"{type.Name} {group.Key} method {ns}",
+                Body = string.Join(" ", group.Select(m => m.Documentation?.Summary ?? "")),
+            });
+        }
+
+        // Operators (grouped by CLR name)
+        foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey))
+        {
+            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(group.Key))}.html";
+            string displayName = group.Key.Replace("op_", "");
+            entries.Add(new SearchEntry
+            {
+                Url = memberUrl,
+                Title = $"{type.Name} {displayName} Operator",
+                Description = group.First().Documentation?.Summary ?? string.Empty,
+                Keywords = $"{type.Name} {displayName} operator {ns}",
+                Body = string.Join(" ", group.Select(m => m.Documentation?.Summary ?? "")),
+            });
         }
     }
 

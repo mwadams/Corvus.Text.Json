@@ -120,6 +120,7 @@ Console.WriteLine($"Generating namespace markdown to: {outputPath}");
 MarkdownGenerator markdownGen = new(outputPath);
 markdownGen.Generate(namespaces);
 markdownGen.GeneratePerType(namespaces);
+markdownGen.GenerateMemberPages(namespaces);
 
 Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
 TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath);
@@ -152,6 +153,7 @@ if (htmlOutputPath is not null)
     }
 
     htmlGen.Generate(namespaces);
+    htmlGen.GenerateMemberPages(namespaces);
 }
 
 string searchIndexPath = Path.Combine(outputPath, "search-index.json");

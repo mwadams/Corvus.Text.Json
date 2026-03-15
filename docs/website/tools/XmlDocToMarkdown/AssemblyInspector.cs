@@ -55,6 +55,15 @@ public sealed class MemberInfo
     public bool IsAbstract { get; set; }
     public bool IsOverride { get; set; }
     public string XmlDocKey { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Key used to group overloads on the same member detail page.
+    /// For methods: the base method name (no generic arity).
+    /// For operators: the CLR method name (e.g. "op_Implicit").
+    /// For constructors: ".ctor".
+    /// For properties/fields/events: same as <see cref="Name"/>.
+    /// </summary>
+    public string GroupKey { get; set; } = string.Empty;
 }
 
 public sealed class ParameterInfo
@@ -281,6 +290,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             typeInfo.Fields.Add(new MemberInfo
             {
                 Name = field.Name,
+                GroupKey = field.Name,
                 Signature = $"{FormatTypeName(field.FieldType)} {field.Name}",
                 ReturnType = FormatTypeName(field.FieldType),
                 ReturnTypeFullName = GetTypeFullName(field.FieldType),
@@ -298,6 +308,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             typeInfo.Events.Add(new MemberInfo
             {
                 Name = evt.Name ?? string.Empty,
+                GroupKey = evt.Name ?? string.Empty,
                 Signature = $"event {FormatTypeName(evt.EventHandlerType!)} {evt.Name}",
                 ReturnType = FormatTypeName(evt.EventHandlerType!),
                 ReturnTypeFullName = GetTypeFullName(evt.EventHandlerType!),
@@ -337,6 +348,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         return new MemberInfo
         {
             Name = shortName,
+            GroupKey = ".ctor",
             Signature = $"{shortName}({paramList})",
             Parameters = parameters.Select(p => new ParameterInfo
             {
@@ -371,6 +383,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         return new MemberInfo
         {
             Name = prop.Name,
+            GroupKey = prop.Name,
             Signature = $"{FormatTypeName(prop.PropertyType)} {prop.Name}{accessors}",
             ReturnType = FormatTypeName(prop.PropertyType),
             ReturnTypeFullName = GetTypeFullName(prop.PropertyType),
@@ -408,6 +421,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         return new MemberInfo
         {
             Name = method.Name,
+            GroupKey = method.Name,
             Signature = $"{FormatTypeName(method.ReturnType)} {method.Name}{genericSuffix}({paramList})",
             ReturnType = FormatTypeName(method.ReturnType),
             ReturnTypeFullName = GetTypeFullName(method.ReturnType),
@@ -489,6 +503,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         return new MemberInfo
         {
             Name = displayName,
+            GroupKey = method.Name,
             Signature = signature,
             ReturnType = FormatTypeName(method.ReturnType),
             ReturnTypeFullName = GetTypeFullName(method.ReturnType),
