@@ -57,13 +57,18 @@ if (!File.Exists(assemblyPath))
     return 1;
 }
 
+// Pre-scan assembly for type names to build the URL map before parsing XML
+Console.WriteLine($"Pre-scanning assembly: {assemblyPath}");
+AssemblyInspector inspector = new(assemblyPath);
+XmlDocParser.TypeUrlMap = inspector.PreScanTypeUrls();
+Console.WriteLine($"  Built type URL map with {XmlDocParser.TypeUrlMap.Count} entries.");
+
 Console.WriteLine($"Parsing XML documentation from: {xmlPath}");
 XmlDocParser parser = new(xmlPath);
 Dictionary<string, DocMember> members = parser.Parse();
 Console.WriteLine($"  Found {members.Count} documented members.");
 
 Console.WriteLine($"Inspecting assembly: {assemblyPath}");
-AssemblyInspector inspector = new(assemblyPath);
 Dictionary<string, NamespaceInfo> namespaces = inspector.Inspect(members);
 Console.WriteLine($"  Found {namespaces.Count} namespace(s) with public types.");
 

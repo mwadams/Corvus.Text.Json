@@ -66,6 +66,39 @@ public sealed class ParameterInfo
 /// </summary>
 public sealed class AssemblyInspector(string assemblyPath)
 {
+    /// <summary>
+    /// Quick pre-scan: returns a map of type FullName → per-type page URL slug.
+    /// Used to populate <see cref="XmlDocParser.TypeUrlMap"/> before XML parsing.
+    /// </summary>
+    public Dictionary<string, string> PreScanTypeUrls()
+    {
+        Dictionary<string, string> map = new(StringComparer.Ordinal);
+
+        string runtimeDir = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
+        string assemblyDir = Path.GetDirectoryName(Path.GetFullPath(assemblyPath))!;
+
+        PathAssemblyResolver resolver = new(GetAssemblyPaths(runtimeDir, assemblyDir));
+        using MetadataLoadContext mlc = new(resolver, coreAssemblyName: "System.Runtime");
+        Assembly assembly = mlc.LoadFromAssemblyPath(Path.GetFullPath(assemblyPath));
+
+        foreach (Type type in assembly.GetExportedTypes())
+        {
+            if (type.Name.StartsWith('<') || type.FullName is null || type.IsNested)
+            {
+                continue;
+            }
+
+            string ns = type.Namespace ?? "(global)";
+            string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
+            string typeName = FormatTypeName(type);
+            string typeSlug = MarkdownGenerator.TypeToSlug(typeName);
+            string url = $"/api/{nsSlug}-{typeSlug}.html";
+            map[type.FullName] = url;
+        }
+
+        return map;
+    }
+
     public Dictionary<string, NamespaceInfo> Inspect(Dictionary<string, DocMember> xmlDocs)
     {
         Dictionary<string, NamespaceInfo> namespaces = new(StringComparer.Ordinal);
