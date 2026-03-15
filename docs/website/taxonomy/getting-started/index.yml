@@ -24,20 +24,20 @@ ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: Setup
     Spec:
-      Path: ../content/GettingStarted/Setup.md
+      Path: ../../content/GettingStarted/Setup.md
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: DefineSchema
     Spec:
-      Path: ../content/GettingStarted/DefineSchema.md
+      Path: ../../content/GettingStarted/DefineSchema.md
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: UseGeneratedTypes
     Spec:
-      Path: ../content/GettingStarted/UseGeneratedTypes.md
+      Path: ../../content/GettingStarted/UseGeneratedTypes.md
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: CreateAndMutate
     Spec:
-      Path: ../content/GettingStarted/CreateAndMutate.md
+      Path: ../../content/GettingStarted/CreateAndMutate.md
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: Validate
     Spec:
-      Path: ../content/GettingStarted/Validate.md
+      Path: ../../content/GettingStarted/Validate.md

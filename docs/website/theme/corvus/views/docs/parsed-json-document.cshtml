@@ -1,67 +1,19 @@
 @model SiteViewModel
 @{
     Layout = "../Shared/_Layout.cshtml";
-    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
 }
-<!-- Documentation page -->
-<div class="docs-layout container">
-    <!-- Sidebar navigation -->
-    <aside class="docs-sidebar" aria-label="Documentation navigation">
-        <nav class="docs-sidebar__nav">
-            <h2 class="docs-sidebar__title">Documentation</h2>
-            <ul class="docs-sidebar__list">
-                @foreach (var sibling in Model.SiteContext.Navigation.Children
-                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/docs/"))
-                    .SelectMany(x => x.Children)
-                    .Where(x => x.Header.Visible)
-                    .OrderBy(x => x.Rank))
-                {
-                    var isActive = Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(sibling.Url, Model.PageContext.Navigation.Url);
-                    <li class="docs-sidebar__item @(isActive ? "docs-sidebar__item--active" : "")">
-                        <a class="docs-sidebar__link" href="@sibling.Url"
-                           @(isActive ? "aria-current=page" : "")>@sibling.Title</a>
-                    </li>
-                }
-            </ul>
-        </nav>
-
-        <!-- On-page TOC -->
-        @if (Model.PageContext.GetAllMarkdownContent().Count() > 1)
-        {
-            <nav class="docs-sidebar__toc" aria-label="On this page">
-                <h3 class="docs-sidebar__toc-title">On this page</h3>
-                <ul class="docs-sidebar__list">
-                    @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
-                    {
-                        <li class="docs-sidebar__item">
-                            <a class="docs-sidebar__link docs-sidebar__link--toc" href="#@contentFragment.Id.ToLower()">@contentFragment.Id.Humanize(LetterCasing.Title)</a>
-                        </li>
-                    }
-                </ul>
-            </nav>
-        }
-    </aside>
-
-    <!-- Main content -->
-    <main id="main-content" class="docs-content">
+<div class="container">
+    <main id="main-content">
         <article class="text-content">
-            <!-- Page header -->
             <header class="page-header">
-                <h1 class="page-header__title">@Model.PageContext.Title</h1>
-                @if (!string.IsNullOrEmpty(Model.PageContext.MetaData.Description))
-                {
-                    <p class="page-header__description">@Model.PageContext.MetaData.Description</p>
-                }
+                <h1>@Model.PageContext.Title</h1>
             </header>
-
-            <!-- Content blocks -->
             @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
             {
-                <section class="content-section" id="@contentFragment.Id.ToLower()">
+                <section>
                     @Html.Raw(contentFragment.Body)
                 </section>
             }
         </article>
     </main>
 </div>
-<!-- /Documentation page -->

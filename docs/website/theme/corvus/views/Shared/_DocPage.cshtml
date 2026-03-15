@@ -11,12 +11,12 @@
             <h2 class="docs-sidebar__title">Documentation</h2>
             <ul class="docs-sidebar__list">
                 @foreach (var sibling in Model.SiteContext.Navigation.Children
-                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/docs/"))
+                    .Where(x => Vellum.Cli.Domain.Url.AreEquivalent(x.Url, new Vellum.Cli.Domain.Url("/docs/")))
                     .SelectMany(x => x.Children)
                     .Where(x => x.Header.Visible)
                     .OrderBy(x => x.Rank))
                 {
-                    var isActive = Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(sibling.Url, Model.PageContext.Navigation.Url);
+                    var isActive = Vellum.Cli.Domain.Url.AreEquivalent(sibling.Url, Model.PageContext.Navigation.Url);
                     <li class="docs-sidebar__item @(isActive ? "docs-sidebar__item--active" : "")">
                         <a class="docs-sidebar__link" href="@sibling.Url"
                            @(isActive ? "aria-current=page" : "")>@sibling.Title</a>

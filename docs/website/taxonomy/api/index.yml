@@ -24,4 +24,4 @@ ContentBlocks:
   - ContentType: application/vnd.endjin.ssg.content+md
     Id: Overview
     Spec:
-      Path: ../content/Api/Overview.md
+      Path: ../../content/Api/Overview.md

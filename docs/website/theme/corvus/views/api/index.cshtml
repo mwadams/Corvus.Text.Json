@@ -18,7 +18,7 @@
             <h2 class="api-sidebar__title">Namespaces</h2>
             <ul class="api-sidebar__list js-api-tree" id="api-tree">
                 @foreach (var child in Model.SiteContext.Navigation.Children
-                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/api/"))
+                    .Where(x => Vellum.Cli.Domain.Url.AreEquivalent(x.Url, new Vellum.Cli.Domain.Url("/api/")))
                     .SelectMany(x => x.Children)
                     .Where(x => x.Header.Visible)
                     .OrderBy(x => x.Rank))

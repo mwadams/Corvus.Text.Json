@@ -27,7 +27,7 @@
         <section class="examples-grid" aria-label="Example recipes">
             <div class="card-grid">
                 @foreach (var child in Model.SiteContext.Navigation.Children
-                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/examples/"))
+                    .Where(x => Vellum.Cli.Domain.Url.AreEquivalent(x.Url, new Vellum.Cli.Domain.Url("/examples/")))
                     .SelectMany(x => x.Children)
                     .Where(x => x.Header.Visible)
                     .OrderBy(x => x.Rank))

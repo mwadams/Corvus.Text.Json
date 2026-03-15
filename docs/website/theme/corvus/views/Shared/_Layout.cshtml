@@ -47,16 +47,16 @@
     <meta property="og:image" content="@ViewBag.OpenGraphImageUrl" />
     <meta property="og:title" content="@ViewBag.OpenGraphTitle" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="@Endjin.StaticSiteGenerator.Domain.Url.Normalize(ViewBag.PageUrl)" />
+    <meta property="og:url" content="@Vellum.Cli.Domain.Url.Normalize(ViewBag.PageUrl)" />
     <title>@ViewBag.MetaTitle</title>
-    <link itemprop="url" href="@Endjin.StaticSiteGenerator.Domain.Url.Normalize(ViewBag.PageUrl)" />
+    <link itemprop="url" href="@Vellum.Cli.Domain.Url.Normalize(ViewBag.PageUrl)" />
     @if (!string.IsNullOrEmpty(ViewBag.CanonicalUrl))
     {
     <link rel="canonical" href="@ViewBag.CanonicalUrl" />
     }
     else
     {
-    <link rel="canonical" href="@Endjin.StaticSiteGenerator.Domain.Url.Normalize(ViewBag.PageUrl)" />
+    <link rel="canonical" href="@Vellum.Cli.Domain.Url.Normalize(ViewBag.PageUrl)" />
     }
     <link rel="sitemap" href="@(Model.SiteContext.MetaData.Url)/sitemap.xml" />
     @if (Model.SiteContext.Preview)

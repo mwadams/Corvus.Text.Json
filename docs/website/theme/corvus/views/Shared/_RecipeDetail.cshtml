@@ -53,14 +53,14 @@
             <!-- Related patterns -->
             @{
                 var parentNav = Model.SiteContext.Navigation.Children
-                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/examples/"))
+                    .Where(x => Vellum.Cli.Domain.Url.AreEquivalent(x.Url, new Vellum.Cli.Domain.Url("/examples/")))
                     .SelectMany(x => x.Children)
                     .Where(x => x.Header.Visible)
                     .OrderBy(x => x.Rank)
                     .ToList();
 
                 var currentIndex = parentNav.FindIndex(x =>
-                    Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, Model.PageContext.Navigation.Url));
+                    Vellum.Cli.Domain.Url.AreEquivalent(x.Url, Model.PageContext.Navigation.Url));
             }
             @if (parentNav.Count > 1)
             {

@@ -21,8 +21,8 @@
             @foreach (var child in Model.SiteContext.Navigation.Children.Where(x => x.Header.Visible).OrderBy(x => x.Rank))
             {
                 <a href="@child.Url"
-                   class="nav-main__link @(Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(child.Url, Model.PageContext.Navigation.Parent) ? " nav-main__link--active" : "")"
-                   @(Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(child.Url, Model.PageContext.Navigation.Url) ? "aria-current=page" : "")>@child.Title</a>
+                   class="nav-main__link @(Vellum.Cli.Domain.Url.AreEquivalent(child.Url, Model.PageContext.Navigation.Parent) ? " nav-main__link--active" : "")"
+                   @(Vellum.Cli.Domain.Url.AreEquivalent(child.Url, Model.PageContext.Navigation.Url) ? "aria-current=page" : "")>@child.Title</a>
             }
         </nav>
 
