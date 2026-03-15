@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Collections.Generic;
@@ -66,8 +66,8 @@ internal ref struct JsonRegexValidator
     private JsonRegexOptions _options;
 
     // NOTE: _optionsStack is ValueListBuilder<int> to ensure that
-    //       ArrayPool<int>.Shared, not ArrayPool<RegexOptions>.Shared,
-    //       will be created if the stackalloc'd capacity is ever exceeded.
+    // ArrayPool<int>.Shared, not ArrayPool<RegexOptions>.Shared,
+    // will be created if the stackalloc'd capacity is ever exceeded.
     private ValueListBuilder<int> _optionsStack;
 
     private int _pos;
@@ -105,7 +105,7 @@ internal ref struct JsonRegexValidator
     [
         // 0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F
            0, 0, 0, 0, 0, 0, 0, 0, 0, W, W, 0, W, W, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        //    !  "  #  $  %  &  '  (  )  *  +  ,  -  .  /  0  1  2  3  4  5  6  7  8  9  :  ;  <  =  >  ?
+        // !  "  #  $  %  &  '  (  )  *  +,  -  .  /  0  1  2  3  4  5  6  7  8  9  :;  <  =  >  ?
            W, 0, 0, Z, S, 0, 0, 0, S, S, Q, Q, 0, 0, S, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, Q,
         // @  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  [  \  ]  ^  _
            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, S, S, 0, S, 0,
@@ -492,7 +492,7 @@ internal ref struct JsonRegexValidator
 
         int pos = startpos;
         int nChars = _pattern.Length - _pos;
-        while (--nChars > 0 && (uint)((ch = _pattern[++pos]) - '0') <= 9) ;
+        while (--nChars > 0 && (uint)((ch = _pattern[++pos]) - '0') <= 9);
 
         if (nChars == 0 || pos - startpos == 1)
         {
@@ -509,7 +509,7 @@ internal ref struct JsonRegexValidator
             return false;
         }
 
-        while (--nChars > 0 && (uint)((ch = _pattern[++pos]) - '0') <= 9) ;
+        while (--nChars > 0 && (uint)((ch = _pattern[++pos]) - '0') <= 9);
 
         return nChars > 0 && ch == '}';
     }

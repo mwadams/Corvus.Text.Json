@@ -537,7 +537,7 @@ namespace System
             if (IsWindows)
             {
                 // Missing key. If we're pre-20H1 then assume SSL3 is enabled.
-                // Otherwise, disabled. (See comments on https://github.com/dotnet/runtime/issues/1166)
+                // Otherwise, disabled. (See comments on https:// github.com/dotnet/runtime/issues/1166)
                 // Alternatively the returned values must have been some other types.
                 bool ssl3DefaultSupport = !IsWindows10Version2004OrGreater;
 
@@ -643,7 +643,7 @@ namespace System
             }
             else if (IsOSX || IsMacCatalyst || IsiOS || IstvOS)
             {
-                // [ActiveIssue("https://github.com/dotnet/runtime/issues/1979")]
+                // [ActiveIssue("https:// github.com/dotnet/runtime/issues/1979")]
                 return false;
             }
             else if (IsAndroid)

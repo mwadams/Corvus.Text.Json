@@ -5,7 +5,7 @@ namespace System
 {
     internal static class Obsoletions
     {
-        internal const string SharedUrlFormat = "https://aka.ms/dotnet-warnings/{0}";
+        internal const string SharedUrlFormat = "https:// aka.ms/dotnet-warnings/{0}";
 
         // Please see docs\project\list-of-diagnostics.md for instructions on the steps required
         // to introduce a new obsoletion, apply it to downlevel builds, claim a diagnostic id,
@@ -43,7 +43,7 @@ namespace System
         internal const string RemotingApisMessage = "This Remoting API is not supported and throws PlatformNotSupportedException.";
         internal const string RemotingApisDiagId = "SYSLIB0010";
 
-        internal const string BinaryFormatterMessage = "BinaryFormatter serialization is obsolete and should not be used. See https://aka.ms/binaryformatter for more information.";
+        internal const string BinaryFormatterMessage = "BinaryFormatter serialization is obsolete and should not be used. See https:// aka.ms/binaryformatter for more information.";
         internal const string BinaryFormatterDiagId = "SYSLIB0011";
 
         internal const string CodeBaseMessage = "Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility. Use Assembly.Location instead.";
@@ -124,7 +124,7 @@ namespace System
         internal const string AssemblyNameMembersMessage = "AssemblyName members HashAlgorithm, ProcessorArchitecture, and VersionCompatibility are obsolete and not supported.";
         internal const string AssemblyNameMembersDiagId = "SYSLIB0037";
 
-        internal const string SystemDataSerializationFormatBinaryMessage = "SerializationFormat.Binary is obsolete and should not be used. See https://aka.ms/serializationformat-binary-obsolete for more information.";
+        internal const string SystemDataSerializationFormatBinaryMessage = "SerializationFormat.Binary is obsolete and should not be used. See https:// aka.ms/serializationformat-binary-obsolete for more information.";
         internal const string SystemDataSerializationFormatBinaryDiagId = "SYSLIB0038";
 
         internal const string TlsVersion10and11Message = "TLS versions 1.0 and 1.1 have known vulnerabilities and are not recommended. Use a newer TLS version instead, or use SslProtocols.None to defer to OS defaults.";

@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -17,11 +17,11 @@ namespace Corvus.Text.Json
     internal static partial class JsonReaderHelper
     {
         /// <summary>IndexOfAny('"', '\', less than 32)</summary>
-        /// <remarks>https://tools.ietf.org/html/rfc8259</remarks>
+        /// <remarks>https:// tools.ietf.org/html/rfc8259</remarks>
         public static unsafe int IndexOfQuoteOrAnyControlOrBackSlash(this ReadOnlySpan<byte> span)
         {
             // Borrowed and modified from SpanHelpers.Byte:
-            // https://github.com/dotnet/corefx/blob/fc169cddedb6820aaabbdb8b7bece2a3df0fd1a5/src/Common/src/CoreLib/System/SpanHelpers.Byte.cs#L473-L604
+            // https:// github.com/dotnet/corefx/blob/fc169cddedb6820aaabbdb8b7bece2a3df0fd1a5/src/Common/src/CoreLib/System/SpanHelpers.Byte.cs#L473-L604
 
             ref byte searchSpace = ref MemoryMarshal.GetReference(span);
             int length = span.Length;
@@ -143,7 +143,7 @@ namespace Corvus.Text.Json
                 }
             }
             return -1;
-        Found: // Workaround for https://github.com/dotnet/runtime/issues/8795
+        Found: // Workaround for https:// github.com/dotnet/runtime/issues/8795
             return (int)(byte*)index;
         Found1:
             return (int)(byte*)(index + 1);
@@ -161,14 +161,14 @@ namespace Corvus.Text.Json
             return (int)(byte*)(index + 7);
         }
 
-        // Vector sub-search adapted from https://github.com/aspnet/KestrelHttpServer/pull/1138
+        // Vector sub-search adapted from https:// github.com/aspnet/KestrelHttpServer/pull/1138
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static int LocateFirstFoundByte(Vector<byte> match)
         {
             var vector64 = Vector.AsVectorUInt64(match);
             ulong candidate = 0;
             int i = 0;
-            // Pattern unrolled by jit https://github.com/dotnet/coreclr/pull/8001
+            // Pattern unrolled by jit https:// github.com/dotnet/coreclr/pull/8001
             for (; i < Vector<ulong>.Count; i++)
             {
                 candidate = vector64[i];

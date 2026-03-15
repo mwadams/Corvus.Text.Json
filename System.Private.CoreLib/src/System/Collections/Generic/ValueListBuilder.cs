@@ -48,7 +48,7 @@ internal ref partial struct ValueListBuilder<T>
     {
         int pos = _pos;
 
-        // Workaround for https://github.com/dotnet/runtime/issues/72004
+        // Workaround for https:// github.com/dotnet/runtime/issues/72004
         Span<T> span = _span;
         if ((uint)pos < (uint)span.Length)
         {

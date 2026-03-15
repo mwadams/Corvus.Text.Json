@@ -1211,11 +1211,11 @@ namespace System
                 return;
             }
 
-            ////if (PlatformDetection.IsRiscV64Process && double.IsNaN(expected) && double.IsNaN(actual))
-            ////{
-            ////    // RISC-V does not preserve payload
-            ////    return;
-            ////}
+            //// if (PlatformDetection.IsRiscV64Process && double.IsNaN(expected) && double.IsNaN(actual))
+            //// {
+            //// // RISC-V does not preserve payload
+            //// return;
+            //// }
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));
         }
@@ -1236,11 +1236,11 @@ namespace System
                 return;
             }
 
-            ////if (PlatformDetection.IsRiscV64Process && float.IsNaN(expected) && float.IsNaN(actual))
-            ////{
-            ////    // RISC-V does not preserve payload
-            ////    return;
-            ////}
+            //// if (PlatformDetection.IsRiscV64Process && float.IsNaN(expected) && float.IsNaN(actual))
+            //// {
+            //// // RISC-V does not preserve payload
+            //// return;
+            //// }
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));
         }
@@ -1258,11 +1258,11 @@ namespace System
                 return;
             }
 
-            ////if (PlatformDetection.IsRiscV64Process && Half.IsNaN(expected) && Half.IsNaN(actual))
-            ////{
-            ////    // RISC-V does not preserve payload
-            ////    return;
-            ////}
+            //// if (PlatformDetection.IsRiscV64Process && Half.IsNaN(expected) && Half.IsNaN(actual))
+            //// {
+            //// // RISC-V does not preserve payload
+            //// return;
+            //// }
 
             throw EqualException.ForMismatchedValues(ToStringPadded(expected), ToStringPadded(actual));
         }

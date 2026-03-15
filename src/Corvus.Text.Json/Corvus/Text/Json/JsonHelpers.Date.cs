@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -149,13 +149,13 @@ internal static partial class JsonHelpers
     ///
     /// Examples: (TZD is either "Z" or hh:mm offset from UTC)
     ///
-    ///  YYYY-MM-DD               (eg 1997-07-16)
-    ///  YYYY-MM-DDThh:mm         (eg 1997-07-16T19:20)
-    ///  YYYY-MM-DDThh:mm:ss      (eg 1997-07-16T19:20:30)
-    ///  YYYY-MM-DDThh:mm:ss.s    (eg 1997-07-16T19:20:30.45)
-    ///  YYYY-MM-DDThh:mmTZD      (eg 1997-07-16T19:20+01:00)
-    ///  YYYY-MM-DDThh:mm:ssTZD   (eg 1997-07-16T19:20:3001:00)
-    ///  YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45Z)
+    /// YYYY-MM-DD               (eg 1997-07-16)
+    /// YYYY-MM-DDThh:mm         (eg 1997-07-16T19:20)
+    /// YYYY-MM-DDThh:mm:ss      (eg 1997-07-16T19:20:30)
+    /// YYYY-MM-DDThh:mm:ss.s    (eg 1997-07-16T19:20:30.45)
+    /// YYYY-MM-DDThh:mmTZD      (eg 1997-07-16T19:20+01:00)
+    /// YYYY-MM-DDThh:mm:ssTZD   (eg 1997-07-16T19:20:3001:00)
+    /// YYYY-MM-DDThh:mm:ss.sTZD (eg 1997-07-16T19:20:30.45Z)
     ///
     /// Generally speaking we always require the "extended" option when one exists (3.1.3.5).
     /// The extended variants have separator characters between components ('-', ':', '.', etc.).
@@ -172,10 +172,10 @@ internal static partial class JsonHelpers
         // Parse the calendar date
         // -----------------------
         // ISO 8601-1:2019 5.2.2.1b "Calendar date complete extended format"
-        //  [dateX] = [year]["-"][month]["-"][day]
-        //  [year]  = [YYYY] [0000 - 9999] (4.3.2)
-        //  [month] = [MM] [01 - 12] (4.3.3)
-        //  [day]   = [DD] [01 - 28, 29, 30, 31] (4.3.4)
+        // [dateX] = [year]["-"][month]["-"][day]
+        // [year]  = [YYYY] [0000 - 9999] (4.3.2)
+        // [month] = [MM] [01 - 12] (4.3.3)
+        // [day]   = [DD] [01 - 28, 29, 30, 31] (4.3.4)
 
         // Note: 5.2.2.2 "Representations with reduced precision" allows for
         // just [year]["-"][month] (a) and just [year] (b), but we currently
@@ -213,18 +213,18 @@ internal static partial class JsonHelpers
         // ---------------------
 
         // ISO 8601-1:2019 5.3.1.2b "Local time of day complete extended format"
-        //  [timeX]   = ["T"][hour][":"][min][":"][sec]
-        //  [hour]    = [hh] [00 - 23] (4.3.8a)
-        //  [minute]  = [mm] [00 - 59] (4.3.9a)
-        //  [sec]     = [ss] [00 - 59, 60 with a leap second] (4.3.10a)
+        // [timeX]   = ["T"][hour][":"][min][":"][sec]
+        // [hour]    = [hh] [00 - 23] (4.3.8a)
+        // [minute]  = [mm] [00 - 59] (4.3.9a)
+        // [sec]     = [ss] [00 - 59, 60 with a leap second] (4.3.10a)
 
         // ISO 8601-1:2019 5.3.3 "UTC of day"
-        //  [timeX]["Z"]
+        // [timeX]["Z"]
 
         // ISO 8601-1:2019 5.3.4.2 "Local time of day with the time shift between
         // local time scale and UTC" (Extended format)
 
-        //  [shiftX] = ["+"|"-"][hour][":"][min]
+        // [shiftX] = ["+"|"-"][hour][":"][min]
 
         // Notes:
 
@@ -560,7 +560,7 @@ internal static partial class JsonHelpers
         }
 
         // This needs to allow leap seconds when appropriate.
-        // See https://github.com/dotnet/runtime/issues/30135.
+        // See https:// github.com/dotnet/runtime/issues/30135.
         if (((uint)parseData.Second) > 59)
         {
             value = default;

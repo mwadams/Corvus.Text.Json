@@ -114,7 +114,7 @@ namespace System.Text
         /// character ([ U+0000..U+007F ]).
         /// </summary>
         /// <remarks>
-        /// Per http://www.unicode.org/glossary/#ASCII, ASCII is only U+0000..U+007F.
+        /// Per http:// www.unicode.org/glossary/#ASCII, ASCII is only U+0000..U+007F.
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsAsciiCodePoint(uint value) => value <= 0x7Fu;

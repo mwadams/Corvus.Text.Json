@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System;
@@ -85,33 +85,33 @@ public readonly partial struct JsonElement
     /// <para>Complex object construction:</para>
     /// <code>
     /// using var objectDoc = JsonElement.CreateBuilder(workspace,
-    ///     new((ref JsonObjectBuilder objBuilder) =>
-    ///     {
-    ///         objBuilder.Add("name", "John Doe");
-    ///         objBuilder.Add("age", 30);
-    ///         objBuilder.Add("active", true);
-    ///         objBuilder.Add("metadata", new((ref JsonObjectBuilder metaBuilder) =>
-    ///         {
-    ///             metaBuilder.Add("created", DateTime.UtcNow);
-    ///             metaBuilder.Add("version", 1);
-    ///         }));
-    ///     }));
+    /// new((ref JsonObjectBuilder objBuilder) =>
+    /// {
+    /// objBuilder.Add("name", "John Doe");
+    /// objBuilder.Add("age", 30);
+    /// objBuilder.Add("active", true);
+    /// objBuilder.Add("metadata", new((ref JsonObjectBuilder metaBuilder) =>
+    /// {
+    /// metaBuilder.Add("created", DateTime.UtcNow);
+    /// metaBuilder.Add("version", 1);
+    /// }));
+    /// }));
     /// </code>
     /// </example>
     /// <example>
     /// <para>Array construction:</para>
     /// <code>
     /// using var arrayDoc = JsonElement.CreateBuilder(workspace,
-    ///     new((ref JsonArrayBuilder arrayBuilder) =>
-    ///     {
-    ///         arrayBuilder.AddItem(1);
-    ///         arrayBuilder.AddItem("two");
-    ///         arrayBuilder.AddItem(3.0);
-    ///         arrayBuilder.AddItem(new((ref JsonObjectBuilder objBuilder) =>
-    ///         {
-    ///             objBuilder.AddProperty("nested", true);
-    ///         }));
-    ///     }));
+    /// new((ref JsonArrayBuilder arrayBuilder) =>
+    /// {
+    /// arrayBuilder.AddItem(1);
+    /// arrayBuilder.AddItem("two");
+    /// arrayBuilder.AddItem(3.0);
+    /// arrayBuilder.AddItem(new((ref JsonObjectBuilder objBuilder) =>
+    /// {
+    /// objBuilder.AddProperty("nested", true);
+    /// }));
+    /// }));
     /// </code>
     /// </example>
     public readonly ref struct Source
@@ -1465,7 +1465,7 @@ public readonly partial struct JsonElement
     ///
     /// // Complex object
     /// using var doc = JsonElement.CreateBuilder(workspace,
-    ///     new(objectBuilder => { /* build object */ }));
+    /// new(objectBuilder => { /* build object */ }));
     ///
     /// // From existing JsonElement
     /// using var doc = JsonElement.CreateBuilder(workspace, existingElement);
@@ -1569,7 +1569,7 @@ public readonly partial struct JsonElement
     }
 
     /// <summary>
-    ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
+    /// Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
     /// </summary>
 
     /// <summary>
@@ -1617,12 +1617,12 @@ public readonly partial struct JsonElement
     /// <code>
     /// using var workspace = JsonWorkspace.Create();
     /// using var doc = JsonElement.CreateBuilder(workspace, new Source(
-    ///     new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
-    ///     {
-    ///         builder.Add("name", "John Doe");
-    ///         builder.Add("age", 30);
-    ///         builder.Add("active", true);
-    ///     })));
+    /// new JsonObjectBuilder.Build((ref JsonObjectBuilder builder) =>
+    /// {
+    /// builder.Add("name", "John Doe");
+    /// builder.Add("age", 30);
+    /// builder.Add("active", true);
+    /// })));
     ///
     /// var root = doc.RootElement;
     ///
@@ -1637,7 +1637,7 @@ public readonly partial struct JsonElement
     /// // Safe property access
     /// if (root.TryGetProperty("email", out var emailElement))
     /// {
-    ///     Console.WriteLine($"Email: {emailElement.GetString()}");
+    /// Console.WriteLine($"Email: {emailElement.GetString()}");
     /// }
     /// </code>
     /// </example>
@@ -1646,19 +1646,19 @@ public readonly partial struct JsonElement
     /// <code>
     /// // Create array document
     /// using var arrayDoc = JsonElement.CreateBuilder(workspace, new Source(
-    ///     new JsonArrayBuilder.Build((ref JsonArrayBuilder builder) =>
-    ///     {
-    ///         builder.Add(1);
-    ///         builder.Add(2);
-    ///         builder.Add(3);
-    ///     })));
+    /// new JsonArrayBuilder.Build((ref JsonArrayBuilder builder) =>
+    /// {
+    /// builder.Add(1);
+    /// builder.Add(2);
+    /// builder.Add(3);
+    /// })));
     ///
     /// var array = arrayDoc.RootElement;
     ///
     /// // Read array elements
     /// for (int i = 0; i &lt; array.GetArrayLength(); i++)
     /// {
-    ///     Console.WriteLine(array[i].GetInt32());
+    /// Console.WriteLine(array[i].GetInt32());
     /// }
     ///
     /// // Modify array elements
@@ -1668,15 +1668,18 @@ public readonly partial struct JsonElement
     /// // Enumerate array
     /// foreach (var item in array.EnumerateArray())
     /// {
-    ///     Console.WriteLine(item.ToString());
+    /// Console.WriteLine(item.ToString());
     /// }
     /// </code>
     /// </example>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
-    public partial struct Mutable : IMutableJsonElement<Mutable>, IFormattable
+    public partial struct Mutable : IMutableJsonElement<Mutable>,
 #if NET
-    , ISpanFormattable
-    , IUtf8SpanFormattable
+    IFormattable,
+    ISpanFormattable,
+    IUtf8SpanFormattable
+#else
+    IFormattable
 #endif
     {
         private readonly IMutableJsonDocument _parent;
@@ -1771,18 +1774,18 @@ public readonly partial struct JsonElement
         /// <code>
         /// switch (element.ValueKind)
         /// {
-        ///     case JsonValueKind.String:
-        ///         Console.WriteLine($"String: {element.GetString()}");
-        ///         break;
-        ///     case JsonValueKind.Number:
-        ///         Console.WriteLine($"Number: {element.GetDouble()}");
-        ///         break;
-        ///     case JsonValueKind.Array:
-        ///         Console.WriteLine($"Array length: {element.GetArrayLength()}");
-        ///         break;
-        ///     case JsonValueKind.Object:
-        ///         Console.WriteLine($"Object properties: {element.GetPropertyCount()}");
-        ///         break;
+        /// case JsonValueKind.String:
+        /// Console.WriteLine($"String: {element.GetString()}");
+        /// break;
+        /// case JsonValueKind.Number:
+        /// Console.WriteLine($"Number: {element.GetDouble()}");
+        /// break;
+        /// case JsonValueKind.Array:
+        /// Console.WriteLine($"Array length: {element.GetArrayLength()}");
+        /// break;
+        /// case JsonValueKind.Object:
+        /// Console.WriteLine($"Object properties: {element.GetPropertyCount()}");
+        /// break;
         /// }
         /// </code>
         /// </example>
@@ -1846,21 +1849,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the property with the given UTF-8 encoded name when the current value is an
-        ///   <see cref="JsonValueKind.Object"/>.
+        /// Gets the value of the property with the given UTF-8 encoded name when the current value is an
+        /// <see cref="JsonValueKind.Object"/>.
         /// </summary>
         /// <param name="propertyName">
-        ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property.
+        /// The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property.
         /// </param>
         /// <returns>
-        ///   The value of the property with the given name, or a default <see cref="Mutable"/>
-        ///   if no such property exists.
+        /// The value of the property with the given name, or a default <see cref="Mutable"/>
+        /// if no such property exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent document has been disposed.
+        /// The parent document has been disposed.
         /// </exception>
         public readonly Mutable this[ReadOnlySpan<byte> propertyName]
         {
@@ -1878,19 +1881,19 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the property with the given name when the current value is an
-        ///   <see cref="JsonValueKind.Object"/>.
+        /// Gets the value of the property with the given name when the current value is an
+        /// <see cref="JsonValueKind.Object"/>.
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>
-        ///   The value of the property with the given name, or a default <see cref="Mutable"/>
-        ///   if no such property exists.
+        /// The value of the property with the given name, or a default <see cref="Mutable"/>
+        /// if no such property exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent document has been disposed.
+        /// The parent document has been disposed.
         /// </exception>
         public readonly Mutable this[ReadOnlySpan<char> propertyName]
         {
@@ -1908,22 +1911,22 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the property with the given name when the current value is an
-        ///   <see cref="JsonValueKind.Object"/>.
+        /// Gets the value of the property with the given name when the current value is an
+        /// <see cref="JsonValueKind.Object"/>.
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         /// <returns>
-        ///   The value of the property with the given name, or a default <see cref="Mutable"/>
-        ///   if no such property exists.
+        /// The value of the property with the given name, or a default <see cref="Mutable"/>
+        /// if no such property exists.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent document has been disposed.
+        /// The parent document has been disposed.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="propertyName"/> is <see langword="null"/>.
+        /// <paramref name="propertyName"/> is <see langword="null"/>.
         /// </exception>
         public readonly Mutable this[string propertyName]
         {
@@ -1971,8 +1974,8 @@ public readonly partial struct JsonElement
         ///
         /// void ProcessReadOnlyElement(JsonElement element)
         /// {
-        ///     // Can only read, not modify
-        ///     Console.WriteLine(element.GetString());
+        /// // Can only read, not modify
+        /// Console.WriteLine(element.GetString());
         /// }
         /// </code>
         /// </example>
@@ -2244,14 +2247,14 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Get the number of values contained within the current array value.
+        /// Get the number of values contained within the current array value.
         /// </summary>
         /// <returns>The number of values contained within the current array value.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly int GetArrayLength()
         {
@@ -2261,14 +2264,14 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Get the number of properties contained within the current object value.
+        /// Get the number of properties contained within the current object value.
         /// </summary>
         /// <returns>The number of properties contained within the current object value.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly int GetPropertyCount()
         {
@@ -2278,31 +2281,31 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets a <see cref="Mutable"/> representing the value of a required property identified
-        ///   by <paramref name="propertyName"/>.
+        /// Gets a <see cref="Mutable"/> representing the value of a required property identified
+        /// by <paramref name="propertyName"/>.
         /// </summary>
         /// <remarks>
-        ///   Property name matching is performed as an ordinal, case-sensitive, comparison.
+        /// Property name matching is performed as an ordinal, case-sensitive, comparison.
         ///
-        ///   If a property is defined multiple times for the same object, the last such definition is
-        ///   what is matched.
+        /// If a property is defined multiple times for the same object, the last such definition is
+        /// what is matched.
         /// </remarks>
         /// <param name="propertyName">Name of the property whose value to return.</param>
         /// <returns>
-        ///   A <see cref="Mutable"/> representing the value of the requested property.
+        /// A <see cref="Mutable"/> representing the value of the requested property.
         /// </returns>
         /// <seealso cref="EnumerateObject"/>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="KeyNotFoundException">
-        ///   No property was found with the requested name.
+        /// No property was found with the requested name.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="propertyName"/> is <see langword="null"/>.
+        /// <paramref name="propertyName"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly Mutable GetProperty(string propertyName)
         {
@@ -2317,32 +2320,32 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets a <see cref="Mutable"/> representing the value of a required property identified
-        ///   by <paramref name="propertyName"/>.
+        /// Gets a <see cref="Mutable"/> representing the value of a required property identified
+        /// by <paramref name="propertyName"/>.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
+        /// <para>
+        /// Property name matching is performed as an ordinal, case-sensitive, comparison.
+        /// </para>
         ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
+        /// <para>
+        /// If a property is defined multiple times for the same object, the last such definition is
+        /// what is matched.
+        /// </para>
         /// </remarks>
         /// <param name="propertyName">Name of the property whose value to return.</param>
         /// <returns>
-        ///   A <see cref="Mutable"/> representing the value of the requested property.
+        /// A <see cref="Mutable"/> representing the value of the requested property.
         /// </returns>
         /// <seealso cref="EnumerateObject"/>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="KeyNotFoundException">
-        ///   No property was found with the requested name.
+        /// No property was found with the requested name.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly Mutable GetProperty(ReadOnlySpan<char> propertyName)
         {
@@ -2355,33 +2358,33 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets a <see cref="Mutable"/> representing the value of a required property identified
-        ///   by <paramref name="utf8PropertyName"/>.
+        /// Gets a <see cref="Mutable"/> representing the value of a required property identified
+        /// by <paramref name="utf8PropertyName"/>.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
+        /// <para>
+        /// Property name matching is performed as an ordinal, case-sensitive, comparison.
+        /// </para>
         ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
+        /// <para>
+        /// If a property is defined multiple times for the same object, the last such definition is
+        /// what is matched.
+        /// </para>
         /// </remarks>
         /// <param name="utf8PropertyName">
-        ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property to return.
+        /// The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property to return.
         /// </param>
         /// <returns>
-        ///   A <see cref="Mutable"/> representing the value of the requested property.
+        /// A <see cref="Mutable"/> representing the value of the requested property.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="KeyNotFoundException">
-        ///   No property was found with the requested name.
+        /// No property was found with the requested name.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="EnumerateObject"/>
         public readonly Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
@@ -2395,33 +2398,33 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Looks for a property named <paramref name="propertyName"/> in the current object, returning
-        ///   whether or not such a property existed. When the property exists <paramref name="value"/>
-        ///   is assigned to the value of that property.
+        /// Looks for a property named <paramref name="propertyName"/> in the current object, returning
+        /// whether or not such a property existed. When the property exists <paramref name="value"/>
+        /// is assigned to the value of that property.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
+        /// <para>
+        /// Property name matching is performed as an ordinal, case-sensitive, comparison.
+        /// </para>
         ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
+        /// <para>
+        /// If a property is defined multiple times for the same object, the last such definition is
+        /// what is matched.
+        /// </para>
         /// </remarks>
         /// <param name="propertyName">Name of the property to find.</param>
         /// <param name="value">Receives the value of the located property.</param>
         /// <returns>
-        ///   <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="propertyName"/> is <see langword="null"/>.
+        /// <paramref name="propertyName"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="EnumerateObject"/>
         public readonly bool TryGetProperty(string propertyName, out Mutable value)
@@ -2432,31 +2435,31 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Looks for a property named <paramref name="propertyName"/> in the current object, returning
-        ///   whether or not such a property existed. When the property exists <paramref name="value"/>
-        ///   is assigned to the value of that property.
+        /// Looks for a property named <paramref name="propertyName"/> in the current object, returning
+        /// whether or not such a property existed. When the property exists <paramref name="value"/>
+        /// is assigned to the value of that property.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
+        /// <para>
+        /// Property name matching is performed as an ordinal, case-sensitive, comparison.
+        /// </para>
         ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
+        /// <para>
+        /// If a property is defined multiple times for the same object, the last such definition is
+        /// what is matched.
+        /// </para>
         /// </remarks>
         /// <param name="propertyName">Name of the property to find.</param>
         /// <param name="value">Receives the value of the located property.</param>
         /// <returns>
-        ///   <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
         /// </returns>
         /// <seealso cref="EnumerateObject"/>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetProperty(ReadOnlySpan<char> propertyName, out Mutable value)
         {
@@ -2466,33 +2469,33 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Looks for a property named <paramref name="utf8PropertyName"/> in the current object, returning
-        ///   whether or not such a property existed. When the property exists <paramref name="value"/>
-        ///   is assigned to the value of that property.
+        /// Looks for a property named <paramref name="utf8PropertyName"/> in the current object, returning
+        /// whether or not such a property existed. When the property exists <paramref name="value"/>
+        /// is assigned to the value of that property.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     Property name matching is performed as an ordinal, case-sensitive, comparison.
-        ///   </para>
+        /// <para>
+        /// Property name matching is performed as an ordinal, case-sensitive, comparison.
+        /// </para>
         ///
-        ///   <para>
-        ///     If a property is defined multiple times for the same object, the last such definition is
-        ///     what is matched.
-        ///   </para>
+        /// <para>
+        /// If a property is defined multiple times for the same object, the last such definition is
+        /// what is matched.
+        /// </para>
         /// </remarks>
         /// <param name="utf8PropertyName">
-        ///   The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property to return.
+        /// The UTF-8 (with no Byte-Order-Mark (BOM)) representation of the name of the property to return.
         /// </param>
         /// <param name="value">Receives the value of the located property.</param>
         /// <returns>
-        ///   <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the property was found, <see langword="false"/> otherwise.
         /// </returns>
         /// <seealso cref="EnumerateObject"/>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, out Mutable value)
         {
@@ -2502,18 +2505,18 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="bool"/>.
+        /// Gets the value of the element as a <see cref="bool"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="bool"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.True"/> or
-        ///   <see cref="JsonValueKind.False"/>.
+        /// This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.True"/> or
+        /// <see cref="JsonValueKind.False"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool GetBoolean()
         {
@@ -2536,17 +2539,17 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="string"/>.
+        /// Gets the value of the element as a <see cref="string"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a string representation of values other than JSON strings.
+        /// This method does not create a string representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="string"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.String"/> nor <see cref="JsonValueKind.Null"/>.
+        /// This value's <see cref="ValueKind"/> is neither <see cref="JsonValueKind.String"/> nor <see cref="JsonValueKind.Null"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly string? GetString()
@@ -2591,21 +2594,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
+        /// Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///  This method does not create a byte[] representation of values other than base 64 encoded JSON strings.
+        /// This method does not create a byte[] representation of values other than base 64 encoded JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes.
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes.
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetBytesFromBase64([NotNullWhen(true)] out byte[]? value)
         {
@@ -2615,20 +2618,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as bytes.
+        /// Gets the value of the element as bytes.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a byte[] representation of values other than Base64 encoded JSON strings.
+        /// This method does not create a byte[] representation of values other than Base64 encoded JSON strings.
         /// </remarks>
         /// <returns>The value decode to bytes.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value is not encoded as Base64 text and hence cannot be decoded to bytes.
+        /// The value is not encoded as Base64 text and hence cannot be decoded to bytes.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly byte[] GetBytesFromBase64()
@@ -2642,21 +2645,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as an <see cref="sbyte"/>.
+        /// Attempts to represent the current JSON number as an <see cref="sbyte"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as an <see cref="sbyte"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as an <see cref="sbyte"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly bool TryGetSByte(out sbyte value)
@@ -2667,17 +2670,17 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as an <see cref="sbyte"/>.
+        /// Gets the current JSON number as an <see cref="sbyte"/>.
         /// </summary>
         /// <returns>The current JSON number as an <see cref="sbyte"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as an <see cref="sbyte"/>.
+        /// The value cannot be represented as an <see cref="sbyte"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly sbyte GetSByte()
@@ -2691,21 +2694,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="byte"/>.
+        /// Attempts to represent the current JSON number as a <see cref="byte"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="byte"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="byte"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetByte(out byte value)
         {
@@ -2715,20 +2718,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="byte"/>.
+        /// Gets the current JSON number as a <see cref="byte"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="byte"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="byte"/>.
+        /// The value cannot be represented as a <see cref="byte"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly byte GetByte()
         {
@@ -2741,21 +2744,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as an <see cref="short"/>.
+        /// Attempts to represent the current JSON number as an <see cref="short"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as an <see cref="short"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as an <see cref="short"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetInt16(out short value)
         {
@@ -2765,17 +2768,17 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as an <see cref="short"/>.
+        /// Gets the current JSON number as an <see cref="short"/>.
         /// </summary>
         /// <returns>The current JSON number as an <see cref="short"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as an <see cref="short"/>.
+        /// The value cannot be represented as an <see cref="short"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly short GetInt16()
         {
@@ -2788,21 +2791,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="ushort"/>.
+        /// Attempts to represent the current JSON number as a <see cref="ushort"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="ushort"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="ushort"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly bool TryGetUInt16(out ushort value)
@@ -2813,20 +2816,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="ushort"/>.
+        /// Gets the current JSON number as a <see cref="ushort"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="ushort"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="ushort"/>.
+        /// The value cannot be represented as a <see cref="ushort"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly ushort GetUInt16()
@@ -2840,21 +2843,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as an <see cref="int"/>.
+        /// Attempts to represent the current JSON number as an <see cref="int"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as an <see cref="int"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as an <see cref="int"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetInt32(out int value)
         {
@@ -2864,17 +2867,17 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as an <see cref="int"/>.
+        /// Gets the current JSON number as an <see cref="int"/>.
         /// </summary>
         /// <returns>The current JSON number as an <see cref="int"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as an <see cref="int"/>.
+        /// The value cannot be represented as an <see cref="int"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly int GetInt32()
         {
@@ -2887,21 +2890,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="uint"/>.
+        /// Attempts to represent the current JSON number as a <see cref="uint"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="uint"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="uint"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly bool TryGetUInt32(out uint value)
@@ -2912,20 +2915,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="uint"/>.
+        /// Gets the current JSON number as a <see cref="uint"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="uint"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="uint"/>.
+        /// The value cannot be represented as a <see cref="uint"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly uint GetUInt32()
@@ -2939,21 +2942,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="long"/>.
+        /// Attempts to represent the current JSON number as a <see cref="long"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="long"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="long"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetInt64(out long value)
         {
@@ -2963,20 +2966,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="long"/>.
+        /// Gets the current JSON number as a <see cref="long"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="long"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="long"/>.
+        /// The value cannot be represented as a <see cref="long"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly long GetInt64()
         {
@@ -2989,21 +2992,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="ulong"/>.
+        /// Attempts to represent the current JSON number as a <see cref="ulong"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="ulong"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="ulong"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly bool TryGetUInt64(out ulong value)
@@ -3014,20 +3017,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="ulong"/>.
+        /// Gets the current JSON number as a <see cref="ulong"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="ulong"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="ulong"/>.
+        /// The value cannot be represented as a <see cref="ulong"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly ulong GetUInt64()
@@ -3041,30 +3044,30 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="double"/>.
+        /// Attempts to represent the current JSON number as a <see cref="double"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   <para>
-        ///     This method does not parse the contents of a JSON string value.
-        ///   </para>
+        /// <para>
+        /// This method does not parse the contents of a JSON string value.
+        /// </para>
         ///
-        ///   <para>
-        ///     On .NET Core this method does not return <see langword="false"/> for values larger than
-        ///     <see cref="double.MaxValue"/> (or smaller than <see cref="double.MinValue"/>),
-        ///     instead <see langword="true"/> is returned and <see cref="double.PositiveInfinity"/> (or
-        ///     <see cref="double.NegativeInfinity"/>) is emitted.
-        ///   </para>
+        /// <para>
+        /// On .NET Core this method does not return <see langword="false"/> for values larger than
+        /// <see cref="double.MaxValue"/> (or smaller than <see cref="double.MinValue"/>),
+        /// instead <see langword="true"/> is returned and <see cref="double.PositiveInfinity"/> (or
+        /// <see cref="double.NegativeInfinity"/>) is emitted.
+        /// </para>
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="double"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="double"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetDouble(out double value)
         {
@@ -3074,28 +3077,28 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="double"/>.
+        /// Gets the current JSON number as a <see cref="double"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="double"/>.</returns>
         /// <remarks>
-        ///   <para>
-        ///     This method does not parse the contents of a JSON string value.
-        ///   </para>
+        /// <para>
+        /// This method does not parse the contents of a JSON string value.
+        /// </para>
         ///
-        ///   <para>
-        ///     On .NET Core this method returns <see cref="double.PositiveInfinity"/> (or
-        ///     <see cref="double.NegativeInfinity"/>) for values larger than
-        ///     <see cref="double.MaxValue"/> (or smaller than <see cref="double.MinValue"/>).
-        ///   </para>
+        /// <para>
+        /// On .NET Core this method returns <see cref="double.PositiveInfinity"/> (or
+        /// <see cref="double.NegativeInfinity"/>) for values larger than
+        /// <see cref="double.MaxValue"/> (or smaller than <see cref="double.MinValue"/>).
+        /// </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="double"/>.
+        /// The value cannot be represented as a <see cref="double"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly double GetDouble()
         {
@@ -3108,30 +3111,30 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="float"/>.
+        /// Attempts to represent the current JSON number as a <see cref="float"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   <para>
-        ///     This method does not parse the contents of a JSON string value.
-        ///   </para>
+        /// <para>
+        /// This method does not parse the contents of a JSON string value.
+        /// </para>
         ///
-        ///   <para>
-        ///     On .NET Core this method does not return <see langword="false"/> for values larger than
-        ///     <see cref="float.MaxValue"/> (or smaller than <see cref="float.MinValue"/>),
-        ///     instead <see langword="true"/> is returned and <see cref="float.PositiveInfinity"/> (or
-        ///     <see cref="float.NegativeInfinity"/>) is emitted.
-        ///   </para>
+        /// <para>
+        /// On .NET Core this method does not return <see langword="false"/> for values larger than
+        /// <see cref="float.MaxValue"/> (or smaller than <see cref="float.MinValue"/>),
+        /// instead <see langword="true"/> is returned and <see cref="float.PositiveInfinity"/> (or
+        /// <see cref="float.NegativeInfinity"/>) is emitted.
+        /// </para>
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="float"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="float"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetSingle(out float value)
         {
@@ -3141,28 +3144,28 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="float"/>.
+        /// Gets the current JSON number as a <see cref="float"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="float"/>.</returns>
         /// <remarks>
-        ///   <para>
-        ///     This method does not parse the contents of a JSON string value.
-        ///   </para>
+        /// <para>
+        /// This method does not parse the contents of a JSON string value.
+        /// </para>
         ///
-        ///   <para>
-        ///     On .NET Core this method returns <see cref="float.PositiveInfinity"/> (or
-        ///     <see cref="float.NegativeInfinity"/>) for values larger than
-        ///     <see cref="float.MaxValue"/> (or smaller than <see cref="float.MinValue"/>).
-        ///   </para>
+        /// <para>
+        /// On .NET Core this method returns <see cref="float.PositiveInfinity"/> (or
+        /// <see cref="float.NegativeInfinity"/>) for values larger than
+        /// <see cref="float.MaxValue"/> (or smaller than <see cref="float.MinValue"/>).
+        /// </para>
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="float"/>.
+        /// The value cannot be represented as a <see cref="float"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly float GetSingle()
         {
@@ -3175,21 +3178,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="decimal"/>.
+        /// Attempts to represent the current JSON number as a <see cref="decimal"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="decimal"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="decimal"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly bool TryGetDecimal(out decimal value)
@@ -3200,20 +3203,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="decimal"/>.
+        /// Gets the current JSON number as a <see cref="decimal"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="decimal"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="decimal"/>.
+        /// The value cannot be represented as a <see cref="decimal"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly decimal GetDecimal()
@@ -3229,21 +3232,21 @@ public readonly partial struct JsonElement
 #if NET
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="Int128"/>.
+        /// Attempts to represent the current JSON number as a <see cref="Int128"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="Int128"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="Int128"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly bool TryGetInt128(out Int128 value)
@@ -3254,20 +3257,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="Int128"/>.
+        /// Gets the current JSON number as a <see cref="Int128"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="Int128"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="Int128"/>.
+        /// The value cannot be represented as a <see cref="Int128"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly Int128 GetInt128()
@@ -3281,21 +3284,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="UInt128"/>.
+        /// Attempts to represent the current JSON number as a <see cref="UInt128"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="UInt128"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="UInt128"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         [CLSCompliant(false)]
@@ -3307,20 +3310,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="UInt128"/>.
+        /// Gets the current JSON number as a <see cref="UInt128"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="UInt128"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="UInt128"/>.
+        /// The value cannot be represented as a <see cref="UInt128"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         [CLSCompliant(false)]
@@ -3335,21 +3338,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="Half"/>.
+        /// Attempts to represent the current JSON number as a <see cref="Half"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="Half"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="Half"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly bool TryGetHalf(out Half value)
@@ -3360,20 +3363,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="Half"/>.
+        /// Gets the current JSON number as a <see cref="Half"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="Half"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="Half"/>.
+        /// The value cannot be represented as a <see cref="Half"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly Half GetHalf()
@@ -3389,21 +3392,21 @@ public readonly partial struct JsonElement
 #endif
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="BigNumber"/>.
+        /// Attempts to represent the current JSON number as a <see cref="BigNumber"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="BigNumber"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="BigNumber"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         [CLSCompliant(false)]
@@ -3415,20 +3418,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="BigNumber"/>.
+        /// Gets the current JSON number as a <see cref="BigNumber"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="BigNumber"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="BigNumber"/>.
+        /// The value cannot be represented as a <see cref="BigNumber"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         [CLSCompliant(false)]
@@ -3443,21 +3446,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON number as a <see cref="BigInteger"/>.
+        /// Attempts to represent the current JSON number as a <see cref="BigInteger"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the number can be represented as a <see cref="BigInteger"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the number can be represented as a <see cref="BigInteger"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly bool TryGetBigInteger(out BigInteger value)
@@ -3468,20 +3471,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the current JSON number as a <see cref="BigInteger"/>.
+        /// Gets the current JSON number as a <see cref="BigInteger"/>.
         /// </summary>
         /// <returns>The current JSON number as a <see cref="BigInteger"/>.</returns>
         /// <remarks>
-        ///   This method does not parse the contents of a JSON string value.
+        /// This method does not parse the contents of a JSON string value.
         /// </remarks>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Number"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="BigInteger"/>.
+        /// The value cannot be represented as a <see cref="BigInteger"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="GetRawText"/>
         public readonly BigInteger GetBigInteger()
@@ -3495,21 +3498,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="LocalDate"/>.
+        /// Attempts to represent the current JSON string as a <see cref="LocalDate"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a LocalDate representation of values other than JSON strings.
+        /// This method does not create a LocalDate representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="LocalDate"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="LocalDate"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetLocalDate(out LocalDate value)
         {
@@ -3519,20 +3522,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="LocalDate"/>.
+        /// Gets the value of the element as a <see cref="LocalDate"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a LocalDate representation of values other than JSON strings.
+        /// This method does not create a LocalDate representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="LocalDate"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTime"/>.
+        /// The value cannot be represented as a <see cref="DateTime"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly LocalDate GetLocalDate()
@@ -3546,21 +3549,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="OffsetTime"/>.
+        /// Attempts to represent the current JSON string as a <see cref="OffsetTime"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a OffsetTime representation of values other than JSON strings.
+        /// This method does not create a OffsetTime representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="OffsetTime"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="OffsetTime"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetOffsetTime(out OffsetTime value)
         {
@@ -3570,20 +3573,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="OffsetTime"/>.
+        /// Gets the value of the element as a <see cref="OffsetTime"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a OffsetTime representation of values other than JSON strings.
+        /// This method does not create a OffsetTime representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="OffsetTime"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTime"/>.
+        /// The value cannot be represented as a <see cref="DateTime"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly OffsetTime GetOffsetTime()
@@ -3597,21 +3600,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="OffsetDateTime"/>.
+        /// Attempts to represent the current JSON string as a <see cref="OffsetDateTime"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a OffsetDateTime representation of values other than JSON strings.
+        /// This method does not create a OffsetDateTime representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="OffsetDateTime"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="OffsetDateTime"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetOffsetDateTime(out OffsetDateTime value)
         {
@@ -3621,20 +3624,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="OffsetDateTime"/>.
+        /// Gets the value of the element as a <see cref="OffsetDateTime"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a OffsetDateTime representation of values other than JSON strings.
+        /// This method does not create a OffsetDateTime representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="OffsetDateTime"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTime"/>.
+        /// The value cannot be represented as a <see cref="DateTime"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly OffsetDateTime GetOffsetDateTime()
@@ -3648,21 +3651,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="OffsetDate"/>.
+        /// Attempts to represent the current JSON string as a <see cref="OffsetDate"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a OffsetDate representation of values other than JSON strings.
+        /// This method does not create a OffsetDate representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="OffsetDate"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="OffsetDate"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetOffsetDate(out OffsetDate value)
         {
@@ -3672,20 +3675,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="OffsetDate"/>.
+        /// Gets the value of the element as a <see cref="OffsetDate"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a OffsetDate representation of values other than JSON strings.
+        /// This method does not create a OffsetDate representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="OffsetDate"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTime"/>.
+        /// The value cannot be represented as a <see cref="DateTime"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly OffsetDate GetOffsetDate()
@@ -3699,21 +3702,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="Period"/>.
+        /// Attempts to represent the current JSON string as a <see cref="Period"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a Period representation of values other than JSON strings.
+        /// This method does not create a Period representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="Period"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="Period"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetPeriod(out Period value)
         {
@@ -3723,20 +3726,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="Period"/>.
+        /// Gets the value of the element as a <see cref="Period"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a Period representation of values other than JSON strings.
+        /// This method does not create a Period representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="Period"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTime"/>.
+        /// The value cannot be represented as a <see cref="DateTime"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly Period GetPeriod()
@@ -3750,21 +3753,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="DateTime"/>.
+        /// Attempts to represent the current JSON string as a <see cref="DateTime"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a DateTime representation of values other than JSON strings.
+        /// This method does not create a DateTime representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="DateTime"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="DateTime"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetDateTime(out DateTime value)
         {
@@ -3774,20 +3777,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="DateTime"/>.
+        /// Gets the value of the element as a <see cref="DateTime"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a DateTime representation of values other than JSON strings.
+        /// This method does not create a DateTime representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="DateTime"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTime"/>.
+        /// The value cannot be represented as a <see cref="DateTime"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly DateTime GetDateTime()
@@ -3801,21 +3804,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="DateTimeOffset"/>.
+        /// Attempts to represent the current JSON string as a <see cref="DateTimeOffset"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a DateTimeOffset representation of values other than JSON strings.
+        /// This method does not create a DateTimeOffset representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="DateTimeOffset"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="DateTimeOffset"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetDateTimeOffset(out DateTimeOffset value)
         {
@@ -3825,20 +3828,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="DateTimeOffset"/>.
+        /// Gets the value of the element as a <see cref="DateTimeOffset"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a DateTimeOffset representation of values other than JSON strings.
+        /// This method does not create a DateTimeOffset representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="DateTimeOffset"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="DateTimeOffset"/>.
+        /// The value cannot be represented as a <see cref="DateTimeOffset"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly DateTimeOffset GetDateTimeOffset()
@@ -3852,21 +3855,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Attempts to represent the current JSON string as a <see cref="Guid"/>.
+        /// Attempts to represent the current JSON string as a <see cref="Guid"/>.
         /// </summary>
         /// <param name="value">Receives the value.</param>
         /// <remarks>
-        ///   This method does not create a Guid representation of values other than JSON strings.
+        /// This method does not create a Guid representation of values other than JSON strings.
         /// </remarks>
         /// <returns>
-        ///   <see langword="true"/> if the string can be represented as a <see cref="Guid"/>,
-        ///   <see langword="false"/> otherwise.
+        /// <see langword="true"/> if the string can be represented as a <see cref="Guid"/>,
+        /// <see langword="false"/> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly bool TryGetGuid(out Guid value)
         {
@@ -3876,20 +3879,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the value of the element as a <see cref="Guid"/>.
+        /// Gets the value of the element as a <see cref="Guid"/>.
         /// </summary>
         /// <remarks>
-        ///   This method does not create a Guid representation of values other than JSON strings.
+        /// This method does not create a Guid representation of values other than JSON strings.
         /// </remarks>
         /// <returns>The value of the element as a <see cref="Guid"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <exception cref="FormatException">
-        ///   The value cannot be represented as a <see cref="Guid"/>.
+        /// The value cannot be represented as a <see cref="Guid"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <seealso cref="ToString"/>
         public readonly Guid GetGuid()
@@ -3903,13 +3906,13 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets the original input data backing this value, returning it as a <see cref="string"/>.
+        /// Gets the original input data backing this value, returning it as a <see cref="string"/>.
         /// </summary>
         /// <returns>
-        ///   The original input data backing this value, returning it as a <see cref="string"/>.
+        /// The original input data backing this value, returning it as a <see cref="string"/>.
         /// </returns>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly string GetRawText()
         {
@@ -3944,19 +3947,19 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Compares <paramref name="text" /> to the string value of this element.
+        /// Compares <paramref name="text" /> to the string value of this element.
         /// </summary>
         /// <param name="text">The text to compare against.</param>
         /// <returns>
-        ///   <see langword="true" /> if the string value of this element matches <paramref name="text"/>,
-        ///   <see langword="false" /> otherwise.
+        /// <see langword="true" /> if the string value of this element matches <paramref name="text"/>,
+        /// <see langword="false" /> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <remarks>
-        ///   This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
-        ///   the result of calling <see cref="GetString" />, but avoids creating the string instance.
+        /// This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
+        /// the result of calling <see cref="GetString" />, but avoids creating the string instance.
         /// </remarks>
         public readonly bool ValueEquals(string? text)
         {
@@ -3971,20 +3974,20 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Compares the text represented by <paramref name="utf8Text" /> to the string value of this element.
+        /// Compares the text represented by <paramref name="utf8Text" /> to the string value of this element.
         /// </summary>
         /// <param name="utf8Text">The UTF-8 encoded text to compare against.</param>
         /// <returns>
-        ///   <see langword="true" /> if the string value of this element has the same UTF-8 encoding as
-        ///   <paramref name="utf8Text" />, <see langword="false" /> otherwise.
+        /// <see langword="true" /> if the string value of this element has the same UTF-8 encoding as
+        /// <paramref name="utf8Text" />, <see langword="false" /> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <remarks>
-        ///   This method is functionally equal to doing an ordinal comparison of the string produced by UTF-8 decoding
-        ///   <paramref name="utf8Text" /> with the result of calling <see cref="GetString" />, but avoids creating the
-        ///   string instances.
+        /// This method is functionally equal to doing an ordinal comparison of the string produced by UTF-8 decoding
+        /// <paramref name="utf8Text" /> with the result of calling <see cref="GetString" />, but avoids creating the
+        /// string instances.
         /// </remarks>
         public readonly bool ValueEquals(ReadOnlySpan<byte> utf8Text)
         {
@@ -4002,19 +4005,19 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Compares <paramref name="text" /> to the string value of this element.
+        /// Compares <paramref name="text" /> to the string value of this element.
         /// </summary>
         /// <param name="text">The text to compare against.</param>
         /// <returns>
-        ///   <see langword="true" /> if the string value of this element matches <paramref name="text"/>,
-        ///   <see langword="false" /> otherwise.
+        /// <see langword="true" /> if the string value of this element matches <paramref name="text"/>,
+        /// <see langword="false" /> otherwise.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.String"/>.
         /// </exception>
         /// <remarks>
-        ///   This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
-        ///   the result of calling <see cref="GetString" />, but avoids creating the string instance.
+        /// This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
+        /// the result of calling <see cref="GetString" />, but avoids creating the string instance.
         /// </remarks>
         public readonly bool ValueEquals(ReadOnlySpan<char> text)
         {
@@ -4046,17 +4049,17 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Write the element into the provided writer as a JSON value.
+        /// Write the element into the provided writer as a JSON value.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <exception cref="ArgumentNullException">
-        ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+        /// The <paramref name="writer"/> parameter is <see langword="null"/>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is <see cref="JsonValueKind.Undefined"/>.
+        /// This value's <see cref="ValueKind"/> is <see cref="JsonValueKind.Undefined"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public readonly void WriteTo(Utf8JsonWriter writer)
         {
@@ -4068,16 +4071,16 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Get an enumerator to enumerate the values in the JSON array represented by this Mutable.
+        /// Get an enumerator to enumerate the values in the JSON array represented by this Mutable.
         /// </summary>
         /// <returns>
-        ///   An enumerator to enumerate the values in the JSON array represented by this Mutable.
+        /// An enumerator to enumerate the values in the JSON array represented by this Mutable.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly ArrayEnumerator<Mutable> EnumerateArray()
@@ -4095,16 +4098,16 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Get an enumerator to enumerate the properties in the JSON object represented by this Mutable.
+        /// Get an enumerator to enumerate the properties in the JSON object represented by this Mutable.
         /// </summary>
         /// <returns>
-        ///   An enumerator to enumerate the properties in the JSON object represented by this Mutable.
+        /// An enumerator to enumerate the properties in the JSON object represented by this Mutable.
         /// </returns>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [CLSCompliant(false)]
         public readonly ObjectEnumerator<Mutable> EnumerateObject()
@@ -4122,38 +4125,38 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Gets a string representation for the current value appropriate to the value type.
+        /// Gets a string representation for the current value appropriate to the value type.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     For Mutable built from <see cref="IMutableJsonDocument"/>:
-        ///   </para>
+        /// <para>
+        /// For Mutable built from <see cref="IMutableJsonDocument"/>:
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For other types, the value of <see cref="GetRawText"/>() is returned.
-        ///   </para>
+        /// <para>
+        /// For other types, the value of <see cref="GetRawText"/>() is returned.
+        /// </para>
         /// </remarks>
         /// <returns>
-        ///   A string representation for the current value appropriate to the value type.
+        /// A string representation for the current value appropriate to the value type.
         /// </returns>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public override readonly string ToString()
         {
@@ -4201,12 +4204,12 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Get a JsonElement which can be safely stored beyond the lifetime of the
-        ///   original <see cref="IMutableJsonDocument"/>.
+        /// Get a JsonElement which can be safely stored beyond the lifetime of the
+        /// original <see cref="IMutableJsonDocument"/>.
         /// </summary>
         /// <returns>
-        ///   A JsonElement which can be safely stored beyond the lifetime of the
-        ///   original <see cref="IMutableJsonDocument"/>.
+        /// A JsonElement which can be safely stored beyond the lifetime of the
+        /// original <see cref="IMutableJsonDocument"/>.
         /// </returns>
         public readonly JsonElement Clone()
         {
@@ -4216,22 +4219,22 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a value Source.
+        /// Sets a JSON object property on this element using a value Source.
         /// </summary>
         /// <param name="propertyName">The name of the property to set.</param>
         /// <param name="source">The source of the property.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, in Source source)
@@ -4240,22 +4243,22 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a value Source.
+        /// Sets a JSON object property on this element using a value Source.
         /// </summary>
         /// <param name="propertyName">The name of the property to set.</param>
         /// <param name="source">The source of the property.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, in Source source, int estimatedMemberCount = 30)
         {
@@ -4285,22 +4288,22 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a value Source.
+        /// Sets a JSON object property on this element using a value Source.
         /// </summary>
         /// <param name="propertyName">The name of the property to set.</param>
         /// <param name="source">The source of the property.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, in Source source, int estimatedMemberCount = 30)
         {
@@ -4330,27 +4333,27 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set.</param>
         /// <param name="objectValue">A delegate that builds the JSON object value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
@@ -4359,7 +4362,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -4367,21 +4370,21 @@ public readonly partial struct JsonElement
         /// <param name="objectValue">A delegate that builds the JSON object value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty<TContext>(string propertyName, in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
@@ -4393,31 +4396,31 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set as a character span.</param>
         /// <param name="objectValue">A delegate that builds the JSON object value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a character span to avoid string allocation when the property name
+        /// is already available as a span.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
@@ -4442,7 +4445,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -4450,25 +4453,25 @@ public readonly partial struct JsonElement
         /// <param name="objectValue">A delegate that builds the JSON object value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a character span to avoid string allocation when the property name
+        /// is already available as a span.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -4496,31 +4499,31 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
         /// <param name="objectValue">A delegate that builds the JSON object value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        /// with UTF-8 property names, avoiding encoding conversions.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
@@ -4545,7 +4548,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
+        /// Sets a JSON object property on this element using a JsonObjectBuilder.Build delegate.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -4553,25 +4556,25 @@ public readonly partial struct JsonElement
         /// <param name="objectValue">A delegate that builds the JSON object value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        /// with UTF-8 property names, avoiding encoding conversions.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -4599,27 +4602,27 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set.</param>
         /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty(string propertyName, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
@@ -4628,7 +4631,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -4636,21 +4639,21 @@ public readonly partial struct JsonElement
         /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetProperty<TContext>(string propertyName, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
@@ -4662,31 +4665,31 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set as a character span.</param>
         /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a character span to avoid string allocation when the property name
+        /// is already available as a span.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty(ReadOnlySpan<char> propertyName, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
@@ -4711,7 +4714,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -4719,25 +4722,25 @@ public readonly partial struct JsonElement
         /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a character span to avoid string allocation when the property name
+        /// is already available as a span.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty<TContext>(ReadOnlySpan<char> propertyName, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -4765,31 +4768,31 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
         /// <param name="propertyName">The name of the property to set as a UTF-8 encoded byte span.</param>
         /// <param name="arrayValue">A delegate that builds the JSON array value.</param>
         /// <param name="estimatedMemberCount">An estimate of the number of elements in the array for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        /// with UTF-8 property names, avoiding encoding conversions.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty(ReadOnlySpan<byte> propertyName, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
@@ -4814,7 +4817,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
+        /// Sets a JSON array property on this element using a JsonArrayBuilder.Build delegate.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="propertyName">The name of the property to set.</param>
@@ -4823,25 +4826,25 @@ public readonly partial struct JsonElement
         /// <param name="estimatedMemberCount">An estimate of the number of members in the object for performance optimization.</param>
         /// <exception cref="InvalidOperationException">
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
-        ///     Providing an accurate estimate can improve performance by reducing reallocations.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced.
-        ///     If the property doesn't exist, it will be added to the object.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        /// with UTF-8 property names, avoiding encoding conversions.
+        /// </para>
+        /// <para>
+        /// The <paramref name="estimatedMemberCount"/> parameter helps optimize memory allocation.
+        /// Providing an accurate estimate can improve performance by reducing reallocations.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced.
+        /// If the property doesn't exist, it will be added to the object.
+        /// </para>
         /// </remarks>
         public void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -4869,24 +4872,24 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a property to JSON null on this JSON object element.
+        /// Sets a property to JSON null on this JSON object element.
         /// </summary>
         /// <param name="propertyName">The name of the property to set to null.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This sets the property to the JSON null value, not the .NET null reference.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced with null.
-        ///     If the property doesn't exist, it will be added to the object with a null value.
-        ///   </para>
+        /// <para>
+        /// This sets the property to the JSON null value, not the .NET null reference.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced with null.
+        /// If the property doesn't exist, it will be added to the object with a null value.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetPropertyNull(string propertyName)
@@ -4895,28 +4898,28 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a property to JSON null on this JSON object element.
+        /// Sets a property to JSON null on this JSON object element.
         /// </summary>
         /// <param name="propertyName">The name of the property to set to null as a character span.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a character span to avoid string allocation when the property name
-        ///     is already available as a span.
-        ///   </para>
-        ///   <para>
-        ///     This sets the property to the JSON null value, not the .NET null reference.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced with null.
-        ///     If the property doesn't exist, it will be added to the object with a null value.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a character span to avoid string allocation when the property name
+        /// is already available as a span.
+        /// </para>
+        /// <para>
+        /// This sets the property to the JSON null value, not the .NET null reference.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced with null.
+        /// If the property doesn't exist, it will be added to the object with a null value.
+        /// </para>
         /// </remarks>
         public void SetPropertyNull(ReadOnlySpan<char> propertyName)
         {
@@ -4941,28 +4944,28 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets a property to JSON null on this JSON object element.
+        /// Sets a property to JSON null on this JSON object element.
         /// </summary>
         /// <param name="propertyName">The name of the property to set to null as a UTF-8 encoded byte span.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This overload accepts a UTF-8 encoded byte span for optimal performance when working
-        ///     with UTF-8 property names, avoiding encoding conversions.
-        ///   </para>
-        ///   <para>
-        ///     This sets the property to the JSON null value, not the .NET null reference.
-        ///   </para>
-        ///   <para>
-        ///     If the property already exists, its value will be replaced with null.
-        ///     If the property doesn't exist, it will be added to the object with a null value.
-        ///   </para>
+        /// <para>
+        /// This overload accepts a UTF-8 encoded byte span for optimal performance when working
+        /// with UTF-8 property names, avoiding encoding conversions.
+        /// </para>
+        /// <para>
+        /// This sets the property to the JSON null value, not the .NET null reference.
+        /// </para>
+        /// <para>
+        /// If the property already exists, its value will be replaced with null.
+        /// If the property doesn't exist, it will be added to the object with a null value.
+        /// </para>
         /// </remarks>
         public void SetPropertyNull(ReadOnlySpan<byte> propertyName)
         {
@@ -5023,29 +5026,29 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index using a value Source.
+        /// Sets the value of an array element at the specified index using a value Source.
         /// </summary>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
         /// <param name="source">The source of the item.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The object is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON objects.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The object is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON objects.
+        /// </para>
         /// </remarks>
         public void SetItem(int itemIndex, in Source source, int estimatedMemberCount = 30)
         {
@@ -5074,29 +5077,29 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// Sets the value of an array element at the specified index to a JSON object.
         /// </summary>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
         /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The object is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON objects.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The object is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON objects.
+        /// </para>
         /// </remarks>
         public void SetItem(int itemIndex, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
@@ -5118,7 +5121,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// Sets the value of an array element at the specified index to a JSON object.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
@@ -5126,23 +5129,23 @@ public readonly partial struct JsonElement
         /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The object is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON objects.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The object is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON objects.
+        /// </para>
         /// </remarks>
         public void SetItem<TContext>(int itemIndex, in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -5167,29 +5170,29 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// Sets the value of an array element at the specified index to a JSON array.
         /// </summary>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
         /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
         /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The array is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON arrays.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The array is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON arrays.
+        /// </para>
         /// </remarks>
         public void SetItem(int itemIndex, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
@@ -5211,7 +5214,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// Sets the value of an array element at the specified index to a JSON array.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
@@ -5219,23 +5222,23 @@ public readonly partial struct JsonElement
         /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
         /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The array is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON arrays.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The array is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON arrays.
+        /// </para>
         /// </remarks>
         public void SetItem<TContext>(int itemIndex, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -5260,21 +5263,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to null.
+        /// Sets the value of an array element at the specified index to null.
         /// </summary>
         /// <param name="itemIndex">The zero-based index of the array element to set.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
         /// </remarks>
         public void SetItemNull(int itemIndex)
         {
@@ -5296,7 +5299,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Inserts an array element at the specified index from a <see cref="Source"/> value.
+        /// Inserts an array element at the specified index from a <see cref="Source"/> value.
         /// </summary>
         /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
         /// <param name="source">The source value to insert.</param>
@@ -5317,29 +5320,29 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// Sets the value of an array element at the specified index to a JSON object.
         /// </summary>
         /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
         /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The object is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON objects.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The object is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON objects.
+        /// </para>
         /// </remarks>
         public void InsertItem(int itemIndex, ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
         {
@@ -5351,7 +5354,7 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON object.
+        /// Sets the value of an array element at the specified index to a JSON object.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
@@ -5359,23 +5362,23 @@ public readonly partial struct JsonElement
         /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The object is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON objects.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The object is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON objects.
+        /// </para>
         /// </remarks>
         public void InsertItem<TContext>(int itemIndex, in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -5390,29 +5393,29 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// Sets the value of an array element at the specified index to a JSON array.
         /// </summary>
         /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
         /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
         /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The array is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON arrays.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The array is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON arrays.
+        /// </para>
         /// </remarks>
         public void InsertItem(int itemIndex, ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
         {
@@ -5424,29 +5427,29 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to a JSON array.
+        /// Sets the value of an array element at the specified index to a JSON array.
         /// </summary>
         /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
         /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
         /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
-        ///   </para>
-        ///   <para>
-        ///     The array is constructed using the provided builder delegate, which provides a fluent API
-        ///     for efficiently building nested JSON arrays.
-        ///   </para>
+        /// <para>
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// </para>
+        /// <para>
+        /// The array is constructed using the provided builder delegate, which provides a fluent API
+        /// for efficiently building nested JSON arrays.
+        /// </para>
         /// </remarks>
         public void InsertItem<TContext>(int itemIndex, in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
 #if NET9_0_OR_GREATER
@@ -5461,21 +5464,21 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Sets the value of an array element at the specified index to null.
+        /// Sets the value of an array element at the specified index to null.
         /// </summary>
         /// <param name="itemIndex">The zero-based index at which to insert the item.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="itemIndex"/> is negative or greater than the current array length.
+        /// <paramref name="itemIndex"/> is negative or greater than the current array length.
         /// </exception>
         /// <remarks>
-        ///   A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
+        /// A new element will be inserted when <paramref name="itemIndex"/> equals the current array length.
         /// </remarks>
         public void InsertItemNull(int itemIndex)
         {
@@ -5487,16 +5490,16 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Adds an item to the end of the array using a value <see cref="Source"/>.
+        /// Adds an item to the end of the array using a value <see cref="Source"/>.
         /// </summary>
         /// <param name="source">The source of the item to add.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem(in Source source, int estimatedMemberCount = 30)
@@ -5505,16 +5508,16 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Adds a JSON object item to the end of the array.
+        /// Adds a JSON object item to the end of the array.
         /// </summary>
         /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem(ObjectBuilder.Build objectValue, int estimatedMemberCount = 30)
@@ -5523,18 +5526,18 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Adds a JSON object item to the end of the array.
+        /// Adds a JSON object item to the end of the array.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="context">The context to pass to the builder.</param>
         /// <param name="objectValue">The object builder delegate that constructs the JSON object.</param>
         /// <param name="estimatedMemberCount">The estimated number of members in the object for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem<TContext>(in TContext context, ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount = 30)
@@ -5546,16 +5549,16 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Adds a JSON array item to the end of the array.
+        /// Adds a JSON array item to the end of the array.
         /// </summary>
         /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
         /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem(ArrayBuilder.Build arrayValue, int estimatedMemberCount = 30)
@@ -5564,18 +5567,18 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Adds a JSON array item to the end of the array.
+        /// Adds a JSON array item to the end of the array.
         /// </summary>
         /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
         /// <param name="context">The context to pass to the builder.</param>
         /// <param name="arrayValue">The array builder delegate that constructs the JSON array.</param>
         /// <param name="estimatedMemberCount">The estimated number of elements in the array for capacity optimization.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItem<TContext>(in TContext context, ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount = 30)
@@ -5587,14 +5590,14 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Adds a null item to the end of the array.
+        /// Adds a null item to the end of the array.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void AddItemNull()
@@ -5603,19 +5606,19 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Removes a range of items from the array starting at the specified index.
+        /// Removes a range of items from the array starting at the specified index.
         /// </summary>
         /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
         /// <param name="count">The number of items to remove.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="startIndex"/> is negative or greater than the current array length.
+        /// <paramref name="startIndex"/> is negative or greater than the current array length.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveRange(int startIndex, int count)
@@ -5626,18 +5629,18 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Removes a single item from the array at the specified index.
+        /// Removes a single item from the array at the specified index.
         /// </summary>
         /// <param name="index">The zero-based index of the item to remove.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentOutOfRangeException">
-        ///   <paramref name="index"/> is negative or greater than or equal to the current array length.
+        /// <paramref name="index"/> is negative or greater than or equal to the current array length.
         /// </exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void RemoveAt(int index)
@@ -5648,22 +5651,22 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Removes the first array element that equals the specified item.
+        /// Removes the first array element that equals the specified item.
         /// </summary>
         /// <param name="item">The item to find and remove.</param>
         /// <returns><see langword="true"/> if an element was found and removed; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This method iterates forward through the array and removes the first element
-        ///     whose value deeply equals the specified <paramref name="item"/>.
-        ///   </para>
+        /// <para>
+        /// This method iterates forward through the array and removes the first element
+        /// whose value deeply equals the specified <paramref name="item"/>.
+        /// </para>
         /// </remarks>
         [CLSCompliant(false)]
         public bool Remove(in JsonElement item)
@@ -5679,24 +5682,24 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Replaces the first array element that deeply equals the specified item
-        ///   with a new value.
+        /// Replaces the first array element that deeply equals the specified item
+        /// with a new value.
         /// </summary>
         /// <param name="oldItem">The item to find.</param>
         /// <param name="newItem">The value to replace it with.</param>
         /// <returns><see langword="true"/> if an element was found and replaced; otherwise, <see langword="false"/>.</returns>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This method iterates forward through the array and replaces the first element
-        ///     whose value deeply equals the specified <paramref name="oldItem"/>.
-        ///   </para>
+        /// <para>
+        /// This method iterates forward through the array and replaces the first element
+        /// whose value deeply equals the specified <paramref name="oldItem"/>.
+        /// </para>
         /// </remarks>
         [CLSCompliant(false)]
         public bool Replace(in JsonElement oldItem, in Source newItem)
@@ -5731,36 +5734,36 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Removes all array elements that match the specified predicate.
+        /// Removes all array elements that match the specified predicate.
         /// </summary>
         /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
         /// <param name="predicate">The predicate function that determines which elements to remove.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="predicate"/> is <see langword="null"/>.
+        /// <paramref name="predicate"/> is <see langword="null"/>.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This method efficiently removes elements in a single pass by iterating backwards
-        ///     through the array and removing consecutive blocks of matching elements.
-        ///   </para>
-        ///   <para>
-        ///     The predicate function is called for each element in the array. If the predicate
-        ///     returns <see langword="true"/>, the element will be removed from the array.
-        ///   </para>
-        ///   <para>
-        ///     This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
-        ///     enabling type-safe element processing with compile-time type checking.
-        ///   </para>
-        ///   <para>
-        ///     This method is not CLS-compliant due to its generic constraint requirements.
-        ///   </para>
+        /// <para>
+        /// This method efficiently removes elements in a single pass by iterating backwards
+        /// through the array and removing consecutive blocks of matching elements.
+        /// </para>
+        /// <para>
+        /// The predicate function is called for each element in the array. If the predicate
+        /// returns <see langword="true"/>, the element will be removed from the array.
+        /// </para>
+        /// <para>
+        /// This generic overload accepts any type implementing <see cref="IJsonElement{T}"/>,
+        /// enabling type-safe element processing with compile-time type checking.
+        /// </para>
+        /// <para>
+        /// This method is not CLS-compliant due to its generic constraint requirements.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
@@ -5773,35 +5776,35 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Removes all array elements that match the specified predicate.
+        /// Removes all array elements that match the specified predicate.
         /// </summary>
         /// <param name="predicate">The predicate function that determines which elements to remove.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///   <paramref name="predicate"/> is <see langword="null"/>.
+        /// <paramref name="predicate"/> is <see langword="null"/>.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This method efficiently removes elements in a single pass by iterating backwards
-        ///     through the array and removing consecutive blocks of matching elements.
-        ///   </para>
-        ///   <para>
-        ///     The predicate function is called for each element in the array. If the predicate
-        ///     returns <see langword="true"/>, the element will be removed from the array.
-        ///   </para>
-        ///   <para>
-        ///     This overload is a convenience method that calls the generic version with
-        ///     <see cref="JsonElement"/> as the type parameter.
-        ///   </para>
-        ///   <para>
-        ///     This method is not CLS-compliant due to its generic constraint requirements.
-        ///   </para>
+        /// <para>
+        /// This method efficiently removes elements in a single pass by iterating backwards
+        /// through the array and removing consecutive blocks of matching elements.
+        /// </para>
+        /// <para>
+        /// The predicate function is called for each element in the array. If the predicate
+        /// returns <see langword="true"/>, the element will be removed from the array.
+        /// </para>
+        /// <para>
+        /// This overload is a convenience method that calls the generic version with
+        /// <see cref="JsonElement"/> as the type parameter.
+        /// </para>
+        /// <para>
+        /// This method is not CLS-compliant due to its generic constraint requirements.
+        /// </para>
         /// </remarks>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [CLSCompliant(false)]
@@ -5811,30 +5814,30 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
-        ///   Applies all properties from another JSON object element to this JSON object element.
+        /// Applies all properties from another JSON object element to this JSON object element.
         /// </summary>
         /// <typeparam name="T">The type of JSON element implementing <see cref="IJsonElement{T}"/>.</typeparam>
         /// <param name="value">The JSON object element whose properties will be copied to this element.</param>
         /// <exception cref="InvalidOperationException">
-        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   the source <paramref name="value"/>'s <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
-        ///   or the element reference is stale due to document mutations.
+        /// This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// the source <paramref name="value"/>'s <see cref="ValueKind"/> is not <see cref="JsonValueKind.Object"/>,
+        /// or the element reference is stale due to document mutations.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         /// <remarks>
-        ///   <para>
-        ///     This method performs a merge of properties from the source JSON object
-        ///     to this JSON object. Each property from the source object is copied to this object,
-        ///     replacing any existing properties with the same name.
-        ///   </para>
-        ///   <para>
-        ///     Both this element and the source value must be JSON object elements.
-        ///   </para>
-        ///   <para>
-        ///     This method is not CLS-compliant due to its generic constraint requirements.
-        ///   </para>
+        /// <para>
+        /// This method performs a merge of properties from the source JSON object
+        /// to this JSON object. Each property from the source object is copied to this object,
+        /// replacing any existing properties with the same name.
+        /// </para>
+        /// <para>
+        /// Both this element and the source value must be JSON object elements.
+        /// </para>
+        /// <para>
+        /// This method is not CLS-compliant due to its generic constraint requirements.
+        /// </para>
         /// </remarks>
         [CLSCompliant(false)]
         public void Apply<T>(in T value)

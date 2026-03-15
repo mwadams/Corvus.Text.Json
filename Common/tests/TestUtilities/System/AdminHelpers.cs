@@ -43,7 +43,7 @@ namespace System
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 uint userId = Interop.Sys.GetEUid();
-                return(userId == 0);
+                return (userId == 0);
             }
 
             SafeTokenHandle token;

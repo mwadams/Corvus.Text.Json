@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -12,7 +12,7 @@ using System.Diagnostics;
 namespace Corvus.Text.Json.Internal;
 
 /// <summary>
-///   An enumerable and enumerator for the properties of a JSON object.
+/// An enumerable and enumerator for the properties of a JSON object.
 /// </summary>
 [DebuggerDisplay("{Current,nq}")]
 [CLSCompliant(false)]

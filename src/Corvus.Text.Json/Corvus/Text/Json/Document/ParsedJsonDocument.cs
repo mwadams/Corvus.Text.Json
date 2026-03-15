@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System;
@@ -23,13 +23,13 @@ using NodaTime;
 namespace Corvus.Text.Json;
 
 /// <summary>
-///   Represents the structure of a JSON value in a lightweight, read-only form.
+/// Represents the structure of a JSON value in a lightweight, read-only form.
 /// </summary>
 /// <remarks>
-///   This class utilizes resources from pooled memory to minimize the garbage collector (GC)
-///   impact in high-usage scenarios. Failure to properly Dispose this object will result in
-///   the memory not being returned to the pool, which will cause an increase in GC impact across
-///   various parts of the framework.
+/// This class utilizes resources from pooled memory to minimize the garbage collector (GC)
+/// impact in high-usage scenarios. Failure to properly Dispose this object will result in
+/// the memory not being returned to the pool, which will cause an increase in GC impact across
+/// various parts of the framework.
 /// </remarks>
 public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument, IDisposable
     where T : struct, IJsonElement<T>
@@ -43,7 +43,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     bool IJsonDocument.IsDisposable => _isDisposable;
 
     /// <summary>
-    ///   The <see cref="IJsonElement"/> representing the value of the document.
+    /// The <see cref="IJsonElement"/> representing the value of the document.
     /// </summary>
 
 #if NET
@@ -109,17 +109,17 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
     }
 
     /// <summary>
-    ///  Write the document into the provided writer as a JSON value.
+    /// Write the document into the provided writer as a JSON value.
     /// </summary>
     /// <param name="writer">The writer.</param>
     /// <exception cref="ArgumentNullException">
-    ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+    /// The <paramref name="writer"/> parameter is <see langword="null"/>.
     /// </exception>
     /// <exception cref="InvalidOperationException">
-    ///   This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
+    /// This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// The parent <see cref="JsonDocument"/> has been disposed.
     /// </exception>
     public void WriteTo(Utf8JsonWriter writer)
     {

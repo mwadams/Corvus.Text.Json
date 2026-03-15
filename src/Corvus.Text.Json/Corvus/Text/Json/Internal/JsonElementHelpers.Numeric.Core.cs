@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers.Text;
@@ -83,7 +83,7 @@ public static partial class JsonElementHelpers
         // Parses a JSON number into its integral, fractional, and exponent parts.
         // The returned components use a normal-form decimal representation:
 
-        //   Number := sign * <integral + fractional> * 10^exponent
+        // Number := sign * <integral + fractional> * 10^exponent
 
         // where integral and fractional are sequences of digits whose concatenation
         // represents the significand of the number without leading or trailing zeros.

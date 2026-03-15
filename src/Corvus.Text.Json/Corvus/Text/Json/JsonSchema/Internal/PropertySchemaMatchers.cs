@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -68,7 +68,7 @@ public class PropertySchemaMatchers<T>
         /// <param name="count">The number of entries.</param>
         internal static PropertyMap Create(int bucketCount, int count)
         {
-            return new PropertyMap() { BucketCount = bucketCount, Count = count};
+            return new PropertyMap() { BucketCount = bucketCount, Count = count };
         }
 
         /// <summary>
@@ -239,23 +239,23 @@ public class PropertySchemaMatchers<T>
     /// 1. **Initialization**: Calculates the number of properties and determines an optimal hash table size using prime numbers.
     ///
     /// 2. **Memory Allocation**: Ensures sufficient space in three backing arrays:
-    ///    - Buckets array: Contains hash bucket indices for the hash table
-    ///    - Property map array: Stores the PropertyMap structure metadata
-    ///    - Entries array: Contains the actual hash table entries with property information
+    /// - Buckets array: Contains hash bucket indices for the hash table
+    /// - Property map array: Stores the PropertyMap structure metadata
+    /// - Entries array: Contains the actual hash table entries with property information
     ///
     /// 3. **Property Processing**: Iterates through all properties in the JSON object:
-    ///    - For properties with complex children (requiring unescaping): Unescapes the property name,
-    ///      stores it in the dynamic value buffer, and creates an entry with the dynamic offset
-    ///    - For simple properties: Uses the raw property name directly from the JSON data
-    ///    - Calculates hash codes and manages hash collisions using chaining
+    /// - For properties with complex children (requiring unescaping): Unescapes the property name,
+    /// stores it in the dynamic value buffer, and creates an entry with the dynamic offset
+    /// - For simple properties: Uses the raw property name directly from the JSON data
+    /// - Calculates hash codes and manages hash collisions using chaining
     ///
     /// 4. **Hash Table Construction**: Uses separate chaining for collision resolution where:
-    ///    - Each bucket contains a 1-based index to the first entry in the chain
-    ///    - Entries link to the next entry in the chain via the Next field
-    ///    - Hash codes are computed using an optimized algorithm based on property name length
+    /// - Each bucket contains a 1-based index to the first entry in the chain
+    /// - Entries link to the next entry in the chain via the Next field
+    /// - Hash codes are computed using an optimized algorithm based on property name length
     ///
     /// 5. **Finalization**: Writes the PropertyMap header structure and updates offset pointers
-    ///    for future property map allocations.
+    /// for future property map allocations.
     ///
     /// The resulting property map enables O(1) average-case property lookups with efficient
     /// memory usage and minimal allocations through array pooling.
@@ -301,31 +301,31 @@ public class PropertySchemaMatchers<T>
     /// The lookup process follows these steps:
     ///
     /// 1. **Property Map Loading**: Reads the PropertyMap structure from the backing buffer to get metadata
-    ///    including bucket and entry offsets, counts, and sizes.
+    /// including bucket and entry offsets, counts, and sizes.
     ///
     /// 2. **Hash Calculation**: Computes a hash code for the target property name using an optimized
-    ///    algorithm that varies based on the property name length for maximum distribution.
+    /// algorithm that varies based on the property name length for maximum distribution.
     ///
     /// 3. **Bucket Selection**: Uses modulo operation to map the hash code to a specific bucket
-    ///    in the hash table, providing O(1) initial access.
+    /// in the hash table, providing O(1) initial access.
     ///
     /// 4. **Chain Traversal**: Follows the linked chain of entries in the selected bucket:
-    ///    - Bucket values are 1-based, so the initial index is decremented
-    ///    - Each entry contains a Next field pointing to the next entry in the collision chain
-    ///    - Bounds checking prevents array access violations
+    /// - Bucket values are 1-based, so the initial index is decremented
+    /// - Each entry contains a Next field pointing to the next entry in the collision chain
+    /// - Bounds checking prevents array access violations
     ///
     /// 5. **Hash and Key Comparison**: For each entry in the chain:
-    ///    - First compares hash codes for fast rejection of non-matches
-    ///    - For hash matches, performs optimized key comparison:
-    ///      * Short keys (&lt; HashLength) with no hash collision bits can skip full comparison
-    ///      * Otherwise, retrieves the actual property name and performs byte-wise comparison
+    /// - First compares hash codes for fast rejection of non-matches
+    /// - For hash matches, performs optimized key comparison:
+    /// * Short keys (&lt; HashLength) with no hash collision bits can skip full comparison
+    /// * Otherwise, retrieves the actual property name and performs byte-wise comparison
     ///
     /// 6. **Key Retrieval**: Property names are retrieved differently based on storage:
-    ///    - Simple properties: Read directly from the original JSON data
-    ///    - Escaped properties: Read from the dynamic value buffer after unescaping
+    /// - Simple properties: Read directly from the original JSON data
+    /// - Escaped properties: Read from the dynamic value buffer after unescaping
     ///
     /// 7. **Collision Handling**: The algorithm includes safeguards against infinite loops
-    ///    by tracking collision count and ensuring it doesn't exceed the total entry count.
+    /// by tracking collision count and ensuring it doesn't exceed the total entry count.
     ///
     /// This implementation provides O(1) average-case lookup performance with graceful handling
     /// of hash collisions through separate chaining, while minimizing memory allocations and

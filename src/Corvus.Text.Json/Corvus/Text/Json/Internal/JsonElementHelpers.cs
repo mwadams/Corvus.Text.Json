@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -119,12 +119,12 @@ public static partial class JsonElementHelpers
     /// <param name="startIndex">The zero-based index at which to begin removing items.</param>
     /// <param name="count">The number of items to remove.</param>
     /// <exception cref="InvalidOperationException">
-    ///   The element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-    ///   or the element reference is stale due to document mutations.
+    /// The element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+    /// or the element reference is stale due to document mutations.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   <paramref name="startIndex"/> is negative or greater than the current array length,
-    ///   or <paramref name="count"/> is negative or causes the operation to exceed the array bounds.
+    /// <paramref name="startIndex"/> is negative or greater than the current array length,
+    /// or <paramref name="count"/> is negative or causes the operation to exceed the array bounds.
     /// </exception>
     [CLSCompliant(false)]
     public static void RemoveRangeUnsafe<TArray>(TArray arrayElement, int startIndex, int count)
@@ -210,12 +210,12 @@ public static partial class JsonElementHelpers
     /// <param name="arrayElement">The array element instance.</param>
     /// <param name="predicate">The predicate to apply to each element to determine if it should be removed.</param>
     /// <exception cref="InvalidOperationException">
-    ///   The element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Array"/>,
-    ///   or the element reference is stale due to document mutations.
+    /// The element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+    /// or the element reference is stale due to document mutations.
     /// </exception>
     /// <exception cref="ArgumentOutOfRangeException">
-    ///   <paramref name="startIndex"/> is negative or greater than the current array length,
-    ///   or <paramref name="count"/> is negative or causes the operation to exceed the array bounds.
+    /// <paramref name="startIndex"/> is negative or greater than the current array length,
+    /// or <paramref name="count"/> is negative or causes the operation to exceed the array bounds.
     /// </exception>
     [CLSCompliant(false)]
     public static void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
@@ -270,7 +270,7 @@ public static partial class JsonElementHelpers
                     // Check if this element is consecutive with the previous block
                     currentEndIndex = enumerator.CurrentEndIndex + DbRow.Size;
 
-                    Debug.Assert(currentEndIndex == consecutiveBlockStartIndex,"The element must be consecutive with the previous block.");
+                    Debug.Assert(currentEndIndex == consecutiveBlockStartIndex, "The element must be consecutive with the previous block.");
                     consecutiveBlockStartIndex = currentStartIndex;
                     consecutiveCount++;
                 }
@@ -304,21 +304,21 @@ public static partial class JsonElementHelpers
     /// <param name="targetElement">The target JSON object element to which properties will be applied.</param>
     /// <param name="sourceElement">The source JSON object element from which properties will be copied.</param>
     /// <exception cref="InvalidOperationException">
-    ///   The source element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Object"/>.
+    /// The source element's <see cref="JsonValueKind"/> is not <see cref="JsonValueKind.Object"/>.
     /// </exception>
     /// <remarks>
-    ///   <para>
-    ///     This method performs a merge of properties from the source JSON object
-    ///     to the target JSON object. Each property from the source object is copied to the target object,
-    ///     replacing any existing properties with the same name.
-    ///   </para>
-    ///   <para>
-    ///     The source element must be a JSON object element. The target element is assumed to be valid
-    ///     and is not validated by this method.
-    ///   </para>
-    ///   <para>
-    ///     This method is not CLS-compliant due to its generic constraint requirements.
-    ///   </para>
+    /// <para>
+    /// This method performs a merge of properties from the source JSON object
+    /// to the target JSON object. Each property from the source object is copied to the target object,
+    /// replacing any existing properties with the same name.
+    /// </para>
+    /// <para>
+    /// The source element must be a JSON object element. The target element is assumed to be valid
+    /// and is not validated by this method.
+    /// </para>
+    /// <para>
+    /// This method is not CLS-compliant due to its generic constraint requirements.
+    /// </para>
     /// </remarks>
     [CLSCompliant(false)]
     public static void ApplyUnsafe<TTarget, TSource>(TTarget targetElement, in TSource sourceElement)
@@ -333,7 +333,7 @@ public static partial class JsonElementHelpers
 
         var enumerator = new ObjectEnumerator<JsonElement>(sourceElement.ParentDocument, sourceElement.ParentDocumentIndex);
 
-        while(enumerator.MoveNext())
+        while (enumerator.MoveNext())
         {
             JsonElementHelpers.SetPropertyUnsafe(targetElement, enumerator.Current);
         }

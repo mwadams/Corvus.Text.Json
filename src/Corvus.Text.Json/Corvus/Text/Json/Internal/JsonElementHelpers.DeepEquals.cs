@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -36,10 +36,10 @@ public static partial class JsonElementHelpers
     /// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
     /// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
     /// <item>
-    ///     JSON objects are equal if and only if they have the same number of properties and each property in the first object
-    ///     has a corresponding property in the second object with the same name and equal value. The order of properties is not
-    ///     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
-    ///     last value in the first instance.
+    /// JSON objects are equal if and only if they have the same number of properties and each property in the first object
+    /// has a corresponding property in the second object with the same name and equal value. The order of properties is not
+    /// significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
+    /// last value in the first instance.
     /// </item>
     /// </list>
     /// </remarks>
@@ -81,10 +81,10 @@ public static partial class JsonElementHelpers
     /// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
     /// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
     /// <item>
-    ///     JSON objects are equal if and only if they have the same number of properties and each property in the first object
-    ///     has a corresponding property in the second object with the same name and equal value. The order of properties is not
-    ///     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
-    ///     last value in the first instance.
+    /// JSON objects are equal if and only if they have the same number of properties and each property in the first object
+    /// has a corresponding property in the second object with the same name and equal value. The order of properties is not
+    /// significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
+    /// last value in the first instance.
     /// </item>
     /// </list>
     /// </remarks>
@@ -119,10 +119,10 @@ public static partial class JsonElementHelpers
     /// <item>JSON strings are equal if and only if they are equal using ordinal string comparison.</item>
     /// <item>JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal.</item>
     /// <item>
-    ///     JSON objects are equal if and only if they have the same number of properties and each property in the first object
-    ///     has a corresponding property in the second object with the same name and equal value. The order of properties is not
-    ///     significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
-    ///     last value in the first instance.
+    /// JSON objects are equal if and only if they have the same number of properties and each property in the first object
+    /// has a corresponding property in the second object with the same name and equal value. The order of properties is not
+    /// significant. Repeated properties are not supported, though they will resolve each value in the second instance to the
+    /// last value in the first instance.
     /// </item>
     /// </list>
     /// </remarks>
@@ -221,7 +221,7 @@ public static partial class JsonElementHelpers
             {
                 ArrayEnumerator<JsonElement> arrayEnumerator2 = new(element2ParentDocument, element2ParentDocumentIndex);
                 ArrayEnumerator<JsonElement> arrayEnumerator1 = new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex);
-                while(arrayEnumerator1.MoveNext())
+                while (arrayEnumerator1.MoveNext())
                 {
                    if (!arrayEnumerator2.MoveNext())
                     {

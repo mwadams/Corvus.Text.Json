@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -22,10 +22,10 @@ internal static partial class JsonWriterHelper
     // else we write the fraction up to 7 decimal places with no trailing zeros. i.e. the output format is
     // YYYY-MM-DDThh:mm:ss[.s]TZD where TZD = Z or +-hh:mm.
     // e.g.
-    //   ---------------------------------
-    //   2017-06-12T05:30:45.768-07:00
-    //   2017-06-12T05:30:45.00768Z           (Z is short for "+00:00" but also distinguishes DateTimeKind.Utc from DateTimeKind.Local)
-    //   2017-06-12T05:30:45                  (interpreted as local time wrt to current time zone)
+    // ---------------------------------
+    // 2017-06-12T05:30:45.768-07:00
+    // 2017-06-12T05:30:45.00768Z           (Z is short for "+00:00" but also distinguishes DateTimeKind.Utc from DateTimeKind.Local)
+    // 2017-06-12T05:30:45                  (interpreted as local time wrt to current time zone)
     public static void TrimDateTimeOffset(Span<byte> buffer, out int bytesWritten)
     {
         const int maxDateTimeLength = JsonConstants.MaximumFormatDateTimeLength;

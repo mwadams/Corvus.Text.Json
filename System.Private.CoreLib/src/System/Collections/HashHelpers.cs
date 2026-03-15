@@ -58,7 +58,7 @@ internal static partial class HashHelpers
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static uint FastMod(uint value, uint divisor, ulong multiplier)
     {
-        // We use modified Daniel Lemire's fastmod algorithm (https://github.com/dotnet/runtime/pull/406),
+        // We use modified Daniel Lemire's fastmod algorithm (https:// github.com/dotnet/runtime/pull/406),
         // which allows to avoid the long multiplication if the divisor is less than 2**31.
         Debug.Assert(divisor <= int.MaxValue);
 

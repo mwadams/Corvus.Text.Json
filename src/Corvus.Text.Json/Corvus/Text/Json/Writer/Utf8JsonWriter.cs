@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -23,18 +23,18 @@ namespace Corvus.Text.Json;
 /// Provides a high-performance API for forward-only, non-cached writing of UTF-8 encoded JSON text.
 /// </summary>
 /// <remarks>
-///   <para>
-///     It writes the text sequentially with no caching and adheres to the JSON RFC
-///     by default (https://tools.ietf.org/html/rfc8259), with the exception of writing comments.
-///   </para>
-///   <para>
-///     When the user attempts to write invalid JSON and validation is enabled, it throws
-///     an <see cref="InvalidOperationException"/> with a context specific error message.
-///   </para>
-///   <para>
-///     To be able to format the output with indentation and whitespace OR to skip validation, create an instance of
-///     <see cref="JsonWriterOptions"/> and pass that in to the writer.
-///   </para>
+/// <para>
+/// It writes the text sequentially with no caching and adheres to the JSON RFC
+/// by default (https:// tools.ietf.org/html/rfc8259), with the exception of writing comments.
+/// </para>
+/// <para>
+/// When the user attempts to write invalid JSON and validation is enabled, it throws
+/// an <see cref="InvalidOperationException"/> with a context specific error message.
+/// </para>
+/// <para>
+/// To be able to format the output with indentation and whitespace OR to skip validation, create an instance of
+/// <see cref="JsonWriterOptions"/> and pass that in to the writer.
+/// </para>
 /// </remarks>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
@@ -277,7 +277,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// and the original output as the destination (either <see cref="IBufferWriter{Byte}" /> or <see cref="Stream" />).
     /// </remarks>
     /// <exception cref="ObjectDisposedException">
-    ///   The instance of <see cref="Utf8JsonWriter"/> has been disposed.
+    /// The instance of <see cref="Utf8JsonWriter"/> has been disposed.
     /// </exception>
     public void Reset()
     {
@@ -299,7 +299,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// Thrown when the instance of <see cref="Stream" /> that is passed in is null.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    ///   The instance of <see cref="Utf8JsonWriter"/> has been disposed.
+    /// The instance of <see cref="Utf8JsonWriter"/> has been disposed.
     /// </exception>
     public void Reset(Stream utf8Json)
     {
@@ -336,7 +336,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// Thrown when the instance of <see cref="IBufferWriter{Byte}" /> that is passed in is null.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    ///   The instance of <see cref="Utf8JsonWriter"/> has been disposed.
+    /// The instance of <see cref="Utf8JsonWriter"/> has been disposed.
     /// </exception>
     public void Reset(IBufferWriter<byte> bufferWriter)
     {
@@ -405,7 +405,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// In the case of Stream, this writes the data to the stream and flushes it.
     /// </remarks>
     /// <exception cref="ObjectDisposedException">
-    ///   The instance of <see cref="Utf8JsonWriter"/> has been disposed.
+    /// The instance of <see cref="Utf8JsonWriter"/> has been disposed.
     /// </exception>
     public void Flush()
     {
@@ -448,13 +448,13 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// Commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.
     /// </summary>
     /// <remarks>
-    ///   <para>
-    ///     In the case of IBufferWriter, this advances the underlying <see cref="IBufferWriter{Byte}" /> based on what has been written so far.
-    ///     In the case of Stream, this writes the data to the stream and flushes it.
-    ///   </para>
-    ///   <para>
-    ///     The <see cref="Utf8JsonWriter"/> instance cannot be re-used after disposing.
-    ///   </para>
+    /// <para>
+    /// In the case of IBufferWriter, this advances the underlying <see cref="IBufferWriter{Byte}" /> based on what has been written so far.
+    /// In the case of Stream, this writes the data to the stream and flushes it.
+    /// </para>
+    /// <para>
+    /// The <see cref="Utf8JsonWriter"/> instance cannot be re-used after disposing.
+    /// </para>
     /// </remarks>
     public void Dispose()
     {
@@ -479,13 +479,13 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// Asynchronously commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.
     /// </summary>
     /// <remarks>
-    ///   <para>
-    ///     In the case of IBufferWriter, this advances the underlying <see cref="IBufferWriter{Byte}" /> based on what has been written so far.
-    ///     In the case of Stream, this writes the data to the stream and flushes it.
-    ///   </para>
-    ///   <para>
-    ///     The <see cref="Utf8JsonWriter"/> instance cannot be re-used after disposing.
-    ///   </para>
+    /// <para>
+    /// In the case of IBufferWriter, this advances the underlying <see cref="IBufferWriter{Byte}" /> based on what has been written so far.
+    /// In the case of Stream, this writes the data to the stream and flushes it.
+    /// </para>
+    /// <para>
+    /// The <see cref="Utf8JsonWriter"/> instance cannot be re-used after disposing.
+    /// </para>
     /// </remarks>
     public async ValueTask DisposeAsync()
     {
@@ -514,7 +514,7 @@ public sealed partial class Utf8JsonWriter : IDisposable, IAsyncDisposable
     /// In the case of Stream, this writes the data to the stream and flushes it asynchronously, while monitoring cancellation requests.
     /// </remarks>
     /// <exception cref="ObjectDisposedException">
-    ///   The instance of <see cref="Utf8JsonWriter"/> has been disposed.
+    /// The instance of <see cref="Utf8JsonWriter"/> has been disposed.
     /// </exception>
     public async Task FlushAsync(CancellationToken cancellationToken = default)
     {

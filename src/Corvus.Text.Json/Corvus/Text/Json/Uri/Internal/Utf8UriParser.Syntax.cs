@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Collections;
@@ -144,7 +144,7 @@ internal partial class Utf8UriParser
                                     Utf8UriSyntaxFlags.MayHavePort |
                                     Utf8UriSyntaxFlags.MayHavePath |
                                     Utf8UriSyntaxFlags.MayHaveFragment |
-                                    Utf8UriSyntaxFlags.MayHaveQuery | //to maintain compat
+                                    Utf8UriSyntaxFlags.MayHaveQuery | // to maintain compat
 
                                     Utf8UriSyntaxFlags.MailToLikeUri |
                                     Utf8UriSyntaxFlags.AllowIdn |
@@ -253,18 +253,18 @@ internal partial class Utf8UriParser
         { HttpsUri.SchemeName, HttpsUri }, // HTTPS cloned from HTTP
         { WsUri.SchemeName, WsUri }, // WebSockets
         { WssUri.SchemeName, WssUri }, // Secure WebSockets
-        { FtpUri.SchemeName, FtpUri }, //FTP
-        { FileUri.SchemeName, FileUri }, //FILE
-        { GopherUri.SchemeName, GopherUri }, //GOPHER
-        { NntpUri.SchemeName, NntpUri }, //NNTP
-        { NewsUri.SchemeName, NewsUri }, //NEWS
-        { MailToUri.SchemeName, MailToUri }, //MAILTO
-        { UuidUri.SchemeName, UuidUri }, //UUID cloned from NEWS
-        { TelnetUri.SchemeName, TelnetUri }, //TELNET
-        { LdapUri.SchemeName, LdapUri }, //LDAP
+        { FtpUri.SchemeName, FtpUri }, // FTP
+        { FileUri.SchemeName, FileUri }, // FILE
+        { GopherUri.SchemeName, GopherUri }, // GOPHER
+        { NntpUri.SchemeName, NntpUri }, // NNTP
+        { NewsUri.SchemeName, NewsUri }, // NEWS
+        { MailToUri.SchemeName, MailToUri }, // MAILTO
+        { UuidUri.SchemeName, UuidUri }, // UUID cloned from NEWS
+        { TelnetUri.SchemeName, TelnetUri }, // TELNET
+        { LdapUri.SchemeName, LdapUri }, // LDAP
         { NetTcpUri.SchemeName, NetTcpUri },
         { NetPipeUri.SchemeName, NetPipeUri },
-        { VsMacrosUri.SchemeName, VsMacrosUri }, //VSMACROS
+        { VsMacrosUri.SchemeName, VsMacrosUri }, // VSMACROS
     };
 
     private static Hashtable s_tempTable = new Hashtable(c_InitialTableSize); // Hashtable used instead of Dictionary<> for lock-free reads

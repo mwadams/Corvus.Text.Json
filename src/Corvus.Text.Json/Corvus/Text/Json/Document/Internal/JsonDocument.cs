@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -1068,7 +1068,7 @@ public abstract partial class JsonDocument
 #else
         Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
 
-        while(!value.TryFormat(_valueBacking.AsSpan(offset), out length))
+        while (!value.TryFormat(_valueBacking.AsSpan(offset), out length))
         {
             Enlarge(JsonConstants.InitialFormatBigIntegerLength, ref _valueBacking);
         }
@@ -1569,7 +1569,7 @@ public abstract partial class JsonDocument
             return false;
         }
 
-        int endIndex = startIndex + GetDbSizeUnsafe(startIndex, false);// checked(row.NumberOfRows * DbRow.Size + startIndex);
+        int endIndex = startIndex + GetDbSizeUnsafe(startIndex, false); // checked(row.NumberOfRows * DbRow.Size + startIndex);
 
         DbRow endObjectRow = _parsedData.Get(endIndex);
 

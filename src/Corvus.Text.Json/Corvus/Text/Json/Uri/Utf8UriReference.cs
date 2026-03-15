@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using Corvus.Text.Json.Internal;
@@ -17,13 +17,13 @@ namespace Corvus.Text.Json;
 /// <remarks>
 /// <code>
 /// <![CDATA[
-///     foo://user@example.com:8042/over/there?name=ferret#nose
-///     \_/   \___________________/\_________/ \_________/ \__/
-///       |           |                 |           |       |
-///     scheme     authority           path       query  fragment
-///           \___/\______________/
-///             |        |
-///          user      host (including port)
+/// foo:// user@example.com:8042/over/there?name= ferret#nose
+/// \_/   \___________________/\_________/ \_________/ \__/
+/// |           |                 |           |       |
+/// scheme     authority           path       query  fragment
+/// \___/\______________/
+/// |        |
+/// user      host (including port)
 /// ]]>
 /// </code>
 /// </remarks>
@@ -158,7 +158,7 @@ public readonly ref struct Utf8UriReference
                 return [];
             }
 
-            // Distinguish between ':' and '://'
+            // Distinguish between ':' and ':// '
             if (_originalUriReference[_offsets.User - 1] == '/')
             {
                 return _originalUriReference.Slice(_offsets.Scheme, _offsets.User - _offsets.Scheme - 3);

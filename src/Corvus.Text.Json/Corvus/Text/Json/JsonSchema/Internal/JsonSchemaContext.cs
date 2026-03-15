@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -150,7 +150,7 @@ public struct JsonSchemaContext
 
     private Span<int> LocalEvaluated
     {
-#pragma warning disable IDE0251 //Member can be made 'readonly'
+#pragma warning disable IDE0251 // Member can be made 'readonly'
         get
         {
 #if NET
@@ -163,7 +163,7 @@ public struct JsonSchemaContext
                 return _rentedBuffer.AsSpan(_localEvaluated[0], _localEvaluated[1]);
             }
 #else
-            return _rentedBuffer.AsSpan(_localEvaluatedOffset,_localEvaluatedLength);
+            return _rentedBuffer.AsSpan(_localEvaluatedOffset, _localEvaluatedLength);
 #endif
         }
 #pragma warning  restore IDE0251
@@ -171,7 +171,7 @@ public struct JsonSchemaContext
 
     private Span<int> AppliedEvaluated
     {
-#pragma warning disable IDE0251 //Member can be made 'readonly'
+#pragma warning disable IDE0251 // Member can be made 'readonly'
         get
         {
 #if NET
@@ -184,7 +184,7 @@ public struct JsonSchemaContext
                 return _rentedBuffer.AsSpan(_appliedEvaluated[0], _appliedEvaluated[1]);
             }
 #else
-            return _rentedBuffer.AsSpan(_appliedEvaluatedOffset,_appliedEvaluatedLength);
+            return _rentedBuffer.AsSpan(_appliedEvaluatedOffset, _appliedEvaluatedLength);
 #endif
         }
 #pragma warning  restore IDE0251
@@ -273,7 +273,7 @@ public struct JsonSchemaContext
     /// <code>
     /// // Push child context for validating a property
     /// JsonSchemaContext childContext = parentContext.PushChildContext(
-    ///     document, propertyIndex, useItems: false, useProperties: true, propertyName);
+    /// document, propertyIndex, useItems: false, useProperties: true, propertyName);
     ///
     /// // Perform validation using child context
     /// bool isValid = ValidateProperty(ref childContext);
@@ -324,7 +324,7 @@ public struct JsonSchemaContext
     /// <code>
     /// // Push child context for validating a property
     /// JsonSchemaContext childContext = parentContext.PushChildContext(
-    ///     document, propertyIndex, useItems: false, useProperties: true, propertyName);
+    /// document, propertyIndex, useItems: false, useProperties: true, propertyName);
     ///
     /// // Perform validation using child context
     /// bool isValid = ValidateProperty(ref childContext);
@@ -501,7 +501,7 @@ public struct JsonSchemaContext
     /// // Optionally merge evaluated tracking
     /// if (needsEvaluatedTracking)
     /// {
-    ///     parentContext.ApplyEvaluated(ref childContext);
+    /// parentContext.ApplyEvaluated(ref childContext);
     /// }
     /// </code>
     /// </para>

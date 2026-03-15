@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -61,10 +61,10 @@ internal ref struct Utf8ValueCursor
     internal ReadOnlySpan<byte> Value { get; }
 
     /// <summary>
-    ///   Returns a <see cref="string" /> that represents this instance.
+    /// Returns a <see cref="string" /> that represents this instance.
     /// </summary>
     /// <returns>
-    ///   A <see cref="string" /> that represents this instance.
+    /// A <see cref="string" /> that represents this instance.
     /// </returns>
     public override readonly string ToString() =>
         this.Index <= 0 ? $"^{JsonReaderHelper.GetTextFromUtf8(this.Value)}"

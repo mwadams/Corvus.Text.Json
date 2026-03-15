@@ -5,118 +5,192 @@
 }
 <!-- Hero -->
 <section class="hero">
-    <div class="hero__container container">
-        <div class="hero__content">
-            @{
-                var heroBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Hero");
-            }
-            @if (heroBlock != null)
-            {
-                @Html.Raw(heroBlock.Body)
-            }
-            else
-            {
-                <h1 class="hero__title">High-performance JSON for .NET</h1>
-                <p class="hero__subtitle">From Schema to Code</p>
-                <p class="hero__description">
-                    Source-generated strongly-typed C# from JSON Schema. Zero-allocation parsing,
-                    full draft 2020-12 validation, mutable documents, and more.
-                </p>
-            }
-            <div class="hero__actions">
-                <a href="/getting-started/index.html" class="hero__cta hero__cta--primary">Get Started</a>
-                <a href="https://github.com/corvus-dotnet/Corvus.JsonSchema"
-                   class="hero__cta hero__cta--secondary"
-                   target="_blank"
-                   rel="noopener noreferrer">View on GitHub</a>
-            </div>
-        </div>
-        <div class="hero__graphic" aria-hidden="true">
-            <pre class="hero__code"><code class="language-json">{
-  "type": "object",
-  "properties": {
-    "name": { "type": "string" },
-    "age":  { "type": "integer", "minimum": 0 }
-  },
-  "required": ["name"]
-}</code></pre>
+    <div class="hero__content">
+        <h1 class="hero__title">High-performance <span class="brand">JSON</span> for .NET</h1>
+        <p class="hero__subtitle">
+            Source-generated strongly-typed C# from JSON Schema. Zero-allocation parsing,
+            full draft&nbsp;2020&#x2011;12 validation, mutable documents, and more.
+        </p>
+        <div class="hero__actions">
+            <a href="/getting-started/index.html" class="btn btn--primary btn--lg">Get Started</a>
+            <a href="https://github.com/corvus-dotnet/Corvus.JsonSchema"
+               class="btn btn--secondary btn--lg" target="_blank" rel="noopener noreferrer">View on GitHub</a>
         </div>
     </div>
 </section>
-<!-- /Hero -->
 
-<!-- Why Corvus -->
-<section class="section section--alt" id="why-corvus">
-    <div class="container">
-        @{
-            var whyBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "WhyCorvus");
-        }
-        @if (whyBlock != null)
-        {
-            <div class="text-content">
-                @Html.Raw(whyBlock.Body)
-            </div>
-        }
+<!-- Stats -->
+<div class="container">
+    <div class="home-stats">
+        <div class="home-stats__item">
+            <div class="home-stats__value">92%</div>
+            <div class="home-stats__label">Fewer allocations</div>
+        </div>
+        <div class="home-stats__item">
+            <div class="home-stats__value">2020&#x2011;12</div>
+            <div class="home-stats__label">JSON Schema draft</div>
+        </div>
+        <div class="home-stats__item">
+            <div class="home-stats__value">120 B</div>
+            <div class="home-stats__label">Per-op allocation</div>
+        </div>
+        <div class="home-stats__item">
+            <div class="home-stats__value">87+</div>
+            <div class="home-stats__label">Public types</div>
+        </div>
     </div>
-</section>
-<!-- /Why Corvus -->
+</div>
 
 <!-- Features -->
-<section class="section" id="features">
+<section class="home-features">
     <div class="container">
-        @{
-            var featuresBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Features");
-        }
-        @if (featuresBlock != null)
-        {
-            <div class="card-grid">
-                @Html.Raw(featuresBlock.Body)
+        <div class="home-features__heading">
+            <h2 class="home-features__title">Built for performance-critical .NET</h2>
+            <p class="home-features__subtitle">Every feature designed around zero-allocation, pooled-memory JSON processing</p>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card__icon">🔧</div>
+                <h3 class="card__title">Source Generation</h3>
+                <p class="card__body">Roslyn incremental source generator or CLI tool produces strongly-typed C# from any JSON Schema. Type-safe accessors, validation, serialization — all from a single schema file.</p>
             </div>
-        }
-    </div>
-</section>
-<!-- /Features -->
-
-<!-- Quick Start -->
-<section class="section section--alt" id="quickstart">
-    <div class="container">
-        @{
-            var quickStartBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "QuickStart");
-        }
-        @if (quickStartBlock != null)
-        {
-            <div class="text-content">
-                @Html.Raw(quickStartBlock.Body)
+            <div class="card">
+                <div class="card__icon">📋</div>
+                <h3 class="card__title">Schema Validation</h3>
+                <p class="card__body">Full draft 2019-09 and 2020-12 validation with <code>EvaluateSchema()</code>. Detailed diagnostics: schema location, evaluation path, and error messages for every failure.</p>
             </div>
-        }
-    </div>
-</section>
-<!-- /Quick Start -->
-
-<!-- Packages -->
-<section class="section" id="packages">
-    <div class="container">
-        @{
-            var packagesBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Packages");
-        }
-        @if (packagesBlock != null)
-        {
-            <div class="text-content">
-                @Html.Raw(packagesBlock.Body)
+            <div class="card">
+                <div class="card__icon">⚡</div>
+                <h3 class="card__title">Pooled Memory</h3>
+                <p class="card__body"><code>ParsedJsonDocument&lt;T&gt;</code> uses <code>ArrayPool&lt;byte&gt;</code> — 92% fewer allocations than <code>JsonNode</code>. Generated types are thin struct wrappers over pooled data.</p>
             </div>
-        }
-    </div>
-</section>
-<!-- /Packages -->
-
-<!-- CTA -->
-<section class="section section--cta">
-    <div class="container">
-        <div class="cta-block">
-            <h2 class="cta-block__title">Ready to get started?</h2>
-            <p class="cta-block__description">Install the tools, define your first JSON Schema, and generate strongly-typed C# in minutes.</p>
-            <a href="/getting-started/index.html" class="hero__cta hero__cta--primary">Get Started</a>
+            <div class="card">
+                <div class="card__icon">🔄</div>
+                <h3 class="card__title">Mutable Documents</h3>
+                <p class="card__body"><code>JsonDocumentBuilder&lt;T&gt;</code> with workspace-managed pooled memory. Ideal for request/response cycles and data pipelines. No per-node allocations.</p>
+            </div>
+            <div class="card">
+                <div class="card__icon">📐</div>
+                <h3 class="card__title">Extended Types</h3>
+                <p class="card__body"><code>BigNumber</code> for arbitrary-precision decimals, NodaTime integration for dates, and zero-allocation UTF-8 URI types. Beyond what <code>decimal</code> offers.</p>
+            </div>
+            <div class="card">
+                <div class="card__icon">🧩</div>
+                <h3 class="card__title">Pattern Matching</h3>
+                <p class="card__body">Type-safe <code>Match()</code> for discriminated unions, <code>allOf</code> composition with <code>From()</code> conversion, and string/numeric enumerations with exhaustive dispatch.</p>
+            </div>
         </div>
     </div>
 </section>
-<!-- /CTA -->
+
+<!-- Code Example -->
+<section class="home-code">
+    <div class="container">
+        <div class="home-code__inner">
+            <div class="home-code__text">
+                <h2 class="home-code__title">From schema to strongly-typed C# in seconds</h2>
+                <p class="home-code__description">
+                    Define a JSON Schema, annotate a partial struct, and the source generator does the rest.
+                    You get typed properties, validation, serialization, mutation — and it all runs on pooled memory.
+                </p>
+                <a href="/getting-started/index.html" class="btn btn--primary">Get Started</a>
+            </div>
+            <div class="home-code__example">
+                <pre><code class="language-csharp">// 1. Annotate a partial struct
+[JsonSchemaTypeGenerator("Schemas/person.json")]
+public readonly partial struct Person;
+
+// 2. Parse JSON — pooled memory, zero-copy
+using var doc = ParsedJsonDocument&lt;Person&gt;.Parse(
+    """{"name":"Alice","age":30}""");
+Person person = doc.RootElement;
+
+// 3. Access typed properties
+string name = (string)person.Name;   // "Alice"
+int age = (int)person.Age;           // 30
+
+// 4. Validate against the schema
+bool valid = person.EvaluateSchema(); // true
+
+// 5. Mutate with the builder pattern
+using var ws = JsonWorkspace.Create();
+using var b = person.CreateBuilder(ws);
+Person.Mutable root = b.RootElement;
+root.SetAge(31);
+// {"name":"Alice","age":31}</code></pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Comparison Table -->
+<section class="section">
+    <div class="container">
+        <div class="layout-narrow">
+            <h2 style="text-align:center;margin-bottom:var(--space-lg)">How it compares</h2>
+            <div class="doc__content">
+                <table>
+                    <thead>
+                        <tr><th>Feature</th><th>System.Text.Json</th><th>Corvus.Text.Json</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Memory Model</td><td>Per-document allocations</td><td>ArrayPool-backed pooled memory</td></tr>
+                        <tr><td>Schema Validation</td><td>None built-in</td><td>Full draft 2020-12 with diagnostics</td></tr>
+                        <tr><td>Code Generation</td><td>None</td><td>Source generator + CLI tool</td></tr>
+                        <tr><td>Date/Time Types</td><td>System.DateTime</td><td>NodaTime (LocalDate, OffsetDateTime)</td></tr>
+                        <tr><td>Mutation</td><td>JsonNode (allocates per node)</td><td>Builder pattern (pooled workspace)</td></tr>
+                        <tr><td>Numeric Precision</td><td>decimal (28 digits)</td><td>BigNumber (arbitrary precision)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Packages -->
+<section class="section">
+    <div class="container">
+        <div class="home-features__heading">
+            <h2 class="home-features__title">Packages</h2>
+            <p class="home-features__subtitle">Install the runtime and source generator to get started</p>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <h3 class="card__title">Corvus.Text.Json</h3>
+                <p class="card__body">Core runtime library. Required by all generated types.</p>
+                <pre style="margin-top:var(--space-sm)"><code class="language-bash">dotnet add package Corvus.Text.Json</code></pre>
+            </div>
+            <div class="card">
+                <h3 class="card__title">Corvus.Text.Json.SourceGenerator</h3>
+                <p class="card__body">Roslyn incremental source generator. Generates C# at build time.</p>
+                <pre style="margin-top:var(--space-sm)"><code class="language-xml">&lt;PackageReference Include="Corvus.Text.Json.SourceGenerator"&gt;
+  &lt;PrivateAssets&gt;all&lt;/PrivateAssets&gt;
+&lt;/PackageReference&gt;</code></pre>
+            </div>
+            <div class="card">
+                <h3 class="card__title">Corvus.Text.Json.CodeGenerator</h3>
+                <p class="card__body">CLI tool for ahead-of-time code generation from JSON Schema.</p>
+                <pre style="margin-top:var(--space-sm)"><code class="language-bash">dotnet tool install --global Corvus.Text.Json.CodeGenerator</code></pre>
+            </div>
+            <div class="card">
+                <h3 class="card__title">Corvus.Text.Json.Validator</h3>
+                <p class="card__body">Standalone schema validation tool for the command line.</p>
+                <pre style="margin-top:var(--space-sm)"><code class="language-bash">dotnet tool install --global Corvus.Text.Json.Validator</code></pre>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="home-cta">
+    <div class="container">
+        <div class="home-cta__inner">
+            <h2 class="home-cta__title">Ready to get started?</h2>
+            <p class="home-cta__description">Install the tools, define your first JSON Schema, and generate strongly-typed C# in minutes.</p>
+            <div class="home-cta__actions">
+                <a href="/getting-started/index.html" class="btn btn--primary btn--lg">Get Started</a>
+                <a href="/examples/index.html" class="btn btn--secondary btn--lg">Browse Examples</a>
+            </div>
+        </div>
+    </div>
+</section>

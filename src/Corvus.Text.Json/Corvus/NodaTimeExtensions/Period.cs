@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Collections.Generic;
@@ -590,7 +590,7 @@ public readonly struct Period : IEquatable<Period>
                 return false;
             }
 
-            // Seen a . or , which need special handling.
+            // Seen a . or, which need special handling.
             if (unit == PeriodUnits.Nanoseconds)
             {
                 // Check for already having seen seconds, e.g. PT5S0.5

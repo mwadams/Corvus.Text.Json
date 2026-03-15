@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -40,10 +40,10 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     }
 
     /// <summary>
-    ///   The <see cref="JsonValueKind"/> that the value is.
+    /// The <see cref="JsonValueKind"/> that the value is.
     /// </summary>
     /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// The parent <see cref="JsonDocument"/> has been disposed.
     /// </exception>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
 
@@ -200,39 +200,39 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     }
 
     /// <summary>
-    ///   Parses one JSON value (including objects or arrays) from the provided reader.
+    /// Parses one JSON value (including objects or arrays) from the provided reader.
     /// </summary>
     /// <param name="reader">The reader to read.</param>
     /// <returns>
-    ///   A JsonElement representing the value (and nested values) read from the reader.
+    /// A JsonElement representing the value (and nested values) read from the reader.
     /// </returns>
     /// <remarks>
-    ///   <para>
-    ///     If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
-    ///     is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
-    ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
-    ///     the start of the value.
-    ///   </para>
+    /// <para>
+    /// If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
+    /// is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
+    /// reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
+    /// the start of the value.
+    /// </para>
     ///
-    ///   <para>
-    ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
-    ///     final token in the JSON value. If an exception is thrown, the reader is reset to
-    ///     the state it was in when the method was called.
-    ///   </para>
+    /// <para>
+    /// Upon completion of this method, <paramref name="reader"/> will be positioned at the
+    /// final token in the JSON value. If an exception is thrown, the reader is reset to
+    /// the state it was in when the method was called.
+    /// </para>
     ///
-    ///   <para>
-    ///     This method makes a copy of the data the reader acted on, so there is no caller
-    ///     requirement to maintain data integrity beyond the return of this method.
-    ///   </para>
+    /// <para>
+    /// This method makes a copy of the data the reader acted on, so there is no caller
+    /// requirement to maintain data integrity beyond the return of this method.
+    /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException">
-    ///   <paramref name="reader"/> is using unsupported options.
+    /// <paramref name="reader"/> is using unsupported options.
     /// </exception>
     /// <exception cref="ArgumentException">
-    ///   The current <paramref name="reader"/> token does not start or represent a value.
+    /// The current <paramref name="reader"/> token does not start or represent a value.
     /// </exception>
     /// <exception cref="JsonException">
-    ///   A value could not be read from the reader.
+    /// A value could not be read from the reader.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static JsonElementForBooleanFalseSchema ParseValue(ref Utf8JsonReader reader)
@@ -241,42 +241,42 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     }
 
     /// <summary>
-    ///   Attempts to parse one JSON value (including objects or arrays) from the provided reader.
+    /// Attempts to parse one JSON value (including objects or arrays) from the provided reader.
     /// </summary>
     /// <param name="reader">The reader to read.</param>
     /// <param name="element">Receives the parsed element.</param>
     /// <returns>
-    ///   <see langword="true"/> if a value was read and parsed into a JsonElement;
-    ///   <see langword="false"/> if the reader ran out of data while parsing.
-    ///   All other situations result in an exception being thrown.
+    /// <see langword="true"/> if a value was read and parsed into a JsonElement;
+    /// <see langword="false"/> if the reader ran out of data while parsing.
+    /// All other situations result in an exception being thrown.
     /// </returns>
     /// <remarks>
-    ///   <para>
-    ///     If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
-    ///     is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
-    ///     reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
-    ///     the start of the value.
-    ///   </para>
+    /// <para>
+    /// If the <see cref="Utf8JsonReader.TokenType"/> property of <paramref name="reader"/>
+    /// is <see cref="JsonTokenType.PropertyName"/> or <see cref="JsonTokenType.None"/>, the
+    /// reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
+    /// the start of the value.
+    /// </para>
     ///
-    ///   <para>
-    ///     Upon completion of this method, <paramref name="reader"/> will be positioned at the
-    ///     final token in the JSON value.  If an exception is thrown, or <see langword="false"/>
-    ///     is returned, the reader is reset to the state it was in when the method was called.
-    ///   </para>
+    /// <para>
+    /// Upon completion of this method, <paramref name="reader"/> will be positioned at the
+    /// final token in the JSON value.  If an exception is thrown, or <see langword="false"/>
+    /// is returned, the reader is reset to the state it was in when the method was called.
+    /// </para>
     ///
-    ///   <para>
-    ///     This method makes a copy of the data the reader acted on, so there is no caller
-    ///     requirement to maintain data integrity beyond the return of this method.
-    ///   </para>
+    /// <para>
+    /// This method makes a copy of the data the reader acted on, so there is no caller
+    /// requirement to maintain data integrity beyond the return of this method.
+    /// </para>
     /// </remarks>
     /// <exception cref="ArgumentException">
-    ///   <paramref name="reader"/> is using unsupported options.
+    /// <paramref name="reader"/> is using unsupported options.
     /// </exception>
     /// <exception cref="ArgumentException">
-    ///   The current <paramref name="reader"/> token does not start or represent a value.
+    /// The current <paramref name="reader"/> token does not start or represent a value.
     /// </exception>
     /// <exception cref="JsonException">
-    ///   A value could not be read from the reader.
+    /// A value could not be read from the reader.
     /// </exception>
     public static bool TryParseValue(ref Utf8JsonReader reader, [NotNullWhen(true)] out JsonElementForBooleanFalseSchema? element)
     {
@@ -314,17 +314,17 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     }
 
     /// <summary>
-    ///   Write the element into the provided writer as a JSON value.
+    /// Write the element into the provided writer as a JSON value.
     /// </summary>
     /// <param name="writer">The writer.</param>
     /// <exception cref="ArgumentNullException">
-    ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+    /// The <paramref name="writer"/> parameter is <see langword="null"/>.
     /// </exception>
     /// <exception cref="InvalidOperationException">
-    ///   This value's <see cref="ValueKind"/> is <see cref="JsonValueKind.Undefined"/>.
+    /// This value's <see cref="ValueKind"/> is <see cref="JsonValueKind.Undefined"/>.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// The parent <see cref="JsonDocument"/> has been disposed.
     /// </exception>
     public void WriteTo(Utf8JsonWriter writer)
     {
@@ -334,38 +334,38 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     }
 
     /// <summary>
-    ///   Gets a string representation for the current value appropriate to the value type.
+    /// Gets a string representation for the current value appropriate to the value type.
     /// </summary>
     /// <remarks>
-    ///   <para>
-    ///     For JsonElement built from <see cref="JsonDocument"/>:
-    ///   </para>
+    /// <para>
+    /// For JsonElement built from <see cref="JsonDocument"/>:
+    /// </para>
     ///
-    ///   <para>
-    ///     For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
-    ///   </para>
+    /// <para>
+    /// For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
+    /// </para>
     ///
-    ///   <para>
-    ///     For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
-    ///   </para>
+    /// <para>
+    /// For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
+    /// </para>
     ///
-    ///   <para>
-    ///     For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
-    ///   </para>
+    /// <para>
+    /// For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
+    /// </para>
     ///
-    ///   <para>
-    ///     For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
-    ///   </para>
+    /// <para>
+    /// For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
+    /// </para>
     ///
-    ///   <para>
-    ///     For other types, the value of <see cref="GetRawText"/>() is returned.
-    ///   </para>
+    /// <para>
+    /// For other types, the value of <see cref="GetRawText"/>() is returned.
+    /// </para>
     /// </remarks>
     /// <returns>
-    ///   A string representation for the current value appropriate to the value type.
+    /// A string representation for the current value appropriate to the value type.
     /// </returns>
     /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// The parent <see cref="JsonDocument"/> has been disposed.
     /// </exception>
     public override string ToString()
     {

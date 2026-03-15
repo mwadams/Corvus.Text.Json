@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -13,7 +13,7 @@ using Corvus.Text.Json.Internal;
 namespace Corvus.Text.Json;
 
 /// <summary>
-///   Represents a single property for a JSON object.
+/// Represents a single property for a JSON object.
 /// </summary>
 /// <typeparam name="TValue">The type of the value.</typeparam>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
@@ -27,7 +27,7 @@ public readonly struct JsonProperty<TValue>
     }
 
     /// <summary>
-    ///   The name of this property.
+    /// The name of this property.
     /// </summary>
     /// <remarks>Note that this allocates.</remarks>
     /// <seealso cref="NameSpan"/>.
@@ -57,7 +57,7 @@ public readonly struct JsonProperty<TValue>
     }
 
     /// <summary>
-    ///   The value of this property.
+    /// The value of this property.
     /// </summary>
     public TValue Value { get; }
 
@@ -77,19 +77,19 @@ public readonly struct JsonProperty<TValue>
             => Value.ValueKind == JsonValueKind.Undefined ? "<Undefined>" : $"\"{ToString()}\"";
 
     /// <summary>
-    ///   Compares <paramref name="text" /> to the name of this property.
+    /// Compares <paramref name="text" /> to the name of this property.
     /// </summary>
     /// <param name="text">The text to compare against.</param>
     /// <returns>
-    ///   <see langword="true" /> if the name of this property matches <paramref name="text"/>,
-    ///   <see langword="false" /> otherwise.
+    /// <see langword="true" /> if the name of this property matches <paramref name="text"/>,
+    /// <see langword="false" /> otherwise.
     /// </returns>
     /// <exception cref="InvalidOperationException">
-    ///   This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
+    /// This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
     /// </exception>
     /// <remarks>
-    ///   This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
-    ///   <see cref="Name" />, but can avoid creating the string instance.
+    /// This method is functionally equal to doing an ordinal comparison of <paramref name="text" /> and
+    /// <see cref="Name" />, but can avoid creating the string instance.
     /// </remarks>
     public bool NameEquals(string? text)
     {
@@ -97,19 +97,19 @@ public readonly struct JsonProperty<TValue>
     }
 
     /// <summary>
-    ///   Compares the text represented by <paramref name="utf8Text" /> to the name of this property.
+    /// Compares the text represented by <paramref name="utf8Text" /> to the name of this property.
     /// </summary>
     /// <param name="utf8Text">The UTF-8 encoded text to compare against.</param>
     /// <returns>
-    ///   <see langword="true" /> if the name of this property has the same UTF-8 encoding as
-    ///   <paramref name="utf8Text" />, <see langword="false" /> otherwise.
+    /// <see langword="true" /> if the name of this property has the same UTF-8 encoding as
+    /// <paramref name="utf8Text" />, <see langword="false" /> otherwise.
     /// </returns>
     /// <exception cref="InvalidOperationException">
-    ///   This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
+    /// This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
     /// </exception>
     /// <remarks>
-    ///   This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
-    ///   <see cref="NameSpan" />, but can avoid creating the UTF8 string instance.
+    /// This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
+    /// <see cref="NameSpan" />, but can avoid creating the UTF8 string instance.
     /// </remarks>
     public bool NameEquals(ReadOnlySpan<byte> utf8Text)
     {
@@ -118,19 +118,19 @@ public readonly struct JsonProperty<TValue>
     }
 
     /// <summary>
-    ///   Compares <paramref name="text" /> to the name of this property.
+    /// Compares <paramref name="text" /> to the name of this property.
     /// </summary>
     /// <param name="text">The text to compare against.</param>
     /// <returns>
-    ///   <see langword="true" /> if the name of this property matches <paramref name="text"/>,
-    ///   <see langword="false" /> otherwise.
+    /// <see langword="true" /> if the name of this property matches <paramref name="text"/>,
+    /// <see langword="false" /> otherwise.
     /// </returns>
     /// <exception cref="InvalidOperationException">
-    ///   This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
+    /// This value's <see cref="Type"/> is not <see cref="JsonTokenType.PropertyName"/>.
     /// </exception>
     /// <remarks>
-    ///   This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
-    ///   <see cref="NameSpan" />, but can avoid creating the UTF-8 string instance.
+    /// This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
+    /// <see cref="NameSpan" />, but can avoid creating the UTF-8 string instance.
     /// </remarks>
     public bool NameEquals(ReadOnlySpan<char> text)
     {
@@ -139,13 +139,13 @@ public readonly struct JsonProperty<TValue>
     }
 
     /// <summary>
-    ///   Provides a <see cref="string"/> representation of the property for
-    ///   debugging purposes.
+    /// Provides a <see cref="string"/> representation of the property for
+    /// debugging purposes.
     /// </summary>
     /// <returns>
-    ///   A string containing the un-interpreted value of the property, beginning
-    ///   at the declaring open-quote and ending at the last character that is part of
-    ///   the value.
+    /// A string containing the un-interpreted value of the property, beginning
+    /// at the declaring open-quote and ending at the last character that is part of
+    /// the value.
     /// </returns>
     public override string ToString()
     {
@@ -158,20 +158,20 @@ public readonly struct JsonProperty<TValue>
     }
 
     /// <summary>
-    ///   Write the property into the provided writer as a named JSON object property.
+    /// Write the property into the provided writer as a named JSON object property.
     /// </summary>
     /// <param name="writer">The writer.</param>
     /// <exception cref="ArgumentNullException">
-    ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+    /// The <paramref name="writer"/> parameter is <see langword="null"/>.
     /// </exception>
     /// <exception cref="ArgumentException">
-    ///   This <see cref="Name"/>'s length is too large to be a JSON object property.
+    /// This <see cref="Name"/>'s length is too large to be a JSON object property.
     /// </exception>
     /// <exception cref="InvalidOperationException">
-    ///   This <see cref="Value"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
+    /// This <see cref="Value"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// The parent <see cref="JsonDocument"/> has been disposed.
     /// </exception>>
     public void WriteTo(Utf8JsonWriter writer)
     {

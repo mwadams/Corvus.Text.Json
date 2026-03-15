@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -92,10 +92,10 @@ public ref partial struct Utf8JsonReader
             }
 
             // If firstSegmentIsEmpty is true,
-            //    only check if we have reached the last segment but do not advance _nextPosition. The while loop above already advanced it.
-            //    Otherwise, we would end up skipping a segment (i.e. advance = false).
+            // only check if we have reached the last segment but do not advance _nextPosition. The while loop above already advanced it.
+            // Otherwise, we would end up skipping a segment (i.e. advance = false).
             // If firstSegmentIsEmpty is false,
-            //    make sure to advance _nextPosition so that it is no longer the same as _currentPosition (i.e. advance = true).
+            // make sure to advance _nextPosition so that it is no longer the same as _currentPosition (i.e. advance = true).
             _isLastSegment = !jsonData.TryGet(ref _nextPosition, out _, advance: !firstSegmentIsEmpty) && isFinalBlock; // Don't re-order to avoid short-circuiting
 
             Debug.Assert(!_nextPosition.Equals(_currentPosition));
@@ -112,12 +112,12 @@ public ref partial struct Utf8JsonReader
     /// that is different from the JSON RFC (for example how to handle comments or maximum depth allowed when reading).
     /// By default, the <see cref="Utf8JsonReader"/> follows the JSON RFC strictly (i.e. comments within the JSON are invalid) and reads up to a maximum depth of 64.</param>
     /// <remarks>
-    ///   <para>
-    ///     Since this type is a ref struct, it is a stack-only type and all the limitations of ref structs apply to it.
-    ///   </para>
-    ///   <para>
-    ///     This assumes that the entire JSON payload is passed in (equivalent to <see cref="IsFinalBlock"/> = true)
-    ///   </para>
+    /// <para>
+    /// Since this type is a ref struct, it is a stack-only type and all the limitations of ref structs apply to it.
+    /// </para>
+    /// <para>
+    /// This assumes that the entire JSON payload is passed in (equivalent to <see cref="IsFinalBlock"/>= true)
+    /// </para>
     /// </remarks>
     public Utf8JsonReader(ReadOnlySequence<byte> jsonData, JsonReaderOptions options = default)
         : this(jsonData, isFinalBlock: true, new JsonReaderState(options))
@@ -968,7 +968,7 @@ public ref partial struct Utf8JsonReader
 
     // Found a backslash or control characters which are considered invalid within a string.
     // Search through the rest of the string one byte at a time.
-    // https://tools.ietf.org/html/rfc8259#section-7
+    // https:// tools.ietf.org/html/rfc8259#section-7
     private bool ConsumeStringAndValidateMultiSegment(ReadOnlySpan<byte> data, int idx)
     {
         Debug.Assert(idx >= 0 && idx < data.Length);
@@ -1132,10 +1132,10 @@ public ref partial struct Utf8JsonReader
         _currentPosition = state._prevCurrentPosition;
     }
 
-    // https://tools.ietf.org/html/rfc7159#section-6
+    // https:// tools.ietf.org/html/rfc7159#section-6
     private bool TryGetNumberMultiSegment(ReadOnlySpan<byte> data, out int consumed)
     {
-        // TODO: https://github.com/dotnet/runtime/issues/27837
+        // TODO: https:// github.com/dotnet/runtime/issues/27837
         Debug.Assert(data.Length > 0);
 
         PartialStateForRollback rollBackState = CaptureState();

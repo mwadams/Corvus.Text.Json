@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 namespace Corvus.Text.Json.Internal;
@@ -182,7 +182,7 @@ internal enum JsonRegexNodeKind : byte
 
     /// <summary>
     /// A positive lookaround assertion: lookahead if <see cref="JsonRegexOptions.RightToLeft"/> is not set and lookbehind if
-    /// <see cref="JsonRegexOptions.RightToLeft"/> is set, e.g. `(?=abc)` or `(?&lt;=abc)`.</summary>
+    /// <see cref="JsonRegexOptions.RightToLeft"/> is set, e.g. `(?= abc)` or `(?&lt;= abc)`.</summary>
     /// <remarks>One and only one child, the expression in the assertion.</remarks>
     PositiveLookaround = 30,
 

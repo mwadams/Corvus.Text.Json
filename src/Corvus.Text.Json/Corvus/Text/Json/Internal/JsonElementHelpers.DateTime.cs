@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers.Text;
@@ -414,10 +414,10 @@ public static partial class JsonElementHelpers
     }
 
     // Roundtrippable format. One of
-    //   012345678901234567890123456789012
-    //   ---------------------------------
-    //   2017-06-12T05:30:45.7680000-07:00
-    //   2017-06-12T05:30:45.7680000Z           (Z is short for "+00:00")
+    // 012345678901234567890123456789012
+    // ---------------------------------
+    // 2017-06-12T05:30:45.7680000-07:00
+    // 2017-06-12T05:30:45.7680000Z           (Z is short for "+00:00")
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in OffsetDateTime dateTime, Span<byte> destination, out int bytesWritten)
     {
@@ -479,10 +479,10 @@ public static partial class JsonElementHelpers
     }
 
     // Roundtrippable format. One of
-    //   012345678901234567890123456789012
-    //   ---------------------------------
-    //   2017-06-12-07:00
-    //   2017-06-12Z           (Z is short for "+00:00")
+    // 012345678901234567890123456789012
+    // ---------------------------------
+    // 2017-06-12-07:00
+    // 2017-06-12Z           (Z is short for "+00:00")
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in OffsetDate date, Span<byte> destination, out int bytesWritten)
     {
@@ -535,9 +535,9 @@ public static partial class JsonElementHelpers
     }
 
     // Roundtrippable format.
-    //   0123456789
-    //   ----------
-    //   2017-06-12
+    // 0123456789
+    // ----------
+    // 2017-06-12
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in LocalDate date, Span<byte> destination, out int bytesWritten)
     {
@@ -564,10 +564,10 @@ public static partial class JsonElementHelpers
     }
 
     // Roundtrippable format. One of
-    //   0123456789012345678901
-    //   ----------------------
-    //   05:30:45.7680000-07:00
-    //   05:30:45.7680000Z           (Z is short for "+00:00" but also distinguishes DateTimeKind.Utc from DateTimeKind.Local)
+    // 0123456789012345678901
+    // ----------------------
+    // 05:30:45.7680000-07:00
+    // 05:30:45.7680000Z           (Z is short for "+00:00" but also distinguishes DateTimeKind.Utc from DateTimeKind.Local)
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in OffsetTime offsetTime, Span<byte> destination, out int bytesWritten)
     {
@@ -622,10 +622,10 @@ public static partial class JsonElementHelpers
     }
 
     // Roundtrippable format. One of
-    //   012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
-    //   ------------------------------------------------------------------------------------------
-    //   P2147483647Y2147483647M2147483647W2147483647DT2147483647H2147483647M-2147483647.123456789S
-    //   P2147483647Y2147483647M2147483647W2147483647D
+    // 012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789
+    // ------------------------------------------------------------------------------------------
+    // P2147483647Y2147483647M2147483647W2147483647DT2147483647H2147483647M-2147483647.123456789S
+    // P2147483647Y2147483647M2147483647W2147483647D
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static unsafe bool TryFormat(in Period incomingPeriod, Span<byte> destination, out int bytesWritten)
     {

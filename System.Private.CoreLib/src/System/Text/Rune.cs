@@ -689,7 +689,7 @@ namespace System.Text
                 // - the last 4 bytes of the input buffer are continuation bytes;
                 // - the entire input buffer (if fewer than 4 bytes) consists only of continuation bytes; or
                 // - there's no UTF-8 leading byte between the final continuation byte of the buffer and
-                //   the previous well-formed subsequence or maximal invalid subsequence.
+                // the previous well-formed subsequence or maximal invalid subsequence.
                 //
                 // In all of these cases, the final byte must be a maximal invalid subsequence of length 1.
                 // See comment near the end of this method for more information.
@@ -1162,9 +1162,9 @@ namespace System.Text
         // in a stack overflow.
         //
         // public int GetMarvin32HashCode(Rune r) {
-        //   Span<char> buffer = stackalloc char[r.Utf16SequenceLength];
-        //   r.TryEncode(buffer, ...);
-        //   return Marvin32.ComputeHash(buffer.AsBytes());
+        // Span<char> buffer = stackalloc char[r.Utf16SequenceLength];
+        // r.TryEncode(buffer, ...);
+        // return Marvin32.ComputeHash(buffer.AsBytes());
         // }
 
         /// <summary>
@@ -1265,7 +1265,7 @@ namespace System.Text
             // Per the Unicode stability policy, the set of control characters
             // is forever fixed at [ U+0000..U+001F ], [ U+007F..U+009F ]. No
             // characters will ever be added to or removed from the "control characters"
-            // group. See https://www.unicode.org/policies/stability_policy.html.
+            // group. See https:// www.unicode.org/policies/stability_policy.html.
 
             // Logic below depends on Rune.Value never being -1 (since Rune is a validating type)
             // 00..1F (+1) => 01..20 (&~80) => 01..20

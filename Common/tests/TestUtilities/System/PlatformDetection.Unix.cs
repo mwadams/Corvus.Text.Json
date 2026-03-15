@@ -210,12 +210,12 @@ namespace System
             else if (Isillumos)
             {
                 // examples:
-                //   on OmniOS
-                //       SunOS 5.11 omnios-r151018-95eaa7e
-                //   on OpenIndiana Hipster:
-                //       SunOS 5.11 illumos-63878f749f
-                //   on SmartOS:
-                //       SunOS 5.11 joyent_20200408T231825Z
+                // on OmniOS
+                // SunOS 5.11 omnios-r151018-95eaa7e
+                // on OpenIndiana Hipster:
+                // SunOS 5.11 illumos-63878f749f
+                // on SmartOS:
+                // SunOS 5.11 joyent_20200408T231825Z
                 string versionDescription = RuntimeInformation.OSDescription.Split(' ')[2];
                 switch (versionDescription)
                 {
@@ -236,7 +236,7 @@ namespace System
             else if (IsSolaris)
             {
                 // example:
-                //   SunOS 5.11 11.3
+                // SunOS 5.11 11.3
                 result.Id = "Solaris";
                 // we only need the major version; 11
                 result.VersionId = ToVersion(RuntimeInformation.OSDescription.Split(' ')[2].Split('.')[0]); // e.g. 11

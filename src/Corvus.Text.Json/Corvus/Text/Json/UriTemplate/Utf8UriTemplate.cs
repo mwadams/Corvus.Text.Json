@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -20,7 +20,7 @@ namespace Corvus.Text.Json.Internal;
 ///
 /// URI-Template = *( literals / expression )
 /// literals     = %x21 / %x23-24 / %x26 / %x28-3B / %x3D / %x3F-5B
-///              / %x5D / %x5F / %x61-7A / %x7E / ucschar / pct-encoded
+/// / %x5D / %x5F / %x61-7A / %x7E / ucschar / pct-encoded
 /// expression   = "{" [ operator ] variable-list "}"
 /// operator     = op-level2 / op-level3 / op-reserve
 /// op-level2    = "+" / "#"
@@ -33,7 +33,7 @@ namespace Corvus.Text.Json.Internal;
 /// modifier     = prefix / explode
 /// prefix       = ":" max-length
 /// explode      = "*"
-/// max-length   = %x31-39 0*3DIGIT   ; positive integer up to 9999
+/// max-length   = %x31-39 0*3DIGIT; positive integer up to 9999
 /// pct-encoded  = "%" HEXDIG HEXDIG
 /// </summary>
 internal static class Utf8UriTemplate
@@ -178,7 +178,7 @@ internal static class Utf8UriTemplate
 
     /// <summary>
     /// Parses literals = %x21 / %x23-24 / %x26 / %x28-3B / %x3D / %x3F-5B
-    ///                / %x5D / %x5F / %x61-7A / %x7E / ucschar / pct-encoded
+    /// / %x5D / %x5F / %x61-7A / %x7E / ucschar / pct-encoded
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ParseLiterals(ReadOnlySpan<byte> input, ref int position)
@@ -365,7 +365,7 @@ internal static class Utf8UriTemplate
     }
 
     /// <summary>
-    /// Parses max-length = %x31-39 0*3DIGIT ; positive integer up to 9999
+    /// Parses max-length = %x31-39 0*3DIGIT; positive integer up to 9999
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool ParseMaxLength(ReadOnlySpan<byte> input, ref int position)
@@ -417,11 +417,11 @@ internal static class Utf8UriTemplate
     /// <summary>
     /// Parses ucschar according to RFC 6570
     /// ucschar = %xA0-D7FF / %xF900-FDCF / %xFDF0-FFEF
-    ///         / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
-    ///         / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
-    ///         / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
-    ///         / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
-    ///         / %xD0000-DFFFD / %xE1000-EFFFD
+    /// / %x10000-1FFFD / %x20000-2FFFD / %x30000-3FFFD
+    /// / %x40000-4FFFD / %x50000-5FFFD / %x60000-6FFFD
+    /// / %x70000-7FFFD / %x80000-8FFFD / %x90000-9FFFD
+    /// / %xA0000-AFFFD / %xB0000-BFFFD / %xC0000-CFFFD
+    /// / %xD0000-DFFFD / %xE1000-EFFFD
     /// </summary>
     private static bool ParseUcsChar(ReadOnlySpan<byte> input, ref int position)
     {

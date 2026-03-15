@@ -2,28 +2,27 @@
  * Corvus.Text.Json Documentation Site — Main JavaScript
  */
 
-// Mobile navigation toggle
 document.addEventListener('DOMContentLoaded', () => {
-  const menuToggle = document.querySelector('.site-header__menu-toggle');
-  const nav = document.querySelector('.site-nav');
+  // Mobile navigation toggle
+  const menuToggle = document.querySelector('.js-toggle-menu');
+  const mobileNav = document.querySelector('.js-mobile-nav');
 
-  if (menuToggle && nav) {
+  if (menuToggle && mobileNav) {
     menuToggle.addEventListener('click', () => {
-      nav.classList.toggle('site-nav--open');
-      menuToggle.classList.toggle('site-header__menu-toggle--open');
-      menuToggle.setAttribute(
-        'aria-expanded',
-        menuToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
-      );
+      const isOpen = mobileNav.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
     });
   }
 
   // Sidebar collapsible sections
-  const sidebarToggles = document.querySelectorAll('.docs-sidebar__toggle');
-  sidebarToggles.forEach((toggle) => {
+  document.querySelectorAll('.sidebar__heading').forEach((toggle) => {
     toggle.addEventListener('click', () => {
-      const section = toggle.closest('.docs-sidebar__section');
-      section.classList.toggle('docs-sidebar__section--collapsed');
+      const section = toggle.closest('.sidebar__section');
+      const body = section?.querySelector('.sidebar__body');
+      if (body) {
+        body.classList.toggle('is-collapsed');
+        toggle.classList.toggle('is-collapsed');
+      }
     });
   });
 
@@ -41,18 +40,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Copy code button
   document.querySelectorAll('pre code').forEach((block) => {
+    const wrapper = block.parentElement;
+    wrapper.style.position = 'relative';
     const button = document.createElement('button');
-    button.className = 'code-copy';
+    button.className = 'code-block__copy';
     button.textContent = 'Copy';
     button.addEventListener('click', () => {
       navigator.clipboard.writeText(block.textContent).then(() => {
         button.textContent = 'Copied!';
-        setTimeout(() => {
-          button.textContent = 'Copy';
-        }, 2000);
+        setTimeout(() => { button.textContent = 'Copy'; }, 2000);
       });
     });
-    block.parentElement.style.position = 'relative';
-    block.parentElement.appendChild(button);
+    wrapper.appendChild(button);
+  });
+
+  // Mark active sidebar link
+  const currentPath = window.location.pathname;
+  document.querySelectorAll('.sidebar__link').forEach((link) => {
+    if (link.getAttribute('href') === currentPath) {
+      link.classList.add('is-active');
+    }
   });
 });

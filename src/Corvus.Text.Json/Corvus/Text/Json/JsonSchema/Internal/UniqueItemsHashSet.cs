@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -205,23 +205,23 @@ public ref struct UniqueItemsHashSet
     /// 1. **Initialization**: Calculates the number of properties and determines an optimal hash table size using prime numbers.
     ///
     /// 2. **Memory Allocation**: Ensures sufficient space in three backing arrays:
-    ///    - Buckets array: Contains hash bucket indices for the hash table
-    ///    - Property map array: Stores the PropertyMap structure metadata
-    ///    - Entries array: Contains the actual hash table entries with property information
+    /// - Buckets array: Contains hash bucket indices for the hash table
+    /// - Property map array: Stores the PropertyMap structure metadata
+    /// - Entries array: Contains the actual hash table entries with property information
     ///
     /// 3. **Property Processing**: Iterates through all properties in the JSON object:
-    ///    - For properties with complex children (requiring unescaping): Unescapes the property name,
-    ///      stores it in the dynamic value buffer, and creates an entry with the dynamic offset
-    ///    - For simple properties: Uses the raw property name directly from the JSON data
-    ///    - Calculates hash codes and manages hash collisions using chaining
+    /// - For properties with complex children (requiring unescaping): Unescapes the property name,
+    /// stores it in the dynamic value buffer, and creates an entry with the dynamic offset
+    /// - For simple properties: Uses the raw property name directly from the JSON data
+    /// - Calculates hash codes and manages hash collisions using chaining
     ///
     /// 4. **Hash Table Construction**: Uses separate chaining for collision resolution where:
-    ///    - Each bucket contains a 1-based index to the first entry in the chain
-    ///    - Entries link to the next entry in the chain via the Next field
-    ///    - Hash codes are computed using an optimized algorithm based on property name length
+    /// - Each bucket contains a 1-based index to the first entry in the chain
+    /// - Entries link to the next entry in the chain via the Next field
+    /// - Hash codes are computed using an optimized algorithm based on property name length
     ///
     /// 5. **Finalization**: Writes the PropertyMap header structure and updates offset pointers
-    ///    for future property map allocations.
+    /// for future property map allocations.
     ///
     /// The resulting property map enables O(1) average-case property lookups with efficient
     /// memory usage and minimal allocations through array pooling.
@@ -324,7 +324,7 @@ public ref struct UniqueItemsHashSet
 
     public void Dispose()
     {
-        if(_bucketsBacking is int[] bb)
+        if (_bucketsBacking is int[] bb)
         {
             ArrayPool<int>.Shared.Return(bb);
         }

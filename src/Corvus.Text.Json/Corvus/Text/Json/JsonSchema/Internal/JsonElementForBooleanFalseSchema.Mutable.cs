@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -16,7 +16,7 @@ namespace Corvus.Text.Json;
 public readonly partial struct JsonElementForBooleanFalseSchema
 {
     /// <summary>
-    ///   Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
+    /// Represents a specific JSON value within a <see cref="IMutableJsonDocument"/>.
     /// </summary>
     [DebuggerDisplay("{DebuggerDisplay,nq}")]
     public readonly partial struct Mutable : IMutableJsonElement<Mutable>
@@ -56,25 +56,25 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         }
 
         /// <summary>
-        ///   The <see cref="JsonValueKind"/> that the value is.
+        /// The <see cref="JsonValueKind"/> that the value is.
         /// </summary>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public JsonValueKind ValueKind => TokenType.ToValueKind();
 
         /// <summary>
-        ///   Get the value at a specified index when the current value is a
-        ///   <see cref="JsonValueKind.Array"/>.
+        /// Get the value at a specified index when the current value is a
+        /// <see cref="JsonValueKind.Array"/>.
         /// </summary>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
+        /// This value's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>.
         /// </exception>
         /// <exception cref="IndexOutOfRangeException">
-        ///   <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
+        /// <paramref name="index"/> is not in the range [0, <see cref="GetArrayLength"/>()).
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public Mutable this[int index]
         {
@@ -220,17 +220,17 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         }
 
         /// <summary>
-        ///   Write the element into the provided writer as a JSON value.
+        /// Write the element into the provided writer as a JSON value.
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <exception cref="ArgumentNullException">
-        ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+        /// The <paramref name="writer"/> parameter is <see langword="null"/>.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        ///   This value's <see cref="ValueKind"/> is <see cref="JsonValueKind.Undefined"/>.
+        /// This value's <see cref="ValueKind"/> is <see cref="JsonValueKind.Undefined"/>.
         /// </exception>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public void WriteTo(Utf8JsonWriter writer)
         {
@@ -242,38 +242,38 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         }
 
         /// <summary>
-        ///   Gets a string representation for the current value appropriate to the value type.
+        /// Gets a string representation for the current value appropriate to the value type.
         /// </summary>
         /// <remarks>
-        ///   <para>
-        ///     For Mutable built from <see cref="IMutableJsonDocument"/>:
-        ///   </para>
+        /// <para>
+        /// For Mutable built from <see cref="IMutableJsonDocument"/>:
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.Null"/>, <see cref="string.Empty"/> is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.True"/>, <see cref="bool.TrueString"/> is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.False"/>, <see cref="bool.FalseString"/> is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
-        ///   </para>
+        /// <para>
+        /// For <see cref="JsonValueKind.String"/>, the value of <see cref="GetString"/>() is returned.
+        /// </para>
         ///
-        ///   <para>
-        ///     For other types, the value of <see cref="GetRawText"/>() is returned.
-        ///   </para>
+        /// <para>
+        /// For other types, the value of <see cref="GetRawText"/>() is returned.
+        /// </para>
         /// </remarks>
         /// <returns>
-        ///   A string representation for the current value appropriate to the value type.
+        /// A string representation for the current value appropriate to the value type.
         /// </returns>
         /// <exception cref="ObjectDisposedException">
-        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// The parent <see cref="JsonDocument"/> has been disposed.
         /// </exception>
         public override readonly string ToString()
         {
@@ -297,12 +297,12 @@ public readonly partial struct JsonElementForBooleanFalseSchema
         }
 
         /// <summary>
-        ///   Get a JsonElement which can be safely stored beyond the lifetime of the
-        ///   original <see cref="IMutableJsonDocument"/>.
+        /// Get a JsonElement which can be safely stored beyond the lifetime of the
+        /// original <see cref="IMutableJsonDocument"/>.
         /// </summary>
         /// <returns>
-        ///   A JsonElement which can be safely stored beyond the lifetime of the
-        ///   original <see cref="IMutableJsonDocument"/>.
+        /// A JsonElement which can be safely stored beyond the lifetime of the
+        /// original <see cref="IMutableJsonDocument"/>.
         /// </returns>
         public readonly JsonElement Clone()
         {

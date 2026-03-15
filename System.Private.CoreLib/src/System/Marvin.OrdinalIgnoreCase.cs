@@ -85,7 +85,7 @@ namespace System
 
             char[]? borrowedArr = null;
             Span<char> scratch = (uint)count <= 64 ? stackalloc char[64] : (borrowedArr = ArrayPool<char>.Shared.Rent(count));
-            fixed(char* c = &data)
+            fixed (char* c = &data)
             {
                 int charsWritten = new ReadOnlySpan<char>(c, count).ToUpperInvariant(scratch);
                 Debug.Assert(charsWritten == count); // invariant case conversion should involve simple folding; preserve code unit count

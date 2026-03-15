@@ -36,10 +36,10 @@ internal static class HexConverter
     // where HHHH and LLLL are the high and low nibbles of the incoming byte. Then
     // subtract this integer from a constant minuend as shown below.
     //
-    //   [ 1000 1001 1000 1001 ]
+    // [ 1000 1001 1000 1001 ]
     // - [ 0000 HHHH 0000 LLLL ]
     // =========================
-    //   [ *YYY **** *ZZZ **** ]
+    // [ *YYY **** *ZZZ **** ]
     //
     // The end result of this is that YYY is 0b000 if HHHH <= 9, and YYY is 0b111 if HHHH >= 10.
     // Similarly, ZZZ is 0b000 if LLLL <= 9, and ZZZ is 0b111 if LLLL >= 10.
@@ -47,7 +47,7 @@ internal static class HexConverter
     //
     // To turn a nibble in the range [ 0 .. 9 ] into hex, we calculate hex := nibble + 48 (ascii '0').
     // To turn a nibble in the range [ 10 .. 15 ] into hex, we calculate hex := nibble - 10 + 65 (ascii 'A').
-    //                                                                => hex := nibble + 55.
+    // => hex := nibble + 55.
     // The difference in the starting ASCII offset is (55 - 48) = 7, depending on whether the nibble is <= 9 or >= 10.
     // Since 7 is 0b111, this conveniently matches the YYY or ZZZ value computed during the earlier subtraction.
 
@@ -276,7 +276,7 @@ internal static class HexConverter
             Vector128<ushort> vec2 = Vector128.LoadUnsafe(ref srcRef, offset + (nuint)Vector128<ushort>.Count);
             Vector128<byte> vec = Ascii.ExtractAsciiVector(vec1, vec2);
 
-            // Based on "Algorithm #3" https://github.com/WojciechMula/toys/blob/master/simd-parse-hex/geoff_algorithm.cpp
+            // Based on "Algorithm #3" https:// github.com/WojciechMula/toys/blob/master/simd-parse-hex/geoff_algorithm.cpp
             // by Geoff Langdale and Wojciech Mula
             // Move digits '0'..'9' into range 0xf6..0xff.
             Vector128<byte> t1 = vec + Vector128.Create((byte)(0xFF - '9'));

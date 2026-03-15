@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -67,17 +67,17 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     }
 
     /// <summary>
-    ///  Write the document into the provided writer as a JSON value.
+    /// Write the document into the provided writer as a JSON value.
     /// </summary>
     /// <param name="writer"></param>
     /// <exception cref="ArgumentNullException">
-    ///   The <paramref name="writer"/> parameter is <see langword="null"/>.
+    /// The <paramref name="writer"/> parameter is <see langword="null"/>.
     /// </exception>
     /// <exception cref="InvalidOperationException">
-    ///   This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
+    /// This <see cref="RootElement"/>'s <see cref="JsonElement.ValueKind"/> would result in an invalid JSON.
     /// </exception>
     /// <exception cref="ObjectDisposedException">
-    ///   The parent <see cref="JsonDocument"/> has been disposed.
+    /// The parent <see cref="JsonDocument"/> has been disposed.
     /// </exception>
     public void WriteTo(Utf8JsonWriter writer)
     {
@@ -120,7 +120,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             return;
         }
 
-        base.DisposeCore();
+        DisposeCore();
 
         _parentWorkspaceIndex = -1;
     }

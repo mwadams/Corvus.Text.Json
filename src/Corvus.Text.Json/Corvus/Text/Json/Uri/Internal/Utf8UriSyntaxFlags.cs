@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 namespace Corvus.Text.Json;
@@ -17,7 +17,7 @@ internal enum Utf8UriSyntaxFlags
 {
     None = 0x0,
 
-    MustHaveAuthority = 0x1,  // must have "//" after scheme:
+    MustHaveAuthority = 0x1,  // must have "// " after scheme:
     OptionalAuthority = 0x2,  // used by generic parser due to unknown Uri syntax
     MayHaveUserInfo = 0x4,
     MayHavePort = 0x8,
@@ -33,8 +33,8 @@ internal enum Utf8UriSyntaxFlags
     AllowAnInternetHost = AllowDnsHost | AllowIPv4Host | AllowIPv6Host,
     AllowAnyOtherHost = 0x1000, // Relaxed authority syntax
 
-    FileLikeUri = 0x2000, //Special case to allow file:\\balbla or file://\\balbla
-    MailToLikeUri = 0x4000, //V1 parser inheritance mailTo:AuthorityButNoSlashes
+    FileLikeUri = 0x2000, // Special case to allow file:\\balbla or file:// \\balbla
+    MailToLikeUri = 0x4000, // V1 parser inheritance mailTo:AuthorityButNoSlashes
 
     V1_UnknownUri = 0x10000, // a Compatibility with V1 parser for an unknown scheme
     SimpleUserSyntax = 0x20000, // It is safe to not call virtual UriParser methods

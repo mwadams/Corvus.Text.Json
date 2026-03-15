@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -25,88 +25,88 @@ namespace Corvus.Text.Json.Internal;
 
 // Number
 // * First int
-//   * Top bit is 0 if this is the local token offset, 1 if it is an external document
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is 0 if this is the local token offset, 1 if it is an external document
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Top bit is set if the number uses scientific notation
-//   * 31 bits for the token length
+// * Top bit is set if the number uses scientific notation
+// * 31 bits for the token length
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the index of the workspace document in the workspace for this row
+// * 4 bits JsonTokenType
+// * 28 bits for the index of the workspace document in the workspace for this row
 
 // String, PropertyName
 // * First int
-//   * Top bit is 0 if this is the local token offset, 1 if it is an external document
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is 0 if this is the local token offset, 1 if it is an external document
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Top bit is set if the string requires unescaping
-//   * 31 bits for the token length
+// * Top bit is set if the string requires unescaping
+// * 31 bits for the token length
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the index of the workspace document in the workspace for this row
+// * 4 bits JsonTokenType
+// * 28 bits for the index of the workspace document in the workspace for this row
 
 // Other value types (True, False, Null)
 // * First int
-//   * Top bit is 0 if this is the local token offset, 1 if it is an external document
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is 0 if this is the local token offset, 1 if it is an external document
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Top bit is unassigned / always clear
-//   * 31 bits for the token length
+// * Top bit is unassigned / always clear
+// * 31 bits for the token length
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the index of the workspace document in the workspace for this row
+// * 4 bits JsonTokenType
+// * 28 bits for the index of the workspace document in the workspace for this row
 
 // EndObject
 // * First int
-//   * Top bit is unassigned / always clear
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is unassigned / always clear
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Top bit is 1 if this object has a property map, otherwise 0
-//   * 31 bits - index into the property map buffer if this has a property map backing, otherwise the length of the token
+// * Top bit is 1 if this object has a property map, otherwise 0
+// * 31 bits - index into the property map buffer if this has a property map backing, otherwise the length of the token
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the number of rows until the previous value (never 0)
+// * 4 bits JsonTokenType
+// * 28 bits for the number of rows until the previous value (never 0)
 
 // EndArray
 // * First int
-//   * Top bit is unassigned / always clear
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is unassigned / always clear
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Unassigned / always clear
+// * Unassigned / always clear
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the number of rows until the previous value (never 0)
+// * 4 bits JsonTokenType
+// * 28 bits for the number of rows until the previous value (never 0)
 
 // StartObject
 // * First int
-//   * Top bit is 0 if this is the local token offset, 1 if it is an external document
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is 0 if this is the local token offset, 1 if it is an external document
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Top bit is unassigned / always clear
-//   * 31 bits for the number of properties in this object
+// * Top bit is unassigned / always clear
+// * 31 bits for the number of properties in this object
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the number of rows until the next value (never 0) if this is a local value,
-//     or the index of the workspace document in the workspace for this row if this is an external value.
+// * 4 bits JsonTokenType
+// * 28 bits for the number of rows until the next value (never 0) if this is a local value,
+// or the index of the workspace document in the workspace for this row if this is an external value.
 
 // StartArray
 // * First int
-//   * Top bit is 0 if this is the local token offset, 1 if it is an external document
-//   * 31 bits for token offset if the top bit is zero, or the external document index if
-//     the top bit is 1
+// * Top bit is 0 if this is the local token offset, 1 if it is an external document
+// * 31 bits for token offset if the top bit is zero, or the external document index if
+// the top bit is 1
 // * Second int
-//   * Top bit is set if the array contains other arrays or objects ("complex" types)
-//   * 31 bits for the number of elements in this array
+// * Top bit is set if the array contains other arrays or objects ("complex" types)
+// * 31 bits for the number of elements in this array
 // * Third int
-//   * 4 bits JsonTokenType
-//   * 28 bits for the number of rows until the next value (never 0) if this is a local value,
-//     or the index of the workspace document in the workspace for this row if this is an external value.
+// * 4 bits JsonTokenType
+// * 28 bits for the number of rows until the next value (never 0) if this is a local value,
+// or the index of the workspace document in the workspace for this row if this is an external value.
 
 /// <summary>
 /// Database storing metadata for parsed JSON document structure, including token information
@@ -376,31 +376,31 @@ public struct MetadataDb : IDisposable
     /// when rows are inserted or removed from within nested containers. The process involves several key steps:
     ///
     /// 1. **Parent Container Traversal**: Starting from the immediate parent container, traverses backwards through
-    ///    all containing objects and arrays to update their metadata. This ensures that parent containers maintain
-    ///    accurate counts of their contents.
+    /// all containing objects and arrays to update their metadata. This ensures that parent containers maintain
+    /// accurate counts of their contents.
     ///
     /// 2. **Count Updates**: For each containing structure encountered:
-    ///    - **StartObject**: Updates both row count and member count, then resets member count to 0 for outer containers
-    ///    - **StartArray**: Updates row count and member count, with special handling for complex children detection
-    ///    - **EndObject/EndArray**: Uses the end token to find the corresponding start token and continues traversal
-    ///    - **Other tokens**: Simply moves to the previous row without modification
+    /// - **StartObject**: Updates both row count and member count, then resets member count to 0 for outer containers
+    /// - **StartArray**: Updates row count and member count, with special handling for complex children detection
+    /// - **EndObject/EndArray**: Uses the end token to find the corresponding start token and continues traversal
+    /// - **Other tokens**: Simply moves to the previous row without modification
     ///
     /// 3. **Memory Management**: Handles dynamic resizing of the backing array:
-    ///    - For insertions requiring more space: Rents a larger array from the pool, copies data with gaps, returns old array
-    ///    - For in-place operations: Uses efficient block copy operations to shift existing data
-    ///    - For removals: Compacts data by copying remaining elements over the removed section
+    /// - For insertions requiring more space: Rents a larger array from the pool, copies data with gaps, returns old array
+    /// - For in-place operations: Uses efficient block copy operations to shift existing data
+    /// - For removals: Compacts data by copying remaining elements over the removed section
     ///
     /// 4. **Data Integrity**: Maintains critical invariants:
-    ///    - Row counts in containers accurately reflect the number of child elements
-    ///    - Member counts distinguish between the logical item count and the actual row count
-    ///    - Complex children flags are properly set when arrays contain non-simple values
-    ///    - External document references are reset to local references when modified
+    /// - Row counts in containers accurately reflect the number of child elements
+    /// - Member counts distinguish between the logical item count and the actual row count
+    /// - Complex children flags are properly set when arrays contain non-simple values
+    /// - External document references are reset to local references when modified
     ///
     /// 5. **Performance Optimizations**:
-    ///    - Updates counts before memory operations to avoid cache invalidation during traversal
-    ///    - Uses block copy operations for efficient memory management
-    ///    - Leverages array pooling to minimize garbage collection pressure
-    ///    - Processes containers in reverse order to maintain data consistency during updates
+    /// - Updates counts before memory operations to avoid cache invalidation during traversal
+    /// - Uses block copy operations for efficient memory management
+    /// - Leverages array pooling to minimize garbage collection pressure
+    /// - Processes containers in reverse order to maintain data consistency during updates
     ///
     /// The method is designed to handle both simple insertions/deletions and complex scenarios involving
     /// nested containers, ensuring that the metadata database remains consistent and all parent containers

@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 #if NET
@@ -88,12 +88,12 @@ internal class Utf8UriDomainNameHelper
             return false;
         }
 
-        //  Determines whether a string is a valid domain name label. In keeping
-        //  with RFC 1123, section 2.1, the requirement that the first character
-        //  of a label be alphabetic is dropped. Therefore, Domain names are
-        //  formed as:
+        // Determines whether a string is a valid domain name label. In keeping
+        // with RFC 1123, section 2.1, the requirement that the first character
+        // of a label be alphabetic is dropped. Therefore, Domain names are
+        // formed as:
 
-        //      <label> -> <alphanum> [<alphanum> | <hyphen> | <underscore>] * 62
+        // <label> -> <alphanum> [<alphanum> | <hyphen> | <underscore>] * 62
 
         // We already verified the content, now verify the lengths of individual labels
         while (true)
@@ -171,7 +171,7 @@ internal class Utf8UriDomainNameHelper
 #else
     private static int IndexOfAny(ReadOnlySpan<byte> hostname, ReadOnlySpan<char> s_iriInvalidChars)
     {
-        for(int i = 0; i < hostname.Length;)
+        for (int i = 0; i < hostname.Length;)
         {
             Rune.DecodeFromUtf8(hostname.Slice(i), out Rune result, out int bytesConsumed);
             if (s_iriInvalidChars.IndexOf((char)result.Value) >= 0)

@@ -13,8 +13,8 @@ namespace TestUtilities;
 /// Logging helper for tests.
 /// Logs event source events into test output.
 /// Example usage:
-///   // Put the following line into your test method:
-///   using var listener = new TestEventListener(_output, TestEventListener.NetworkingEvents);
+/// // Put the following line into your test method:
+/// using var listener = new TestEventListener(_output, TestEventListener.NetworkingEvents);
 /// </summary>
 public sealed class TestEventListener : EventListener
 {
@@ -43,7 +43,7 @@ public sealed class TestEventListener : EventListener
     private readonly HashSet<string> _sourceNames;
     private readonly bool _enableActivityId;
 
-    // Until https://github.com/dotnet/runtime/issues/63979 is solved.
+    // Until https:// github.com/dotnet/runtime/issues/63979 is solved.
     private List<EventSource> _eventSources = new List<EventSource>();
 
     public TestEventListener(TextWriter output, params string[] sourceNames)
@@ -142,7 +142,7 @@ public sealed class TestEventListener : EventListener
         catch { }
     }
 
-    // From https://gist.github.com/MihaZupan/cc63ee68b4146892f2e5b640ed57bc09
+    // From https:// gist.github.com/MihaZupan/cc63ee68b4146892f2e5b640ed57bc09
     private static class ActivityHelpers
     {
         private enum NumberListCodes : byte

@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Diagnostics;
@@ -71,11 +71,11 @@ internal static partial class IPv4AddressHelper
     /// Parses ABNF productions from RFC3986, Section 3.2.2:
     /// IP-literal = "[" ( IPv6address / IPvFuture  ) "]"
     /// IPv4address = dec-octet "." dec-octet "." dec-octet "." dec-octet
-    /// dec-octet   = DIGIT                 ; 0-9
-    ///             / %x31-39 DIGIT         ; 10-99
-    ///             / "1" 2DIGIT            ; 100-199
-    ///             / "2" %x30-34 DIGIT     ; 200-249
-    ///             / "25" %x30-35          ; 250-255
+    /// dec-octet   = DIGIT; 0-9
+    /// / %x31-39 DIGIT; 10-99
+    /// / "1" 2DIGIT; 100-199
+    /// / "2" %x30-34 DIGIT; 200-249
+    /// / "25" %x30-35; 250-255
     /// </remarks>
     internal static unsafe bool IsValidCanonical(byte* name, int start, ref int end, bool allowIPv6, bool notImplicitFile)
     {

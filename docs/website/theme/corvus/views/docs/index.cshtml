@@ -1,54 +1,26 @@
 @model SiteViewModel
 @{
     Layout = "../Shared/_Layout.cshtml";
-    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
 }
-<!-- Documentation hub -->
-<div class="container">
-    <main id="main-content" class="page">
-        <!-- Page header -->
-        <header class="page-header">
-            <h1 class="page-header__title">@Model.PageContext.Title</h1>
-            <p class="page-header__description">@Model.PageContext.MetaData.Description</p>
-        </header>
-
-        <!-- Overview content -->
-        @{
-            var overviewBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Overview");
-        }
-        @if (overviewBlock != null)
-        {
-            <div class="text-content">
-                @Html.Raw(overviewBlock.Body)
-            </div>
-        }
-
-        <!-- Doc section cards -->
-        <section class="docs-hub" aria-label="Documentation sections">
-            <div class="card-grid">
-                @foreach (var child in Model.SiteContext.Navigation.Children
-                    .Where(x => Vellum.Cli.Domain.Url.AreEquivalent(x.Url, new Vellum.Cli.Domain.Url("/docs/")))
-                    .SelectMany(x => x.Children)
-                    .Where(x => x.Header.Visible)
-                    .OrderBy(x => x.Rank))
-                {
-                    <a href="@child.Url" class="card">
-                        <article class="card__inner">
-                            <h2 class="card__title">@child.Title</h2>
-                            <p class="card__description">@child.Description</p>
-                        </article>
-                    </a>
-                }
-            </div>
-        </section>
-
-        <!-- Remaining content blocks -->
-        @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent().Where(c => c.Id != "Overview"))
-        {
-            <section class="content-section text-content" id="@contentFragment.Id.ToLower()">
-                @Html.Raw(contentFragment.Body)
-            </section>
-        }
-    </main>
+<section class="hero hero--compact">
+    <div class="hero__content">
+        <h1 class="hero__title">Documentation</h1>
+        <p class="hero__subtitle">In-depth guides for core types and migration</p>
+    </div>
+</section>
+<div class="container section">
+    <div class="card-grid">
+        <a class="card card--link" href="/docs/parsed-json-document/index.html">
+            <h3 class="card__title">ParsedJsonDocument</h3>
+            <p class="card__body">Pooled-memory document parsing with ArrayPool&lt;byte&gt;. The primary way to parse and access JSON data.</p>
+        </a>
+        <a class="card card--link" href="/docs/json-document-builder/index.html">
+            <h3 class="card__title">JsonDocumentBuilder</h3>
+            <p class="card__body">Mutable JSON documents with workspace-managed pooled memory for building and modifying JSON.</p>
+        </a>
+        <a class="card card--link" href="/docs/migrating-from-v4/index.html">
+            <h3 class="card__title">Migrating from V4 to V5</h3>
+            <p class="card__body">Step-by-step migration guide covering namespace changes, API differences, and new features.</p>
+        </a>
+    </div>
 </div>
-<!-- /Documentation hub -->

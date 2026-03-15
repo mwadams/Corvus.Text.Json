@@ -230,13 +230,13 @@ namespace System.Text.Unicode
             //
             // original input   +05         |A0         +1A
             // ====================================================
-            //         00 .. 3F -> 05 .. 44 -> A5 .. E4 -> BF .. FE
-            //               40 ->       45 ->       E5 ->       FF
+            // 00 .. 3F -> 05 .. 44 -> A5 .. E4 -> BF .. FE
+            // 40 ->       45 ->       E5 ->       FF
             // ([A-Z]) 41 .. 5A -> 46 .. 5F -> E6 .. FF -> 00 .. 19
-            //         5B .. 5F -> 60 .. 64 -> E0 .. E4 -> FA .. FE
-            //               60 ->       65 ->       E5 ->       FF
+            // 5B .. 5F -> 60 .. 64 -> E0 .. E4 -> FA .. FE
+            // 60 ->       65 ->       E5 ->       FF
             // ([a-z]) 61 .. 7A -> 66 .. 7F -> E6 .. FF -> 00 .. 19
-            //         7B .. 7F -> 80 .. 84 -> A0 .. A4 -> BA .. BE
+            // 7B .. 7F -> 80 .. 84 -> A0 .. A4 -> BA .. BE
             //
             // This combination of operations results in the 0x80 bit of each word being set
             // iff the original word value was *not* [A-Za-z].

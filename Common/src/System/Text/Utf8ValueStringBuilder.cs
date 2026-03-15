@@ -4,7 +4,7 @@
 // <license>
 // Derived from code Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
-// See https://github.com/dotnet/runtime/blob/c1049390d5b33483203f058b0e1457d2a1f62bf4/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
+// See https:// github.com/dotnet/runtime/blob/c1049390d5b33483203f058b0e1457d2a1f62bf4/src/libraries/Common/src/System/Text/ValueStringBuilder.cs
 // </license>
 
 using System.Buffers;
@@ -170,7 +170,7 @@ internal ref partial struct Utf8ValueStringBuilder
     /// <param name="length">The final length of the span.</param>
     public void ApplySlice(int start, int length)
     {
-        if(start + length > _pos)
+        if (start + length > _pos)
         {
             throw new ArgumentOutOfRangeException();
         }
@@ -313,7 +313,7 @@ internal ref partial struct Utf8ValueStringBuilder
     {
         const int ExpandInt32String = 14;
         int bytesWritten;
-        while(!Utf8Formatter.TryFormat(value, _bytes.Slice(_pos), out bytesWritten, format))
+        while (!Utf8Formatter.TryFormat(value, _bytes.Slice(_pos), out bytesWritten, format))
         {
             Grow(ExpandInt32String);
         }
@@ -381,7 +381,7 @@ internal ref partial struct Utf8ValueStringBuilder
     {
         Debug.Assert(additionalCapacityBeyondPos > 0);
         Debug.Assert(_bytes.Length < _pos + additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
-        //Debug.Assert(_pos > _bytes.Length - additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
+        // Debug.Assert(_pos > _bytes.Length - additionalCapacityBeyondPos, "Grow called incorrectly, no resize is needed.");
 
         const uint ArrayMaxLength = 0x7FFFFFC7; // same as Array.MaxLength
 

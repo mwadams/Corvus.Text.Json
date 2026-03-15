@@ -339,8 +339,6 @@ dotnet_diagnostic.SA1501.severity = None
 dotnet_diagnostic.SA1502.severity = None
 
 # Comment formatting
-# SA1005: Single line comments should begin with single space
-dotnet_diagnostic.SA1005.severity = None
 # SA1108: Block statements should not contain embedded comments
 dotnet_diagnostic.SA1108.severity = None
 
@@ -381,20 +379,6 @@ dotnet_diagnostic.SA1107.severity = None
 dotnet_diagnostic.SA1129.severity = None
 
 # Spacing rules
-# SA1000: Keywords should be spaced correctly
-dotnet_diagnostic.SA1000.severity = None
-# SA1001: Commas should be spaced correctly
-dotnet_diagnostic.SA1001.severity = None
-# SA1002: Semicolons should be spaced correctly
-dotnet_diagnostic.SA1002.severity = None
-# SA1003: Symbols should be spaced correctly
-dotnet_diagnostic.SA1003.severity = None
-# SA1009: Closing parenthesis should be spaced correctly
-dotnet_diagnostic.SA1009.severity = None
-# SA1013: Closing brace should be spaced correctly
-dotnet_diagnostic.SA1013.severity = None
-# SA1100: Do not prefix calls with base unless local implementation exists
-dotnet_diagnostic.SA1100.severity = None
 
 # Naming rules that conflict with dotnet/runtime conventions
 # SA1300: Element should begin with upper-case letter

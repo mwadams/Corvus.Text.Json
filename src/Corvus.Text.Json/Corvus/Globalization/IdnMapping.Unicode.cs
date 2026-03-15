@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 // This file contains the IDN functions and implementation.
@@ -12,11 +12,11 @@
 // This allows encoding of non-ASCII domain names in a "punycode" form,
 // for example:
 
-//     \u5B89\u5BA4\u5948\u7F8E\u6075-with-SUPER-MONKEYS
+// \u5B89\u5BA4\u5948\u7F8E\u6075-with-SUPER-MONKEYS
 
 // is encoded as:
 
-//     xn---with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n
+// xn---with-SUPER-MONKEYS-pc58ag80a8qai00g7n9n
 
 // Additional options are provided to allow unassigned IDN characters and
 // to validate according to the Std3ASCII Rules (like DNS names).
@@ -25,9 +25,9 @@
 // of segments.
 
 // For additional rules see also:
-//  RFC 3490 - Internationalizing Domain Names in Applications (IDNA)
-//  RFC 3491 - Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)
-//  RFC 3492 - Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)
+// RFC 3490 - Internationalizing Domain Names in Applications (IDNA)
+// RFC 3491 - Nameprep: A Stringprep Profile for Internationalized Domain Names (IDN)
+// RFC 3492 - Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)
 
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -199,14 +199,14 @@ public sealed partial class IdnMapping
                 written = 0;
                 return false;
                 // (unlike this code below)
-                ////if (iNextDot != ascii.Length)
-                ////{
-                ////    written = 0;
-                ////    return false;
-                ////}
+                //// if (iNextDot != ascii.Length)
+                //// {
+                //// written = 0;
+                //// return false;
+                //// }
 
                 ////// Last dot, stop
-                ////break;
+                //// break;
             }
 
             // In either case it can't be bigger than segment size
@@ -476,10 +476,10 @@ public sealed partial class IdnMapping
         }
 
         // We should not need to assert the round trip rule here
-        ////GetAscii(strUnicode)
+        //// GetAscii(strUnicode)
         ////// Output name MUST obey IDNA rules & round trip (casing differences are allowed)
-        ////if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))
-        ////    throw new ArgumentException(SR.Argument_IdnIllegalName, nameof(ascii));
+        //// if (!ascii.Equals(, StringComparison.OrdinalIgnoreCase))
+        //// throw new ArgumentException(SR.Argument_IdnIllegalName, nameof(ascii));
 
         return true;
     }

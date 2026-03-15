@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -124,11 +124,11 @@ namespace Corvus.Text.Json;
 /// // Enumerate results
 /// foreach (var result in collector.EnumerateResults())
 /// {
-///     if (!result.IsMatch)
-///     {
-///         Console.WriteLine($"Validation failed: {result.GetMessageText()}");
-///         Console.WriteLine($"  Location: {result.GetDocumentEvaluationLocationText()}");
-///     }
+/// if (!result.IsMatch)
+/// {
+/// Console.WriteLine($"Validation failed: {result.GetMessageText()}");
+/// Console.WriteLine($"  Location: {result.GetDocumentEvaluationLocationText()}");
+/// }
 /// }
 /// </code>
 /// </example>
@@ -137,8 +137,8 @@ namespace Corvus.Text.Json;
 /// <code>
 /// // Pre-size for expected validation complexity
 /// using var collector = JsonSchemaResultsCollector.Create(
-///     JsonSchemaResultsLevel.Basic,
-///     estimatedCapacity: documentSize / 10);
+/// JsonSchemaResultsLevel.Basic,
+/// estimatedCapacity: documentSize / 10);
 ///
 /// // Use UTF-8 paths for optimal performance
 /// ReadOnlySpan&lt;byte&gt; propertyName = "username"u8;
@@ -151,11 +151,11 @@ namespace Corvus.Text.Json;
 /// int resultCount = collector.GetResultCount();
 /// if (resultCount > 0)
 /// {
-///     var enumerator = collector.EnumerateResults();
-///     while (enumerator.MoveNext())
-///     {
-///         ProcessResult(enumerator.Current);
-///     }
+/// var enumerator = collector.EnumerateResults();
+/// while (enumerator.MoveNext())
+/// {
+/// ProcessResult(enumerator.Current);
+/// }
 /// }
 /// </code>
 /// </example>
@@ -176,12 +176,12 @@ namespace Corvus.Text.Json;
 /// // Comprehensive result analysis
 /// foreach (var result in collector.EnumerateResults())
 /// {
-///     LogValidationResult(
-///         result.IsMatch,
-///         result.GetEvaluationLocationText(),
-///         result.GetSchemaEvaluationLocationText(),
-///         result.GetDocumentEvaluationLocationText(),
-///         result.GetMessageText());
+/// LogValidationResult(
+/// result.IsMatch,
+/// result.GetEvaluationLocationText(),
+/// result.GetSchemaEvaluationLocationText(),
+/// result.GetDocumentEvaluationLocationText(),
+/// result.GetMessageText());
 /// }
 /// </code>
 /// </example>
@@ -389,8 +389,8 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// // Estimate capacity based on schema complexity
     /// int expectedResults = schemaKeywordCount * documentDepth / 4;
     /// using var collector = JsonSchemaResultsCollector.Create(
-    ///     JsonSchemaResultsLevel.Basic,
-    ///     expectedResults);
+    /// JsonSchemaResultsLevel.Basic,
+    /// expectedResults);
     ///
     /// // Validation operations...
     /// </code>
@@ -400,8 +400,8 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// // Liberal capacity for complete validation trace
     /// using var collector = JsonSchemaResultsCollector.Create(
-    ///     JsonSchemaResultsLevel.Verbose,
-    ///     estimatedCapacity: 200);
+    /// JsonSchemaResultsLevel.Verbose,
+    /// estimatedCapacity: 200);
     ///
     /// // All validation steps will be captured
     /// </code>
@@ -443,8 +443,8 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// // Standalone collector for isolated validation
     /// using var collector = JsonSchemaResultsCollector.CreateUnrented(
-    ///     JsonSchemaResultsLevel.Detailed,
-    ///     estimatedCapacity: 75);
+    /// JsonSchemaResultsLevel.Detailed,
+    /// estimatedCapacity: 75);
     ///
     /// // Validation operations with complete memory isolation...
     /// </code>
@@ -682,15 +682,15 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// var enumerator = collector.EnumerateResults();
     /// while (enumerator.MoveNext())
     /// {
-    ///     var result = enumerator.Current;
-    ///     if (!result.IsMatch)
-    ///     {
-    ///         // Direct UTF-8 processing for optimal performance
-    ///         ProcessValidationFailure(
-    ///             result.Message,
-    ///             result.DocumentEvaluationLocation,
-    ///             result.SchemaEvaluationLocation);
-    ///     }
+    /// var result = enumerator.Current;
+    /// if (!result.IsMatch)
+    /// {
+    /// // Direct UTF-8 processing for optimal performance
+    /// ProcessValidationFailure(
+    /// result.Message,
+    /// result.DocumentEvaluationLocation,
+    /// result.SchemaEvaluationLocation);
+    /// }
     /// }
     /// </code>
     /// </example>
@@ -699,11 +699,11 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// foreach (var result in collector.EnumerateResults())
     /// {
-    ///     Console.WriteLine($"Match: {result.IsMatch}");
-    ///     Console.WriteLine($"Message: {result.GetMessageText()}");
-    ///     Console.WriteLine($"Document Path: {result.GetDocumentEvaluationLocationText()}");
-    ///     Console.WriteLine($"Schema Path: {result.GetSchemaEvaluationLocationText()}");
-    ///     Console.WriteLine();
+    /// Console.WriteLine($"Match: {result.IsMatch}");
+    /// Console.WriteLine($"Message: {result.GetMessageText()}");
+    /// Console.WriteLine($"Document Path: {result.GetDocumentEvaluationLocationText()}");
+    /// Console.WriteLine($"Schema Path: {result.GetSchemaEvaluationLocationText()}");
+    /// Console.WriteLine();
     /// }
     /// </code>
     /// </example>
@@ -742,19 +742,19 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// int resultCount = collector.GetResultCount();
     /// if (resultCount > 0)
     /// {
-    ///     Console.WriteLine($"Validation produced {resultCount} results");
+    /// Console.WriteLine($"Validation produced {resultCount} results");
     ///
-    ///     // Pre-size collections if needed
-    ///     var issues = new List&lt;ValidationIssue&gt;(resultCount);
+    /// // Pre-size collections if needed
+    /// var issues = new List&lt;ValidationIssue&gt;(resultCount);
     ///
-    ///     foreach (var result in collector.EnumerateResults())
-    ///     {
-    ///         issues.Add(ConvertToIssue(result));
-    ///     }
+    /// foreach (var result in collector.EnumerateResults())
+    /// {
+    /// issues.Add(ConvertToIssue(result));
+    /// }
     /// }
     /// else
     /// {
-    ///     Console.WriteLine("Validation completed successfully with no issues");
+    /// Console.WriteLine("Validation completed successfully with no issues");
     /// }
     /// </code>
     /// </example>
@@ -817,11 +817,11 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
     /// try
     /// {
-    ///     // Validation operations...
+    /// // Validation operations...
     /// }
     /// finally
     /// {
-    ///     collector.Dispose(); // Essential for proper resource management
+    /// collector.Dispose(); // Essential for proper resource management
     /// }
     /// </code>
     /// </example>

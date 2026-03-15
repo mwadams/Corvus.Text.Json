@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers.Binary;
@@ -33,7 +33,7 @@ public static partial class CharUnicodeInfo
     /*
      * GetBidiCategory
      * ===============
-     * Data derived from https://www.unicode.org/reports/tr9/#Bidirectional_Character_Types. This data
+     * Data derived from https:// www.unicode.org/reports/tr9/#Bidirectional_Character_Types. This data
      * is encoded in DerivedBidiClass.txt. We map "L" to "strong left-to-right"; and we map "R" and "AL"
      * to "strong right-to-left". All other (non-strong) code points are "other" for our purposes.
      */

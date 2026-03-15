@@ -10,7 +10,7 @@ namespace System
     /// <remarks>
     /// Index is used by the C# compiler to support the new index syntax
     /// <code>
-    /// int[] someArray = new int[5] { 1, 2, 3, 4, 5 } ;
+    /// int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
     /// int lastElement = someArray[^1]; // lastElement = 5
     /// </code>
     /// </remarks>

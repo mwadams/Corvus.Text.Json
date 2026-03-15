@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -24,7 +24,7 @@ public sealed partial class Utf8JsonWriter
     /// Thrown if this would result in invalid JSON being written (while validation is enabled).
     /// </exception>
     /// <remarks>
-    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000-07:00.
+    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/>, for example: 2017-06-12T05:30:45.7680000-07:00.
     /// </remarks>
     public void WriteString(JsonEncodedText propertyName, DateTimeOffset value)
     {
@@ -52,7 +52,7 @@ public sealed partial class Utf8JsonWriter
     /// Thrown if this would result in invalid JSON being written (while validation is enabled).
     /// </exception>
     /// <remarks>
-    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000-07:00.
+    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/>, for example: 2017-06-12T05:30:45.7680000-07:00.
     /// The property name is escaped before writing.
     /// </remarks>
     public void WriteString(string propertyName, DateTimeOffset value)
@@ -73,7 +73,7 @@ public sealed partial class Utf8JsonWriter
     /// Thrown if this would result in invalid JSON being written (while validation is enabled).
     /// </exception>
     /// <remarks>
-    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000-07:00.
+    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/>, for example: 2017-06-12T05:30:45.7680000-07:00.
     /// The property name is escaped before writing.
     /// </remarks>
     public void WriteString(ReadOnlySpan<char> propertyName, DateTimeOffset value)
@@ -98,7 +98,7 @@ public sealed partial class Utf8JsonWriter
     /// Thrown if this would result in invalid JSON being written (while validation is enabled).
     /// </exception>
     /// <remarks>
-    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/> , for example: 2017-06-12T05:30:45.7680000-07:00.
+    /// Writes the <see cref="DateTimeOffset"/> using the round-trippable ('O') <see cref="StandardFormat"/>, for example: 2017-06-12T05:30:45.7680000-07:00.
     /// The property name is escaped before writing.
     /// </remarks>
     public void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTimeOffset value)

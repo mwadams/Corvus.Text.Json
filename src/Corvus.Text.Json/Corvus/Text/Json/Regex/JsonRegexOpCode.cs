@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 namespace Corvus.Text.Json.Internal;
@@ -15,16 +15,16 @@ namespace Corvus.Text.Json.Internal;
 /// the interpreter to process the regular expression.  The array contains a packed sequence of operations,
 /// each of which is an <see cref="JsonRegexOpCode"/> stored as an int, followed immediately by all of the operands
 /// required for that operation.  For example, the subexpression `a{2,7}[^b]` would be represented as the sequence
-///     0 97 2 3 97 5 10 98
+/// 0 97 2 3 97 5 10 98
 /// which is interpreted as:
-///     0  = opcode for Onerep (a{2, 7} is written out as a repeater for the minimum followed by a loop for the maximum minus the minimum)
-///     97 = 'a'
-///     2  = repeat count
-///     3  = opcode for Oneloop
-///     97 = 'a'
-///     5  = max iteration count
-///     10 = opcode for Notone
-///     98 = 'b'
+/// 0  = opcode for Onerep (a{2, 7} is written out as a repeater for the minimum followed by a loop for the maximum minus the minimum)
+/// 97 = 'a'
+/// 2  = repeat count
+/// 3  = opcode for Oneloop
+/// 97 = 'a'
+/// 5  = max iteration count
+/// 10 = opcode for Notone
+/// 98 = 'b'
 /// </remarks>
 internal enum JsonRegexOpCode
 {

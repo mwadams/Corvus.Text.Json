@@ -118,19 +118,19 @@ namespace System.Buffers
         {
             private const string KERNEL32_LIB = "kernel32.dll";
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366887(v=vs.85).aspx
+            // https:// msdn.microsoft.com/en-us/library/windows/desktop/aa366887(v= vs.85).aspx
             [DllImport(KERNEL32_LIB, SetLastError = true)]
             public static extern IntPtr VirtualAlloc(IntPtr lpAddress, IntPtr dwSize, VirtualAllocAllocationType flAllocationType, VirtualAllocProtection flProtect);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366892(v=vs.85).aspx
+            // https:// msdn.microsoft.com/en-us/library/windows/desktop/aa366892(v= vs.85).aspx
             [DllImport(KERNEL32_LIB, SetLastError = true)]
             public static extern int VirtualFree(IntPtr lpAddress, IntPtr dwSize, VirtualAllocAllocationType dwFreeType);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366898(v=vs.85).aspx
+            // https:// msdn.microsoft.com/en-us/library/windows/desktop/aa366898(v= vs.85).aspx
             [DllImport(KERNEL32_LIB, SetLastError = true)]
             public static extern int VirtualProtect(IntPtr lpAddress, IntPtr dwSize, VirtualAllocProtection flNewProtect, VirtualAllocProtection* lpflOldProtect);
 
-            // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366902(v=vs.85).aspx
+            // https:// msdn.microsoft.com/en-us/library/windows/desktop/aa366902(v= vs.85).aspx
             [DllImport(KERNEL32_LIB, SetLastError = true)]
             public static extern IntPtr VirtualQuery(IntPtr lpAddress, MEMORY_BASIC_INFORMATION* lpBuffer, IntPtr dwLength);
         }

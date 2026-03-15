@@ -74,7 +74,7 @@ namespace System
 
                 // Decrementing by 1 every time and comparing against zero allows the JIT to produce
                 // better codegen compared to a standard 'for' loop with an incrementing counter.
-                // Requires https://github.com/dotnet/runtime/issues/6794 to be addressed first
+                // Requires https:// github.com/dotnet/runtime/issues/6794 to be addressed first
                 // before we can realize the full benefits of this.
 
                 data = ref Unsafe.AddByteOffset(ref data, 8);
@@ -121,7 +121,7 @@ namespace System
             // need to consume, and ## are bytes which we want to throw away since we've already
             // consumed them as part of a previous read.
             //
-            //                                                    (partialResult contains)   (we want it to contain)
+            // (partialResult contains)   (we want it to contain)
             // count mod 4 = 0 -> [ ## ## ## ## |             ] -> 0x####_####             -> 0x0000_0080
             // count mod 4 = 1 -> [ ## ## ## ## | AA          ] -> 0xAA##_####             -> 0x0000_80AA
             // count mod 4 = 2 -> [ ## ## ## ## | AA BB       ] -> 0xBBAA_####             -> 0x0080_BBAA
@@ -175,7 +175,7 @@ namespace System
                 // and merge it into our partial result. This will result in partialResult
                 // having one of the two values below, where AA BB CC are the buffer bytes.
                 //
-                //                  (little-endian / big-endian)
+                // (little-endian / big-endian)
                 // [ AA          ]  -> 0x0000_80AA / 0xAA80_0000
                 // [ AA BB CC    ]  -> 0x0000_80CC / 0xCC80_0000
 
@@ -198,7 +198,7 @@ namespace System
                 // and merge it into the partial result. This will result in partialResult
                 // having one of the two values below, where AA BB CC are the buffer bytes.
                 //
-                //                  (little-endian / big-endian)
+                // (little-endian / big-endian)
                 // [ AA BB       ]  -> 0x0080_BBAA / 0xAABB_8000
                 // [ AA BB CC    ]  -> 0x80CC_BBAA / 0xAABB_CC80 (carried over from above)
 

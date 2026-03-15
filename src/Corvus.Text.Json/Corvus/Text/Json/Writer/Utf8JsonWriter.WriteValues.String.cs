@@ -4,7 +4,7 @@
 // <licensing>
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
-// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
 using System.Buffers;
@@ -235,7 +235,7 @@ public sealed partial class Utf8JsonWriter
         }
     }
 
-    // TODO: https://github.com/dotnet/runtime/issues/29293
+    // TODO: https:// github.com/dotnet/runtime/issues/29293
     private void WriteStringIndented(ReadOnlySpan<char> escapedValue)
     {
         int indent = Indentation;
@@ -276,7 +276,7 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Quote;
     }
 
-    // TODO: https://github.com/dotnet/runtime/issues/29293
+    // TODO: https:// github.com/dotnet/runtime/issues/29293
     private void WriteStringIndented(ReadOnlySpan<byte> escapedValue)
     {
         int indent = Indentation;
@@ -317,7 +317,7 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Quote;
     }
 
-    // TODO: https://github.com/dotnet/runtime/issues/29293
+    // TODO: https:// github.com/dotnet/runtime/issues/29293
     private void WriteStringMinimized(ReadOnlySpan<char> escapedValue)
     {
         Debug.Assert(escapedValue.Length < (int.MaxValue / JsonConstants.MaxExpansionFactorWhileTranscoding) - 3);
@@ -344,14 +344,14 @@ public sealed partial class Utf8JsonWriter
         output[BytesPending++] = JsonConstants.Quote;
     }
 
-    ////internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
-    ////{
-    ////    JsonWriterHelper.ValidateValue(utf8Value);
-    ////    WriteStringByOptions(utf8Value);
-    ////    SetFlagToAddListSeparatorBeforeNextItem();
-    ////    _tokenType = JsonTokenType.String;
-    ////}
-    // TODO: https://github.com/dotnet/runtime/issues/29293
+    //// internal void WriteStringValueUnescaped(ReadOnlySpan<byte> utf8Value)
+    //// {
+    //// JsonWriterHelper.ValidateValue(utf8Value);
+    //// WriteStringByOptions(utf8Value);
+    //// SetFlagToAddListSeparatorBeforeNextItem();
+    //// _tokenType = JsonTokenType.String;
+    //// }
+    // TODO: https:// github.com/dotnet/runtime/issues/29293
     private void WriteStringMinimized(ReadOnlySpan<byte> escapedValue)
     {
         Debug.Assert(escapedValue.Length < int.MaxValue - 3);

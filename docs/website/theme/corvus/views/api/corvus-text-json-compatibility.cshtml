@@ -2,18 +2,29 @@
 @{
     Layout = "../Shared/_Layout.cshtml";
 }
-<div class="container">
-    <main id="main-content">
-        <article class="text-content">
-            <header class="page-header">
-                <h1>@Model.PageContext.Title</h1>
-            </header>
+<div class="layout-docs container">
+    <aside class="sidebar">
+        <div class="sidebar__section">
+            <button class="sidebar__heading">Namespaces</button>
+            <div class="sidebar__body">
+                <ul class="sidebar__list">
+                    <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-text-json/index.html">Corvus.Text.Json</a></li>
+                    <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-text-json-internal/index.html">Corvus.Text.Json.Internal</a></li>
+                    <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-numerics/index.html">Corvus.Numerics</a></li>
+                    <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-text-json-compatibility/index.html">Corvus.Text.Json.Compatibility</a></li>
+                    <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-globalization/index.html">Corvus.Globalization</a></li>
+                    <li class="sidebar__item"><a class="sidebar__link" href="/api/corvus-runtime-interopservices/index.html">Corvus.Runtime.InteropServices</a></li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+    <main id="main-content" class="layout-docs__main">
+        <div class="doc__content">
+            <h1>@Model.PageContext.Title</h1>
             @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
             {
-                <section>
-                    @Html.Raw(contentFragment.Body)
-                </section>
+                @Html.Raw(contentFragment.Body)
             }
-        </article>
+        </div>
     </main>
 </div>
