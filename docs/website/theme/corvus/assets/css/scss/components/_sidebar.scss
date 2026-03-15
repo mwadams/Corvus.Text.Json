@@ -61,13 +61,15 @@
 
 .sidebar {
   // Mobile: off-screen drawer
+  // Bottom is inset by the height of the Browse/Close button so they never overlap
+  --sidebar-toggle-height: 2.5rem;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   width: var(--sidebar-width);
-  height: 100vh;
-  max-height: 100vh;
+  height: calc(100vh - var(--sidebar-toggle-height));
+  max-height: calc(100vh - var(--sidebar-toggle-height));
   overflow: hidden;
   padding: 0;
   background: var(--color-bg);
