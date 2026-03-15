@@ -88,6 +88,19 @@ if (htmlOutputPath is not null)
     string title = siteTitleArg ?? "Corvus.Text.Json";
     Console.WriteLine($"Generating standalone HTML type pages to: {htmlOutputPath}");
     HtmlPageGenerator htmlGen = new(htmlOutputPath, title);
+
+    // Try to load template from a Vellum-rendered namespace page
+    string referencePagePath = Path.Combine(htmlOutputPath, "corvus-text-json.html");
+    if (File.Exists(referencePagePath))
+    {
+        Console.WriteLine($"  Loading page template from: {referencePagePath}");
+        htmlGen.LoadTemplate(referencePagePath);
+    }
+    else
+    {
+        Console.WriteLine("  Warning: No reference page found — using fallback template.");
+    }
+
     htmlGen.Generate(namespaces);
 }
 

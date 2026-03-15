@@ -13,6 +13,36 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         .UseAdvancedExtensions()
         .Build();
 
+    private string? _templateBefore;
+    private string? _templateAfter;
+
+    /// <summary>
+    /// Loads the page template by splitting a Vellum-rendered reference page.
+    /// The reference page is split at the inner content div, so we can inject
+    /// our own sidebar + content while keeping the exact same head, header, footer, scripts.
+    /// </summary>
+    public void LoadTemplate(string referenceHtmlPath)
+    {
+        string html = File.ReadAllText(referenceHtmlPath);
+
+        // Split at the layout-docs div — we'll provide our own
+        int layoutDocsIndex = html.IndexOf("<div class=\"layout-docs", StringComparison.Ordinal);
+        if (layoutDocsIndex < 0)
+            throw new InvalidOperationException($"Could not find layout-docs div in {referenceHtmlPath}");
+
+        _templateBefore = html[..layoutDocsIndex];
+
+        // Find the closing </main></div> that ends the layout-docs section, then the footer
+        int footerIndex = html.IndexOf("<footer class=\"site-footer\"", StringComparison.Ordinal);
+        if (footerIndex < 0)
+            throw new InvalidOperationException($"Could not find site-footer in {referenceHtmlPath}");
+
+        _templateAfter = html[footerIndex..];
+
+        Console.WriteLine($"  Template loaded from: {referenceHtmlPath}");
+        Console.WriteLine($"    Before: {_templateBefore.Length} chars, After: {_templateAfter.Length} chars");
+    }
+
     /// <summary>
     /// Generates one HTML file per type, placed flat in the output directory.
     /// File names use the pattern: {nsSlug}-{typeSlug}.html
@@ -354,37 +384,45 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         string typeName)
     {
         StringBuilder sb = new();
-        sb.AppendLine("<!DOCTYPE html>");
-        sb.AppendLine("<html lang=\"en\">");
-        sb.AppendLine("<head>");
-        sb.AppendLine("    <meta charset=\"utf-8\" />");
-        sb.AppendLine("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />");
-        sb.AppendLine($"    <title>{HtmlEncode(title)} — {HtmlEncode(siteTitle)}</title>");
-        sb.AppendLine("    <link rel=\"stylesheet\" href=\"/assets/css/main.css\" />");
-        sb.AppendLine("    <link rel=\"icon\" href=\"/assets/images/favicon.svg\" type=\"image/svg+xml\" />");
-        sb.AppendLine("    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css\" />");
-        sb.AppendLine("</head>");
-        sb.AppendLine("<body>");
 
-        // Header (matching the Vellum-generated site header)
-        sb.AppendLine("<header class=\"header\">");
-        sb.AppendLine("    <div class=\"container header__inner\">");
-        sb.AppendLine("        <a href=\"/\" class=\"header__logo\">");
-        sb.AppendLine($"            <span class=\"header__title\">{HtmlEncode(siteTitle)}</span>");
-        sb.AppendLine("        </a>");
-        sb.AppendLine("        <nav class=\"header__nav\">");
-        sb.AppendLine("            <a class=\"header__link\" href=\"/getting-started/index.html\">Get Started</a>");
-        sb.AppendLine("            <a class=\"header__link\" href=\"/examples/index.html\">Examples</a>");
-        sb.AppendLine("            <a class=\"header__link\" href=\"/docs/index.html\">Docs</a>");
-        sb.AppendLine("            <a class=\"header__link header__link--active\" href=\"/api/index.html\">API</a>");
-        sb.AppendLine("        </nav>");
-        sb.AppendLine("    </div>");
-        sb.AppendLine("</header>");
+        if (_templateBefore is not null)
+        {
+            // Use template-based rendering: inject our title into the head
+            string before = _templateBefore;
+            // Replace the <title> tag
+            before = System.Text.RegularExpressions.Regex.Replace(
+                before,
+                @"<title>[^<]*</title>",
+                $"<title>{HtmlEncode(title)} \u2014 {HtmlEncode(siteTitle)}</title>");
+            // Replace meta description
+            before = System.Text.RegularExpressions.Regex.Replace(
+                before,
+                @"<meta name=""description"" content=""[^""]*""",
+                $"<meta name=\"description\" content=\"API documentation for {HtmlEncode(typeName)} in {HtmlEncode(currentNsName)}\"");
+            sb.Append(before);
+        }
+        else
+        {
+            // Fallback: generate a self-contained page
+            sb.AppendLine("<!DOCTYPE html>");
+            sb.AppendLine("<html lang=\"en\">");
+            sb.AppendLine("<head>");
+            sb.AppendLine("    <meta charset=\"UTF-8\" />");
+            sb.AppendLine("    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />");
+            sb.AppendLine("    <meta name=\"theme-color\" content=\"#1C1D21\" />");
+            sb.AppendLine($"    <meta name=\"description\" content=\"API documentation for {HtmlEncode(typeName)} in {HtmlEncode(currentNsName)}\" />");
+            sb.AppendLine($"    <title>{HtmlEncode(title)} \u2014 {HtmlEncode(siteTitle)}</title>");
+            sb.AppendLine("    <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\" />");
+            sb.AppendLine("    <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin />");
+            sb.AppendLine("    <link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap\" />");
+            sb.AppendLine("    <link rel=\"stylesheet\" href=\"/main.css\" />");
+            sb.AppendLine("    <link rel=\"icon\" type=\"image/svg+xml\" href=\"/assets/images/favicon.svg\" />");
+            sb.AppendLine("</head>");
+            sb.AppendLine("<body>");
+        }
 
-        // Main content with sidebar
+        // Main content with sidebar — matches Vellum namespace page structure
         sb.AppendLine("<div class=\"layout-docs container\">");
-
-        // Sidebar
         sb.AppendLine("    <aside class=\"sidebar\">");
         sb.AppendLine("        <div class=\"sidebar__section\">");
         sb.AppendLine("            <button class=\"sidebar__heading\">Namespaces</button>");
@@ -399,8 +437,6 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         sb.AppendLine("            </div>");
         sb.AppendLine("        </div>");
         sb.AppendLine("    </aside>");
-
-        // Content
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
         sb.AppendLine("            <p class=\"doc__breadcrumb\">");
@@ -414,21 +450,26 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle)
         sb.AppendLine("    </main>");
         sb.AppendLine("</div>");
 
-        // Footer
-        sb.AppendLine("<footer class=\"footer\">");
-        sb.AppendLine("    <div class=\"container\">");
-        sb.AppendLine("        <div class=\"footer__inner\">");
-        sb.AppendLine($"            <p>&copy; {DateTime.UtcNow.Year} endjin. Corvus.Text.Json is licensed under the Apache 2.0 License.</p>");
-        sb.AppendLine("            <p><a href=\"https://github.com/corvus-dotnet/Corvus.JsonSchema\" target=\"_blank\" rel=\"noopener\">GitHub</a></p>");
-        sb.AppendLine("        </div>");
-        sb.AppendLine("    </div>");
-        sb.AppendLine("</footer>");
-
-        sb.AppendLine("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\"></script>");
-        sb.AppendLine("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js\"></script>");
-        sb.AppendLine("<script>hljs.highlightAll();</script>");
-        sb.AppendLine("</body>");
-        sb.AppendLine("</html>");
+        if (_templateAfter is not null)
+        {
+            sb.Append(_templateAfter);
+        }
+        else
+        {
+            // Fallback footer + scripts
+            sb.AppendLine("<footer class=\"site-footer\">");
+            sb.AppendLine("    <div class=\"site-footer__inner\">");
+            sb.AppendLine("        <div class=\"site-footer__sponsor\">Sponsored by <a href=\"https://endjin.com\" target=\"_blank\" rel=\"noopener noreferrer\">endjin</a></div>");
+            sb.AppendLine($"        <p class=\"site-footer__copyright\">&copy; {DateTime.UtcNow.Year} endjin Ltd &amp; contributors. Released under the MIT License.</p>");
+            sb.AppendLine("    </div>");
+            sb.AppendLine("</footer>");
+            sb.AppendLine("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js\" defer></script>");
+            sb.AppendLine("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js\" defer></script>");
+            sb.AppendLine("<script>document.addEventListener('DOMContentLoaded',()=>hljs.highlightAll())</script>");
+            sb.AppendLine("<script src=\"/assets/js/main.js\" defer></script>");
+            sb.AppendLine("</body>");
+            sb.AppendLine("</html>");
+        }
 
         return sb.ToString();
     }
