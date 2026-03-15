@@ -4,11 +4,13 @@
 
 @use '../abstracts/mixins' as *;
 
-// ---- Page content wrapper (below footer in stacking order) ----
+// ---- Page content wrapper (sticks at bottom so footer scrolls over it) ----
 
 .page-content {
-  position: relative;
+  position: sticky;
+  bottom: 0;
   z-index: 1;
+  background: var(--color-bg);
 }
 
 // ---- Container ----
