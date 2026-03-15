@@ -1,0 +1,45 @@
+@model SiteViewModel
+@{
+    Layout = "Shared/_Layout.cshtml";
+    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
+}
+<!-- Getting Started -->
+<div class="docs-layout container">
+    <!-- Sidebar TOC -->
+    <aside class="docs-sidebar" aria-label="Table of contents">
+        <nav class="docs-sidebar__nav">
+            <h2 class="docs-sidebar__title">On this page</h2>
+            <ul class="docs-sidebar__list" id="toc-list">
+                @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
+                {
+                    <li class="docs-sidebar__item">
+                        <a class="docs-sidebar__link" href="#@contentFragment.Id.ToLower()">@contentFragment.Id.Humanize(LetterCasing.Title)</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main id="main-content" class="docs-content">
+        <article class="text-content">
+            <!-- Page header -->
+            <header class="page-header">
+                <h1 class="page-header__title">@Model.PageContext.Title</h1>
+                @if (!string.IsNullOrEmpty(Model.PageContext.MetaData.Description))
+                {
+                    <p class="page-header__description">@Model.PageContext.MetaData.Description</p>
+                }
+            </header>
+
+            <!-- Content blocks -->
+            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
+            {
+                <section class="content-section" id="@contentFragment.Id.ToLower()">
+                    @Html.Raw(contentFragment.Body)
+                </section>
+            }
+        </article>
+    </main>
+</div>
+<!-- /Getting Started -->

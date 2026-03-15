@@ -1,0 +1,122 @@
+@model SiteViewModel
+@{
+    Layout = "Shared/_Layout.cshtml";
+    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
+}
+<!-- Hero -->
+<section class="hero">
+    <div class="hero__container container">
+        <div class="hero__content">
+            @{
+                var heroBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Hero");
+            }
+            @if (heroBlock != null)
+            {
+                @Html.Raw(heroBlock.Body)
+            }
+            else
+            {
+                <h1 class="hero__title">High-performance JSON for .NET</h1>
+                <p class="hero__subtitle">From Schema to Code</p>
+                <p class="hero__description">
+                    Source-generated strongly-typed C# from JSON Schema. Zero-allocation parsing,
+                    full draft 2020-12 validation, mutable documents, and more.
+                </p>
+            }
+            <div class="hero__actions">
+                <a href="/getting-started/index.html" class="hero__cta hero__cta--primary">Get Started</a>
+                <a href="https://github.com/corvus-dotnet/Corvus.JsonSchema"
+                   class="hero__cta hero__cta--secondary"
+                   target="_blank"
+                   rel="noopener noreferrer">View on GitHub</a>
+            </div>
+        </div>
+        <div class="hero__graphic" aria-hidden="true">
+            <pre class="hero__code"><code class="language-json">{
+  "type": "object",
+  "properties": {
+    "name": { "type": "string" },
+    "age":  { "type": "integer", "minimum": 0 }
+  },
+  "required": ["name"]
+}</code></pre>
+        </div>
+    </div>
+</section>
+<!-- /Hero -->
+
+<!-- Why Corvus -->
+<section class="section section--alt" id="why-corvus">
+    <div class="container">
+        @{
+            var whyBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "WhyCorvus");
+        }
+        @if (whyBlock != null)
+        {
+            <div class="text-content">
+                @Html.Raw(whyBlock.Body)
+            </div>
+        }
+    </div>
+</section>
+<!-- /Why Corvus -->
+
+<!-- Features -->
+<section class="section" id="features">
+    <div class="container">
+        @{
+            var featuresBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Features");
+        }
+        @if (featuresBlock != null)
+        {
+            <div class="card-grid">
+                @Html.Raw(featuresBlock.Body)
+            </div>
+        }
+    </div>
+</section>
+<!-- /Features -->
+
+<!-- Quick Start -->
+<section class="section section--alt" id="quickstart">
+    <div class="container">
+        @{
+            var quickStartBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "QuickStart");
+        }
+        @if (quickStartBlock != null)
+        {
+            <div class="text-content">
+                @Html.Raw(quickStartBlock.Body)
+            </div>
+        }
+    </div>
+</section>
+<!-- /Quick Start -->
+
+<!-- Packages -->
+<section class="section" id="packages">
+    <div class="container">
+        @{
+            var packagesBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Packages");
+        }
+        @if (packagesBlock != null)
+        {
+            <div class="text-content">
+                @Html.Raw(packagesBlock.Body)
+            </div>
+        }
+    </div>
+</section>
+<!-- /Packages -->
+
+<!-- CTA -->
+<section class="section section--cta">
+    <div class="container">
+        <div class="cta-block">
+            <h2 class="cta-block__title">Ready to get started?</h2>
+            <p class="cta-block__description">Install the tools, define your first JSON Schema, and generate strongly-typed C# in minutes.</p>
+            <a href="/getting-started/index.html" class="hero__cta hero__cta--primary">Get Started</a>
+        </div>
+    </div>
+</section>
+<!-- /CTA -->

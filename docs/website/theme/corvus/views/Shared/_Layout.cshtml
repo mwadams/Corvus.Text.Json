@@ -1,0 +1,86 @@
+@model SiteViewModel
+@{
+    ViewBag.OpenGraphDescription ??= Model.PageContext.OpenGraph.Description;
+    ViewBag.OpenGraphTitle ??= Model.PageContext.OpenGraph.Title;
+
+    if (string.IsNullOrEmpty(ViewBag.OpenGraphImageUrl))
+    {
+        if (string.IsNullOrEmpty(Model.PageContext.OpenGraph?.Image))
+        {
+            ViewBag.OpenGraphImageUrl = "/assets/images/og-corvus.png";
+        }
+        else
+        {
+            ViewBag.OpenGraphImageUrl = Model.PageContext.OpenGraph.Image;
+        }
+    }
+
+    ViewBag.PageTitle ??= Model.PageContext.Title;
+    ViewBag.MetaTitle ??= Model.PageContext.MetaData.Title;
+    ViewBag.MetaTags ??= Model.PageContext.MetaData.Keywords;
+    ViewBag.MetaKeywords ??= string.Join(", ", Model.PageContext.MetaData.Keywords);
+    ViewBag.MetaDescription ??= Model.PageContext.MetaData.Description;
+    ViewBag.PageUrl ??= Model.PageContext.Url;
+    ViewBag.CanonicalUrl ??= Model.PageContext.MetaData.CanonicalUrl;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1C1D21" />
+    <!-- SEO Metadata -->
+    <meta name="description" content="@ViewBag.MetaDescription" />
+    <meta name="keywords" content="@ViewBag.MetaKeywords" />
+    <meta name="robots" content="follow, index, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:description" content="@ViewBag.OpenGraphDescription" />
+    <meta name="twitter:image" content="@ViewBag.OpenGraphImageUrl" />
+    <meta name="twitter:title" content="@ViewBag.OpenGraphTitle" />
+    @foreach (string tag in ViewBag.MetaTags)
+    {
+    <meta property="article:tag" content="@tag" />
+    }
+    <!-- Open Graph -->
+    <meta property="og:description" content="@ViewBag.OpenGraphDescription" />
+    <meta property="og:image" content="@ViewBag.OpenGraphImageUrl" />
+    <meta property="og:title" content="@ViewBag.OpenGraphTitle" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="@Endjin.StaticSiteGenerator.Domain.Url.Normalize(ViewBag.PageUrl)" />
+    <title>@ViewBag.MetaTitle</title>
+    <link itemprop="url" href="@Endjin.StaticSiteGenerator.Domain.Url.Normalize(ViewBag.PageUrl)" />
+    @if (!string.IsNullOrEmpty(ViewBag.CanonicalUrl))
+    {
+    <link rel="canonical" href="@ViewBag.CanonicalUrl" />
+    }
+    else
+    {
+    <link rel="canonical" href="@Endjin.StaticSiteGenerator.Domain.Url.Normalize(ViewBag.PageUrl)" />
+    }
+    <link rel="sitemap" href="@(Model.SiteContext.MetaData.Url)/sitemap.xml" />
+    @if (Model.SiteContext.Preview)
+    {
+    <link rel="stylesheet" href="/main.css" />
+    }
+    else
+    {
+    <link rel="stylesheet" href="/assets/css/scss/main.scss" />
+    }
+    <link rel="icon" type="image/svg+xml" href="/assets/images/corvus-icon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    @RenderSection("head", required: false)
+</head>
+<body>
+    @await Html.PartialAsync("SearchResults").ConfigureAwait(false)
+    @await Html.PartialAsync("Header").ConfigureAwait(false)
+    @RenderBody()
+    @await Html.PartialAsync("Footer").ConfigureAwait(false)
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+    <script async type="module" src="/assets/js/main.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

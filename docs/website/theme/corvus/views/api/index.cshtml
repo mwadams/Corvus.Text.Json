@@ -1,0 +1,97 @@
+@model SiteViewModel
+@{
+    Layout = "Shared/_Layout.cshtml";
+    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
+}
+<!-- API Reference -->
+<div class="api-browser container">
+    <!-- Sidebar: namespace tree -->
+    <aside class="api-sidebar" aria-label="API namespace browser">
+        <div class="api-search">
+            <input type="search"
+                   class="api-search__input js-api-filter"
+                   placeholder="Filter types…"
+                   spellcheck="false"
+                   aria-label="Filter API types" />
+        </div>
+        <nav class="api-sidebar__nav">
+            <h2 class="api-sidebar__title">Namespaces</h2>
+            <ul class="api-sidebar__list js-api-tree" id="api-tree">
+                @foreach (var child in Model.SiteContext.Navigation.Children
+                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/api/"))
+                    .SelectMany(x => x.Children)
+                    .Where(x => x.Header.Visible)
+                    .OrderBy(x => x.Rank))
+                {
+                    <li class="api-sidebar__item" data-namespace="@child.Title">
+                        <a class="api-sidebar__link" href="@child.Url">@child.Title</a>
+                        @if (child.Children.Any(c => c.Header.Visible))
+                        {
+                            <ul class="api-sidebar__sublist">
+                                @foreach (var type in child.Children.Where(c => c.Header.Visible).OrderBy(c => c.Title))
+                                {
+                                    <li class="api-sidebar__subitem" data-type="@type.Title">
+                                        <a class="api-sidebar__link api-sidebar__link--type" href="@type.Url">@type.Title</a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </li>
+                }
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main id="main-content" class="api-content">
+        <!-- Page header -->
+        <header class="page-header">
+            <h1 class="page-header__title">@Model.PageContext.Title</h1>
+            @if (!string.IsNullOrEmpty(Model.PageContext.MetaData.Description))
+            {
+                <p class="page-header__description">@Model.PageContext.MetaData.Description</p>
+            }
+        </header>
+
+        <!-- Content blocks -->
+        <div class="text-content">
+            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
+            {
+                <section class="content-section" id="@contentFragment.Id.ToLower()">
+                    @Html.Raw(contentFragment.Body)
+                </section>
+            }
+        </div>
+    </main>
+</div>
+<!-- /API Reference -->
+
+@section scripts {
+<script>
+    (function () {
+        var filterInput = document.querySelector('.js-api-filter');
+        var tree = document.querySelector('.js-api-tree');
+        if (!filterInput || !tree) return;
+
+        filterInput.addEventListener('input', function () {
+            var query = this.value.toLowerCase().trim();
+            var namespaces = tree.querySelectorAll('.api-sidebar__item');
+
+            namespaces.forEach(function (ns) {
+                var types = ns.querySelectorAll('.api-sidebar__subitem');
+                var nsName = (ns.getAttribute('data-namespace') || '').toLowerCase();
+                var hasVisibleType = false;
+
+                types.forEach(function (typeEl) {
+                    var typeName = (typeEl.getAttribute('data-type') || '').toLowerCase();
+                    var match = !query || nsName.indexOf(query) !== -1 || typeName.indexOf(query) !== -1;
+                    typeEl.style.display = match ? '' : 'none';
+                    if (match) hasVisibleType = true;
+                });
+
+                ns.style.display = (!query || hasVisibleType || nsName.indexOf(query) !== -1) ? '' : 'none';
+            });
+        });
+    })();
+</script>
+}

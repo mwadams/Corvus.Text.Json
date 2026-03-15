@@ -1,0 +1,54 @@
+@model SiteViewModel
+@{
+    Layout = "Shared/_Layout.cshtml";
+    ViewBag.MetaTitle = Model.PageContext.MetaData.Title;
+}
+<!-- Documentation hub -->
+<div class="container">
+    <main id="main-content" class="page">
+        <!-- Page header -->
+        <header class="page-header">
+            <h1 class="page-header__title">@Model.PageContext.Title</h1>
+            <p class="page-header__description">@Model.PageContext.MetaData.Description</p>
+        </header>
+
+        <!-- Overview content -->
+        @{
+            var overviewBlock = Model.PageContext.GetAllMarkdownContent().FirstOrDefault(c => c.Id == "Overview");
+        }
+        @if (overviewBlock != null)
+        {
+            <div class="text-content">
+                @Html.Raw(overviewBlock.Body)
+            </div>
+        }
+
+        <!-- Doc section cards -->
+        <section class="docs-hub" aria-label="Documentation sections">
+            <div class="card-grid">
+                @foreach (var child in Model.SiteContext.Navigation.Children
+                    .Where(x => Endjin.StaticSiteGenerator.Domain.Url.AreEquivalent(x.Url, "/docs/"))
+                    .SelectMany(x => x.Children)
+                    .Where(x => x.Header.Visible)
+                    .OrderBy(x => x.Rank))
+                {
+                    <a href="@child.Url" class="card">
+                        <article class="card__inner">
+                            <h2 class="card__title">@child.Title</h2>
+                            <p class="card__description">@child.Description</p>
+                        </article>
+                    </a>
+                }
+            </div>
+        </section>
+
+        <!-- Remaining content blocks -->
+        @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent().Where(c => c.Id != "Overview"))
+        {
+            <section class="content-section text-content" id="@contentFragment.Id.ToLower()">
+                @Html.Raw(contentFragment.Body)
+            </section>
+        }
+    </main>
+</div>
+<!-- /Documentation hub -->
