@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Maps of Strings to Strongly Typed Values — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."
-  Keywords: [recipe, JSON Schema, C#]
+  Keywords: ["recipe", "JSON Schema", "C#", "Q: Can map values be complex types (objects, arrays)?", "Q: How do I validate map keys against a pattern?", "Q: What's the difference between additionalProperties and patternProperties?", "Q: Can I use maps with known and unknown property combinations?"]
 OpenGraph:
   Title: "Maps of Strings to Strongly Typed Values — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."

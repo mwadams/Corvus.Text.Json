@@ -112,6 +112,15 @@ $recipeViewTemplate = @'
     <main id="main-content" class="layout-docs__main">
         <div class="doc__content">
             <h1>@Model.PageContext.Title</h1>
+            @if (Model.PageContext.MetaData.Keywords.Any())
+            {
+                <div class="card__tags" style="margin-bottom:1.5rem">
+                    @foreach (var keyword in Model.PageContext.MetaData.Keywords)
+                    {
+                        <span class="card__tag">@keyword</span>
+                    }
+                </div>
+            }
             @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
             {
                 @Html.Raw(contentFragment.Body)
@@ -152,6 +161,19 @@ foreach ($dir in $recipeDirs) {
         $description = $title
     }
 
+    # Extract FAQ questions from ### headings inside the FAQ section
+    $faqQuestions = @()
+    if ($raw -match '(?s)## Frequently Asked Questions(.+?)(?=\n## |\z)') {
+        $faqSection = $Matches[1]
+        $faqQuestions = [regex]::Matches($faqSection, '###\s+(.+)') |
+            ForEach-Object { $_.Groups[1].Value.Trim() -replace '"', '\"' -replace '`', '' }
+    }
+
+    # Build Keywords array: base keywords + FAQ questions
+    $keywordItems = @('recipe', 'JSON Schema', 'C#')
+    $keywordItems += $faqQuestions
+    $keywordsYaml = ($keywordItems | ForEach-Object { "`"$_`"" }) -join ', '
+
     # 1) Content markdown with Vellum frontmatter
     $contentPath = Join-Path $recipesContentDir "$pascalName.md"
     $frontmatter = "---`nContentType: `"application/vnd.endjin.ssg.content+md`"`nPublicationStatus: Published`nDate: 2026-03-15T00:00:00.0+00:00`nTitle: `"$title`"`n---`n"
@@ -178,7 +200,7 @@ Navigation:
 MetaData:
   Title: "$title — Corvus.Text.Json Examples"
   Description: "$description"
-  Keywords: [recipe, JSON Schema, C#]
+  Keywords: [$keywordsYaml]
 OpenGraph:
   Title: "$title — Corvus.Text.Json Examples"
   Description: "$description"

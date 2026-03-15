@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Open Versus Closed Types — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `unevaluatedProperties` to control whether a JSON Schema object type is open (extensible) or closed (strict), and how that affects validation and mutation in generated .NET code."
-  Keywords: [recipe, JSON Schema, C#]
+  Keywords: ["recipe", "JSON Schema", "C#", "When should I use an open type vs a closed type?", "What is the difference between unevaluatedProperties and additionalProperties?", "Can I still access undeclared properties on a closed type?", "How does open/closed affect API versioning?"]
 OpenGraph:
   Title: "Open Versus Closed Types — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `unevaluatedProperties` to control whether a JSON Schema object type is open (extensible) or closed (strict), and how that affects validation and mutation in generated .NET code."

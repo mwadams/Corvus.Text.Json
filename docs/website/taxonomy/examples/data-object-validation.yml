@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Data Object Validation — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."
-  Keywords: [recipe, JSON Schema, C#]
+  Keywords: ["recipe", "JSON Schema", "C#", "How fast is schema validation compared to manual property checks?", "When should I use Basic vs. Detailed vs. Verbose results levels?", "What is the difference between structural validation and semantic validation?", "Does Corvus.Text.Json validate format keywords automatically?", "Can I add custom validation constraints beyond what JSON Schema supports?"]
 OpenGraph:
   Title: "Data Object Validation — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."

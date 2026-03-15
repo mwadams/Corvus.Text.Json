@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Multi-Dimensional Arrays — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to define multi-dimensional (higher-rank) JSON arrays in .NET by nesting array schemas, giving you strongly-typed indexers and tensor operations for fixed-size numeric arrays."
-  Keywords: [recipe, JSON Schema, C#]
+  Keywords: ["recipe", "JSON Schema", "C#", "What's the difference between rank and dimension?", "Can I create ragged (jagged) multi-dimensional arrays?", "Are tensor operations available on all multi-dimensional arrays?", "How do I access nested elements without intermediate variables?"]
 OpenGraph:
   Title: "Multi-Dimensional Arrays — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to define multi-dimensional (higher-rank) JSON arrays in .NET by nesting array schemas, giving you strongly-typed indexers and tensor operations for fixed-size numeric arrays."

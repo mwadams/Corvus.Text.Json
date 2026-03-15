@@ -15,7 +15,7 @@ Navigation:
 MetaData:
   Title: "Constraining a Base Type — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `$ref` to base a new schema on an existing type and add tighter constraints to its properties, showing how JSON Schema composes constraints from both base and derived schemas."
-  Keywords: [recipe, JSON Schema, C#]
+  Keywords: ["recipe", "JSON Schema", "C#", "How does constraint composition work in JSON Schema?", "What happens if I define incompatible constraints?", "Why use $ref to the base property when just adding a new constraint would also validate correctly?", "Can I constrain a closed type even though it has unevaluatedProperties: false?"]
 OpenGraph:
   Title: "Constraining a Base Type — Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `$ref` to base a new schema on an existing type and add tighter constraints to its properties, showing how JSON Schema composes constraints from both base and derived schemas."
