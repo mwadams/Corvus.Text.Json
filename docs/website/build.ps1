@@ -438,6 +438,18 @@ if ($Preview) { $vellumArgs += "--preview" }
 if ($Watch)   { $vellumArgs += "--watch" }
 & $vellumCmd $vellumArgs
 if ($LASTEXITCODE -ne 0) { throw "Vellum generation failed" }
+
+# Vellum copies the entire working directory into .output alongside the rendered
+# pages. Remove the spurious copies so they don't bloat the output or cause
+# recursive nesting on repeat runs.
+foreach ($dir in @(".output", "node_modules", "tools", "taxonomy", "content", "theme", ".endjin")) {
+    $spurious = Join-Path $outputDir $dir
+    if (Test-Path $spurious) { Remove-Item $spurious -Recurse -Force }
+}
+foreach ($file in @("build.ps1", "preview.ps1", "package.json", "package-lock.json", "site.yml", ".gitignore")) {
+    $spurious = Join-Path $outputDir $file
+    if (Test-Path $spurious) { Remove-Item $spurious -Force }
+}
 Write-Host "  Site rendered." -ForegroundColor Green
 
 # ── Step 7: Compile SCSS ────────────────────────────────────────────────────
