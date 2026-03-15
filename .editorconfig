@@ -412,14 +412,14 @@ dotnet_diagnostic.IDE0044.severity = None
 # IDE0251: Make member readonly (can cause hidden copies in structs)
 dotnet_diagnostic.IDE0251.severity = None
 # IDE0059: Unnecessary value assignment (intentional patterns in runtime code)
-dotnet_diagnostic.IDE0059.severity = None
+dotnet_diagnostic.IDE0059.severity = warning
 # IDE0300/IDE0301: Use collection expression (not available on netstandard2.0)
 dotnet_diagnostic.IDE0300.severity = None
 dotnet_diagnostic.IDE0301.severity = None
 # IDE0066: Use switch expression (readability preference)
-dotnet_diagnostic.IDE0066.severity = None
+dotnet_diagnostic.IDE0066.severity = warning
 # IDE0017: Use object initializer (readability preference)
-dotnet_diagnostic.IDE0017.severity = None
+dotnet_diagnostic.IDE0017.severity = warning
 # IDE0220: Add explicit cast in foreach (runtime pattern)
 dotnet_diagnostic.IDE0220.severity = None
 # IDE0064: Make struct fields writable (deliberate design)

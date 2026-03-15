@@ -549,7 +549,7 @@ internal static class Utf8UriTools
             }
 
             targetAuthority = targetUri.Slice(2, authEnd - 2);
-            targetAuthorityLen = targetAuthority.Length;
+            _ = targetAuthority.Length;
 
             // Path starts after authority (if any)
             int targetPathLen = targetUriOffsets.Query - authEnd;

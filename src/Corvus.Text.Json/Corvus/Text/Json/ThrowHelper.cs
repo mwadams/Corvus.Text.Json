@@ -112,8 +112,10 @@ internal static partial class ThrowHelper
     /// <returns>An <see cref="InvalidOperationException"/> with the appropriate source.</returns>
     public static InvalidOperationException GetInvalidOperationException(string message, Exception? innerException)
     {
-        var ex = new InvalidOperationException(message, innerException);
-        ex.Source = ExceptionSourceValueToRethrowAsJsonException;
+        var ex = new InvalidOperationException(message, innerException)
+        {
+            Source = ExceptionSourceValueToRethrowAsJsonException
+        };
         return ex;
     }
 

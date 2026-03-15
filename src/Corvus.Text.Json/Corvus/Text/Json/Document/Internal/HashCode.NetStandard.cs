@@ -50,7 +50,7 @@ internal static class StringHashCodePolyfills
         }
 
         // Then add the left-over bytes as bytes
-        int remainingBytes = value.Length % sizeof(ulong);
+        _ = value.Length % sizeof(ulong);
         for (int i = initialLength; i < value.Length; i++)
         {
             hashCode.Add(value[i]);

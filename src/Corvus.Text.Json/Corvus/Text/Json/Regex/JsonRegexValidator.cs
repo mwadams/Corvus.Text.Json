@@ -307,7 +307,7 @@ internal ref struct JsonRegexValidator
                 break;
 
             default:
-                foreach (char c in _pattern.Slice(pos, cch))
+                for (int i = 0; i < cch; i++)
                 {
                     _concatenation.AddChild(ref this, CreateNode(JsonRegexNodeKind.One));
                 }
@@ -484,7 +484,7 @@ internal ref struct JsonRegexValidator
     /// <summary>True if the capture slot was noted</summary>
     private readonly bool IsCaptureSlot(int i, bool requireExplicit)
     {
-        return TryGetCapturePos(i, requireExplicit, out int pos);
+        return TryGetCapturePos(i, requireExplicit, out _);
     }
 
     private readonly bool IsTrueQuantifier()
@@ -874,7 +874,7 @@ internal ref struct JsonRegexValidator
 
         // Not backreference: must be char code
         _pos = backpos;
-        if (!ScanCharEscape(out ch))
+        if (!ScanCharEscape(out _))
         {
             node = JsonRegexNode.Null;
             return false;
@@ -1766,7 +1766,6 @@ internal ref struct JsonRegexValidator
 
         while (_pos < _pattern.Length)
         {
-            bool wasPrevQuantifier = isQuantifier;
             isQuantifier = false;
 
             if (!ScanBlank())
@@ -1813,8 +1812,6 @@ internal ref struct JsonRegexValidator
             if (startpos < endpos)
             {
                 int cchUnquantified = endpos - startpos - (isQuantifier ? 1 : 0);
-
-                wasPrevQuantifier = false;
 
                 if (cchUnquantified > 0)
                 {

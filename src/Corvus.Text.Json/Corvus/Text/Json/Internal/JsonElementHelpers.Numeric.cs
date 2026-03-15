@@ -94,10 +94,9 @@ public static partial class JsonElementHelpers
         Debug.Assert(leftFractional.Length == 0 || leftFractional[^1] != (byte)'0');
         Debug.Assert(rightIntegral.Length == 0 || rightIntegral[0] != (byte)'0');
         Debug.Assert(rightFractional.Length == 0 || rightFractional[^1] != (byte)'0');
-        int nDigits;
         if (leftIsNegative != rightIsNegative ||
             leftExponent != rightExponent ||
-            (nDigits = (leftIntegral.Length + leftFractional.Length)) !=
+            ((leftIntegral.Length + leftFractional.Length)) !=
                         rightIntegral.Length + rightFractional.Length)
         {
             return false;
@@ -227,34 +226,18 @@ public static partial class JsonElementHelpers
         // Step 4.
         // Determine if the divisor is one of the common "fast path" divisors and use that (e.g. 1, 2, 5, 10) otherwise use the general purpose
         // algorithm
-        switch (divisor)
+        return divisor switch
         {
-            case 1:
-                return true; // 0 mod 1 == 0
-            case 2:
-                return IsDivisibleByTwo(integral, fractional, totalLength + netExponent - 1);
-
-            case 3:
-                return IsDivisibleByThree(integral, fractional);
-
-            case 4:
-                return IsDivisibleByFour(integral, fractional, totalLength + netExponent - 1);
-
-            case 5:
-                return IsDivisibleByFive(integral, fractional, totalLength + netExponent - 1);
-
-            case 6:
-                return IsDivisibleBySix(integral, fractional, totalLength + netExponent - 1);
-
-            case 8:
-                return IsDivisibleByEight(integral, fractional, totalLength + netExponent - 1);
-
-            case 10:
-                return IsDivisibleByTen(integral, fractional, totalLength + netExponent - 1);
-
-            default:
-                return GeneralPurposeIsMultipleOf(integral, fractional, totalLength + netExponent - 1, divisor);
-        }
+            1 => true, // 0 mod 1 == 0
+            2 => IsDivisibleByTwo(integral, fractional, totalLength + netExponent - 1),
+            3 => IsDivisibleByThree(integral, fractional),
+            4 => IsDivisibleByFour(integral, fractional, totalLength + netExponent - 1),
+            5 => IsDivisibleByFive(integral, fractional, totalLength + netExponent - 1),
+            6 => IsDivisibleBySix(integral, fractional, totalLength + netExponent - 1),
+            8 => IsDivisibleByEight(integral, fractional, totalLength + netExponent - 1),
+            10 => IsDivisibleByTen(integral, fractional, totalLength + netExponent - 1),
+            _ => GeneralPurposeIsMultipleOf(integral, fractional, totalLength + netExponent - 1, divisor),
+        };
     }
 
     /// <summary>
@@ -5354,7 +5337,7 @@ public static partial class JsonElementHelpers
 
         if (precision > 0)
         {
-            if (!JsonReaderHelper.TryGetUtf8FromText(numberDecimalSeparator, destination.Slice(pos), out int numberDecimalSeparatorLength))
+            if (!JsonReaderHelper.TryGetUtf8FromText(numberDecimalSeparator, destination.Slice(pos), out _))
             {
                 bytesWritten = 0;
                 return false;

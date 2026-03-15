@@ -363,7 +363,6 @@ public sealed partial class IdnMapping
             {
                 // Not ASCII, bump up iAfterLastDot to be after ACE Prefix
                 iAfterLastDot += c_strAcePrefixUtf8.Length;
-                runeCount -= c_strAcePrefixUtf8.Length;
 
                 // Get number of basic code points (where delimiter is)
                 // numBasicCodePoints < 0 if there're no basic code points
