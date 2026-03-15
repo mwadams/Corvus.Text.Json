@@ -41,12 +41,19 @@ using var builder = Person.CreateBuilder(
 
 ### Array properties
 
+Build array properties by adding elements inside the builder delegate:
+
 ```csharp
-hobbies: Person.HobbiesEntity.Build((ref hb) =>
-{
-    hb.Add("reading"u8);
-    hb.Add("hiking"u8);
-})
+using var builder = Person.CreateBuilder(
+    workspace,
+    name: Person.PersonNameEntity.Build(
+        (ref nb) => nb.Create(familyName: "Oldroyd"u8, givenName: "Michael"u8)),
+    hobbies: Person.HobbiesEntity.Build((ref hb) =>
+    {
+        hb.Add("reading"u8);
+        hb.Add("hiking"u8);
+        hb.Add("coding"u8);
+    }));
 ```
 
 ### Advanced: delegate pattern
@@ -108,6 +115,26 @@ Optional properties can be removed from mutable instances:
 
 ```csharp
 root.RemoveEmail();
+```
+
+## Mutating arrays
+
+Array properties on a `Mutable` element support in-place modification:
+
+```csharp
+Person.Mutable root = builder.RootElement;
+
+// Add an item to the end
+root.Hobbies.AddItem("gardening"u8);
+
+// Insert at a specific index
+root.Hobbies.InsertItem(0, "cooking"u8);
+
+// Replace an item at an index
+root.Hobbies.SetItem(1, "swimming"u8);
+
+// Remove by index
+root.Hobbies.RemoveAt(0);
 ```
 
 The standard mutation workflow is:

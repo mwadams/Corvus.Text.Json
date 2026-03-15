@@ -81,6 +81,50 @@ if (person.TryGetProperty("email"u8, out JsonElement email))
 }
 ```
 
+## Array access
+
+Our Person schema has two array types: `hobbies` is a simple `"type": "array"` with `"items": { "type": "string" }`, and `PersonNameElementArray` (used by `otherNames` via `oneOf`) is an array of `PersonNameElement` strings. The code generator produces strongly-typed array wrappers for both.
+
+### Enumerating array elements
+
+The generated type supports `foreach` via `EnumerateArray()`:
+
+```csharp
+foreach (var hobby in person.Hobbies.EnumerateArray())
+{
+    Console.WriteLine((string)hobby);
+}
+```
+
+When `otherNames` is an array (rather than a single string), you can enumerate it in the same way:
+
+```csharp
+// otherNames uses oneOf — it can be a single string or an array
+// Use AsPersonNameElementArray to access the array variant
+foreach (var name in person.Name.OtherNames.AsPersonNameElementArray.EnumerateArray())
+{
+    Console.WriteLine((string)name);
+}
+```
+
+The enumerator also supports LINQ:
+
+```csharp
+var hobbies = person.Hobbies.EnumerateArray()
+    .Select(h => (string)h)
+    .ToList();
+```
+
+### Array length and indexing
+
+```csharp
+int count = person.Hobbies.GetArrayLength();
+
+// Access by index
+var first = person.Hobbies[0];
+string firstHobby = (string)first;
+```
+
 ## Converting to .NET types
 
 ### Implicit conversions (value types)
