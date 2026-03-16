@@ -128,7 +128,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
                 memberFileBase: fileBase,
                 memberDisplayName: memberDisplayName,
                 memberCategory: category,
-                memberXmlDocKey: members[0].XmlDocKey);
+                members: members);
 
             File.WriteAllText(htmlPath, fullHtml);
         }
@@ -197,7 +197,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
         string memberFileBase,
         string memberDisplayName,
         string memberCategory,
-        string memberXmlDocKey)
+        List<MemberInfo> members)
     {
         StringBuilder sb = new();
 
@@ -238,8 +238,18 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
         sb.AppendLine($"                <span class=\"doc__kind-badge\">{HtmlEncode(memberCategory)}</span> {HtmlEncode(memberDisplayName)}");
         sb.AppendLine("            </p>");
         sb.AppendLine($"            <h1>{HtmlEncode(type.Name)}.{HtmlEncode(memberDisplayName)}</h1>");
-        AppendSourceLink(sb, sourceResolver?.GetMemberSourceUrl(memberXmlDocKey));
-        sb.AppendLine(bodyHtml);
+
+        if (members.Count == 1)
+        {
+            // Single member: source link right after h1
+            AppendSourceLink(sb, sourceResolver?.GetMemberSourceUrl(members[0].XmlDocKey));
+            sb.AppendLine(bodyHtml);
+        }
+        else
+        {
+            // Multiple overloads: inject per-overload source links into the body HTML
+            sb.AppendLine(InjectPerOverloadSourceLinks(bodyHtml, members));
+        }
         sb.AppendLine("        </div>");
         AppendFeedbackSection(sb);
         sb.AppendLine("    </main>");
@@ -361,6 +371,97 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
         }
 
         sb.AppendLine($"            <p class=\"api-source\">Source: <a href=\"{HtmlEncode(sourceUrl)}\" target=\"_blank\" rel=\"noopener noreferrer\">{HtmlEncode(GetSourceDisplayPath(sourceUrl))}</a></p>");
+    }
+
+    private static string BuildSourceLinkHtml(string sourceUrl)
+    {
+        return $"<p class=\"api-source\">Source: <a href=\"{HtmlEncode(sourceUrl)}\" target=\"_blank\" rel=\"noopener noreferrer\">{HtmlEncode(GetSourceDisplayPath(sourceUrl))}</a></p>";
+    }
+
+    /// <summary>
+    /// For pages with multiple overloads, injects a source link after each overload's
+    /// heading (the h2 tags that follow the Overloads summary table).
+    /// Overloads are matched to members by position.
+    /// </summary>
+    private string InjectPerOverloadSourceLinks(string bodyHtml, List<MemberInfo> members)
+    {
+        if (sourceResolver is null)
+        {
+            return bodyHtml;
+        }
+
+        // Find the overloads heading marker
+        const string overloadsHeading = "<h2 id=\"overloads\">";
+        int overloadsIdx = bodyHtml.IndexOf(overloadsHeading, StringComparison.OrdinalIgnoreCase);
+        if (overloadsIdx < 0)
+        {
+            return bodyHtml;
+        }
+
+        // Work through the HTML after the overloads heading, injecting source links
+        // after each subsequent <h2> tag (each represents one overload)
+        StringBuilder result = new(bodyHtml.Length + members.Count * 200);
+        result.Append(bodyHtml[..overloadsIdx]);
+
+        string remaining = bodyHtml[overloadsIdx..];
+        int memberIdx = 0;
+        int searchFrom = 0;
+
+        // Skip the "Overloads" heading itself
+        int firstH2End = remaining.IndexOf("</h2>", searchFrom, StringComparison.OrdinalIgnoreCase);
+        if (firstH2End >= 0)
+        {
+            firstH2End += "</h2>".Length;
+            result.Append(remaining[..firstH2End]);
+            searchFrom = firstH2End;
+        }
+
+        // Now find each subsequent <h2> (one per overload)
+        while (searchFrom < remaining.Length)
+        {
+            int nextH2 = remaining.IndexOf("<h2 ", searchFrom, StringComparison.OrdinalIgnoreCase);
+            if (nextH2 < 0)
+            {
+                nextH2 = remaining.IndexOf("<h2>", searchFrom, StringComparison.OrdinalIgnoreCase);
+            }
+
+            if (nextH2 < 0)
+            {
+                // No more h2 tags — append the rest
+                result.Append(remaining[searchFrom..]);
+                break;
+            }
+
+            // Find the closing </h2>
+            int h2End = remaining.IndexOf("</h2>", nextH2, StringComparison.OrdinalIgnoreCase);
+            if (h2End < 0)
+            {
+                result.Append(remaining[searchFrom..]);
+                break;
+            }
+
+            h2End += "</h2>".Length;
+
+            // Append everything up to and including this </h2>
+            result.Append(remaining[searchFrom..h2End]);
+
+            // Inject source link for this overload
+            if (memberIdx < members.Count)
+            {
+                string? url = sourceResolver.GetMemberSourceUrl(members[memberIdx].XmlDocKey);
+                if (url is not null)
+                {
+                    result.AppendLine();
+                    result.Append(BuildSourceLinkHtml(url));
+                }
+
+                memberIdx++;
+            }
+
+            searchFrom = h2End;
+        }
+
+        return result.ToString();
     }
 
     private static string GetSourceDisplayPath(string url)

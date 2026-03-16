@@ -177,12 +177,22 @@ public sealed class SourceLinkResolver : IDisposable
                 ? $"{typeInfo.FullName}.#ctor"
                 : $"{typeInfo.FullName}.{methodName}";
 
-            if (!_sourceUrls.ContainsKey(memberKey))
+            string? memberUrl = BuildSourceUrl(filePath, firstLine);
+            if (memberUrl is not null)
             {
-                string? url = BuildSourceUrl(filePath, firstLine);
-                if (url is not null)
+                // Store with full parameter signature for overload disambiguation
+                string paramSuffix = XmlDocIdTypeProvider.FormatMethodParams(_peMetadata, methodDef);
+                string fullKey = $"{memberKey}{paramSuffix}";
+
+                if (!_sourceUrls.ContainsKey(fullKey))
                 {
-                    _sourceUrls[memberKey] = url;
+                    _sourceUrls[fullKey] = memberUrl;
+                }
+
+                // Also store without parameters (first overload wins for non-overloaded members)
+                if (!_sourceUrls.ContainsKey(memberKey))
+                {
+                    _sourceUrls[memberKey] = memberUrl;
                 }
             }
 
@@ -359,21 +369,43 @@ public sealed class SourceLinkResolver : IDisposable
     public string? GetMemberSourceUrl(string xmlDocKey)
     {
         // Strip the prefix (M:, P:, F:, E:)
-        string key = xmlDocKey.Length > 2 && xmlDocKey[1] == ':'
+        string rawKey = xmlDocKey.Length > 2 && xmlDocKey[1] == ':'
             ? xmlDocKey[2..]
             : xmlDocKey;
 
-        // Strip parameters
+        string fullKey = rawKey.Replace('+', '.');
+
+        // Try full key with parameters first (exact overload match)
+        if (_sourceUrls.TryGetValue(fullKey, out string? url))
+        {
+            return url;
+        }
+
+        // Try with generic arity stripped from the type portion
+        string fullKeyNoArity = StripGenericArity(fullKey);
+        if (fullKeyNoArity != fullKey && _sourceUrls.TryGetValue(fullKeyNoArity, out url))
+        {
+            return url;
+        }
+
+        // Try arity variants on the full key (with parameters preserved)
+        string? arityUrl = TryArityVariantsFullKey(fullKeyNoArity);
+        if (arityUrl is not null)
+        {
+            return arityUrl;
+        }
+
+        // Strip parameters for unqualified lookup
+        string key = fullKey;
         int parenIdx = key.IndexOf('(');
         if (parenIdx >= 0)
         {
             key = key[..parenIdx];
         }
 
-        key = key.Replace('+', '.');
-
+        // Fall back to unqualified (non-overloaded) lookup
         // Try exact key
-        if (_sourceUrls.TryGetValue(key, out string? url))
+        if (_sourceUrls.TryGetValue(key, out url))
         {
             return url;
         }
@@ -768,6 +800,39 @@ public sealed class SourceLinkResolver : IDisposable
         }
 
         return key[..backtickIdx] + key[endIdx..];
+    }
+
+    /// <summary>
+    /// Tries generic arity variants on the type portion of a full key (with parameters).
+    /// E.g. for "Ns.Type.Method(System.String)", tries "Ns.Type`1.Method(System.String)" etc.
+    /// </summary>
+    private string? TryArityVariantsFullKey(string fullKeyNoArity)
+    {
+        // Split into method+params portion and type portion
+        // "Ns.Type.Method(params)" → parentType="Ns.Type", memberAndParams="Method(params)"
+        int parenIdx = fullKeyNoArity.IndexOf('(');
+        string withoutParams = parenIdx >= 0 ? fullKeyNoArity[..parenIdx] : fullKeyNoArity;
+        string paramSuffix = parenIdx >= 0 ? fullKeyNoArity[parenIdx..] : "";
+
+        int lastDot = withoutParams.LastIndexOf('.');
+        if (lastDot < 0)
+        {
+            return null;
+        }
+
+        string parentType = withoutParams[..lastDot];
+        string memberName = withoutParams[(lastDot + 1)..];
+
+        for (int arity = 1; arity <= 4; arity++)
+        {
+            string candidate = $"{parentType}`{arity}.{memberName}{paramSuffix}";
+            if (_sourceUrls.TryGetValue(candidate, out string? url))
+            {
+                return url;
+            }
+        }
+
+        return null;
     }
 
     private string BuildFullTypeName(TypeDefinition typeDef, string ns, string name)
