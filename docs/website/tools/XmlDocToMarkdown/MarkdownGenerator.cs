@@ -260,7 +260,7 @@ public sealed class MarkdownGenerator(string outputDir)
                 string sig = FormatShortSignature(ctor);
                 string summary = TruncateSummary(ctor.Documentation?.Summary ?? string.Empty);
                 if (ctorUrl is not null)
-                    sb.AppendLine($"| [{EscapeTableCell(sig)}]({ctorUrl}#{Anchor(ctor.Signature)}) | {summary} |");
+                    sb.AppendLine($"| [{EscapeTableCell(sig)}]({ctorUrl}#{Anchor(sig)}) | {summary} |");
                 else
                     sb.AppendLine($"| `{EscapeTableCell(sig)}` | {summary} |");
             }
@@ -314,7 +314,7 @@ public sealed class MarkdownGenerator(string outputDir)
                     string summary = TruncateSummary(method.Documentation?.Summary ?? string.Empty);
                     string modifiers = method.IsStatic ? " `static`" : "";
                     if (methodUrl is not null)
-                        sb.AppendLine($"| [{EscapeTableCell(sig)}]({methodUrl}#{Anchor(method.Signature)}){modifiers} | {summary} |");
+                        sb.AppendLine($"| [{EscapeTableCell(sig)}]({methodUrl}#{Anchor(sig)}){modifiers} | {summary} |");
                     else
                         sb.AppendLine($"| `{EscapeTableCell(sig)}`{modifiers} | {summary} |");
                 }
@@ -339,7 +339,7 @@ public sealed class MarkdownGenerator(string outputDir)
                     string sig = FormatShortSignature(op);
                     string summary = TruncateSummary(op.Documentation?.Summary ?? string.Empty);
                     if (opUrl is not null)
-                        sb.AppendLine($"| [{EscapeTableCell(sig)}]({opUrl}#{Anchor(op.Signature)}) | {summary} |");
+                        sb.AppendLine($"| [{EscapeTableCell(sig)}]({opUrl}#{Anchor(sig)}) | {summary} |");
                     else
                         sb.AppendLine($"| `{EscapeTableCell(sig)}` | {summary} |");
                 }
@@ -478,7 +478,8 @@ public sealed class MarkdownGenerator(string outputDir)
 
         string headingText = useSignatureHeading ? FormatShortSignature(member) : member.Name;
         string anchorId = Anchor(headingText);
-        sb.AppendLine($"{heading} {headingText} {{#{anchorId}}}");
+        string escapedHeading = headingText.Replace("<", "&lt;").Replace(">", "&gt;");
+        sb.AppendLine($"{heading} {escapedHeading} {{#{anchorId}}}");
         sb.AppendLine();
         sb.AppendLine("```csharp");
         sb.AppendLine(member.Signature);
