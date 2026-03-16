@@ -96,7 +96,7 @@ internal static class SidebarBuilder
             string ctorFileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, "ctor");
             string ctorActive = ctorFileBase == currentMemberFileBase ? " is-active" : "";
             sb.AppendLine("                                <li class=\"sidebar__category\">Constructors</li>");
-            sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}(…)</a></li>");
+            sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}</a></li>");
         }
 
         // Properties (one entry per overload group — indexers share a name)
