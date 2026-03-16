@@ -27,9 +27,6 @@ Provides polyfills for Corvus.JsonSchema API compatibility.
 | [get_Null()](/api/corvus-text-json-compatibility-polyfills.get-null.html#get-null) `static` |  |
 | [get_Undefined()](/api/corvus-text-json-compatibility-polyfills.get-undefined.html#get-undefined) `static` |  |
 | [IsValid(T)](/api/corvus-text-json-compatibility-polyfills.isvalid.html#isvalid-t) `static` |  |
-| [Parse(string, JsonDocumentOptions)](/api/corvus-text-json-compatibility-polyfills.parse.html#parse-string-jsondocumentoptions) `static` |  |
-| [Parse(Stream, JsonDocumentOptions)](/api/corvus-text-json-compatibility-polyfills.parse.html#parse-stream-jsondocumentoptions) `static` |  |
-| [Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions)](/api/corvus-text-json-compatibility-polyfills.parse.html#parse-readonlymemory-byte-jsondocumentoptions) `static` |  |
-| [Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions)](/api/corvus-text-json-compatibility-polyfills.parse.html#parse-readonlymemory-char-jsondocumentoptions) `static` |  |
+| [Parse](/api/corvus-text-json-compatibility-polyfills.parse.html) `static` |  |
 | [Validate(T, ref ValidationContext, ValidationLevel)](/api/corvus-text-json-compatibility-polyfills.validate.html#validate-t-ref-validationcontext-validationlevel) `static` |  |
 

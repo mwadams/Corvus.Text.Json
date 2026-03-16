@@ -74,7 +74,7 @@
     "Title": "BigNumber",
     "Description": "Represents an arbitrary-precision decimal number using a significand and exponent.",
     "Keywords": "BigNumber struct Corvus.Numerics",
-    "Body": "Represents an arbitrary-precision decimal number using a significand and exponent.\r\nInternally represented as: value = significand × 10^exponent where significand is a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) and exponent is a [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). This type provides equivalent functionality to [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) but with arbitrary precision, similar to how [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) extends integer arithmetic beyond fixed sizes.\r\nSignificand: Gets the significand of the number.\r\nExponent: Gets the exponent (power of 10) of the number.\r\nZero: Gets a value representing zero.\r\nOne: Gets a value representing one.\r\nMinusOne: Gets a value representing minus one.\r\nRadix: Gets the radix (base) of the number system.\r\nNormalize: Returns a normalized copy of this number with trailing zeros removed from the significand.\r\nIsInteger: Determines whether this instance represents an integer value.\r\nTryGetMinimumFormatBufferLength: Gets the minimum format buffer length.\r\nParse: Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nParse: Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nParse: Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nDivide: Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with specified precision.\r\nAbs: Returns the absolute value.\r\nSign: Returns the sign of the number.\r\nPow: Raises a BigNumber to an integer power.\r\nSqrt: Computes the square root of a BigNumber using Newton's method.\r\nRound: Rounds a value to a specified number of decimal places.\r\nFloor: Returns the largest integer less than or equal to the specified number.\r\nCeiling: Returns the smallest integer greater than or equal to the specified number.\r\nTruncate: Truncates a value to an integer by removing the fractional part.\r\nTryFormatOptimized: Tries to format this instance into the provided UTF-16 span with zero allocations.\r\nTryFormatUtf8Optimized: Tries to format this instance into the provided UTF-8 span with zero allocations.\r\nTryParseJsonUtf8: Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations."
+    "Body": "Represents an arbitrary-precision decimal number using a significand and exponent.\r\nInternally represented as: value = significand × 10^exponent where significand is a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) and exponent is a [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). This type provides equivalent functionality to [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) but with arbitrary precision, similar to how [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) extends integer arithmetic beyond fixed sizes.\r\nSignificand: Gets the significand of the number.\r\nExponent: Gets the exponent (power of 10) of the number.\r\nZero: Gets a value representing zero.\r\nOne: Gets a value representing one.\r\nMinusOne: Gets a value representing minus one.\r\nRadix: Gets the radix (base) of the number system.\r\nNormalize: Returns a normalized copy of this number with trailing zeros removed from the significand.\r\nIsInteger: Determines whether this instance represents an integer value.\r\nEquals: Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance.\r\nEquals: Determines whether the specified object is equal to this instance.\r\nGetHashCode: Returns a hash code for this instance.\r\nCompareTo: Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value.\r\nCompareTo: Compares this instance with a specified object.\r\nToString: Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.\r\nToString: Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the specified format string and format provider.\r\nTryGetMinimumFormatBufferLength: Gets the minimum format buffer length.\r\nTryFormat: Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span.\r\nTryFormat: Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span.\r\nTryFormat: Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span using default formatting.\r\nTryFormat: Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span using default formatting.\r\nParse: Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nParse: Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nParse: Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nTryParse: Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).\r\nDivide: Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with specified precision.\r\nAbs: Returns the absolute value.\r\nSign: Returns the sign of the number.\r\nPow: Raises a BigNumber to an integer power.\r\nSqrt: Computes the square root of a BigNumber using Newton's method.\r\nRound: Rounds a value to a specified number of decimal places.\r\nFloor: Returns the largest integer less than or equal to the specified number.\r\nCeiling: Returns the smallest integer greater than or equal to the specified number.\r\nTruncate: Truncates a value to an integer by removing the fractional part.\r\nTryFormatOptimized: Tries to format this instance into the provided UTF-16 span with zero allocations.\r\nTryFormatUtf8Optimized: Tries to format this instance into the provided UTF-8 span with zero allocations.\r\nTryParseJsonUtf8: Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations."
   },
   {
     "Url": "/api/corvus-numerics-bignumber.ctor.html",
@@ -142,30 +142,30 @@
   {
     "Url": "/api/corvus-numerics-bignumber.equals.html",
     "Title": "BigNumber.Equals",
-    "Description": "",
+    "Description": "Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance.",
     "Keywords": "BigNumber Equals method Corvus.Numerics",
-    "Body": " "
+    "Body": "Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance. Determines whether the specified object is equal to this instance."
   },
   {
     "Url": "/api/corvus-numerics-bignumber.gethashcode.html",
     "Title": "BigNumber.GetHashCode",
-    "Description": "",
+    "Description": "Returns a hash code for this instance.",
     "Keywords": "BigNumber GetHashCode method Corvus.Numerics",
-    "Body": ""
+    "Body": "Returns a hash code for this instance."
   },
   {
     "Url": "/api/corvus-numerics-bignumber.compareto.html",
     "Title": "BigNumber.CompareTo",
-    "Description": "",
+    "Description": "Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value.",
     "Keywords": "BigNumber CompareTo method Corvus.Numerics",
-    "Body": " "
+    "Body": "Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value. Compares this instance with a specified object."
   },
   {
     "Url": "/api/corvus-numerics-bignumber.tostring.html",
     "Title": "BigNumber.ToString",
-    "Description": "",
+    "Description": "Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.",
     "Keywords": "BigNumber ToString method Corvus.Numerics",
-    "Body": " "
+    "Body": "Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value. Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the specified format string and format provider."
   },
   {
     "Url": "/api/corvus-numerics-bignumber.trygetminimumformatbufferlength.html",
@@ -177,9 +177,9 @@
   {
     "Url": "/api/corvus-numerics-bignumber.tryformat.html",
     "Title": "BigNumber.TryFormat",
-    "Description": "",
+    "Description": "Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span.",
     "Keywords": "BigNumber TryFormat method Corvus.Numerics",
-    "Body": "   "
+    "Body": "Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span. Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span. Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span using default formatting. Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span using default formatting."
   },
   {
     "Url": "/api/corvus-numerics-bignumber.parse.html",
@@ -3119,7 +3119,7 @@
     "Title": "JsonWorkspace",
     "Description": "A workspace for manipulating JSON documents.",
     "Keywords": "JsonWorkspace class Corvus.Text.Json",
-    "Body": "A workspace for manipulating JSON documents.\r\nOptions: Gets the JsonWriterOptions\r\nCreate: Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).\r\nCreateUnrented: Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).\r\nRentWriterAndBuffer: Rents a UTF-8 JSON writer and associated buffer writer from the pool.\r\nRentWriter: Rents a UTF-8 JSON writer from the pool that writes to the specified buffer writer.\r\nReturnWriterAndBuffer: Returns a rented UTF-8 JSON writer and buffer writer to the pool.\r\nReturnWriter: Returns a rented UTF-8 JSON writer to the pool.\r\nCreateBuilder: Creates a document builder for building mutable JSON documents from an existing element.\r\nCreateBuilder: Creates a document builder for building mutable JSON documents."
+    "Body": "A workspace for manipulating JSON documents.\r\nOptions: Gets the JsonWriterOptions\r\nCreate: Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).\r\nCreateUnrented: Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).\r\nRentWriterAndBuffer: Rents a UTF-8 JSON writer and associated buffer writer from the pool.\r\nRentWriter: Rents a UTF-8 JSON writer from the pool that writes to the specified buffer writer.\r\nReturnWriterAndBuffer: Returns a rented UTF-8 JSON writer and buffer writer to the pool.\r\nReturnWriter: Returns a rented UTF-8 JSON writer to the pool.\r\nDispose: Disposes the workspace. If the workspace was rented from the cache, returns it; otherwise disposes all child documents and returns the backing array to the pool.\r\nCreateBuilder: Creates a document builder for building mutable JSON documents from an existing element.\r\nCreateBuilder: Creates a document builder for building mutable JSON documents."
   },
   {
     "Url": "/api/corvus-text-json-jsonworkspace.options.html",
@@ -3173,9 +3173,9 @@
   {
     "Url": "/api/corvus-text-json-jsonworkspace.dispose.html",
     "Title": "JsonWorkspace.Dispose",
-    "Description": "",
+    "Description": "Disposes the workspace. If the workspace was rented from the cache, returns it; otherwise disposes all child documents and returns the backing array to the pool.",
     "Keywords": "JsonWorkspace Dispose method Corvus.Text.Json",
-    "Body": ""
+    "Body": "Disposes the workspace. If the workspace was rented from the cache, returns it; otherwise disposes all child documents and returns the backing array to the pool."
   },
   {
     "Url": "/api/corvus-text-json-jsonworkspace.createbuilder.html",
@@ -3189,7 +3189,7 @@
     "Title": "JsonWriterOptions",
     "Description": "Provides the ability for the user to define custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). By default, the JSON is written without any indentation or extra white space. Also, the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will throw an exception if the user attempts to write structurally invalid JSON.",
     "Keywords": "JsonWriterOptions struct Corvus.Text.Json",
-    "Body": "Provides the ability for the user to define custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). By default, the JSON is written without any indentation or extra white space. Also, the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will throw an exception if the user attempts to write structurally invalid JSON.\r\nEncoder: The encoder to use when escaping strings, or `null` to use the default encoder.\r\nIndentCharacter: Defines the indentation character used by [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is enabled. Defaults to the space character.\r\nIndented: Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should pretty print the JSON which includes: indenting nested JSON tokens, adding new lines, and adding white space between property names and values. By default, the JSON is written without any extra white space.\r\nIndentSize: Defines the indentation size used by [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is enabled. Defaults to two.\r\nMaxDepth: Gets or sets the maximum depth allowed when writing JSON, with the default (i.e. 0) indicating a max depth of 1000.\r\nNewLine: Gets or sets the new line string to use when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is `true`. The default is the value of [`NewLine`](https://learn.microsoft.com/dotnet/api/system.environment.newline#newline).\r\nSkipValidation: Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in a to be thrown."
+    "Body": "Provides the ability for the user to define custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). By default, the JSON is written without any indentation or extra white space. Also, the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will throw an exception if the user attempts to write structurally invalid JSON.\r\nEncoder: The encoder to use when escaping strings, or `null` to use the default encoder.\r\nIndentCharacter: Defines the indentation character used by [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is enabled. Defaults to the space character.\r\nIndented: Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should pretty print the JSON which includes: indenting nested JSON tokens, adding new lines, and adding white space between property names and values. By default, the JSON is written without any extra white space.\r\nIndentSize: Defines the indentation size used by [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is enabled. Defaults to two.\r\nMaxDepth: Gets or sets the maximum depth allowed when writing JSON, with the default (i.e. 0) indicating a max depth of 1000.\r\nNewLine: Gets or sets the new line string to use when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is `true`. The default is the value of [`NewLine`](https://learn.microsoft.com/dotnet/api/system.environment.newline#newline).\r\nSkipValidation: Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) to be thrown."
   },
   {
     "Url": "/api/corvus-text-json-jsonwriteroptions.encoder.html",
@@ -3236,9 +3236,9 @@
   {
     "Url": "/api/corvus-text-json-jsonwriteroptions.skipvalidation.html",
     "Title": "JsonWriterOptions.SkipValidation",
-    "Description": "Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in a to be thrown.",
+    "Description": "Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) to be thrown.",
     "Keywords": "JsonWriterOptions SkipValidation property Corvus.Text.Json",
-    "Body": "Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in a to be thrown."
+    "Body": "Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) to be thrown."
   },
   {
     "Url": "/api/corvus-text-json-matcher-tmatch-tcontext-tresult.html",
@@ -3315,14 +3315,14 @@
     "Title": "ObjectEnumerator<TValue>",
     "Description": "An enumerable and enumerator for the properties of a JSON object.",
     "Keywords": "ObjectEnumerator<TValue> struct Corvus.Text.Json TValue",
-    "Body": "An enumerable and enumerator for the properties of a JSON object.\r\nGetEnumerator: Returns an enumerator that iterates the properties of an object."
+    "Body": "An enumerable and enumerator for the properties of a JSON object.\r\nCurrent: Gets the current element in the enumeration.\r\nGetEnumerator: Returns an enumerator that iterates the properties of an object."
   },
   {
     "Url": "/api/corvus-text-json-objectenumerator-tvalue.current.html",
     "Title": "ObjectEnumerator<TValue>.Current",
-    "Description": "",
+    "Description": "Gets the current element in the enumeration.",
     "Keywords": "ObjectEnumerator<TValue> Current property Corvus.Text.Json",
-    "Body": ""
+    "Body": "Gets the current element in the enumeration."
   },
   {
     "Url": "/api/corvus-text-json-objectenumerator-tvalue.getenumerator.html",

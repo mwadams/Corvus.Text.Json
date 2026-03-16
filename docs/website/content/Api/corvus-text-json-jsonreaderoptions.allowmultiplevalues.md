@@ -23,5 +23,5 @@ Defines whether the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html
 
 ### Remarks
 
-By default, it's set to false, and is thrown if trailing content is encountered after the first top-level JSON value.
+By default, it's set to false, and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown if trailing content is encountered after the first top-level JSON value.
 

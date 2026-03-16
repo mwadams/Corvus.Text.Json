@@ -25,8 +25,7 @@ public readonly struct JsonElementForBooleanFalseSchema.Mutable : IMutableJsonEl
 |--------|-------------|
 | [Clone()](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.clone.html#clone) |  |
 | [CreateBuilder(JsonWorkspace)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.createbuilder.html#createbuilder-jsonworkspace) |  |
-| [Equals(object)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.equals.html#equals-object) |  |
-| [Equals(T)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.equals.html#equals-t) |  |
+| [Equals](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.equals.html) |  |
 | [EvaluateSchema(IJsonSchemaResultsCollector)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.evaluateschema.html#evaluateschema-ijsonschemaresultscollector) |  |
 | [From(ref T)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.from.html#from-ref-t) `static` |  |
 | [GetHashCode()](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.gethashcode.html#gethashcode) |  |
@@ -37,10 +36,8 @@ public readonly struct JsonElementForBooleanFalseSchema.Mutable : IMutableJsonEl
 
 | Operator | Description |
 |----------|-------------|
-| [operator ==(JsonElementForBooleanFalseSchema.Mutable, JsonElementForBooleanFalseSchema.Mutable)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-equality.html#operator-jsonelementforbooleanfalseschema-mutable-jsonelementforbooleanfalseschema-mutable) |  |
-| [operator ==(JsonElementForBooleanFalseSchema.Mutable, JsonElement)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-equality.html#operator-jsonelementforbooleanfalseschema-mutable-jsonelement) |  |
+| [Equality](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-equality.html) |  |
 | [explicit operator JsonElementForBooleanFalseSchema.Mutable(JsonElementForBooleanFalseSchema)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-explicit.html#explicit-operator-jsonelementforbooleanfalseschema-mutable-jsonelementforbooleanfalseschema) |  |
 | [implicit operator JsonElementForBooleanFalseSchema(JsonElementForBooleanFalseSchema.Mutable)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-implicit.html#implicit-operator-jsonelementforbooleanfalseschema-jsonelementforbooleanfalseschema-mutable) |  |
-| [operator !=(JsonElementForBooleanFalseSchema.Mutable, JsonElementForBooleanFalseSchema.Mutable)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-inequality.html#operator-jsonelementforbooleanfalseschema-mutable-jsonelementforbooleanfalseschema-mutable) |  |
-| [operator !=(JsonElementForBooleanFalseSchema.Mutable, JsonElement)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-inequality.html#operator-jsonelementforbooleanfalseschema-mutable-jsonelement) |  |
+| [Inequality](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-inequality.html) |  |
 

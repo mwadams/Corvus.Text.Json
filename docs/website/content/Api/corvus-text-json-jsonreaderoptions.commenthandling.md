@@ -29,5 +29,5 @@ Defines how the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) sh
 
 ### Remarks
 
-By default is thrown if a comment is encountered.
+By default a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown if a comment is encountered.
 

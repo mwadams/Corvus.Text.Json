@@ -15,6 +15,8 @@ Title: "ObjectEnumerator<TValue>.Current Property — Corvus.Text.Json"
 JsonProperty<TValue> Current { get; }
 ```
 
+Gets the current element in the enumeration.
+
 ### Returns
 
 [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html)

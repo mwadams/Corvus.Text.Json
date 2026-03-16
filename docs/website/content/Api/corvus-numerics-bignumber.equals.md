@@ -13,8 +13,8 @@ Title: "BigNumber.Equals Method — Corvus.Numerics"
 
 | Method | Description |
 |--------|-------------|
-| [Equals(BigNumber)](#equals-bignumber) |  |
-| [Equals(object)](#equals-object) |  |
+| [Equals(BigNumber)](#equals-bignumber) | Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance. |
+| [Equals(object)](#equals-object) | Determines whether the specified object is equal to this instance. |
 
 ## Equals(BigNumber) {#equals-bignumber}
 
@@ -22,15 +22,19 @@ Title: "BigNumber.Equals Method — Corvus.Numerics"
 bool Equals(BigNumber other)
 ```
 
+Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance.
+
 ### Parameters
 
 | Name | Type | Description |
 |------|------|-------------|
-| `other` | [`BigNumber`](/api/corvus-numerics-bignumber.html) |  |
+| `other` | [`BigNumber`](/api/corvus-numerics-bignumber.html) | The [`BigNumber`](/api/corvus-numerics-bignumber.html) to compare with this instance. |
 
 ### Returns
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+`true` if the specified value is equal to this instance; otherwise, `false`.
 
 ---
 
@@ -40,15 +44,19 @@ bool Equals(BigNumber other)
 bool Equals(object obj)
 ```
 
+Determines whether the specified object is equal to this instance.
+
 ### Parameters
 
 | Name | Type | Description |
 |------|------|-------------|
-| `obj` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
+| `obj` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) | The object to compare with this instance. |
 
 ### Returns
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+`true` if the specified object is a [`BigNumber`](/api/corvus-numerics-bignumber.html) equal to this instance; otherwise, `false`.
 
 ---
 

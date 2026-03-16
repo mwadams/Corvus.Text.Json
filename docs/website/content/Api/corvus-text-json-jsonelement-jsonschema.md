@@ -22,12 +22,8 @@ public static class JsonElement.JsonSchema
 
 | Method | Description |
 |--------|-------------|
-| [Evaluate(IJsonDocument, int, ref JsonSchemaContext)](/api/corvus-text-json-jsonelement-jsonschema.evaluate.html#evaluate-ijsondocument-int-ref-jsonschemacontext) `static` |  |
-| [Evaluate(IJsonDocument, int, IJsonSchemaResultsCollector)](/api/corvus-text-json-jsonelement-jsonschema.evaluate.html#evaluate-ijsondocument-int-ijsonschemaresultscollector) `static` |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, JsonSchemaPathProvider, JsonSchemaPathProvider)](/api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.html#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-jsonschemapathprovider-jsonschemapathprovider) `static` |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, TContext, JsonSchemaPathProvider&lt;TContext&gt;, JsonSchemaPathProvider&lt;TContext&gt;)](/api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.html#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-tcontext-jsonschemapathprovider-tcontext-jsonschemapathprovider-tcontext) `static` |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider)](/api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.html#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-readonlyspan-byte-jsonschemapathprovider) `static` |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, int, JsonSchemaPathProvider)](/api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.html#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-int-jsonschemapathprovider) `static` |  |
+| [Evaluate](/api/corvus-text-json-jsonelement-jsonschema.evaluate.html) `static` |  |
+| [PushChildContext](/api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.html) `static` |  |
 | [PushChildContextUnescaped(IJsonDocument, int, ref JsonSchemaContext, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider)](/api/corvus-text-json-jsonelement-jsonschema.pushchildcontextunescaped.html#pushchildcontextunescaped-ijsondocument-int-ref-jsonschemacontext-readonlyspan-byte-jsonschemapathprovider) `static` |  |
 
 ## Fields

@@ -41,40 +41,25 @@ Internally represented as: value = significand × 10^exponent where significand 
 |--------|-------------|
 | [Abs(BigNumber)](/api/corvus-numerics-bignumber.abs.html#abs-bignumber) `static` | Returns the absolute value. |
 | [Ceiling(BigNumber)](/api/corvus-numerics-bignumber.ceiling.html#ceiling-bignumber) `static` | Returns the smallest integer greater than or equal to the specified number. |
-| [CompareTo(BigNumber)](/api/corvus-numerics-bignumber.compareto.html#compareto-bignumber) |  |
-| [CompareTo(object)](/api/corvus-numerics-bignumber.compareto.html#compareto-object) |  |
+| [CompareTo](/api/corvus-numerics-bignumber.compareto.html) | Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value. |
 | [Divide(BigNumber, BigNumber, int)](/api/corvus-numerics-bignumber.divide.html#divide-bignumber-bignumber-int) `static` | Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with specified precision. |
-| [Equals(BigNumber)](/api/corvus-numerics-bignumber.equals.html#equals-bignumber) |  |
-| [Equals(object)](/api/corvus-numerics-bignumber.equals.html#equals-object) |  |
+| [Equals](/api/corvus-numerics-bignumber.equals.html) | Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance. |
 | [Floor(BigNumber)](/api/corvus-numerics-bignumber.floor.html#floor-bignumber) `static` | Returns the largest integer less than or equal to the specified number. |
-| [GetHashCode()](/api/corvus-numerics-bignumber.gethashcode.html#gethashcode) |  |
+| [GetHashCode()](/api/corvus-numerics-bignumber.gethashcode.html#gethashcode) | Returns a hash code for this instance. |
 | [IsInteger()](/api/corvus-numerics-bignumber.isinteger.html#isinteger) | Determines whether this instance represents an integer value. |
 | [Normalize()](/api/corvus-numerics-bignumber.normalize.html#normalize) | Returns a normalized copy of this number with trailing zeros removed from the significand. |
-| [Parse(string, IFormatProvider)](/api/corvus-numerics-bignumber.parse.html#parse-string-iformatprovider) `static` | Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider)](/api/corvus-numerics-bignumber.parse.html#parse-readonlyspan-char-numberstyles-iformatprovider) `static` | Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider)](/api/corvus-numerics-bignumber.parse.html#parse-readonlyspan-byte-numberstyles-iformatprovider) `static` | Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Parse](/api/corvus-numerics-bignumber.parse.html) `static` | Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
 | [Pow(BigNumber, int)](/api/corvus-numerics-bignumber.pow.html#pow-bignumber-int) `static` | Raises a BigNumber to an integer power. |
 | [Round(BigNumber, int, MidpointRounding)](/api/corvus-numerics-bignumber.round.html#round-bignumber-int-midpointrounding) `static` | Rounds a value to a specified number of decimal places. |
 | [Sign(BigNumber)](/api/corvus-numerics-bignumber.sign.html#sign-bignumber) `static` | Returns the sign of the number. |
 | [Sqrt(BigNumber, int)](/api/corvus-numerics-bignumber.sqrt.html#sqrt-bignumber-int) `static` | Computes the square root of a BigNumber using Newton's method. |
-| [ToString()](/api/corvus-numerics-bignumber.tostring.html#tostring) |  |
-| [ToString(string, IFormatProvider)](/api/corvus-numerics-bignumber.tostring.html#tostring-string-iformatprovider) |  |
+| [ToString](/api/corvus-numerics-bignumber.tostring.html) | Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value. |
 | [Truncate(BigNumber)](/api/corvus-numerics-bignumber.truncate.html#truncate-bignumber) `static` | Truncates a value to an integer by removing the fractional part. |
-| [TryFormat(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformat.html#tryformat-span-char-ref-int-readonlyspan-char-iformatprovider) |  |
-| [TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformat.html#tryformat-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
-| [TryFormat(Span&lt;char&gt;, ref int)](/api/corvus-numerics-bignumber.tryformat.html#tryformat-span-char-ref-int) |  |
-| [TryFormat(Span&lt;byte&gt;, ref int)](/api/corvus-numerics-bignumber.tryformat.html#tryformat-span-byte-ref-int) |  |
+| [TryFormat](/api/corvus-numerics-bignumber.tryformat.html) | Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span. |
 | [TryFormatOptimized(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformatoptimized.html#tryformatoptimized-span-char-ref-int-readonlyspan-char-iformatprovider) | Tries to format this instance into the provided UTF-16 span with zero allocations. |
 | [TryFormatUtf8Optimized(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-numerics-bignumber.tryformatutf8optimized.html#tryformatutf8optimized-span-byte-ref-int-readonlyspan-char-iformatprovider) | Tries to format this instance into the provided UTF-8 span with zero allocations. |
 | [TryGetMinimumFormatBufferLength(ref int)](/api/corvus-numerics-bignumber.trygetminimumformatbufferlength.html#trygetminimumformatbufferlength-ref-int) | Gets the minimum format buffer length. |
-| [TryParse(string, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-string-ref-bignumber) `static` | Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(string, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-string-iformatprovider-ref-bignumber) `static` | Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(ReadOnlySpan&lt;char&gt;, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-readonlyspan-char-iformatprovider-ref-bignumber) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(ReadOnlySpan&lt;char&gt;, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-readonlyspan-char-ref-bignumber) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(ReadOnlySpan&lt;byte&gt;, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-readonlyspan-byte-iformatprovider-ref-bignumber) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(ReadOnlySpan&lt;byte&gt;, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-readonlyspan-byte-ref-bignumber) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-readonlyspan-char-numberstyles-iformatprovider-ref-bignumber) `static` | Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryParse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider, ref BigNumber)](/api/corvus-numerics-bignumber.tryparse.html#tryparse-readonlyspan-byte-numberstyles-iformatprovider-ref-bignumber) `static` | Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryParse](/api/corvus-numerics-bignumber.tryparse.html) `static` | Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
 | [TryParseJsonUtf8(ReadOnlySpan&lt;byte&gt;, ref BigNumber)](/api/corvus-numerics-bignumber.tryparsejsonutf8.html#tryparsejsonutf8-readonlyspan-byte-ref-bignumber) `static` | Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations. |
 
 ## Operators
@@ -85,19 +70,10 @@ Internally represented as: value = significand × 10^exponent where significand 
 | [operator --(BigNumber)](/api/corvus-numerics-bignumber.op-decrement.html#operator-bignumber) | Decrements a value by one. |
 | [operator /(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-division.html#operator-bignumber-bignumber) | Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with default precision. |
 | [operator ==(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-equality.html#operator-bignumber-bignumber) | Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are equal. |
-| [explicit operator decimal(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#explicit-operator-decimal-bignumber) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
-| [explicit operator double(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#explicit-operator-double-bignumber) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). |
-| [explicit operator float(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#explicit-operator-float-bignumber) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). |
-| [explicit operator long(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#explicit-operator-long-bignumber) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). |
-| [explicit operator ulong(BigNumber)](/api/corvus-numerics-bignumber.op-explicit.html#explicit-operator-ulong-bignumber) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). |
+| [Explicit](/api/corvus-numerics-bignumber.op-explicit.html) | Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
 | [operator &gt;(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-greaterthan.html#operator-bignumber-bignumber) | Determines whether one value is greater than another. |
 | [operator &gt;=(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-greaterthanorequal.html#operator-bignumber-bignumber) | Determines whether one value is greater than or equal to another. |
-| [implicit operator BigNumber(int)](/api/corvus-numerics-bignumber.op-implicit.html#implicit-operator-bignumber-int) | Converts an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(long)](/api/corvus-numerics-bignumber.op-implicit.html#implicit-operator-bignumber-long) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(ulong)](/api/corvus-numerics-bignumber.op-implicit.html#implicit-operator-bignumber-ulong) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(BigInteger)](/api/corvus-numerics-bignumber.op-implicit.html#implicit-operator-bignumber-biginteger) | Converts a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(decimal)](/api/corvus-numerics-bignumber.op-implicit.html#implicit-operator-bignumber-decimal) | Converts a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(double)](/api/corvus-numerics-bignumber.op-implicit.html#implicit-operator-bignumber-double) | Converts a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Implicit](/api/corvus-numerics-bignumber.op-implicit.html) | Converts an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
 | [operator ++(BigNumber)](/api/corvus-numerics-bignumber.op-increment.html#operator-bignumber) | Increments a value by one. |
 | [operator !=(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-inequality.html#operator-bignumber-bignumber) | Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are not equal. |
 | [operator &lt;(BigNumber, BigNumber)](/api/corvus-numerics-bignumber.op-lessthan.html#operator-bignumber-bignumber) | Determines whether one value is less than another. |

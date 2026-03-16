@@ -29,5 +29,5 @@ Gets or sets the maximum depth allowed when reading JSON, with the default (i.e.
 
 ### Remarks
 
-Reading past this depth will throw a .
+Reading past this depth will throw a [`JsonException`](/api/corvus-text-json-jsonexception.html).
 

@@ -40,6 +40,5 @@ This type uses an internal cache to avoid allocations for evaluatoin of string v
 |--------|-------------|
 | [Parse(ReadOnlyMemory&lt;byte&gt;, bool)](/api/corvus-text-json-internal-fixedstringjsondocument-t.parse.html#parse-readonlymemory-byte-bool) `static` | Parse an instance of the fixed string to a document, using caching. |
 | [ToString(int, string, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tostring.html#tostring-int-string-iformatprovider) |  |
-| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider) |  |
-| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
+| [TryFormat](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html) |  |
 

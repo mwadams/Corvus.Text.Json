@@ -15,7 +15,11 @@ Title: "BigNumber.GetHashCode Method — Corvus.Numerics"
 int GetHashCode()
 ```
 
+Returns a hash code for this instance.
+
 ### Returns
 
 [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
+
+A hash code for this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
 

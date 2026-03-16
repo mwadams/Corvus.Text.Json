@@ -13,8 +13,8 @@ Title: "BigNumber.ToString Method — Corvus.Numerics"
 
 | Method | Description |
 |--------|-------------|
-| [ToString()](#tostring) |  |
-| [ToString(string, IFormatProvider)](#tostring-string-iformatprovider) |  |
+| [ToString()](#tostring) | Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value. |
+| [ToString(string, IFormatProvider)](#tostring-string-iformatprovider) | Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the specified format string and format provider. |
 
 ## ToString() {#tostring}
 
@@ -22,9 +22,13 @@ Title: "BigNumber.ToString Method — Corvus.Numerics"
 string ToString()
 ```
 
+Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
+
 ### Returns
 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
+
+The string representation of this instance.
 
 ---
 
@@ -34,16 +38,20 @@ string ToString()
 string ToString(string format, IFormatProvider formatProvider)
 ```
 
+Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the specified format string and format provider.
+
 ### Parameters
 
 | Name | Type | Description |
 |------|------|-------------|
-| `format` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
-| `formatProvider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) |  |
+| `format` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The format string. |
+| `formatProvider` | [`IFormatProvider`](https://learn.microsoft.com/dotnet/api/system.iformatprovider) | The format provider. |
 
 ### Returns
 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
+
+The formatted string representation of this instance.
 
 ---
 

@@ -14,10 +14,7 @@ Provides a high-performance API for forward-only, read-only access to the UTF-8 
 
 | Constructor | Description |
 |-------------|-------------|
-| [Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, bool, JsonReaderState)](/api/corvus-text-json-utf8jsonreader.ctor.html#utf8jsonreader-readonlyspan-byte-bool-jsonreaderstate) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
-| [Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, JsonReaderOptions)](/api/corvus-text-json-utf8jsonreader.ctor.html#utf8jsonreader-readonlyspan-byte-jsonreaderoptions) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
-| [Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, bool, JsonReaderState)](/api/corvus-text-json-utf8jsonreader.ctor.html#utf8jsonreader-readonlysequence-byte-bool-jsonreaderstate) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
-| [Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, JsonReaderOptions)](/api/corvus-text-json-utf8jsonreader.ctor.html#utf8jsonreader-readonlysequence-byte-jsonreaderoptions) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
+| [Utf8JsonReader(...)](/api/corvus-text-json-utf8jsonreader.ctor.html) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
 
 ## Properties
 
@@ -39,8 +36,7 @@ Provides a high-performance API for forward-only, read-only access to the UTF-8 
 
 | Method | Description |
 |--------|-------------|
-| [CopyString(Span&lt;byte&gt;)](/api/corvus-text-json-utf8jsonreader.copystring.html#copystring-span-byte) | Copies the current JSON token value from the source, unescaped as a UTF-8 string to the destination buffer. |
-| [CopyString(Span&lt;char&gt;)](/api/corvus-text-json-utf8jsonreader.copystring.html#copystring-span-char) | Copies the current JSON token value from the source, unescaped, and transcoded as a UTF-16 char buffer. |
+| [CopyString](/api/corvus-text-json-utf8jsonreader.copystring.html) | Copies the current JSON token value from the source, unescaped as a UTF-8 string to the destination buffer. |
 | [GetBoolean()](/api/corvus-text-json-utf8jsonreader.getboolean.html#getboolean) | Parses the current JSON token value from the source as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean). Returns `true` if the TokenType is JsonTokenType.True and `false` if the... |
 | [GetByte()](/api/corvus-text-json-utf8jsonreader.getbyte.html#getbyte) | Parses the current JSON token value from the source as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte). Returns the value if the entire UTF-8 encoded token value can be successfully ... |
 | [GetBytesFromBase64()](/api/corvus-text-json-utf8jsonreader.getbytesfrombase64.html#getbytesfrombase64) | Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes. |
@@ -77,7 +73,5 @@ Provides a high-performance API for forward-only, read-only access to the UTF-8 
 | [TryGetUInt32(ref uint)](/api/corvus-text-json-utf8jsonreader.trygetuint32.html#trygetuint32-ref-uint) | Parses the current JSON token value from the source as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32). Returns `true` if the entire UTF-8 encoded token value can be successfully... |
 | [TryGetUInt64(ref ulong)](/api/corvus-text-json-utf8jsonreader.trygetuint64.html#trygetuint64-ref-ulong) | Parses the current JSON token value from the source as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). Returns `true` if the entire UTF-8 encoded token value can be successfully... |
 | [TrySkip()](/api/corvus-text-json-utf8jsonreader.tryskip.html#tryskip) | Tries to skip the children of the current JSON token. |
-| [ValueTextEquals(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-utf8jsonreader.valuetextequals.html#valuetextequals-readonlyspan-byte) | Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match. |
-| [ValueTextEquals(string)](/api/corvus-text-json-utf8jsonreader.valuetextequals.html#valuetextequals-string) | Compares the string text to the unescaped JSON token value in the source and returns true if they match. |
-| [ValueTextEquals(ReadOnlySpan&lt;char&gt;)](/api/corvus-text-json-utf8jsonreader.valuetextequals.html#valuetextequals-readonlyspan-char) | Compares the text to the unescaped JSON token value in the source and returns true if they match. |
+| [ValueTextEquals](/api/corvus-text-json-utf8jsonreader.valuetextequals.html) | Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match. |
 

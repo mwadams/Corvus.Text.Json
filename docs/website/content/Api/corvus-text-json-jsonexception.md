@@ -22,11 +22,7 @@ Represents errors that occur during JSON parsing, reading, or writing operations
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonException(string, string, Nullable&lt;long&gt;, Nullable&lt;long&gt;, Exception)](/api/corvus-text-json-jsonexception.ctor.html#jsonexception-string-string-nullable-long-nullable-long-exception) | Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message, path, line number, byte position, and a reference to the inner ex... |
-| [JsonException(string, string, Nullable&lt;long&gt;, Nullable&lt;long&gt;)](/api/corvus-text-json-jsonexception.ctor.html#jsonexception-string-string-nullable-long-nullable-long) | Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message, path, line number, and byte position. |
-| [JsonException(string, Exception)](/api/corvus-text-json-jsonexception.ctor.html#jsonexception-string-exception) | Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message and a reference to the inner exception that is the cause of this e... |
-| [JsonException(string)](/api/corvus-text-json-jsonexception.ctor.html#jsonexception-string) | Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message. |
-| [JsonException()](/api/corvus-text-json-jsonexception.ctor.html#jsonexception) | Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class. |
+| [JsonException(...)](/api/corvus-text-json-jsonexception.ctor.html) | Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message, path, line number, byte position, and a reference to the inner ex... |
 
 ## Properties
 

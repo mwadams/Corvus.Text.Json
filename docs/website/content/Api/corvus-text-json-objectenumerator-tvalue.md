@@ -18,7 +18,7 @@ An enumerable and enumerator for the properties of a JSON object.
 
 | Property | Type | Description |
 |----------|------|-------------|
-| [Current](/api/corvus-text-json-objectenumerator-tvalue.current.html) | [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html) |  |
+| [Current](/api/corvus-text-json-objectenumerator-tvalue.current.html) | [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html) | Gets the current element in the enumeration. |
 
 ## Methods
 

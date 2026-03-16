@@ -23,5 +23,5 @@ Defines whether an extra comma at the end of a list of JSON values in an object 
 
 ### Remarks
 
-By default, it's set to false, and is thrown if a trailing comma is encountered.
+By default, it's set to false, and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown if a trailing comma is encountered.
 
