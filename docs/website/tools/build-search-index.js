@@ -139,12 +139,22 @@ function main() {
   console.log(`  → ${entries.length} content search entries.`);
 
   // 2. API search index produced by XmlDocToMarkdown
+  //    API entries use PascalCase keys (Url, Title, …); normalise to lowercase
+  //    to match content entries and the Lunr field names used by search.js.
   const apiIndexPath = path.join(ROOT, 'content', 'Api', 'search-index.json');
   if (fs.existsSync(apiIndexPath)) {
     try {
       const apiEntries = JSON.parse(fs.readFileSync(apiIndexPath, 'utf8'));
       if (Array.isArray(apiEntries)) {
-        entries.push(...apiEntries);
+        for (const e of apiEntries) {
+          entries.push({
+            url:         e.Url         || e.url         || '',
+            title:       e.Title       || e.title       || '',
+            description: e.Description || e.description || '',
+            keywords:    e.Keywords    || e.keywords    || '',
+            body:        (e.Body       || e.body        || '').substring(0, 5000),
+          });
+        }
         console.log(`  → ${apiEntries.length} API search entries merged.`);
       }
     } catch (e) {

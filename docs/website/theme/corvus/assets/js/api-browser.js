@@ -1,33 +1,54 @@
 /**
- * API Browser — inline search/filter for the API Reference landing page.
+ * API Browser — inline incremental search for the API Reference landing page.
  *
- * Lazy-loads /api/search-index.json on first keystroke and performs fast
- * case-insensitive substring matching against Title, Keywords, and Description.
- * Results are grouped by namespace and rendered inline, replacing the default
- * namespace card grid while a query is active.
+ * Follows the same pattern as the site-wide search (search.js / endjin.com):
+ *   • Lazy-loads the shared /search-index.json on first interaction
+ *   • Builds a Lunr.js index (same library loaded globally via CDN)
+ *   • Renders results inline, grouped by namespace
+ *
+ * When the input is empty the default namespace card grid is shown.
+ * While typing, results replace the card grid with matching API entries.
  */
 (function () {
   'use strict';
 
   const input = document.getElementById('api-browser-input');
-  const status = document.getElementById('api-browser-status');
-  const results = document.getElementById('api-browser-results');
+  const statusEl = document.getElementById('api-browser-status');
+  const resultsEl = document.getElementById('api-browser-results');
   const defaultContent = document.getElementById('api-browser-default');
 
-  if (!input || !results || !defaultContent) return;
+  if (!input || !resultsEl || !defaultContent) return;
 
-  let indexData = null;
+  let searchIndex = null;
+  let searchDataMap = null;
   let indexLoading = false;
 
-  // ---- Data loading ----
+  // ── Index loading (shared /search-index.json, same as search.js) ──────────
 
   async function ensureIndex() {
-    if (indexData || indexLoading) return;
+    if (searchIndex || indexLoading) return;
     indexLoading = true;
     try {
-      const resp = await fetch('/api/search-index.json');
+      const resp = await fetch('/search-index.json');
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      indexData = await resp.json();
+      const data = await resp.json();
+
+      // Build a lookup map (keyed by url) and a Lunr index
+      // Only index API entries (url starts with /api/)
+      const apiEntries = data.filter(function (d) { return d.url && d.url.startsWith('/api/'); });
+
+      searchDataMap = Object.create(null);
+      apiEntries.forEach(function (doc) { searchDataMap[doc.url] = doc; });
+
+      searchIndex = lunr(function () {
+        this.ref('url');
+        this.field('title',       { boost: 10 });
+        this.field('keywords',    { boost: 8 });
+        this.field('description', { boost: 5 });
+        this.field('body');
+
+        apiEntries.forEach(function (doc) { this.add(doc); }, this);
+      });
     } catch (e) {
       console.warn('[api-browser] Failed to load search index:', e);
     } finally {
@@ -35,101 +56,92 @@
     }
   }
 
-  // ---- Helpers ----
+  // ── Helpers ────────────────────────────────────────────────────────────────
 
   function escapeHtml(str) {
-    const el = document.createElement('span');
+    var el = document.createElement('span');
     el.textContent = str;
     return el.innerHTML;
   }
 
-  /** Extract namespace from the Keywords field, e.g. "JsonElement class Corvus.Text.Json" → "Corvus.Text.Json" */
   function extractNamespace(keywords) {
     if (!keywords) return '';
-    const parts = keywords.split(' ');
-    // The namespace is typically the last dot-separated token
-    for (let i = parts.length - 1; i >= 0; i--) {
-      if (parts[i].includes('.')) return parts[i];
+    var parts = keywords.split(' ');
+    for (var i = parts.length - 1; i >= 0; i--) {
+      if (parts[i].indexOf('.') !== -1) return parts[i];
     }
     return '';
   }
 
-  /** Extract kind (class, struct, interface, enum, delegate) from the Keywords field */
   function extractKind(keywords) {
     if (!keywords) return '';
-    const kinds = ['class', 'struct', 'interface', 'enum', 'delegate'];
-    const lower = keywords.toLowerCase();
-    for (const k of kinds) {
-      if (lower.includes(' ' + k + ' ') || lower.includes(' ' + k)) return k;
+    var kinds = ['class', 'struct', 'interface', 'enum', 'delegate'];
+    var lower = keywords.toLowerCase();
+    for (var k = 0; k < kinds.length; k++) {
+      if (lower.indexOf(' ' + kinds[k] + ' ') !== -1 || lower.indexOf(' ' + kinds[k]) !== -1) return kinds[k];
     }
     return '';
   }
 
-  /** True if this entry looks like a top-level type (not a member page) */
-  function isTypePage(entry) {
-    const kw = (entry.Keywords || '').toLowerCase();
-    return /\b(class|struct|interface|enum|delegate)\b/.test(kw);
+  function isTypePage(doc) {
+    return /\b(class|struct|interface|enum|delegate)\b/.test((doc.keywords || '').toLowerCase());
   }
 
   function truncate(str, max) {
     if (!str || str.length <= max) return str || '';
-    return str.slice(0, max) + '…';
+    return str.slice(0, max) + '\u2026';
   }
 
-  // ---- Search ----
+  // ── Search ─────────────────────────────────────────────────────────────────
 
-  function search(query) {
-    if (!indexData) return;
+  function performSearch(query) {
+    if (!searchIndex) return;
 
-    const q = query.toLowerCase();
-    const matches = [];
+    // Lunr wildcard search for partial matching (same as search.js)
+    var results = searchIndex.search(query + '*');
+    var maxResults = 50;
 
-    for (const entry of indexData) {
-      const haystack = ((entry.Title || '') + ' ' + (entry.Keywords || '') + ' ' + (entry.Description || '')).toLowerCase();
-      if (haystack.includes(q)) {
-        matches.push(entry);
-      }
-    }
-
-    if (matches.length === 0) {
-      status.textContent = 'No results for \u201c' + query + '\u201d';
-      results.innerHTML = '';
+    if (results.length === 0) {
+      statusEl.textContent = 'No results for \u201c' + query + '\u201d';
+      resultsEl.innerHTML = '';
       return;
     }
 
-    status.textContent = 'Showing ' + matches.length + ' result' + (matches.length !== 1 ? 's' : '') + ' for \u201c' + query + '\u201d';
+    var hits = results.slice(0, maxResults).map(function (r) { return searchDataMap[r.ref]; }).filter(Boolean);
+
+    statusEl.textContent = 'Showing ' + hits.length + ' result' + (hits.length !== 1 ? 's' : '') + ' for \u201c' + query + '\u201d';
 
     // Sort: type pages first, then alphabetical
-    matches.sort(function (a, b) {
-      const aType = isTypePage(a) ? 0 : 1;
-      const bType = isTypePage(b) ? 0 : 1;
+    hits.sort(function (a, b) {
+      var aType = isTypePage(a) ? 0 : 1;
+      var bType = isTypePage(b) ? 0 : 1;
       if (aType !== bType) return aType - bType;
-      return (a.Title || '').localeCompare(b.Title || '');
+      return (a.title || '').localeCompare(b.title || '');
     });
 
     // Group by namespace
-    const groups = new Map();
-    for (const m of matches) {
-      const ns = extractNamespace(m.Keywords) || 'Other';
+    var groups = new Map();
+    hits.forEach(function (m) {
+      var ns = extractNamespace(m.keywords) || 'Other';
       if (!groups.has(ns)) groups.set(ns, []);
       groups.get(ns).push(m);
-    }
+    });
 
-    let html = '';
-    for (const [ns, items] of groups) {
+    var html = '';
+    groups.forEach(function (items, ns) {
       html += '<div class="api-browser__group">';
       html += '<h3 class="api-browser__group-title">' + escapeHtml(ns) + '</h3>';
       html += '<ul class="api-browser__list">';
 
-      for (const item of items) {
-        const kind = extractKind(item.Keywords);
-        const badgeClass = kind ? ' api__badge--' + kind : '';
-        const badgeLabel = kind ? kind.charAt(0).toUpperCase() + kind.slice(1) : '';
-        const desc = truncate(item.Description, 120);
+      items.forEach(function (item) {
+        var kind = extractKind(item.keywords);
+        var badgeClass = kind ? ' api__badge--' + kind : '';
+        var badgeLabel = kind ? kind.charAt(0).toUpperCase() + kind.slice(1) : '';
+        var desc = truncate(item.description, 120);
 
         html += '<li class="api-browser__item">';
-        html += '<a class="api-browser__item-link" href="' + escapeHtml(item.Url) + '">';
-        html += '<span class="api-browser__item-name">' + escapeHtml(item.Title) + '</span>';
+        html += '<a class="api-browser__item-link" href="' + escapeHtml(item.url) + '">';
+        html += '<span class="api-browser__item-name">' + escapeHtml(item.title) + '</span>';
         if (badgeLabel) {
           html += ' <span class="api__badge' + badgeClass + '">' + escapeHtml(badgeLabel) + '</span>';
         }
@@ -137,39 +149,38 @@
           html += '<span class="api-browser__item-desc">' + escapeHtml(desc) + '</span>';
         }
         html += '</a></li>';
-      }
+      });
 
       html += '</ul></div>';
-    }
+    });
 
-    results.innerHTML = html;
+    resultsEl.innerHTML = html;
   }
 
-  // ---- Event wiring ----
+  // ── Event wiring (debounced input, same pattern as search.js) ─────────────
 
-  let debounce;
+  var debounceTimer;
   input.addEventListener('input', function () {
-    clearTimeout(debounce);
-    const q = input.value.trim();
+    clearTimeout(debounceTimer);
+    var q = input.value.trim();
 
     if (!q) {
       defaultContent.hidden = false;
-      results.hidden = true;
-      status.textContent = '';
-      results.innerHTML = '';
+      resultsEl.hidden = true;
+      statusEl.textContent = '';
+      resultsEl.innerHTML = '';
       return;
     }
 
     ensureIndex().then(function () {
-      debounce = setTimeout(function () {
+      debounceTimer = setTimeout(function () {
         defaultContent.hidden = true;
-        results.hidden = false;
-        search(q);
+        resultsEl.hidden = false;
+        performSearch(q);
       }, 150);
     });
   });
 
-  // Clear button via Escape in the input
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') {
       input.value = '';
