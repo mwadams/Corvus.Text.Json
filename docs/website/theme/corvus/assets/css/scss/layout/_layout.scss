@@ -58,9 +58,9 @@
   max-width: 52rem;
 
   // Extra padding extends the grid row so the sidebar stays
-  // sticky while the footer slides up over this zone.
+  // sticky as the footer comes into view.
   @include breakpoint-md {
-    padding-bottom: 15rem;
+    padding-bottom: 4rem;
   }
 }
 
