@@ -463,7 +463,7 @@ public sealed class MarkdownGenerator(string outputDir)
         // Then show each overload in detail
         foreach (MemberInfo member in members)
         {
-            WriteMemberDetail(sb, member, 2);
+            WriteMemberDetail(sb, member, 2, useSignatureHeading: true);
             sb.AppendLine("---");
             sb.AppendLine();
         }
@@ -472,7 +472,7 @@ public sealed class MarkdownGenerator(string outputDir)
     /// <summary>
     /// Writes the detail for a single member (one overload of a method, a property, etc.).
     /// </summary>
-    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel)
+    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel, bool useSignatureHeading = false)
     {
         string heading = new('#', headingLevel);
 
@@ -482,7 +482,8 @@ public sealed class MarkdownGenerator(string outputDir)
         if (member.IsVirtual && !member.IsAbstract) modifiers += " `virtual`";
         if (member.IsOverride) modifiers += " `override`";
 
-        sb.AppendLine($"{heading} {member.Name}{modifiers}");
+        string headingText = useSignatureHeading ? FormatShortSignature(member) : member.Name;
+        sb.AppendLine($"{heading} {headingText}{modifiers}");
         sb.AppendLine();
         sb.AppendLine("```csharp");
         sb.AppendLine(member.Signature);
