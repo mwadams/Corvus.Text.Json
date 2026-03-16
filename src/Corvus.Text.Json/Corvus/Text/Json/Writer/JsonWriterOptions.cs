@@ -104,7 +104,7 @@ public struct JsonWriterOptions
     /// Thrown when the max depth is set to a negative value.
     /// </exception>
     /// <remarks>
-    /// Reading past this depth will throw a <exception cref="JsonException"/>.
+    /// Reading past this depth will throw a <see cref="JsonException"/>.
     /// </remarks>
     public int MaxDepth
     {
@@ -146,7 +146,7 @@ public struct JsonWriterOptions
     /// <summary>
     /// Defines whether the <see cref="Utf8JsonWriter"/> should skip structural validation and allow
     /// the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in
-    /// a <exception cref="InvalidOperationException"/> to be thrown.
+    /// an <see cref="InvalidOperationException"/> to be thrown.
     /// </summary>
     /// <remarks>
     /// If the JSON being written is known to be correct,

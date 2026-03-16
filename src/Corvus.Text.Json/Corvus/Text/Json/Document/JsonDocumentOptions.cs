@@ -26,7 +26,7 @@ public struct JsonDocumentOptions
     /// is allowed (and ignored) within the JSON payload being read.
     /// </summary>
     /// <remarks>
-    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if a trailing comma is encountered.
+    /// By default, it's set to false, and a <see cref="JsonException"/> is thrown if a trailing comma is encountered.
     /// </remarks>
     public bool AllowTrailingCommas { get; set; }
 
@@ -37,7 +37,7 @@ public struct JsonDocumentOptions
     /// Thrown when the comment handling enum is set to a value that is not supported (or not within the <see cref="JsonCommentHandling"/> enum range).
     /// </exception>
     /// <remarks>
-    /// By default <exception cref="JsonException"/> is thrown if a comment is encountered.
+    /// By default a <see cref="JsonException"/> is thrown if a comment is encountered.
     /// </remarks>
     public JsonCommentHandling CommentHandling
     {
@@ -59,7 +59,7 @@ public struct JsonDocumentOptions
     /// Thrown when the max depth is set to a negative value.
     /// </exception>
     /// <remarks>
-    /// Reading past this depth will throw a <exception cref="JsonException"/>.
+    /// Reading past this depth will throw a <see cref="JsonException"/>.
     /// </remarks>
     public int MaxDepth
     {

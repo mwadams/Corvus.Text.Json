@@ -26,7 +26,7 @@ public struct JsonReaderOptions
     /// zero or more top-level JSON values that are whitespace separated.
     /// </summary>
     /// <remarks>
-    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if trailing content is encountered after the first top-level JSON value.
+    /// By default, it's set to false, and a <see cref="JsonException"/> is thrown if trailing content is encountered after the first top-level JSON value.
     /// </remarks>
     public bool AllowMultipleValues { get; set; }
 
@@ -35,7 +35,7 @@ public struct JsonReaderOptions
     /// is allowed (and ignored) within the JSON payload being read.
     /// </summary>
     /// <remarks>
-    /// By default, it's set to false, and <exception cref="JsonException"/> is thrown if a trailing comma is encountered.
+    /// By default, it's set to false, and a <see cref="JsonException"/> is thrown if a trailing comma is encountered.
     /// </remarks>
     public bool AllowTrailingCommas { get; set; }
 
@@ -46,7 +46,7 @@ public struct JsonReaderOptions
     /// Thrown when the comment handling enum is set to a value that is not supported (i.e. not within the <see cref="JsonCommentHandling"/> enum range).
     /// </exception>
     /// <remarks>
-    /// By default <exception cref="JsonException"/> is thrown if a comment is encountered.
+    /// By default a <see cref="JsonException"/> is thrown if a comment is encountered.
     /// </remarks>
     public JsonCommentHandling CommentHandling
     {
@@ -70,7 +70,7 @@ public struct JsonReaderOptions
     /// Thrown when the max depth is set to a negative value.
     /// </exception>
     /// <remarks>
-    /// Reading past this depth will throw a <exception cref="JsonException"/>.
+    /// Reading past this depth will throw a <see cref="JsonException"/>.
     /// </remarks>
     public int MaxDepth
     {
