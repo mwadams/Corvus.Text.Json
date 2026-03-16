@@ -1,6 +1,11 @@
 // <copyright file="JsonSchema.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
 
 using System.Buffers;
 using System.Collections.Concurrent;
@@ -42,7 +47,7 @@ public readonly struct JsonSchema
     {
         options ??= Options.Default;
 
-        System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(text);
+        var document = System.Text.Json.JsonDocument.Parse(text);
 
         if (canonicalUri is null && !TryGetCanonicalUri(document, out canonicalUri))
         {
@@ -80,7 +85,7 @@ public readonly struct JsonSchema
     {
         options ??= Options.Default;
 
-        System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(stream);
+        var document = System.Text.Json.JsonDocument.Parse(stream);
 
         if (canonicalUri is null && !TryGetCanonicalUri(document, out canonicalUri))
         {
@@ -260,13 +265,13 @@ public readonly struct JsonSchema
         // Check for built-in types before code generation
         if (rootType.IsBuiltInJsonAnyType())
         {
-            ValidatorPipeline alwaysTruePipeline = ValidatorPipeline.Create(isAlwaysTrue: true, isAlwaysFalse: false);
+            var alwaysTruePipeline = ValidatorPipeline.Create(isAlwaysTrue: true, isAlwaysFalse: false);
             return new(CachedSchema.GetOrAdd(cacheKey, alwaysTruePipeline));
         }
 
         if (rootType.IsBuiltInJsonNotAnyType())
         {
-            ValidatorPipeline alwaysFalsePipeline = ValidatorPipeline.Create(isAlwaysTrue: false, isAlwaysFalse: true);
+            var alwaysFalsePipeline = ValidatorPipeline.Create(isAlwaysTrue: false, isAlwaysFalse: true);
             return new(CachedSchema.GetOrAdd(cacheKey, alwaysFalsePipeline));
         }
 
@@ -287,7 +292,7 @@ public readonly struct JsonSchema
             options.HostAssembly);
 
         DynamicJsonType dynamicType = new(generatedType);
-        ValidatorPipeline pipeline = ValidatorPipeline.Create(dynamicType);
+        var pipeline = ValidatorPipeline.Create(dynamicType);
         return new(CachedSchema.GetOrAdd(cacheKey, pipeline));
     }
 
@@ -360,7 +365,7 @@ public readonly struct JsonSchema
         PrepopulatedDocumentResolver additionalFilesResolver = new();
         foreach (AdditionalSchemaFile file in options.AdditionalSchemaFiles)
         {
-            System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(file.FilePath));
+            var document = System.Text.Json.JsonDocument.Parse(File.ReadAllText(file.FilePath));
             string canonicalUri = file.CanonicalUri;
 
             additionalFilesResolver.AddDocument(canonicalUri, document);

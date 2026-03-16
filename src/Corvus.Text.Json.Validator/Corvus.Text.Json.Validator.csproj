@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <Import Project="$(EndjinProjectPropsPath)" Condition="$(EndjinProjectPropsPath) != ''" />
+
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0;netstandard2.0</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -9,8 +11,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <!-- Only upgrade NuGetAudit warnings to errors for official builds. -->
     <WarningsNotAsErrors>$(WarningsNotAsErrors);NU1901;NU1902;NU1903;NU1904</WarningsNotAsErrors>
-    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591;NU1504</NoWarn>
     <IsPackable>true</IsPackable>
+    <EndjinDisableCreateEditorConfig>true</EndjinDisableCreateEditorConfig>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
@@ -18,7 +21,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>Dynamically load JSON Schema and validate JSON documents against them using Corvus.Text.Json.</Description>
   </PropertyGroup>
 
@@ -69,6 +72,12 @@
     <EmbeddedResource Include="metaschema\draft4\schema.json" LogicalName="metaschema.draft4.schema.json" />
     <EmbeddedResource Include="metaschema\draft6\schema.json" LogicalName="metaschema.draft6.schema.json" />
     <EmbeddedResource Include="metaschema\draft7\schema.json" LogicalName="metaschema.draft7.schema.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.18" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All" />
+    <PackageReference Include="Roslynator.Analyzers" Version="4.13.1" PrivateAssets="All" />
   </ItemGroup>
 
 </Project>
