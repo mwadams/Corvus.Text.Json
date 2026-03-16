@@ -206,17 +206,19 @@
     align-self: start;
     width: var(--sidebar-width);
     height: auto;
-    max-height: calc(100vh - var(--header-height) - var(--space-lg));
+    // JS sets --sidebar-available-height when the footer is visible;
+    // otherwise fall back to full viewport minus header.
+    max-height: var(--sidebar-available-height, calc(100vh - var(--header-height) - var(--space-lg)));
     overflow: hidden;
     background: transparent;
     border-right: none;
     transform: none;
-    transition: transform 0.25s ease;
+    transition: transform 0.25s ease, max-height 0.15s ease-out;
     z-index: 10;
 
     .sidebar__inner {
       height: auto;
-      max-height: calc(100vh - var(--header-height) - var(--space-lg));
+      max-height: var(--sidebar-available-height, calc(100vh - var(--header-height) - var(--space-lg)));
       overflow-y: auto;
       padding: 0;
     }

@@ -12,16 +12,8 @@
   padding: var(--space-md) 0;
   border-top: 1px solid var(--color-border);
 
-  // On docs pages (desktop), pull the footer up into the main-content
-  // padding zone so the grid row stays tall and the sidebar remains sticky.
-  // Two selectors: Vellum pages (footer is sibling of .page-content) and
-  // API pages (footer is sibling of .layout-docs inside .page-content).
-  @media (min-width: 60rem) {
-    .page-content:has(.layout-docs) + &,
-    .layout-docs ~ & {
-      margin-top: -4rem;
-    }
-  }
+  // The footer no longer uses negative-margin tricks. Instead, JS
+  // observes the footer and dynamically shrinks the sidebar height.
 
   &__inner {
     display: flex;
