@@ -230,7 +230,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
         sb.AppendLine("<div class=\"layout-docs container\">");
         SidebarBuilder.AppendSidebar(sb, namespaces, nsSlug, typeFileBase, memberFileBase);
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
-        sb.AppendLine("        <div class=\"doc__content\">");
+        sb.AppendLine("        <div class=\"doc__content api-ref\">");
         sb.AppendLine("            <p class=\"doc__breadcrumb\">");
         sb.AppendLine($"                <a href=\"/api/index.html\">API</a> &rsaquo;");
         sb.AppendLine($"                <a href=\"/api/{nsSlug}.html\">{HtmlEncode(ns)}</a> &rsaquo;");
@@ -325,7 +325,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
         sb.AppendLine("<div class=\"layout-docs container\">");
         SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug, currentTypeFileBase);
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
-        sb.AppendLine("        <div class=\"doc__content\">");
+        sb.AppendLine("        <div class=\"doc__content api-ref\">");
         sb.AppendLine("            <p class=\"doc__breadcrumb\">");
         sb.AppendLine($"                <a href=\"/api/index.html\">API</a> &rsaquo;");
         sb.AppendLine($"                <a href=\"/api/{currentNsSlug}.html\">{HtmlEncode(currentNsName)}</a> &rsaquo;");

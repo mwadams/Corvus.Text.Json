@@ -218,7 +218,7 @@
 .api-source {
   font-size: var(--font-size-sm);
   color: var(--color-gray-dark);
-  margin: calc(-1 * var(--space-sm)) 0 var(--space-lg);
+  margin: calc(-1 * var(--space-sm)) 0 var(--space-md);
 
   a {
     color: var(--color-brand);
@@ -226,6 +226,103 @@
 
     &:hover {
       color: var(--color-brand-hover);
+      text-decoration: underline;
+    }
+  }
+}
+
+// ---- API reference typography (matches .NET reference docs sizing) ----
+.api-ref {
+  // Headings — tighter and smaller than prose docs
+  h1 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-md);
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-sm);
+    line-height: 1.25;
+  }
+
+  h3 {
+    font-size: 1rem;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
+    line-height: 1.3;
+  }
+
+  h4 {
+    font-size: 0.875rem;
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-xs);
+  }
+
+  // Body text — slightly smaller
+  p {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-regular);
+    margin-bottom: var(--space-sm);
+  }
+
+  // Code blocks — compact
+  pre {
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+  }
+
+  // Inline code
+  code:not(pre code) {
+    font-size: 0.8125rem;
+  }
+
+  // Tables — compact cells
+  table {
+    font-size: 0.8125rem;
+    margin-bottom: var(--space-md);
+
+    th {
+      padding: var(--space-xs) var(--space-sm);
+    }
+
+    td {
+      padding: var(--space-xs) var(--space-sm);
+    }
+  }
+
+  // Lists
+  ul, ol {
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--space-sm);
+    padding-left: var(--space-md);
+  }
+
+  // Horizontal rules — tighter spacing between overload sections
+  hr {
+    margin: var(--space-md) 0;
+  }
+
+  // Definition section (Namespace/Assembly)
+  > h2:first-of-type {
+    margin-top: var(--space-sm);
+  }
+
+  // Source link adjusts for smaller heading spacing
+  .api-source {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.8125rem;
+  }
+
+  // Overload summary table links
+  table a {
+    text-decoration: none;
+
+    &:hover {
       text-decoration: underline;
     }
   }
