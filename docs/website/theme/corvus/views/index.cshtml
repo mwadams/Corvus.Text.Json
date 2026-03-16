@@ -140,6 +140,7 @@ root.SetAge(31);
                         <tr><td>Code Generation</td><td>Source generation for serialization to/from fixed .NET POCOs</td><td>Source generator + CLI tool producing strongly-typed entities with composition, pattern matching, and resilience to invalid schema</td></tr>
                         <tr><td>Date/Time Types</td><td>System.DateTime, DateTimeOffset</td><td>All .NET types (DateTime, DateOnly, TimeOnly where available) plus NodaTime (LocalDate, OffsetDateTime, Period)</td></tr>
                         <tr><td>Numeric Precision</td><td>decimal (28 digits); Int128, UInt128, Half via custom serializers</td><td>BigNumber (arbitrary precision) plus native Int128, UInt128, and Half support where available</td></tr>
+                        <tr><td>Strings &amp; URIs</td><td>Allocates .NET strings; System.Uri for URI handling</td><td>Allocation-free access to UTF-8 and UTF-16 unescaped strings; UTF-8 Uri/Iri with display and canonical formatting without string allocation</td></tr>
                     </tbody>
                 </table>
             </div>
