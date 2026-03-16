@@ -456,7 +456,7 @@ public sealed class MarkdownGenerator(string outputDir)
         {
             string sig = FormatShortSignature(member);
             string summary = TruncateSummary(member.Documentation?.Summary ?? string.Empty);
-            sb.AppendLine($"| [{EscapeTableCell(sig)}](#{Anchor(member.Signature)}) | {summary} |");
+            sb.AppendLine($"| [{EscapeTableCell(sig)}](#{Anchor(sig)}) | {summary} |");
         }
         sb.AppendLine();
 
@@ -477,7 +477,8 @@ public sealed class MarkdownGenerator(string outputDir)
         string heading = new('#', headingLevel);
 
         string headingText = useSignatureHeading ? FormatShortSignature(member) : member.Name;
-        sb.AppendLine($"{heading} {headingText}");
+        string anchorId = Anchor(headingText);
+        sb.AppendLine($"{heading} {headingText} {{#{anchorId}}}");
         sb.AppendLine();
         sb.AppendLine("```csharp");
         sb.AppendLine(member.Signature);
