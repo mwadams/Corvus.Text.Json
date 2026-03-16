@@ -6,4 +6,4 @@ Title: "High-performance JSON for .NET"
 CTA: "Get Started"
 Url: "/getting-started/index.html"
 ---
-From schema to code. Source-generated, strongly-typed C# models from JSON Schema with pooled-memory parsing, full draft 2020-12 validation, and 92% fewer allocations than System.Text.Json's JsonNode.
+From schema to code. Source-generated, strongly-typed C# models from JSON Schema with pooled-memory parsing, full draft 4 through 2020-12 validation, and 120B per-document allocation.

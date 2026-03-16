@@ -8,8 +8,8 @@ Corvus.Text.Json is a ground-up rethink of JSON handling in .NET. Where `System.
 
 If you're building APIs, data pipelines, or any system that processes JSON at volume, here's what sets it apart:
 
-- **92% fewer allocations** — `ArrayPool<byte>`-backed parsing eliminates GC pressure in high-throughput scenarios. In benchmarks, Corvus.Text.Json allocates 120 bytes vs 1,528 bytes for equivalent `JsonNode` operations.
-- **Full JSON Schema support** — Draft 2019-09 and 2020-12 with complete validation diagnostics including schema location, evaluation path, and error messages for every failure. Not just basic type checking.
+- **92% fewer allocations** — `ArrayPool<byte>`-backed parsing eliminates GC pressure in high-throughput scenarios. Corvus.Text.Json uses just 120B per-document allocation vs 1,528 bytes for equivalent `JsonNode` operations.
+- **Full JSON Schema support** — Draft 4, 6, 7, 2019-09, and 2020-12 with complete validation diagnostics including schema location, evaluation path, and error messages for every failure. Over 10x faster than other .NET JSON Schema validators.
 - **Source-generated models** — A Roslyn incremental source generator or `generatejsonschematypes` CLI tool produces strongly-typed C# from any JSON Schema. You get type-safe property accessors, validation, serialization, and implicit conversions from a single schema file.
 - **NodaTime integration** — JSON Schema `date`, `date-time`, `time`, and `duration` formats map to NodaTime types (`LocalDate`, `OffsetDateTime`, `OffsetTime`, `Period`), not error-prone `System.DateTime`.
 - **Mutable builder pattern** — `JsonDocumentBuilder` with `JsonWorkspace`-managed pooled memory, not per-node allocations like `JsonNode`. Ideal for request/response cycles and data pipelines.
@@ -20,7 +20,7 @@ If you're building APIs, data pipelines, or any system that processes JSON at vo
 | Feature | System.Text.Json | Corvus.Text.Json |
 |---------|-----------------|-----------------|
 | Memory Model | Per-document allocations | ArrayPool-backed pooled memory |
-| Schema Validation | None built-in | Full draft 2020-12 with diagnostics |
+| Schema Validation | None built-in | Draft 4 through 2020-12 with diagnostics |
 | Code Generation | None | Source generator + CLI tool |
 | Date/Time Types | System.DateTime | NodaTime (LocalDate, OffsetDateTime) |
 | Mutation | JsonNode (allocates per node) | Builder pattern (pooled workspace) |

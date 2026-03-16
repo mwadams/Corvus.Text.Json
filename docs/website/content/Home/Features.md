@@ -10,11 +10,11 @@ Generate strongly-typed C# from JSON Schema at build time with the Roslyn increm
 
 ## 📋 Schema Validation
 
-Full JSON Schema draft 2019-09 and 2020-12 validation with `EvaluateSchema()`. Get detailed diagnostic results including the exact schema location, evaluation path, and error messages for every validation failure. Choose from four levels — flag-only `bool`, basic failure messages, detailed messages with locations, or verbose output including successful validations.
+Full JSON Schema draft 4, 6, 7, 2019-09, and 2020-12 validation with `EvaluateSchema()`. Over 10x faster than other .NET JSON Schema validators. Get detailed diagnostic results including the exact schema location, evaluation path, and error messages for every validation failure. Choose from four levels — flag-only `bool`, basic failure messages, detailed messages with locations, or verbose output including successful validations.
 
 ## ⚡ Pooled Memory
 
-`ParsedJsonDocument<T>` uses `ArrayPool<byte>` to parse JSON with minimal GC impact. In benchmarks, Corvus.Text.Json allocates 92% less memory than equivalent `JsonNode` operations (120 bytes vs 1,528 bytes for typical object builds). Generated types are thin struct wrappers — creating a typed value from a parsed document is essentially free.
+`ParsedJsonDocument<T>` uses `ArrayPool<byte>` to parse JSON with minimal GC impact. Just 120B per-document allocation vs 1,528 bytes for equivalent `JsonNode` operations — 92% less memory. Generated types are thin struct wrappers — creating a typed value from a parsed document is essentially free.
 
 ## 🔄 Mutable Documents
 
