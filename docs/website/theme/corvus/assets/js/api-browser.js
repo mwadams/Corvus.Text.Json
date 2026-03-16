@@ -1,54 +1,44 @@
 /**
- * API Browser — inline incremental search for the API Reference landing page.
+ * API Browser - inline incremental search for the API Reference landing page.
  *
- * Follows the same pattern as the site-wide search (search.js / endjin.com):
- *   • Lazy-loads the shared /search-index.json on first interaction
- *   • Builds a Lunr.js index (same library loaded globally via CDN)
- *   • Renders results inline, grouped by namespace
+ * Lazy-loads the shared /search-index.json on first interaction and performs
+ * dot-segment-aware prefix matching on entry titles.
+ *
+ * Matching rules:
+ *   - The query is matched as a case-insensitive prefix against each "tail"
+ *     of the title (split at dots). E.g. title "JsonElement.Parse" has tails
+ *     "JsonElement.Parse" and "Parse".
+ *   - After matching the prefix, if the next character in the title is a dot,
+ *     the match is rejected. This prevents "JsonElement" from matching all of
+ *     its members - the user must type past the dot ("JsonElement.P") to see
+ *     members.
+ *   - Types (class/struct/interface/enum/delegate) are always listed first.
  *
  * When the input is empty the default namespace card grid is shown.
- * While typing, results replace the card grid with matching API entries.
  */
 (function () {
   'use strict';
 
-  const input = document.getElementById('api-browser-input');
-  const statusEl = document.getElementById('api-browser-status');
-  const resultsEl = document.getElementById('api-browser-results');
-  const defaultContent = document.getElementById('api-browser-default');
+  var input = document.getElementById('api-browser-input');
+  var statusEl = document.getElementById('api-browser-status');
+  var resultsEl = document.getElementById('api-browser-results');
+  var defaultContent = document.getElementById('api-browser-default');
 
   if (!input || !resultsEl || !defaultContent) return;
 
-  let searchIndex = null;
-  let searchDataMap = null;
-  let indexLoading = false;
+  var apiEntries = null;
+  var indexLoading = false;
 
-  // ── Index loading (shared /search-index.json, same as search.js) ──────────
+  // -- Index loading ----------------------------------------------------------
 
   async function ensureIndex() {
-    if (searchIndex || indexLoading) return;
+    if (apiEntries || indexLoading) return;
     indexLoading = true;
     try {
-      const resp = await fetch('/search-index.json');
+      var resp = await fetch('/search-index.json');
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      const data = await resp.json();
-
-      // Build a lookup map (keyed by url) and a Lunr index
-      // Only index API entries (url starts with /api/)
-      const apiEntries = data.filter(function (d) { return d.url && d.url.startsWith('/api/'); });
-
-      searchDataMap = Object.create(null);
-      apiEntries.forEach(function (doc) { searchDataMap[doc.url] = doc; });
-
-      searchIndex = lunr(function () {
-        this.ref('url');
-        this.field('title',       { boost: 10 });
-        this.field('keywords',    { boost: 8 });
-        this.field('description', { boost: 5 });
-        this.field('body');
-
-        apiEntries.forEach(function (doc) { this.add(doc); }, this);
-      });
+      var data = await resp.json();
+      apiEntries = data.filter(function (d) { return d.url && d.url.startsWith('/api/'); });
     } catch (e) {
       console.warn('[api-browser] Failed to load search index:', e);
     } finally {
@@ -56,7 +46,7 @@
     }
   }
 
-  // ── Helpers ────────────────────────────────────────────────────────────────
+  // -- Helpers ----------------------------------------------------------------
 
   function escapeHtml(str) {
     var el = document.createElement('span');
@@ -78,13 +68,13 @@
     var kinds = ['class', 'struct', 'interface', 'enum', 'delegate'];
     var lower = keywords.toLowerCase();
     for (var k = 0; k < kinds.length; k++) {
-      if (lower.indexOf(' ' + kinds[k] + ' ') !== -1 || lower.indexOf(' ' + kinds[k]) !== -1) return kinds[k];
+      if (lower.indexOf(' ' + kinds[k] + ' ') !== -1 || lower.endsWith(' ' + kinds[k])) return kinds[k];
     }
     return '';
   }
 
-  function isTypePage(doc) {
-    return /\b(class|struct|interface|enum|delegate)\b/.test((doc.keywords || '').toLowerCase());
+  function isTypePage(entry) {
+    return /\b(class|struct|interface|enum|delegate)\b/.test((entry.keywords || '').toLowerCase());
   }
 
   function truncate(str, max) {
@@ -92,26 +82,62 @@
     return str.slice(0, max) + '\u2026';
   }
 
-  // ── Search ─────────────────────────────────────────────────────────────────
+  // -- Dot-segment-aware prefix matching --------------------------------------
+
+  /**
+   * Returns true if the query matches the title under the dot-boundary rule.
+   *
+   * The query is tested as a case-insensitive prefix against every "tail" of
+   * the title (starting at each dot boundary). A prefix match is rejected if
+   * the character immediately after the matched prefix in the title is a dot.
+   * This prevents "JsonElement" from matching "JsonElement.Parse" while still
+   * allowing "JsonElement.P" to match it.
+   */
+  function matchesTitle(title, lowerQuery) {
+    var lowerTitle = title.toLowerCase();
+    var startIdx = 0;
+
+    while (startIdx <= lowerTitle.length) {
+      if (lowerTitle.startsWith(lowerQuery, startIdx)) {
+        var nextCharIdx = startIdx + lowerQuery.length;
+        // Dot-boundary rule: reject if the next char is a dot
+        if (nextCharIdx >= lowerTitle.length || lowerTitle[nextCharIdx] !== '.') {
+          return true;
+        }
+      }
+      var dotIdx = lowerTitle.indexOf('.', startIdx);
+      if (dotIdx === -1) break;
+      startIdx = dotIdx + 1;
+    }
+
+    return false;
+  }
+
+  // -- Search -----------------------------------------------------------------
 
   function performSearch(query) {
-    if (!searchIndex) return;
+    if (!apiEntries) return;
 
-    // Lunr wildcard search for partial matching (same as search.js)
-    var results = searchIndex.search(query + '*');
+    var lowerQuery = query.toLowerCase();
     var maxResults = 50;
+    var hits = [];
 
-    if (results.length === 0) {
+    for (var i = 0; i < apiEntries.length && hits.length < maxResults; i++) {
+      var entry = apiEntries[i];
+      if (matchesTitle(entry.title || '', lowerQuery)) {
+        hits.push(entry);
+      }
+    }
+
+    if (hits.length === 0) {
       statusEl.textContent = 'No results for \u201c' + query + '\u201d';
       resultsEl.innerHTML = '';
       return;
     }
 
-    var hits = results.slice(0, maxResults).map(function (r) { return searchDataMap[r.ref]; }).filter(Boolean);
-
     statusEl.textContent = 'Showing ' + hits.length + ' result' + (hits.length !== 1 ? 's' : '') + ' for \u201c' + query + '\u201d';
 
-    // Sort: type pages first, then alphabetical
+    // Sort: types first, then alphabetical by title
     hits.sort(function (a, b) {
       var aType = isTypePage(a) ? 0 : 1;
       var bType = isTypePage(b) ? 0 : 1;
@@ -157,7 +183,7 @@
     resultsEl.innerHTML = html;
   }
 
-  // ── Event wiring (debounced input, same pattern as search.js) ─────────────
+  // -- Event wiring -----------------------------------------------------------
 
   var debounceTimer;
   input.addEventListener('input', function () {
