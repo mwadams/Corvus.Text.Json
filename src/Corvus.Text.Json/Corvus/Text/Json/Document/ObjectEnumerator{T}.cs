@@ -38,7 +38,9 @@ public struct ObjectEnumerator<TValue> : IEnumerable<JsonProperty<TValue>>, IEnu
         _endIdxOrVersion = _initialIndex + _targetDocument.GetDbSize(_initialIndex, includeEndElement: false);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Gets the current element in the enumeration.
+    /// </summary>
     public JsonProperty<TValue> Current
     {
         get

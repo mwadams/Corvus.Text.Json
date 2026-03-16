@@ -111,7 +111,10 @@ public class JsonWorkspace : IDisposable
 
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Disposes the workspace. If the workspace was rented from the cache, returns it;
+    /// otherwise disposes all child documents and returns the backing array to the pool.
+    /// </summary>
     public void Dispose()
     {
         if (_rented)
