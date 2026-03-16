@@ -20,7 +20,7 @@ Examples:
 	| "#\\foor\\bar"                                       | false | Flag     | 0     | JsonElement  |
 	| "#\\foor\\bar"                                       | false | Basic    | 1     | JsonElement  |
 	| "#\\foor\\bar"                                       | false | Detailed | 1     | JsonElement  |
-	| "#\\foor\\bar"                                       | false | Verbose  | 210   | JsonElement  |
+	| "#\\foor\\bar"                                       | false | Verbose  | 209   | JsonElement  |
 	| "01234567890123456789012345678901234567890123456789" | false | Flag     | 0     | JsonElement  |
 	| "01234567890123456789012345678901234567890123456789" | false | Basic    | 1     | JsonElement  |
 	| "01234567890123456789012345678901234567890123456789" | false | Detailed | 1     | JsonElement  |
@@ -167,7 +167,7 @@ Examples:
 	| "#\\foo\\bar"                                        | false | Flag     | 0     | dotnet       |
 	| "#\\foo\\bar"                                        | false | Basic    | 1     | dotnet       |
 	| "#\\foo\\bar"                                        | false | Detailed | 1     | dotnet       |
-	| "#\\foo\\bar"                                        | false | Verbose  | 210   | dotnet       |
+	| "#\\foo\\bar"                                        | false | Verbose  | 209   | dotnet       |
 	| "1"                                                  | false | Flag     | 0     | dotnet       |
 	| "2"                                                  | false | Flag     | 0     | dotnet       |
 	| "3"                                                  | false | Flag     | 0     | dotnet       |

@@ -6,11 +6,17 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
 		<Description>Defines .NET types representing data types found in JSON, including numerous types for specialized string forms such as JsonUuid and JsonDateTime.</Description>
+	</PropertyGroup>
+
+	<!-- CS1591: Linked V5 source files have public types without XML docs -->
+	<PropertyGroup>
+		<NoWarn>$(NoWarn);CS1591</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">

@@ -1359,60 +1359,47 @@ public static partial class Validate
             }
         }
 
-        string value = (string)instance.AsString;
+        instance.AsString.TryGetValue(IdnHostnameValidatorUtf8, new ValidationContextWrapperWithFormatKeyword(validationContext, level, formatKeyword), out ValidationContext result);
 
-        bool isMatch;
-        if (value.StartsWith("xn--"))
+        if (level == ValidationLevel.Flag && !result.IsValid)
         {
-            string decodedValue;
-
-            try
-            {
-                decodedValue = IdnMapping.GetUnicode(value);
-                isMatch = !InvalidIdnHostNamePattern.IsMatch(decodedValue);
-            }
-            catch (ArgumentException)
-            {
-                isMatch = false;
-            }
-        }
-        else
-        {
-            try
-            {
-                IdnMapping.GetAscii(value);
-                isMatch = !InvalidIdnHostNamePattern.IsMatch(value);
-            }
-            catch (ArgumentException)
-            {
-                isMatch = false;
-            }
+            return result;
         }
 
-        if (!isMatch)
-        {
-            if (level >= ValidationLevel.Detailed)
-            {
-                return validationContext.WithResult(isValid: false, $"Validation {formatKeyword ?? "format"} - should have been 'idn-hostname', but was '{value}'.", formatKeyword ?? "format");
-            }
-            else if (level >= ValidationLevel.Basic)
-            {
-                return validationContext.WithResult(isValid: false, "Validation format - should have been 'idn-hostname'.", formatKeyword ?? "format");
-            }
-            else
-            {
-                return ValidationContext.InvalidContext;
-            }
-        }
-
-        if (level == ValidationLevel.Verbose)
+        if (level == ValidationLevel.Verbose && result.IsValid)
         {
             return validationContext
                 .WithResult(isValid: true, $"Validation {typeKeyword ?? "type"} - was 'string'.", typeKeyword ?? "type")
                 .WithResult(isValid: true, $"Validation {formatKeyword ?? "format"} - was 'idn-hostname'.", formatKeyword ?? "format");
         }
 
-        return validationContext;
+        return result;
+
+        static bool IdnHostnameValidatorUtf8(ReadOnlySpan<byte> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
+        {
+            bool isMatch = Internal.HostnameValidator.MatchIdnHostname(input);
+            result = context.Context;
+
+            if (!isMatch)
+            {
+                if (context.Level >= ValidationLevel.Detailed)
+                {
+                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'idn-hostname'.", context.FormatKeyword ?? "format");
+                }
+                else if (context.Level >= ValidationLevel.Basic)
+                {
+                    result = context.Context.WithResult(isValid: false, "Validation format - should have been 'idn-hostname'.", context.FormatKeyword ?? "format");
+                }
+                else
+                {
+                    result = context.Context.WithResult(isValid: false);
+                }
+
+                return true;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -1456,7 +1443,7 @@ public static partial class Validate
             result = validationContext;
         }
 
-        instance.AsString.TryGetValue(HostnameValidator, new ValidationContextWrapperWithFormatKeyword(result, level, formatKeyword), out result);
+        instance.AsString.TryGetValue(HostnameValidatorUtf8, new ValidationContextWrapperWithFormatKeyword(result, level, formatKeyword), out result);
 
         if (level == ValidationLevel.Flag && !result.IsValid)
         {
@@ -1465,38 +1452,16 @@ public static partial class Validate
 
         return result;
 
-        static bool HostnameValidator(ReadOnlySpan<char> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
+        static bool HostnameValidatorUtf8(ReadOnlySpan<byte> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
         {
-            bool isMatch;
+            bool isMatch = Internal.HostnameValidator.MatchHostname(input);
             result = context.Context;
-
-#if NET8_0_OR_GREATER
-            if (input.StartsWith("xn--"))
-#else
-            if (input.StartsWith("xn--".AsSpan()))
-#endif
-            {
-                try
-                {
-                    // Sadly there's no support for readonly span in IdnMapping.
-                    string decodedValue = IdnMapping.GetUnicode(input.ToString());
-                    isMatch = HostnamePattern.IsMatch(decodedValue);
-                }
-                catch (ArgumentException)
-                {
-                    isMatch = false;
-                }
-            }
-            else
-            {
-                isMatch = HostnamePattern.IsMatch(input);
-            }
 
             if (!isMatch)
             {
                 if (context.Level >= ValidationLevel.Detailed)
                 {
-                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'hostname', but was '{input.ToString()}'.", context.FormatKeyword ?? "format");
+                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'hostname'.", context.FormatKeyword ?? "format");
                 }
                 else if (context.Level >= ValidationLevel.Basic)
                 {
@@ -3549,39 +3514,47 @@ public static partial class Validate
             }
         }
 
-        JsonIriReference iri = instance.As<JsonIriReference>();
+        instance.AsString.TryGetValue(IriReferenceValidatorUtf8, new ValidationContextWrapperWithFormatKeyword(validationContext, level, formatKeyword), out ValidationContext result);
 
-        if (!iri.TryGetUri(out Uri? uri) ||
-            uri.OriginalString.StartsWith("\\\\") ||
-            (uri.IsAbsoluteUri && uri.Fragment.Contains('\\')) ||
-#if NET8_0_OR_GREATER
-            (uri.OriginalString.StartsWith('#') && uri.OriginalString.Contains('\\')))
-#else
-            (uri.OriginalString.StartsWith("#") && uri.OriginalString.Contains('\\')))
-#endif
+        if (level == ValidationLevel.Flag && !result.IsValid)
         {
-            if (level >= ValidationLevel.Detailed)
-            {
-                return validationContext.WithResult(isValid: false, $"Validation {formatKeyword ?? "format"} - should have been 'iri-reference' but was '{iri}'.", typeKeyword ?? "type");
-            }
-            else if (level >= ValidationLevel.Basic)
-            {
-                return validationContext.WithResult(isValid: false, "Validation format - should have been 'iri-reference'.", formatKeyword ?? "format");
-            }
-            else
-            {
-                return ValidationContext.InvalidContext;
-            }
+            return result;
         }
 
-        if (level == ValidationLevel.Verbose)
+        if (level == ValidationLevel.Verbose && result.IsValid)
         {
             return validationContext
                 .WithResult(isValid: true, $"Validation {typeKeyword ?? "type"} - was 'string'.", typeKeyword ?? "type")
                 .WithResult(isValid: true, $"Validation {formatKeyword ?? "format"} - was 'iri-reference'.", formatKeyword ?? "format");
         }
 
-        return validationContext;
+        return result;
+
+        static bool IriReferenceValidatorUtf8(ReadOnlySpan<byte> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
+        {
+            bool isMatch = Internal.UriValidator.IsValidIriReference(input);
+            result = context.Context;
+
+            if (!isMatch)
+            {
+                if (context.Level >= ValidationLevel.Detailed)
+                {
+                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'iri-reference'.", context.FormatKeyword ?? "format");
+                }
+                else if (context.Level >= ValidationLevel.Basic)
+                {
+                    result = context.Context.WithResult(isValid: false, "Validation format - should have been 'iri-reference'.", context.FormatKeyword ?? "format");
+                }
+                else
+                {
+                    result = context.Context.WithResult(isValid: false);
+                }
+
+                return true;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -3614,32 +3587,47 @@ public static partial class Validate
             }
         }
 
-        JsonIri iri = instance.As<JsonIri>();
+        instance.AsString.TryGetValue(IriValidatorUtf8, new ValidationContextWrapperWithFormatKeyword(validationContext, level, formatKeyword), out ValidationContext result);
 
-        if (!iri.TryGetUri(out Uri? uri) || (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps))
+        if (level == ValidationLevel.Flag && !result.IsValid)
         {
-            if (level >= ValidationLevel.Detailed)
-            {
-                return validationContext.WithResult(isValid: false, $"Validation {formatKeyword ?? "format"} - should have been 'iri' but was '{iri}'.", formatKeyword ?? "format");
-            }
-            else if (level >= ValidationLevel.Basic)
-            {
-                return validationContext.WithResult(isValid: false, "Validation format - should have been 'iri'.", formatKeyword ?? "format");
-            }
-            else
-            {
-                return ValidationContext.InvalidContext;
-            }
+            return result;
         }
 
-        if (level == ValidationLevel.Verbose)
+        if (level == ValidationLevel.Verbose && result.IsValid)
         {
             return validationContext
                 .WithResult(isValid: true, $"Validation {typeKeyword ?? "type"} - was 'string'.", typeKeyword ?? "type")
                 .WithResult(isValid: true, $"Validation {formatKeyword ?? "format"} - was 'iri'.", formatKeyword ?? "format");
         }
 
-        return validationContext;
+        return result;
+
+        static bool IriValidatorUtf8(ReadOnlySpan<byte> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
+        {
+            bool isMatch = Internal.UriValidator.IsValidIri(input);
+            result = context.Context;
+
+            if (!isMatch)
+            {
+                if (context.Level >= ValidationLevel.Detailed)
+                {
+                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'iri'.", context.FormatKeyword ?? "format");
+                }
+                else if (context.Level >= ValidationLevel.Basic)
+                {
+                    result = context.Context.WithResult(isValid: false, "Validation format - should have been 'iri'.", context.FormatKeyword ?? "format");
+                }
+                else
+                {
+                    result = context.Context.WithResult(isValid: false);
+                }
+
+                return true;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -3672,32 +3660,47 @@ public static partial class Validate
             }
         }
 
-        JsonUri uriInstance = instance.As<JsonUri>();
+        instance.AsString.TryGetValue(UriValidatorUtf8, new ValidationContextWrapperWithFormatKeyword(validationContext, level, formatKeyword), out ValidationContext result);
 
-        if (!(uriInstance.TryGetUri(out Uri? testUri) && (!testUri.IsAbsoluteUri || !testUri.IsUnc)))
+        if (level == ValidationLevel.Flag && !result.IsValid)
         {
-            if (level >= ValidationLevel.Detailed)
-            {
-                return validationContext.WithResult(isValid: false, $"Validation {formatKeyword ?? "format"} - should have been 'uri' but was '{uriInstance}'.", formatKeyword ?? "format");
-            }
-            else if (level >= ValidationLevel.Basic)
-            {
-                return validationContext.WithResult(isValid: false, "Validation format - should have been 'uri'.", formatKeyword ?? "format");
-            }
-            else
-            {
-                return ValidationContext.InvalidContext;
-            }
+            return result;
         }
 
-        if (level == ValidationLevel.Verbose)
+        if (level == ValidationLevel.Verbose && result.IsValid)
         {
             return validationContext
                 .WithResult(isValid: true, $"Validation {typeKeyword ?? "type"} - was 'string'.", typeKeyword ?? "type")
                 .WithResult(isValid: true, $"Validation {formatKeyword ?? "format"} - was 'uri'.", formatKeyword ?? "format");
         }
 
-        return validationContext;
+        return result;
+
+        static bool UriValidatorUtf8(ReadOnlySpan<byte> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
+        {
+            bool isMatch = Internal.UriValidator.IsValidUri(input);
+            result = context.Context;
+
+            if (!isMatch)
+            {
+                if (context.Level >= ValidationLevel.Detailed)
+                {
+                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'uri'.", context.FormatKeyword ?? "format");
+                }
+                else if (context.Level >= ValidationLevel.Basic)
+                {
+                    result = context.Context.WithResult(isValid: false, "Validation format - should have been 'uri'.", context.FormatKeyword ?? "format");
+                }
+                else
+                {
+                    result = context.Context.WithResult(isValid: false);
+                }
+
+                return true;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>
@@ -3730,39 +3733,47 @@ public static partial class Validate
             }
         }
 
-        JsonUriReference uriReferenceInstance = instance.As<JsonUriReference>();
+        instance.AsString.TryGetValue(UriReferenceValidatorUtf8, new ValidationContextWrapperWithFormatKeyword(validationContext, level, formatKeyword), out ValidationContext result);
 
-        if (!uriReferenceInstance.TryGetUri(out Uri? uri) ||
-            uri.OriginalString.StartsWith("\\\\") ||
-            (uri.IsAbsoluteUri && uri.Fragment.Contains('\\')) ||
-#if NET8_0_OR_GREATER
-            (uri.OriginalString.StartsWith('#') && uri.OriginalString.Contains('\\')))
-#else
-            (uri.OriginalString.StartsWith("#") && uri.OriginalString.Contains('\\')))
-#endif
+        if (level == ValidationLevel.Flag && !result.IsValid)
         {
-            if (level >= ValidationLevel.Detailed)
-            {
-                return validationContext.WithResult(isValid: false, $"Validation {formatKeyword ?? "format"} - should have been 'uri-reference' but was '{uriReferenceInstance}'.", formatKeyword ?? "format");
-            }
-            else if (level >= ValidationLevel.Basic)
-            {
-                return validationContext.WithResult(isValid: false, "Validation format - should have been 'uri-reference'.", formatKeyword ?? "format");
-            }
-            else
-            {
-                return ValidationContext.InvalidContext;
-            }
+            return result;
         }
 
-        if (level == ValidationLevel.Verbose)
+        if (level == ValidationLevel.Verbose && result.IsValid)
         {
             return validationContext
                 .WithResult(isValid: true, $"Validation {typeKeyword ?? "type"} - was 'string'.", typeKeyword ?? "type")
                 .WithResult(isValid: true, $"Validation {formatKeyword ?? "format"} - was 'uri-reference'.", formatKeyword ?? "format");
         }
 
-        return validationContext;
+        return result;
+
+        static bool UriReferenceValidatorUtf8(ReadOnlySpan<byte> input, in ValidationContextWrapperWithFormatKeyword context, out ValidationContext result)
+        {
+            bool isMatch = Internal.UriValidator.IsValidUriReference(input);
+            result = context.Context;
+
+            if (!isMatch)
+            {
+                if (context.Level >= ValidationLevel.Detailed)
+                {
+                    result = context.Context.WithResult(isValid: false, $"Validation {context.FormatKeyword ?? "format"} - should have been 'uri-reference'.", context.FormatKeyword ?? "format");
+                }
+                else if (context.Level >= ValidationLevel.Basic)
+                {
+                    result = context.Context.WithResult(isValid: false, "Validation format - should have been 'uri-reference'.", context.FormatKeyword ?? "format");
+                }
+                else
+                {
+                    result = context.Context.WithResult(isValid: false);
+                }
+
+                return true;
+            }
+
+            return true;
+        }
     }
 
     /// <summary>

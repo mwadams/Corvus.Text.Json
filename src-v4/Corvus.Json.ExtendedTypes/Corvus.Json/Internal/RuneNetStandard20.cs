@@ -258,6 +258,201 @@ public readonly struct Rune
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static Rune UnsafeCreate(uint scalarValue) => new Rune(scalarValue);
+
+    /// <summary>
+    /// Attempts to create a <see cref="Rune"/> from the provided int value.
+    /// </summary>
+    public static bool TryCreate(int value, out Rune result)
+    {
+        uint v = (uint)value;
+        if (v <= 0x10FFFFu && !(v >= 0xD800u && v <= 0xDFFFu))
+        {
+            result = new Rune(v);
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Decodes the <see cref="Rune"/> at the beginning of the provided UTF-8 source buffer.
+    /// </summary>
+    public static OperationStatus DecodeFromUtf8(ReadOnlySpan<byte> source, out Rune result, out int bytesConsumed)
+    {
+        if (source.IsEmpty)
+        {
+            result = default;
+            bytesConsumed = 0;
+            return OperationStatus.NeedMoreData;
+        }
+
+        byte first = source[0];
+        if (first < 0x80)
+        {
+            result = new Rune(first);
+            bytesConsumed = 1;
+            return OperationStatus.Done;
+        }
+
+        if ((first & 0xE0) == 0xC0)
+        {
+            if (source.Length < 2) { result = default; bytesConsumed = 1; return OperationStatus.NeedMoreData; }
+            if ((source[1] & 0xC0) != 0x80) { result = default; bytesConsumed = 1; return OperationStatus.InvalidData; }
+            uint scalar = ((uint)(first & 0x1F) << 6) | ((uint)(source[1] & 0x3F));
+            if (scalar < 0x80) { result = default; bytesConsumed = 2; return OperationStatus.InvalidData; }
+            result = new Rune(scalar);
+            bytesConsumed = 2;
+            return OperationStatus.Done;
+        }
+
+        if ((first & 0xF0) == 0xE0)
+        {
+            if (source.Length < 3) { result = default; bytesConsumed = source.Length; return OperationStatus.NeedMoreData; }
+            if ((source[1] & 0xC0) != 0x80 || (source[2] & 0xC0) != 0x80) { result = default; bytesConsumed = 1; return OperationStatus.InvalidData; }
+            uint scalar = ((uint)(first & 0x0F) << 12) | ((uint)(source[1] & 0x3F) << 6) | ((uint)(source[2] & 0x3F));
+            if (scalar < 0x800 || (scalar >= 0xD800u && scalar <= 0xDFFFu)) { result = default; bytesConsumed = 3; return OperationStatus.InvalidData; }
+            result = new Rune(scalar);
+            bytesConsumed = 3;
+            return OperationStatus.Done;
+        }
+
+        if ((first & 0xF8) == 0xF0)
+        {
+            if (source.Length < 4) { result = default; bytesConsumed = source.Length; return OperationStatus.NeedMoreData; }
+            if ((source[1] & 0xC0) != 0x80 || (source[2] & 0xC0) != 0x80 || (source[3] & 0xC0) != 0x80) { result = default; bytesConsumed = 1; return OperationStatus.InvalidData; }
+            uint scalar = ((uint)(first & 0x07) << 18) | ((uint)(source[1] & 0x3F) << 12) | ((uint)(source[2] & 0x3F) << 6) | ((uint)(source[3] & 0x3F));
+            if (scalar < 0x10000 || scalar > 0x10FFFF) { result = default; bytesConsumed = 4; return OperationStatus.InvalidData; }
+            result = new Rune(scalar);
+            bytesConsumed = 4;
+            return OperationStatus.Done;
+        }
+
+        result = default;
+        bytesConsumed = 1;
+        return OperationStatus.InvalidData;
+    }
+
+    /// <summary>
+    /// Decodes the <see cref="Rune"/> at the end of the provided UTF-8 source buffer.
+    /// </summary>
+    public static OperationStatus DecodeLastFromUtf8(ReadOnlySpan<byte> source, out Rune result, out int bytesConsumed)
+    {
+        if (source.IsEmpty)
+        {
+            result = default;
+            bytesConsumed = 0;
+            return OperationStatus.NeedMoreData;
+        }
+
+        int maxBytes = Math.Min(source.Length, 4);
+        for (int i = 1; i <= maxBytes; i++)
+        {
+            int offset = source.Length - i;
+            byte b = source[offset];
+
+            if (i == 1 && b < 0x80)
+            {
+                result = new Rune(b);
+                bytesConsumed = 1;
+                return OperationStatus.Done;
+            }
+
+            // Is this a leading byte?
+            if (b >= 0xC0 && b < 0xFE)
+            {
+                int expectedLen = b < 0xE0 ? 2 : b < 0xF0 ? 3 : 4;
+                if (expectedLen == i)
+                {
+                    return DecodeFromUtf8(source.Slice(offset), out result, out bytesConsumed);
+                }
+
+                result = default;
+                bytesConsumed = i;
+                return OperationStatus.InvalidData;
+            }
+
+            if ((b & 0xC0) != 0x80)
+            {
+                result = default;
+                bytesConsumed = 1;
+                return OperationStatus.InvalidData;
+            }
+        }
+
+        result = default;
+        bytesConsumed = maxBytes;
+        return OperationStatus.InvalidData;
+    }
+
+    /// <summary>
+    /// Gets the Unicode category of the specified rune.
+    /// </summary>
+    public static System.Globalization.UnicodeCategory GetUnicodeCategory(Rune value)
+    {
+        if (value.Value <= 0xFFFF)
+        {
+            return char.GetUnicodeCategory((char)value.Value);
+        }
+
+        // Supplementary plane: convert to string with surrogate pair
+        string s = char.ConvertFromUtf32((int)value.Value);
+        return char.GetUnicodeCategory(s, 0);
+    }
+
+    /// <summary>
+    /// Returns true if the rune is a Unicode letter.
+    /// </summary>
+    public static bool IsLetter(Rune value)
+    {
+        System.Globalization.UnicodeCategory cat = GetUnicodeCategory(value);
+        return cat == System.Globalization.UnicodeCategory.UppercaseLetter ||
+               cat == System.Globalization.UnicodeCategory.LowercaseLetter ||
+               cat == System.Globalization.UnicodeCategory.TitlecaseLetter ||
+               cat == System.Globalization.UnicodeCategory.ModifierLetter ||
+               cat == System.Globalization.UnicodeCategory.OtherLetter;
+    }
+
+    /// <summary>
+    /// Returns true if the rune is a Unicode letter or digit.
+    /// </summary>
+    public static bool IsLetterOrDigit(Rune value)
+    {
+        System.Globalization.UnicodeCategory cat = GetUnicodeCategory(value);
+        return cat == System.Globalization.UnicodeCategory.UppercaseLetter ||
+               cat == System.Globalization.UnicodeCategory.LowercaseLetter ||
+               cat == System.Globalization.UnicodeCategory.TitlecaseLetter ||
+               cat == System.Globalization.UnicodeCategory.ModifierLetter ||
+               cat == System.Globalization.UnicodeCategory.OtherLetter ||
+               cat == System.Globalization.UnicodeCategory.DecimalDigitNumber;
+    }
+
+    /// <summary>
+    /// Encodes this <see cref="Rune"/> to a UTF-16 destination buffer.
+    /// </summary>
+    public int EncodeToUtf16(Span<char> destination)
+    {
+        if (_value <= 0xFFFF)
+        {
+            if (destination.Length >= 1)
+            {
+                destination[0] = (char)_value;
+                return 1;
+            }
+
+            return 0;
+        }
+
+        if (destination.Length >= 2)
+        {
+            uint offset = _value - 0x10000u;
+            destination[0] = (char)((offset >> 10) + 0xD800u);
+            destination[1] = (char)((offset & 0x3FFu) + 0xDC00u);
+            return 2;
+        }
+
+        return 0;
+    }
 }
 
 #endif
