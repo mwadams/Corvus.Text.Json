@@ -448,7 +448,7 @@ foreach ($dir in @(".output", "node_modules", "tools", "taxonomy", "content", "t
     $spurious = Join-Path $outputDir $dir
     if (Test-Path $spurious) { Remove-Item $spurious -Recurse -Force }
 }
-foreach ($file in @("build.ps1", "preview.ps1", "package.json", "package-lock.json", "site.yml", ".gitignore")) {
+foreach ($file in @("build.ps1", "preview.ps1", "package.json", "package-lock.json", "site.yml", ".gitignore", "DEVELOPMENT.md")) {
     $spurious = Join-Path $outputDir $file
     if (Test-Path $spurious) { Remove-Item $spurious -Force }
 }
