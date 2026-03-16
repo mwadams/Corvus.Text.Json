@@ -266,8 +266,19 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             sb.AppendLine();
             sb.AppendLine("| Constructor | Description |");
             sb.AppendLine("|-------------|-------------|");
-            foreach (MemberInfo ctor in type.Constructors)
+            if (type.Constructors.Count > 1)
             {
+                // Collapse multiple overloads into a single row
+                string summary = TruncateSummary(type.Constructors[0].Documentation?.Summary ?? string.Empty);
+                string display = $"{type.Name}(...)";
+                if (ctorUrl is not null)
+                    sb.AppendLine($"| [{EscapeTableCell(display)}]({ctorUrl}) | {summary} |");
+                else
+                    sb.AppendLine($"| `{EscapeTableCell(display)}` | {summary} |");
+            }
+            else
+            {
+                MemberInfo ctor = type.Constructors[0];
                 string sig = FormatShortSignature(ctor);
                 string summary = TruncateSummary(ctor.Documentation?.Summary ?? string.Empty);
                 if (ctorUrl is not null)
@@ -290,24 +301,34 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
                 string? propUrl = hasLinks
                     ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
                     : null;
-                foreach (MemberInfo prop in group)
+                List<MemberInfo> members = group.ToList();
+                if (members.Count > 1)
                 {
+                    // Collapse indexer overloads into a single row
+                    MemberInfo first = members[0];
+                    string summary = TruncateSummary(first.Documentation?.Summary ?? string.Empty);
+                    string display = first.Name.StartsWith("this[", StringComparison.Ordinal) ? "Item[...]" : first.Name;
+                    string staticBadge = first.IsStatic ? " `static`" : "";
+                    if (propUrl is not null)
+                        sb.AppendLine($"| [{EscapeTableCell(display)}]({propUrl}){staticBadge} | | {summary} |");
+                    else
+                        sb.AppendLine($"| `{EscapeTableCell(display)}`{staticBadge} | | {summary} |");
+                }
+                else
+                {
+                    MemberInfo prop = members[0];
                     string summary = TruncateSummary(prop.Documentation?.Summary ?? string.Empty);
                     string staticBadge = prop.IsStatic ? " `static`" : "";
                     if (propUrl is not null)
-                    {
                         sb.AppendLine($"| [{EscapeTableCell(prop.Name)}]({propUrl}){staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
-                    }
                     else
-                    {
                         sb.AppendLine($"| `{EscapeTableCell(prop.Name)}`{staticBadge} | {ResolveTypeLink(prop.ReturnType, prop.ReturnTypeFullName)} | {summary} |");
-                    }
                 }
             }
             sb.AppendLine();
         }
 
-        // Methods (grouped by name — all overloads shown, linking to same page)
+        // Methods (grouped by name — overloads collapsed into a single row)
         if (type.Methods.Count > 0)
         {
             sb.AppendLine("## Methods");
@@ -319,8 +340,20 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
                 string? methodUrl = hasLinks
                     ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
                     : null;
-                foreach (MemberInfo method in group)
+                List<MemberInfo> members = group.ToList();
+                if (members.Count > 1)
                 {
+                    // Collapse overloads into a single row linking to the overload page
+                    string summary = TruncateSummary(members[0].Documentation?.Summary ?? string.Empty);
+                    string modifiers = members[0].IsStatic ? " `static`" : "";
+                    if (methodUrl is not null)
+                        sb.AppendLine($"| [{EscapeTableCell(group.Key)}]({methodUrl}){modifiers} | {summary} |");
+                    else
+                        sb.AppendLine($"| `{EscapeTableCell(group.Key)}`{modifiers} | {summary} |");
+                }
+                else
+                {
+                    MemberInfo method = members[0];
                     string sig = FormatShortSignature(method);
                     string summary = TruncateSummary(method.Documentation?.Summary ?? string.Empty);
                     string modifiers = method.IsStatic ? " `static`" : "";
@@ -333,7 +366,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             sb.AppendLine();
         }
 
-        // Operators (grouped by CLR name)
+        // Operators (grouped by CLR name — overloads collapsed into a single row)
         if (type.Operators.Count > 0)
         {
             sb.AppendLine("## Operators");
@@ -345,8 +378,20 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
                 string? opUrl = hasLinks
                     ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
                     : null;
-                foreach (MemberInfo op in group)
+                List<MemberInfo> members = group.ToList();
+                if (members.Count > 1)
                 {
+                    // Collapse overloads into a single row
+                    string displayName = GetOperatorGroupDisplayName(group.Key);
+                    string summary = TruncateSummary(members[0].Documentation?.Summary ?? string.Empty);
+                    if (opUrl is not null)
+                        sb.AppendLine($"| [{EscapeTableCell(displayName)}]({opUrl}) | {summary} |");
+                    else
+                        sb.AppendLine($"| `{EscapeTableCell(displayName)}` | {summary} |");
+                }
+                else
+                {
+                    MemberInfo op = members[0];
                     string sig = FormatShortSignature(op);
                     string summary = TruncateSummary(op.Documentation?.Summary ?? string.Empty);
                     if (opUrl is not null)
