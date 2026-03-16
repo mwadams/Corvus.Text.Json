@@ -44,9 +44,9 @@ for (int i = 0; i < args.Length - 1; i++)
     }
 }
 
-if (xmlPath is null || assemblyPath is null || outputPath is null || taxonomyOutputPath is null)
+if (xmlPath is null || assemblyPath is null)
 {
-    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> --output <path> --taxonomy-output <path> [--html-output <path>] [--site-title <title>] [--repo-url <url>]");
+    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> [--output <path>] [--taxonomy-output <path>] [--html-output <path>] [--site-title <title>] [--repo-url <url>]");
     Console.Error.WriteLine();
     Console.Error.WriteLine("  --xml              Path to the XML documentation file (e.g., Corvus.Text.Json.xml)");
     Console.Error.WriteLine("  --assembly         Path to the compiled DLL");
@@ -172,18 +172,25 @@ else
     Console.WriteLine("  No PDB found — source links disabled.");
 }
 
-Directory.CreateDirectory(outputPath);
-Directory.CreateDirectory(taxonomyOutputPath);
+if (outputPath is not null)
+{
+    Directory.CreateDirectory(outputPath);
 
-Console.WriteLine($"Generating namespace markdown to: {outputPath}");
-MarkdownGenerator markdownGen = new(outputPath, nsDescriptionsDir);
-markdownGen.Generate(namespaces);
-markdownGen.GeneratePerType(namespaces);
-markdownGen.GenerateMemberPages(namespaces);
+    Console.WriteLine($"Generating namespace markdown to: {outputPath}");
+    MarkdownGenerator markdownGen = new(outputPath, nsDescriptionsDir);
+    markdownGen.Generate(namespaces);
+    markdownGen.GeneratePerType(namespaces);
+    markdownGen.GenerateMemberPages(namespaces);
+}
 
-Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
-TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath);
-taxonomyGen.Generate(namespaces);
+if (taxonomyOutputPath is not null)
+{
+    Directory.CreateDirectory(taxonomyOutputPath);
+
+    Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
+    TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath!);
+    taxonomyGen.Generate(namespaces);
+}
 
 if (apiViewsDir is not null)
 {
@@ -215,10 +222,13 @@ if (htmlOutputPath is not null)
     htmlGen.GenerateMemberPages(namespaces);
 }
 
-string searchIndexPath = Path.Combine(outputPath, "search-index.json");
-Console.WriteLine($"Generating search index: {searchIndexPath}");
-SearchIndexGenerator searchGen = new(searchIndexPath);
-searchGen.Generate(namespaces);
+if (outputPath is not null)
+{
+    string searchIndexPath = Path.Combine(outputPath, "search-index.json");
+    Console.WriteLine($"Generating search index: {searchIndexPath}");
+    SearchIndexGenerator searchGen = new(searchIndexPath);
+    searchGen.Generate(namespaces);
+}
 
 Console.WriteLine("Done.");
 sourceResolver?.Dispose();

@@ -468,8 +468,6 @@ $apiHtmlDir = Join-Path $outputDir "api"
 & dotnet run --project $toolProject -c Release --no-build -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
-    --output $apiContentDir `
-    --taxonomy-output $apiTaxonomyDir `
     --html-output $apiHtmlDir `
     --site-title "Corvus.Text.Json" `
     --ns-descriptions $nsDescriptionsDir
