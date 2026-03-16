@@ -12,7 +12,7 @@ Title: "JsonElement.GetRawText Method — Corvus.Text.Json"
 ## GetRawText {#getrawtext}
 
 ```csharp
-string GetRawText()
+public string GetRawText()
 ```
 
 Gets the original input data backing this value, returning it as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).

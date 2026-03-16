@@ -12,7 +12,7 @@ Title: "JsonElement.CreateObjectBuilder Method — Corvus.Text.Json"
 ## CreateObjectBuilder {#createobjectbuilder}
 
 ```csharp
-JsonDocumentBuilder<JsonElement.Mutable> CreateObjectBuilder(JsonWorkspace workspace, int estimatedMemberCount)
+public static JsonDocumentBuilder<JsonElement.Mutable> CreateObjectBuilder(JsonWorkspace workspace, int estimatedMemberCount)
 ```
 
 Creates an empty mutable object document builder.

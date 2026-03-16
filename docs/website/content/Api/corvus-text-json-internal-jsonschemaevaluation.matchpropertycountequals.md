@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountEquals Method — Corvus.Text.Jso
 ## MatchPropertyCountEquals {#matchpropertycountequals}
 
 ```csharp
-bool MatchPropertyCountEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchPropertyCountEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a property count equals the given value.

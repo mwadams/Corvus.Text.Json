@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetOffsetDate Method — Corvus.Text.Json"
 ## TryGetOffsetDate {#trygetoffsetdate}
 
 ```csharp
-bool TryGetOffsetDate(ref OffsetDate value)
+public bool TryGetOffsetDate(ref OffsetDate value)
 ```
 
 ### Parameters

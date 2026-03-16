@@ -12,7 +12,7 @@ Title: "JsonDocumentOptions.CommentHandling Property — Corvus.Text.Json"
 ## CommentHandling {#commenthandling}
 
 ```csharp
-JsonCommentHandling CommentHandling { get; set; }
+public JsonCommentHandling CommentHandling { get; set; }
 ```
 
 Defines how the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) should handle comments when reading through the JSON.

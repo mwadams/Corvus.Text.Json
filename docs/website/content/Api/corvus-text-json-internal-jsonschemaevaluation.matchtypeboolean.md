@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchTypeBoolean Method — Corvus.Text.Json.Intern
 ## MatchTypeBoolean {#matchtypeboolean}
 
 ```csharp
-bool MatchTypeBoolean(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
+public static bool MatchTypeBoolean(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON token type against the "boolean" type constraint.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountNotEqualsValue Method — Corv
 ## ExpectedPropertyCountNotEqualsValue {#expectedpropertycountnotequalsvalue}
 
 ```csharp
-bool ExpectedPropertyCountNotEqualsValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedPropertyCountNotEqualsValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

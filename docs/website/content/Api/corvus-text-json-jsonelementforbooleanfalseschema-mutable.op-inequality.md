@@ -19,7 +19,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Inequality Operator — Corvus.
 ## operator !=(JsonElementForBooleanFalseSchema.Mutable, JsonElementForBooleanFalseSchema.Mutable) {#operator-jsonelementforbooleanfalseschema-mutable-jsonelementforbooleanfalseschema-mutable}
 
 ```csharp
-static bool operator !=(JsonElementForBooleanFalseSchema.Mutable left, JsonElementForBooleanFalseSchema.Mutable right)
+public static bool operator !=(JsonElementForBooleanFalseSchema.Mutable left, JsonElementForBooleanFalseSchema.Mutable right)
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ static bool operator !=(JsonElementForBooleanFalseSchema.Mutable left, JsonEleme
 ## operator !=(JsonElementForBooleanFalseSchema.Mutable, JsonElement) {#operator-jsonelementforbooleanfalseschema-mutable-jsonelement}
 
 ```csharp
-static bool operator !=(JsonElementForBooleanFalseSchema.Mutable left, JsonElement right)
+public static bool operator !=(JsonElementForBooleanFalseSchema.Mutable left, JsonElement right)
 ```
 
 ### Parameters

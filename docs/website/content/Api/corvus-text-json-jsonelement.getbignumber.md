@@ -12,7 +12,7 @@ Title: "JsonElement.GetBigNumber Method — Corvus.Text.Json"
 ## GetBigNumber {#getbignumber}
 
 ```csharp
-BigNumber GetBigNumber()
+public BigNumber GetBigNumber()
 ```
 
 Gets the current JSON number as a [`BigNumber`](/api/corvus-numerics-bignumber.html).

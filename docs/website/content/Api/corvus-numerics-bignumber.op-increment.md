@@ -12,7 +12,7 @@ Title: "BigNumber.Increment Operator — Corvus.Numerics"
 ## operator ++ {#operator}
 
 ```csharp
-static BigNumber operator ++(BigNumber value)
+public static BigNumber operator ++(BigNumber value)
 ```
 
 Increments a value by one.

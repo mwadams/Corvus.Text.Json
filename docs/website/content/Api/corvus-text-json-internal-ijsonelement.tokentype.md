@@ -12,7 +12,7 @@ Title: "IJsonElement.TokenType Property — Corvus.Text.Json.Internal"
 ## TokenType {#tokentype}
 
 ```csharp
-JsonTokenType TokenType { get; }
+public abstract JsonTokenType TokenType { get; }
 ```
 
 Gets the JSON Token type of the element.

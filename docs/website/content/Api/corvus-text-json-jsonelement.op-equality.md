@@ -12,7 +12,7 @@ Title: "JsonElement.Equality Operator — Corvus.Text.Json"
 ## operator == {#operator}
 
 ```csharp
-static bool operator ==(JsonElement left, JsonElement right)
+public static bool operator ==(JsonElement left, JsonElement right)
 ```
 
 Compares two JsonElement values for equality.

@@ -20,7 +20,7 @@ Title: "JsonElement.Mutable.GetProperty Method — Corvus.Text.Json"
 ## GetProperty(string) {#getproperty-string}
 
 ```csharp
-JsonElement.Mutable GetProperty(string propertyName)
+public JsonElement.Mutable GetProperty(string propertyName)
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ JsonElement.Mutable GetProperty(string propertyName)
 ## GetProperty(ReadOnlySpan&lt;char&gt;) {#getproperty-readonlyspan-char}
 
 ```csharp
-JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
+public JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
 ```
 
 ### Parameters
@@ -56,7 +56,7 @@ JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
 ## GetProperty(ReadOnlySpan&lt;byte&gt;) {#getproperty-readonlyspan-byte}
 
 ```csharp
-JsonElement.Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
+public JsonElement.Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
 ```
 
 ### Parameters

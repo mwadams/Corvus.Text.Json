@@ -12,7 +12,7 @@ Title: "JsonElement.GetUInt64 Method — Corvus.Text.Json"
 ## GetUInt64 {#getuint64}
 
 ```csharp
-ulong GetUInt64()
+public ulong GetUInt64()
 ```
 
 Gets the current JSON number as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).

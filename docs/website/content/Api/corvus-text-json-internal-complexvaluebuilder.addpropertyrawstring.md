@@ -20,7 +20,7 @@ Title: "ComplexValueBuilder.AddPropertyRawString Method — Corvus.Text.Json.Int
 ## AddPropertyRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addpropertyrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool}
 
 ```csharp
-void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
+public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
 ```
 
 Adds a property with a raw string value to the current object, with control over escaping and unescaping.
@@ -40,7 +40,7 @@ Adds a property with a raw string value to the current object, with control over
 ## AddPropertyRawString(string, ReadOnlySpan&lt;byte&gt;, bool) {#addpropertyrawstring-string-readonlyspan-byte-bool}
 
 ```csharp
-void AddPropertyRawString(string propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
+public void AddPropertyRawString(string propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
 ```
 
 Adds a property with a raw string value.
@@ -58,7 +58,7 @@ Adds a property with a raw string value.
 ## AddPropertyRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool) {#addpropertyrawstring-readonlyspan-char-readonlyspan-byte-bool}
 
 ```csharp
-void AddPropertyRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
+public void AddPropertyRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
 ```
 
 Adds a property with a raw string value.

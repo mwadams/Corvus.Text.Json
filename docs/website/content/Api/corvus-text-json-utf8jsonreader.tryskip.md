@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TrySkip Method — Corvus.Text.Json"
 ## TrySkip {#tryskip}
 
 ```csharp
-bool TrySkip()
+public bool TrySkip()
 ```
 
 Tries to skip the children of the current JSON token.

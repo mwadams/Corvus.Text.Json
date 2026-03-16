@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.SchemaLocationForIndexedKeywordWithDependency Metho
 ## SchemaLocationForIndexedKeywordWithDependency {#schemalocationforindexedkeywordwithdependency}
 
 ```csharp
-bool SchemaLocationForIndexedKeywordWithDependency(ReadOnlySpan<byte> keywordSchemaLocation, ReadOnlySpan<byte> dependencyName, int index, Span<byte> buffer, ref int written)
+public static bool SchemaLocationForIndexedKeywordWithDependency(ReadOnlySpan<byte> keywordSchemaLocation, ReadOnlySpan<byte> dependencyName, int index, Span<byte> buffer, ref int written)
 ```
 
 Creates a schema location for an indexed keyword by appending the index to the base location and dependency.

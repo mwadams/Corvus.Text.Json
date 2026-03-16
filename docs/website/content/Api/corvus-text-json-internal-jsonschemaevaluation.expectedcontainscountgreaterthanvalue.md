@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedContainsCountGreaterThanValue Method — Co
 ## ExpectedContainsCountGreaterThanValue {#expectedcontainscountgreaterthanvalue}
 
 ```csharp
-bool ExpectedContainsCountGreaterThanValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedContainsCountGreaterThanValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

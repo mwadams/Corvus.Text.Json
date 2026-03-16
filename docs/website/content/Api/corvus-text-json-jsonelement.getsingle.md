@@ -12,7 +12,7 @@ Title: "JsonElement.GetSingle Method — Corvus.Text.Json"
 ## GetSingle {#getsingle}
 
 ```csharp
-float GetSingle()
+public float GetSingle()
 ```
 
 Gets the current JSON number as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).

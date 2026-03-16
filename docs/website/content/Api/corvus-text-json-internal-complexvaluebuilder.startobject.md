@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.StartObject Method — Corvus.Text.Json.Internal"
 ## StartObject {#startobject}
 
 ```csharp
-void StartObject()
+public void StartObject()
 ```
 
 Starts a new JSON object in the builder.

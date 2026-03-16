@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetPropertyCount Method — Corvus.Text.Json"
 ## GetPropertyCount {#getpropertycount}
 
 ```csharp
-int GetPropertyCount()
+public int GetPropertyCount()
 ```
 
 ### Returns

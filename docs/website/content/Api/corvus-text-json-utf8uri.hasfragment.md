@@ -12,7 +12,7 @@ Title: "Utf8Uri.HasFragment Property — Corvus.Text.Json"
 ## HasFragment {#hasfragment}
 
 ```csharp
-bool HasFragment { get; }
+public bool HasFragment { get; }
 ```
 
 Gets a value indicating whether this reference has a fragment.

@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.BytesPending Property — Corvus.Text.Json"
 ## BytesPending {#bytespending}
 
 ```csharp
-int BytesPending { get; set; }
+public int BytesPending { get; set; }
 ```
 
 Returns the amount of bytes written by the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) so far that have not yet been flushed to the output and committed.

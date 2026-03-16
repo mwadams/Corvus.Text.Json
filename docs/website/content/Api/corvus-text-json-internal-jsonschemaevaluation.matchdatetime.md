@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchDateTime Method — Corvus.Text.Json.Internal"
 ## MatchDateTime {#matchdatetime}
 
 ```csharp
-bool MatchDateTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchDateTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value conforms to the ISO 8601 offset date-time format.

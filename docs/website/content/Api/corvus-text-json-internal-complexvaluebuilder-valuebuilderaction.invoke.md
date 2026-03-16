@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction.Invoke Method — Corvus.Text.Jso
 ## Invoke {#invoke}
 
 ```csharp
-void Invoke(ref ComplexValueBuilder builder)
+public virtual void Invoke(ref ComplexValueBuilder builder)
 ```
 
 ### Parameters

@@ -19,7 +19,7 @@ Title: "JsonElementHelpers.DeepEqualsNoParentDocumentCheck Method — Corvus.Tex
 ## DeepEqualsNoParentDocumentCheck(ref TLeft, JsonTokenType, IJsonDocument, int) {#deepequalsnoparentdocumentcheck-ref-tleft-jsontokentype-ijsondocument-int}
 
 ```csharp
-bool DeepEqualsNoParentDocumentCheck<TLeft>(ref TLeft element1, JsonTokenType element2TokenType, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
+public static bool DeepEqualsNoParentDocumentCheck<TLeft>(ref TLeft element1, JsonTokenType element2TokenType, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
 ```
 
 Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) values for equality, including the values of all descendant elements.
@@ -54,7 +54,7 @@ Deep equality of two JSON values is defined as follows: - JSON values of differe
 ## DeepEqualsNoParentDocumentCheck(IJsonDocument, int, IJsonDocument, int) {#deepequalsnoparentdocumentcheck-ijsondocument-int-ijsondocument-int}
 
 ```csharp
-bool DeepEqualsNoParentDocumentCheck(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
+public static bool DeepEqualsNoParentDocumentCheck(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
 ```
 
 Compares the values of two JSON values for equality, including the values of all descendant elements.

@@ -21,7 +21,7 @@ Title: "Utf8JsonReader Constructors — Corvus.Text.Json"
 ## Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, bool, JsonReaderState) {#utf8jsonreader-readonlyspan-byte-bool-jsonreaderstate}
 
 ```csharp
-Utf8JsonReader(ReadOnlySpan<byte> jsonData, bool isFinalBlock, JsonReaderState state)
+public Utf8JsonReader(ReadOnlySpan<byte> jsonData, bool isFinalBlock, JsonReaderState state)
 ```
 
 Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance.
@@ -43,7 +43,7 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 ## Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, JsonReaderOptions) {#utf8jsonreader-readonlyspan-byte-jsonreaderoptions}
 
 ```csharp
-Utf8JsonReader(ReadOnlySpan<byte> jsonData, JsonReaderOptions options)
+public Utf8JsonReader(ReadOnlySpan<byte> jsonData, JsonReaderOptions options)
 ```
 
 Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance.
@@ -64,7 +64,7 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 ## Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, bool, JsonReaderState) {#utf8jsonreader-readonlysequence-byte-bool-jsonreaderstate}
 
 ```csharp
-Utf8JsonReader(ReadOnlySequence<byte> jsonData, bool isFinalBlock, JsonReaderState state)
+public Utf8JsonReader(ReadOnlySequence<byte> jsonData, bool isFinalBlock, JsonReaderState state)
 ```
 
 Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance.
@@ -86,7 +86,7 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 ## Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, JsonReaderOptions) {#utf8jsonreader-readonlysequence-byte-jsonreaderoptions}
 
 ```csharp
-Utf8JsonReader(ReadOnlySequence<byte> jsonData, JsonReaderOptions options)
+public Utf8JsonReader(ReadOnlySequence<byte> jsonData, JsonReaderOptions options)
 ```
 
 Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance.

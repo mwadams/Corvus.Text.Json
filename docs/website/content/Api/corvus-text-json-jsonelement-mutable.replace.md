@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.Replace Method — Corvus.Text.Json"
 ## Replace {#replace}
 
 ```csharp
-bool Replace(ref JsonElement oldItem, ref JsonElement.Source newItem)
+public bool Replace(ref JsonElement oldItem, ref JsonElement.Source newItem)
 ```
 
 ### Parameters

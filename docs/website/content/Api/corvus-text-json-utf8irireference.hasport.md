@@ -12,7 +12,7 @@ Title: "Utf8IriReference.HasPort Property — Corvus.Text.Json"
 ## HasPort {#hasport}
 
 ```csharp
-bool HasPort { get; }
+public bool HasPort { get; }
 ```
 
 Gets a value indicating whether this reference has a port.

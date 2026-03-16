@@ -12,7 +12,7 @@ Title: "JsonDocumentBuilder<T>.WriteTo Method — Corvus.Text.Json"
 ## WriteTo {#writeto}
 
 ```csharp
-void WriteTo(Utf8JsonWriter writer)
+public void WriteTo(Utf8JsonWriter writer)
 ```
 
 Write the document into the provided writer as a JSON value.

@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.FlushAsync Method — Corvus.Text.Json"
 ## FlushAsync {#flushasync}
 
 ```csharp
-Task FlushAsync(CancellationToken cancellationToken)
+public Task FlushAsync(CancellationToken cancellationToken)
 ```
 
 Asynchronously commits the JSON text written so far which makes it visible to the output destination.

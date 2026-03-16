@@ -12,7 +12,7 @@ Title: "BigNumber.Radix Property — Corvus.Numerics"
 ## Radix {#radix}
 
 ```csharp
-int Radix { get; }
+public static int Radix { get; }
 ```
 
 Gets the radix (base) of the number system.

@@ -12,7 +12,7 @@ Title: "JsonElement.ArrayBuilder.AddRawString Method — Corvus.Text.Json"
 ## AddRawString {#addrawstring}
 
 ```csharp
-void AddRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
+public void AddRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
 ```
 
 ### Parameters

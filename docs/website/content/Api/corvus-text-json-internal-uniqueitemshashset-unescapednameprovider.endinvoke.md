@@ -12,7 +12,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.EndInvoke Method — Corvus.Tex
 ## EndInvoke {#endinvoke}
 
 ```csharp
-ReadOnlySpan<byte> EndInvoke(IAsyncResult result)
+public virtual ReadOnlySpan<byte> EndInvoke(IAsyncResult result)
 ```
 
 ### Parameters

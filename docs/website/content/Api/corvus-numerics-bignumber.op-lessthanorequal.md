@@ -12,7 +12,7 @@ Title: "BigNumber.LessThanOrEqual Operator — Corvus.Numerics"
 ## operator &lt;= {#operator}
 
 ```csharp
-static bool operator <=(BigNumber left, BigNumber right)
+public static bool operator <=(BigNumber left, BigNumber right)
 ```
 
 Determines whether one value is less than or equal to another.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchLengthNotEquals Method — Corvus.Text.Json.In
 ## MatchLengthNotEquals {#matchlengthnotequals}
 
 ```csharp
-bool MatchLengthNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchLengthNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string length does not equal the given value.

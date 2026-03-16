@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.DeepEquals Method — Corvus.Text.Json.Internal"
 ## DeepEquals {#deepequals}
 
 ```csharp
-bool DeepEquals<TLeft, TRight>(ref TLeft element1, ref TRight element2)
+public static bool DeepEquals<TLeft, TRight>(ref TLeft element1, ref TRight element2)
 ```
 
 Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) values for equality, including the values of all descendant elements.

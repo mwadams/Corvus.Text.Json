@@ -12,7 +12,7 @@ Title: "JsonWriterOptions.IndentSize Property — Corvus.Text.Json"
 ## IndentSize {#indentsize}
 
 ```csharp
-int IndentSize { get; set; }
+public int IndentSize { get; set; }
 ```
 
 Defines the indentation size used by [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is enabled. Defaults to two.

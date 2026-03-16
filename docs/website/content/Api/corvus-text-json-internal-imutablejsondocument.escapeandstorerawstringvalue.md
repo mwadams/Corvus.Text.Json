@@ -19,7 +19,7 @@ Title: "IMutableJsonDocument.EscapeAndStoreRawStringValue Method — Corvus.Text
 ## EscapeAndStoreRawStringValue(ReadOnlySpan&lt;char&gt;, ref bool) {#escapeandstorerawstringvalue-readonlyspan-char-ref-bool}
 
 ```csharp
-int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, ref bool requiredEscaping)
+public abstract int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, ref bool requiredEscaping)
 ```
 
 Escapes and stores a raw string value in the document.
@@ -42,7 +42,7 @@ The index of the stored value.
 ## EscapeAndStoreRawStringValue(ReadOnlySpan&lt;byte&gt;, ref bool) {#escapeandstorerawstringvalue-readonlyspan-byte-ref-bool}
 
 ```csharp
-int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, ref bool requiredEscaping)
+public abstract int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, ref bool requiredEscaping)
 ```
 
 Escapes and stores a raw string value in the document.

@@ -12,7 +12,7 @@ Title: "JsonElementExtensions.IsNotNullOrUndefined Method — Corvus.Text.Json"
 ## IsNotNullOrUndefined {#isnotnullorundefined}
 
 ```csharp
-bool IsNotNullOrUndefined<T>(T value)
+public static bool IsNotNullOrUndefined<T>(T value)
 ```
 
 Gets a value indicating whether this value is neither null nor undefined.

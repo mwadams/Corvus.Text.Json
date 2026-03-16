@@ -12,7 +12,7 @@ Title: "Polyfills.Validate Method — Corvus.Text.Json.Compatibility"
 ## Validate {#validate}
 
 ```csharp
-ValidationContext Validate<T>(T element, ref ValidationContext context, ValidationLevel validationLevel)
+public static ValidationContext Validate<T>(T element, ref ValidationContext context, ValidationLevel validationLevel)
 ```
 
 ### Parameters

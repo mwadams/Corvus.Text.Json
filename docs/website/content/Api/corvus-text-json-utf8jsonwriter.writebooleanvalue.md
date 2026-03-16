@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.WriteBooleanValue Method — Corvus.Text.Json"
 ## WriteBooleanValue {#writebooleanvalue}
 
 ```csharp
-void WriteBooleanValue(bool value)
+public void WriteBooleanValue(bool value)
 ```
 
 Writes the [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as an element of a JSON array.

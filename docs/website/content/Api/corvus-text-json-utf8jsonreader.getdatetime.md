@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetDateTime Method — Corvus.Text.Json"
 ## GetDateTime {#getdatetime}
 
 ```csharp
-DateTime GetDateTime()
+public DateTime GetDateTime()
 ```
 
 Parses the current JSON token value from the source as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value. Throws exceptions otherwise.

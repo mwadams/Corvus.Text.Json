@@ -12,7 +12,7 @@ Title: "Utf8JsonPointer.TryCreateJsonPointer Method — Corvus.Text.Json"
 ## TryCreateJsonPointer {#trycreatejsonpointer}
 
 ```csharp
-bool TryCreateJsonPointer(ReadOnlySpan<byte> jsonPointer, ref Utf8JsonPointer utf8JsonPointer)
+public static bool TryCreateJsonPointer(ReadOnlySpan<byte> jsonPointer, ref Utf8JsonPointer utf8JsonPointer)
 ```
 
 Tries to create a new UTF-8 JSON Pointer from the specified UTF-8 bytes.

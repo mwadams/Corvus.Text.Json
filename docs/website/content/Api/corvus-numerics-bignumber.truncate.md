@@ -12,7 +12,7 @@ Title: "BigNumber.Truncate Method — Corvus.Numerics"
 ## Truncate {#truncate}
 
 ```csharp
-BigNumber Truncate(BigNumber value)
+public static BigNumber Truncate(BigNumber value)
 ```
 
 Truncates a value to an integer by removing the fractional part.

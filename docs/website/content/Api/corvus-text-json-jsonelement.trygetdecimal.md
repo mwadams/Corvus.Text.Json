@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetDecimal Method — Corvus.Text.Json"
 ## TryGetDecimal {#trygetdecimal}
 
 ```csharp
-bool TryGetDecimal(ref decimal value)
+public bool TryGetDecimal(ref decimal value)
 ```
 
 Attempts to represent the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).

@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetRawValueAsString Method — Corvus.Text.Json.Internal"
 ## GetRawValueAsString {#getrawvalueasstring}
 
 ```csharp
-string GetRawValueAsString(int index)
+public abstract string GetRawValueAsString(int index)
 ```
 
 Gets the raw value of the element at the specified index as a string.

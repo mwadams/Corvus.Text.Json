@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.ParentWorkspaceIndex Property — Corvus.Text.Json.
 ## ParentWorkspaceIndex {#parentworkspaceindex}
 
 ```csharp
-int ParentWorkspaceIndex { get; }
+public abstract int ParentWorkspaceIndex { get; }
 ```
 
 Gets the index of the parent workspace.

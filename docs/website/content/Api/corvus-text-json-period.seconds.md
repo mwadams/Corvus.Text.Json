@@ -12,7 +12,7 @@ Title: "Period.Seconds Property — Corvus.Text.Json"
 ## Seconds {#seconds}
 
 ```csharp
-long Seconds { get; }
+public long Seconds { get; }
 ```
 
 Gets the number of seconds within this period.

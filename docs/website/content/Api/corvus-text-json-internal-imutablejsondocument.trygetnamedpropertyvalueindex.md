@@ -20,7 +20,7 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValueIndex Method — Corvus.Tex
 ## TryGetNamedPropertyValueIndex(ref MetadataDb, int, int, ReadOnlySpan&lt;byte&gt;, ref int) {#trygetnamedpropertyvalueindex-ref-metadatadb-int-int-readonlyspan-byte-ref-int}
 
 ```csharp
-bool TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, ref int valueIndex)
+public abstract bool TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, ref int valueIndex)
 ```
 
 Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
@@ -46,7 +46,7 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 ## TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;char&gt;, ref int) {#trygetnamedpropertyvalueindex-int-readonlyspan-char-ref-int}
 
 ```csharp
-bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, ref int valueIndex)
+public abstract bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, ref int valueIndex)
 ```
 
 Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
@@ -70,7 +70,7 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 ## TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;byte&gt;, ref int) {#trygetnamedpropertyvalueindex-int-readonlyspan-byte-ref-int}
 
 ```csharp
-bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, ref int valueIndex)
+public abstract bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, ref int valueIndex)
 ```
 
 Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).

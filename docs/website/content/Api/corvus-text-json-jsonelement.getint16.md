@@ -12,7 +12,7 @@ Title: "JsonElement.GetInt16 Method — Corvus.Text.Json"
 ## GetInt16 {#getint16}
 
 ```csharp
-short GetInt16()
+public short GetInt16()
 ```
 
 Gets the current JSON number as an [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16).

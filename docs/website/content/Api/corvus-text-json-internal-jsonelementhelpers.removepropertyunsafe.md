@@ -19,7 +19,7 @@ Title: "JsonElementHelpers.RemovePropertyUnsafe Method — Corvus.Text.Json.Inte
 ## RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;char&gt;) {#removepropertyunsafe-imutablejsondocument-int-readonlyspan-char}
 
 ```csharp
-bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<char> propertyName)
+public static bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<char> propertyName)
 ```
 
 Removes a property value from a target element.
@@ -43,7 +43,7 @@ Removes a property value from a target element.
 ## RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;byte&gt;) {#removepropertyunsafe-imutablejsondocument-int-readonlyspan-byte}
 
 ```csharp
-bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<byte> propertyName)
+public static bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<byte> propertyName)
 ```
 
 Removes a property value from a target element.

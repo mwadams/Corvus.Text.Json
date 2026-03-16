@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetPropertyRawValueAsString Method — Corvus.Text.Json.In
 ## GetPropertyRawValueAsString {#getpropertyrawvalueasstring}
 
 ```csharp
-string GetPropertyRawValueAsString(int valueIndex)
+public abstract string GetPropertyRawValueAsString(int valueIndex)
 ```
 
 Gets the raw value of the property at the specified index as a string.

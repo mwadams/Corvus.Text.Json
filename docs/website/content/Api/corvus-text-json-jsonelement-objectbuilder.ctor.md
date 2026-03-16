@@ -12,6 +12,6 @@ Title: "JsonElement.ObjectBuilder Constructors — Corvus.Text.Json"
 ## JsonElement.ObjectBuilder {#jsonelement-objectbuilder}
 
 ```csharp
-JsonElement.ObjectBuilder()
+public JsonElement.ObjectBuilder()
 ```
 

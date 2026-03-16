@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.EnumerateResults Method — Corvus.Text.Json"
 ## EnumerateResults {#enumerateresults}
 
 ```csharp
-JsonSchemaResultsCollector.ResultsEnumerator EnumerateResults()
+public JsonSchemaResultsCollector.ResultsEnumerator EnumerateResults()
 ```
 
 ### Returns

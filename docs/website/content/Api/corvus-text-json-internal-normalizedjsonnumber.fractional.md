@@ -12,7 +12,7 @@ Title: "NormalizedJsonNumber.Fractional Property — Corvus.Text.Json.Internal"
 ## Fractional {#fractional}
 
 ```csharp
-ReadOnlySpan<byte> Fractional { get; }
+public ReadOnlySpan<byte> Fractional { get; }
 ```
 
 The normalized fractional part of the original JSON representation of the number.

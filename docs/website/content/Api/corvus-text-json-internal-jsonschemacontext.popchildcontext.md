@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.PopChildContext Method — Corvus.Text.Json.Internal"
 ## PopChildContext {#popchildcontext}
 
 ```csharp
-void PopChildContext(ref JsonSchemaContext childContext)
+public void PopChildContext(ref JsonSchemaContext childContext)
 ```
 
 Pops the most recently pushed child context without committing changes.

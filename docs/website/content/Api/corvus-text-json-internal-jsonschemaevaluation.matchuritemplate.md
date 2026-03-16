@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchUriTemplate Method — Corvus.Text.Json.Intern
 ## MatchUriTemplate {#matchuritemplate}
 
 ```csharp
-bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid URI template format.

@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetOffsetDateTime Method — Corvus.Text.Json"
 ## GetOffsetDateTime {#getoffsetdatetime}
 
 ```csharp
-OffsetDateTime GetOffsetDateTime()
+public OffsetDateTime GetOffsetDateTime()
 ```
 
 ### Returns

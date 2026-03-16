@@ -12,7 +12,7 @@ Title: "BigIntegerPolyfills.TryGetMinimumFormatBufferLength Method — Corvus.Te
 ## TryGetMinimumFormatBufferLength {#trygetminimumformatbufferlength}
 
 ```csharp
-bool TryGetMinimumFormatBufferLength(ref BigInteger bigInteger, ref int minimumLength)
+public static bool TryGetMinimumFormatBufferLength(ref BigInteger bigInteger, ref int minimumLength)
 ```
 
 Gets the minimum format buffer length.

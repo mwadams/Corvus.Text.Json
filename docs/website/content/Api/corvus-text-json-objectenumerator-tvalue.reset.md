@@ -12,6 +12,6 @@ Title: "ObjectEnumerator<TValue>.Reset Method — Corvus.Text.Json"
 ## Reset {#reset}
 
 ```csharp
-void Reset()
+public void Reset()
 ```
 

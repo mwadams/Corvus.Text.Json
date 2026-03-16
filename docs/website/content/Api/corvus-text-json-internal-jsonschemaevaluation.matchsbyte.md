@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchSByte Method — Corvus.Text.Json.Internal"
 ## MatchSByte {#matchsbyte}
 
 ```csharp
-bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchSByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the SByte type constraint, validating it as an 8-bit signed integer.

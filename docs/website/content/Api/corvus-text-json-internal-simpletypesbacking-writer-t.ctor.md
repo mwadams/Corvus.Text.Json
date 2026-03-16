@@ -12,7 +12,7 @@ Title: "SimpleTypesBacking.Writer<T> Constructors — Corvus.Text.Json.Internal"
 ## SimpleTypesBacking.Writer {#simpletypesbacking-writer}
 
 ```csharp
-SimpleTypesBacking.Writer(object object, IntPtr method)
+public SimpleTypesBacking.Writer(object object, IntPtr method)
 ```
 
 ### Parameters

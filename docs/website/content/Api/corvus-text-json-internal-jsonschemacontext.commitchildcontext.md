@@ -19,7 +19,7 @@ Title: "JsonSchemaContext.CommitChildContext Method — Corvus.Text.Json.Interna
 ## CommitChildContext(bool, ref JsonSchemaContext, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#commitchildcontext-bool-ref-jsonschemacontext-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
 ```csharp
-void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
+public void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
 ```
 
 ### Parameters
@@ -36,7 +36,7 @@ void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaContext ch
 ## CommitChildContext(bool, ref JsonSchemaContext, JsonSchemaMessageProvider) {#commitchildcontext-bool-ref-jsonschemacontext-jsonschemamessageprovider}
 
 ```csharp
-void CommitChildContext(bool isMatch, ref JsonSchemaContext childContext, JsonSchemaMessageProvider messageProvider)
+public void CommitChildContext(bool isMatch, ref JsonSchemaContext childContext, JsonSchemaMessageProvider messageProvider)
 ```
 
 Commits a child context back to its parent, merging validation results and cleaning up resources.

@@ -19,7 +19,7 @@ Title: "CodeGenThrowHelper.ThrowFormatException Method — Corvus.Text.Json.Inte
 ## ThrowFormatException() {#throwformatexception}
 
 ```csharp
-void ThrowFormatException()
+public static void ThrowFormatException()
 ```
 
 Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for format-related errors.
@@ -35,7 +35,7 @@ Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/syst
 ## ThrowFormatException(CodeGenNumericType) {#throwformatexception-codegennumerictype}
 
 ```csharp
-void ThrowFormatException(CodeGenNumericType numericType)
+public static void ThrowFormatException(CodeGenNumericType numericType)
 ```
 
 Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for numeric type formatting errors.

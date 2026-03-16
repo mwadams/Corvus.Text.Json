@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Create Method — Corvus.Text.Json"
 ## Create {#create}
 
 ```csharp
-JsonSchemaResultsCollector Create(JsonSchemaResultsLevel level, int estimatedCapacity)
+public static JsonSchemaResultsCollector Create(JsonSchemaResultsLevel level, int estimatedCapacity)
 ```
 
 ### Parameters

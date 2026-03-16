@@ -12,7 +12,7 @@ Title: "IJsonDocument.BuildRentedMetadataDb Method — Corvus.Text.Json.Internal
 ## BuildRentedMetadataDb {#buildrentedmetadatadb}
 
 ```csharp
-int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, ref byte[] rentedBacking)
+public abstract int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, ref byte[] rentedBacking)
 ```
 
 Builds a rented metadata database for the specified parent document index.

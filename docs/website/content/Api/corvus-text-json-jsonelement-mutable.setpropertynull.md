@@ -20,7 +20,7 @@ Title: "JsonElement.Mutable.SetPropertyNull Method — Corvus.Text.Json"
 ## SetPropertyNull(string) {#setpropertynull-string}
 
 ```csharp
-void SetPropertyNull(string propertyName)
+public void SetPropertyNull(string propertyName)
 ```
 
 ### Parameters
@@ -34,7 +34,7 @@ void SetPropertyNull(string propertyName)
 ## SetPropertyNull(ReadOnlySpan&lt;char&gt;) {#setpropertynull-readonlyspan-char}
 
 ```csharp
-void SetPropertyNull(ReadOnlySpan<char> propertyName)
+public void SetPropertyNull(ReadOnlySpan<char> propertyName)
 ```
 
 ### Parameters
@@ -48,7 +48,7 @@ void SetPropertyNull(ReadOnlySpan<char> propertyName)
 ## SetPropertyNull(ReadOnlySpan&lt;byte&gt;) {#setpropertynull-readonlyspan-byte}
 
 ```csharp
-void SetPropertyNull(ReadOnlySpan<byte> propertyName)
+public void SetPropertyNull(ReadOnlySpan<byte> propertyName)
 ```
 
 ### Parameters

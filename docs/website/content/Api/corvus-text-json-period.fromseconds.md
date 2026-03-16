@@ -12,7 +12,7 @@ Title: "Period.FromSeconds Method — Corvus.Text.Json"
 ## FromSeconds {#fromseconds}
 
 ```csharp
-Period FromSeconds(long seconds)
+public static Period FromSeconds(long seconds)
 ```
 
 Creates a period representing the specified number of seconds.

@@ -19,7 +19,7 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValue Method — Corvus.Text.Jso
 ## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref JsonElement.Mutable) {#trygetnamedpropertyvalue-int-readonlyspan-char-ref-jsonelement-mutable}
 
 ```csharp
-bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref JsonElement.Mutable value)
+public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref JsonElement.Mutable value)
 ```
 
 ### Parameters
@@ -39,7 +39,7 @@ bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref Js
 ## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable) {#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-jsonelement-mutable}
 
 ```csharp
-bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, ref JsonElement.Mutable value)
+public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, ref JsonElement.Mutable value)
 ```
 
 ### Parameters

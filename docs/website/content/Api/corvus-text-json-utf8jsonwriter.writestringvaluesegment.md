@@ -19,7 +19,7 @@ Title: "Utf8JsonWriter.WriteStringValueSegment Method — Corvus.Text.Json"
 ## WriteStringValueSegment(ReadOnlySpan&lt;char&gt;, bool) {#writestringvaluesegment-readonlyspan-char-bool}
 
 ```csharp
-void WriteStringValueSegment(ReadOnlySpan<char> value, bool isFinalSegment)
+public void WriteStringValueSegment(ReadOnlySpan<char> value, bool isFinalSegment)
 ```
 
 Writes the text value segment as a partial JSON string.
@@ -47,7 +47,7 @@ The value is escaped before writing.
 ## WriteStringValueSegment(ReadOnlySpan&lt;byte&gt;, bool) {#writestringvaluesegment-readonlyspan-byte-bool}
 
 ```csharp
-void WriteStringValueSegment(ReadOnlySpan<byte> value, bool isFinalSegment)
+public void WriteStringValueSegment(ReadOnlySpan<byte> value, bool isFinalSegment)
 ```
 
 Writes the UTF-8 text value segment as a partial JSON string.

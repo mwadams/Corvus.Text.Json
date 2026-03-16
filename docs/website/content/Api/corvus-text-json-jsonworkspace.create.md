@@ -12,7 +12,7 @@ Title: "JsonWorkspace.Create Method — Corvus.Text.Json"
 ## Create {#create}
 
 ```csharp
-JsonWorkspace Create(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)
+public static JsonWorkspace Create(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)
 ```
 
 Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).

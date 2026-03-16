@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Seconds Property — Corvus.Text.Json"
 ## Seconds {#seconds}
 
 ```csharp
-long Seconds { get; set; }
+public long Seconds { get; set; }
 ```
 
 Gets or sets the number of seconds within the period.

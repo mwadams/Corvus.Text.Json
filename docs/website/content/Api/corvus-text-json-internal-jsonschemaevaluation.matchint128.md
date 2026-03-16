@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchInt128 Method — Corvus.Text.Json.Internal"
 ## MatchInt128 {#matchint128}
 
 ```csharp
-bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Int128 type constraint, validating it as a 128-bit signed integer.

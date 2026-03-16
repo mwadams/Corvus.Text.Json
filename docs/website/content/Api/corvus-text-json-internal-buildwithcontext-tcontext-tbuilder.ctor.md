@@ -12,7 +12,7 @@ Title: "BuildWithContext<TContext, TBuilder> Constructors — Corvus.Text.Json.I
 ## BuildWithContext {#buildwithcontext}
 
 ```csharp
-BuildWithContext(TContext context, TBuilder build)
+public BuildWithContext(TContext context, TBuilder build)
 ```
 
 ### Parameters

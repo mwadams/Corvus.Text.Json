@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetInt16 Method — Corvus.Text.Json"
 ## GetInt16 {#getint16}
 
 ```csharp
-short GetInt16()
+public short GetInt16()
 ```
 
 ### Returns

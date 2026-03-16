@@ -12,7 +12,7 @@ Title: "JsonElement.GetUInt32 Method — Corvus.Text.Json"
 ## GetUInt32 {#getuint32}
 
 ```csharp
-uint GetUInt32()
+public uint GetUInt32()
 ```
 
 Gets the current JSON number as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32).

@@ -12,7 +12,7 @@ Title: "ArrayEnumerator Constructors — Corvus.Text.Json.Internal"
 ## ArrayEnumerator {#arrayenumerator}
 
 ```csharp
-ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
+public ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
 ```
 
 Initializes a new instance of the [`ArrayEnumerator`](/api/corvus-text-json-internal-arrayenumerator.html) struct.

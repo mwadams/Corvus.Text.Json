@@ -12,7 +12,7 @@ Title: "Utf8JsonPointer.TryResolve Method — Corvus.Text.Json"
 ## TryResolve {#tryresolve}
 
 ```csharp
-bool TryResolve<T, TResult>(ref T jsonElement, ref TResult value)
+public bool TryResolve<T, TResult>(ref T jsonElement, ref TResult value)
 ```
 
 Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the value at that path if it exists.

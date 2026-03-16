@@ -22,7 +22,7 @@ Title: "ParsedJsonDocument<T>.Parse Method — Corvus.Text.Json"
 ## Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlymemory-byte-jsondocumentoptions}
 
 ```csharp
-ParsedJsonDocument<T> Parse(ReadOnlyMemory<byte> utf8Json, JsonDocumentOptions options)
+public static ParsedJsonDocument<T> Parse(ReadOnlyMemory<byte> utf8Json, JsonDocumentOptions options)
 ```
 
 Parse memory as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
@@ -56,7 +56,7 @@ The [`ReadOnlyMemory`](https://learn.microsoft.com/dotnet/api/system.readonlymem
 ## Parse(ReadOnlySequence&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlysequence-byte-jsondocumentoptions}
 
 ```csharp
-ParsedJsonDocument<T> Parse(ReadOnlySequence<byte> utf8Json, JsonDocumentOptions options)
+public static ParsedJsonDocument<T> Parse(ReadOnlySequence<byte> utf8Json, JsonDocumentOptions options)
 ```
 
 Parse a sequence as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
@@ -90,7 +90,7 @@ The [`ReadOnlySequence`](https://learn.microsoft.com/dotnet/api/system.buffers.r
 ## Parse(Stream, JsonDocumentOptions) {#parse-stream-jsondocumentoptions}
 
 ```csharp
-ParsedJsonDocument<T> Parse(Stream utf8Json, JsonDocumentOptions options)
+public static ParsedJsonDocument<T> Parse(Stream utf8Json, JsonDocumentOptions options)
 ```
 
 Parse a [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) as UTF-8 encoded data representing a single JSON value into a ParsedJsonDocument. The Stream will be read to completion.
@@ -120,7 +120,7 @@ A ParsedJsonDocument{T} representation of the JSON value.
 ## Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions) {#parse-readonlymemory-char-jsondocumentoptions}
 
 ```csharp
-ParsedJsonDocument<T> Parse(ReadOnlyMemory<char> json, JsonDocumentOptions options)
+public static ParsedJsonDocument<T> Parse(ReadOnlyMemory<char> json, JsonDocumentOptions options)
 ```
 
 Parses text representing a single JSON value into a ParsedJsonDocument.
@@ -154,7 +154,7 @@ The [`ReadOnlyMemory`](https://learn.microsoft.com/dotnet/api/system.readonlymem
 ## Parse(string, JsonDocumentOptions) {#parse-string-jsondocumentoptions}
 
 ```csharp
-ParsedJsonDocument<T> Parse(string json, JsonDocumentOptions options)
+public static ParsedJsonDocument<T> Parse(string json, JsonDocumentOptions options)
 ```
 
 Parses text representing a single JSON value into a ParsedJsonDocument.

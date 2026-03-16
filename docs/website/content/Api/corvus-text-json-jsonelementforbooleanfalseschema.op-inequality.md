@@ -19,7 +19,7 @@ Title: "JsonElementForBooleanFalseSchema.Inequality Operator — Corvus.Text.Jso
 ## operator !=(JsonElementForBooleanFalseSchema, JsonElementForBooleanFalseSchema) {#operator-jsonelementforbooleanfalseschema-jsonelementforbooleanfalseschema}
 
 ```csharp
-static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElementForBooleanFalseSchema right)
+public static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElementForBooleanFalseSchema right)
 ```
 
 Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instances are not equal.
@@ -42,7 +42,7 @@ Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-jso
 ## operator !=(JsonElementForBooleanFalseSchema, JsonElement) {#operator-jsonelementforbooleanfalseschema-jsonelement}
 
 ```csharp
-static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElement right)
+public static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElement right)
 ```
 
 Determines whether a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) and a [`JsonElement`](/api/corvus-text-json-jsonelement.html) are not equal.

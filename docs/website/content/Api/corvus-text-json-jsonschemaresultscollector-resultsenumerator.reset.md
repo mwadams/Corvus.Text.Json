@@ -12,6 +12,6 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method — Corvus.Tex
 ## Reset {#reset}
 
 ```csharp
-void Reset()
+public void Reset()
 ```
 

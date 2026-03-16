@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedItemCountGreaterThanValue Method — Corvus
 ## ExpectedItemCountGreaterThanValue {#expecteditemcountgreaterthanvalue}
 
 ```csharp
-bool ExpectedItemCountGreaterThanValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedItemCountGreaterThanValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

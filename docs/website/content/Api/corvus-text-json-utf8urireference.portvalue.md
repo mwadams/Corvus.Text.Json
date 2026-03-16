@@ -12,7 +12,7 @@ Title: "Utf8UriReference.PortValue Property — Corvus.Text.Json"
 ## PortValue {#portvalue}
 
 ```csharp
-int PortValue { get; }
+public int PortValue { get; }
 ```
 
 Gets the port value as an integer.

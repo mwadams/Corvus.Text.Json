@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedMultipleOfDivisor Method — Corvus.Text.Js
 ## ExpectedMultipleOfDivisor {#expectedmultipleofdivisor}
 
 ```csharp
-bool ExpectedMultipleOfDivisor(string divisor, Span<byte> buffer, ref int written)
+public static bool ExpectedMultipleOfDivisor(string divisor, Span<byte> buffer, ref int written)
 ```
 
 Tries to write a message indicating the expected type for a value.

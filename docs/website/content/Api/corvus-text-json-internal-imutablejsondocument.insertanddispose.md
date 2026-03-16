@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.InsertAndDispose Method — Corvus.Text.Json.Intern
 ## InsertAndDispose {#insertanddispose}
 
 ```csharp
-void InsertAndDispose(int complexObjectStartIndex, int index, ref ComplexValueBuilder cvb)
+public abstract void InsertAndDispose(int complexObjectStartIndex, int index, ref ComplexValueBuilder cvb)
 ```
 
 Inserts a value into the document and disposes the provided [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html).

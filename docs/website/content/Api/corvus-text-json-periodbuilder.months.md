@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Months Property — Corvus.Text.Json"
 ## Months {#months}
 
 ```csharp
-int Months { get; set; }
+public int Months { get; set; }
 ```
 
 Gets or sets the number of months within the period.

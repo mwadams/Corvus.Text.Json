@@ -19,7 +19,7 @@ Title: "JsonElement.Mutable.Equality Operator — Corvus.Text.Json"
 ## operator ==(JsonElement.Mutable, JsonElement.Mutable) {#operator-jsonelement-mutable-jsonelement-mutable}
 
 ```csharp
-static bool operator ==(JsonElement.Mutable left, JsonElement.Mutable right)
+public static bool operator ==(JsonElement.Mutable left, JsonElement.Mutable right)
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ static bool operator ==(JsonElement.Mutable left, JsonElement.Mutable right)
 ## operator ==(JsonElement.Mutable, JsonElement) {#operator-jsonelement-mutable-jsonelement}
 
 ```csharp
-static bool operator ==(JsonElement.Mutable left, JsonElement right)
+public static bool operator ==(JsonElement.Mutable left, JsonElement right)
 ```
 
 ### Parameters

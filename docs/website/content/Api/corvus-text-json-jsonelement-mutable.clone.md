@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.Clone Method — Corvus.Text.Json"
 ## Clone {#clone}
 
 ```csharp
-JsonElement Clone()
+public JsonElement Clone()
 ```
 
 ### Returns

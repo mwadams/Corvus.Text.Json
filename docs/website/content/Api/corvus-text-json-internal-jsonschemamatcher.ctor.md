@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcher Constructors — Corvus.Text.Json.Internal"
 ## JsonSchemaMatcher {#jsonschemamatcher}
 
 ```csharp
-JsonSchemaMatcher(object object, IntPtr method)
+public JsonSchemaMatcher(object object, IntPtr method)
 ```
 
 ### Parameters

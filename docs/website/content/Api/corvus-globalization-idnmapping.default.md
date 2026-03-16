@@ -12,7 +12,7 @@ Title: "IdnMapping.Default Property — Corvus.Globalization"
 ## Default {#default}
 
 ```csharp
-IdnMapping Default { get; }
+public static IdnMapping Default { get; }
 ```
 
 ### Returns

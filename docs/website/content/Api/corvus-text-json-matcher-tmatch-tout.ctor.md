@@ -12,7 +12,7 @@ Title: "Matcher<TMatch, TOut> Constructors — Corvus.Text.Json"
 ## Matcher {#matcher}
 
 ```csharp
-Matcher(object object, IntPtr method)
+public Matcher(object object, IntPtr method)
 ```
 
 ### Parameters

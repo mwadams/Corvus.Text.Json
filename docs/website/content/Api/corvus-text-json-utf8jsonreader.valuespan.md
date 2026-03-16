@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.ValueSpan Property — Corvus.Text.Json"
 ## ValueSpan {#valuespan}
 
 ```csharp
-ReadOnlySpan<byte> ValueSpan { get; set; }
+public ReadOnlySpan<byte> ValueSpan { get; set; }
 ```
 
 ### Returns

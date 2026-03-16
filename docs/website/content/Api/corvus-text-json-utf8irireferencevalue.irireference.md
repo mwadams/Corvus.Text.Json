@@ -12,7 +12,7 @@ Title: "Utf8IriReferenceValue.IriReference Property — Corvus.Text.Json"
 ## IriReference {#irireference}
 
 ```csharp
-Utf8IriReference IriReference { get; }
+public Utf8IriReference IriReference { get; }
 ```
 
 Gets the UTF-8 IRI reference value.

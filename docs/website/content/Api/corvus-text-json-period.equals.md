@@ -20,7 +20,7 @@ Title: "Period.Equals Method — Corvus.Text.Json"
 ## Equals(object) {#equals-object}
 
 ```csharp
-bool Equals(object other)
+public virtual bool Equals(object other)
 ```
 
 Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics.
@@ -42,7 +42,7 @@ true if the other object is a period equal to this one, consistent with [`Equals
 ## Equals(Period) {#equals-period}
 
 ```csharp
-bool Equals(Period other)
+public bool Equals(Period other)
 ```
 
 Compares the given period for equality with this one. See the type documentation for a description of equality semantics.
@@ -64,7 +64,7 @@ True if this period has the same values for the same properties as the one speci
 ## Equals(Period) {#equals-period}
 
 ```csharp
-bool Equals(Period other)
+public bool Equals(Period other)
 ```
 
 Compares the given period for equality with this one. See the type documentation for a description of equality semantics.

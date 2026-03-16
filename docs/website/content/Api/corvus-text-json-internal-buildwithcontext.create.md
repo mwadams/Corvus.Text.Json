@@ -12,7 +12,7 @@ Title: "BuildWithContext.Create Method — Corvus.Text.Json.Internal"
 ## Create {#create}
 
 ```csharp
-BuildWithContext<TContext, TBuilder> Create<TContext, TBuilder>(ref TContext context, TBuilder build)
+public static BuildWithContext<TContext, TBuilder> Create<TContext, TBuilder>(ref TContext context, TBuilder build)
 ```
 
 ### Parameters

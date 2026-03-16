@@ -12,7 +12,7 @@ Title: "JsonElement.GetGuid Method — Corvus.Text.Json"
 ## GetGuid {#getguid}
 
 ```csharp
-Guid GetGuid()
+public Guid GetGuid()
 ```
 
 Gets the value of the element as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).

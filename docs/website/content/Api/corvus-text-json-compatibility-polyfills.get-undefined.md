@@ -12,7 +12,7 @@ Title: "Polyfills.get_Undefined Method — Corvus.Text.Json.Compatibility"
 ## get_Undefined {#get-undefined}
 
 ```csharp
-T get_Undefined<T>()
+public static T get_Undefined<T>()
 ```
 
 ### Returns

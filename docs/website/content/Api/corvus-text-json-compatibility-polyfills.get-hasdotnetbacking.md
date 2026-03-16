@@ -12,7 +12,7 @@ Title: "Polyfills.get_HasDotnetBacking Method — Corvus.Text.Json.Compatibility
 ## get_HasDotnetBacking {#get-hasdotnetbacking}
 
 ```csharp
-bool get_HasDotnetBacking<T>(T element)
+public static bool get_HasDotnetBacking<T>(T element)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetPropertyNameUnescaped Method — Corvus.Text.Json.Inter
 ## GetPropertyNameUnescaped {#getpropertynameunescaped}
 
 ```csharp
-UnescapedUtf8JsonString GetPropertyNameUnescaped(int index)
+public abstract UnescapedUtf8JsonString GetPropertyNameUnescaped(int index)
 ```
 
 Gets the property name as a JSON element.

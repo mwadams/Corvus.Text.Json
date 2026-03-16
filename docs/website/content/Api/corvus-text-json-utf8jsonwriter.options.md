@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.Options Property — Corvus.Text.Json"
 ## Options {#options}
 
 ```csharp
-JsonWriterOptions Options { get; }
+public JsonWriterOptions Options { get; }
 ```
 
 Gets the custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) which indicates whether to format the output while writing and whether to skip structural JSON validation or not.

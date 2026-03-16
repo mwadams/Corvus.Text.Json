@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.StartArray Method — Corvus.Text.Json.Internal"
 ## StartArray {#startarray}
 
 ```csharp
-void StartArray()
+public void StartArray()
 ```
 
 Starts a new JSON array in the builder.

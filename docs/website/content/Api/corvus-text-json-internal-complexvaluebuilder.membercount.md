@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.MemberCount Property — Corvus.Text.Json.Internal"
 ## MemberCount {#membercount}
 
 ```csharp
-int MemberCount { get; }
+public int MemberCount { get; }
 ```
 
 Gets the number of members (properties or items) added to the current object or array.

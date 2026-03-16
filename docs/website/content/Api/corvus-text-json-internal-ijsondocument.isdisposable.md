@@ -12,7 +12,7 @@ Title: "IJsonDocument.IsDisposable Property — Corvus.Text.Json.Internal"
 ## IsDisposable {#isdisposable}
 
 ```csharp
-bool IsDisposable { get; }
+public abstract bool IsDisposable { get; }
 ```
 
 Gets a value indicating whether the document is disposable.

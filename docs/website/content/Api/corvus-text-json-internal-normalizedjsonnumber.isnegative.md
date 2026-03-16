@@ -12,7 +12,7 @@ Title: "NormalizedJsonNumber.IsNegative Property — Corvus.Text.Json.Internal"
 ## IsNegative {#isnegative}
 
 ```csharp
-bool IsNegative { get; }
+public bool IsNegative { get; }
 ```
 
 Indicates whether the number is negative.

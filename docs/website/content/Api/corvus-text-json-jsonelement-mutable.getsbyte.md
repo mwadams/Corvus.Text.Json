@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetSByte Method — Corvus.Text.Json"
 ## GetSByte {#getsbyte}
 
 ```csharp
-sbyte GetSByte()
+public sbyte GetSByte()
 ```
 
 ### Returns

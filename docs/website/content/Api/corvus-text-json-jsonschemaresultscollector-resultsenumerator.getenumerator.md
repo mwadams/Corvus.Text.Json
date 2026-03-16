@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.GetEnumerator Method — Co
 ## GetEnumerator {#getenumerator}
 
 ```csharp
-IEnumerator<JsonSchemaResultsCollector.Result> GetEnumerator()
+public IEnumerator<JsonSchemaResultsCollector.Result> GetEnumerator()
 ```
 
 ### Returns

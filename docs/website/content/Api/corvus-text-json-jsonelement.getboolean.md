@@ -12,7 +12,7 @@ Title: "JsonElement.GetBoolean Method — Corvus.Text.Json"
 ## GetBoolean {#getboolean}
 
 ```csharp
-bool GetBoolean()
+public bool GetBoolean()
 ```
 
 Gets the value of the element as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean).

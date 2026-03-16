@@ -20,7 +20,7 @@ Title: "JsonElement.ValueEquals Method — Corvus.Text.Json"
 ## ValueEquals(string) {#valueequals-string}
 
 ```csharp
-bool ValueEquals(string text)
+public bool ValueEquals(string text)
 ```
 
 Compares `text` to the string value of this element.
@@ -52,7 +52,7 @@ This method is functionally equal to doing an ordinal comparison of `text` and t
 ## ValueEquals(ReadOnlySpan&lt;byte&gt;) {#valueequals-readonlyspan-byte}
 
 ```csharp
-bool ValueEquals(ReadOnlySpan<byte> utf8Text)
+public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
 ```
 
 Compares the text represented by `utf8Text` to the string value of this element.
@@ -84,7 +84,7 @@ This method is functionally equal to doing an ordinal comparison of the string p
 ## ValueEquals(ReadOnlySpan&lt;char&gt;) {#valueequals-readonlyspan-char}
 
 ```csharp
-bool ValueEquals(ReadOnlySpan<char> text)
+public bool ValueEquals(ReadOnlySpan<char> text)
 ```
 
 Compares `text` to the string value of this element.

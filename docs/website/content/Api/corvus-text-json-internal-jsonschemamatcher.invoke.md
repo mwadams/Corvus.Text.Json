@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcher.Invoke Method — Corvus.Text.Json.Internal"
 ## Invoke {#invoke}
 
 ```csharp
-void Invoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context)
+public virtual void Invoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context)
 ```
 
 ### Parameters

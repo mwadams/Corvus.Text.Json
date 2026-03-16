@@ -12,7 +12,7 @@ Title: "Period.FromMonths Method — Corvus.Text.Json"
 ## FromMonths {#frommonths}
 
 ```csharp
-Period FromMonths(int months)
+public static Period FromMonths(int months)
 ```
 
 Creates a period representing the specified number of months.

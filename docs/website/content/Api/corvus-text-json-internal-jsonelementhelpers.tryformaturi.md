@@ -19,7 +19,7 @@ Title: "JsonElementHelpers.TryFormatUri Method — Corvus.Text.Json.Internal"
 ## TryFormatUri(Utf8Uri, bool, ref string) {#tryformaturi-utf8uri-bool-ref-string}
 
 ```csharp
-bool TryFormatUri(Utf8Uri uri, bool isDisplay, ref string result)
+public static bool TryFormatUri(Utf8Uri uri, bool isDisplay, ref string result)
 ```
 
 ### Parameters
@@ -39,7 +39,7 @@ bool TryFormatUri(Utf8Uri uri, bool isDisplay, ref string result)
 ## TryFormatUri(Utf8Uri, bool, Span&lt;char&gt;, ref int) {#tryformaturi-utf8uri-bool-span-char-ref-int}
 
 ```csharp
-bool TryFormatUri(Utf8Uri uri, bool isDisplay, Span<char> destination, ref int charsWritten)
+public static bool TryFormatUri(Utf8Uri uri, bool isDisplay, Span<char> destination, ref int charsWritten)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "Period.DaysBetween Method — Corvus.Text.Json"
 ## DaysBetween {#daysbetween}
 
 ```csharp
-int DaysBetween(LocalDate start, LocalDate end)
+public static int DaysBetween(LocalDate start, LocalDate end)
 ```
 
 Returns the number of days between two [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) objects.

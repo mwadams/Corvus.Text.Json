@@ -19,7 +19,7 @@ Title: "IMutableJsonDocument.GetArrayIndexElement Method — Corvus.Text.Json.In
 ## GetArrayIndexElement(int, int) {#getarrayindexelement-int-int}
 
 ```csharp
-JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex)
+public abstract JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex)
 ```
 
 Gets the array element at the specified index as a mutable JSON element.
@@ -42,7 +42,7 @@ The mutable JSON element at the specified array index.
 ## GetArrayIndexElement(int, int, ref IMutableJsonDocument, ref int) {#getarrayindexelement-int-int-ref-imutablejsondocument-ref-int}
 
 ```csharp
-void GetArrayIndexElement(int currentIndex, int arrayIndex, ref IMutableJsonDocument parentDocument, ref int parentDocumentIndex)
+public abstract void GetArrayIndexElement(int currentIndex, int arrayIndex, ref IMutableJsonDocument parentDocument, ref int parentDocumentIndex)
 ```
 
 Gets the element at the specified array index within the current index.

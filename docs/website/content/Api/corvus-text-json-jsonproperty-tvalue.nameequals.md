@@ -20,7 +20,7 @@ Title: "JsonProperty<TValue>.NameEquals Method — Corvus.Text.Json"
 ## NameEquals(string) {#nameequals-string}
 
 ```csharp
-bool NameEquals(string text)
+public bool NameEquals(string text)
 ```
 
 Compares `text` to the name of this property.
@@ -52,7 +52,7 @@ This method is functionally equal to doing an ordinal comparison of `text` and [
 ## NameEquals(ReadOnlySpan&lt;byte&gt;) {#nameequals-readonlyspan-byte}
 
 ```csharp
-bool NameEquals(ReadOnlySpan<byte> utf8Text)
+public bool NameEquals(ReadOnlySpan<byte> utf8Text)
 ```
 
 Compares the text represented by `utf8Text` to the name of this property.
@@ -84,7 +84,7 @@ This method is functionally equal to doing an ordinal comparison of `utf8Text` a
 ## NameEquals(ReadOnlySpan&lt;char&gt;) {#nameequals-readonlyspan-char}
 
 ```csharp
-bool NameEquals(ReadOnlySpan<char> text)
+public bool NameEquals(ReadOnlySpan<char> text)
 ```
 
 Compares `text` to the name of this property.

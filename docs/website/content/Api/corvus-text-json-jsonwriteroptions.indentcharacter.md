@@ -12,7 +12,7 @@ Title: "JsonWriterOptions.IndentCharacter Property — Corvus.Text.Json"
 ## IndentCharacter {#indentcharacter}
 
 ```csharp
-char IndentCharacter { get; set; }
+public char IndentCharacter { get; set; }
 ```
 
 Defines the indentation character used by [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is enabled. Defaults to the space character.

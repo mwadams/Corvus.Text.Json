@@ -12,7 +12,7 @@ Title: "BuildWithContext<TContext, TBuilder>.Context Property — Corvus.Text.Js
 ## Context {#context}
 
 ```csharp
-TContext Context { get; }
+public TContext Context { get; }
 ```
 
 ### Returns

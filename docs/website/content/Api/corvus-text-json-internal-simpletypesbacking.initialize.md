@@ -12,7 +12,7 @@ Title: "SimpleTypesBacking.Initialize Method — Corvus.Text.Json.Internal"
 ## Initialize {#initialize}
 
 ```csharp
-void Initialize<T>(ref SimpleTypesBacking backing, ref T value, SimpleTypesBacking.Writer<T> writer)
+public static void Initialize<T>(ref SimpleTypesBacking backing, ref T value, SimpleTypesBacking.Writer<T> writer)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "IJsonSchemaResultsCollector.PopChildContext Method — Corvus.Text.Json"
 ## PopChildContext {#popchildcontext}
 
 ```csharp
-void PopChildContext(int sequenceNumber)
+public abstract void PopChildContext(int sequenceNumber)
 ```
 
 Abandons the last child context.

@@ -12,7 +12,7 @@ Title: "Period.FromNanoseconds Method — Corvus.Text.Json"
 ## FromNanoseconds {#fromnanoseconds}
 
 ```csharp
-Period FromNanoseconds(long nanoseconds)
+public static Period FromNanoseconds(long nanoseconds)
 ```
 
 Creates a period representing the specified number of nanoseconds.

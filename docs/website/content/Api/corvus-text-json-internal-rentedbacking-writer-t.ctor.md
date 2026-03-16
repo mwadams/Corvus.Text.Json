@@ -12,7 +12,7 @@ Title: "RentedBacking.Writer<T> Constructors — Corvus.Text.Json.Internal"
 ## RentedBacking.Writer {#rentedbacking-writer}
 
 ```csharp
-RentedBacking.Writer(object object, IntPtr method)
+public RentedBacking.Writer(object object, IntPtr method)
 ```
 
 ### Parameters

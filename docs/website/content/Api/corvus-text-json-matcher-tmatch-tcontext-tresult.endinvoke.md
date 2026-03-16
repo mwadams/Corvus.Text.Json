@@ -12,7 +12,7 @@ Title: "Matcher<TMatch, TContext, TResult>.EndInvoke Method — Corvus.Text.Json
 ## EndInvoke {#endinvoke}
 
 ```csharp
-TResult EndInvoke(ref TMatch match, ref TContext context, IAsyncResult result)
+public virtual TResult EndInvoke(ref TMatch match, ref TContext context, IAsyncResult result)
 ```
 
 ### Parameters

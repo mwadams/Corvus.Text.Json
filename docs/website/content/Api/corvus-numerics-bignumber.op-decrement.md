@@ -12,7 +12,7 @@ Title: "BigNumber.Decrement Operator — Corvus.Numerics"
 ## operator -- {#operator}
 
 ```csharp
-static BigNumber operator --(BigNumber value)
+public static BigNumber operator --(BigNumber value)
 ```
 
 Decrements a value by one.

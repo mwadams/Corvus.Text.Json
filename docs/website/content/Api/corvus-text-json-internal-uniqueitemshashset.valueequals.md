@@ -12,7 +12,7 @@ Title: "UniqueItemsHashSet.ValueEquals Method — Corvus.Text.Json.Internal"
 ## ValueEquals {#valueequals}
 
 ```csharp
-bool ValueEquals(int leftIndex, int rightIndex)
+public bool ValueEquals(int leftIndex, int rightIndex)
 ```
 
 ### Parameters

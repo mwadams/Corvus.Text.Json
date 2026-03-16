@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetDateTime Method — Corvus.Text.Json"
 ## TryGetDateTime {#trygetdatetime}
 
 ```csharp
-bool TryGetDateTime(ref DateTime value)
+public bool TryGetDateTime(ref DateTime value)
 ```
 
 Attempts to represent the current JSON string as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).

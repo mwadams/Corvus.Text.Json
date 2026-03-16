@@ -12,7 +12,7 @@ Title: "JsonElement.From Method — Corvus.Text.Json"
 ## From {#from}
 
 ```csharp
-JsonElement From<T>(ref T instance)
+public static JsonElement From<T>(ref T instance)
 ```
 
 ### Parameters

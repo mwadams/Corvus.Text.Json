@@ -12,7 +12,7 @@ Title: "JsonElement.ArrayBuilder.AddFormattedNumber Method — Corvus.Text.Json"
 ## AddFormattedNumber {#addformattednumber}
 
 ```csharp
-void AddFormattedNumber(ReadOnlySpan<byte> value)
+public void AddFormattedNumber(ReadOnlySpan<byte> value)
 ```
 
 ### Parameters

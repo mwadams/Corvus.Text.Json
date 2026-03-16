@@ -12,7 +12,7 @@ Title: "Polyfills.As Method — Corvus.Text.Json.Compatibility"
 ## As {#as}
 
 ```csharp
-TTarget As<T, TTarget>(T element)
+public static TTarget As<T, TTarget>(T element)
 ```
 
 ### Parameters

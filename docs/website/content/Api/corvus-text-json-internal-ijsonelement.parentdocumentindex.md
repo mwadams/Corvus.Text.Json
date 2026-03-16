@@ -12,7 +12,7 @@ Title: "IJsonElement.ParentDocumentIndex Property — Corvus.Text.Json.Internal"
 ## ParentDocumentIndex {#parentdocumentindex}
 
 ```csharp
-int ParentDocumentIndex { get; }
+public abstract int ParentDocumentIndex { get; }
 ```
 
 Gets the handle identifying the [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) in its parent document.

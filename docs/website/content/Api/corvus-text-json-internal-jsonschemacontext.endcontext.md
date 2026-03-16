@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.EndContext Method — Corvus.Text.Json.Internal"
 ## EndContext {#endcontext}
 
 ```csharp
-void EndContext()
+public void EndContext()
 ```
 
 Ends the root evaluation context, committing any pending results to the results collector.

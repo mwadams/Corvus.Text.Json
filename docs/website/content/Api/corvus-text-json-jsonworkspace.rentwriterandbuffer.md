@@ -12,7 +12,7 @@ Title: "JsonWorkspace.RentWriterAndBuffer Method — Corvus.Text.Json"
 ## RentWriterAndBuffer {#rentwriterandbuffer}
 
 ```csharp
-Utf8JsonWriter RentWriterAndBuffer(int defaultBufferSize, ref IByteBufferWriter bufferWriter)
+public Utf8JsonWriter RentWriterAndBuffer(int defaultBufferSize, ref IByteBufferWriter bufferWriter)
 ```
 
 Rents a UTF-8 JSON writer and associated buffer writer from the pool.

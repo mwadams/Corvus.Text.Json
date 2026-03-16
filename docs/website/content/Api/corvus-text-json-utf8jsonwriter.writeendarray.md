@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.WriteEndArray Method — Corvus.Text.Json"
 ## WriteEndArray {#writeendarray}
 
 ```csharp
-void WriteEndArray()
+public void WriteEndArray()
 ```
 
 Writes the end of a JSON array.

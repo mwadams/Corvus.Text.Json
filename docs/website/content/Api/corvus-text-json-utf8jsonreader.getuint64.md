@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetUInt64 Method — Corvus.Text.Json"
 ## GetUInt64 {#getuint64}
 
 ```csharp
-ulong GetUInt64()
+public ulong GetUInt64()
 ```
 
 Parses the current JSON token value from the source as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value. Throws exceptions otherwise.

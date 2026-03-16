@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchInt16 Method — Corvus.Text.Json.Internal"
 ## MatchInt16 {#matchint16}
 
 ```csharp
-bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Int16 type constraint, validating it as a 16-bit signed integer.

@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.Create Method — Corvus.Text.Json.Internal"
 ## Create {#create}
 
 ```csharp
-ComplexValueBuilder Create(IMutableJsonDocument parentDocument, int initialElementCount)
+public static ComplexValueBuilder Create(IMutableJsonDocument parentDocument, int initialElementCount)
 ```
 
 Creates a new [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) for the specified parent document, pre-allocating space for the given number of elements.

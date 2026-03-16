@@ -12,7 +12,7 @@ Title: "JsonElement.Source<TContext>.Implicit Operator — Corvus.Text.Json"
 ## implicit operator JsonElement.Source&lt;TContext&gt; {#implicit-operator-jsonelement-source-tcontext}
 
 ```csharp
-static implicit operator JsonElement.Source<TContext>(JsonElement.Source source)
+public static implicit operator JsonElement.Source<TContext>(JsonElement.Source source)
 ```
 
 ### Parameters

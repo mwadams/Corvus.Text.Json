@@ -12,7 +12,7 @@ Title: "JsonElement.ArrayBuilder.Build<T>.Invoke Method — Corvus.Text.Json"
 ## Invoke {#invoke}
 
 ```csharp
-void Invoke(ref T context, ref JsonElement.ArrayBuilder builder)
+public virtual void Invoke(ref T context, ref JsonElement.ArrayBuilder builder)
 ```
 
 ### Parameters

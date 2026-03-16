@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Implicit Operator — Corvus.Text.Json"
 ## implicit operator int {#implicit-operator-int}
 
 ```csharp
-static implicit operator int(JsonElementForBooleanFalseSchema age)
+public static implicit operator int(JsonElementForBooleanFalseSchema age)
 ```
 
 Implicitly converts a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) to an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32).

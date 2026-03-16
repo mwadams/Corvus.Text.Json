@@ -19,7 +19,7 @@ Title: "JsonSchemaContext.EvaluatedKeyword Method — Corvus.Text.Json.Internal"
 ## EvaluatedKeyword(bool, JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeyword-bool-jsonschemamessageprovider-readonlyspan-byte}
 
 ```csharp
-void EvaluatedKeyword(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> unescapedKeyword)
+public void EvaluatedKeyword(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> unescapedKeyword)
 ```
 
 Records the evaluation of a schema keyword.
@@ -37,7 +37,7 @@ Records the evaluation of a schema keyword.
 ## EvaluatedKeyword(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeyword-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-readonlyspan-byte}
 
 ```csharp
-void EvaluatedKeyword<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> unescapedKeyword)
+public void EvaluatedKeyword<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> unescapedKeyword)
 ```
 
 Records the evaluation of a schema keyword with a provider context.

@@ -12,7 +12,7 @@ Title: "JsonElement.GetByte Method — Corvus.Text.Json"
 ## GetByte {#getbyte}
 
 ```csharp
-byte GetByte()
+public byte GetByte()
 ```
 
 Gets the current JSON number as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte).

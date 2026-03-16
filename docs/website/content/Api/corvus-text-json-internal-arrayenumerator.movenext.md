@@ -12,7 +12,7 @@ Title: "ArrayEnumerator.MoveNext Method — Corvus.Text.Json.Internal"
 ## MoveNext {#movenext}
 
 ```csharp
-bool MoveNext()
+public bool MoveNext()
 ```
 
 Advances the enumerator to the next element of the collection.

@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.Dispose Method — Corvus.Text.Json"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 
 Commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.

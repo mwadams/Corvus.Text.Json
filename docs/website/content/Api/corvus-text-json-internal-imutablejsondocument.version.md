@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.Version Property — Corvus.Text.Json.Internal"
 ## Version {#version}
 
 ```csharp
-ulong Version { get; }
+public abstract ulong Version { get; }
 ```
 
 Gets the version of the document.

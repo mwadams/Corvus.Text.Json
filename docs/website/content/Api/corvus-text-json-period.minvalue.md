@@ -12,7 +12,7 @@ Title: "Period.MinValue Property — Corvus.Text.Json"
 ## MinValue {#minvalue}
 
 ```csharp
-Period MinValue { get; }
+public static Period MinValue { get; }
 ```
 
 A period containing the minimum value for all properties.

@@ -12,7 +12,7 @@ Title: "Utf8Uri.TryFormatDisplay Method — Corvus.Text.Json"
 ## TryFormatDisplay {#tryformatdisplay}
 
 ```csharp
-bool TryFormatDisplay(Span<byte> buffer, ref int writtenBytes)
+public bool TryFormatDisplay(Span<byte> buffer, ref int writtenBytes)
 ```
 
 Gets the URI in canonical form for display.

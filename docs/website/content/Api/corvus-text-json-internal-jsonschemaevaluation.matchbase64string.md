@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchBase64String Method — Corvus.Text.Json.Inter
 ## MatchBase64String {#matchbase64string}
 
 ```csharp
-bool MatchBase64String(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchBase64String(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid Base64-encoded string.

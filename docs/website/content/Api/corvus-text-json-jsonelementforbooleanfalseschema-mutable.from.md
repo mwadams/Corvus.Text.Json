@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.From Method — Corvus.Text.Jso
 ## From {#from}
 
 ```csharp
-JsonElementForBooleanFalseSchema.Mutable From<T>(ref T instance)
+public static JsonElementForBooleanFalseSchema.Mutable From<T>(ref T instance)
 ```
 
 ### Parameters

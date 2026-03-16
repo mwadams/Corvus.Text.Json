@@ -19,7 +19,7 @@ Title: "JsonElement.TryFormat Method — Corvus.Text.Json"
 ## TryFormat(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-char-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
-bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+public bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
 
 ### Parameters
@@ -40,7 +40,7 @@ bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> 
 ## TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
-bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+public bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
 
 ### Parameters

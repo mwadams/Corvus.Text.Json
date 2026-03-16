@@ -12,7 +12,7 @@ Title: "JsonElement.CreateArrayBuilder Method — Corvus.Text.Json"
 ## CreateArrayBuilder {#createarraybuilder}
 
 ```csharp
-JsonDocumentBuilder<JsonElement.Mutable> CreateArrayBuilder(JsonWorkspace workspace, int estimatedMemberCount)
+public static JsonDocumentBuilder<JsonElement.Mutable> CreateArrayBuilder(JsonWorkspace workspace, int estimatedMemberCount)
 ```
 
 Creates an empty mutable array document builder.

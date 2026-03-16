@@ -12,7 +12,7 @@ Title: "JsonWorkspace.CreateUnrented Method — Corvus.Text.Json"
 ## CreateUnrented {#createunrented}
 
 ```csharp
-JsonWorkspace CreateUnrented(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)
+public static JsonWorkspace CreateUnrented(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)
 ```
 
 Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).

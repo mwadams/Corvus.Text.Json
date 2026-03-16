@@ -12,7 +12,7 @@ Title: "Utf8IriValue.TryGetValue Method — Corvus.Text.Json"
 ## TryGetValue {#trygetvalue}
 
 ```csharp
-bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8IriValue value)
+public static bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8IriValue value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html).

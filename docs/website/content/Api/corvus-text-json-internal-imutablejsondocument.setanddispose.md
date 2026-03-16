@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.SetAndDispose Method — Corvus.Text.Json.Internal"
 ## SetAndDispose {#setanddispose}
 
 ```csharp
-void SetAndDispose(ref ComplexValueBuilder cvb)
+public abstract void SetAndDispose(ref ComplexValueBuilder cvb)
 ```
 
 Sets the value of the document and disposes the provided [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html).

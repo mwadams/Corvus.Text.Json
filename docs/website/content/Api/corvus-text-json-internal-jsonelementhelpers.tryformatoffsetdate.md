@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryFormatOffsetDate Method — Corvus.Text.Json.Inter
 ## TryFormatOffsetDate {#tryformatoffsetdate}
 
 ```csharp
-bool TryFormatOffsetDate(ref OffsetDate value, Span<byte> output, ref int bytesWritten)
+public static bool TryFormatOffsetDate(ref OffsetDate value, Span<byte> output, ref int bytesWritten)
 ```
 
 Format a date as a UTF-8 string.

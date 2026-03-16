@@ -12,7 +12,7 @@ Title: "RawUtf8JsonString.Span Property — Corvus.Text.Json"
 ## Span {#span}
 
 ```csharp
-ReadOnlySpan<byte> Span { get; }
+public ReadOnlySpan<byte> Span { get; }
 ```
 
 Gets the underlying UTF-8 bytes as a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1).

@@ -12,7 +12,7 @@ Title: "Utf8Iri.OriginalIri Property — Corvus.Text.Json"
 ## OriginalIri {#originaliri}
 
 ```csharp
-ReadOnlySpan<byte> OriginalIri { get; }
+public ReadOnlySpan<byte> OriginalIri { get; }
 ```
 
 Gets the original (fully encoded) string.

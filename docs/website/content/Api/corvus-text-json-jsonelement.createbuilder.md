@@ -21,7 +21,7 @@ Title: "JsonElement.CreateBuilder Method — Corvus.Text.Json"
 ## CreateBuilder(JsonWorkspace, ref JsonElement.Source, int) {#createbuilder-jsonworkspace-ref-jsonelement-source-int}
 
 ```csharp
-JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace, ref JsonElement.Source source, int estimatedMemberCount)
+public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace, ref JsonElement.Source source, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -41,7 +41,7 @@ JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace, 
 ## CreateBuilder(JsonWorkspace, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#createbuilder-jsonworkspace-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
-JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> builder, int estimatedMemberCount)
+public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> builder, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -62,7 +62,7 @@ JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace w
 ## CreateBuilder(JsonWorkspace, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#createbuilder-jsonworkspace-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
-JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> builder, int estimatedMemberCount)
+public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> builder, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -83,7 +83,7 @@ JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace w
 ## CreateBuilder(JsonWorkspace) {#createbuilder-jsonworkspace}
 
 ```csharp
-JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace)
+public JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace)
 ```
 
 Creates a mutable document builder from this JsonElement using the specified workspace.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedMatchPatternPropertySchemaValue Method — 
 ## ExpectedMatchPatternPropertySchemaValue {#expectedmatchpatternpropertyschemavalue}
 
 ```csharp
-bool ExpectedMatchPatternPropertySchemaValue(string expression, Span<byte> buffer, ref int written)
+public static bool ExpectedMatchPatternPropertySchemaValue(string expression, Span<byte> buffer, ref int written)
 ```
 
 Tries to write a message indicating that a property name was intended to match a regular expression.

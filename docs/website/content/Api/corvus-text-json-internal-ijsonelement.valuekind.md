@@ -12,7 +12,7 @@ Title: "IJsonElement.ValueKind Property — Corvus.Text.Json.Internal"
 ## ValueKind {#valuekind}
 
 ```csharp
-JsonValueKind ValueKind { get; }
+public abstract JsonValueKind ValueKind { get; }
 ```
 
 Gets the JSON Value Kind of the element.

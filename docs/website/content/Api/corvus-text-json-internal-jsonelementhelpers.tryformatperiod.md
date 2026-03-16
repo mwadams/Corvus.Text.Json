@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryFormatPeriod Method — Corvus.Text.Json.Internal"
 ## TryFormatPeriod {#tryformatperiod}
 
 ```csharp
-bool TryFormatPeriod(ref Period value, Span<byte> output, ref int bytesWritten)
+public static bool TryFormatPeriod(ref Period value, Span<byte> output, ref int bytesWritten)
 ```
 
 Format a period as a UTF-8 string for the `duration` format.

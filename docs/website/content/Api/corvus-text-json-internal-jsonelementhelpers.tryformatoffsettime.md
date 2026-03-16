@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryFormatOffsetTime Method — Corvus.Text.Json.Inter
 ## TryFormatOffsetTime {#tryformatoffsettime}
 
 ```csharp
-bool TryFormatOffsetTime(ref OffsetTime value, Span<byte> output, ref int bytesWritten)
+public static bool TryFormatOffsetTime(ref OffsetTime value, Span<byte> output, ref int bytesWritten)
 ```
 
 Format a time as a UTF-8 string.

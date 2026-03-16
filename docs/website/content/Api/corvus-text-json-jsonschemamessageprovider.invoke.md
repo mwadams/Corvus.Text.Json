@@ -12,7 +12,7 @@ Title: "JsonSchemaMessageProvider.Invoke Method — Corvus.Text.Json"
 ## Invoke {#invoke}
 
 ```csharp
-bool Invoke(Span<byte> buffer, ref int written)
+public virtual bool Invoke(Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

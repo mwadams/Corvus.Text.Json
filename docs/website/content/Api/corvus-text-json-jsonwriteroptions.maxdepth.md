@@ -12,7 +12,7 @@ Title: "JsonWriterOptions.MaxDepth Property — Corvus.Text.Json"
 ## MaxDepth {#maxdepth}
 
 ```csharp
-int MaxDepth { get; set; }
+public int MaxDepth { get; set; }
 ```
 
 Gets or sets the maximum depth allowed when writing JSON, with the default (i.e. 0) indicating a max depth of 1000.

@@ -12,7 +12,7 @@ Title: "BigNumber.IsInteger Method — Corvus.Numerics"
 ## IsInteger {#isinteger}
 
 ```csharp
-bool IsInteger()
+public bool IsInteger()
 ```
 
 Determines whether this instance represents an integer value.

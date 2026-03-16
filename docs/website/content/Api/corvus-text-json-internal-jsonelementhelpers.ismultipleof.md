@@ -19,7 +19,7 @@ Title: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
 ## IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int) {#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int}
 
 ```csharp
-bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent)
+public static bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent)
 ```
 
 Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
@@ -49,7 +49,7 @@ We do not need to pass the sign of the JSON number as it is irrelevant to the ca
 ## IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int) {#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int}
 
 ```csharp
-bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent)
+public static bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent)
 ```
 
 Determines whether the normalized JSON number is an exact multiple of the given integer divisor.

@@ -12,7 +12,7 @@ Title: "BigNumber.Floor Method — Corvus.Numerics"
 ## Floor {#floor}
 
 ```csharp
-BigNumber Floor(BigNumber value)
+public static BigNumber Floor(BigNumber value)
 ```
 
 Returns the largest integer less than or equal to the specified number.

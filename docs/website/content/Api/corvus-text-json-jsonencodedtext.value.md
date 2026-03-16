@@ -12,7 +12,7 @@ Title: "JsonEncodedText.Value Property — Corvus.Text.Json"
 ## Value {#value}
 
 ```csharp
-string Value { get; }
+public string Value { get; }
 ```
 
 Returns the UTF-16 encoded representation of the pre-encoded JSON text as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).

@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetBytesFromBase64 Method — Corvus.Text.Json"
 ## GetBytesFromBase64 {#getbytesfrombase64}
 
 ```csharp
-byte[] GetBytesFromBase64()
+public byte[] GetBytesFromBase64()
 ```
 
 Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes.

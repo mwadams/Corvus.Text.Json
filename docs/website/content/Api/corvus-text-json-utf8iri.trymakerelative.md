@@ -19,7 +19,7 @@ Title: "Utf8Iri.TryMakeRelative Method — Corvus.Text.Json"
 ## TryMakeRelative(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8IriReference) {#trymakerelative-ref-utf8iri-span-byte-ref-utf8irireference}
 
 ```csharp
-bool TryMakeRelative(ref Utf8Iri targetIri, Span<byte> buffer, ref Utf8IriReference result)
+public bool TryMakeRelative(ref Utf8Iri targetIri, Span<byte> buffer, ref Utf8IriReference result)
 ```
 
 Makes a relative IRI reference from the current (base) IRI to the target IRI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target IRI is returned.
@@ -43,7 +43,7 @@ Makes a relative IRI reference from the current (base) IRI to the target IRI. If
 ## TryMakeRelative(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8IriReference) {#trymakerelative-ref-utf8uri-span-byte-ref-utf8irireference}
 
 ```csharp
-bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8IriReference result)
+public bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8IriReference result)
 ```
 
 Makes a relative IRI reference from the current (base) IRI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.

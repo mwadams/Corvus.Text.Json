@@ -21,7 +21,7 @@ Title: "BigNumber.TryFormat Method — Corvus.Numerics"
 ## TryFormat(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-char-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
-bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+public bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
 
 Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span.
@@ -46,7 +46,7 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 ## TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
-bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+public bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
 
 Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span.
@@ -71,7 +71,7 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 ## TryFormat(Span&lt;char&gt;, ref int) {#tryformat-span-char-ref-int}
 
 ```csharp
-bool TryFormat(Span<char> destination, ref int charsWritten)
+public bool TryFormat(Span<char> destination, ref int charsWritten)
 ```
 
 Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span using default formatting.
@@ -94,7 +94,7 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 ## TryFormat(Span&lt;byte&gt;, ref int) {#tryformat-span-byte-ref-int}
 
 ```csharp
-bool TryFormat(Span<byte> destination, ref int bytesWritten)
+public bool TryFormat(Span<byte> destination, ref int bytesWritten)
 ```
 
 Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span using default formatting.

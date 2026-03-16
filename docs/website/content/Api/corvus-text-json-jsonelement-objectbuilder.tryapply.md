@@ -12,7 +12,7 @@ Title: "JsonElement.ObjectBuilder.TryApply Method — Corvus.Text.Json"
 ## TryApply {#tryapply}
 
 ```csharp
-bool TryApply<TApplicator>(ref TApplicator value)
+public bool TryApply<TApplicator>(ref TApplicator value)
 ```
 
 ### Parameters

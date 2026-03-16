@@ -12,7 +12,7 @@ Title: "UniqueItemsHashSet Constructors — Corvus.Text.Json.Internal"
 ## UniqueItemsHashSet {#uniqueitemshashset}
 
 ```csharp
-UniqueItemsHashSet(IJsonDocument parentDocument, int itemsCount, Span<int> buckets, Span<byte> entries)
+public UniqueItemsHashSet(IJsonDocument parentDocument, int itemsCount, Span<int> buckets, Span<byte> entries)
 ```
 
 Creates a validator map for efficient property lookup based on the provided matchers.

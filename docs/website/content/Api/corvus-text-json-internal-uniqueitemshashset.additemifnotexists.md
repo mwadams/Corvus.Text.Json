@@ -12,7 +12,7 @@ Title: "UniqueItemsHashSet.AddItemIfNotExists Method — Corvus.Text.Json.Intern
 ## AddItemIfNotExists {#additemifnotexists}
 
 ```csharp
-bool AddItemIfNotExists(int parentDocumentIndex)
+public bool AddItemIfNotExists(int parentDocumentIndex)
 ```
 
 Adds the item identified by the parent document index to the map if it does not already exist, returning true if it was added and false if it already existed.

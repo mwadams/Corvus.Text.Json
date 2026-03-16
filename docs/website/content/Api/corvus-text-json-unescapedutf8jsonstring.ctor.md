@@ -12,7 +12,7 @@ Title: "UnescapedUtf8JsonString Constructors — Corvus.Text.Json"
 ## UnescapedUtf8JsonString {#unescapedutf8jsonstring}
 
 ```csharp
-UnescapedUtf8JsonString(ReadOnlyMemory<byte> utf8Bytes, byte[] extraRentedArrayPoolBytes)
+public UnescapedUtf8JsonString(ReadOnlyMemory<byte> utf8Bytes, byte[] extraRentedArrayPoolBytes)
 ```
 
 Initializes a new instance of the [`UnescapedUtf8JsonString`](/api/corvus-text-json-unescapedutf8jsonstring.html) struct.

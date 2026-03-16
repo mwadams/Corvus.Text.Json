@@ -12,7 +12,7 @@ Title: "ArrayEnumerator<TItem>.Dispose Method — Corvus.Text.Json"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 
 Releases resources used by the enumerator.

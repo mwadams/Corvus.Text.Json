@@ -12,7 +12,7 @@ Title: "JsonElement.GetOffsetDate Method — Corvus.Text.Json"
 ## GetOffsetDate {#getoffsetdate}
 
 ```csharp
-OffsetDate GetOffsetDate()
+public OffsetDate GetOffsetDate()
 ```
 
 Gets the value of the element as a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html).

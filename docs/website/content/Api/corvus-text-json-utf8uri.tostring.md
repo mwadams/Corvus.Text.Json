@@ -12,7 +12,7 @@ Title: "Utf8Uri.ToString Method — Corvus.Text.Json"
 ## ToString {#tostring}
 
 ```csharp
-string ToString()
+public virtual string ToString()
 ```
 
 Returns a string representation of the URI in display format.

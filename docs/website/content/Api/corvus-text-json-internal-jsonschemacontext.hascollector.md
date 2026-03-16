@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.HasCollector Property — Corvus.Text.Json.Internal"
 ## HasCollector {#hascollector}
 
 ```csharp
-bool HasCollector { get; }
+public bool HasCollector { get; }
 ```
 
 Gets a value indicating whether this context has a [`IJsonSchemaResultsCollector`](/api/corvus-text-json-ijsonschemaresultscollector.html).

@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.IsMatch Property — Corvus.Text.Json"
 ## IsMatch {#ismatch}
 
 ```csharp
-bool IsMatch { get; }
+public bool IsMatch { get; }
 ```
 
 ### Returns

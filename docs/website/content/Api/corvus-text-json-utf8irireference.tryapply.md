@@ -21,7 +21,7 @@ Title: "Utf8IriReference.TryApply Method — Corvus.Text.Json"
 ## TryApply(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8iri-span-byte-ref-utf8iri}
 
 ```csharp
-bool TryApply(ref Utf8Iri iri, Span<byte> buffer, ref Utf8Iri result)
+public bool TryApply(ref Utf8Iri iri, Span<byte> buffer, ref Utf8Iri result)
 ```
 
 Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
@@ -45,7 +45,7 @@ Applies the given IRI to the current (base) IRI and writes the result to the pro
 ## TryApply(ref Utf8IriReference, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8irireference-span-byte-ref-utf8iri}
 
 ```csharp
-bool TryApply(ref Utf8IriReference iriReference, Span<byte> buffer, ref Utf8Iri result)
+public bool TryApply(ref Utf8IriReference iriReference, Span<byte> buffer, ref Utf8Iri result)
 ```
 
 Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
@@ -69,7 +69,7 @@ Applies the given IRI reference to the current (base) IRI and writes the result 
 ## TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8urireference-span-byte-ref-utf8iri}
 
 ```csharp
-bool TryApply(ref Utf8UriReference uriReference, Span<byte> buffer, ref Utf8Iri result)
+public bool TryApply(ref Utf8UriReference uriReference, Span<byte> buffer, ref Utf8Iri result)
 ```
 
 Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
@@ -93,7 +93,7 @@ Applies the given URI reference to the current (base) IRI and writes the result 
 ## TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8uri-span-byte-ref-utf8iri}
 
 ```csharp
-bool TryApply(ref Utf8Uri uri, Span<byte> buffer, ref Utf8Iri result)
+public bool TryApply(ref Utf8Uri uri, Span<byte> buffer, ref Utf8Iri result)
 ```
 
 Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.

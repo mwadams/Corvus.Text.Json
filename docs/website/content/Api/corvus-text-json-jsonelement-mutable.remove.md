@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.Remove Method — Corvus.Text.Json"
 ## Remove {#remove}
 
 ```csharp
-bool Remove(ref JsonElement item)
+public bool Remove(ref JsonElement item)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "EnumeratorCreator.CreateArrayEnumerator Method — Corvus.Text.Json.Inte
 ## CreateArrayEnumerator {#createarrayenumerator}
 
 ```csharp
-ArrayEnumerator<T> CreateArrayEnumerator<T>(IJsonDocument parent, int index)
+public static ArrayEnumerator<T> CreateArrayEnumerator<T>(IJsonDocument parent, int index)
 ```
 
 Creates an enumerator for the items of a JSON array.

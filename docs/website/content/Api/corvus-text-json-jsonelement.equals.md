@@ -19,7 +19,7 @@ Title: "JsonElement.Equals Method — Corvus.Text.Json"
 ## Equals(object) {#equals-object}
 
 ```csharp
-bool Equals(object obj)
+public virtual bool Equals(object obj)
 ```
 
 Determines whether the specified object is equal to the current JsonElement.
@@ -41,7 +41,7 @@ Determines whether the specified object is equal to the current JsonElement.
 ## Equals(T) {#equals-t}
 
 ```csharp
-bool Equals<T>(T other)
+public bool Equals<T>(T other)
 ```
 
 Determines whether the current JsonElement is equal to another JsonElement-like value through deep comparison.

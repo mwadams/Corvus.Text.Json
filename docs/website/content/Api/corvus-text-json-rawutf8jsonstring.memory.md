@@ -12,7 +12,7 @@ Title: "RawUtf8JsonString.Memory Property — Corvus.Text.Json"
 ## Memory {#memory}
 
 ```csharp
-ReadOnlyMemory<byte> Memory { get; }
+public ReadOnlyMemory<byte> Memory { get; }
 ```
 
 Gets the underlying UTF-8 bytes as a [`ReadOnlyMemory`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1).

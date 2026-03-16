@@ -21,7 +21,7 @@ Title: "JsonElementHelpers.ParseValue Method — Corvus.Text.Json.Internal"
 ## ParseValue(ReadOnlySpan&lt;byte&gt;, JsonDocumentOptions) {#parsevalue-readonlyspan-byte-jsondocumentoptions}
 
 ```csharp
-T ParseValue<T>(ReadOnlySpan<byte> span, JsonDocumentOptions options)
+public static T ParseValue<T>(ReadOnlySpan<byte> span, JsonDocumentOptions options)
 ```
 
 Parses one JSON value (including objects or arrays) from the provided span.
@@ -54,7 +54,7 @@ This method makes a copy of the data the reader acted on, so there is no caller 
 ## ParseValue(ReadOnlySpan&lt;char&gt;, JsonDocumentOptions) {#parsevalue-readonlyspan-char-jsondocumentoptions}
 
 ```csharp
-T ParseValue<T>(ReadOnlySpan<char> span, JsonDocumentOptions options)
+public static T ParseValue<T>(ReadOnlySpan<char> span, JsonDocumentOptions options)
 ```
 
 Parses one JSON value (including objects or arrays) from the provided span.
@@ -87,7 +87,7 @@ This method makes a copy of the data the reader acted on, so there is no caller 
 ## ParseValue(string, JsonDocumentOptions) {#parsevalue-string-jsondocumentoptions}
 
 ```csharp
-T ParseValue<T>(string text, JsonDocumentOptions options)
+public static T ParseValue<T>(string text, JsonDocumentOptions options)
 ```
 
 Parses one JSON value (including objects or arrays) from the provided text.
@@ -120,7 +120,7 @@ This method makes a copy of the data, so there is no caller requirement to maint
 ## ParseValue(ref Utf8JsonReader) {#parsevalue-ref-utf8jsonreader}
 
 ```csharp
-T ParseValue<T>(ref Utf8JsonReader reader)
+public static T ParseValue<T>(ref Utf8JsonReader reader)
 ```
 
 Parses one JSON value (including objects or arrays) from the provided reader.

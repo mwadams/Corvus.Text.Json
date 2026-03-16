@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.CreateBuilder Method — Corvus
 ## CreateBuilder {#createbuilder}
 
 ```csharp
-JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateBuilder(JsonWorkspace workspace)
+public JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateBuilder(JsonWorkspace workspace)
 ```
 
 ### Parameters

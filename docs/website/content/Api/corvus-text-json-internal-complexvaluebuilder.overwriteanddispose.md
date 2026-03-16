@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.OverwriteAndDispose Method — Corvus.Text.Json.Inte
 ## OverwriteAndDispose {#overwriteanddispose}
 
 ```csharp
-void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref MetadataDb targetData)
+public void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref MetadataDb targetData)
 ```
 
 Overwrites a range of data in the specified [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) with the built data and disposes this builder.

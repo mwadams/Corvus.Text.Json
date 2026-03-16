@@ -12,6 +12,6 @@ Title: "JsonElement.ArrayBuilder Constructors — Corvus.Text.Json"
 ## JsonElement.ArrayBuilder {#jsonelement-arraybuilder}
 
 ```csharp
-JsonElement.ArrayBuilder()
+public JsonElement.ArrayBuilder()
 ```
 

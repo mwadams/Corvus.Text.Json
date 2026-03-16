@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetBoolean Method — Corvus.Text.Json"
 ## GetBoolean {#getboolean}
 
 ```csharp
-bool GetBoolean()
+public bool GetBoolean()
 ```
 
 ### Returns

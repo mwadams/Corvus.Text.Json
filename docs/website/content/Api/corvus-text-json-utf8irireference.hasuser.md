@@ -12,7 +12,7 @@ Title: "Utf8IriReference.HasUser Property — Corvus.Text.Json"
 ## HasUser {#hasuser}
 
 ```csharp
-bool HasUser { get; }
+public bool HasUser { get; }
 ```
 
 Gets a value indicating whether this reference has a user.

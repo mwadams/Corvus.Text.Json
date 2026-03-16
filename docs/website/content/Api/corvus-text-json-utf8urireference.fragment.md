@@ -12,7 +12,7 @@ Title: "Utf8UriReference.Fragment Property — Corvus.Text.Json"
 ## Fragment {#fragment}
 
 ```csharp
-ReadOnlySpan<byte> Fragment { get; }
+public ReadOnlySpan<byte> Fragment { get; }
 ```
 
 Gets the fragment component of the reference.

@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Days Property — Corvus.Text.Json"
 ## Days {#days}
 
 ```csharp
-int Days { get; set; }
+public int Days { get; set; }
 ```
 
 Gets or sets the number of days within the period.

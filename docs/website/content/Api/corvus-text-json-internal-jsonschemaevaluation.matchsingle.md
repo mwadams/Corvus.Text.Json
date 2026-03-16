@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchSingle Method — Corvus.Text.Json.Internal"
 ## MatchSingle {#matchsingle}
 
 ```csharp
-bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Single type constraint, validating it as a single-precision floating-point number.

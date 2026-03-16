@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetSingle Method — Corvus.Text.Json"
 ## TryGetSingle {#trygetsingle}
 
 ```csharp
-bool TryGetSingle(ref float value)
+public bool TryGetSingle(ref float value)
 ```
 
 Attempts to represent the current JSON number as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).

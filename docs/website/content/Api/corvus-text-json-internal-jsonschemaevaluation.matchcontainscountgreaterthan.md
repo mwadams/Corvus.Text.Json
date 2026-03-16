@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchContainsCountGreaterThan Method — Corvus.Tex
 ## MatchContainsCountGreaterThan {#matchcontainscountgreaterthan}
 
 ```csharp
-bool MatchContainsCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchContainsCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a contains count is greater than the given value.

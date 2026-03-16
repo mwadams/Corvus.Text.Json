@@ -19,7 +19,7 @@ Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Tex
 ## EvaluatedBooleanSchema(bool, JsonSchemaMessageProvider) {#evaluatedbooleanschema-bool-jsonschemamessageprovider}
 
 ```csharp
-void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider messageProvider)
+public abstract void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider messageProvider)
 ```
 
 Indicates that a boolean schema was evaluated.
@@ -40,7 +40,7 @@ This is used when evaluating a schema of the form `true` or `false`.
 ## EvaluatedBooleanSchema(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#evaluatedbooleanschema-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
 ```csharp
-void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
+public abstract void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
 ```
 
 Indicates that a boolean schema was evaluated.

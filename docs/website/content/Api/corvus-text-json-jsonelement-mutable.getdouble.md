@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetDouble Method — Corvus.Text.Json"
 ## GetDouble {#getdouble}
 
 ```csharp
-double GetDouble()
+public double GetDouble()
 ```
 
 ### Returns

@@ -12,7 +12,7 @@ Title: "JsonException.BytePositionInLine Property — Corvus.Text.Json"
 ## BytePositionInLine {#bytepositioninline}
 
 ```csharp
-Nullable<long> BytePositionInLine { get; set; }
+public Nullable<long> BytePositionInLine { get; set; }
 ```
 
 Gets the number of bytes read within the current line before the exception (starting at 0).

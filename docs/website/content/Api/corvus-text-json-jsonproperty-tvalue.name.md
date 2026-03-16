@@ -12,7 +12,7 @@ Title: "JsonProperty<TValue>.Name Property — Corvus.Text.Json"
 ## Name {#name}
 
 ```csharp
-string Name { get; }
+public string Name { get; }
 ```
 
 The name of this property.

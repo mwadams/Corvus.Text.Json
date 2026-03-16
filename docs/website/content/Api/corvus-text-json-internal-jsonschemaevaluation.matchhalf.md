@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchHalf Method — Corvus.Text.Json.Internal"
 ## MatchHalf {#matchhalf}
 
 ```csharp
-bool MatchHalf(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchHalf(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Half type constraint, validating it as a half-precision floating-point number.

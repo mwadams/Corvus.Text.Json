@@ -19,7 +19,7 @@ Title: "IJsonDocument.TextEquals Method — Corvus.Text.Json.Internal"
 ## TextEquals(int, ReadOnlySpan&lt;char&gt;, bool) {#textequals-int-readonlyspan-char-bool}
 
 ```csharp
-bool TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
+public abstract bool TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
 ```
 
 Determines whether the text at the specified index equals the specified text.
@@ -43,7 +43,7 @@ Determines whether the text at the specified index equals the specified text.
 ## TextEquals(int, ReadOnlySpan&lt;byte&gt;, bool, bool) {#textequals-int-readonlyspan-byte-bool-bool}
 
 ```csharp
-bool TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
+public abstract bool TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
 ```
 
 Determines whether the UTF-8 text at the specified index equals the specified text.

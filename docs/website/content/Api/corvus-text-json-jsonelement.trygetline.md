@@ -19,7 +19,7 @@ Title: "JsonElement.TryGetLine Method — Corvus.Text.Json"
 ## TryGetLine(int, ref ReadOnlyMemory&lt;byte&gt;) {#trygetline-int-ref-readonlymemory-byte}
 
 ```csharp
-bool TryGetLine(int lineNumber, ref ReadOnlyMemory<byte> line)
+public bool TryGetLine(int lineNumber, ref ReadOnlyMemory<byte> line)
 ```
 
 Tries to get the specified line from the original source document as UTF-8 bytes.
@@ -46,7 +46,7 @@ This method returns `false` when the backing document does not retain the origin
 ## TryGetLine(int, ref string) {#trygetline-int-ref-string}
 
 ```csharp
-bool TryGetLine(int lineNumber, ref string line)
+public bool TryGetLine(int lineNumber, ref string line)
 ```
 
 Tries to get the specified line from the original source document as a string.

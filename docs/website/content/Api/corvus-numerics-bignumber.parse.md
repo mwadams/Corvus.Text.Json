@@ -20,7 +20,7 @@ Title: "BigNumber.Parse Method — Corvus.Numerics"
 ## Parse(string, IFormatProvider) {#parse-string-iformatprovider}
 
 ```csharp
-BigNumber Parse(string s, IFormatProvider provider)
+public static BigNumber Parse(string s, IFormatProvider provider)
 ```
 
 Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -43,7 +43,7 @@ The parsed number.
 ## Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider) {#parse-readonlyspan-char-numberstyles-iformatprovider}
 
 ```csharp
-BigNumber Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider)
+public static BigNumber Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider)
 ```
 
 Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -67,7 +67,7 @@ The parsed number.
 ## Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider) {#parse-readonlyspan-byte-numberstyles-iformatprovider}
 
 ```csharp
-BigNumber Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
+public static BigNumber Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
 ```
 
 Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).

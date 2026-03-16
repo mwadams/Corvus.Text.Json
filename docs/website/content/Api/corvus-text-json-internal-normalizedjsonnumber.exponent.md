@@ -12,7 +12,7 @@ Title: "NormalizedJsonNumber.Exponent Property — Corvus.Text.Json.Internal"
 ## Exponent {#exponent}
 
 ```csharp
-int Exponent { get; }
+public int Exponent { get; }
 ```
 
 The exponent to apply after concatenating the integral and fractional parts.

@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.InsertAndDispose Method — Corvus.Text.Json.Interna
 ## InsertAndDispose {#insertanddispose}
 
 ```csharp
-void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref MetadataDb targetData)
+public void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref MetadataDb targetData)
 ```
 
 Inserts the built data into the specified [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) at the given index and disposes this builder.

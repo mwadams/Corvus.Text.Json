@@ -12,7 +12,7 @@ Title: "RentedBacking.Span Method — Corvus.Text.Json.Internal"
 ## Span {#span}
 
 ```csharp
-ReadOnlySpan<byte> Span()
+public ReadOnlySpan<byte> Span()
 ```
 
 Gets the written value as a span

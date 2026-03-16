@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetSingle Method — Corvus.Text.Json"
 ## TryGetSingle {#trygetsingle}
 
 ```csharp
-bool TryGetSingle(ref float value)
+public bool TryGetSingle(ref float value)
 ```
 
 Parses the current JSON token value from the source as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value. Returns `false` otherwise.

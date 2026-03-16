@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.TryCopyPath Method — Corvus.Text.Json.Internal"
 ## TryCopyPath {#trycopypath}
 
 ```csharp
-bool TryCopyPath(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, ref int written)
+public static bool TryCopyPath(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, ref int written)
 ```
 
 Tries to copy the path to the output buffer.

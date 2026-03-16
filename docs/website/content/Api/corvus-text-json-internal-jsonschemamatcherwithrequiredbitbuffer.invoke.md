@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcherWithRequiredBitBuffer.Invoke Method — Corvus.Text.Jso
 ## Invoke {#invoke}
 
 ```csharp
-void Invoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
+public virtual void Invoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer)
 ```
 
 ### Parameters

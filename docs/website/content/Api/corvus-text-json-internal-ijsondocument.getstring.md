@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetString Method — Corvus.Text.Json.Internal"
 ## GetString {#getstring}
 
 ```csharp
-string GetString(int index, JsonTokenType expectedType)
+public abstract string GetString(int index, JsonTokenType expectedType)
 ```
 
 Gets the string value of the element at the specified index.

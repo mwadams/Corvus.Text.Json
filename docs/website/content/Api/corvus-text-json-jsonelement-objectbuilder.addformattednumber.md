@@ -19,7 +19,7 @@ Title: "JsonElement.ObjectBuilder.AddFormattedNumber Method — Corvus.Text.Json
 ## AddFormattedNumber(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addformattednumber-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
-void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
+public void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -36,7 +36,7 @@ void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> valu
 ## AddFormattedNumber(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#addformattednumber-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
-void AddFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
+public void AddFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
 ```
 
 ### Parameters

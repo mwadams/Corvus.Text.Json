@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedContainsCountLessThanValue Method — Corvu
 ## ExpectedContainsCountLessThanValue {#expectedcontainscountlessthanvalue}
 
 ```csharp
-bool ExpectedContainsCountLessThanValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedContainsCountLessThanValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "Period.HasDateComponent Property — Corvus.Text.Json"
 ## HasDateComponent {#hasdatecomponent}
 
 ```csharp
-bool HasDateComponent { get; }
+public bool HasDateComponent { get; }
 ```
 
 Gets a value indicating whether or not this period contains any non-zero date-based properties (days or higher).

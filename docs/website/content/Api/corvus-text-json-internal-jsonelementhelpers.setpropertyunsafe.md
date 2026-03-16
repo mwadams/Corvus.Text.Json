@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.SetPropertyUnsafe Method — Corvus.Text.Json.Interna
 ## SetPropertyUnsafe {#setpropertyunsafe}
 
 ```csharp
-void SetPropertyUnsafe<TTarget, TValue>(TTarget targetElement, JsonProperty<TValue> property)
+public static void SetPropertyUnsafe<TTarget, TValue>(TTarget targetElement, JsonProperty<TValue> property)
 ```
 
 Sets a property value on a target element.

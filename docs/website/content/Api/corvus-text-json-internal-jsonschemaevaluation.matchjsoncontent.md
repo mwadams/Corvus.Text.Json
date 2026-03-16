@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchJsonContent Method — Corvus.Text.Json.Intern
 ## MatchJsonContent {#matchjsoncontent}
 
 ```csharp
-bool MatchJsonContent(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchJsonContent(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value contains valid JSON content.

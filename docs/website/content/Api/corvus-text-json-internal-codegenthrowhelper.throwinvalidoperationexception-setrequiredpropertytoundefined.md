@@ -12,7 +12,7 @@ Title: "CodeGenThrowHelper.ThrowInvalidOperationException_SetRequiredPropertyToU
 ## ThrowInvalidOperationException_SetRequiredPropertyToUndefined {#throwinvalidoperationexception-setrequiredpropertytoundefined}
 
 ```csharp
-void ThrowInvalidOperationException_SetRequiredPropertyToUndefined(string propertyName)
+public static void ThrowInvalidOperationException_SetRequiredPropertyToUndefined(string propertyName)
 ```
 
 Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) when attempting to set a required property to an undefined value.

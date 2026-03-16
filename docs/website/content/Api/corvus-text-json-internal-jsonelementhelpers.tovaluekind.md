@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ToValueKind Method — Corvus.Text.Json.Internal"
 ## ToValueKind {#tovaluekind}
 
 ```csharp
-JsonValueKind ToValueKind(JsonTokenType tokenType)
+public static JsonValueKind ToValueKind(JsonTokenType tokenType)
 ```
 
 Converts a [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) to its corresponding [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html).

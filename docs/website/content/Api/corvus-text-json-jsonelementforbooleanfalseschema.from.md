@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.From Method — Corvus.Text.Json"
 ## From {#from}
 
 ```csharp
-JsonElementForBooleanFalseSchema From<T>(ref T instance)
+public static JsonElementForBooleanFalseSchema From<T>(ref T instance)
 ```
 
 Creates a new [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) from the specified JSON element instance.

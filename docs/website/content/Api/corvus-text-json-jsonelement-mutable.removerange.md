@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.RemoveRange Method — Corvus.Text.Json"
 ## RemoveRange {#removerange}
 
 ```csharp
-void RemoveRange(int startIndex, int count)
+public void RemoveRange(int startIndex, int count)
 ```
 
 ### Parameters

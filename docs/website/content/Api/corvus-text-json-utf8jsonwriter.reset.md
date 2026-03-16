@@ -20,7 +20,7 @@ Title: "Utf8JsonWriter.Reset Method — Corvus.Text.Json"
 ## Reset() {#reset}
 
 ```csharp
-void Reset()
+public void Reset()
 ```
 
 Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used.
@@ -40,7 +40,7 @@ The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will continue 
 ## Reset(Stream) {#reset-stream}
 
 ```csharp
-void Reset(Stream utf8Json)
+public void Reset(Stream utf8Json)
 ```
 
 Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used with the new instance of [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream).
@@ -67,7 +67,7 @@ The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will continue 
 ## Reset(IBufferWriter&lt;byte&gt;) {#reset-ibufferwriter-byte}
 
 ```csharp
-void Reset(IBufferWriter<byte> bufferWriter)
+public void Reset(IBufferWriter<byte> bufferWriter)
 ```
 
 Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used with the new instance of [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1).

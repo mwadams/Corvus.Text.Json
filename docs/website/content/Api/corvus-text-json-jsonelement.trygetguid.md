@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetGuid Method — Corvus.Text.Json"
 ## TryGetGuid {#trygetguid}
 
 ```csharp
-bool TryGetGuid(ref Guid value)
+public bool TryGetGuid(ref Guid value)
 ```
 
 Attempts to represent the current JSON string as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).

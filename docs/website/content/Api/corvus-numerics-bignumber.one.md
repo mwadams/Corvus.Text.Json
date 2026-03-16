@@ -12,7 +12,7 @@ Title: "BigNumber.One Property — Corvus.Numerics"
 ## One {#one}
 
 ```csharp
-BigNumber One { get; }
+public static BigNumber One { get; }
 ```
 
 Gets a value representing one.

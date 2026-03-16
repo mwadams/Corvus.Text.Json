@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchIri Method — Corvus.Text.Json.Internal"
 ## MatchIri {#matchiri}
 
 ```csharp
-bool MatchIri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchIri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid Internationalized Resource Identifier (IRI) format.

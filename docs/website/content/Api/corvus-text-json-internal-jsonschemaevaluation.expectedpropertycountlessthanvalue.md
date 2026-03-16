@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountLessThanValue Method — Corvu
 ## ExpectedPropertyCountLessThanValue {#expectedpropertycountlessthanvalue}
 
 ```csharp
-bool ExpectedPropertyCountLessThanValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedPropertyCountLessThanValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

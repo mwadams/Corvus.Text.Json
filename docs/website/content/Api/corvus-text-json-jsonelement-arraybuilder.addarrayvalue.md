@@ -12,7 +12,7 @@ Title: "JsonElement.ArrayBuilder.AddArrayValue Method — Corvus.Text.Json"
 ## AddArrayValue {#addarrayvalue}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<ulong> array)
+public void AddArrayValue(ReadOnlySpan<ulong> array)
 ```
 
 ### Parameters

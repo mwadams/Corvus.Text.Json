@@ -22,7 +22,7 @@ Title: "Utf8JsonWriter.WriteStartObject Method — Corvus.Text.Json"
 ## WriteStartObject() {#writestartobject}
 
 ```csharp
-void WriteStartObject()
+public void WriteStartObject()
 ```
 
 Writes the beginning of a JSON object.
@@ -38,7 +38,7 @@ Writes the beginning of a JSON object.
 ## WriteStartObject(JsonEncodedText) {#writestartobject-jsonencodedtext}
 
 ```csharp
-void WriteStartObject(JsonEncodedText propertyName)
+public void WriteStartObject(JsonEncodedText propertyName)
 ```
 
 Writes the beginning of a JSON object with a pre-encoded property name as the key.
@@ -60,7 +60,7 @@ Writes the beginning of a JSON object with a pre-encoded property name as the ke
 ## WriteStartObject(ReadOnlySpan&lt;byte&gt;) {#writestartobject-readonlyspan-byte}
 
 ```csharp
-void WriteStartObject(ReadOnlySpan<byte> utf8PropertyName)
+public void WriteStartObject(ReadOnlySpan<byte> utf8PropertyName)
 ```
 
 Writes the beginning of a JSON object with a property name as the key.
@@ -87,7 +87,7 @@ The property name is escaped before writing.
 ## WriteStartObject(string) {#writestartobject-string}
 
 ```csharp
-void WriteStartObject(string propertyName)
+public void WriteStartObject(string propertyName)
 ```
 
 Writes the beginning of a JSON object with a property name as the key.
@@ -115,7 +115,7 @@ The property name is escaped before writing.
 ## WriteStartObject(ReadOnlySpan&lt;char&gt;) {#writestartobject-readonlyspan-char}
 
 ```csharp
-void WriteStartObject(ReadOnlySpan<char> propertyName)
+public void WriteStartObject(ReadOnlySpan<char> propertyName)
 ```
 
 Writes the beginning of a JSON object with a property name as the key.

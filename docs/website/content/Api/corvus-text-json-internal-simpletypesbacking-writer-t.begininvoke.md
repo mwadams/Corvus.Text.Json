@@ -12,7 +12,7 @@ Title: "SimpleTypesBacking.Writer<T>.BeginInvoke Method — Corvus.Text.Json.Int
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(T value, Span<byte> buffer, ref int written, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(T value, Span<byte> buffer, ref int written, AsyncCallback callback, object object)
 ```
 
 ### Parameters

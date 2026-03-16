@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.Apply Method — Corvus.Text.Json.Internal"
 ## Apply {#apply}
 
 ```csharp
-void Apply<T>(ref T value)
+public void Apply<T>(ref T value)
 ```
 
 Apply an object instance value to the document.

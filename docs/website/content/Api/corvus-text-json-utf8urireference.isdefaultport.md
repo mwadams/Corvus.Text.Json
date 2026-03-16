@@ -12,7 +12,7 @@ Title: "Utf8UriReference.IsDefaultPort Property — Corvus.Text.Json"
 ## IsDefaultPort {#isdefaultport}
 
 ```csharp
-bool IsDefaultPort { get; }
+public bool IsDefaultPort { get; }
 ```
 
 Gets a value indicating whether this is the default port for the scheme.

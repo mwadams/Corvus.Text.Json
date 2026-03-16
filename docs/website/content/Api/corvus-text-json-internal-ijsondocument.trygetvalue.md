@@ -44,7 +44,7 @@ Title: "IJsonDocument.TryGetValue Method — Corvus.Text.Json.Internal"
 ## TryGetValue(int, ref byte[]) {#trygetvalue-int-ref-byte}
 
 ```csharp
-bool TryGetValue(int index, ref byte[] value)
+public abstract bool TryGetValue(int index, ref byte[] value)
 ```
 
 Tries to get the value of the element at the specified index as a byte array.
@@ -67,7 +67,7 @@ Tries to get the value of the element at the specified index as a byte array.
 ## TryGetValue(int, ref sbyte) {#trygetvalue-int-ref-sbyte}
 
 ```csharp
-bool TryGetValue(int index, ref sbyte value)
+public abstract bool TryGetValue(int index, ref sbyte value)
 ```
 
 Tries to get the value of the element at the specified index as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
@@ -90,7 +90,7 @@ Tries to get the value of the element at the specified index as an [`SByte`](htt
 ## TryGetValue(int, ref byte) {#trygetvalue-int-ref-byte}
 
 ```csharp
-bool TryGetValue(int index, ref byte value)
+public abstract bool TryGetValue(int index, ref byte value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte).
@@ -113,7 +113,7 @@ Tries to get the value of the element at the specified index as a [`Byte`](https
 ## TryGetValue(int, ref short) {#trygetvalue-int-ref-short}
 
 ```csharp
-bool TryGetValue(int index, ref short value)
+public abstract bool TryGetValue(int index, ref short value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16).
@@ -136,7 +136,7 @@ Tries to get the value of the element at the specified index as a [`Int16`](http
 ## TryGetValue(int, ref ushort) {#trygetvalue-int-ref-ushort}
 
 ```csharp
-bool TryGetValue(int index, ref ushort value)
+public abstract bool TryGetValue(int index, ref ushort value)
 ```
 
 Tries to get the value of the element at the specified index as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16).
@@ -159,7 +159,7 @@ Tries to get the value of the element at the specified index as a [`UInt16`](htt
 ## TryGetValue(int, ref int) {#trygetvalue-int-ref-int}
 
 ```csharp
-bool TryGetValue(int index, ref int value)
+public abstract bool TryGetValue(int index, ref int value)
 ```
 
 Tries to get the value of the element at the specified index as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32).
@@ -182,7 +182,7 @@ Tries to get the value of the element at the specified index as an [`Int32`](htt
 ## TryGetValue(int, ref uint) {#trygetvalue-int-ref-uint}
 
 ```csharp
-bool TryGetValue(int index, ref uint value)
+public abstract bool TryGetValue(int index, ref uint value)
 ```
 
 Tries to get the value of the element at the specified index as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32).
@@ -205,7 +205,7 @@ Tries to get the value of the element at the specified index as a [`UInt32`](htt
 ## TryGetValue(int, ref long) {#trygetvalue-int-ref-long}
 
 ```csharp
-bool TryGetValue(int index, ref long value)
+public abstract bool TryGetValue(int index, ref long value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
@@ -228,7 +228,7 @@ Tries to get the value of the element at the specified index as a [`Int64`](http
 ## TryGetValue(int, ref ulong) {#trygetvalue-int-ref-ulong}
 
 ```csharp
-bool TryGetValue(int index, ref ulong value)
+public abstract bool TryGetValue(int index, ref ulong value)
 ```
 
 Tries to get the value of the element at the specified index as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
@@ -251,7 +251,7 @@ Tries to get the value of the element at the specified index as a [`UInt64`](htt
 ## TryGetValue(int, ref double) {#trygetvalue-int-ref-double}
 
 ```csharp
-bool TryGetValue(int index, ref double value)
+public abstract bool TryGetValue(int index, ref double value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
@@ -274,7 +274,7 @@ Tries to get the value of the element at the specified index as a [`Double`](htt
 ## TryGetValue(int, ref float) {#trygetvalue-int-ref-float}
 
 ```csharp
-bool TryGetValue(int index, ref float value)
+public abstract bool TryGetValue(int index, ref float value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
@@ -297,7 +297,7 @@ Tries to get the value of the element at the specified index as a [`Single`](htt
 ## TryGetValue(int, ref decimal) {#trygetvalue-int-ref-decimal}
 
 ```csharp
-bool TryGetValue(int index, ref decimal value)
+public abstract bool TryGetValue(int index, ref decimal value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
@@ -320,7 +320,7 @@ Tries to get the value of the element at the specified index as a [`Decimal`](ht
 ## TryGetValue(int, ref BigInteger) {#trygetvalue-int-ref-biginteger}
 
 ```csharp
-bool TryGetValue(int index, ref BigInteger value)
+public abstract bool TryGetValue(int index, ref BigInteger value)
 ```
 
 Tries to get the value of the element at the specified index as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
@@ -343,7 +343,7 @@ Tries to get the value of the element at the specified index as a [`BigInteger`]
 ## TryGetValue(int, ref BigNumber) {#trygetvalue-int-ref-bignumber}
 
 ```csharp
-bool TryGetValue(int index, ref BigNumber value)
+public abstract bool TryGetValue(int index, ref BigNumber value)
 ```
 
 Tries to get the value of the element at the specified index as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -366,7 +366,7 @@ Tries to get the value of the element at the specified index as a [`BigNumber`](
 ## TryGetValue(int, ref DateTime) {#trygetvalue-int-ref-datetime}
 
 ```csharp
-bool TryGetValue(int index, ref DateTime value)
+public abstract bool TryGetValue(int index, ref DateTime value)
 ```
 
 Tries to get the value of the element at the specified index as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
@@ -389,7 +389,7 @@ Tries to get the value of the element at the specified index as a [`DateTime`](h
 ## TryGetValue(int, ref DateTimeOffset) {#trygetvalue-int-ref-datetimeoffset}
 
 ```csharp
-bool TryGetValue(int index, ref DateTimeOffset value)
+public abstract bool TryGetValue(int index, ref DateTimeOffset value)
 ```
 
 Tries to get the value of the element at the specified index as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset).
@@ -412,7 +412,7 @@ Tries to get the value of the element at the specified index as a [`DateTimeOffs
 ## TryGetValue(int, ref OffsetDateTime) {#trygetvalue-int-ref-offsetdatetime}
 
 ```csharp
-bool TryGetValue(int index, ref OffsetDateTime value)
+public abstract bool TryGetValue(int index, ref OffsetDateTime value)
 ```
 
 Tries to get the value of the element at the specified index as an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html).
@@ -435,7 +435,7 @@ Tries to get the value of the element at the specified index as an [`OffsetDateT
 ## TryGetValue(int, ref OffsetDate) {#trygetvalue-int-ref-offsetdate}
 
 ```csharp
-bool TryGetValue(int index, ref OffsetDate value)
+public abstract bool TryGetValue(int index, ref OffsetDate value)
 ```
 
 Tries to get the value of the element at the specified index as an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html).
@@ -458,7 +458,7 @@ Tries to get the value of the element at the specified index as an [`OffsetDate`
 ## TryGetValue(int, ref OffsetTime) {#trygetvalue-int-ref-offsettime}
 
 ```csharp
-bool TryGetValue(int index, ref OffsetTime value)
+public abstract bool TryGetValue(int index, ref OffsetTime value)
 ```
 
 Tries to get the value of the element at the specified index as an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html).
@@ -481,7 +481,7 @@ Tries to get the value of the element at the specified index as an [`OffsetTime`
 ## TryGetValue(int, ref LocalDate) {#trygetvalue-int-ref-localdate}
 
 ```csharp
-bool TryGetValue(int index, ref LocalDate value)
+public abstract bool TryGetValue(int index, ref LocalDate value)
 ```
 
 Tries to get the value of the element at the specified index as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
@@ -504,7 +504,7 @@ Tries to get the value of the element at the specified index as a [`LocalDate`](
 ## TryGetValue(int, ref Period) {#trygetvalue-int-ref-period}
 
 ```csharp
-bool TryGetValue(int index, ref Period value)
+public abstract bool TryGetValue(int index, ref Period value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Period`](/api/corvus-text-json-period.html).
@@ -527,7 +527,7 @@ Tries to get the value of the element at the specified index as a [`Period`](/ap
 ## TryGetValue(int, ref Guid) {#trygetvalue-int-ref-guid}
 
 ```csharp
-bool TryGetValue(int index, ref Guid value)
+public abstract bool TryGetValue(int index, ref Guid value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
@@ -550,7 +550,7 @@ Tries to get the value of the element at the specified index as a [`Guid`](https
 ## TryGetValue(int, ref Int128) {#trygetvalue-int-ref-int128}
 
 ```csharp
-bool TryGetValue(int index, ref Int128 value)
+public abstract bool TryGetValue(int index, ref Int128 value)
 ```
 
 Tries to get the value of the element at the specified index as an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
@@ -573,7 +573,7 @@ Tries to get the value of the element at the specified index as an [`Int128`](ht
 ## TryGetValue(int, ref UInt128) {#trygetvalue-int-ref-uint128}
 
 ```csharp
-bool TryGetValue(int index, ref UInt128 value)
+public abstract bool TryGetValue(int index, ref UInt128 value)
 ```
 
 Tries to get the value of the element at the specified index as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128).
@@ -596,7 +596,7 @@ Tries to get the value of the element at the specified index as a [`UInt128`](ht
 ## TryGetValue(int, ref Half) {#trygetvalue-int-ref-half}
 
 ```csharp
-bool TryGetValue(int index, ref Half value)
+public abstract bool TryGetValue(int index, ref Half value)
 ```
 
 Tries to get the value of the element at the specified index as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half).
@@ -619,7 +619,7 @@ Tries to get the value of the element at the specified index as a [`Half`](https
 ## TryGetValue(int, ref DateOnly) {#trygetvalue-int-ref-dateonly}
 
 ```csharp
-bool TryGetValue(int index, ref DateOnly value)
+public abstract bool TryGetValue(int index, ref DateOnly value)
 ```
 
 Tries to get the value of the element at the specified index as a [`DateOnly`](https://learn.microsoft.com/dotnet/api/system.dateonly).
@@ -642,7 +642,7 @@ Tries to get the value of the element at the specified index as a [`DateOnly`](h
 ## TryGetValue(int, ref TimeOnly) {#trygetvalue-int-ref-timeonly}
 
 ```csharp
-bool TryGetValue(int index, ref TimeOnly value)
+public abstract bool TryGetValue(int index, ref TimeOnly value)
 ```
 
 Tries to get the value of the element at the specified index as a [`TimeOnly`](https://learn.microsoft.com/dotnet/api/system.timeonly).

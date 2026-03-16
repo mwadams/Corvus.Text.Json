@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.RootElement Property — Corvus.Text.Json"
 ## RootElement {#rootelement}
 
 ```csharp
-T RootElement { get; }
+public T RootElement { get; }
 ```
 
 The [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) representing the value of the document.

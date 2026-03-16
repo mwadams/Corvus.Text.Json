@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetByte Method — Corvus.Text.Json"
 ## GetByte {#getbyte}
 
 ```csharp
-byte GetByte()
+public byte GetByte()
 ```
 
 Parses the current JSON token value from the source as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value. Throws exceptions otherwise.

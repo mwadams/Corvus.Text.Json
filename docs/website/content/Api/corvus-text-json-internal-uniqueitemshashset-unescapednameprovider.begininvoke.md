@@ -12,7 +12,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.BeginInvoke Method — Corvus.T
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(AsyncCallback callback, object object)
 ```
 
 ### Parameters

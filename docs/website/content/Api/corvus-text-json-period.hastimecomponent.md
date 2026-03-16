@@ -12,7 +12,7 @@ Title: "Period.HasTimeComponent Property — Corvus.Text.Json"
 ## HasTimeComponent {#hastimecomponent}
 
 ```csharp
-bool HasTimeComponent { get; }
+public bool HasTimeComponent { get; }
 ```
 
 Gets a value indicating whether or not this period contains any non-zero-valued time-based properties (hours or lower).

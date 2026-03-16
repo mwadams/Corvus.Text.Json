@@ -12,7 +12,7 @@ Title: "JsonElement.GetPeriod Method — Corvus.Text.Json"
 ## GetPeriod {#getperiod}
 
 ```csharp
-Period GetPeriod()
+public Period GetPeriod()
 ```
 
 Gets the value of the element as a [`Period`](/api/corvus-text-json-period.html).

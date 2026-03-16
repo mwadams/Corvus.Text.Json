@@ -59,7 +59,7 @@ Title: "JsonElement.ObjectBuilder.AddArrayValue Method — Corvus.Text.Json"
 ## AddArrayValue(string, ReadOnlySpan&lt;long&gt;) {#addarrayvalue-string-readonlyspan-long}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<long> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<long> array)
 ```
 
 ### Parameters
@@ -74,7 +74,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<long> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;int&gt;) {#addarrayvalue-string-readonlyspan-int}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<int> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<int> array)
 ```
 
 ### Parameters
@@ -89,7 +89,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<int> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;short&gt;) {#addarrayvalue-string-readonlyspan-short}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<short> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<short> array)
 ```
 
 ### Parameters
@@ -104,7 +104,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<short> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;sbyte&gt;) {#addarrayvalue-string-readonlyspan-sbyte}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<sbyte> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<sbyte> array)
 ```
 
 ### Parameters
@@ -119,7 +119,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<sbyte> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;ulong&gt;) {#addarrayvalue-string-readonlyspan-ulong}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<ulong> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<ulong> array)
 ```
 
 ### Parameters
@@ -134,7 +134,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<ulong> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;uint&gt;) {#addarrayvalue-string-readonlyspan-uint}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<uint> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<uint> array)
 ```
 
 ### Parameters
@@ -149,7 +149,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<uint> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;ushort&gt;) {#addarrayvalue-string-readonlyspan-ushort}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<ushort> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<ushort> array)
 ```
 
 ### Parameters
@@ -164,7 +164,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<ushort> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;byte&gt;) {#addarrayvalue-string-readonlyspan-byte}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<byte> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<byte> array)
 ```
 
 ### Parameters
@@ -179,7 +179,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<byte> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;decimal&gt;) {#addarrayvalue-string-readonlyspan-decimal}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<decimal> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<decimal> array)
 ```
 
 ### Parameters
@@ -194,7 +194,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<decimal> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;double&gt;) {#addarrayvalue-string-readonlyspan-double}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<double> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<double> array)
 ```
 
 ### Parameters
@@ -209,7 +209,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<double> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;float&gt;) {#addarrayvalue-string-readonlyspan-float}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<float> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<float> array)
 ```
 
 ### Parameters
@@ -224,7 +224,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<float> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;Int128&gt;) {#addarrayvalue-string-readonlyspan-int128}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<Int128> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<Int128> array)
 ```
 
 ### Parameters
@@ -239,7 +239,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<Int128> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;UInt128&gt;) {#addarrayvalue-string-readonlyspan-uint128}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<UInt128> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<UInt128> array)
 ```
 
 ### Parameters
@@ -254,7 +254,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<UInt128> array)
 ## AddArrayValue(string, ReadOnlySpan&lt;Half&gt;) {#addarrayvalue-string-readonlyspan-half}
 
 ```csharp
-void AddArrayValue(string propertyName, ReadOnlySpan<Half> array)
+public void AddArrayValue(string propertyName, ReadOnlySpan<Half> array)
 ```
 
 ### Parameters
@@ -269,7 +269,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<Half> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;long&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-long}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<long> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<long> array)
 ```
 
 ### Parameters
@@ -284,7 +284,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<long> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;int&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-int}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<int> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<int> array)
 ```
 
 ### Parameters
@@ -299,7 +299,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<int> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;short&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-short}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<short> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<short> array)
 ```
 
 ### Parameters
@@ -314,7 +314,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<short> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;sbyte&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-sbyte}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<sbyte> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<sbyte> array)
 ```
 
 ### Parameters
@@ -329,7 +329,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<sbyte> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ulong&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-ulong}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ulong> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ulong> array)
 ```
 
 ### Parameters
@@ -344,7 +344,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ulong> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;uint&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-uint}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<uint> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<uint> array)
 ```
 
 ### Parameters
@@ -359,7 +359,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<uint> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ushort&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-ushort}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ushort> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ushort> array)
 ```
 
 ### Parameters
@@ -374,7 +374,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ushort> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> array)
 ```
 
 ### Parameters
@@ -389,7 +389,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;decimal&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-decimal}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<decimal> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<decimal> array)
 ```
 
 ### Parameters
@@ -404,7 +404,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<decimal> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;double&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-double}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<double> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<double> array)
 ```
 
 ### Parameters
@@ -419,7 +419,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<double> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;float&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-float}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<float> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<float> array)
 ```
 
 ### Parameters
@@ -434,7 +434,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<float> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Int128&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-int128}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Int128> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Int128> array)
 ```
 
 ### Parameters
@@ -449,7 +449,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Int128> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;UInt128&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-uint128}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<UInt128> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<UInt128> array)
 ```
 
 ### Parameters
@@ -464,7 +464,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<UInt128> array)
 ## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Half&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-half}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Half> array)
+public void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Half> array)
 ```
 
 ### Parameters
@@ -479,7 +479,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Half> array)
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;long&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-long-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -496,7 +496,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<long> array, bo
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;int&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-int-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<int> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<int> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -513,7 +513,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<int> array, boo
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;short&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-short-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<short> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<short> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -530,7 +530,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<short> array, b
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;sbyte&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-sbyte-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<sbyte> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<sbyte> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -547,7 +547,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<sbyte> array, b
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ulong&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-ulong-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ulong> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ulong> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -564,7 +564,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ulong> array, b
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;uint&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-uint-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<uint> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<uint> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -581,7 +581,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<uint> array, bo
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ushort&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-ushort-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ushort> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ushort> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -598,7 +598,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ushort> array, 
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -615,7 +615,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> array, bo
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;decimal&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-decimal-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<decimal> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<decimal> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -632,7 +632,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<decimal> array,
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;double&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-double-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<double> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<double> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -649,7 +649,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<double> array, 
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;float&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-float-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<float> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<float> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -666,7 +666,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<float> array, b
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Int128&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-int128-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Int128> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Int128> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -683,7 +683,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Int128> array, 
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;UInt128&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-uint128-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<UInt128> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<UInt128> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -700,7 +700,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<UInt128> array,
 ## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Half&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-half-bool-bool}
 
 ```csharp
-void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Half> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Half> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters

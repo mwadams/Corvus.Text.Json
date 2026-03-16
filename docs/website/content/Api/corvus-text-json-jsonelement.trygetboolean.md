@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetBoolean Method — Corvus.Text.Json"
 ## TryGetBoolean {#trygetboolean}
 
 ```csharp
-bool TryGetBoolean(ref bool value)
+public bool TryGetBoolean(ref bool value)
 ```
 
 Tries to get the value as a boolean

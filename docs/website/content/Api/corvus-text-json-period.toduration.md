@@ -12,7 +12,7 @@ Title: "Period.ToDuration Method — Corvus.Text.Json"
 ## ToDuration {#toduration}
 
 ```csharp
-Duration ToDuration()
+public Duration ToDuration()
 ```
 
 For periods that do not contain a non-zero number of years or months, returns a duration for this period assuming a standard 7-day week, 24-hour day, 60-minute hour etc.

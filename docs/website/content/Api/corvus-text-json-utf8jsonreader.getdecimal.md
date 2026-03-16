@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetDecimal Method — Corvus.Text.Json"
 ## GetDecimal {#getdecimal}
 
 ```csharp
-decimal GetDecimal()
+public decimal GetDecimal()
 ```
 
 Parses the current JSON token value from the source as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value. Throws exceptions otherwise.

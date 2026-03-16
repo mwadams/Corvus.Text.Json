@@ -12,7 +12,7 @@ Title: "JsonDocumentBuilder<T>.RootElement Property — Corvus.Text.Json"
 ## RootElement {#rootelement}
 
 ```csharp
-T RootElement { get; }
+public T RootElement { get; }
 ```
 
 Gets the root element of the JSON document.

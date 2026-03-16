@@ -12,7 +12,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.Invoke Method — Corvus.Text.J
 ## Invoke {#invoke}
 
 ```csharp
-ReadOnlySpan<byte> Invoke()
+public virtual ReadOnlySpan<byte> Invoke()
 ```
 
 ### Returns

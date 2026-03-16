@@ -12,7 +12,7 @@ Title: "JsonPredicate<T>.Invoke Method — Corvus.Text.Json"
 ## Invoke {#invoke}
 
 ```csharp
-bool Invoke(ref T item)
+public virtual bool Invoke(ref T item)
 ```
 
 ### Parameters

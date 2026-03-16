@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountGreaterThanValue Method — Co
 ## ExpectedPropertyCountGreaterThanValue {#expectedpropertycountgreaterthanvalue}
 
 ```csharp
-bool ExpectedPropertyCountGreaterThanValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedPropertyCountGreaterThanValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

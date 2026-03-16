@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Milliseconds Property — Corvus.Text.Json"
 ## Milliseconds {#milliseconds}
 
 ```csharp
-long Milliseconds { get; set; }
+public long Milliseconds { get; set; }
 ```
 
 Gets or sets the number of milliseconds within the period.

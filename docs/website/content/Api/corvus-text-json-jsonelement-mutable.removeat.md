@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.RemoveAt Method — Corvus.Text.Json"
 ## RemoveAt {#removeat}
 
 ```csharp
-void RemoveAt(int index)
+public void RemoveAt(int index)
 ```
 
 ### Parameters

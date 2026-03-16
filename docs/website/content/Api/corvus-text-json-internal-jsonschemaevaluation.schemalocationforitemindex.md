@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.SchemaLocationForItemIndex Method — Corvus.Text.J
 ## SchemaLocationForItemIndex {#schemalocationforitemindex}
 
 ```csharp
-bool SchemaLocationForItemIndex(ReadOnlySpan<byte> arraySchemaLocation, int itemIndex, Span<byte> buffer, ref int written)
+public static bool SchemaLocationForItemIndex(ReadOnlySpan<byte> arraySchemaLocation, int itemIndex, Span<byte> buffer, ref int written)
 ```
 
 Writes the schema location for an item at a specific index in an array.

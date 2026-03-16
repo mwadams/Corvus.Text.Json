@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetSByte Method — Corvus.Text.Json"
 ## TryGetSByte {#trygetsbyte}
 
 ```csharp
-bool TryGetSByte(ref sbyte value)
+public bool TryGetSByte(ref sbyte value)
 ```
 
 Attempts to represent the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).

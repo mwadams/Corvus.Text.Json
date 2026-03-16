@@ -12,7 +12,7 @@ Title: "Utf8IriReference.Path Property — Corvus.Text.Json"
 ## Path {#path}
 
 ```csharp
-ReadOnlySpan<byte> Path { get; }
+public ReadOnlySpan<byte> Path { get; }
 ```
 
 Gets the path component of the reference.

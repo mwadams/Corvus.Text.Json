@@ -12,7 +12,7 @@ Title: "JsonProperty<TValue>.ToString Method — Corvus.Text.Json"
 ## ToString {#tostring}
 
 ```csharp
-string ToString()
+public virtual string ToString()
 ```
 
 Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes.

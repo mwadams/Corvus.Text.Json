@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetGuid Method — Corvus.Text.Json"
 ## TryGetGuid {#trygetguid}
 
 ```csharp
-bool TryGetGuid(ref Guid value)
+public bool TryGetGuid(ref Guid value)
 ```
 
 Parses the current JSON token value from the source as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value. Only supports [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) values with hyphens and without any surrounding decorations. Returns `false` otherwise.

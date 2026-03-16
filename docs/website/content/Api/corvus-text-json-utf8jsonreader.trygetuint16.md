@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetUInt16 Method — Corvus.Text.Json"
 ## TryGetUInt16 {#trygetuint16}
 
 ```csharp
-bool TryGetUInt16(ref ushort value)
+public bool TryGetUInt16(ref ushort value)
 ```
 
 Parses the current JSON token value from the source as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value. Returns `false` otherwise.

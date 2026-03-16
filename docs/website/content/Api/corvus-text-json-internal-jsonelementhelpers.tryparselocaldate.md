@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryParseLocalDate Method — Corvus.Text.Json.Interna
 ## TryParseLocalDate {#tryparselocaldate}
 
 ```csharp
-bool TryParseLocalDate(ReadOnlySpan<byte> text, ref LocalDate value)
+public static bool TryParseLocalDate(ReadOnlySpan<byte> text, ref LocalDate value)
 ```
 
 Parse a date from a string for the `date` format.

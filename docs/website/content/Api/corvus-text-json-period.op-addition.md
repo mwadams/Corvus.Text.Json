@@ -12,7 +12,7 @@ Title: "Period.Addition Operator — Corvus.Text.Json"
 ## operator + {#operator}
 
 ```csharp
-static Period operator +(Period left, Period right)
+public static Period operator +(Period left, Period right)
 ```
 
 Adds two periods together, by simply adding the values for each property.

@@ -12,7 +12,7 @@ Title: "IJsonDocument.EnsurePropertyMap Method — Corvus.Text.Json.Internal"
 ## EnsurePropertyMap {#ensurepropertymap}
 
 ```csharp
-void EnsurePropertyMap(int index)
+public abstract void EnsurePropertyMap(int index)
 ```
 
 Ensures the property map is available for the specified index.

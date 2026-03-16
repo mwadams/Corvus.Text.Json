@@ -12,7 +12,7 @@ Title: "ValidationContext.IsValid Property — Corvus.Text.Json.Compatibility"
 ## IsValid {#isvalid}
 
 ```csharp
-bool IsValid { get; }
+public bool IsValid { get; }
 ```
 
 Gets a value indicating whether this context represents a valid result.

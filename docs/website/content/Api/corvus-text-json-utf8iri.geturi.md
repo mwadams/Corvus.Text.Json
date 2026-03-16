@@ -12,7 +12,7 @@ Title: "Utf8Iri.GetUri Method — Corvus.Text.Json"
 ## GetUri {#geturi}
 
 ```csharp
-Uri GetUri()
+public Uri GetUri()
 ```
 
 Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri).

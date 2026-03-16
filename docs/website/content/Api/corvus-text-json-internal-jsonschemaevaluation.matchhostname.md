@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchHostname Method — Corvus.Text.Json.Internal"
 ## MatchHostname {#matchhostname}
 
 ```csharp
-bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid hostname format.

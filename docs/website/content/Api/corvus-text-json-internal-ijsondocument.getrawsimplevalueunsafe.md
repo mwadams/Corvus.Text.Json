@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetRawSimpleValueUnsafe Method — Corvus.Text.Json.Intern
 ## GetRawSimpleValueUnsafe {#getrawsimplevalueunsafe}
 
 ```csharp
-ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index)
+public abstract ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index)
 ```
 
 Gets the raw simple value of the element at the specified index, without checking if the document has been disposed.

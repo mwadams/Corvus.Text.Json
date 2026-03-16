@@ -12,7 +12,7 @@ Title: "UnescapedUtf8JsonString.Memory Property — Corvus.Text.Json"
 ## Memory {#memory}
 
 ```csharp
-ReadOnlyMemory<byte> Memory { get; }
+public ReadOnlyMemory<byte> Memory { get; }
 ```
 
 Gets the UTF-8 bytes as a read-only memory.

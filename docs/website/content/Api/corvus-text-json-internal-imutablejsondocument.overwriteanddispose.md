@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.OverwriteAndDispose Method — Corvus.Text.Json.Int
 ## OverwriteAndDispose {#overwriteanddispose}
 
 ```csharp
-void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int membersToOverwrite, ref ComplexValueBuilder cvb)
+public abstract void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int membersToOverwrite, ref ComplexValueBuilder cvb)
 ```
 
 Overwrites values in the document and disposes the provided [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html).

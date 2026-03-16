@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.GetMessageText Method — Corvus.Text.
 ## GetMessageText {#getmessagetext}
 
 ```csharp
-string GetMessageText()
+public string GetMessageText()
 ```
 
 ### Returns

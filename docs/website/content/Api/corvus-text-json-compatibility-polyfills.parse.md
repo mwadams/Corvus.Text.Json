@@ -21,7 +21,7 @@ Title: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
 ## Parse(string, JsonDocumentOptions) {#parse-string-jsondocumentoptions}
 
 ```csharp
-T Parse<T>(string value, JsonDocumentOptions options)
+public static T Parse<T>(string value, JsonDocumentOptions options)
 ```
 
 ### Parameters
@@ -40,7 +40,7 @@ T Parse<T>(string value, JsonDocumentOptions options)
 ## Parse(Stream, JsonDocumentOptions) {#parse-stream-jsondocumentoptions}
 
 ```csharp
-T Parse<T>(Stream value, JsonDocumentOptions options)
+public static T Parse<T>(Stream value, JsonDocumentOptions options)
 ```
 
 ### Parameters
@@ -59,7 +59,7 @@ T Parse<T>(Stream value, JsonDocumentOptions options)
 ## Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlymemory-byte-jsondocumentoptions}
 
 ```csharp
-T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options)
+public static T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options)
 ```
 
 ### Parameters
@@ -78,7 +78,7 @@ T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options)
 ## Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions) {#parse-readonlymemory-char-jsondocumentoptions}
 
 ```csharp
-T Parse<T>(ReadOnlyMemory<char> value, JsonDocumentOptions options)
+public static T Parse<T>(ReadOnlyMemory<char> value, JsonDocumentOptions options)
 ```
 
 ### Parameters

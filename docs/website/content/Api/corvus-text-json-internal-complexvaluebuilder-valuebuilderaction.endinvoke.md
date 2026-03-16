@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction.EndInvoke Method — Corvus.Text.
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref ComplexValueBuilder builder, IAsyncResult result)
+public virtual void EndInvoke(ref ComplexValueBuilder builder, IAsyncResult result)
 ```
 
 ### Parameters

@@ -360,7 +360,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         {
             Name = shortName,
             GroupKey = ".ctor",
-            Signature = $"{shortName}({paramList})",
+            Signature = $"public {shortName}({paramList})",
             Parameters = parameters.Select(p => new ParameterInfo
             {
                 Name = p.Name ?? string.Empty,
@@ -398,11 +398,13 @@ public sealed class AssemblyInspector(string assemblyPath)
         string signature;
         var parameters = new List<ParameterInfo>();
 
+        string modifiers = BuildPropertyModifiers(prop);
+
         if (isIndexer)
         {
             string paramList = string.Join(", ", indexParams.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"));
             displayName = $"this[{string.Join(", ", indexParams.Select(p => FormatTypeName(p.ParameterType)))}]";
-            signature = $"{FormatTypeName(prop.PropertyType)} this[{paramList}]{accessors}";
+            signature = $"{modifiers} {FormatTypeName(prop.PropertyType)} this[{paramList}]{accessors}";
 
             foreach (System.Reflection.ParameterInfo p in indexParams)
             {
@@ -417,7 +419,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         }
         else
         {
-            signature = $"{FormatTypeName(prop.PropertyType)} {prop.Name}{accessors}";
+            signature = $"{modifiers} {FormatTypeName(prop.PropertyType)} {prop.Name}{accessors}";
         }
 
         System.Reflection.MethodInfo? getter = prop.GetGetMethod();
@@ -460,11 +462,13 @@ public sealed class AssemblyInspector(string assemblyPath)
             // MetadataLoadContext does not support GetBaseDefinition; skip override detection.
         }
 
+        string modifiers = BuildMethodModifiers(method, isOverride);
+
         return new MemberInfo
         {
             Name = method.Name,
             GroupKey = method.Name,
-            Signature = $"{FormatTypeName(method.ReturnType)} {method.Name}{genericSuffix}({paramList})",
+            Signature = $"{modifiers} {FormatTypeName(method.ReturnType)} {method.Name}{genericSuffix}({paramList})",
             ReturnType = FormatTypeName(method.ReturnType),
             ReturnTypeFullName = GetTypeFullName(method.ReturnType),
             Parameters = parameters.Select(p => new ParameterInfo
@@ -539,8 +543,8 @@ public sealed class AssemblyInspector(string assemblyPath)
         string displayName = GetOperatorDisplayName(method);
         string paramList = string.Join(", ", parameters.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"));
         string signature = method.Name is "op_Implicit" or "op_Explicit"
-            ? $"static {displayName}({paramList})"
-            : $"static {FormatTypeName(method.ReturnType)} {displayName}({paramList})";
+            ? $"public static {displayName}({paramList})"
+            : $"public static {FormatTypeName(method.ReturnType)} {displayName}({paramList})";
 
         return new MemberInfo
         {
@@ -559,6 +563,72 @@ public sealed class AssemblyInspector(string assemblyPath)
             IsStatic = true,
             XmlDocKey = xmlKey,
         };
+    }
+
+    /// <summary>
+    /// Builds the C# modifier prefix for a method (public, static, override, virtual, abstract).
+    /// </summary>
+    private static string BuildMethodModifiers(System.Reflection.MethodInfo method, bool isOverride)
+    {
+        var parts = new List<string> { "public" };
+        if (method.IsStatic)
+        {
+            parts.Add("static");
+        }
+        else if (isOverride)
+        {
+            parts.Add("override");
+        }
+        else if (method.IsAbstract)
+        {
+            parts.Add("abstract");
+        }
+        else if (method.IsVirtual && !method.IsFinal)
+        {
+            parts.Add("virtual");
+        }
+
+        return string.Join(' ', parts);
+    }
+
+    /// <summary>
+    /// Builds the C# modifier prefix for a property.
+    /// </summary>
+    private static string BuildPropertyModifiers(System.Reflection.PropertyInfo prop)
+    {
+        var parts = new List<string> { "public" };
+        System.Reflection.MethodInfo? accessor = prop.GetGetMethod() ?? prop.GetSetMethod();
+        if (accessor is not null)
+        {
+            if (accessor.IsStatic)
+            {
+                parts.Add("static");
+            }
+            else
+            {
+                bool isOverride = false;
+                try
+                {
+                    isOverride = accessor.GetBaseDefinition().DeclaringType != accessor.DeclaringType;
+                }
+                catch (NotSupportedException) { }
+
+                if (isOverride)
+                {
+                    parts.Add("override");
+                }
+                else if (accessor.IsAbstract)
+                {
+                    parts.Add("abstract");
+                }
+                else if (accessor.IsVirtual && !accessor.IsFinal)
+                {
+                    parts.Add("virtual");
+                }
+            }
+        }
+
+        return string.Join(' ', parts);
     }
 
     /// <summary>

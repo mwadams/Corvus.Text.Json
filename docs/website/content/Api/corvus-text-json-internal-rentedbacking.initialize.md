@@ -12,7 +12,7 @@ Title: "RentedBacking.Initialize Method — Corvus.Text.Json.Internal"
 ## Initialize {#initialize}
 
 ```csharp
-void Initialize<T>(ref RentedBacking backing, int minimumLength, ref T value, RentedBacking.Writer<T> writer)
+public static void Initialize<T>(ref RentedBacking backing, int minimumLength, ref T value, RentedBacking.Writer<T> writer)
 ```
 
 ### Parameters

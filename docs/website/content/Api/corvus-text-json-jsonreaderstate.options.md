@@ -12,7 +12,7 @@ Title: "JsonReaderState.Options Property — Corvus.Text.Json"
 ## Options {#options}
 
 ```csharp
-JsonReaderOptions Options { get; }
+public JsonReaderOptions Options { get; }
 ```
 
 Gets the custom behavior when reading JSON using the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) that may deviate from strict adherence to the JSON specification, which is the default behavior.

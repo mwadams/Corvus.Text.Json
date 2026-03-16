@@ -12,7 +12,7 @@ Title: "RentedBacking.Writer<T>.Invoke Method — Corvus.Text.Json.Internal"
 ## Invoke {#invoke}
 
 ```csharp
-void Invoke(T value, Span<byte> buffer, ref int written)
+public virtual void Invoke(T value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

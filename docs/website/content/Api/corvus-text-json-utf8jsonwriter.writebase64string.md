@@ -21,7 +21,7 @@ Title: "Utf8JsonWriter.WriteBase64String Method — Corvus.Text.Json"
 ## WriteBase64String(JsonEncodedText, ReadOnlySpan&lt;byte&gt;) {#writebase64string-jsonencodedtext-readonlyspan-byte}
 
 ```csharp
-void WriteBase64String(JsonEncodedText propertyName, ReadOnlySpan<byte> bytes)
+public void WriteBase64String(JsonEncodedText propertyName, ReadOnlySpan<byte> bytes)
 ```
 
 Writes the pre-encoded property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
@@ -44,7 +44,7 @@ Writes the pre-encoded property name and raw bytes value (as a Base64 encoded JS
 ## WriteBase64String(string, ReadOnlySpan&lt;byte&gt;) {#writebase64string-string-readonlyspan-byte}
 
 ```csharp
-void WriteBase64String(string propertyName, ReadOnlySpan<byte> bytes)
+public void WriteBase64String(string propertyName, ReadOnlySpan<byte> bytes)
 ```
 
 Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
@@ -73,7 +73,7 @@ The property name is escaped before writing.
 ## WriteBase64String(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#writebase64string-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
-void WriteBase64String(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> bytes)
+public void WriteBase64String(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> bytes)
 ```
 
 Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
@@ -101,7 +101,7 @@ The property name is escaped before writing.
 ## WriteBase64String(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#writebase64string-readonlyspan-byte-readonlyspan-byte}
 
 ```csharp
-void WriteBase64String(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> bytes)
+public void WriteBase64String(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> bytes)
 ```
 
 Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.

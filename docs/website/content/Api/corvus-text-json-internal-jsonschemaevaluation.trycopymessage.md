@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.TryCopyMessage Method — Corvus.Text.Json.Internal
 ## TryCopyMessage {#trycopymessage}
 
 ```csharp
-bool TryCopyMessage(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, ref int written)
+public static bool TryCopyMessage(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, ref int written)
 ```
 
 Tries to copy a message to the specified buffer.

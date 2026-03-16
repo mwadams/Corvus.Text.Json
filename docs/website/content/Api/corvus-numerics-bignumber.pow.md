@@ -12,7 +12,7 @@ Title: "BigNumber.Pow Method — Corvus.Numerics"
 ## Pow {#pow}
 
 ```csharp
-BigNumber Pow(BigNumber value, int exponent)
+public static BigNumber Pow(BigNumber value, int exponent)
 ```
 
 Raises a BigNumber to an integer power.

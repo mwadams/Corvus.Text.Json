@@ -12,7 +12,7 @@ Title: "JsonElement.GetDecimal Method — Corvus.Text.Json"
 ## GetDecimal {#getdecimal}
 
 ```csharp
-decimal GetDecimal()
+public decimal GetDecimal()
 ```
 
 Gets the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).

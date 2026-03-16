@@ -12,7 +12,7 @@ Title: "JsonElement.GetLocalDate Method — Corvus.Text.Json"
 ## GetLocalDate {#getlocaldate}
 
 ```csharp
-LocalDate GetLocalDate()
+public LocalDate GetLocalDate()
 ```
 
 Gets the value of the element as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).

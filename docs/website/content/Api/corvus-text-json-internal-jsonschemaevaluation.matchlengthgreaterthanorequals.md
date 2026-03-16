@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchLengthGreaterThanOrEquals Method — Corvus.Te
 ## MatchLengthGreaterThanOrEquals {#matchlengthgreaterthanorequals}
 
 ```csharp
-bool MatchLengthGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchLengthGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string length is greater than or equal to the given value.

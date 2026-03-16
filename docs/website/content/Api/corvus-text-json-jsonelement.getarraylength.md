@@ -12,7 +12,7 @@ Title: "JsonElement.GetArrayLength Method — Corvus.Text.Json"
 ## GetArrayLength {#getarraylength}
 
 ```csharp
-int GetArrayLength()
+public int GetArrayLength()
 ```
 
 Get the number of values contained within the current array value.

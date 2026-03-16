@@ -19,7 +19,7 @@ Title: "IJsonDocument.CloneElement Method — Corvus.Text.Json.Internal"
 ## CloneElement(int) {#cloneelement-int}
 
 ```csharp
-JsonElement CloneElement(int index)
+public abstract JsonElement CloneElement(int index)
 ```
 
 Clones the element at the specified index.
@@ -41,7 +41,7 @@ The cloned JSON element.
 ## CloneElement(int) {#cloneelement-int}
 
 ```csharp
-TElement CloneElement<TElement>(int index)
+public abstract TElement CloneElement<TElement>(int index)
 ```
 
 Clones the element at the specified index.

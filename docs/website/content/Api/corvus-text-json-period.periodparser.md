@@ -12,7 +12,7 @@ Title: "Period.PeriodParser Method — Corvus.Text.Json"
 ## PeriodParser {#periodparser}
 
 ```csharp
-bool PeriodParser(ReadOnlySpan<byte> text, ref PeriodBuilder builder)
+public static bool PeriodParser(ReadOnlySpan<byte> text, ref PeriodBuilder builder)
 ```
 
 A parser for a json period.

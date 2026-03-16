@@ -21,7 +21,7 @@ Title: "IJsonSchemaResultsCollector.BeginChildContext Method — Corvus.Text.Jso
 ## BeginChildContext(int, JsonSchemaPathProvider, JsonSchemaPathProvider, JsonSchemaPathProvider) {#beginchildcontext-int-jsonschemapathprovider-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
-int BeginChildContext(int parentSequenceNumber, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath, JsonSchemaPathProvider documentEvaluationPath)
+public abstract int BeginChildContext(int parentSequenceNumber, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath, JsonSchemaPathProvider documentEvaluationPath)
 ```
 
 Begin a child context.
@@ -50,7 +50,7 @@ Begins evaluation of a schema in a child context. The context may later be commi
 ## BeginChildContext(int, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider, JsonSchemaPathProvider) {#beginchildcontext-int-readonlyspan-byte-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
-int BeginChildContext(int parentSequenceNumber, ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
+public abstract int BeginChildContext(int parentSequenceNumber, ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
 ```
 
 Begin a child context for a property evaluation.
@@ -79,7 +79,7 @@ Begins evaluation of a schema in a child context. The context may later be commi
 ## BeginChildContext(int, int, JsonSchemaPathProvider, JsonSchemaPathProvider) {#beginchildcontext-int-int-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
-int BeginChildContext(int parentSequenceNumber, int itemIndex, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
+public abstract int BeginChildContext(int parentSequenceNumber, int itemIndex, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
 ```
 
 Begin a child context for an item evaluation.
@@ -108,7 +108,7 @@ Begins evaluation of a schema in a child context. The context may later be commi
 ## BeginChildContext(int, TProviderContext, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#beginchildcontext-int-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
 ```csharp
-int BeginChildContext<TProviderContext>(int parentSequenceNumber, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> reducedEvaluationPath, JsonSchemaPathProvider<TProviderContext> schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath)
+public abstract int BeginChildContext<TProviderContext>(int parentSequenceNumber, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> reducedEvaluationPath, JsonSchemaPathProvider<TProviderContext> schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath)
 ```
 
 Begin a child context.

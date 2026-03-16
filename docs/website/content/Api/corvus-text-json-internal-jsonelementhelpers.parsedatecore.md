@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ParseDateCore Method — Corvus.Text.Json.Internal"
 ## ParseDateCore {#parsedatecore}
 
 ```csharp
-bool ParseDateCore(ReadOnlySpan<byte> text, ref int year, ref int month, ref int day)
+public static bool ParseDateCore(ReadOnlySpan<byte> text, ref int year, ref int month, ref int day)
 ```
 
 Parses a date string in ISO 8601 format (YYYY-MM-DD) and extracts the year, month, and day components.

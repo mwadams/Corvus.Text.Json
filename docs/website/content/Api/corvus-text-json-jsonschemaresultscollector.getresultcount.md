@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.GetResultCount Method — Corvus.Text.Json"
 ## GetResultCount {#getresultcount}
 
 ```csharp
-int GetResultCount()
+public int GetResultCount()
 ```
 
 ### Returns

@@ -12,7 +12,7 @@ Title: "Utf8Uri.TryMakeRelative Method — Corvus.Text.Json"
 ## TryMakeRelative {#trymakerelative}
 
 ```csharp
-bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8UriReference result)
+public bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8UriReference result)
 ```
 
 Makes a relative URI reference from the current (base) URI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.

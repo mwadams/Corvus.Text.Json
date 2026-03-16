@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.StringConstant Method — Corvus.Text.Json"
 ## StringConstant {#stringconstant}
 
 ```csharp
-T StringConstant(byte[] quotedUtf8String)
+public static T StringConstant(byte[] quotedUtf8String)
 ```
 
 Creates a constant string instance that does not require disposal.

@@ -12,7 +12,7 @@ Title: "BigNumber.TryParseJsonUtf8 Method — Corvus.Numerics"
 ## TryParseJsonUtf8 {#tryparsejsonutf8}
 
 ```csharp
-bool TryParseJsonUtf8(ReadOnlySpan<byte> utf8Source, ref BigNumber result)
+public static bool TryParseJsonUtf8(ReadOnlySpan<byte> utf8Source, ref BigNumber result)
 ```
 
 Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations.

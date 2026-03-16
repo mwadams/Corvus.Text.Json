@@ -12,7 +12,7 @@ Title: "Matcher<TMatch, TOut>.BeginInvoke Method — Corvus.Text.Json"
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(ref TMatch match, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(ref TMatch match, AsyncCallback callback, object object)
 ```
 
 ### Parameters

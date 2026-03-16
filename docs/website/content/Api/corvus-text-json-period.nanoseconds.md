@@ -12,7 +12,7 @@ Title: "Period.Nanoseconds Property — Corvus.Text.Json"
 ## Nanoseconds {#nanoseconds}
 
 ```csharp
-long Nanoseconds { get; }
+public long Nanoseconds { get; }
 ```
 
 Gets the number of nanoseconds within this period.

@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.AreEqualNormalizedJsonNumbers Method — Corvus.Text.
 ## AreEqualNormalizedJsonNumbers {#areequalnormalizedjsonnumbers}
 
 ```csharp
-bool AreEqualNormalizedJsonNumbers(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent)
+public static bool AreEqualNormalizedJsonNumbers(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent)
 ```
 
 Compares two valid normalized JSON numbers for decimal equality.

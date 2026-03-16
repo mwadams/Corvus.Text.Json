@@ -12,7 +12,7 @@ Title: "Period.Zero Property — Corvus.Text.Json"
 ## Zero {#zero}
 
 ```csharp
-Period Zero { get; }
+public static Period Zero { get; }
 ```
 
 Gets a period containing only zero-valued properties.

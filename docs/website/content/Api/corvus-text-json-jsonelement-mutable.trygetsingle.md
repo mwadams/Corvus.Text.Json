@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetSingle Method — Corvus.Text.Json"
 ## TryGetSingle {#trygetsingle}
 
 ```csharp
-bool TryGetSingle(ref float value)
+public bool TryGetSingle(ref float value)
 ```
 
 ### Parameters

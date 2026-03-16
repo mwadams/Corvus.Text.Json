@@ -20,7 +20,7 @@ Title: "JsonElement.Mutable.ValueEquals Method — Corvus.Text.Json"
 ## ValueEquals(string) {#valueequals-string}
 
 ```csharp
-bool ValueEquals(string text)
+public bool ValueEquals(string text)
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ bool ValueEquals(string text)
 ## ValueEquals(ReadOnlySpan&lt;byte&gt;) {#valueequals-readonlyspan-byte}
 
 ```csharp
-bool ValueEquals(ReadOnlySpan<byte> utf8Text)
+public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
 ```
 
 ### Parameters
@@ -56,7 +56,7 @@ bool ValueEquals(ReadOnlySpan<byte> utf8Text)
 ## ValueEquals(ReadOnlySpan&lt;char&gt;) {#valueequals-readonlyspan-char}
 
 ```csharp
-bool ValueEquals(ReadOnlySpan<char> text)
+public bool ValueEquals(ReadOnlySpan<char> text)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "CodeGenThrowHelper.ThrowInvalidOperationException_PrefixTupleMustBeCreat
 ## ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst {#throwinvalidoperationexception-prefixtuplemustbecreatedfirst}
 
 ```csharp
-void ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()
+public static void ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()
 ```
 
 Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) when attempting to set a required property to an undefined value.

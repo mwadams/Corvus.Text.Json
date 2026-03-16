@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.IgnoredFormatNotAsserted Method — Corvus.Text.Jso
 ## IgnoredFormatNotAsserted {#ignoredformatnotasserted}
 
 ```csharp
-bool IgnoredFormatNotAsserted(Span<byte> buffer, ref int written)
+public static bool IgnoredFormatNotAsserted(Span<byte> buffer, ref int written)
 ```
 
 Tries to write a message indicating that the format was not asserted.

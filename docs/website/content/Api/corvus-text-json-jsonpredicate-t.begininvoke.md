@@ -12,7 +12,7 @@ Title: "JsonPredicate<T>.BeginInvoke Method — Corvus.Text.Json"
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(ref T item, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(ref T item, AsyncCallback callback, object object)
 ```
 
 ### Parameters

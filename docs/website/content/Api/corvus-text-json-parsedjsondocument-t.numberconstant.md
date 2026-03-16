@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.NumberConstant Method — Corvus.Text.Json"
 ## NumberConstant {#numberconstant}
 
 ```csharp
-T NumberConstant(byte[] utf8Number)
+public static T NumberConstant(byte[] utf8Number)
 ```
 
 Creates a constant number instance that does not require disposal.

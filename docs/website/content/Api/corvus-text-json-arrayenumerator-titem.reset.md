@@ -12,7 +12,7 @@ Title: "ArrayEnumerator<TItem>.Reset Method — Corvus.Text.Json"
 ## Reset {#reset}
 
 ```csharp
-void Reset()
+public void Reset()
 ```
 
 Sets the enumerator to its initial position, which is before the first element in the collection.

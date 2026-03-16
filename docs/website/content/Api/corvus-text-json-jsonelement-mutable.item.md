@@ -21,7 +21,7 @@ Title: "JsonElement.Mutable.Item Property — Corvus.Text.Json"
 ## this[int] {#this-int}
 
 ```csharp
-JsonElement.Mutable this[int index] { get; }
+public JsonElement.Mutable this[int index] { get; }
 ```
 
 ### Parameters
@@ -39,7 +39,7 @@ JsonElement.Mutable this[int index] { get; }
 ## this[ReadOnlySpan&lt;byte&gt;] {#this-readonlyspan-byte}
 
 ```csharp
-JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
+public JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
 ```
 
 ### Parameters
@@ -57,7 +57,7 @@ JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
 ## this[ReadOnlySpan&lt;char&gt;] {#this-readonlyspan-char}
 
 ```csharp
-JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
+public JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
 ```
 
 ### Parameters
@@ -75,7 +75,7 @@ JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
 ## this[string] {#this-string}
 
 ```csharp
-JsonElement.Mutable this[string propertyName] { get; }
+public JsonElement.Mutable this[string propertyName] { get; }
 ```
 
 ### Parameters

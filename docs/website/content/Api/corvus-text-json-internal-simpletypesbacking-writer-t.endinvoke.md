@@ -12,7 +12,7 @@ Title: "SimpleTypesBacking.Writer<T>.EndInvoke Method — Corvus.Text.Json.Inter
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref int written, IAsyncResult result)
+public virtual void EndInvoke(ref int written, IAsyncResult result)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "Utf8Uri.Query Property — Corvus.Text.Json"
 ## Query {#query}
 
 ```csharp
-ReadOnlySpan<byte> Query { get; }
+public ReadOnlySpan<byte> Query { get; }
 ```
 
 Gets the query component of the URI.

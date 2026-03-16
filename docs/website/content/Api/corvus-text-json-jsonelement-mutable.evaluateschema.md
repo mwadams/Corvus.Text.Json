@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.EvaluateSchema Method — Corvus.Text.Json"
 ## EvaluateSchema {#evaluateschema}
 
 ```csharp
-bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
+public bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 ```
 
 ### Parameters

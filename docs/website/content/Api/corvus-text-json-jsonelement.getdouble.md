@@ -12,7 +12,7 @@ Title: "JsonElement.GetDouble Method — Corvus.Text.Json"
 ## GetDouble {#getdouble}
 
 ```csharp
-double GetDouble()
+public double GetDouble()
 ```
 
 Gets the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).

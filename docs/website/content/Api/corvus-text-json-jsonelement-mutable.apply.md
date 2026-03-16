@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.Apply Method — Corvus.Text.Json"
 ## Apply {#apply}
 
 ```csharp
-void Apply<T>(ref T value)
+public void Apply<T>(ref T value)
 ```
 
 ### Parameters

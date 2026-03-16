@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ParseTimeCore Method — Corvus.Text.Json.Internal"
 ## ParseTimeCore {#parsetimecore}
 
 ```csharp
-bool ParseTimeCore(ReadOnlySpan<byte> text, ref int hours, ref int minutes, ref int seconds, ref int milliseconds, ref int microseconds, ref int nanoseconds)
+public static bool ParseTimeCore(ReadOnlySpan<byte> text, ref int hours, ref int minutes, ref int seconds, ref int milliseconds, ref int microseconds, ref int nanoseconds)
 ```
 
 Parses a time string in ISO 8601 format (HH:MM:SS[.nnnnnnnnn]) and extracts the time components.

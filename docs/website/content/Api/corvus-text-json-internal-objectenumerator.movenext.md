@@ -12,7 +12,7 @@ Title: "ObjectEnumerator.MoveNext Method — Corvus.Text.Json.Internal"
 ## MoveNext {#movenext}
 
 ```csharp
-bool MoveNext()
+public bool MoveNext()
 ```
 
 ### Returns

@@ -12,7 +12,7 @@ Title: "JsonException.Message Property — Corvus.Text.Json"
 ## Message {#message}
 
 ```csharp
-string Message { get; }
+public virtual string Message { get; }
 ```
 
 Gets a message that describes the current exception.

@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.BytesConsumed Property — Corvus.Text.Json"
 ## BytesConsumed {#bytesconsumed}
 
 ```csharp
-long BytesConsumed { get; }
+public long BytesConsumed { get; }
 ```
 
 Returns the total amount of bytes consumed by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) so far for the current instance of the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) with the given UTF-8 encoded input text.

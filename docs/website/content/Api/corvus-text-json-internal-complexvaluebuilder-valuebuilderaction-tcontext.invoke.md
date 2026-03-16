@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction<TContext>.Invoke Method — Corvu
 ## Invoke {#invoke}
 
 ```csharp
-void Invoke(ref TContext context, ref ComplexValueBuilder builder)
+public virtual void Invoke(ref TContext context, ref ComplexValueBuilder builder)
 ```
 
 ### Parameters

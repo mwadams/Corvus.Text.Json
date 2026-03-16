@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchUriReference Method — Corvus.Text.Json.Inter
 ## MatchUriReference {#matchurireference}
 
 ```csharp
-bool MatchUriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchUriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid URI reference format (absolute or relative URI).

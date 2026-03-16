@@ -12,7 +12,7 @@ Title: "ValidationResult.LocationTuple.DocumentLocation Property — Corvus.Text
 ## DocumentLocation {#documentlocation}
 
 ```csharp
-Utf8IriReference DocumentLocation { get; }
+public Utf8IriReference DocumentLocation { get; }
 ```
 
 ### Returns

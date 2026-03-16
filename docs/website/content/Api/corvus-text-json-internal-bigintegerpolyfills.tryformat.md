@@ -12,7 +12,7 @@ Title: "BigIntegerPolyfills.TryFormat Method — Corvus.Text.Json.Internal"
 ## TryFormat {#tryformat}
 
 ```csharp
-bool TryFormat(ref BigInteger value, Span<byte> destination, ref int bytesWritten)
+public static bool TryFormat(ref BigInteger value, Span<byte> destination, ref int bytesWritten)
 ```
 
 Tries to format the value of the current [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) instance into the provided span of bytes.

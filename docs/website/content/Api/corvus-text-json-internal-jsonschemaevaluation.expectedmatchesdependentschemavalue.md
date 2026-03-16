@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method — Corv
 ## ExpectedMatchesDependentSchemaValue {#expectedmatchesdependentschemavalue}
 
 ```csharp
-bool ExpectedMatchesDependentSchemaValue(string propertyName, Span<byte> buffer, ref int written)
+public static bool ExpectedMatchesDependentSchemaValue(string propertyName, Span<byte> buffer, ref int written)
 ```
 
 Tries to write a message indicating that a value was expected to match a schema becaused it contained a specific named property.

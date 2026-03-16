@@ -12,7 +12,7 @@ Title: "Utf8Uri.OriginalUri Property — Corvus.Text.Json"
 ## OriginalUri {#originaluri}
 
 ```csharp
-ReadOnlySpan<byte> OriginalUri { get; }
+public ReadOnlySpan<byte> OriginalUri { get; }
 ```
 
 Gets the original (fully encoded) string.

@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.TryApply Method — Corvus.Text.Json.Internal"
 ## TryApply {#tryapply}
 
 ```csharp
-bool TryApply<T>(ref T value)
+public bool TryApply<T>(ref T value)
 ```
 
 Tries to apply an object instance value to the document.

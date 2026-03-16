@@ -50,7 +50,7 @@ Title: "JsonElement.ArrayBuilder.AddItem Method — Corvus.Text.Json"
 ## AddItem(JsonElement.ObjectBuilder.Build) {#additem-jsonelement-objectbuilder-build}
 
 ```csharp
-void AddItem(JsonElement.ObjectBuilder.Build value)
+public void AddItem(JsonElement.ObjectBuilder.Build value)
 ```
 
 ### Parameters
@@ -64,7 +64,7 @@ void AddItem(JsonElement.ObjectBuilder.Build value)
 ## AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;) {#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext}
 
 ```csharp
-void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
+public void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
 ```
 
 ### Parameters
@@ -79,7 +79,7 @@ void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TCo
 ## AddItem(JsonElement.ArrayBuilder.Build) {#additem-jsonelement-arraybuilder-build}
 
 ```csharp
-void AddItem(JsonElement.ArrayBuilder.Build value)
+public void AddItem(JsonElement.ArrayBuilder.Build value)
 ```
 
 ### Parameters
@@ -93,7 +93,7 @@ void AddItem(JsonElement.ArrayBuilder.Build value)
 ## AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;) {#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext}
 
 ```csharp
-void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
+public void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
 ```
 
 ### Parameters
@@ -108,7 +108,7 @@ void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TCon
 ## AddItem(string) {#additem-string}
 
 ```csharp
-void AddItem(string value)
+public void AddItem(string value)
 ```
 
 ### Parameters
@@ -122,7 +122,7 @@ void AddItem(string value)
 ## AddItem(ReadOnlySpan&lt;char&gt;) {#additem-readonlyspan-char}
 
 ```csharp
-void AddItem(ReadOnlySpan<char> value)
+public void AddItem(ReadOnlySpan<char> value)
 ```
 
 ### Parameters
@@ -136,7 +136,7 @@ void AddItem(ReadOnlySpan<char> value)
 ## AddItem(ReadOnlySpan&lt;byte&gt;) {#additem-readonlyspan-byte}
 
 ```csharp
-void AddItem(ReadOnlySpan<byte> utf8String)
+public void AddItem(ReadOnlySpan<byte> utf8String)
 ```
 
 ### Parameters
@@ -150,7 +150,7 @@ void AddItem(ReadOnlySpan<byte> utf8String)
 ## AddItem(bool) {#additem-bool}
 
 ```csharp
-void AddItem(bool value)
+public void AddItem(bool value)
 ```
 
 ### Parameters
@@ -164,7 +164,7 @@ void AddItem(bool value)
 ## AddItem(T) {#additem-t}
 
 ```csharp
-void AddItem<T>(T value)
+public void AddItem<T>(T value)
 ```
 
 ### Parameters
@@ -178,7 +178,7 @@ void AddItem<T>(T value)
 ## AddItem(Guid) {#additem-guid}
 
 ```csharp
-void AddItem(Guid value)
+public void AddItem(Guid value)
 ```
 
 ### Parameters
@@ -192,7 +192,7 @@ void AddItem(Guid value)
 ## AddItem(ref DateTime) {#additem-ref-datetime}
 
 ```csharp
-void AddItem(ref DateTime value)
+public void AddItem(ref DateTime value)
 ```
 
 ### Parameters
@@ -206,7 +206,7 @@ void AddItem(ref DateTime value)
 ## AddItem(ref DateTimeOffset) {#additem-ref-datetimeoffset}
 
 ```csharp
-void AddItem(ref DateTimeOffset value)
+public void AddItem(ref DateTimeOffset value)
 ```
 
 ### Parameters
@@ -220,7 +220,7 @@ void AddItem(ref DateTimeOffset value)
 ## AddItem(ref OffsetDateTime) {#additem-ref-offsetdatetime}
 
 ```csharp
-void AddItem(ref OffsetDateTime value)
+public void AddItem(ref OffsetDateTime value)
 ```
 
 ### Parameters
@@ -234,7 +234,7 @@ void AddItem(ref OffsetDateTime value)
 ## AddItem(ref OffsetDate) {#additem-ref-offsetdate}
 
 ```csharp
-void AddItem(ref OffsetDate value)
+public void AddItem(ref OffsetDate value)
 ```
 
 ### Parameters
@@ -248,7 +248,7 @@ void AddItem(ref OffsetDate value)
 ## AddItem(ref OffsetTime) {#additem-ref-offsettime}
 
 ```csharp
-void AddItem(ref OffsetTime value)
+public void AddItem(ref OffsetTime value)
 ```
 
 ### Parameters
@@ -262,7 +262,7 @@ void AddItem(ref OffsetTime value)
 ## AddItem(ref LocalDate) {#additem-ref-localdate}
 
 ```csharp
-void AddItem(ref LocalDate value)
+public void AddItem(ref LocalDate value)
 ```
 
 ### Parameters
@@ -276,7 +276,7 @@ void AddItem(ref LocalDate value)
 ## AddItem(ref Period) {#additem-ref-period}
 
 ```csharp
-void AddItem(ref Period value)
+public void AddItem(ref Period value)
 ```
 
 ### Parameters
@@ -290,7 +290,7 @@ void AddItem(ref Period value)
 ## AddItem(sbyte) {#additem-sbyte}
 
 ```csharp
-void AddItem(sbyte value)
+public void AddItem(sbyte value)
 ```
 
 ### Parameters
@@ -304,7 +304,7 @@ void AddItem(sbyte value)
 ## AddItem(byte) {#additem-byte}
 
 ```csharp
-void AddItem(byte value)
+public void AddItem(byte value)
 ```
 
 ### Parameters
@@ -318,7 +318,7 @@ void AddItem(byte value)
 ## AddItem(int) {#additem-int}
 
 ```csharp
-void AddItem(int value)
+public void AddItem(int value)
 ```
 
 ### Parameters
@@ -332,7 +332,7 @@ void AddItem(int value)
 ## AddItem(uint) {#additem-uint}
 
 ```csharp
-void AddItem(uint value)
+public void AddItem(uint value)
 ```
 
 ### Parameters
@@ -346,7 +346,7 @@ void AddItem(uint value)
 ## AddItem(long) {#additem-long}
 
 ```csharp
-void AddItem(long value)
+public void AddItem(long value)
 ```
 
 ### Parameters
@@ -360,7 +360,7 @@ void AddItem(long value)
 ## AddItem(ulong) {#additem-ulong}
 
 ```csharp
-void AddItem(ulong value)
+public void AddItem(ulong value)
 ```
 
 ### Parameters
@@ -374,7 +374,7 @@ void AddItem(ulong value)
 ## AddItem(short) {#additem-short}
 
 ```csharp
-void AddItem(short value)
+public void AddItem(short value)
 ```
 
 ### Parameters
@@ -388,7 +388,7 @@ void AddItem(short value)
 ## AddItem(ushort) {#additem-ushort}
 
 ```csharp
-void AddItem(ushort value)
+public void AddItem(ushort value)
 ```
 
 ### Parameters
@@ -402,7 +402,7 @@ void AddItem(ushort value)
 ## AddItem(float) {#additem-float}
 
 ```csharp
-void AddItem(float value)
+public void AddItem(float value)
 ```
 
 ### Parameters
@@ -416,7 +416,7 @@ void AddItem(float value)
 ## AddItem(double) {#additem-double}
 
 ```csharp
-void AddItem(double value)
+public void AddItem(double value)
 ```
 
 ### Parameters
@@ -430,7 +430,7 @@ void AddItem(double value)
 ## AddItem(decimal) {#additem-decimal}
 
 ```csharp
-void AddItem(decimal value)
+public void AddItem(decimal value)
 ```
 
 ### Parameters
@@ -444,7 +444,7 @@ void AddItem(decimal value)
 ## AddItem(ref BigInteger) {#additem-ref-biginteger}
 
 ```csharp
-void AddItem(ref BigInteger value)
+public void AddItem(ref BigInteger value)
 ```
 
 ### Parameters
@@ -458,7 +458,7 @@ void AddItem(ref BigInteger value)
 ## AddItem(ref BigNumber) {#additem-ref-bignumber}
 
 ```csharp
-void AddItem(ref BigNumber value)
+public void AddItem(ref BigNumber value)
 ```
 
 ### Parameters
@@ -472,7 +472,7 @@ void AddItem(ref BigNumber value)
 ## AddItem(Int128) {#additem-int128}
 
 ```csharp
-void AddItem(Int128 value)
+public void AddItem(Int128 value)
 ```
 
 ### Parameters
@@ -486,7 +486,7 @@ void AddItem(Int128 value)
 ## AddItem(UInt128) {#additem-uint128}
 
 ```csharp
-void AddItem(UInt128 value)
+public void AddItem(UInt128 value)
 ```
 
 ### Parameters
@@ -500,7 +500,7 @@ void AddItem(UInt128 value)
 ## AddItem(Half) {#additem-half}
 
 ```csharp
-void AddItem(Half value)
+public void AddItem(Half value)
 ```
 
 ### Parameters

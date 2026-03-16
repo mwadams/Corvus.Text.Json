@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.StoreRawStringValue Method — Corvus.Text.Json.Int
 ## StoreRawStringValue {#storerawstringvalue}
 
 ```csharp
-int StoreRawStringValue(ReadOnlySpan<byte> value)
+public abstract int StoreRawStringValue(ReadOnlySpan<byte> value)
 ```
 
 Stores a raw string value in the document.

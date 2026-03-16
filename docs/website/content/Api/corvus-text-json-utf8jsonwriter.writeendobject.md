@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.WriteEndObject Method — Corvus.Text.Json"
 ## WriteEndObject {#writeendobject}
 
 ```csharp
-void WriteEndObject()
+public void WriteEndObject()
 ```
 
 Writes the end of a JSON object.

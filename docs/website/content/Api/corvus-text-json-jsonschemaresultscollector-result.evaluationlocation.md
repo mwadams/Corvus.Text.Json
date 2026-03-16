@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.EvaluationLocation Property — Corvus
 ## EvaluationLocation {#evaluationlocation}
 
 ```csharp
-ReadOnlySpan<byte> EvaluationLocation { get; }
+public ReadOnlySpan<byte> EvaluationLocation { get; }
 ```
 
 ### Returns

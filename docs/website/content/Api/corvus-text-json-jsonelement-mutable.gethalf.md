@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetHalf Method — Corvus.Text.Json"
 ## GetHalf {#gethalf}
 
 ```csharp
-Half GetHalf()
+public Half GetHalf()
 ```
 
 ### Returns

@@ -12,7 +12,7 @@ Title: "BuildWithContext<TContext, TBuilder>.Build Property — Corvus.Text.Json
 ## Build {#build}
 
 ```csharp
-TBuilder Build { get; }
+public TBuilder Build { get; }
 ```
 
 ### Returns

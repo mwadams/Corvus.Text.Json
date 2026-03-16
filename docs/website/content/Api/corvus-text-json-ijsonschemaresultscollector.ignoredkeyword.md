@@ -19,7 +19,7 @@ Title: "IJsonSchemaResultsCollector.IgnoredKeyword Method — Corvus.Text.Json"
 ## IgnoredKeyword(JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;) {#ignoredkeyword-jsonschemamessageprovider-readonlyspan-byte}
 
 ```csharp
-void IgnoredKeyword(JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> encodedKeyword)
+public abstract void IgnoredKeyword(JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> encodedKeyword)
 ```
 
 Indicates that a schema keyword was ignored.
@@ -36,7 +36,7 @@ Indicates that a schema keyword was ignored.
 ## IgnoredKeyword(TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;) {#ignoredkeyword-tprovidercontext-jsonschemamessageprovider-tprovidercontext-readonlyspan-byte}
 
 ```csharp
-void IgnoredKeyword<TProviderContext>(TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword)
+public abstract void IgnoredKeyword<TProviderContext>(TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword)
 ```
 
 Indicates that a schema keyword was ignored.

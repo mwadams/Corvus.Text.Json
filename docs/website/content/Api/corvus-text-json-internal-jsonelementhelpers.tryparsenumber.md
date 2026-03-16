@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryParseNumber Method — Corvus.Text.Json.Internal"
 ## TryParseNumber {#tryparsenumber}
 
 ```csharp
-bool TryParseNumber(ReadOnlySpan<byte> span, ref bool isNegative, ref ReadOnlySpan<byte> integral, ref ReadOnlySpan<byte> fractional, ref int exponent)
+public static bool TryParseNumber(ReadOnlySpan<byte> span, ref bool isNegative, ref ReadOnlySpan<byte> integral, ref ReadOnlySpan<byte> fractional, ref int exponent)
 ```
 
 Parses a JSON number into its component parts using normal-form decimal representation.

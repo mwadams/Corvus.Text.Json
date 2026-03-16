@@ -19,7 +19,7 @@ Title: "JsonElement.ObjectBuilder.AddRawString Method — Corvus.Text.Json"
 ## AddRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool}
 
 ```csharp
-void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping, bool escapeName, bool nameRequiresUnescaping)
+public void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -37,7 +37,7 @@ void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, boo
 ## AddRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool) {#addrawstring-readonlyspan-char-readonlyspan-byte-bool}
 
 ```csharp
-void AddRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
+public void AddRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
 ```
 
 ### Parameters

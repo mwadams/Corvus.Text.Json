@@ -12,7 +12,7 @@ Title: "Utf8UriReference.HasQuery Property — Corvus.Text.Json"
 ## HasQuery {#hasquery}
 
 ```csharp
-bool HasQuery { get; }
+public bool HasQuery { get; }
 ```
 
 Gets a value indicating whether this reference has a query.

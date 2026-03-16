@@ -12,7 +12,7 @@ Title: "ObjectEnumerator<TValue>.Current Property — Corvus.Text.Json"
 ## Current {#current}
 
 ```csharp
-JsonProperty<TValue> Current { get; }
+public JsonProperty<TValue> Current { get; }
 ```
 
 Gets the current element in the enumeration.

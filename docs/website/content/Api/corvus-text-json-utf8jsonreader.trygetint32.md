@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetInt32 Method — Corvus.Text.Json"
 ## TryGetInt32 {#trygetint32}
 
 ```csharp
-bool TryGetInt32(ref int value)
+public bool TryGetInt32(ref int value)
 ```
 
 Parses the current JSON token value from the source as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value. Returns `false` otherwise.

@@ -19,7 +19,7 @@ Title: "Utf8JsonWriter Constructors — Corvus.Text.Json"
 ## Utf8JsonWriter(IBufferWriter&lt;byte&gt;, JsonWriterOptions) {#utf8jsonwriter-ibufferwriter-byte-jsonwriteroptions}
 
 ```csharp
-Utf8JsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterOptions options)
+public Utf8JsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterOptions options)
 ```
 
 Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `bufferWriter`.
@@ -42,7 +42,7 @@ Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) i
 ## Utf8JsonWriter(Stream, JsonWriterOptions) {#utf8jsonwriter-stream-jsonwriteroptions}
 
 ```csharp
-Utf8JsonWriter(Stream utf8Json, JsonWriterOptions options)
+public Utf8JsonWriter(Stream utf8Json, JsonWriterOptions options)
 ```
 
 Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `utf8Json`.

@@ -12,7 +12,7 @@ Title: "RawUtf8JsonString.TakeOwnership Method — Corvus.Text.Json"
 ## TakeOwnership {#takeownership}
 
 ```csharp
-ReadOnlyMemory<byte> TakeOwnership(ref byte[] extraRentedArrayPoolBytes)
+public ReadOnlyMemory<byte> TakeOwnership(ref byte[] extraRentedArrayPoolBytes)
 ```
 
 Takes ownership of the underlying memory and any extra rented array pool bytes.

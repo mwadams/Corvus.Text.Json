@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.SchemaEvaluationLocation Property — 
 ## SchemaEvaluationLocation {#schemaevaluationlocation}
 
 ```csharp
-ReadOnlySpan<byte> SchemaEvaluationLocation { get; }
+public ReadOnlySpan<byte> SchemaEvaluationLocation { get; }
 ```
 
 ### Returns

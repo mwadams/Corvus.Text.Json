@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetHashCode Method — Corvus.Text.Json"
 ## GetHashCode {#gethashcode}
 
 ```csharp
-int GetHashCode()
+public virtual int GetHashCode()
 ```
 
 ### Returns

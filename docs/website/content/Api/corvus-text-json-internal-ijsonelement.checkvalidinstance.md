@@ -12,7 +12,7 @@ Title: "IJsonElement.CheckValidInstance Method — Corvus.Text.Json.Internal"
 ## CheckValidInstance {#checkvalidinstance}
 
 ```csharp
-void CheckValidInstance()
+public abstract void CheckValidInstance()
 ```
 
 Checks that this instance is valid.

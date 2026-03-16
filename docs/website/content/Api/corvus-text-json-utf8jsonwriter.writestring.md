@@ -45,7 +45,7 @@ Title: "Utf8JsonWriter.WriteString Method — Corvus.Text.Json"
 ## WriteString(JsonEncodedText, DateTime) {#writestring-jsonencodedtext-datetime}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, DateTime value)
+public void WriteString(JsonEncodedText propertyName, DateTime value)
 ```
 
 Writes the pre-encoded property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -72,7 +72,7 @@ Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) 
 ## WriteString(string, DateTime) {#writestring-string-datetime}
 
 ```csharp
-void WriteString(string propertyName, DateTime value)
+public void WriteString(string propertyName, DateTime value)
 ```
 
 Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -101,7 +101,7 @@ Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) 
 ## WriteString(ReadOnlySpan&lt;char&gt;, DateTime) {#writestring-readonlyspan-char-datetime}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, DateTime value)
+public void WriteString(ReadOnlySpan<char> propertyName, DateTime value)
 ```
 
 Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -129,7 +129,7 @@ Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) 
 ## WriteString(ReadOnlySpan&lt;byte&gt;, DateTime) {#writestring-readonlyspan-byte-datetime}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTime value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTime value)
 ```
 
 Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -157,7 +157,7 @@ Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) 
 ## WriteString(JsonEncodedText, DateTimeOffset) {#writestring-jsonencodedtext-datetimeoffset}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, DateTimeOffset value)
+public void WriteString(JsonEncodedText propertyName, DateTimeOffset value)
 ```
 
 Writes the pre-encoded property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -184,7 +184,7 @@ Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.date
 ## WriteString(string, DateTimeOffset) {#writestring-string-datetimeoffset}
 
 ```csharp
-void WriteString(string propertyName, DateTimeOffset value)
+public void WriteString(string propertyName, DateTimeOffset value)
 ```
 
 Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -213,7 +213,7 @@ Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.date
 ## WriteString(ReadOnlySpan&lt;char&gt;, DateTimeOffset) {#writestring-readonlyspan-char-datetimeoffset}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, DateTimeOffset value)
+public void WriteString(ReadOnlySpan<char> propertyName, DateTimeOffset value)
 ```
 
 Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -241,7 +241,7 @@ Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.date
 ## WriteString(ReadOnlySpan&lt;byte&gt;, DateTimeOffset) {#writestring-readonlyspan-byte-datetimeoffset}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTimeOffset value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTimeOffset value)
 ```
 
 Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -269,7 +269,7 @@ Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.date
 ## WriteString(JsonEncodedText, Guid) {#writestring-jsonencodedtext-guid}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, Guid value)
+public void WriteString(JsonEncodedText propertyName, Guid value)
 ```
 
 Writes the pre-encoded property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -296,7 +296,7 @@ Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using th
 ## WriteString(string, Guid) {#writestring-string-guid}
 
 ```csharp
-void WriteString(string propertyName, Guid value)
+public void WriteString(string propertyName, Guid value)
 ```
 
 Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -325,7 +325,7 @@ Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using th
 ## WriteString(ReadOnlySpan&lt;char&gt;, Guid) {#writestring-readonlyspan-char-guid}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, Guid value)
+public void WriteString(ReadOnlySpan<char> propertyName, Guid value)
 ```
 
 Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -353,7 +353,7 @@ Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using th
 ## WriteString(ReadOnlySpan&lt;byte&gt;, Guid) {#writestring-readonlyspan-byte-guid}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, Guid value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, Guid value)
 ```
 
 Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -381,7 +381,7 @@ Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using th
 ## WriteString(JsonEncodedText, JsonEncodedText) {#writestring-jsonencodedtext-jsonencodedtext}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, JsonEncodedText value)
+public void WriteString(JsonEncodedText propertyName, JsonEncodedText value)
 ```
 
 Writes the pre-encoded property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -404,7 +404,7 @@ Writes the pre-encoded property name and pre-encoded value (as a JSON string) as
 ## WriteString(string, JsonEncodedText) {#writestring-string-jsonencodedtext}
 
 ```csharp
-void WriteString(string propertyName, JsonEncodedText value)
+public void WriteString(string propertyName, JsonEncodedText value)
 ```
 
 Writes the property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -433,7 +433,7 @@ The property name is escaped before writing.
 ## WriteString(string, string) {#writestring-string-string}
 
 ```csharp
-void WriteString(string propertyName, string value)
+public void WriteString(string propertyName, string value)
 ```
 
 Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -462,7 +462,7 @@ The property name and value is escaped before writing. If `value` is `null` the 
 ## WriteString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;) {#writestring-readonlyspan-char-readonlyspan-char}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
+public void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
 ```
 
 Writes the property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -490,7 +490,7 @@ The property name and value is escaped before writing.
 ## WriteString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#writestring-readonlyspan-byte-readonlyspan-byte}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> utf8Value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> utf8Value)
 ```
 
 Writes the UTF-8 property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -518,7 +518,7 @@ The property name and value is escaped before writing.
 ## WriteString(JsonEncodedText, string) {#writestring-jsonencodedtext-string}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, string value)
+public void WriteString(JsonEncodedText propertyName, string value)
 ```
 
 Writes the pre-encoded property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -546,7 +546,7 @@ The value is escaped before writing. If `value` is `null` the JSON null value is
 ## WriteString(JsonEncodedText, ReadOnlySpan&lt;char&gt;) {#writestring-jsonencodedtext-readonlyspan-char}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, ReadOnlySpan<char> value)
+public void WriteString(JsonEncodedText propertyName, ReadOnlySpan<char> value)
 ```
 
 Writes the pre-encoded property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -574,7 +574,7 @@ The value is escaped before writing.
 ## WriteString(string, ReadOnlySpan&lt;char&gt;) {#writestring-string-readonlyspan-char}
 
 ```csharp
-void WriteString(string propertyName, ReadOnlySpan<char> value)
+public void WriteString(string propertyName, ReadOnlySpan<char> value)
 ```
 
 Writes the property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -603,7 +603,7 @@ The property name and value is escaped before writing.
 ## WriteString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;) {#writestring-readonlyspan-byte-readonlyspan-char}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<char> value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<char> value)
 ```
 
 Writes the UTF-8 property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -631,7 +631,7 @@ The property name and value is escaped before writing.
 ## WriteString(JsonEncodedText, ReadOnlySpan&lt;byte&gt;) {#writestring-jsonencodedtext-readonlyspan-byte}
 
 ```csharp
-void WriteString(JsonEncodedText propertyName, ReadOnlySpan<byte> utf8Value)
+public void WriteString(JsonEncodedText propertyName, ReadOnlySpan<byte> utf8Value)
 ```
 
 Writes the pre-encoded property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -659,7 +659,7 @@ The value is escaped before writing.
 ## WriteString(string, ReadOnlySpan&lt;byte&gt;) {#writestring-string-readonlyspan-byte}
 
 ```csharp
-void WriteString(string propertyName, ReadOnlySpan<byte> utf8Value)
+public void WriteString(string propertyName, ReadOnlySpan<byte> utf8Value)
 ```
 
 Writes the property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -688,7 +688,7 @@ The property name and value is escaped before writing.
 ## WriteString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#writestring-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8Value)
+public void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8Value)
 ```
 
 Writes the property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -716,7 +716,7 @@ The property name and value is escaped before writing.
 ## WriteString(ReadOnlySpan&lt;char&gt;, JsonEncodedText) {#writestring-readonlyspan-char-jsonencodedtext}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, JsonEncodedText value)
+public void WriteString(ReadOnlySpan<char> propertyName, JsonEncodedText value)
 ```
 
 Writes the property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -744,7 +744,7 @@ The property name is escaped before writing.
 ## WriteString(ReadOnlySpan&lt;char&gt;, string) {#writestring-readonlyspan-char-string}
 
 ```csharp
-void WriteString(ReadOnlySpan<char> propertyName, string value)
+public void WriteString(ReadOnlySpan<char> propertyName, string value)
 ```
 
 Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -772,7 +772,7 @@ The property name and value are escaped before writing. If `value` is `null` the
 ## WriteString(ReadOnlySpan&lt;byte&gt;, JsonEncodedText) {#writestring-readonlyspan-byte-jsonencodedtext}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, JsonEncodedText value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, JsonEncodedText value)
 ```
 
 Writes the UTF-8 property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
@@ -800,7 +800,7 @@ The property name is escaped before writing.
 ## WriteString(ReadOnlySpan&lt;byte&gt;, string) {#writestring-readonlyspan-byte-string}
 
 ```csharp
-void WriteString(ReadOnlySpan<byte> utf8PropertyName, string value)
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, string value)
 ```
 
 Writes the UTF-8 property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.

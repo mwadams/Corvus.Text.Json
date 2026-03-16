@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchTypeInteger Method — Corvus.Text.Json.Intern
 ## MatchTypeInteger {#matchtypeinteger}
 
 ```csharp
-bool MatchTypeInteger(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, int exponent, ref JsonSchemaContext context)
+public static bool MatchTypeInteger(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, int exponent, ref JsonSchemaContext context)
 ```
 
 Matches a JSON token type against the "number" type constraint.

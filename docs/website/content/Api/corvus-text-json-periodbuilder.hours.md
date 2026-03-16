@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Hours Property — Corvus.Text.Json"
 ## Hours {#hours}
 
 ```csharp
-long Hours { get; set; }
+public long Hours { get; set; }
 ```
 
 Gets or sets the number of hours within the period.

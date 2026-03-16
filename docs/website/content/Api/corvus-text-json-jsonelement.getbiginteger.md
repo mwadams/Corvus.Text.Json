@@ -12,7 +12,7 @@ Title: "JsonElement.GetBigInteger Method — Corvus.Text.Json"
 ## GetBigInteger {#getbiginteger}
 
 ```csharp
-BigInteger GetBigInteger()
+public BigInteger GetBigInteger()
 ```
 
 Gets the current JSON number as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).

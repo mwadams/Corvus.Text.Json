@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetUInt64 Method — Corvus.Text.Json"
 ## TryGetUInt64 {#trygetuint64}
 
 ```csharp
-bool TryGetUInt64(ref ulong value)
+public bool TryGetUInt64(ref ulong value)
 ```
 
 Parses the current JSON token value from the source as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value. Returns `false` otherwise.

@@ -12,7 +12,7 @@ Title: "Period.FromYears Method — Corvus.Text.Json"
 ## FromYears {#fromyears}
 
 ```csharp
-Period FromYears(int years)
+public static Period FromYears(int years)
 ```
 
 Creates a period representing the specified number of years.

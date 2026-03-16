@@ -12,7 +12,7 @@ Title: "BigNumber.UnaryPlus Operator — Corvus.Numerics"
 ## operator + {#operator}
 
 ```csharp
-static BigNumber operator +(BigNumber value)
+public static BigNumber operator +(BigNumber value)
 ```
 
 Returns the value unchanged (unary plus).

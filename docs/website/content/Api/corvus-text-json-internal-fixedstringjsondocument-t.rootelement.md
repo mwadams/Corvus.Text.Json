@@ -12,7 +12,7 @@ Title: "FixedStringJsonDocument<T>.RootElement Property — Corvus.Text.Json.Int
 ## RootElement {#rootelement}
 
 ```csharp
-T RootElement { get; }
+public T RootElement { get; }
 ```
 
 ### Returns

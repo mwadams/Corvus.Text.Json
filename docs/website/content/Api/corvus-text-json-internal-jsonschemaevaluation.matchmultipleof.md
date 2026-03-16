@@ -19,7 +19,7 @@ Title: "JsonSchemaEvaluation.MatchMultipleOf Method — Corvus.Text.Json.Interna
 ## MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchmultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int-string-readonlyspan-byte-ref-jsonschemacontext}
 
 ```csharp
-bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number as a multiple of the given divisor.
@@ -52,7 +52,7 @@ We do not need to pass the sign of the JSON number as it is irrelevant to the ca
 ## MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchmultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int-string-readonlyspan-byte-ref-jsonschemacontext}
 
 ```csharp
-bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number as a multiple of the given divisor.

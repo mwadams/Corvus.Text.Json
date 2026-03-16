@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ParseNumber Method — Corvus.Text.Json.Internal"
 ## ParseNumber {#parsenumber}
 
 ```csharp
-void ParseNumber(ReadOnlySpan<byte> span, ref bool isNegative, ref ReadOnlySpan<byte> integral, ref ReadOnlySpan<byte> fractional, ref int exponent)
+public static void ParseNumber(ReadOnlySpan<byte> span, ref bool isNegative, ref ReadOnlySpan<byte> integral, ref ReadOnlySpan<byte> fractional, ref int exponent)
 ```
 
 Parses a JSON number into its component parts using normal-form decimal representation.

@@ -12,7 +12,7 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T>.Invoke Method — Cor
 ## Invoke {#invoke}
 
 ```csharp
-ReadOnlySpan<byte> Invoke()
+public virtual ReadOnlySpan<byte> Invoke()
 ```
 
 ### Returns

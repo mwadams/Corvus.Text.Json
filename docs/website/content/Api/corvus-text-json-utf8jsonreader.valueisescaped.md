@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.ValueIsEscaped Property — Corvus.Text.Json"
 ## ValueIsEscaped {#valueisescaped}
 
 ```csharp
-bool ValueIsEscaped { get; set; }
+public bool ValueIsEscaped { get; set; }
 ```
 
 Lets the caller know whether the current [`ValueSpan`](/api/corvus-text-json-utf8jsonreader.html#valuespan) or [`ValueSequence`](/api/corvus-text-json-utf8jsonreader.html#valuesequence) properties contain escape sequences per RFC 8259 section 7, and therefore require unescaping before being consumed.

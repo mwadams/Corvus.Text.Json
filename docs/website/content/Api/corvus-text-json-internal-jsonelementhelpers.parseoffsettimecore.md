@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ParseOffsetTimeCore Method — Corvus.Text.Json.Inter
 ## ParseOffsetTimeCore {#parseoffsettimecore}
 
 ```csharp
-bool ParseOffsetTimeCore(ReadOnlySpan<byte> text, ref int hours, ref int minutes, ref int seconds, ref int milliseconds, ref int microseconds, ref int nanoseconds, ref int offsetSeconds)
+public static bool ParseOffsetTimeCore(ReadOnlySpan<byte> text, ref int hours, ref int minutes, ref int seconds, ref int milliseconds, ref int microseconds, ref int nanoseconds, ref int offsetSeconds)
 ```
 
 Parses a time string with optional offset in ISO 8601 format and extracts the time and offset components.

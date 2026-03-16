@@ -12,7 +12,7 @@ Title: "JsonElement.Source<TContext>.AddAsItem Method — Corvus.Text.Json"
 ## AddAsItem {#addasitem}
 
 ```csharp
-void AddAsItem(ref ComplexValueBuilder valueBuilder)
+public void AddAsItem(ref ComplexValueBuilder valueBuilder)
 ```
 
 ### Parameters

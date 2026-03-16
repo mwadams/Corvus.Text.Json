@@ -12,7 +12,7 @@ Title: "BigNumber.Sign Method — Corvus.Numerics"
 ## Sign {#sign}
 
 ```csharp
-int Sign(BigNumber value)
+public static int Sign(BigNumber value)
 ```
 
 Returns the sign of the number.

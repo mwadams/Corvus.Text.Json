@@ -41,7 +41,7 @@ Title: "IMutableJsonDocument.StoreValue Method — Corvus.Text.Json.Internal"
 ## StoreValue(Guid) {#storevalue-guid}
 
 ```csharp
-int StoreValue(Guid value)
+public abstract int StoreValue(Guid value)
 ```
 
 Stores a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value in the document.
@@ -63,7 +63,7 @@ The index of the stored value.
 ## StoreValue(ref DateTime) {#storevalue-ref-datetime}
 
 ```csharp
-int StoreValue(ref DateTime value)
+public abstract int StoreValue(ref DateTime value)
 ```
 
 Stores a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value in the document.
@@ -85,7 +85,7 @@ The index of the stored value.
 ## StoreValue(ref DateTimeOffset) {#storevalue-ref-datetimeoffset}
 
 ```csharp
-int StoreValue(ref DateTimeOffset value)
+public abstract int StoreValue(ref DateTimeOffset value)
 ```
 
 Stores a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value in the document.
@@ -107,7 +107,7 @@ The index of the stored value.
 ## StoreValue(ref OffsetDateTime) {#storevalue-ref-offsetdatetime}
 
 ```csharp
-int StoreValue(ref OffsetDateTime value)
+public abstract int StoreValue(ref OffsetDateTime value)
 ```
 
 Stores an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value in the document.
@@ -129,7 +129,7 @@ The index of the stored value.
 ## StoreValue(ref OffsetDate) {#storevalue-ref-offsetdate}
 
 ```csharp
-int StoreValue(ref OffsetDate value)
+public abstract int StoreValue(ref OffsetDate value)
 ```
 
 Stores an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value in the document.
@@ -151,7 +151,7 @@ The index of the stored value.
 ## StoreValue(ref OffsetTime) {#storevalue-ref-offsettime}
 
 ```csharp
-int StoreValue(ref OffsetTime value)
+public abstract int StoreValue(ref OffsetTime value)
 ```
 
 Stores an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value in the document.
@@ -173,7 +173,7 @@ The index of the stored value.
 ## StoreValue(ref LocalDate) {#storevalue-ref-localdate}
 
 ```csharp
-int StoreValue(ref LocalDate value)
+public abstract int StoreValue(ref LocalDate value)
 ```
 
 Stores a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value in the document.
@@ -195,7 +195,7 @@ The index of the stored value.
 ## StoreValue(ref Period) {#storevalue-ref-period}
 
 ```csharp
-int StoreValue(ref Period value)
+public abstract int StoreValue(ref Period value)
 ```
 
 Stores a [`Period`](/api/corvus-text-json-period.html) value in the document.
@@ -217,7 +217,7 @@ The index of the stored value.
 ## StoreValue(sbyte) {#storevalue-sbyte}
 
 ```csharp
-int StoreValue(sbyte value)
+public abstract int StoreValue(sbyte value)
 ```
 
 Stores an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value in the document.
@@ -239,7 +239,7 @@ The index of the stored value.
 ## StoreValue(byte) {#storevalue-byte}
 
 ```csharp
-int StoreValue(byte value)
+public abstract int StoreValue(byte value)
 ```
 
 Stores a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value in the document.
@@ -261,7 +261,7 @@ The index of the stored value.
 ## StoreValue(int) {#storevalue-int}
 
 ```csharp
-int StoreValue(int value)
+public abstract int StoreValue(int value)
 ```
 
 Stores an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value in the document.
@@ -283,7 +283,7 @@ The index of the stored value.
 ## StoreValue(uint) {#storevalue-uint}
 
 ```csharp
-int StoreValue(uint value)
+public abstract int StoreValue(uint value)
 ```
 
 Stores a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value in the document.
@@ -305,7 +305,7 @@ The index of the stored value.
 ## StoreValue(long) {#storevalue-long}
 
 ```csharp
-int StoreValue(long value)
+public abstract int StoreValue(long value)
 ```
 
 Stores a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value in the document.
@@ -327,7 +327,7 @@ The index of the stored value.
 ## StoreValue(ulong) {#storevalue-ulong}
 
 ```csharp
-int StoreValue(ulong value)
+public abstract int StoreValue(ulong value)
 ```
 
 Stores a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value in the document.
@@ -349,7 +349,7 @@ The index of the stored value.
 ## StoreValue(short) {#storevalue-short}
 
 ```csharp
-int StoreValue(short value)
+public abstract int StoreValue(short value)
 ```
 
 Stores a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value in the document.
@@ -371,7 +371,7 @@ The index of the stored value.
 ## StoreValue(ushort) {#storevalue-ushort}
 
 ```csharp
-int StoreValue(ushort value)
+public abstract int StoreValue(ushort value)
 ```
 
 Stores a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value in the document.
@@ -393,7 +393,7 @@ The index of the stored value.
 ## StoreValue(float) {#storevalue-float}
 
 ```csharp
-int StoreValue(float value)
+public abstract int StoreValue(float value)
 ```
 
 Stores a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value in the document.
@@ -415,7 +415,7 @@ The index of the stored value.
 ## StoreValue(double) {#storevalue-double}
 
 ```csharp
-int StoreValue(double value)
+public abstract int StoreValue(double value)
 ```
 
 Stores a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value in the document.
@@ -437,7 +437,7 @@ The index of the stored value.
 ## StoreValue(decimal) {#storevalue-decimal}
 
 ```csharp
-int StoreValue(decimal value)
+public abstract int StoreValue(decimal value)
 ```
 
 Stores a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value in the document.
@@ -459,7 +459,7 @@ The index of the stored value.
 ## StoreValue(ref BigInteger) {#storevalue-ref-biginteger}
 
 ```csharp
-int StoreValue(ref BigInteger value)
+public abstract int StoreValue(ref BigInteger value)
 ```
 
 Stores a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value in the document.
@@ -481,7 +481,7 @@ The index of the stored value.
 ## StoreValue(ref BigNumber) {#storevalue-ref-bignumber}
 
 ```csharp
-int StoreValue(ref BigNumber value)
+public abstract int StoreValue(ref BigNumber value)
 ```
 
 Stores a [`BigNumber`](/api/corvus-numerics-bignumber.html) value in the document.
@@ -503,7 +503,7 @@ The index of the stored value.
 ## StoreValue(Int128) {#storevalue-int128}
 
 ```csharp
-int StoreValue(Int128 value)
+public abstract int StoreValue(Int128 value)
 ```
 
 Stores an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value in the document.
@@ -525,7 +525,7 @@ The index of the stored value.
 ## StoreValue(UInt128) {#storevalue-uint128}
 
 ```csharp
-int StoreValue(UInt128 value)
+public abstract int StoreValue(UInt128 value)
 ```
 
 Stores a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value in the document.
@@ -547,7 +547,7 @@ The index of the stored value.
 ## StoreValue(Half) {#storevalue-half}
 
 ```csharp
-int StoreValue(Half value)
+public abstract int StoreValue(Half value)
 ```
 
 Stores a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value in the document.

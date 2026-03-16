@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Weeks Property — Corvus.Text.Json"
 ## Weeks {#weeks}
 
 ```csharp
-int Weeks { get; set; }
+public int Weeks { get; set; }
 ```
 
 Gets or sets the number of weeks within the period.

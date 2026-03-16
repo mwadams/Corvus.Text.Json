@@ -12,7 +12,7 @@ Title: "Period.CreateComparer Method — Corvus.Text.Json"
 ## CreateComparer {#createcomparer}
 
 ```csharp
-IComparer<Period> CreateComparer(LocalDateTime baseDateTime)
+public static IComparer<Period> CreateComparer(LocalDateTime baseDateTime)
 ```
 
 Creates an [`IComparer`](https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1) for periods, using the given "base" local date/time.

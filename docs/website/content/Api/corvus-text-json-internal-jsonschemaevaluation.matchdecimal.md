@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchDecimal Method — Corvus.Text.Json.Internal"
 ## MatchDecimal {#matchdecimal}
 
 ```csharp
-bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Decimal type constraint, validating it as a decimal floating-point number.

@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetInt128 Method — Corvus.Text.Json"
 ## TryGetInt128 {#trygetint128}
 
 ```csharp
-bool TryGetInt128(ref Int128 value)
+public bool TryGetInt128(ref Int128 value)
 ```
 
 ### Parameters

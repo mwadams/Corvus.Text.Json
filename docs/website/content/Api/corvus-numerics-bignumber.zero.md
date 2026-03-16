@@ -12,7 +12,7 @@ Title: "BigNumber.Zero Property — Corvus.Numerics"
 ## Zero {#zero}
 
 ```csharp
-BigNumber Zero { get; }
+public static BigNumber Zero { get; }
 ```
 
 Gets a value representing zero.

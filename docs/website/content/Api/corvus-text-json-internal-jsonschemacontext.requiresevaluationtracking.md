@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.RequiresEvaluationTracking Property — Corvus.Text.Js
 ## RequiresEvaluationTracking {#requiresevaluationtracking}
 
 ```csharp
-bool RequiresEvaluationTracking { get; }
+public bool RequiresEvaluationTracking { get; }
 ```
 
 Gets a value indicating whether this context requires evaluation tracking.

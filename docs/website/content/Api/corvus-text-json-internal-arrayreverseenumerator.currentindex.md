@@ -12,7 +12,7 @@ Title: "ArrayReverseEnumerator.CurrentIndex Property — Corvus.Text.Json.Intern
 ## CurrentIndex {#currentindex}
 
 ```csharp
-int CurrentIndex { get; }
+public int CurrentIndex { get; }
 ```
 
 Gets the current index within the JSON array.

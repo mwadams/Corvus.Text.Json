@@ -12,7 +12,7 @@ Title: "JsonElementExtensions.IsUndefined Method — Corvus.Text.Json"
 ## IsUndefined {#isundefined}
 
 ```csharp
-bool IsUndefined<T>(T value)
+public static bool IsUndefined<T>(T value)
 ```
 
 Gets a value indicating whether this value is undefined.

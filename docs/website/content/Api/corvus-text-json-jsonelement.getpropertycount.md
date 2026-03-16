@@ -12,7 +12,7 @@ Title: "JsonElement.GetPropertyCount Method — Corvus.Text.Json"
 ## GetPropertyCount {#getpropertycount}
 
 ```csharp
-int GetPropertyCount()
+public int GetPropertyCount()
 ```
 
 Get the number of properties contained within the current object value.

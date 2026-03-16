@@ -12,7 +12,7 @@ Title: "IJsonElement.EvaluateSchema Method — Corvus.Text.Json.Internal"
 ## EvaluateSchema {#evaluateschema}
 
 ```csharp
-bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
+public abstract bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 ```
 
 Evaluates the schema for this element.

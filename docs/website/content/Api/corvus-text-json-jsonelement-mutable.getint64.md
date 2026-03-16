@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetInt64 Method — Corvus.Text.Json"
 ## GetInt64 {#getint64}
 
 ```csharp
-long GetInt64()
+public long GetInt64()
 ```
 
 ### Returns

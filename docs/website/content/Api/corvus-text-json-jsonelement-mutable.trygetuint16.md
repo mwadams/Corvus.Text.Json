@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetUInt16 Method — Corvus.Text.Json"
 ## TryGetUInt16 {#trygetuint16}
 
 ```csharp
-bool TryGetUInt16(ref ushort value)
+public bool TryGetUInt16(ref ushort value)
 ```
 
 ### Parameters

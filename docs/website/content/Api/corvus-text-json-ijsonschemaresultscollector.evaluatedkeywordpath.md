@@ -19,7 +19,7 @@ Title: "IJsonSchemaResultsCollector.EvaluatedKeywordPath Method — Corvus.Text.
 ## EvaluatedKeywordPath(bool, JsonSchemaMessageProvider, JsonSchemaPathProvider) {#evaluatedkeywordpath-bool-jsonschemamessageprovider-jsonschemapathprovider}
 
 ```csharp
-void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider encodedKeywordPath)
+public abstract void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider encodedKeywordPath)
 ```
 
 Updates the match state for the given evaluated keyword.
@@ -41,7 +41,7 @@ This is used when the entity evaluated was a sub-element of the keyword (e.g. th
 ## EvaluatedKeywordPath(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#evaluatedkeywordpath-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
 ```csharp
-void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath)
+public abstract void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath)
 ```
 
 Updates the match state for the given evaluated keyword.

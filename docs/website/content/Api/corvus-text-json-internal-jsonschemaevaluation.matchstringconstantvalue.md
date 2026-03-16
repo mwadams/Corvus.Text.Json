@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchStringConstantValue Method — Corvus.Text.Jso
 ## MatchStringConstantValue {#matchstringconstantvalue}
 
 ```csharp
-bool MatchStringConstantValue(ReadOnlySpan<byte> actual, ReadOnlySpan<byte> expected, string expectedString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchStringConstantValue(ReadOnlySpan<byte> actual, ReadOnlySpan<byte> expected, string expectedString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string equals the given value.

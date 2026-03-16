@@ -12,7 +12,7 @@ Title: "Period.GetHashCode Method — Corvus.Text.Json"
 ## GetHashCode {#gethashcode}
 
 ```csharp
-int GetHashCode()
+public virtual int GetHashCode()
 ```
 
 Returns the hash code for this period, consistent with [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics.

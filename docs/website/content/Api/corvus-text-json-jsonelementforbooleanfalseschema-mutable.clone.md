@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Clone Method — Corvus.Text.Js
 ## Clone {#clone}
 
 ```csharp
-JsonElement Clone()
+public JsonElement Clone()
 ```
 
 ### Returns

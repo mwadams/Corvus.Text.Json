@@ -12,7 +12,7 @@ Title: "BigNumber.Ceiling Method — Corvus.Numerics"
 ## Ceiling {#ceiling}
 
 ```csharp
-BigNumber Ceiling(BigNumber value)
+public static BigNumber Ceiling(BigNumber value)
 ```
 
 Returns the smallest integer greater than or equal to the specified number.

@@ -12,7 +12,7 @@ Title: "JsonSchemaPathProvider<TContext>.Invoke Method — Corvus.Text.Json"
 ## Invoke {#invoke}
 
 ```csharp
-bool Invoke(TContext context, Span<byte> buffer, ref int written)
+public virtual bool Invoke(TContext context, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

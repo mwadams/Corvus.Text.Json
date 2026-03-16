@@ -22,7 +22,7 @@ Title: "JsonElement.Mutable.AddItem Method — Corvus.Text.Json"
 ## AddItem(ref JsonElement.Source, int) {#additem-ref-jsonelement-source-int}
 
 ```csharp
-void AddItem(ref JsonElement.Source source, int estimatedMemberCount)
+public void AddItem(ref JsonElement.Source source, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -37,7 +37,7 @@ void AddItem(ref JsonElement.Source source, int estimatedMemberCount)
 ## AddItem(JsonElement.ObjectBuilder.Build, int) {#additem-jsonelement-objectbuilder-build-int}
 
 ```csharp
-void AddItem(JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
+public void AddItem(JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -52,7 +52,7 @@ void AddItem(JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCou
 ## AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
-void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
+public void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -68,7 +68,7 @@ void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TCo
 ## AddItem(JsonElement.ArrayBuilder.Build, int) {#additem-jsonelement-arraybuilder-build-int}
 
 ```csharp
-void AddItem(JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
+public void AddItem(JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -83,7 +83,7 @@ void AddItem(JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount
 ## AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
-void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
+public void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters

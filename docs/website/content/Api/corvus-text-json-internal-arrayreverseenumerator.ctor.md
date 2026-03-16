@@ -12,7 +12,7 @@ Title: "ArrayReverseEnumerator Constructors — Corvus.Text.Json.Internal"
 ## ArrayReverseEnumerator {#arrayreverseenumerator}
 
 ```csharp
-ArrayReverseEnumerator(IJsonDocument targetDocument, int arrayDocumentIndex)
+public ArrayReverseEnumerator(IJsonDocument targetDocument, int arrayDocumentIndex)
 ```
 
 Initializes a new instance of the [`ArrayReverseEnumerator`](/api/corvus-text-json-internal-arrayreverseenumerator.html) struct.

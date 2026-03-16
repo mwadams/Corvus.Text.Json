@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.EvaluatedBooleanSchema Method — Corvus.Text.Json.Int
 ## EvaluatedBooleanSchema {#evaluatedbooleanschema}
 
 ```csharp
-void EvaluatedBooleanSchema(bool isMatch)
+public void EvaluatedBooleanSchema(bool isMatch)
 ```
 
 Records the evaluation of a boolean schema.

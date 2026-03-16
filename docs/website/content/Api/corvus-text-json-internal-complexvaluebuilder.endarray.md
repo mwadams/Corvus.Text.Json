@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.EndArray Method — Corvus.Text.Json.Internal"
 ## EndArray {#endarray}
 
 ```csharp
-void EndArray()
+public void EndArray()
 ```
 
 Ends the current JSON array, finalizing its structure in the builder.

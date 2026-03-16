@@ -12,7 +12,7 @@ Title: "Utf8IriReference.Scheme Property — Corvus.Text.Json"
 ## Scheme {#scheme}
 
 ```csharp
-ReadOnlySpan<byte> Scheme { get; }
+public ReadOnlySpan<byte> Scheme { get; }
 ```
 
 Gets the scheme component of the reference.

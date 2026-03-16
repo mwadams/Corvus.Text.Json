@@ -12,7 +12,7 @@ Title: "Period.Subtraction Operator — Corvus.Text.Json"
 ## operator - {#operator}
 
 ```csharp
-static Period operator -(Period minuend, Period subtrahend)
+public static Period operator -(Period minuend, Period subtrahend)
 ```
 
 Subtracts one period from another, by simply subtracting each property value.

@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetDateTime Method — Corvus.Text.Json"
 ## GetDateTime {#getdatetime}
 
 ```csharp
-DateTime GetDateTime()
+public DateTime GetDateTime()
 ```
 
 ### Returns

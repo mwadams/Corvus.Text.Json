@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetArrayLength Method — Corvus.Text.Json"
 ## GetArrayLength {#getarraylength}
 
 ```csharp
-int GetArrayLength()
+public int GetArrayLength()
 ```
 
 ### Returns

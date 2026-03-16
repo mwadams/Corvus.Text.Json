@@ -12,7 +12,7 @@ Title: "BigNumber.Significand Property — Corvus.Numerics"
 ## Significand {#significand}
 
 ```csharp
-BigInteger Significand { get; }
+public BigInteger Significand { get; }
 ```
 
 Gets the significand of the number.

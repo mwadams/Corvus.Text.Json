@@ -12,7 +12,7 @@ Title: "NormalizedJsonNumber Constructors — Corvus.Text.Json.Internal"
 ## NormalizedJsonNumber {#normalizedjsonnumber}
 
 ```csharp
-NormalizedJsonNumber(bool isNegative, byte[] integral, byte[] fractional, int exponent)
+public NormalizedJsonNumber(bool isNegative, byte[] integral, byte[] fractional, int exponent)
 ```
 
 ### Parameters

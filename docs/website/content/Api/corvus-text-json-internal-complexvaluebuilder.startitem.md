@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.StartItem Method — Corvus.Text.Json.Internal"
 ## StartItem {#startitem}
 
 ```csharp
-ComplexValueBuilder.ComplexValueHandle StartItem()
+public ComplexValueBuilder.ComplexValueHandle StartItem()
 ```
 
 Start an array item.

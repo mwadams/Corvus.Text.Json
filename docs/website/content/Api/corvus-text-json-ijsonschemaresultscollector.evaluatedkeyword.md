@@ -19,7 +19,7 @@ Title: "IJsonSchemaResultsCollector.EvaluatedKeyword Method — Corvus.Text.Json
 ## EvaluatedKeyword(bool, JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeyword-bool-jsonschemamessageprovider-readonlyspan-byte}
 
 ```csharp
-void EvaluatedKeyword(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> encodedKeyword)
+public abstract void EvaluatedKeyword(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> encodedKeyword)
 ```
 
 Updates the match state for the given evaluated keyword.
@@ -37,7 +37,7 @@ Updates the match state for the given evaluated keyword.
 ## EvaluatedKeyword(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeyword-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-readonlyspan-byte}
 
 ```csharp
-void EvaluatedKeyword<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword)
+public abstract void EvaluatedKeyword<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword)
 ```
 
 Updates the match state for the given evaluated keyword.

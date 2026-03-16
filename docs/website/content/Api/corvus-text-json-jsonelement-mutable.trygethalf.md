@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetHalf Method — Corvus.Text.Json"
 ## TryGetHalf {#trygethalf}
 
 ```csharp
-bool TryGetHalf(ref Half value)
+public bool TryGetHalf(ref Half value)
 ```
 
 ### Parameters

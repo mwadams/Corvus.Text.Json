@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.Workspace Property — Corvus.Text.Json.Internal"
 ## Workspace {#workspace}
 
 ```csharp
-JsonWorkspace Workspace { get; }
+public abstract JsonWorkspace Workspace { get; }
 ```
 
 Gets the JSON workspace associated with this document.

@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.HasLocalOrAppliedEvaluatedItem Method — Corvus.Text.
 ## HasLocalOrAppliedEvaluatedItem {#haslocalorappliedevaluateditem}
 
 ```csharp
-bool HasLocalOrAppliedEvaluatedItem(int index)
+public bool HasLocalOrAppliedEvaluatedItem(int index)
 ```
 
 Determines whether a specific item at the given index has been either locally or applied evaluated.

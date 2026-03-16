@@ -20,7 +20,7 @@ Title: "JsonEncodedText.Encode Method — Corvus.Text.Json"
 ## Encode(string, JavaScriptEncoder) {#encode-string-javascriptencoder}
 
 ```csharp
-JsonEncodedText Encode(string value, JavaScriptEncoder encoder)
+public static JsonEncodedText Encode(string value, JavaScriptEncoder encoder)
 ```
 
 Encodes the string text value as a JSON string.
@@ -48,7 +48,7 @@ Encodes the string text value as a JSON string.
 ## Encode(ReadOnlySpan&lt;char&gt;, JavaScriptEncoder) {#encode-readonlyspan-char-javascriptencoder}
 
 ```csharp
-JsonEncodedText Encode(ReadOnlySpan<char> value, JavaScriptEncoder encoder)
+public static JsonEncodedText Encode(ReadOnlySpan<char> value, JavaScriptEncoder encoder)
 ```
 
 Encodes the text value as a JSON string.
@@ -75,7 +75,7 @@ Encodes the text value as a JSON string.
 ## Encode(ReadOnlySpan&lt;byte&gt;, JavaScriptEncoder) {#encode-readonlyspan-byte-javascriptencoder}
 
 ```csharp
-JsonEncodedText Encode(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder encoder)
+public static JsonEncodedText Encode(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder encoder)
 ```
 
 Encodes the UTF-8 text value as a JSON string.

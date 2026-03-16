@@ -31,7 +31,7 @@ Title: "ComplexValueBuilder.AddItemArrayValue Method — Corvus.Text.Json.Intern
 ## AddItemArrayValue(ReadOnlySpan&lt;long&gt;) {#additemarrayvalue-readonlyspan-long}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<long> array)
+public void AddItemArrayValue(ReadOnlySpan<long> array)
 ```
 
 Adds an array of [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) values as an item to the current array.
@@ -47,7 +47,7 @@ Adds an array of [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) 
 ## AddItemArrayValue(ReadOnlySpan&lt;int&gt;) {#additemarrayvalue-readonlyspan-int}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<int> array)
+public void AddItemArrayValue(ReadOnlySpan<int> array)
 ```
 
 Adds an array of [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) values as an item to the current array.
@@ -63,7 +63,7 @@ Adds an array of [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) 
 ## AddItemArrayValue(ReadOnlySpan&lt;short&gt;) {#additemarrayvalue-readonlyspan-short}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<short> array)
+public void AddItemArrayValue(ReadOnlySpan<short> array)
 ```
 
 Adds an array of [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) values as an item to the current array.
@@ -79,7 +79,7 @@ Adds an array of [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) 
 ## AddItemArrayValue(ReadOnlySpan&lt;sbyte&gt;) {#additemarrayvalue-readonlyspan-sbyte}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<sbyte> array)
+public void AddItemArrayValue(ReadOnlySpan<sbyte> array)
 ```
 
 Adds an array of [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) values as an item to the current array.
@@ -95,7 +95,7 @@ Adds an array of [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) 
 ## AddItemArrayValue(ReadOnlySpan&lt;ulong&gt;) {#additemarrayvalue-readonlyspan-ulong}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<ulong> array)
+public void AddItemArrayValue(ReadOnlySpan<ulong> array)
 ```
 
 Adds an array of [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) values as an item to the current array.
@@ -111,7 +111,7 @@ Adds an array of [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64
 ## AddItemArrayValue(ReadOnlySpan&lt;uint&gt;) {#additemarrayvalue-readonlyspan-uint}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<uint> array)
+public void AddItemArrayValue(ReadOnlySpan<uint> array)
 ```
 
 Adds an array of [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) values as an item to the current array.
@@ -127,7 +127,7 @@ Adds an array of [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32
 ## AddItemArrayValue(ReadOnlySpan&lt;ushort&gt;) {#additemarrayvalue-readonlyspan-ushort}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<ushort> array)
+public void AddItemArrayValue(ReadOnlySpan<ushort> array)
 ```
 
 Adds an array of [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) values as an item to the current array.
@@ -143,7 +143,7 @@ Adds an array of [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16
 ## AddItemArrayValue(ReadOnlySpan&lt;byte&gt;) {#additemarrayvalue-readonlyspan-byte}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<byte> array)
+public void AddItemArrayValue(ReadOnlySpan<byte> array)
 ```
 
 Adds an array of [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) values as an item to the current array.
@@ -159,7 +159,7 @@ Adds an array of [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) va
 ## AddItemArrayValue(ReadOnlySpan&lt;decimal&gt;) {#additemarrayvalue-readonlyspan-decimal}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<decimal> array)
+public void AddItemArrayValue(ReadOnlySpan<decimal> array)
 ```
 
 Adds an array of [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) values as an item to the current array.
@@ -175,7 +175,7 @@ Adds an array of [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decim
 ## AddItemArrayValue(ReadOnlySpan&lt;double&gt;) {#additemarrayvalue-readonlyspan-double}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<double> array)
+public void AddItemArrayValue(ReadOnlySpan<double> array)
 ```
 
 Adds an array of [`Double`](https://learn.microsoft.com/dotnet/api/system.double) values as an item to the current array.
@@ -191,7 +191,7 @@ Adds an array of [`Double`](https://learn.microsoft.com/dotnet/api/system.double
 ## AddItemArrayValue(ReadOnlySpan&lt;float&gt;) {#additemarrayvalue-readonlyspan-float}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<float> array)
+public void AddItemArrayValue(ReadOnlySpan<float> array)
 ```
 
 Adds an array of [`Single`](https://learn.microsoft.com/dotnet/api/system.single) values as an item to the current array.
@@ -207,7 +207,7 @@ Adds an array of [`Single`](https://learn.microsoft.com/dotnet/api/system.single
 ## AddItemArrayValue(ReadOnlySpan&lt;Int128&gt;) {#additemarrayvalue-readonlyspan-int128}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<Int128> array)
+public void AddItemArrayValue(ReadOnlySpan<Int128> array)
 ```
 
 Adds an array of [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) values as an item to the current array.
@@ -223,7 +223,7 @@ Adds an array of [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128
 ## AddItemArrayValue(ReadOnlySpan&lt;UInt128&gt;) {#additemarrayvalue-readonlyspan-uint128}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<UInt128> array)
+public void AddItemArrayValue(ReadOnlySpan<UInt128> array)
 ```
 
 Adds an array of [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) values as an item to the current array.
@@ -239,7 +239,7 @@ Adds an array of [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint1
 ## AddItemArrayValue(ReadOnlySpan&lt;Half&gt;) {#additemarrayvalue-readonlyspan-half}
 
 ```csharp
-void AddItemArrayValue(ReadOnlySpan<Half> array)
+public void AddItemArrayValue(ReadOnlySpan<Half> array)
 ```
 
 Adds an array of [`Half`](https://learn.microsoft.com/dotnet/api/system.half) values as an item to the current array.

@@ -12,7 +12,7 @@ Title: "Polyfills.get_AsAny Method — Corvus.Text.Json.Compatibility"
 ## get_AsAny {#get-asany}
 
 ```csharp
-JsonElement get_AsAny<T>(T element)
+public static JsonElement get_AsAny<T>(T element)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryParseOffsetDate Method — Corvus.Text.Json.Intern
 ## TryParseOffsetDate {#tryparseoffsetdate}
 
 ```csharp
-bool TryParseOffsetDate(ReadOnlySpan<byte> text, ref OffsetDate value)
+public static bool TryParseOffsetDate(ReadOnlySpan<byte> text, ref OffsetDate value)
 ```
 
 Parse a date time from a string for the `date-time` format.

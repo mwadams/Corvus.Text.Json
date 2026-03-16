@@ -12,7 +12,7 @@ Title: "BigNumber.Round Method — Corvus.Numerics"
 ## Round {#round}
 
 ```csharp
-BigNumber Round(BigNumber value, int decimals, MidpointRounding mode)
+public static BigNumber Round(BigNumber value, int decimals, MidpointRounding mode)
 ```
 
 Rounds a value to a specified number of decimal places.

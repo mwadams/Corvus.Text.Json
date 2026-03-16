@@ -49,7 +49,7 @@ Title: "ComplexValueBuilder.AddItem Method — Corvus.Text.Json.Internal"
 ## AddItem(ReadOnlySpan&lt;byte&gt;) {#additem-readonlyspan-byte}
 
 ```csharp
-void AddItem(ReadOnlySpan<byte> utf8String)
+public void AddItem(ReadOnlySpan<byte> utf8String)
 ```
 
 Adds an item to the current array as a UTF-8 string.
@@ -65,7 +65,7 @@ Adds an item to the current array as a UTF-8 string.
 ## AddItem(string) {#additem-string}
 
 ```csharp
-void AddItem(string value)
+public void AddItem(string value)
 ```
 
 Adds an item to the current array as a string.
@@ -81,7 +81,7 @@ Adds an item to the current array as a string.
 ## AddItem(ReadOnlySpan&lt;byte&gt;, bool, bool) {#additem-readonlyspan-byte-bool-bool}
 
 ```csharp
-void AddItem(ReadOnlySpan<byte> utf8String, bool escapeValue, bool requiresUnescaping)
+public void AddItem(ReadOnlySpan<byte> utf8String, bool escapeValue, bool requiresUnescaping)
 ```
 
 Adds an item to the current array as a UTF-8 string with control over escaping.
@@ -99,7 +99,7 @@ Adds an item to the current array as a UTF-8 string with control over escaping.
 ## AddItem(ReadOnlySpan&lt;char&gt;) {#additem-readonlyspan-char}
 
 ```csharp
-void AddItem(ReadOnlySpan<char> value)
+public void AddItem(ReadOnlySpan<char> value)
 ```
 
 Adds an item to the current array as a character span.
@@ -115,7 +115,7 @@ Adds an item to the current array as a character span.
 ## AddItem(ComplexValueBuilder.ValueBuilderAction) {#additem-complexvaluebuilder-valuebuilderaction}
 
 ```csharp
-void AddItem(ComplexValueBuilder.ValueBuilderAction createValue)
+public void AddItem(ComplexValueBuilder.ValueBuilderAction createValue)
 ```
 
 ### Parameters
@@ -129,7 +129,7 @@ void AddItem(ComplexValueBuilder.ValueBuilderAction createValue)
 ## AddItem(ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;) {#additem-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext}
 
 ```csharp
-void AddItem<TContext>(ref TContext context, ComplexValueBuilder.ValueBuilderAction<TContext> createValue)
+public void AddItem<TContext>(ref TContext context, ComplexValueBuilder.ValueBuilderAction<TContext> createValue)
 ```
 
 ### Parameters
@@ -144,7 +144,7 @@ void AddItem<TContext>(ref TContext context, ComplexValueBuilder.ValueBuilderAct
 ## AddItem(bool) {#additem-bool}
 
 ```csharp
-void AddItem(bool value)
+public void AddItem(bool value)
 ```
 
 Adds a boolean item to the current array.
@@ -160,7 +160,7 @@ Adds a boolean item to the current array.
 ## AddItem(ref T) {#additem-ref-t}
 
 ```csharp
-void AddItem<T>(ref T value)
+public void AddItem<T>(ref T value)
 ```
 
 Adds a JSON element item to the current array.
@@ -182,7 +182,7 @@ Adds a JSON element item to the current array.
 ## AddItem(Guid) {#additem-guid}
 
 ```csharp
-void AddItem(Guid value)
+public void AddItem(Guid value)
 ```
 
 Adds a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) item to the current array.
@@ -198,7 +198,7 @@ Adds a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) item to the 
 ## AddItem(ref DateTime) {#additem-ref-datetime}
 
 ```csharp
-void AddItem(ref DateTime value)
+public void AddItem(ref DateTime value)
 ```
 
 Adds a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) item to the current array.
@@ -214,7 +214,7 @@ Adds a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) item
 ## AddItem(ref DateTimeOffset) {#additem-ref-datetimeoffset}
 
 ```csharp
-void AddItem(ref DateTimeOffset value)
+public void AddItem(ref DateTimeOffset value)
 ```
 
 Adds a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) item to the current array.
@@ -230,7 +230,7 @@ Adds a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetime
 ## AddItem(ref OffsetDateTime) {#additem-ref-offsetdatetime}
 
 ```csharp
-void AddItem(ref OffsetDateTime value)
+public void AddItem(ref OffsetDateTime value)
 ```
 
 Adds an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) item to the current array.
@@ -246,7 +246,7 @@ Adds an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDat
 ## AddItem(ref OffsetDate) {#additem-ref-offsetdate}
 
 ```csharp
-void AddItem(ref OffsetDate value)
+public void AddItem(ref OffsetDate value)
 ```
 
 Adds an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) item to the current array.
@@ -262,7 +262,7 @@ Adds an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.ht
 ## AddItem(ref OffsetTime) {#additem-ref-offsettime}
 
 ```csharp
-void AddItem(ref OffsetTime value)
+public void AddItem(ref OffsetTime value)
 ```
 
 Adds an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) item to the current array.
@@ -278,7 +278,7 @@ Adds an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.ht
 ## AddItem(ref LocalDate) {#additem-ref-localdate}
 
 ```csharp
-void AddItem(ref LocalDate value)
+public void AddItem(ref LocalDate value)
 ```
 
 Adds a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) item to the current array.
@@ -294,7 +294,7 @@ Adds a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html)
 ## AddItem(ref Period) {#additem-ref-period}
 
 ```csharp
-void AddItem(ref Period value)
+public void AddItem(ref Period value)
 ```
 
 Adds a [`Period`](/api/corvus-text-json-period.html) item to the current array.
@@ -310,7 +310,7 @@ Adds a [`Period`](/api/corvus-text-json-period.html) item to the current array.
 ## AddItem(sbyte) {#additem-sbyte}
 
 ```csharp
-void AddItem(sbyte value)
+public void AddItem(sbyte value)
 ```
 
 Adds an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) item to the current array.
@@ -326,7 +326,7 @@ Adds an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) item to t
 ## AddItem(byte) {#additem-byte}
 
 ```csharp
-void AddItem(byte value)
+public void AddItem(byte value)
 ```
 
 Adds a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) item to the current array.
@@ -342,7 +342,7 @@ Adds a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) item to the 
 ## AddItem(int) {#additem-int}
 
 ```csharp
-void AddItem(int value)
+public void AddItem(int value)
 ```
 
 Adds an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) item to the current array.
@@ -358,7 +358,7 @@ Adds an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) item to t
 ## AddItem(uint) {#additem-uint}
 
 ```csharp
-void AddItem(uint value)
+public void AddItem(uint value)
 ```
 
 Adds a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) item to the current array.
@@ -374,7 +374,7 @@ Adds a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) item to 
 ## AddItem(long) {#additem-long}
 
 ```csharp
-void AddItem(long value)
+public void AddItem(long value)
 ```
 
 Adds a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) item to the current array.
@@ -390,7 +390,7 @@ Adds a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) item to th
 ## AddItem(ulong) {#additem-ulong}
 
 ```csharp
-void AddItem(ulong value)
+public void AddItem(ulong value)
 ```
 
 Adds a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) item to the current array.
@@ -406,7 +406,7 @@ Adds a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) item to 
 ## AddItem(short) {#additem-short}
 
 ```csharp
-void AddItem(short value)
+public void AddItem(short value)
 ```
 
 Adds a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) item to the current array.
@@ -422,7 +422,7 @@ Adds a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) item to th
 ## AddItem(ushort) {#additem-ushort}
 
 ```csharp
-void AddItem(ushort value)
+public void AddItem(ushort value)
 ```
 
 Adds a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) item to the current array.
@@ -438,7 +438,7 @@ Adds a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) item to 
 ## AddItem(float) {#additem-float}
 
 ```csharp
-void AddItem(float value)
+public void AddItem(float value)
 ```
 
 Adds a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) item to the current array.
@@ -454,7 +454,7 @@ Adds a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) item to 
 ## AddItem(double) {#additem-double}
 
 ```csharp
-void AddItem(double value)
+public void AddItem(double value)
 ```
 
 Adds a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) item to the current array.
@@ -470,7 +470,7 @@ Adds a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) item to 
 ## AddItem(decimal) {#additem-decimal}
 
 ```csharp
-void AddItem(decimal value)
+public void AddItem(decimal value)
 ```
 
 Adds a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) item to the current array.
@@ -486,7 +486,7 @@ Adds a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) item t
 ## AddItem(ref BigNumber) {#additem-ref-bignumber}
 
 ```csharp
-void AddItem(ref BigNumber value)
+public void AddItem(ref BigNumber value)
 ```
 
 Adds a [`BigNumber`](/api/corvus-numerics-bignumber.html) item to the current array.
@@ -502,7 +502,7 @@ Adds a [`BigNumber`](/api/corvus-numerics-bignumber.html) item to the current ar
 ## AddItem(ref BigInteger) {#additem-ref-biginteger}
 
 ```csharp
-void AddItem(ref BigInteger value)
+public void AddItem(ref BigInteger value)
 ```
 
 Adds a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) item to the current array.
@@ -518,7 +518,7 @@ Adds a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.big
 ## AddItem(Int128) {#additem-int128}
 
 ```csharp
-void AddItem(Int128 value)
+public void AddItem(Int128 value)
 ```
 
 Adds an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) item to the current array.
@@ -534,7 +534,7 @@ Adds an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) item to
 ## AddItem(UInt128) {#additem-uint128}
 
 ```csharp
-void AddItem(UInt128 value)
+public void AddItem(UInt128 value)
 ```
 
 Adds a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) item to the current array.
@@ -550,7 +550,7 @@ Adds a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) item t
 ## AddItem(Half) {#additem-half}
 
 ```csharp
-void AddItem(Half value)
+public void AddItem(Half value)
 ```
 
 Adds a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) item to the current array.

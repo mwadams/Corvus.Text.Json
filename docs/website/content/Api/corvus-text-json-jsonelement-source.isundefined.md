@@ -12,7 +12,7 @@ Title: "JsonElement.Source.IsUndefined Property — Corvus.Text.Json"
 ## IsUndefined {#isundefined}
 
 ```csharp
-bool IsUndefined { get; }
+public bool IsUndefined { get; }
 ```
 
 ### Returns

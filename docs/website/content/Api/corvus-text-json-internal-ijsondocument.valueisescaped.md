@@ -12,7 +12,7 @@ Title: "IJsonDocument.ValueIsEscaped Method — Corvus.Text.Json.Internal"
 ## ValueIsEscaped {#valueisescaped}
 
 ```csharp
-bool ValueIsEscaped(int index, bool isPropertyName)
+public abstract bool ValueIsEscaped(int index, bool isPropertyName)
 ```
 
 Determines whether the value at the specified index is escaped.

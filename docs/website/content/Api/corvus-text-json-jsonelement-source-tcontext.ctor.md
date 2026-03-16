@@ -20,7 +20,7 @@ Title: "JsonElement.Source<TContext> Constructors — Corvus.Text.Json"
 ## JsonElement.Source(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;) {#jsonelement-source-ref-tcontext-jsonelement-arraybuilder-build-tcontext}
 
 ```csharp
-JsonElement.Source(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
+public JsonElement.Source(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
 ```
 
 ### Parameters
@@ -35,7 +35,7 @@ JsonElement.Source(ref TContext context, JsonElement.ArrayBuilder.Build<TContext
 ## JsonElement.Source(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;) {#jsonelement-source-ref-tcontext-jsonelement-objectbuilder-build-tcontext}
 
 ```csharp
-JsonElement.Source(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
+public JsonElement.Source(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
 ```
 
 ### Parameters
@@ -50,7 +50,7 @@ JsonElement.Source(ref TContext context, JsonElement.ObjectBuilder.Build<TContex
 ## JsonElement.Source(JsonElement.Source) {#jsonelement-source-jsonelement-source}
 
 ```csharp
-JsonElement.Source(JsonElement.Source source)
+public JsonElement.Source(JsonElement.Source source)
 ```
 
 ### Parameters

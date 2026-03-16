@@ -20,7 +20,7 @@ Title: "JsonElement.GetProperty Method — Corvus.Text.Json"
 ## GetProperty(string) {#getproperty-string}
 
 ```csharp
-JsonElement GetProperty(string propertyName)
+public JsonElement GetProperty(string propertyName)
 ```
 
 Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`.
@@ -55,7 +55,7 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 ## GetProperty(ReadOnlySpan&lt;char&gt;) {#getproperty-readonlyspan-char}
 
 ```csharp
-JsonElement GetProperty(ReadOnlySpan<char> propertyName)
+public JsonElement GetProperty(ReadOnlySpan<char> propertyName)
 ```
 
 Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`.
@@ -89,7 +89,7 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 ## GetProperty(ReadOnlySpan&lt;byte&gt;) {#getproperty-readonlyspan-byte}
 
 ```csharp
-JsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)
+public JsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)
 ```
 
 Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `utf8PropertyName`.

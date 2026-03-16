@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetInt64 Method — Corvus.Text.Json"
 ## TryGetInt64 {#trygetint64}
 
 ```csharp
-bool TryGetInt64(ref long value)
+public bool TryGetInt64(ref long value)
 ```
 
 ### Parameters

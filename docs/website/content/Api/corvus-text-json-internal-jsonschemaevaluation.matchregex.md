@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchRegex Method — Corvus.Text.Json.Internal"
 ## MatchRegex {#matchregex}
 
 ```csharp
-bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid ECMAScript regular expression format.

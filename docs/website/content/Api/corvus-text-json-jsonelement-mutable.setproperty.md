@@ -32,7 +32,7 @@ Title: "JsonElement.Mutable.SetProperty Method — Corvus.Text.Json"
 ## SetProperty(string, ref JsonElement.Source) {#setproperty-string-ref-jsonelement-source}
 
 ```csharp
-void SetProperty(string propertyName, ref JsonElement.Source source)
+public void SetProperty(string propertyName, ref JsonElement.Source source)
 ```
 
 ### Parameters
@@ -47,7 +47,7 @@ void SetProperty(string propertyName, ref JsonElement.Source source)
 ## SetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement.Source, int) {#setproperty-readonlyspan-char-ref-jsonelement-source-int}
 
 ```csharp
-void SetProperty(ReadOnlySpan<char> propertyName, ref JsonElement.Source source, int estimatedMemberCount)
+public void SetProperty(ReadOnlySpan<char> propertyName, ref JsonElement.Source source, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -63,7 +63,7 @@ void SetProperty(ReadOnlySpan<char> propertyName, ref JsonElement.Source source,
 ## SetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement.Source, int) {#setproperty-readonlyspan-byte-ref-jsonelement-source-int}
 
 ```csharp
-void SetProperty(ReadOnlySpan<byte> propertyName, ref JsonElement.Source source, int estimatedMemberCount)
+public void SetProperty(ReadOnlySpan<byte> propertyName, ref JsonElement.Source source, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -79,7 +79,7 @@ void SetProperty(ReadOnlySpan<byte> propertyName, ref JsonElement.Source source,
 ## SetProperty(string, JsonElement.ObjectBuilder.Build, int) {#setproperty-string-jsonelement-objectbuilder-build-int}
 
 ```csharp
-void SetProperty(string propertyName, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
+public void SetProperty(string propertyName, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -95,7 +95,7 @@ void SetProperty(string propertyName, JsonElement.ObjectBuilder.Build objectValu
 ## SetProperty(string, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#setproperty-string-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
-void SetProperty<TContext>(string propertyName, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
+public void SetProperty<TContext>(string propertyName, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -112,7 +112,7 @@ void SetProperty<TContext>(string propertyName, ref TContext context, JsonElemen
 ## SetProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ObjectBuilder.Build, int) {#setproperty-readonlyspan-char-jsonelement-objectbuilder-build-int}
 
 ```csharp
-void SetProperty(ReadOnlySpan<char> propertyName, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
+public void SetProperty(ReadOnlySpan<char> propertyName, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -128,7 +128,7 @@ void SetProperty(ReadOnlySpan<char> propertyName, JsonElement.ObjectBuilder.Buil
 ## SetProperty(ReadOnlySpan&lt;char&gt;, TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#setproperty-readonlyspan-char-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
-void SetProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
+public void SetProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -145,7 +145,7 @@ void SetProperty<TContext>(ReadOnlySpan<char> propertyName, TContext context, Js
 ## SetProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ObjectBuilder.Build, int) {#setproperty-readonlyspan-byte-jsonelement-objectbuilder-build-int}
 
 ```csharp
-void SetProperty(ReadOnlySpan<byte> propertyName, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
+public void SetProperty(ReadOnlySpan<byte> propertyName, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -161,7 +161,7 @@ void SetProperty(ReadOnlySpan<byte> propertyName, JsonElement.ObjectBuilder.Buil
 ## SetProperty(ReadOnlySpan&lt;byte&gt;, TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#setproperty-readonlyspan-byte-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
-void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
+public void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -178,7 +178,7 @@ void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, TContext context, Js
 ## SetProperty(string, JsonElement.ArrayBuilder.Build, int) {#setproperty-string-jsonelement-arraybuilder-build-int}
 
 ```csharp
-void SetProperty(string propertyName, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
+public void SetProperty(string propertyName, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -194,7 +194,7 @@ void SetProperty(string propertyName, JsonElement.ArrayBuilder.Build arrayValue,
 ## SetProperty(string, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#setproperty-string-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
-void SetProperty<TContext>(string propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
+public void SetProperty<TContext>(string propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -211,7 +211,7 @@ void SetProperty<TContext>(string propertyName, ref TContext context, JsonElemen
 ## SetProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ArrayBuilder.Build, int) {#setproperty-readonlyspan-char-jsonelement-arraybuilder-build-int}
 
 ```csharp
-void SetProperty(ReadOnlySpan<char> propertyName, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
+public void SetProperty(ReadOnlySpan<char> propertyName, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -227,7 +227,7 @@ void SetProperty(ReadOnlySpan<char> propertyName, JsonElement.ArrayBuilder.Build
 ## SetProperty(ReadOnlySpan&lt;char&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#setproperty-readonlyspan-char-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
-void SetProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
+public void SetProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -244,7 +244,7 @@ void SetProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context
 ## SetProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ArrayBuilder.Build, int) {#setproperty-readonlyspan-byte-jsonelement-arraybuilder-build-int}
 
 ```csharp
-void SetProperty(ReadOnlySpan<byte> propertyName, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
+public void SetProperty(ReadOnlySpan<byte> propertyName, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -260,7 +260,7 @@ void SetProperty(ReadOnlySpan<byte> propertyName, JsonElement.ArrayBuilder.Build
 ## SetProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#setproperty-readonlyspan-byte-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
-void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
+public void SetProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters

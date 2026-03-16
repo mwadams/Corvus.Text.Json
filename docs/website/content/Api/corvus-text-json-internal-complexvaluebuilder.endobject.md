@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.EndObject Method — Corvus.Text.Json.Internal"
 ## EndObject {#endobject}
 
 ```csharp
-void EndObject()
+public void EndObject()
 ```
 
 Ends the current JSON object, finalizing its structure in the builder.

@@ -12,7 +12,7 @@ Title: "Utf8IriReference.TryCreateIriReference Method — Corvus.Text.Json"
 ## TryCreateIriReference {#trycreateirireference}
 
 ```csharp
-bool TryCreateIriReference(ReadOnlySpan<byte> iri, ref Utf8IriReference utf8Iri)
+public static bool TryCreateIriReference(ReadOnlySpan<byte> iri, ref Utf8IriReference utf8Iri)
 ```
 
 Tries to create a new UTF-8 IRI Reference from the specified IRI bytes.

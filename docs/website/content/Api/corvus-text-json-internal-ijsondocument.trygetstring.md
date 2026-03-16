@@ -12,7 +12,7 @@ Title: "IJsonDocument.TryGetString Method — Corvus.Text.Json.Internal"
 ## TryGetString {#trygetstring}
 
 ```csharp
-bool TryGetString(int index, JsonTokenType expectedType, ref string result)
+public abstract bool TryGetString(int index, JsonTokenType expectedType, ref string result)
 ```
 
 Tries to get the string value of the element at the specified index.

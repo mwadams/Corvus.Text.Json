@@ -12,7 +12,7 @@ Title: "JsonDocument.IsImmutable Property — Corvus.Text.Json.Internal"
 ## IsImmutable {#isimmutable}
 
 ```csharp
-bool IsImmutable { get; }
+public bool IsImmutable { get; }
 ```
 
 Gets a value indicating whether the document is immutable.

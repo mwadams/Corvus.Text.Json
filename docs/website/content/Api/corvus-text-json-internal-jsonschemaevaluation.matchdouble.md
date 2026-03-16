@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchDouble Method — Corvus.Text.Json.Internal"
 ## MatchDouble {#matchdouble}
 
 ```csharp
-bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Double type constraint, validating it as a double-precision floating-point number.

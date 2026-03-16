@@ -12,7 +12,7 @@ Title: "Matcher<TMatch, TOut>.Invoke Method — Corvus.Text.Json"
 ## Invoke {#invoke}
 
 ```csharp
-TOut Invoke(ref TMatch match)
+public virtual TOut Invoke(ref TMatch match)
 ```
 
 ### Parameters

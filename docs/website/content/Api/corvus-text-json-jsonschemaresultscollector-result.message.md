@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.Message Property — Corvus.Text.Json"
 ## Message {#message}
 
 ```csharp
-ReadOnlySpan<byte> Message { get; }
+public ReadOnlySpan<byte> Message { get; }
 ```
 
 ### Returns

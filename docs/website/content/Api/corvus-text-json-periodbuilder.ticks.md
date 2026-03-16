@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Ticks Property — Corvus.Text.Json"
 ## Ticks {#ticks}
 
 ```csharp
-long Ticks { get; set; }
+public long Ticks { get; set; }
 ```
 
 Gets or sets the number of ticks within the period.

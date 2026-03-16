@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.Read Method — Corvus.Text.Json"
 ## Read {#read}
 
 ```csharp
-bool Read()
+public bool Read()
 ```
 
 Read the next JSON token from input source.

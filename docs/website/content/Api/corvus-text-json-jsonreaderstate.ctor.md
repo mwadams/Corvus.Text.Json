@@ -12,7 +12,7 @@ Title: "JsonReaderState Constructors — Corvus.Text.Json"
 ## JsonReaderState {#jsonreaderstate}
 
 ```csharp
-JsonReaderState(JsonReaderOptions options)
+public JsonReaderState(JsonReaderOptions options)
 ```
 
 Constructs a new [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) instance.

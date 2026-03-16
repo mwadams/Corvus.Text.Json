@@ -20,7 +20,7 @@ Title: "JsonElement.Mutable.RemoveProperty Method — Corvus.Text.Json"
 ## RemoveProperty(string) {#removeproperty-string}
 
 ```csharp
-bool RemoveProperty(string propertyName)
+public bool RemoveProperty(string propertyName)
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ bool RemoveProperty(string propertyName)
 ## RemoveProperty(ReadOnlySpan&lt;char&gt;) {#removeproperty-readonlyspan-char}
 
 ```csharp
-bool RemoveProperty(ReadOnlySpan<char> propertyName)
+public bool RemoveProperty(ReadOnlySpan<char> propertyName)
 ```
 
 ### Parameters
@@ -56,7 +56,7 @@ bool RemoveProperty(ReadOnlySpan<char> propertyName)
 ## RemoveProperty(ReadOnlySpan&lt;byte&gt;) {#removeproperty-readonlyspan-byte}
 
 ```csharp
-bool RemoveProperty(ReadOnlySpan<byte> propertyName)
+public bool RemoveProperty(ReadOnlySpan<byte> propertyName)
 ```
 
 ### Parameters

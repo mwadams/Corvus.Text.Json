@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.Skip Method — Corvus.Text.Json"
 ## Skip {#skip}
 
 ```csharp
-void Skip()
+public void Skip()
 ```
 
 Skips the children of the current JSON token.

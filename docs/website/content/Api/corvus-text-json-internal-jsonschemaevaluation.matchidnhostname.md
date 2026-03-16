@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchIdnHostname Method — Corvus.Text.Json.Intern
 ## MatchIdnHostname {#matchidnhostname}
 
 ```csharp
-bool MatchIdnHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchIdnHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid internationalized domain name (IDN) hostname format.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.SchemaLocationForIndexedKeyword Method — Corvus.T
 ## SchemaLocationForIndexedKeyword {#schemalocationforindexedkeyword}
 
 ```csharp
-bool SchemaLocationForIndexedKeyword(ReadOnlySpan<byte> keywordSchemaLocation, int index, Span<byte> buffer, ref int written)
+public static bool SchemaLocationForIndexedKeyword(ReadOnlySpan<byte> keywordSchemaLocation, int index, Span<byte> buffer, ref int written)
 ```
 
 Creates a schema location for an indexed keyword by appending the index to the base location.

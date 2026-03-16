@@ -19,7 +19,7 @@ Title: "JsonElementForBooleanFalseSchema.CreateDocument Method — Corvus.Text.J
 ## CreateDocument(JsonWorkspace, int, int) {#createdocument-jsonworkspace-int-int}
 
 ```csharp
-JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity)
+public static JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity)
 ```
 
 Creates a JSON document containing the specified integer value.
@@ -43,7 +43,7 @@ A JSON document builder containing the specified value.
 ## CreateDocument(JsonWorkspace) {#createdocument-jsonworkspace}
 
 ```csharp
-JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateDocument(JsonWorkspace workspace)
+public JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateDocument(JsonWorkspace workspace)
 ```
 
 Creates a JSON document from the current instance.

@@ -12,6 +12,6 @@ Title: "JsonElement.ArrayBuilder.AddItemNull Method — Corvus.Text.Json"
 ## AddItemNull {#additemnull}
 
 ```csharp
-void AddItemNull()
+public void AddItemNull()
 ```
 

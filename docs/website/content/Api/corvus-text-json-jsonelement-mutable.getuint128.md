@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetUInt128 Method — Corvus.Text.Json"
 ## GetUInt128 {#getuint128}
 
 ```csharp
-UInt128 GetUInt128()
+public UInt128 GetUInt128()
 ```
 
 ### Returns

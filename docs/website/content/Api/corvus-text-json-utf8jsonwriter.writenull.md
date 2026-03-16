@@ -21,7 +21,7 @@ Title: "Utf8JsonWriter.WriteNull Method — Corvus.Text.Json"
 ## WriteNull(JsonEncodedText) {#writenull-jsonencodedtext}
 
 ```csharp
-void WriteNull(JsonEncodedText propertyName)
+public void WriteNull(JsonEncodedText propertyName)
 ```
 
 Writes the pre-encoded property name and the JSON literal "null" as part of a name/value pair of a JSON object.
@@ -43,7 +43,7 @@ Writes the pre-encoded property name and the JSON literal "null" as part of a na
 ## WriteNull(string) {#writenull-string}
 
 ```csharp
-void WriteNull(string propertyName)
+public void WriteNull(string propertyName)
 ```
 
 Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object.
@@ -71,7 +71,7 @@ The property name is escaped before writing.
 ## WriteNull(ReadOnlySpan&lt;char&gt;) {#writenull-readonlyspan-char}
 
 ```csharp
-void WriteNull(ReadOnlySpan<char> propertyName)
+public void WriteNull(ReadOnlySpan<char> propertyName)
 ```
 
 Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object.
@@ -98,7 +98,7 @@ The property name is escaped before writing.
 ## WriteNull(ReadOnlySpan&lt;byte&gt;) {#writenull-readonlyspan-byte}
 
 ```csharp
-void WriteNull(ReadOnlySpan<byte> utf8PropertyName)
+public void WriteNull(ReadOnlySpan<byte> utf8PropertyName)
 ```
 
 Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object.

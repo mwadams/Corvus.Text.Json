@@ -12,7 +12,7 @@ Title: "IJsonDocument.TryGetLineAndOffsetForPointer Method — Corvus.Text.Json.
 ## TryGetLineAndOffsetForPointer {#trygetlineandoffsetforpointer}
 
 ```csharp
-bool TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, ref int line, ref int charOffset, ref long lineByteOffset)
+public abstract bool TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, ref int line, ref int charOffset, ref long lineByteOffset)
 ```
 
 Resolves a JSON pointer against the element at the specified index and gets the line number and character offset of the target element in the original source document.

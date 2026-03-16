@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.ParseValue Method — Corvus.Text.Json"
 ## ParseValue {#parsevalue}
 
 ```csharp
-ParsedJsonDocument<T> ParseValue(ref Utf8JsonReader reader)
+public static ParsedJsonDocument<T> ParseValue(ref Utf8JsonReader reader)
 ```
 
 Parses one JSON value (including objects or arrays) from the provided reader.

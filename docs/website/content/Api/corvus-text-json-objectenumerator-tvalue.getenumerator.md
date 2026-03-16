@@ -12,7 +12,7 @@ Title: "ObjectEnumerator<TValue>.GetEnumerator Method — Corvus.Text.Json"
 ## GetEnumerator {#getenumerator}
 
 ```csharp
-ObjectEnumerator<TValue> GetEnumerator()
+public ObjectEnumerator<TValue> GetEnumerator()
 ```
 
 Returns an enumerator that iterates the properties of an object.

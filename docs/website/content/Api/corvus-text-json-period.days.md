@@ -12,7 +12,7 @@ Title: "Period.Days Property — Corvus.Text.Json"
 ## Days {#days}
 
 ```csharp
-int Days { get; }
+public int Days { get; }
 ```
 
 Gets the number of days within this period.

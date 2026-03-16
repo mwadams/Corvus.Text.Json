@@ -12,7 +12,7 @@ Title: "JsonElement.EnumerateObject Method — Corvus.Text.Json"
 ## EnumerateObject {#enumerateobject}
 
 ```csharp
-ObjectEnumerator<JsonElement> EnumerateObject()
+public ObjectEnumerator<JsonElement> EnumerateObject()
 ```
 
 Get an enumerator to enumerate the properties in the JSON object represented by this JsonElement.

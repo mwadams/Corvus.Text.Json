@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchEmail Method — Corvus.Text.Json.Internal"
 ## MatchEmail {#matchemail}
 
 ```csharp
-bool MatchEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid email address format.

@@ -12,7 +12,7 @@ Title: "JsonElement.ObjectBuilder.Build.BeginInvoke Method — Corvus.Text.Json"
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(ref JsonElement.ObjectBuilder builder, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(ref JsonElement.ObjectBuilder builder, AsyncCallback callback, object object)
 ```
 
 ### Parameters

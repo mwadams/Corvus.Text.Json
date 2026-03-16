@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcher.BeginInvoke Method — Corvus.Text.Json.Internal"
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, AsyncCallback callback, object object)
 ```
 
 ### Parameters

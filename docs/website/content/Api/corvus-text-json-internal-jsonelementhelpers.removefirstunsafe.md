@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.RemoveFirstUnsafe Method — Corvus.Text.Json.Interna
 ## RemoveFirstUnsafe {#removefirstunsafe}
 
 ```csharp
-bool RemoveFirstUnsafe<TArray, T>(TArray arrayElement, ref T item)
+public static bool RemoveFirstUnsafe<TArray, T>(TArray arrayElement, ref T item)
 ```
 
 Removes the first array element that equals the specified item.

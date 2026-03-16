@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.IsMatch Property — Corvus.Text.Json.Internal"
 ## IsMatch {#ismatch}
 
 ```csharp
-bool IsMatch { get; }
+public bool IsMatch { get; }
 ```
 
 Gets a value indicating whether the context represents a match.

@@ -12,7 +12,7 @@ Title: "Period.Normalize Method — Corvus.Text.Json"
 ## Normalize {#normalize}
 
 ```csharp
-Period Normalize()
+public Period Normalize()
 ```
 
 Returns a normalized version of this period, such that equivalent (but potentially non-equal) periods are changed to the same representation.

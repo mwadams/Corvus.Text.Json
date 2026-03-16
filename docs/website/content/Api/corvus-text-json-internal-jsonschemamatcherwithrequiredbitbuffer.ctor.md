@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcherWithRequiredBitBuffer Constructors — Corvus.Text.Json
 ## JsonSchemaMatcherWithRequiredBitBuffer {#jsonschemamatcherwithrequiredbitbuffer}
 
 ```csharp
-JsonSchemaMatcherWithRequiredBitBuffer(object object, IntPtr method)
+public JsonSchemaMatcherWithRequiredBitBuffer(object object, IntPtr method)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "JsonWriterOptions.Encoder Property — Corvus.Text.Json"
 ## Encoder {#encoder}
 
 ```csharp
-JavaScriptEncoder Encoder { get; set; }
+public JavaScriptEncoder Encoder { get; set; }
 ```
 
 The encoder to use when escaping strings, or `null` to use the default encoder.

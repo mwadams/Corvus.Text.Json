@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetSByte Method — Corvus.Text.Json"
 ## TryGetSByte {#trygetsbyte}
 
 ```csharp
-bool TryGetSByte(ref sbyte value)
+public bool TryGetSByte(ref sbyte value)
 ```
 
 Parses the current JSON token value from the source as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value. Returns `false` otherwise.

@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.EndItem Method — Corvus.Text.Json.Internal"
 ## EndItem {#enditem}
 
 ```csharp
-void EndItem(ref ComplexValueBuilder.ComplexValueHandle handle)
+public void EndItem(ref ComplexValueBuilder.ComplexValueHandle handle)
 ```
 
 ### Parameters

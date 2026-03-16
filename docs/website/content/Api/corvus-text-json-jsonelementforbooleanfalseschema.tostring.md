@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.ToString Method — Corvus.Text.Json"
 ## ToString {#tostring}
 
 ```csharp
-string ToString()
+public virtual string ToString()
 ```
 
 Gets a string representation for the current value appropriate to the value type.

@@ -12,7 +12,7 @@ Title: "JsonElement.Source.RawString Method — Corvus.Text.Json"
 ## RawString {#rawstring}
 
 ```csharp
-JsonElement.Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
+public static JsonElement.Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
 ```
 
 ### Parameters

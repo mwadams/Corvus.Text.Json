@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetDateTimeOffset Method — Corvus.Text.Json"
 ## TryGetDateTimeOffset {#trygetdatetimeoffset}
 
 ```csharp
-bool TryGetDateTimeOffset(ref DateTimeOffset value)
+public bool TryGetDateTimeOffset(ref DateTimeOffset value)
 ```
 
 Parses the current JSON token value from the source as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value. Returns `false` otherwise.

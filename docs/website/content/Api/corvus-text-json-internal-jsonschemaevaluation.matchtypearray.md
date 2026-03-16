@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchTypeArray Method — Corvus.Text.Json.Internal
 ## MatchTypeArray {#matchtypearray}
 
 ```csharp
-bool MatchTypeArray(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
+public static bool MatchTypeArray(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON token type against the "array" type constraint.

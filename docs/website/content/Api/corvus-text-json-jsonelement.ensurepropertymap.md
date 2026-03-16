@@ -12,7 +12,7 @@ Title: "JsonElement.EnsurePropertyMap Method — Corvus.Text.Json"
 ## EnsurePropertyMap {#ensurepropertymap}
 
 ```csharp
-void EnsurePropertyMap()
+public void EnsurePropertyMap()
 ```
 
 Ensures that a fast-lookup property map is created for this element.

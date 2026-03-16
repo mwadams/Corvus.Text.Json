@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchItemCountLessThan Method — Corvus.Text.Json.
 ## MatchItemCountLessThan {#matchitemcountlessthan}
 
 ```csharp
-bool MatchItemCountLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchItemCountLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a item count is less than the given value.

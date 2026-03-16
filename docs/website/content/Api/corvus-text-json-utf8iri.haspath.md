@@ -12,7 +12,7 @@ Title: "Utf8Iri.HasPath Property — Corvus.Text.Json"
 ## HasPath {#haspath}
 
 ```csharp
-bool HasPath { get; }
+public bool HasPath { get; }
 ```
 
 Gets a value indicating whether this reference has a path.

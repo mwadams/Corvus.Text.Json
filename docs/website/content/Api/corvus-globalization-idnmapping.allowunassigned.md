@@ -12,7 +12,7 @@ Title: "IdnMapping.AllowUnassigned Property — Corvus.Globalization"
 ## AllowUnassigned {#allowunassigned}
 
 ```csharp
-bool AllowUnassigned { get; set; }
+public bool AllowUnassigned { get; set; }
 ```
 
 ### Returns

@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetUtf16JsonString Method — Corvus.Text.Json.Internal"
 ## GetUtf16JsonString {#getutf16jsonstring}
 
 ```csharp
-UnescapedUtf16JsonString GetUtf16JsonString(int index, JsonTokenType expectedType)
+public abstract UnescapedUtf16JsonString GetUtf16JsonString(int index, JsonTokenType expectedType)
 ```
 
 Gets the UTF-16 JSON string value of the element at the specified index.

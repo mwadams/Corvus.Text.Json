@@ -12,6 +12,6 @@ Title: "IdnMapping Constructors — Corvus.Globalization"
 ## IdnMapping {#idnmapping}
 
 ```csharp
-IdnMapping()
+public IdnMapping()
 ```
 

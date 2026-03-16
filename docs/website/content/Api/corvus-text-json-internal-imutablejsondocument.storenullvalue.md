@@ -12,7 +12,7 @@ Title: "IMutableJsonDocument.StoreNullValue Method — Corvus.Text.Json.Internal
 ## StoreNullValue {#storenullvalue}
 
 ```csharp
-int StoreNullValue()
+public abstract int StoreNullValue()
 ```
 
 Stores a null value in the document.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchJsonPointer Method — Corvus.Text.Json.Intern
 ## MatchJsonPointer {#matchjsonpointer}
 
 ```csharp
-bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid JSON Pointer format.

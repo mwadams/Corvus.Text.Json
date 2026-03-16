@@ -12,7 +12,7 @@ Title: "Utf8UriValue.Uri Property — Corvus.Text.Json"
 ## Uri {#uri}
 
 ```csharp
-Utf8Uri Uri { get; }
+public Utf8Uri Uri { get; }
 ```
 
 Gets the UTF-8 URI value.

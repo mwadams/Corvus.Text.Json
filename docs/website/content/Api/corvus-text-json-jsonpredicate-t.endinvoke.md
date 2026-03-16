@@ -12,7 +12,7 @@ Title: "JsonPredicate<T>.EndInvoke Method — Corvus.Text.Json"
 ## EndInvoke {#endinvoke}
 
 ```csharp
-bool EndInvoke(ref T item, IAsyncResult result)
+public virtual bool EndInvoke(ref T item, IAsyncResult result)
 ```
 
 ### Parameters

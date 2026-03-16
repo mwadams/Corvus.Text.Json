@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped Me
 ## PushChildContextUnescaped {#pushchildcontextunescaped}
 
 ```csharp
-JsonSchemaContext PushChildContextUnescaped(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider evaluationPath)
+public static JsonSchemaContext PushChildContextUnescaped(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider evaluationPath)
 ```
 
 ### Parameters

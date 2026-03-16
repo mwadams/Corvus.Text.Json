@@ -12,7 +12,7 @@ Title: "Period.Inequality Operator — Corvus.Text.Json"
 ## operator != {#operator}
 
 ```csharp
-static bool operator !=(Period left, Period right)
+public static bool operator !=(Period left, Period right)
 ```
 
 Implements the operator != (inequality). See the type documentation for a description of equality semantics.

@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Current Property — Corvus
 ## Current {#current}
 
 ```csharp
-JsonSchemaResultsCollector.Result Current { get; }
+public JsonSchemaResultsCollector.Result Current { get; }
 ```
 
 ### Returns

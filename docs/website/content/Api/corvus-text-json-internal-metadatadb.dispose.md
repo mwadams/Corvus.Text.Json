@@ -12,7 +12,7 @@ Title: "MetadataDb.Dispose Method — Corvus.Text.Json.Internal"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 
 Releases resources used by the metadata database, returning rented arrays to the pool.

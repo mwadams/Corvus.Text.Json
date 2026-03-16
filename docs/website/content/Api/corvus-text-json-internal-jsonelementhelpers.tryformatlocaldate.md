@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.TryFormatLocalDate Method — Corvus.Text.Json.Intern
 ## TryFormatLocalDate {#tryformatlocaldate}
 
 ```csharp
-bool TryFormatLocalDate(ref LocalDate value, Span<byte> output, ref int bytesWritten)
+public static bool TryFormatLocalDate(ref LocalDate value, Span<byte> output, ref int bytesWritten)
 ```
 
 Format a date as a UTF-8 string.

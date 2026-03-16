@@ -12,7 +12,7 @@ Title: "RentedBacking.Writer<T>.EndInvoke Method — Corvus.Text.Json.Internal"
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref int written, IAsyncResult result)
+public virtual void EndInvoke(ref int written, IAsyncResult result)
 ```
 
 ### Parameters

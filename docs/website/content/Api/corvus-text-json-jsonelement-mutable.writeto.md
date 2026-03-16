@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.WriteTo Method — Corvus.Text.Json"
 ## WriteTo {#writeto}
 
 ```csharp
-void WriteTo(Utf8JsonWriter writer)
+public void WriteTo(Utf8JsonWriter writer)
 ```
 
 ### Parameters

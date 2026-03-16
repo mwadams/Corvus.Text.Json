@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.BytesCommitted Property — Corvus.Text.Json"
 ## BytesCommitted {#bytescommitted}
 
 ```csharp
-long BytesCommitted { get; set; }
+public long BytesCommitted { get; set; }
 ```
 
 Returns the amount of bytes committed to the output by the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) so far.

@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcherWithRequiredBitBuffer.EndInvoke Method — Corvus.Text.
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref JsonSchemaContext context, IAsyncResult result)
+public virtual void EndInvoke(ref JsonSchemaContext context, IAsyncResult result)
 ```
 
 ### Parameters

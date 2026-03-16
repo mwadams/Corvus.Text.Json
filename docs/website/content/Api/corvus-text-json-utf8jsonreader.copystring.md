@@ -19,7 +19,7 @@ Title: "Utf8JsonReader.CopyString Method — Corvus.Text.Json"
 ## CopyString(Span&lt;byte&gt;) {#copystring-span-byte}
 
 ```csharp
-int CopyString(Span<byte> utf8Destination)
+public int CopyString(Span<byte> utf8Destination)
 ```
 
 Copies the current JSON token value from the source, unescaped as a UTF-8 string to the destination buffer.
@@ -52,7 +52,7 @@ Unlike [`GetString`](/api/corvus-text-json-utf8jsonreader.html#getstring), this 
 ## CopyString(Span&lt;char&gt;) {#copystring-span-char}
 
 ```csharp
-int CopyString(Span<char> destination)
+public int CopyString(Span<char> destination)
 ```
 
 Copies the current JSON token value from the source, unescaped, and transcoded as a UTF-16 char buffer.

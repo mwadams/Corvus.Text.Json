@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchEquals Method — Corvus.Text.Json.Internal"
 ## MatchEquals {#matchequals}
 
 ```csharp
-bool MatchEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number equals.

@@ -12,7 +12,7 @@ Title: "NormalizedJsonNumber.Integral Property — Corvus.Text.Json.Internal"
 ## Integral {#integral}
 
 ```csharp
-ReadOnlySpan<byte> Integral { get; }
+public ReadOnlySpan<byte> Integral { get; }
 ```
 
 The normalized integral part of the original JSON representation of the number.

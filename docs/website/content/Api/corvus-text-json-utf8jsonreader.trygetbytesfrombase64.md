@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetBytesFromBase64 Method — Corvus.Text.Json"
 ## TryGetBytesFromBase64 {#trygetbytesfrombase64}
 
 ```csharp
-bool TryGetBytesFromBase64(ref byte[] value)
+public bool TryGetBytesFromBase64(ref byte[] value)
 ```
 
 Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes. Returns `true` if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes. Returns `false` otherwise.

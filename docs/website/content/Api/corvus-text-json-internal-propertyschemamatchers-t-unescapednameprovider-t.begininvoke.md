@@ -12,7 +12,7 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T>.BeginInvoke Method â€
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(AsyncCallback callback, object object)
 ```
 
 ### Parameters

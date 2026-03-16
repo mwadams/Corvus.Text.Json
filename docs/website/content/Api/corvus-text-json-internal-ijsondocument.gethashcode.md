@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetHashCode Method — Corvus.Text.Json.Internal"
 ## GetHashCode {#gethashcode}
 
 ```csharp
-int GetHashCode(int index)
+public abstract int GetHashCode(int index)
 ```
 
 Gets the hash code for the specified index.

@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetSingle Method — Corvus.Text.Json"
 ## GetSingle {#getsingle}
 
 ```csharp
-float GetSingle()
+public float GetSingle()
 ```
 
 Parses the current JSON token value from the source as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value. Throws exceptions otherwise.

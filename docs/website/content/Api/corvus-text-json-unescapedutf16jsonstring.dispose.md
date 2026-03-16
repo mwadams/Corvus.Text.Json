@@ -12,7 +12,7 @@ Title: "UnescapedUtf16JsonString.Dispose Method — Corvus.Text.Json"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 
 Disposes the unescaped UTF-16 JSON string, returning any rented array pool characters.

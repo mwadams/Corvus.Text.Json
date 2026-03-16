@@ -20,7 +20,7 @@ Title: "IdnMapping.GetAscii Method — Corvus.Globalization"
 ## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int) {#getascii-readonlyspan-char-span-char-ref-int}
 
 ```csharp
-bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int written)
+public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int written)
 ```
 
 ### Parameters
@@ -40,7 +40,7 @@ bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int writt
 ## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int) {#getascii-readonlyspan-char-span-char-int-ref-int}
 
 ```csharp
-bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, ref int written)
+public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, ref int written)
 ```
 
 ### Parameters
@@ -61,7 +61,7 @@ bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, re
 ## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int) {#getascii-readonlyspan-char-span-char-int-int-ref-int}
 
 ```csharp
-bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, ref int written)
+public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, ref int written)
 ```
 
 ### Parameters

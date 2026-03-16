@@ -12,7 +12,7 @@ Title: "BigNumber.Addition Operator — Corvus.Numerics"
 ## operator + {#operator}
 
 ```csharp
-static BigNumber operator +(BigNumber left, BigNumber right)
+public static BigNumber operator +(BigNumber left, BigNumber right)
 ```
 
 Adds two [`BigNumber`](/api/corvus-numerics-bignumber.html) values.

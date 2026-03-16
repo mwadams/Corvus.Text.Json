@@ -12,7 +12,7 @@ Title: "Utf8UriReference.Host Property — Corvus.Text.Json"
 ## Host {#host}
 
 ```csharp
-ReadOnlySpan<byte> Host { get; }
+public ReadOnlySpan<byte> Host { get; }
 ```
 
 Gets the host component of the reference (includes both host and port).

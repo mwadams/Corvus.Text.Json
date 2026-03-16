@@ -12,7 +12,7 @@ Title: "JsonPredicate<T> Constructors — Corvus.Text.Json"
 ## JsonPredicate {#jsonpredicate}
 
 ```csharp
-JsonPredicate(object object, IntPtr method)
+public JsonPredicate(object object, IntPtr method)
 ```
 
 ### Parameters

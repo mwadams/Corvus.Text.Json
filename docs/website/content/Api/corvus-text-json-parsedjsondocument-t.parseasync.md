@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.ParseAsync Method — Corvus.Text.Json"
 ## ParseAsync {#parseasync}
 
 ```csharp
-Task<ParsedJsonDocument<T>> ParseAsync(Stream utf8Json, JsonDocumentOptions options, CancellationToken cancellationToken)
+public static Task<ParsedJsonDocument<T>> ParseAsync(Stream utf8Json, JsonDocumentOptions options, CancellationToken cancellationToken)
 ```
 
 Parse a [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) as UTF-8 encoded data representing a single JSON value into a ParsedJsonDocument. The Stream will be read to completion.

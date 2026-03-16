@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.RemoveWhereUnsafe Method — Corvus.Text.Json.Interna
 ## RemoveWhereUnsafe {#removewhereunsafe}
 
 ```csharp
-void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
+public static void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
 ```
 
 Removes a items from an array element which match a predicate.

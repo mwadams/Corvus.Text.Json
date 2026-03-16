@@ -19,7 +19,7 @@ Title: "JsonSchemaEvaluation.MatchRegularExpression Method — Corvus.Text.Json.
 ## MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchregularexpression-readonlyspan-byte-regex-string-readonlyspan-byte-ref-jsonschemacontext}
 
 ```csharp
-bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string length equals the given value.
@@ -45,7 +45,7 @@ Validates that a string length equals the given value.
 ## MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex) {#matchregularexpression-readonlyspan-byte-regex}
 
 ```csharp
-bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression)
+public static bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression)
 ```
 
 Validates that a string length equals the given value.

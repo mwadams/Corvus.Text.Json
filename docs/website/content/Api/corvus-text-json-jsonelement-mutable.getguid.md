@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetGuid Method — Corvus.Text.Json"
 ## GetGuid {#getguid}
 
 ```csharp
-Guid GetGuid()
+public Guid GetGuid()
 ```
 
 ### Returns

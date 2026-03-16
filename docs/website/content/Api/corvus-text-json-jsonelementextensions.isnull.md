@@ -12,7 +12,7 @@ Title: "JsonElementExtensions.IsNull Method — Corvus.Text.Json"
 ## IsNull {#isnull}
 
 ```csharp
-bool IsNull<T>(T value)
+public static bool IsNull<T>(T value)
 ```
 
 Gets a value indicating whether this value is null.

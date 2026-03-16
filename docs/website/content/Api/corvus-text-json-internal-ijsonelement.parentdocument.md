@@ -12,7 +12,7 @@ Title: "IJsonElement.ParentDocument Property — Corvus.Text.Json.Internal"
 ## ParentDocument {#parentdocument}
 
 ```csharp
-IJsonDocument ParentDocument { get; }
+public abstract IJsonDocument ParentDocument { get; }
 ```
 
 Gets the parent document.

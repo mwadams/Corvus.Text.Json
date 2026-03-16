@@ -12,7 +12,7 @@ Title: "BigNumber.GetHashCode Method — Corvus.Numerics"
 ## GetHashCode {#gethashcode}
 
 ```csharp
-int GetHashCode()
+public virtual int GetHashCode()
 ```
 
 Returns a hash code for this instance.

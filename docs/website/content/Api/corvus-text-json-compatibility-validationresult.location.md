@@ -12,7 +12,7 @@ Title: "ValidationResult.Location Property — Corvus.Text.Json.Compatibility"
 ## Location {#location}
 
 ```csharp
-ValidationResult.LocationTuple Location { get; }
+public ValidationResult.LocationTuple Location { get; }
 ```
 
 Gets the location information for this validation result.

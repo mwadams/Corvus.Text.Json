@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetInt64 Method — Corvus.Text.Json"
 ## GetInt64 {#getint64}
 
 ```csharp
-long GetInt64()
+public long GetInt64()
 ```
 
 Parses the current JSON token value from the source as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value. Throws exceptions otherwise.

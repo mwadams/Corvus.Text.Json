@@ -12,7 +12,7 @@ Title: "Utf8IriReference.IsRelative Property — Corvus.Text.Json"
 ## IsRelative {#isrelative}
 
 ```csharp
-bool IsRelative { get; }
+public bool IsRelative { get; }
 ```
 
 Gets a value indicating whether this is a relative reference.

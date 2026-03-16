@@ -12,7 +12,7 @@ Title: "Utf8IriReference.HasAuthority Property — Corvus.Text.Json"
 ## HasAuthority {#hasauthority}
 
 ```csharp
-bool HasAuthority { get; }
+public bool HasAuthority { get; }
 ```
 
 Gets a value indicating whether this reference has an authority.

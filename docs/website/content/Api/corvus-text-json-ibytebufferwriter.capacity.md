@@ -12,7 +12,7 @@ Title: "IByteBufferWriter.Capacity Property — Corvus.Text.Json"
 ## Capacity {#capacity}
 
 ```csharp
-int Capacity { get; }
+public abstract int Capacity { get; }
 ```
 
 ### Returns

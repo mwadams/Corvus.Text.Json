@@ -12,7 +12,7 @@ Title: "BigNumber.UnaryNegation Operator — Corvus.Numerics"
 ## operator - {#operator}
 
 ```csharp
-static BigNumber operator -(BigNumber value)
+public static BigNumber operator -(BigNumber value)
 ```
 
 Negates a value.

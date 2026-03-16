@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.From Method — Corvus.Text.Json"
 ## From {#from}
 
 ```csharp
-JsonElement.Mutable From<T>(ref T instance)
+public static JsonElement.Mutable From<T>(ref T instance)
 ```
 
 ### Parameters

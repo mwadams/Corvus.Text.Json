@@ -12,7 +12,7 @@ Title: "JsonElement.ObjectBuilder.Build<T> Constructors — Corvus.Text.Json"
 ## JsonElement.ObjectBuilder.Build {#jsonelement-objectbuilder-build}
 
 ```csharp
-JsonElement.ObjectBuilder.Build(object object, IntPtr method)
+public JsonElement.ObjectBuilder.Build(object object, IntPtr method)
 ```
 
 ### Parameters

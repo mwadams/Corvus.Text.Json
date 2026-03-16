@@ -12,7 +12,7 @@ Title: "PeriodBuilder.BuildPeriod Method — Corvus.Text.Json"
 ## BuildPeriod {#buildperiod}
 
 ```csharp
-Period BuildPeriod()
+public Period BuildPeriod()
 ```
 
 Builds a period from the properties in this builder.

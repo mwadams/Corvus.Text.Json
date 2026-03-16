@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetInt32 Method — Corvus.Text.Json"
 ## TryGetInt32 {#trygetint32}
 
 ```csharp
-bool TryGetInt32(ref int value)
+public bool TryGetInt32(ref int value)
 ```
 
 Attempts to represent the current JSON number as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32).

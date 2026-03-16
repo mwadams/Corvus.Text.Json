@@ -12,7 +12,7 @@ Title: "BigNumber.Multiply Operator — Corvus.Numerics"
 ## operator * {#operator}
 
 ```csharp
-static BigNumber operator *(BigNumber left, BigNumber right)
+public static BigNumber operator *(BigNumber left, BigNumber right)
 ```
 
 Multiplies two [`BigNumber`](/api/corvus-numerics-bignumber.html) values.

@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.GetHashCode Method — Corvus.Text.Json
 ## GetHashCode {#gethashcode}
 
 ```csharp
-int GetHashCode()
+public virtual int GetHashCode()
 ```
 
 Gets the hash code for the current instance.

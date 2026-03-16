@@ -12,7 +12,7 @@ Title: "JsonProperty<TValue>.NameSpan Property — Corvus.Text.Json"
 ## NameSpan {#namespan}
 
 ```csharp
-UnescapedUtf8JsonString NameSpan { get; }
+public UnescapedUtf8JsonString NameSpan { get; }
 ```
 
 Gets the name as an unescaped UTF-8 JSON string.

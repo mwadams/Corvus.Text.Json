@@ -24,7 +24,7 @@ Title: "Utf8JsonWriter.WriteNumberValue Method — Corvus.Text.Json"
 ## WriteNumberValue(decimal) {#writenumbervalue-decimal}
 
 ```csharp
-void WriteNumberValue(decimal value)
+public void WriteNumberValue(decimal value)
 ```
 
 Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as an element of a JSON array.
@@ -50,7 +50,7 @@ Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) us
 ## WriteNumberValue(double) {#writenumbervalue-double}
 
 ```csharp
-void WriteNumberValue(double value)
+public void WriteNumberValue(double value)
 ```
 
 Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as an element of a JSON array.
@@ -76,7 +76,7 @@ Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) usin
 ## WriteNumberValue(float) {#writenumbervalue-float}
 
 ```csharp
-void WriteNumberValue(float value)
+public void WriteNumberValue(float value)
 ```
 
 Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as an element of a JSON array.
@@ -102,7 +102,7 @@ Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) usin
 ## WriteNumberValue(int) {#writenumbervalue-int}
 
 ```csharp
-void WriteNumberValue(int value)
+public void WriteNumberValue(int value)
 ```
 
 Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as an element of a JSON array.
@@ -128,7 +128,7 @@ Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using 
 ## WriteNumberValue(long) {#writenumbervalue-long}
 
 ```csharp
-void WriteNumberValue(long value)
+public void WriteNumberValue(long value)
 ```
 
 Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as an element of a JSON array.
@@ -154,7 +154,7 @@ Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using 
 ## WriteNumberValue(uint) {#writenumbervalue-uint}
 
 ```csharp
-void WriteNumberValue(uint value)
+public void WriteNumberValue(uint value)
 ```
 
 Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as an element of a JSON array.
@@ -180,7 +180,7 @@ Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) usin
 ## WriteNumberValue(ulong) {#writenumbervalue-ulong}
 
 ```csharp
-void WriteNumberValue(ulong value)
+public void WriteNumberValue(ulong value)
 ```
 
 Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as an element of a JSON array.

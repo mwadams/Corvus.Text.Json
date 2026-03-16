@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcherWithRequiredBitBuffer.BeginInvoke Method — Corvus.Tex
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, Span<int> requiredBitBuffer, AsyncCallback callback, object object)
 ```
 
 ### Parameters

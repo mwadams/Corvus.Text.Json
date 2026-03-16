@@ -12,7 +12,7 @@ Title: "BigNumber.Abs Method — Corvus.Numerics"
 ## Abs {#abs}
 
 ```csharp
-BigNumber Abs(BigNumber value)
+public static BigNumber Abs(BigNumber value)
 ```
 
 Returns the absolute value.

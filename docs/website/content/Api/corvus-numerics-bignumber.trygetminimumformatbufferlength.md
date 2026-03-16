@@ -12,7 +12,7 @@ Title: "BigNumber.TryGetMinimumFormatBufferLength Method — Corvus.Numerics"
 ## TryGetMinimumFormatBufferLength {#trygetminimumformatbufferlength}
 
 ```csharp
-bool TryGetMinimumFormatBufferLength(ref int minimumLength)
+public bool TryGetMinimumFormatBufferLength(ref int minimumLength)
 ```
 
 Gets the minimum format buffer length.

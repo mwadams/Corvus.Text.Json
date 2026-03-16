@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetOffsetTime Method — Corvus.Text.Json"
 ## TryGetOffsetTime {#trygetoffsettime}
 
 ```csharp
-bool TryGetOffsetTime(ref OffsetTime value)
+public bool TryGetOffsetTime(ref OffsetTime value)
 ```
 
 Attempts to represent the current JSON string as a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html).

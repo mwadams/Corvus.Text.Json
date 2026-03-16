@@ -12,7 +12,7 @@ Title: "Utf8UriReference.User Property — Corvus.Text.Json"
 ## User {#user}
 
 ```csharp
-ReadOnlySpan<byte> User { get; }
+public ReadOnlySpan<byte> User { get; }
 ```
 
 Gets the user component of the reference.

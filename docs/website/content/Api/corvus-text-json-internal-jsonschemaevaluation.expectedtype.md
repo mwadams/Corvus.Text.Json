@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedType Method — Corvus.Text.Json.Internal"
 ## ExpectedType {#expectedtype}
 
 ```csharp
-bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, ref int written)
+public static bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, ref int written)
 ```
 
 Tries to write a message indicating the expected type for a value.

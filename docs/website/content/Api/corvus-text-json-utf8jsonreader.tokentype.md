@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TokenType Property — Corvus.Text.Json"
 ## TokenType {#tokentype}
 
 ```csharp
-JsonTokenType TokenType { get; }
+public JsonTokenType TokenType { get; }
 ```
 
 Gets the type of the last processed JSON token in the UTF-8 encoded JSON text.

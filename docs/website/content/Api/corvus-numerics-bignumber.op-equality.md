@@ -12,7 +12,7 @@ Title: "BigNumber.Equality Operator — Corvus.Numerics"
 ## operator == {#operator}
 
 ```csharp
-static bool operator ==(BigNumber left, BigNumber right)
+public static bool operator ==(BigNumber left, BigNumber right)
 ```
 
 Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are equal.

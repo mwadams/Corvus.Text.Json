@@ -12,7 +12,7 @@ Title: "JsonSchemaMessageProvider.BeginInvoke Method — Corvus.Text.Json"
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(Span<byte> buffer, ref int written, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(Span<byte> buffer, ref int written, AsyncCallback callback, object object)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "JsonWorkspace.ReturnWriter Method — Corvus.Text.Json"
 ## ReturnWriter {#returnwriter}
 
 ```csharp
-void ReturnWriter(Utf8JsonWriter writer)
+public void ReturnWriter(Utf8JsonWriter writer)
 ```
 
 Returns a rented UTF-8 JSON writer to the pool.

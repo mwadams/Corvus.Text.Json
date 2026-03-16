@@ -12,7 +12,7 @@ Title: "JsonException.Path Property — Corvus.Text.Json"
 ## Path {#path}
 
 ```csharp
-string Path { get; set; }
+public string Path { get; set; }
 ```
 
 Gets the path within the JSON where the exception was encountered.

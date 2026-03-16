@@ -12,7 +12,7 @@ Title: "JsonWorkspace.Dispose Method — Corvus.Text.Json"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 
 Disposes the workspace. If the workspace was rented from the cache, returns it; otherwise disposes all child documents and returns the backing array to the pool.

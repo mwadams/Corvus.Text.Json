@@ -12,7 +12,7 @@ Title: "Utf8IriReference.Port Property — Corvus.Text.Json"
 ## Port {#port}
 
 ```csharp
-ReadOnlySpan<byte> Port { get; }
+public ReadOnlySpan<byte> Port { get; }
 ```
 
 Gets the port component of the reference as a byte span.

@@ -12,7 +12,7 @@ Title: "Period.MaxValue Property — Corvus.Text.Json"
 ## MaxValue {#maxvalue}
 
 ```csharp
-Period MaxValue { get; }
+public static Period MaxValue { get; }
 ```
 
 A period containing the maximum value for all properties.

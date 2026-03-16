@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchInt64 Method — Corvus.Text.Json.Internal"
 ## MatchInt64 {#matchint64}
 
 ```csharp
-bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Int64 type constraint, validating it as a 64-bit signed integer.

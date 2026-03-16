@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TryGetDateTime Method — Corvus.Text.Json"
 ## TryGetDateTime {#trygetdatetime}
 
 ```csharp
-bool TryGetDateTime(ref DateTime value)
+public bool TryGetDateTime(ref DateTime value)
 ```
 
 Parses the current JSON token value from the source as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value. Returns `false` otherwise.

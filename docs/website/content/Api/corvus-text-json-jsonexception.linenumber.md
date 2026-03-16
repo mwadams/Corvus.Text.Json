@@ -12,7 +12,7 @@ Title: "JsonException.LineNumber Property — Corvus.Text.Json"
 ## LineNumber {#linenumber}
 
 ```csharp
-Nullable<long> LineNumber { get; set; }
+public Nullable<long> LineNumber { get; set; }
 ```
 
 Gets the number of lines read so far before the exception (starting at 0).

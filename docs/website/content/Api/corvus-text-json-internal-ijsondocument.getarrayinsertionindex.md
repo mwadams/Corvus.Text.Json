@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetArrayInsertionIndex Method — Corvus.Text.Json.Interna
 ## GetArrayInsertionIndex {#getarrayinsertionindex}
 
 ```csharp
-int GetArrayInsertionIndex(int currentIndex, int arrayIndex)
+public abstract int GetArrayInsertionIndex(int currentIndex, int arrayIndex)
 ```
 
 Gets DB index of the item at the array index within the array that starts at `currentIndex`.

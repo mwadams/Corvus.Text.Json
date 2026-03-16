@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.TryParseValue Method — Corvus.Text.Js
 ## TryParseValue {#tryparsevalue}
 
 ```csharp
-bool TryParseValue(ref Utf8JsonReader reader, ref Nullable<JsonElementForBooleanFalseSchema> element)
+public static bool TryParseValue(ref Utf8JsonReader reader, ref Nullable<JsonElementForBooleanFalseSchema> element)
 ```
 
 ### Parameters

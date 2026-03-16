@@ -12,7 +12,7 @@ Title: "Utf8Uri.TryCreateUri Method — Corvus.Text.Json"
 ## TryCreateUri {#trycreateuri}
 
 ```csharp
-bool TryCreateUri(ReadOnlySpan<byte> uri, ref Utf8Uri utf8Uri)
+public static bool TryCreateUri(ReadOnlySpan<byte> uri, ref Utf8Uri utf8Uri)
 ```
 
 Tries to create a new UTF-8 URI from the specified URI bytes.

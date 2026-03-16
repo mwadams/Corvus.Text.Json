@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.CountRunes Method — Corvus.Text.Json.Internal"
 ## CountRunes {#countrunes}
 
 ```csharp
-int CountRunes(ReadOnlySpan<byte> utf8String)
+public static int CountRunes(ReadOnlySpan<byte> utf8String)
 ```
 
 Count the runes in a UTF-8 string.

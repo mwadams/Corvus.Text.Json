@@ -12,7 +12,7 @@ Title: "BigNumber Constructors — Corvus.Numerics"
 ## BigNumber {#bignumber}
 
 ```csharp
-BigNumber(BigInteger significand, int exponent)
+public BigNumber(BigInteger significand, int exponent)
 ```
 
 Initializes a new instance of the [`BigNumber`](/api/corvus-numerics-bignumber.html) struct.

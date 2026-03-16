@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.RequiredPropertyPresent Method — Corvus.Text.Json
 ## RequiredPropertyPresent {#requiredpropertypresent}
 
 ```csharp
-bool RequiredPropertyPresent(ReadOnlySpan<byte> propertyName, Span<byte> buffer, ref int written)
+public static bool RequiredPropertyPresent(ReadOnlySpan<byte> propertyName, Span<byte> buffer, ref int written)
 ```
 
 Creates a message indicating that a required property is present.

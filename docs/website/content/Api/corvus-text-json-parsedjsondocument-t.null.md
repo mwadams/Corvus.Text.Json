@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.Null Property — Corvus.Text.Json"
 ## Null {#null}
 
 ```csharp
-T Null { get; }
+public static T Null { get; }
 ```
 
 Gets the null instance.

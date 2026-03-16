@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.CurrentDepth Property — Corvus.Text.Json"
 ## CurrentDepth {#currentdepth}
 
 ```csharp
-int CurrentDepth { get; }
+public int CurrentDepth { get; }
 ```
 
 Tracks the recursive depth of the nested objects / arrays within the JSON text written so far. This provides the depth of the current token.

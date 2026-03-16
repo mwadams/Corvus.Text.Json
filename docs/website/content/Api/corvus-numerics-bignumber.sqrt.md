@@ -12,7 +12,7 @@ Title: "BigNumber.Sqrt Method — Corvus.Numerics"
 ## Sqrt {#sqrt}
 
 ```csharp
-BigNumber Sqrt(BigNumber value, int precision)
+public static BigNumber Sqrt(BigNumber value, int precision)
 ```
 
 Computes the square root of a BigNumber using Newton's method.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchUuid Method — Corvus.Text.Json.Internal"
 ## MatchUuid {#matchuuid}
 
 ```csharp
-bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid UUID format.

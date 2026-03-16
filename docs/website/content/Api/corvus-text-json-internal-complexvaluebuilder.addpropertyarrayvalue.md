@@ -59,7 +59,7 @@ Title: "ComplexValueBuilder.AddPropertyArrayValue Method — Corvus.Text.Json.In
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;long&gt;) {#addpropertyarrayvalue-string-readonlyspan-long}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<long> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<long> array)
 ```
 
 Adds a property with an array of [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) values to the current object.
@@ -76,7 +76,7 @@ Adds a property with an array of [`Int64`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;int&gt;) {#addpropertyarrayvalue-string-readonlyspan-int}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<int> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<int> array)
 ```
 
 Adds a property with an array of [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) values to the current object.
@@ -93,7 +93,7 @@ Adds a property with an array of [`Int32`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;short&gt;) {#addpropertyarrayvalue-string-readonlyspan-short}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<short> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<short> array)
 ```
 
 Adds a property with an array of [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) values to the current object.
@@ -110,7 +110,7 @@ Adds a property with an array of [`Int16`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;sbyte&gt;) {#addpropertyarrayvalue-string-readonlyspan-sbyte}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<sbyte> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<sbyte> array)
 ```
 
 Adds a property with an array of [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) values to the current object.
@@ -127,7 +127,7 @@ Adds a property with an array of [`SByte`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;ulong&gt;) {#addpropertyarrayvalue-string-readonlyspan-ulong}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<ulong> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<ulong> array)
 ```
 
 Adds a property with an array of [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) values to the current object.
@@ -144,7 +144,7 @@ Adds a property with an array of [`UInt64`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;uint&gt;) {#addpropertyarrayvalue-string-readonlyspan-uint}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<uint> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<uint> array)
 ```
 
 Adds a property with an array of [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) values to the current object.
@@ -161,7 +161,7 @@ Adds a property with an array of [`UInt32`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;ushort&gt;) {#addpropertyarrayvalue-string-readonlyspan-ushort}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<ushort> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<ushort> array)
 ```
 
 Adds a property with an array of [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) values to the current object.
@@ -178,7 +178,7 @@ Adds a property with an array of [`UInt16`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;byte&gt;) {#addpropertyarrayvalue-string-readonlyspan-byte}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<byte> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<byte> array)
 ```
 
 Adds a property with an array of [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) values to the current object.
@@ -195,7 +195,7 @@ Adds a property with an array of [`Byte`](https://learn.microsoft.com/dotnet/api
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;decimal&gt;) {#addpropertyarrayvalue-string-readonlyspan-decimal}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<decimal> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<decimal> array)
 ```
 
 Adds a property with an array of [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) values to the current object.
@@ -212,7 +212,7 @@ Adds a property with an array of [`Decimal`](https://learn.microsoft.com/dotnet/
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;double&gt;) {#addpropertyarrayvalue-string-readonlyspan-double}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<double> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<double> array)
 ```
 
 Adds a property with an array of [`Double`](https://learn.microsoft.com/dotnet/api/system.double) values to the current object.
@@ -229,7 +229,7 @@ Adds a property with an array of [`Double`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;float&gt;) {#addpropertyarrayvalue-string-readonlyspan-float}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<float> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<float> array)
 ```
 
 Adds a property with an array of [`Single`](https://learn.microsoft.com/dotnet/api/system.single) values to the current object.
@@ -246,7 +246,7 @@ Adds a property with an array of [`Single`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;Int128&gt;) {#addpropertyarrayvalue-string-readonlyspan-int128}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<Int128> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<Int128> array)
 ```
 
 Adds a property with an array of [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) values to the current object.
@@ -263,7 +263,7 @@ Adds a property with an array of [`Int128`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;UInt128&gt;) {#addpropertyarrayvalue-string-readonlyspan-uint128}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<UInt128> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<UInt128> array)
 ```
 
 Adds a property with an array of [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) values to the current object.
@@ -280,7 +280,7 @@ Adds a property with an array of [`UInt128`](https://learn.microsoft.com/dotnet/
 ## AddPropertyArrayValue(string, ReadOnlySpan&lt;Half&gt;) {#addpropertyarrayvalue-string-readonlyspan-half}
 
 ```csharp
-void AddPropertyArrayValue(string name, ReadOnlySpan<Half> array)
+public void AddPropertyArrayValue(string name, ReadOnlySpan<Half> array)
 ```
 
 Adds a property with an array of [`Half`](https://learn.microsoft.com/dotnet/api/system.half) values to the current object.
@@ -297,7 +297,7 @@ Adds a property with an array of [`Half`](https://learn.microsoft.com/dotnet/api
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;long&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-long}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<long> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<long> array)
 ```
 
 Adds a property with an array of [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) values to the current object.
@@ -314,7 +314,7 @@ Adds a property with an array of [`Int64`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;int&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-int}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<int> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<int> array)
 ```
 
 Adds a property with an array of [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) values to the current object.
@@ -331,7 +331,7 @@ Adds a property with an array of [`Int32`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;short&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-short}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<short> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<short> array)
 ```
 
 Adds a property with an array of [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) values to the current object.
@@ -348,7 +348,7 @@ Adds a property with an array of [`Int16`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;sbyte&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-sbyte}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<sbyte> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<sbyte> array)
 ```
 
 Adds a property with an array of [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) values to the current object.
@@ -365,7 +365,7 @@ Adds a property with an array of [`SByte`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ulong&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-ulong}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ulong> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ulong> array)
 ```
 
 Adds a property with an array of [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) values to the current object.
@@ -382,7 +382,7 @@ Adds a property with an array of [`UInt64`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;uint&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-uint}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<uint> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<uint> array)
 ```
 
 Adds a property with an array of [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) values to the current object.
@@ -399,7 +399,7 @@ Adds a property with an array of [`UInt32`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ushort&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-ushort}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ushort> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<ushort> array)
 ```
 
 Adds a property with an array of [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) values to the current object.
@@ -416,7 +416,7 @@ Adds a property with an array of [`UInt16`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<byte> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<byte> array)
 ```
 
 Adds a property with an array of [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) values to the current object.
@@ -433,7 +433,7 @@ Adds a property with an array of [`Byte`](https://learn.microsoft.com/dotnet/api
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;decimal&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-decimal}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<decimal> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<decimal> array)
 ```
 
 Adds a property with an array of [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) values to the current object.
@@ -450,7 +450,7 @@ Adds a property with an array of [`Decimal`](https://learn.microsoft.com/dotnet/
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;double&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-double}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<double> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<double> array)
 ```
 
 Adds a property with an array of [`Double`](https://learn.microsoft.com/dotnet/api/system.double) values to the current object.
@@ -467,7 +467,7 @@ Adds a property with an array of [`Double`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;float&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-float}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<float> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<float> array)
 ```
 
 Adds a property with an array of [`Single`](https://learn.microsoft.com/dotnet/api/system.single) values to the current object.
@@ -484,7 +484,7 @@ Adds a property with an array of [`Single`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Int128&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-int128}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Int128> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Int128> array)
 ```
 
 Adds a property with an array of [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) values to the current object.
@@ -501,7 +501,7 @@ Adds a property with an array of [`Int128`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;UInt128&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-uint128}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<UInt128> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<UInt128> array)
 ```
 
 Adds a property with an array of [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) values to the current object.
@@ -518,7 +518,7 @@ Adds a property with an array of [`UInt128`](https://learn.microsoft.com/dotnet/
 ## AddPropertyArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Half&gt;) {#addpropertyarrayvalue-readonlyspan-char-readonlyspan-half}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Half> array)
+public void AddPropertyArrayValue(ReadOnlySpan<char> name, ReadOnlySpan<Half> array)
 ```
 
 Adds a property with an array of [`Half`](https://learn.microsoft.com/dotnet/api/system.half) values to the current object.
@@ -535,7 +535,7 @@ Adds a property with an array of [`Half`](https://learn.microsoft.com/dotnet/api
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;long&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-long-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) values to the current object, with control over escaping.
@@ -554,7 +554,7 @@ Adds a property with an array of [`Int64`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;int&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-int-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<int> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<int> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) values to the current object, with control over escaping.
@@ -573,7 +573,7 @@ Adds a property with an array of [`Int32`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;short&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-short-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<short> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<short> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) values to the current object, with control over escaping.
@@ -592,7 +592,7 @@ Adds a property with an array of [`Int16`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;sbyte&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-sbyte-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<sbyte> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<sbyte> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) values to the current object, with control over escaping.
@@ -611,7 +611,7 @@ Adds a property with an array of [`SByte`](https://learn.microsoft.com/dotnet/ap
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ulong&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-ulong-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<ulong> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<ulong> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) values to the current object, with control over escaping.
@@ -630,7 +630,7 @@ Adds a property with an array of [`UInt64`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;uint&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-uint-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<uint> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<uint> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) values to the current object, with control over escaping.
@@ -649,7 +649,7 @@ Adds a property with an array of [`UInt32`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ushort&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-ushort-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<ushort> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<ushort> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) values to the current object, with control over escaping.
@@ -668,7 +668,7 @@ Adds a property with an array of [`UInt16`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<byte> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<byte> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) values to the current object, with control over escaping.
@@ -687,7 +687,7 @@ Adds a property with an array of [`Byte`](https://learn.microsoft.com/dotnet/api
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;decimal&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-decimal-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<decimal> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<decimal> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) values to the current object, with control over escaping.
@@ -706,7 +706,7 @@ Adds a property with an array of [`Decimal`](https://learn.microsoft.com/dotnet/
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;double&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-double-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<double> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<double> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Double`](https://learn.microsoft.com/dotnet/api/system.double) values to the current object, with control over escaping.
@@ -725,7 +725,7 @@ Adds a property with an array of [`Double`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;float&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-float-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<float> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<float> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Single`](https://learn.microsoft.com/dotnet/api/system.single) values to the current object, with control over escaping.
@@ -744,7 +744,7 @@ Adds a property with an array of [`Single`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Int128&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-int128-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<Int128> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<Int128> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) values to the current object, with control over escaping.
@@ -763,7 +763,7 @@ Adds a property with an array of [`Int128`](https://learn.microsoft.com/dotnet/a
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;UInt128&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-uint128-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<UInt128> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<UInt128> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) values to the current object, with control over escaping.
@@ -782,7 +782,7 @@ Adds a property with an array of [`UInt128`](https://learn.microsoft.com/dotnet/
 ## AddPropertyArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Half&gt;, bool, bool) {#addpropertyarrayvalue-readonlyspan-byte-readonlyspan-half-bool-bool}
 
 ```csharp
-void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<Half> array, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyArrayValue(ReadOnlySpan<byte> utf8Name, ReadOnlySpan<Half> array, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with an array of [`Half`](https://learn.microsoft.com/dotnet/api/system.half) values to the current object, with control over escaping.

@@ -20,7 +20,7 @@ Title: "Utf8JsonWriter.WriteCommentValue Method — Corvus.Text.Json"
 ## WriteCommentValue(string) {#writecommentvalue-string}
 
 ```csharp
-void WriteCommentValue(string value)
+public void WriteCommentValue(string value)
 ```
 
 Writes the string text value (as a JSON comment).
@@ -47,7 +47,7 @@ The comment value is not escaped before writing.
 ## WriteCommentValue(ReadOnlySpan&lt;char&gt;) {#writecommentvalue-readonlyspan-char}
 
 ```csharp
-void WriteCommentValue(ReadOnlySpan<char> value)
+public void WriteCommentValue(ReadOnlySpan<char> value)
 ```
 
 Writes the text value (as a JSON comment).
@@ -73,7 +73,7 @@ The comment value is not escaped before writing.
 ## WriteCommentValue(ReadOnlySpan&lt;byte&gt;) {#writecommentvalue-readonlyspan-byte}
 
 ```csharp
-void WriteCommentValue(ReadOnlySpan<byte> utf8Value)
+public void WriteCommentValue(ReadOnlySpan<byte> utf8Value)
 ```
 
 Writes the UTF-8 text value (as a JSON comment).

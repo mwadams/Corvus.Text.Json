@@ -12,7 +12,7 @@ Title: "ValidationContext.Results Property — Corvus.Text.Json.Compatibility"
 ## Results {#results}
 
 ```csharp
-IReadOnlyList<ValidationResult> Results { get; }
+public IReadOnlyList<ValidationResult> Results { get; }
 ```
 
 Gets the validation results.

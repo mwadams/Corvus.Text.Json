@@ -12,7 +12,7 @@ Title: "Period.ToString Method — Corvus.Text.Json"
 ## ToString {#tostring}
 
 ```csharp
-string ToString()
+public virtual string ToString()
 ```
 
 Returns this string formatted according to the ISO8601 duration specification used by JSON schema.

@@ -12,7 +12,7 @@ Title: "IByteBufferWriter.WrittenSpan Property — Corvus.Text.Json"
 ## WrittenSpan {#writtenspan}
 
 ```csharp
-ReadOnlySpan<byte> WrittenSpan { get; }
+public abstract ReadOnlySpan<byte> WrittenSpan { get; }
 ```
 
 ### Returns

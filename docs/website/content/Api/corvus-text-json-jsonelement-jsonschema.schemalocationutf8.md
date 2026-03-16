@@ -12,7 +12,7 @@ Title: "JsonElement.JsonSchema.SchemaLocationUtf8 Property — Corvus.Text.Json"
 ## SchemaLocationUtf8 {#schemalocationutf8}
 
 ```csharp
-ReadOnlySpan<byte> SchemaLocationUtf8 { get; }
+public static ReadOnlySpan<byte> SchemaLocationUtf8 { get; }
 ```
 
 ### Returns

@@ -19,7 +19,7 @@ Title: "JsonSchemaContext.EvaluatedKeywordPath Method — Corvus.Text.Json.Inter
 ## EvaluatedKeywordPath(bool, JsonSchemaMessageProvider, JsonSchemaPathProvider) {#evaluatedkeywordpath-bool-jsonschemamessageprovider-jsonschemapathprovider}
 
 ```csharp
-void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider keywordPath)
+public void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider keywordPath)
 ```
 
 Records the evaluation of a schema keyword using a path-based approach.
@@ -37,7 +37,7 @@ Records the evaluation of a schema keyword using a path-based approach.
 ## EvaluatedKeywordPath(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#evaluatedkeywordpath-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
 ```csharp
-void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> keywordPath)
+public void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> keywordPath)
 ```
 
 Records the evaluation of a schema keyword using a path-based approach with a provider context.

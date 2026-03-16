@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Item Property — Corvus.Text.Json"
 ## this[PeriodUnits] {#this-periodunits}
 
 ```csharp
-long this[PeriodUnits unit] { get; set; }
+public long this[PeriodUnits unit] { get; set; }
 ```
 
 Gets or sets the value of a single unit.

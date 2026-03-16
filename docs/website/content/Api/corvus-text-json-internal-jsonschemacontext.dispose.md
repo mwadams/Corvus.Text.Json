@@ -12,6 +12,6 @@ Title: "JsonSchemaContext.Dispose Method — Corvus.Text.Json.Internal"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 

@@ -12,7 +12,7 @@ Title: "JsonDocument.Freeze Method — Corvus.Text.Json.Internal"
 ## Freeze {#freeze}
 
 ```csharp
-void Freeze()
+public void Freeze()
 ```
 
 Makes the document immutable.

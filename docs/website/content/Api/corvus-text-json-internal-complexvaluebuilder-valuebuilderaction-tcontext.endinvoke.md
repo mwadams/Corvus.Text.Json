@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction<TContext>.EndInvoke Method — Co
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref TContext context, ref ComplexValueBuilder builder, IAsyncResult result)
+public virtual void EndInvoke(ref TContext context, ref ComplexValueBuilder builder, IAsyncResult result)
 ```
 
 ### Parameters

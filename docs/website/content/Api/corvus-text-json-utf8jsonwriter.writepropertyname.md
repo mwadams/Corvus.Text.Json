@@ -21,7 +21,7 @@ Title: "Utf8JsonWriter.WritePropertyName Method — Corvus.Text.Json"
 ## WritePropertyName(JsonEncodedText) {#writepropertyname-jsonencodedtext}
 
 ```csharp
-void WritePropertyName(JsonEncodedText propertyName)
+public void WritePropertyName(JsonEncodedText propertyName)
 ```
 
 Writes the pre-encoded property name (as a JSON string) as the first part of a name/value pair of a JSON object.
@@ -43,7 +43,7 @@ Writes the pre-encoded property name (as a JSON string) as the first part of a n
 ## WritePropertyName(string) {#writepropertyname-string}
 
 ```csharp
-void WritePropertyName(string propertyName)
+public void WritePropertyName(string propertyName)
 ```
 
 Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object.
@@ -71,7 +71,7 @@ The property name is escaped before writing.
 ## WritePropertyName(ReadOnlySpan&lt;char&gt;) {#writepropertyname-readonlyspan-char}
 
 ```csharp
-void WritePropertyName(ReadOnlySpan<char> propertyName)
+public void WritePropertyName(ReadOnlySpan<char> propertyName)
 ```
 
 Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object.
@@ -98,7 +98,7 @@ The property name is escaped before writing.
 ## WritePropertyName(ReadOnlySpan&lt;byte&gt;) {#writepropertyname-readonlyspan-byte}
 
 ```csharp
-void WritePropertyName(ReadOnlySpan<byte> utf8PropertyName)
+public void WritePropertyName(ReadOnlySpan<byte> utf8PropertyName)
 ```
 
 Writes the UTF-8 property name (as a JSON string) as the first part of a name/value pair of a JSON object.

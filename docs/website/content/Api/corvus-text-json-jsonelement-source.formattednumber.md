@@ -12,7 +12,7 @@ Title: "JsonElement.Source.FormattedNumber Method — Corvus.Text.Json"
 ## FormattedNumber {#formattednumber}
 
 ```csharp
-JsonElement.Source FormattedNumber(ReadOnlySpan<byte> value)
+public static JsonElement.Source FormattedNumber(ReadOnlySpan<byte> value)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "BigNumber.TryFormatOptimized Method — Corvus.Numerics"
 ## TryFormatOptimized {#tryformatoptimized}
 
 ```csharp
-bool TryFormatOptimized(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
+public bool TryFormatOptimized(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
 
 Tries to format this instance into the provided UTF-16 span with zero allocations.

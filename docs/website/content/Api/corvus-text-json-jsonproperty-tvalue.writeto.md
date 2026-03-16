@@ -12,7 +12,7 @@ Title: "JsonProperty<TValue>.WriteTo Method — Corvus.Text.Json"
 ## WriteTo {#writeto}
 
 ```csharp
-void WriteTo(Utf8JsonWriter writer)
+public void WriteTo(Utf8JsonWriter writer)
 ```
 
 Write the property into the provided writer as a named JSON object property.

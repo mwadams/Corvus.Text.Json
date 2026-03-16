@@ -12,7 +12,7 @@ Title: "Period.FromTicks Method — Corvus.Text.Json"
 ## FromTicks {#fromticks}
 
 ```csharp
-Period FromTicks(long ticks)
+public static Period FromTicks(long ticks)
 ```
 
 Creates a period representing the specified number of ticks.

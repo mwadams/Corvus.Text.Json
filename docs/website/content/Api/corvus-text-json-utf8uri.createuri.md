@@ -12,7 +12,7 @@ Title: "Utf8Uri.CreateUri Method — Corvus.Text.Json"
 ## CreateUri {#createuri}
 
 ```csharp
-Utf8Uri CreateUri(ReadOnlySpan<byte> uri)
+public static Utf8Uri CreateUri(ReadOnlySpan<byte> uri)
 ```
 
 Creates a new UTF-8 URI from the specified URI bytes.

@@ -12,7 +12,7 @@ Title: "PropertySchemaMatchers<T> Constructors — Corvus.Text.Json.Internal"
 ## PropertySchemaMatchers {#propertyschemamatchers}
 
 ```csharp
-PropertySchemaMatchers(List<ValueTuple<PropertySchemaMatchers<T>.UnescapedNameProvider<T>, T>> matchers)
+public PropertySchemaMatchers(List<ValueTuple<PropertySchemaMatchers<T>.UnescapedNameProvider<T>, T>> matchers)
 ```
 
 ### Parameters

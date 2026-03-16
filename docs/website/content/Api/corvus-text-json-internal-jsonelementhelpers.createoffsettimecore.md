@@ -19,7 +19,7 @@ Title: "JsonElementHelpers.CreateOffsetTimeCore Method — Corvus.Text.Json.Inte
 ## CreateOffsetTimeCore(int, int, int, int, int, int, int) {#createoffsettimecore-int-int-int-int-int-int-int}
 
 ```csharp
-OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
+public static OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
 ```
 
 Creates an offset time from its individual components including nanosecond precision.
@@ -47,7 +47,7 @@ The constructed offset time.
 ## CreateOffsetTimeCore(int, int, int, int, int) {#createoffsettimecore-int-int-int-int-int}
 
 ```csharp
-OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
+public static OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
 ```
 
 Creates an offset time from its individual components with millisecond precision.

@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction<TContext>.BeginInvoke Method — 
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(ref TContext context, ref ComplexValueBuilder builder, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(ref TContext context, ref ComplexValueBuilder builder, AsyncCallback callback, object object)
 ```
 
 ### Parameters

@@ -12,6 +12,6 @@ Title: "JsonDocumentBuilder<T>.Dispose Method — Corvus.Text.Json"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 

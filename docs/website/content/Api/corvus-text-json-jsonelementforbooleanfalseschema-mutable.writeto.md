@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.WriteTo Method — Corvus.Text.
 ## WriteTo {#writeto}
 
 ```csharp
-void WriteTo(Utf8JsonWriter writer)
+public void WriteTo(Utf8JsonWriter writer)
 ```
 
 ### Parameters

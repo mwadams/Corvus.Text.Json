@@ -19,7 +19,7 @@ Title: "BigNumber.CompareTo Method — Corvus.Numerics"
 ## CompareTo(BigNumber) {#compareto-bignumber}
 
 ```csharp
-int CompareTo(BigNumber other)
+public int CompareTo(BigNumber other)
 ```
 
 Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
@@ -41,7 +41,7 @@ A value that indicates the relative order of the values being compared.
 ## CompareTo(object) {#compareto-object}
 
 ```csharp
-int CompareTo(object obj)
+public int CompareTo(object obj)
 ```
 
 Compares this instance with a specified object.

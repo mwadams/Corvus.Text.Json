@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetRawText Method — Corvus.Text.Json"
 ## GetRawText {#getrawtext}
 
 ```csharp
-string GetRawText()
+public string GetRawText()
 ```
 
 ### Returns

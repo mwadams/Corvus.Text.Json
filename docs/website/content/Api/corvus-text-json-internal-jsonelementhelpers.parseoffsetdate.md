@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ParseOffsetDate Method — Corvus.Text.Json.Internal"
 ## ParseOffsetDate {#parseoffsetdate}
 
 ```csharp
-OffsetDate ParseOffsetDate(ReadOnlySpan<byte> text)
+public static OffsetDate ParseOffsetDate(ReadOnlySpan<byte> text)
 ```
 
 Parse an offset date from a UTF-8 encoded string for the `date` format.

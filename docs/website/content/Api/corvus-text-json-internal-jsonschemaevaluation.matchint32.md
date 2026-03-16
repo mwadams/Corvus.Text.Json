@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchInt32 Method — Corvus.Text.Json.Internal"
 ## MatchInt32 {#matchint32}
 
 ```csharp
-bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number against the Int32 type constraint, validating it as a 32-bit signed integer.

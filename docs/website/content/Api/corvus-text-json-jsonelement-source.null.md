@@ -12,7 +12,7 @@ Title: "JsonElement.Source.Null Method — Corvus.Text.Json"
 ## Null {#null}
 
 ```csharp
-JsonElement.Source Null()
+public static JsonElement.Source Null()
 ```
 
 ### Returns

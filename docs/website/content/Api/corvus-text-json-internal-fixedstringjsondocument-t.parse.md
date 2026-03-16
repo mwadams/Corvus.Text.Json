@@ -12,7 +12,7 @@ Title: "FixedStringJsonDocument<T>.Parse Method — Corvus.Text.Json.Internal"
 ## Parse {#parse}
 
 ```csharp
-FixedStringJsonDocument<T> Parse(ReadOnlyMemory<byte> rawJsonStringValue, bool requiresUnescaping)
+public static FixedStringJsonDocument<T> Parse(ReadOnlyMemory<byte> rawJsonStringValue, bool requiresUnescaping)
 ```
 
 Parse an instance of the fixed string to a document, using caching.

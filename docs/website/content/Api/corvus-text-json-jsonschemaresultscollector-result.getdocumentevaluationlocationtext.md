@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.GetDocumentEvaluationLocationText Meth
 ## GetDocumentEvaluationLocationText {#getdocumentevaluationlocationtext}
 
 ```csharp
-string GetDocumentEvaluationLocationText()
+public string GetDocumentEvaluationLocationText()
 ```
 
 ### Returns

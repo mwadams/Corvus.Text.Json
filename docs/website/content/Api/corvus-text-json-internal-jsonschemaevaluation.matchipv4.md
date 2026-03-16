@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchIPV4 Method — Corvus.Text.Json.Internal"
 ## MatchIPV4 {#matchipv4}
 
 ```csharp
-bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value is a valid IPv4 address format.

@@ -12,7 +12,7 @@ Title: "UnescapedUtf16JsonString.Span Property — Corvus.Text.Json"
 ## Span {#span}
 
 ```csharp
-ReadOnlySpan<char> Span { get; }
+public ReadOnlySpan<char> Span { get; }
 ```
 
 Gets the UTF-16 characters as a read-only span.

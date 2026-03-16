@@ -12,7 +12,7 @@ Title: "JsonReaderOptions.AllowMultipleValues Property — Corvus.Text.Json"
 ## AllowMultipleValues {#allowmultiplevalues}
 
 ```csharp
-bool AllowMultipleValues { get; set; }
+public bool AllowMultipleValues { get; set; }
 ```
 
 Defines whether the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) should tolerate zero or more top-level JSON values that are whitespace separated.

@@ -19,7 +19,7 @@ Title: "IJsonSchemaResultsCollector.CommitChildContext Method — Corvus.Text.Js
 ## CommitChildContext(int, bool, bool, JsonSchemaMessageProvider) {#commitchildcontext-int-bool-bool-jsonschemamessageprovider}
 
 ```csharp
-void CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider messageProvider)
+public abstract void CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider messageProvider)
 ```
 
 Commits the last child context.
@@ -42,7 +42,7 @@ This allows the collector to update the match state, and commit any resources as
 ## CommitChildContext(int, bool, bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#commitchildcontext-int-bool-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
 ```csharp
-void CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
+public abstract void CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
 ```
 
 Commits the last child context.

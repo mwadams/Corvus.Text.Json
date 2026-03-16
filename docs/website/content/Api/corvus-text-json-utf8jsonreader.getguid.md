@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetGuid Method — Corvus.Text.Json"
 ## GetGuid {#getguid}
 
 ```csharp
-Guid GetGuid()
+public Guid GetGuid()
 ```
 
 Parses the current JSON token value from the source as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value. Throws exceptions otherwise.

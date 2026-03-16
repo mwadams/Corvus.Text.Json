@@ -12,7 +12,7 @@ Title: "ValidationResult.LocationTuple.SchemaLocation Property — Corvus.Text.J
 ## SchemaLocation {#schemalocation}
 
 ```csharp
-Utf8IriReference SchemaLocation { get; }
+public Utf8IriReference SchemaLocation { get; }
 ```
 
 ### Returns

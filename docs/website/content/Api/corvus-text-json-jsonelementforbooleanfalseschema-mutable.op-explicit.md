@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Explicit Operator — Corvus.Te
 ## explicit operator JsonElementForBooleanFalseSchema.Mutable {#explicit-operator-jsonelementforbooleanfalseschema-mutable}
 
 ```csharp
-static explicit operator JsonElementForBooleanFalseSchema.Mutable(JsonElementForBooleanFalseSchema value)
+public static explicit operator JsonElementForBooleanFalseSchema.Mutable(JsonElementForBooleanFalseSchema value)
 ```
 
 ### Parameters

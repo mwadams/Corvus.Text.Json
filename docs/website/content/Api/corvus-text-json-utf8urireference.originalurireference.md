@@ -12,7 +12,7 @@ Title: "Utf8UriReference.OriginalUriReference Property — Corvus.Text.Json"
 ## OriginalUriReference {#originalurireference}
 
 ```csharp
-ReadOnlySpan<byte> OriginalUriReference { get; }
+public ReadOnlySpan<byte> OriginalUriReference { get; }
 ```
 
 Gets the original string.

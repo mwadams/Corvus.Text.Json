@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetPropertyName Method — Corvus.Text.Json.Internal"
 ## GetPropertyName {#getpropertyname}
 
 ```csharp
-JsonElement GetPropertyName(int index)
+public abstract JsonElement GetPropertyName(int index)
 ```
 
 Gets the property name as a JSON element.

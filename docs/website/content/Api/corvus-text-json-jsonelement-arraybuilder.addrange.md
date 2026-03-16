@@ -30,7 +30,7 @@ Title: "JsonElement.ArrayBuilder.AddRange Method — Corvus.Text.Json"
 ## AddRange(ReadOnlySpan&lt;long&gt;) {#addrange-readonlyspan-long}
 
 ```csharp
-void AddRange(ReadOnlySpan<long> array)
+public void AddRange(ReadOnlySpan<long> array)
 ```
 
 ### Parameters
@@ -44,7 +44,7 @@ void AddRange(ReadOnlySpan<long> array)
 ## AddRange(ReadOnlySpan&lt;int&gt;) {#addrange-readonlyspan-int}
 
 ```csharp
-void AddRange(ReadOnlySpan<int> array)
+public void AddRange(ReadOnlySpan<int> array)
 ```
 
 ### Parameters
@@ -58,7 +58,7 @@ void AddRange(ReadOnlySpan<int> array)
 ## AddRange(ReadOnlySpan&lt;short&gt;) {#addrange-readonlyspan-short}
 
 ```csharp
-void AddRange(ReadOnlySpan<short> array)
+public void AddRange(ReadOnlySpan<short> array)
 ```
 
 ### Parameters
@@ -72,7 +72,7 @@ void AddRange(ReadOnlySpan<short> array)
 ## AddRange(ReadOnlySpan&lt;sbyte&gt;) {#addrange-readonlyspan-sbyte}
 
 ```csharp
-void AddRange(ReadOnlySpan<sbyte> array)
+public void AddRange(ReadOnlySpan<sbyte> array)
 ```
 
 ### Parameters
@@ -86,7 +86,7 @@ void AddRange(ReadOnlySpan<sbyte> array)
 ## AddRange(ReadOnlySpan&lt;uint&gt;) {#addrange-readonlyspan-uint}
 
 ```csharp
-void AddRange(ReadOnlySpan<uint> array)
+public void AddRange(ReadOnlySpan<uint> array)
 ```
 
 ### Parameters
@@ -100,7 +100,7 @@ void AddRange(ReadOnlySpan<uint> array)
 ## AddRange(ReadOnlySpan&lt;ushort&gt;) {#addrange-readonlyspan-ushort}
 
 ```csharp
-void AddRange(ReadOnlySpan<ushort> array)
+public void AddRange(ReadOnlySpan<ushort> array)
 ```
 
 ### Parameters
@@ -114,7 +114,7 @@ void AddRange(ReadOnlySpan<ushort> array)
 ## AddRange(ReadOnlySpan&lt;byte&gt;) {#addrange-readonlyspan-byte}
 
 ```csharp
-void AddRange(ReadOnlySpan<byte> array)
+public void AddRange(ReadOnlySpan<byte> array)
 ```
 
 ### Parameters
@@ -128,7 +128,7 @@ void AddRange(ReadOnlySpan<byte> array)
 ## AddRange(ReadOnlySpan&lt;decimal&gt;) {#addrange-readonlyspan-decimal}
 
 ```csharp
-void AddRange(ReadOnlySpan<decimal> array)
+public void AddRange(ReadOnlySpan<decimal> array)
 ```
 
 ### Parameters
@@ -142,7 +142,7 @@ void AddRange(ReadOnlySpan<decimal> array)
 ## AddRange(ReadOnlySpan&lt;double&gt;) {#addrange-readonlyspan-double}
 
 ```csharp
-void AddRange(ReadOnlySpan<double> array)
+public void AddRange(ReadOnlySpan<double> array)
 ```
 
 ### Parameters
@@ -156,7 +156,7 @@ void AddRange(ReadOnlySpan<double> array)
 ## AddRange(ReadOnlySpan&lt;float&gt;) {#addrange-readonlyspan-float}
 
 ```csharp
-void AddRange(ReadOnlySpan<float> array)
+public void AddRange(ReadOnlySpan<float> array)
 ```
 
 ### Parameters
@@ -170,7 +170,7 @@ void AddRange(ReadOnlySpan<float> array)
 ## AddRange(ReadOnlySpan&lt;Int128&gt;) {#addrange-readonlyspan-int128}
 
 ```csharp
-void AddRange(ReadOnlySpan<Int128> array)
+public void AddRange(ReadOnlySpan<Int128> array)
 ```
 
 ### Parameters
@@ -184,7 +184,7 @@ void AddRange(ReadOnlySpan<Int128> array)
 ## AddRange(ReadOnlySpan&lt;UInt128&gt;) {#addrange-readonlyspan-uint128}
 
 ```csharp
-void AddRange(ReadOnlySpan<UInt128> array)
+public void AddRange(ReadOnlySpan<UInt128> array)
 ```
 
 ### Parameters
@@ -198,7 +198,7 @@ void AddRange(ReadOnlySpan<UInt128> array)
 ## AddRange(ReadOnlySpan&lt;Half&gt;) {#addrange-readonlyspan-half}
 
 ```csharp
-void AddRange(ReadOnlySpan<Half> array)
+public void AddRange(ReadOnlySpan<Half> array)
 ```
 
 ### Parameters

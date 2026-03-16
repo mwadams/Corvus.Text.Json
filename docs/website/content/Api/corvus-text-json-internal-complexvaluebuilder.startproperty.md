@@ -20,7 +20,7 @@ Title: "ComplexValueBuilder.StartProperty Method — Corvus.Text.Json.Internal"
 ## StartProperty(ReadOnlySpan&lt;byte&gt;, bool, bool) {#startproperty-readonlyspan-byte-bool-bool}
 
 ```csharp
-ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
+public ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
 ```
 
 Add a property name to the current object.
@@ -44,7 +44,7 @@ The handle for the property.
 ## StartProperty(ReadOnlySpan&lt;char&gt;) {#startproperty-readonlyspan-char}
 
 ```csharp
-ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<char> propertyName)
+public ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<char> propertyName)
 ```
 
 Add a property name to the current object.
@@ -66,7 +66,7 @@ The handle for the property.
 ## StartProperty(string) {#startproperty-string}
 
 ```csharp
-ComplexValueBuilder.ComplexValueHandle StartProperty(string propertyName)
+public ComplexValueBuilder.ComplexValueHandle StartProperty(string propertyName)
 ```
 
 Add a property name to the current object.

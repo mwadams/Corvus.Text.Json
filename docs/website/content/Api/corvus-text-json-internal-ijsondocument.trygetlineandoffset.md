@@ -12,7 +12,7 @@ Title: "IJsonDocument.TryGetLineAndOffset Method — Corvus.Text.Json.Internal"
 ## TryGetLineAndOffset {#trygetlineandoffset}
 
 ```csharp
-bool TryGetLineAndOffset(int index, ref int line, ref int charOffset, ref long lineByteOffset)
+public abstract bool TryGetLineAndOffset(int index, ref int line, ref int charOffset, ref long lineByteOffset)
 ```
 
 Tries to get the line number and character offset in the original source document for the element at the specified index.

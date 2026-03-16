@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.True Property — Corvus.Text.Json"
 ## True {#true}
 
 ```csharp
-T True { get; }
+public static T True { get; }
 ```
 
 Gets the True instance.

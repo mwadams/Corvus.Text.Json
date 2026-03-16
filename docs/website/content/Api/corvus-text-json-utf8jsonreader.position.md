@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.Position Property — Corvus.Text.Json"
 ## Position {#position}
 
 ```csharp
-SequencePosition Position { get; }
+public SequencePosition Position { get; }
 ```
 
 Returns the current [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition) within the provided UTF-8 encoded input ReadOnlySequence<byte>. If the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) was constructed with a ReadOnlySpan<byte> instead, this will always return a default [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition).

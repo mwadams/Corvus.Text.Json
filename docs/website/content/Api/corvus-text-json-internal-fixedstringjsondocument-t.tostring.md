@@ -12,7 +12,7 @@ Title: "FixedStringJsonDocument<T>.ToString Method — Corvus.Text.Json.Internal
 ## ToString {#tostring}
 
 ```csharp
-string ToString(int index, string format, IFormatProvider formatProvider)
+public string ToString(int index, string format, IFormatProvider formatProvider)
 ```
 
 ### Parameters

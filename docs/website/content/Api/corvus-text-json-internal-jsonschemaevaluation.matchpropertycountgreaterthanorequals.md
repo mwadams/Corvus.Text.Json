@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThanOrEquals Method — Co
 ## MatchPropertyCountGreaterThanOrEquals {#matchpropertycountgreaterthanorequals}
 
 ```csharp
-bool MatchPropertyCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchPropertyCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a property count is greater than or equal to the given value.

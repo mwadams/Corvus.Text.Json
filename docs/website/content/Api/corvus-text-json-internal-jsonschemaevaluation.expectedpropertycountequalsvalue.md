@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountEqualsValue Method — Corvus.
 ## ExpectedPropertyCountEqualsValue {#expectedpropertycountequalsvalue}
 
 ```csharp
-bool ExpectedPropertyCountEqualsValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedPropertyCountEqualsValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

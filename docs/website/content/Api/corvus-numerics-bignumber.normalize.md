@@ -12,7 +12,7 @@ Title: "BigNumber.Normalize Method — Corvus.Numerics"
 ## Normalize {#normalize}
 
 ```csharp
-BigNumber Normalize()
+public BigNumber Normalize()
 ```
 
 Returns a normalized copy of this number with trailing zeros removed from the significand.

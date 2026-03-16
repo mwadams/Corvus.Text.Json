@@ -12,7 +12,7 @@ Title: "Utf8JsonPointer.IsValid Property — Corvus.Text.Json"
 ## IsValid {#isvalid}
 
 ```csharp
-bool IsValid { get; }
+public bool IsValid { get; }
 ```
 
 Gets a value indicating whether this is a valid IRI.

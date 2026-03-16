@@ -12,7 +12,7 @@ Title: "Utf8UriReference.CreateUriReference Method — Corvus.Text.Json"
 ## CreateUriReference {#createurireference}
 
 ```csharp
-Utf8UriReference CreateUriReference(ReadOnlySpan<byte> uri)
+public static Utf8UriReference CreateUriReference(ReadOnlySpan<byte> uri)
 ```
 
 Creates a new UTF-8 URI Reference from the specified URI bytes.

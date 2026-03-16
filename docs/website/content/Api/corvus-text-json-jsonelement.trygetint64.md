@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetInt64 Method — Corvus.Text.Json"
 ## TryGetInt64 {#trygetint64}
 
 ```csharp
-bool TryGetInt64(ref long value)
+public bool TryGetInt64(ref long value)
 ```
 
 Attempts to represent the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).

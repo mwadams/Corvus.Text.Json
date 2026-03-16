@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.Flush Method — Corvus.Text.Json"
 ## Flush {#flush}
 
 ```csharp
-void Flush()
+public void Flush()
 ```
 
 Commits the JSON text written so far which makes it visible to the output destination.

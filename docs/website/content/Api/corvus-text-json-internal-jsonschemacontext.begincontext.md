@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.BeginContext Method — Corvus.Text.Json.Internal"
 ## BeginContext {#begincontext}
 
 ```csharp
-JsonSchemaContext BeginContext<T>(T parentDocument, int parentDocumentIndex, bool usingEvaluatedItems, bool usingEvaluatedProperties, IJsonSchemaResultsCollector resultsCollector)
+public static JsonSchemaContext BeginContext<T>(T parentDocument, int parentDocumentIndex, bool usingEvaluatedItems, bool usingEvaluatedProperties, IJsonSchemaResultsCollector resultsCollector)
 ```
 
 Begins a new JSON schema evaluation context for the specified document.

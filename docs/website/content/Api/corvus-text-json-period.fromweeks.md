@@ -12,7 +12,7 @@ Title: "Period.FromWeeks Method — Corvus.Text.Json"
 ## FromWeeks {#fromweeks}
 
 ```csharp
-Period FromWeeks(int weeks)
+public static Period FromWeeks(int weeks)
 ```
 
 Creates a period representing the specified number of weeks.

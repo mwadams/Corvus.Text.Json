@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ParsePeriod Method — Corvus.Text.Json.Internal"
 ## ParsePeriod {#parseperiod}
 
 ```csharp
-Period ParsePeriod(ReadOnlySpan<byte> text)
+public static Period ParsePeriod(ReadOnlySpan<byte> text)
 ```
 
 Parse a period from a UTF-8 encoded string for the `duration` format.

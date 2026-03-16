@@ -12,7 +12,7 @@ Title: "JsonReaderOptions.AllowTrailingCommas Property — Corvus.Text.Json"
 ## AllowTrailingCommas {#allowtrailingcommas}
 
 ```csharp
-bool AllowTrailingCommas { get; set; }
+public bool AllowTrailingCommas { get; set; }
 ```
 
 Defines whether an extra comma at the end of a list of JSON values in an object or array is allowed (and ignored) within the JSON payload being read.

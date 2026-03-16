@@ -21,7 +21,7 @@ Title: "ComplexValueBuilder.AddPropertyFormattedNumber Method — Corvus.Text.Js
 ## AddPropertyFormattedNumber(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#addpropertyformattednumber-readonlyspan-byte-readonlyspan-byte}
 
 ```csharp
-void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
+public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value)
 ```
 
 Adds a property with a formatted number value to the current object.
@@ -38,7 +38,7 @@ Adds a property with a formatted number value to the current object.
 ## AddPropertyFormattedNumber(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addpropertyformattednumber-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
-void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
+public void AddPropertyFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 Adds a property with a formatted number value to the current object.
@@ -57,7 +57,7 @@ Adds a property with a formatted number value to the current object.
 ## AddPropertyFormattedNumber(string, ReadOnlySpan&lt;byte&gt;) {#addpropertyformattednumber-string-readonlyspan-byte}
 
 ```csharp
-void AddPropertyFormattedNumber(string propertyName, ReadOnlySpan<byte> value)
+public void AddPropertyFormattedNumber(string propertyName, ReadOnlySpan<byte> value)
 ```
 
 Adds a property with a formatted number value to the current object.
@@ -74,7 +74,7 @@ Adds a property with a formatted number value to the current object.
 ## AddPropertyFormattedNumber(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#addpropertyformattednumber-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
-void AddPropertyFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
+public void AddPropertyFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)
 ```
 
 Adds a property with a formatted number value to the current object.

@@ -12,7 +12,7 @@ Title: "Period.TryParse Method — Corvus.Text.Json"
 ## TryParse {#tryparse}
 
 ```csharp
-bool TryParse(ReadOnlySpan<byte> value, ref Period result)
+public static bool TryParse(ReadOnlySpan<byte> value, ref Period result)
 ```
 
 Parses a string into a Period.

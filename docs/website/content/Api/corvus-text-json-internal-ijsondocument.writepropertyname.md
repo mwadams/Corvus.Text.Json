@@ -12,7 +12,7 @@ Title: "IJsonDocument.WritePropertyName Method — Corvus.Text.Json.Internal"
 ## WritePropertyName {#writepropertyname}
 
 ```csharp
-void WritePropertyName(int index, Utf8JsonWriter writer)
+public abstract void WritePropertyName(int index, Utf8JsonWriter writer)
 ```
 
 Writes the property name at the specified index to the provided JSON writer.

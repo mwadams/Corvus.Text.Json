@@ -19,7 +19,7 @@ Title: "IJsonDocument.ToString Method — Corvus.Text.Json.Internal"
 ## ToString(int) {#tostring-int}
 
 ```csharp
-string ToString(int index)
+public abstract string ToString(int index)
 ```
 
 Converts the element at the specified index to a string.
@@ -41,7 +41,7 @@ The string representation of the element.
 ## ToString(int, string, IFormatProvider) {#tostring-int-string-iformatprovider}
 
 ```csharp
-string ToString(int index, string format, IFormatProvider formatProvider)
+public abstract string ToString(int index, string format, IFormatProvider formatProvider)
 ```
 
 Gets the display string representation of the element at the specified index according to the specified format and format provider.

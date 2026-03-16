@@ -12,7 +12,7 @@ Title: "Utf8Uri.HasHost Property — Corvus.Text.Json"
 ## HasHost {#hashost}
 
 ```csharp
-bool HasHost { get; }
+public bool HasHost { get; }
 ```
 
 Gets a value indicating whether this reference has a host.

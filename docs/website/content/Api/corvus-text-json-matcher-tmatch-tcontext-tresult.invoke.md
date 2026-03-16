@@ -12,7 +12,7 @@ Title: "Matcher<TMatch, TContext, TResult>.Invoke Method — Corvus.Text.Json"
 ## Invoke {#invoke}
 
 ```csharp
-TResult Invoke(ref TMatch match, ref TContext context)
+public virtual TResult Invoke(ref TMatch match, ref TContext context)
 ```
 
 ### Parameters

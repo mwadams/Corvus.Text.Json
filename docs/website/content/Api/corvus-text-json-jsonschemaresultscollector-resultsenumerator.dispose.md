@@ -12,6 +12,6 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Dispose Method — Corvus.T
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 

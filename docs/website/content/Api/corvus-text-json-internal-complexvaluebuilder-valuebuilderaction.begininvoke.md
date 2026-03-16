@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction.BeginInvoke Method — Corvus.Tex
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(ref ComplexValueBuilder builder, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(ref ComplexValueBuilder builder, AsyncCallback callback, object object)
 ```
 
 ### Parameters

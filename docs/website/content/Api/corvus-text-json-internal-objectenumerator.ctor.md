@@ -12,7 +12,7 @@ Title: "ObjectEnumerator Constructors — Corvus.Text.Json.Internal"
 ## ObjectEnumerator {#objectenumerator}
 
 ```csharp
-ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)
+public ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)
 ```
 
 Initializes a new instance of the [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) struct.

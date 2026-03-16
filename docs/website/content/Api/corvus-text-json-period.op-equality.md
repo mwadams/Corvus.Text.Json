@@ -12,7 +12,7 @@ Title: "Period.Equality Operator — Corvus.Text.Json"
 ## operator == {#operator}
 
 ```csharp
-static bool operator ==(Period left, Period right)
+public static bool operator ==(Period left, Period right)
 ```
 
 Implements the operator == (equality). See the type documentation for a description of equality semantics.

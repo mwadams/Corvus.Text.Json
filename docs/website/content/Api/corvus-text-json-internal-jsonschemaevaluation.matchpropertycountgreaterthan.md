@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method — Corvus.Tex
 ## MatchPropertyCountGreaterThan {#matchpropertycountgreaterthan}
 
 ```csharp
-bool MatchPropertyCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchPropertyCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a property count is greater than the given value.

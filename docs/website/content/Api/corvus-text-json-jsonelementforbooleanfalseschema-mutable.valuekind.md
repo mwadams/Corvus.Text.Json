@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.ValueKind Property — Corvus.T
 ## ValueKind {#valuekind}
 
 ```csharp
-JsonValueKind ValueKind { get; }
+public JsonValueKind ValueKind { get; }
 ```
 
 ### Returns

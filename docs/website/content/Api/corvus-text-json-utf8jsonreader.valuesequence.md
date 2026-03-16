@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.ValueSequence Property — Corvus.Text.Json"
 ## ValueSequence {#valuesequence}
 
 ```csharp
-ReadOnlySequence<byte> ValueSequence { get; set; }
+public ReadOnlySequence<byte> ValueSequence { get; set; }
 ```
 
 ### Returns

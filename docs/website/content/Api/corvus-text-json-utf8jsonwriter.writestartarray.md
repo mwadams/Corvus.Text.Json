@@ -22,7 +22,7 @@ Title: "Utf8JsonWriter.WriteStartArray Method — Corvus.Text.Json"
 ## WriteStartArray() {#writestartarray}
 
 ```csharp
-void WriteStartArray()
+public void WriteStartArray()
 ```
 
 Writes the beginning of a JSON array.
@@ -38,7 +38,7 @@ Writes the beginning of a JSON array.
 ## WriteStartArray(JsonEncodedText) {#writestartarray-jsonencodedtext}
 
 ```csharp
-void WriteStartArray(JsonEncodedText propertyName)
+public void WriteStartArray(JsonEncodedText propertyName)
 ```
 
 Writes the beginning of a JSON array with a pre-encoded property name as the key.
@@ -60,7 +60,7 @@ Writes the beginning of a JSON array with a pre-encoded property name as the key
 ## WriteStartArray(ReadOnlySpan&lt;byte&gt;) {#writestartarray-readonlyspan-byte}
 
 ```csharp
-void WriteStartArray(ReadOnlySpan<byte> utf8PropertyName)
+public void WriteStartArray(ReadOnlySpan<byte> utf8PropertyName)
 ```
 
 Writes the beginning of a JSON array with a property name as the key.
@@ -87,7 +87,7 @@ The property name is escaped before writing.
 ## WriteStartArray(string) {#writestartarray-string}
 
 ```csharp
-void WriteStartArray(string propertyName)
+public void WriteStartArray(string propertyName)
 ```
 
 Writes the beginning of a JSON array with a property name as the key.
@@ -115,7 +115,7 @@ The property name is escaped before writing.
 ## WriteStartArray(ReadOnlySpan&lt;char&gt;) {#writestartarray-readonlyspan-char}
 
 ```csharp
-void WriteStartArray(ReadOnlySpan<char> propertyName)
+public void WriteStartArray(ReadOnlySpan<char> propertyName)
 ```
 
 Writes the beginning of a JSON array with a property name as the key.

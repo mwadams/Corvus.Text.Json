@@ -12,7 +12,7 @@ Title: "IJsonElement<T>.CreateInstance Method — Corvus.Text.Json.Internal"
 ## CreateInstance {#createinstance}
 
 ```csharp
-T CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex)
+public static T CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex)
 ```
 
 Creates an instance of the element from the parent document and the handle of the element in the parent document.

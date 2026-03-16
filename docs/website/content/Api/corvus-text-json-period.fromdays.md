@@ -12,7 +12,7 @@ Title: "Period.FromDays Method — Corvus.Text.Json"
 ## FromDays {#fromdays}
 
 ```csharp
-Period FromDays(int days)
+public static Period FromDays(int days)
 ```
 
 Creates a period representing the specified number of days.

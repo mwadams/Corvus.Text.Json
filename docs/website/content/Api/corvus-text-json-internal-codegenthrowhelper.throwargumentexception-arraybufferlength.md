@@ -12,7 +12,7 @@ Title: "CodeGenThrowHelper.ThrowArgumentException_ArrayBufferLength Method — C
 ## ThrowArgumentException_ArrayBufferLength {#throwargumentexception-arraybufferlength}
 
 ```csharp
-void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
+public static void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
 ```
 
 Throws an [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) when an array buffer has an incorrect length.

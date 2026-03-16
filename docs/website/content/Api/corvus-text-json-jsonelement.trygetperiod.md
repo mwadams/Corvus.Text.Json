@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetPeriod Method — Corvus.Text.Json"
 ## TryGetPeriod {#trygetperiod}
 
 ```csharp
-bool TryGetPeriod(ref Period value)
+public bool TryGetPeriod(ref Period value)
 ```
 
 Attempts to represent the current JSON string as a [`Period`](/api/corvus-text-json-period.html).

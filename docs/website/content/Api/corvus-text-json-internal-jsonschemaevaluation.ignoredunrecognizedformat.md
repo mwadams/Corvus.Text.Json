@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.IgnoredUnrecognizedFormat Method — Corvus.Text.Js
 ## IgnoredUnrecognizedFormat {#ignoredunrecognizedformat}
 
 ```csharp
-bool IgnoredUnrecognizedFormat(Span<byte> buffer, ref int written)
+public static bool IgnoredUnrecognizedFormat(Span<byte> buffer, ref int written)
 ```
 
 Tries to write a message indicating that the format was not recognized.

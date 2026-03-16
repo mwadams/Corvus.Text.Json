@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.WriteBase64StringSegment Method — Corvus.Text.Json"
 ## WriteBase64StringSegment {#writebase64stringsegment}
 
 ```csharp
-void WriteBase64StringSegment(ReadOnlySpan<byte> value, bool isFinalSegment)
+public void WriteBase64StringSegment(ReadOnlySpan<byte> value, bool isFinalSegment)
 ```
 
 Writes the input bytes as a partial JSON string.

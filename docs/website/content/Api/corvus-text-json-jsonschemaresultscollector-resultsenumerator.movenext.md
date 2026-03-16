@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.MoveNext Method — Corvus.
 ## MoveNext {#movenext}
 
 ```csharp
-bool MoveNext()
+public bool MoveNext()
 ```
 
 ### Returns

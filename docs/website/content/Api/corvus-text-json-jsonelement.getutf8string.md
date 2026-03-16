@@ -12,7 +12,7 @@ Title: "JsonElement.GetUtf8String Method — Corvus.Text.Json"
 ## GetUtf8String {#getutf8string}
 
 ```csharp
-UnescapedUtf8JsonString GetUtf8String()
+public UnescapedUtf8JsonString GetUtf8String()
 ```
 
 Gets the value of the element as a [`UnescapedUtf8JsonString`](/api/corvus-text-json-unescapedutf8jsonstring.html).

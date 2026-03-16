@@ -19,7 +19,7 @@ Title: "JsonElement.Mutable.RemoveWhere Method — Corvus.Text.Json"
 ## RemoveWhere(JsonPredicate&lt;T&gt;) {#removewhere-jsonpredicate-t}
 
 ```csharp
-void RemoveWhere<T>(JsonPredicate<T> predicate)
+public void RemoveWhere<T>(JsonPredicate<T> predicate)
 ```
 
 ### Parameters
@@ -33,7 +33,7 @@ void RemoveWhere<T>(JsonPredicate<T> predicate)
 ## RemoveWhere(JsonPredicate&lt;JsonElement&gt;) {#removewhere-jsonpredicate-jsonelement}
 
 ```csharp
-void RemoveWhere(JsonPredicate<JsonElement> predicate)
+public void RemoveWhere(JsonPredicate<JsonElement> predicate)
 ```
 
 ### Parameters

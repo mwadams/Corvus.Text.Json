@@ -12,7 +12,7 @@ Title: "Polyfills.get_Null Method — Corvus.Text.Json.Compatibility"
 ## get_Null {#get-null}
 
 ```csharp
-T get_Null<T>()
+public static T get_Null<T>()
 ```
 
 ### Returns

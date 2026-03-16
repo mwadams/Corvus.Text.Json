@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.RemoveRangeUnsafe Method — Corvus.Text.Json.Interna
 ## RemoveRangeUnsafe {#removerangeunsafe}
 
 ```csharp
-void RemoveRangeUnsafe<TArray>(TArray arrayElement, int startIndex, int count)
+public static void RemoveRangeUnsafe<TArray>(TArray arrayElement, int startIndex, int count)
 ```
 
 Removes a range of items from an array element.

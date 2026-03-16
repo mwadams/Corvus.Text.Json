@@ -12,7 +12,7 @@ Title: "JsonEncodedText.GetHashCode Method — Corvus.Text.Json"
 ## GetHashCode {#gethashcode}
 
 ```csharp
-int GetHashCode()
+public virtual int GetHashCode()
 ```
 
 Returns the hash code for this [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html).

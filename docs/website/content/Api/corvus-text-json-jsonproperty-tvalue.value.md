@@ -12,7 +12,7 @@ Title: "JsonProperty<TValue>.Value Property — Corvus.Text.Json"
 ## Value {#value}
 
 ```csharp
-TValue Value { get; }
+public TValue Value { get; }
 ```
 
 The value of this property.

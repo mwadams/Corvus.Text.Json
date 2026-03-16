@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchLessThanOrEquals Method — Corvus.Text.Json.I
 ## MatchLessThanOrEquals {#matchlessthanorequals}
 
 ```csharp
-bool MatchLessThanOrEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchLessThanOrEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON number less than or equals.

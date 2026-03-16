@@ -12,7 +12,7 @@ Title: "IdnMapping.UseStd3AsciiRules Property — Corvus.Globalization"
 ## UseStd3AsciiRules {#usestd3asciirules}
 
 ```csharp
-bool UseStd3AsciiRules { get; set; }
+public bool UseStd3AsciiRules { get; set; }
 ```
 
 ### Returns

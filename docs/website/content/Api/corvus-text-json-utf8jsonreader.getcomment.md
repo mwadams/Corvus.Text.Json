@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetComment Method — Corvus.Text.Json"
 ## GetComment {#getcomment}
 
 ```csharp
-string GetComment()
+public string GetComment()
 ```
 
 Parses the current JSON token value from the source as a comment, transcoded as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).

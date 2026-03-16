@@ -12,7 +12,7 @@ Title: "JsonSchemaPathProvider<TContext> Constructors — Corvus.Text.Json"
 ## JsonSchemaPathProvider {#jsonschemapathprovider}
 
 ```csharp
-JsonSchemaPathProvider(object object, IntPtr method)
+public JsonSchemaPathProvider(object object, IntPtr method)
 ```
 
 ### Parameters

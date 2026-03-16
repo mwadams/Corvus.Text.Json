@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetBigInteger Method — Corvus.Text.Json"
 ## TryGetBigInteger {#trygetbiginteger}
 
 ```csharp
-bool TryGetBigInteger(ref BigInteger value)
+public bool TryGetBigInteger(ref BigInteger value)
 ```
 
 ### Parameters

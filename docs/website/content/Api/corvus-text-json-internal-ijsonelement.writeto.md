@@ -12,7 +12,7 @@ Title: "IJsonElement.WriteTo Method — Corvus.Text.Json.Internal"
 ## WriteTo {#writeto}
 
 ```csharp
-void WriteTo(Utf8JsonWriter writer)
+public abstract void WriteTo(Utf8JsonWriter writer)
 ```
 
 Writes this element to the specified [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html).

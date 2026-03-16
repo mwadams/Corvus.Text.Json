@@ -12,7 +12,7 @@ Title: "JsonElement.Clone Method — Corvus.Text.Json"
 ## Clone {#clone}
 
 ```csharp
-JsonElement Clone()
+public JsonElement Clone()
 ```
 
 Get a JsonElement which can be safely stored beyond the lifetime of the original [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html).

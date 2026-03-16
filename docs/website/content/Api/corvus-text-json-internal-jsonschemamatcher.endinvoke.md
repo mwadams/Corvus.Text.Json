@@ -12,7 +12,7 @@ Title: "JsonSchemaMatcher.EndInvoke Method — Corvus.Text.Json.Internal"
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref JsonSchemaContext context, IAsyncResult result)
+public virtual void EndInvoke(ref JsonSchemaContext context, IAsyncResult result)
 ```
 
 ### Parameters

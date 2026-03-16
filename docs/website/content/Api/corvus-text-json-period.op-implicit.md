@@ -19,7 +19,7 @@ Title: "Period.Implicit Operator — Corvus.Text.Json"
 ## implicit operator Period(ref Period) {#implicit-operator-period-ref-period}
 
 ```csharp
-static implicit operator Period(ref Period value)
+public static implicit operator Period(ref Period value)
 ```
 
 Convert to a NodaTime.Period.
@@ -39,7 +39,7 @@ Convert to a NodaTime.Period.
 ## implicit operator Period(Period) {#implicit-operator-period-period}
 
 ```csharp
-static implicit operator Period(Period value)
+public static implicit operator Period(Period value)
 ```
 
 Convert to a NodaTime.Period.

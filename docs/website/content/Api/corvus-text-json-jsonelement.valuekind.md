@@ -12,7 +12,7 @@ Title: "JsonElement.ValueKind Property — Corvus.Text.Json"
 ## ValueKind {#valuekind}
 
 ```csharp
-JsonValueKind ValueKind { get; }
+public JsonValueKind ValueKind { get; }
 ```
 
 The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value is.

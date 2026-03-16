@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetSingle Method — Corvus.Text.Json"
 ## GetSingle {#getsingle}
 
 ```csharp
-float GetSingle()
+public float GetSingle()
 ```
 
 ### Returns

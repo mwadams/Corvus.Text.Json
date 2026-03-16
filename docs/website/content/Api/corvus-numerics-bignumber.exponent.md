@@ -12,7 +12,7 @@ Title: "BigNumber.Exponent Property — Corvus.Numerics"
 ## Exponent {#exponent}
 
 ```csharp
-int Exponent { get; }
+public int Exponent { get; }
 ```
 
 Gets the exponent (power of 10) of the number.

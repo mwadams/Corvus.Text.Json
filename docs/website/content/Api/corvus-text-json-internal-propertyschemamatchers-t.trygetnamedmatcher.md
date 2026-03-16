@@ -12,7 +12,7 @@ Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method — Corvus.Text.Json
 ## TryGetNamedMatcher {#trygetnamedmatcher}
 
 ```csharp
-bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, ref T matcher)
+public bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, ref T matcher)
 ```
 
 Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup.

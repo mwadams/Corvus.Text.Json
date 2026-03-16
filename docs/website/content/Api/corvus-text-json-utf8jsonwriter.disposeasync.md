@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.DisposeAsync Method — Corvus.Text.Json"
 ## DisposeAsync {#disposeasync}
 
 ```csharp
-ValueTask DisposeAsync()
+public ValueTask DisposeAsync()
 ```
 
 Asynchronously commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.

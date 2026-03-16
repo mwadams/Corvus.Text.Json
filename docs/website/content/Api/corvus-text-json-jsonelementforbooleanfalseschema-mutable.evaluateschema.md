@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.EvaluateSchema Method — Corvu
 ## EvaluateSchema {#evaluateschema}
 
 ```csharp
-bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
+public bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 ```
 
 ### Parameters

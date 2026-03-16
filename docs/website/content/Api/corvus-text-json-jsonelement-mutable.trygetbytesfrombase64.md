@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetBytesFromBase64 Method — Corvus.Text.Json"
 ## TryGetBytesFromBase64 {#trygetbytesfrombase64}
 
 ```csharp
-bool TryGetBytesFromBase64(ref byte[] value)
+public bool TryGetBytesFromBase64(ref byte[] value)
 ```
 
 ### Parameters

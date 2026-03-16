@@ -12,7 +12,7 @@ Title: "JsonSchemaPathProvider<TContext>.BeginInvoke Method — Corvus.Text.Json
 ## BeginInvoke {#begininvoke}
 
 ```csharp
-IAsyncResult BeginInvoke(TContext context, Span<byte> buffer, ref int written, AsyncCallback callback, object object)
+public virtual IAsyncResult BeginInvoke(TContext context, Span<byte> buffer, ref int written, AsyncCallback callback, object object)
 ```
 
 ### Parameters

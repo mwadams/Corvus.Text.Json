@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchTypeString Method — Corvus.Text.Json.Interna
 ## MatchTypeString {#matchtypestring}
 
 ```csharp
-bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
+public static bool MatchTypeString(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON token type against the string type constraint.

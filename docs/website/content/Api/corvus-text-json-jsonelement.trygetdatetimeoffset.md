@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetDateTimeOffset Method — Corvus.Text.Json"
 ## TryGetDateTimeOffset {#trygetdatetimeoffset}
 
 ```csharp
-bool TryGetDateTimeOffset(ref DateTimeOffset value)
+public bool TryGetDateTimeOffset(ref DateTimeOffset value)
 ```
 
 Attempts to represent the current JSON string as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset).

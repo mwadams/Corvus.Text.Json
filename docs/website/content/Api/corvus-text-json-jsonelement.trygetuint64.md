@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetUInt64 Method — Corvus.Text.Json"
 ## TryGetUInt64 {#trygetuint64}
 
 ```csharp
-bool TryGetUInt64(ref ulong value)
+public bool TryGetUInt64(ref ulong value)
 ```
 
 Attempts to represent the current JSON number as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).

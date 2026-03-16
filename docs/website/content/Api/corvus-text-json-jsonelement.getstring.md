@@ -12,7 +12,7 @@ Title: "JsonElement.GetString Method — Corvus.Text.Json"
 ## GetString {#getstring}
 
 ```csharp
-string GetString()
+public string GetString()
 ```
 
 Gets the value of the element as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).

@@ -12,7 +12,7 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T> Constructors — Corv
 ## PropertySchemaMatchers {#propertyschemamatchers}
 
 ```csharp
-PropertySchemaMatchers(object object, IntPtr method)
+public PropertySchemaMatchers(object object, IntPtr method)
 ```
 
 ### Parameters

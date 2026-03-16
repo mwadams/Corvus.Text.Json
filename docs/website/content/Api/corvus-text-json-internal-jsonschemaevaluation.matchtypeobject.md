@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchTypeObject Method — Corvus.Text.Json.Interna
 ## MatchTypeObject {#matchtypeobject}
 
 ```csharp
-bool MatchTypeObject(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
+public static bool MatchTypeObject(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
 
 Matches a JSON token type against the "object" type constraint.

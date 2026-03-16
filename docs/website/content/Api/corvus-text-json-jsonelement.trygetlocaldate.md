@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetLocalDate Method — Corvus.Text.Json"
 ## TryGetLocalDate {#trygetlocaldate}
 
 ```csharp
-bool TryGetLocalDate(ref LocalDate value)
+public bool TryGetLocalDate(ref LocalDate value)
 ```
 
 Attempts to represent the current JSON string as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).

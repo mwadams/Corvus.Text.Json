@@ -30,7 +30,8 @@ internal static class SidebarBuilder
 
         // Search box — sits above the scrollable tree
         sb.AppendLine("        <div class=\"sidebar-search\">");
-        sb.AppendLine("            <input id=\"sidebar-search-input\" class=\"sidebar-search__input\" type=\"search\" placeholder=\"Filter\u2026\" autocomplete=\"off\" />");
+        sb.AppendLine("            <svg class=\"sidebar-search__icon\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 16 16\" fill=\"currentColor\"><path d=\"M11.5 7a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Zm-.82 4.74a6 6 0 1 1 1.06-1.06l3.04 3.04a.75.75 0 1 1-1.06 1.06l-3.04-3.04Z\"/></svg>");
+        sb.AppendLine("            <input id=\"sidebar-search-input\" class=\"sidebar-search__input\" type=\"search\" placeholder=\"Search\" autocomplete=\"off\" />");
         sb.AppendLine("            <div id=\"sidebar-search-dropdown\" class=\"sidebar-search__dropdown\" hidden></div>");
         sb.AppendLine("        </div>");
 

@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.Implicit Operator — Corvus.Text.Json"
 ## implicit operator JsonElement {#implicit-operator-jsonelement}
 
 ```csharp
-static implicit operator JsonElement(JsonElement.Mutable value)
+public static implicit operator JsonElement(JsonElement.Mutable value)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "IByteBufferWriter.WrittenMemory Property — Corvus.Text.Json"
 ## WrittenMemory {#writtenmemory}
 
 ```csharp
-ReadOnlyMemory<byte> WrittenMemory { get; }
+public abstract ReadOnlyMemory<byte> WrittenMemory { get; }
 ```
 
 ### Returns

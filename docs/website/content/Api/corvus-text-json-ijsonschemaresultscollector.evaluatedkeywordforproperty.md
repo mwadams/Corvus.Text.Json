@@ -19,7 +19,7 @@ Title: "IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method — Corvu
 ## EvaluatedKeywordForProperty(bool, JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeywordforproperty-bool-jsonschemamessageprovider-readonlyspan-byte-readonlyspan-byte}
 
 ```csharp
-void EvaluatedKeywordForProperty(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> encodedKeyword)
+public abstract void EvaluatedKeywordForProperty(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> encodedKeyword)
 ```
 
 Updates the match state for the given keyword evaluated against the given property.
@@ -38,7 +38,7 @@ Updates the match state for the given keyword evaluated against the given proper
 ## EvaluatedKeywordForProperty(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeywordforproperty-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-readonlyspan-byte-readonlyspan-byte}
 
 ```csharp
-void EvaluatedKeywordForProperty<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> encodedKeyword)
+public abstract void EvaluatedKeywordForProperty<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> encodedKeyword)
 ```
 
 Updates the match state for the given keyword evaluated against the given property.

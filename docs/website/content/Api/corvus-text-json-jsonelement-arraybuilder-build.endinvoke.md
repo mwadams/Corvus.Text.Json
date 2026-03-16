@@ -12,7 +12,7 @@ Title: "JsonElement.ArrayBuilder.Build.EndInvoke Method — Corvus.Text.Json"
 ## EndInvoke {#endinvoke}
 
 ```csharp
-void EndInvoke(ref JsonElement.ArrayBuilder builder, IAsyncResult result)
+public virtual void EndInvoke(ref JsonElement.ArrayBuilder builder, IAsyncResult result)
 ```
 
 ### Parameters

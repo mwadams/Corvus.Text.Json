@@ -20,7 +20,7 @@ Title: "Utf8JsonReader.ValueTextEquals Method — Corvus.Text.Json"
 ## ValueTextEquals(ReadOnlySpan&lt;byte&gt;) {#valuetextequals-readonlyspan-byte}
 
 ```csharp
-bool ValueTextEquals(ReadOnlySpan<byte> utf8Text)
+public bool ValueTextEquals(ReadOnlySpan<byte> utf8Text)
 ```
 
 Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match.
@@ -52,7 +52,7 @@ If the look up text is invalid UTF-8 text, the method will return false since yo
 ## ValueTextEquals(string) {#valuetextequals-string}
 
 ```csharp
-bool ValueTextEquals(string text)
+public bool ValueTextEquals(string text)
 ```
 
 Compares the string text to the unescaped JSON token value in the source and returns true if they match.
@@ -84,7 +84,7 @@ If the look up text is invalid UTF-8 text, the method will return false since yo
 ## ValueTextEquals(ReadOnlySpan&lt;char&gt;) {#valuetextequals-readonlyspan-char}
 
 ```csharp
-bool ValueTextEquals(ReadOnlySpan<char> text)
+public bool ValueTextEquals(ReadOnlySpan<char> text)
 ```
 
 Compares the text to the unescaped JSON token value in the source and returns true if they match.

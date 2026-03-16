@@ -24,7 +24,7 @@ Title: "Utf8JsonWriter.WriteStringValue Method — Corvus.Text.Json"
 ## WriteStringValue(DateTime) {#writestringvalue-datetime}
 
 ```csharp
-void WriteStringValue(DateTime value)
+public void WriteStringValue(DateTime value)
 ```
 
 Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as an element of a JSON array.
@@ -50,7 +50,7 @@ Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) 
 ## WriteStringValue(DateTimeOffset) {#writestringvalue-datetimeoffset}
 
 ```csharp
-void WriteStringValue(DateTimeOffset value)
+public void WriteStringValue(DateTimeOffset value)
 ```
 
 Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as an element of a JSON array.
@@ -76,7 +76,7 @@ Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.date
 ## WriteStringValue(Guid) {#writestringvalue-guid}
 
 ```csharp
-void WriteStringValue(Guid value)
+public void WriteStringValue(Guid value)
 ```
 
 Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as an element of a JSON array.
@@ -102,7 +102,7 @@ Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using th
 ## WriteStringValue(JsonEncodedText) {#writestringvalue-jsonencodedtext}
 
 ```csharp
-void WriteStringValue(JsonEncodedText value)
+public void WriteStringValue(JsonEncodedText value)
 ```
 
 Writes the pre-encoded text value (as a JSON string) as an element of a JSON array.
@@ -124,7 +124,7 @@ Writes the pre-encoded text value (as a JSON string) as an element of a JSON arr
 ## WriteStringValue(string) {#writestringvalue-string}
 
 ```csharp
-void WriteStringValue(string value)
+public void WriteStringValue(string value)
 ```
 
 Writes the string text value (as a JSON string) as an element of a JSON array.
@@ -151,7 +151,7 @@ The value is escaped before writing. If `value` is `null` the JSON null value is
 ## WriteStringValue(ReadOnlySpan&lt;char&gt;) {#writestringvalue-readonlyspan-char}
 
 ```csharp
-void WriteStringValue(ReadOnlySpan<char> value)
+public void WriteStringValue(ReadOnlySpan<char> value)
 ```
 
 Writes the text value (as a JSON string) as an element of a JSON array.
@@ -178,7 +178,7 @@ The value is escaped before writing.
 ## WriteStringValue(ReadOnlySpan&lt;byte&gt;) {#writestringvalue-readonlyspan-byte}
 
 ```csharp
-void WriteStringValue(ReadOnlySpan<byte> utf8Value)
+public void WriteStringValue(ReadOnlySpan<byte> utf8Value)
 ```
 
 Writes the UTF-8 text value (as a JSON string) as an element of a JSON array.

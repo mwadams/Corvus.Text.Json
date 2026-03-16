@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetStartIndex Method — Corvus.Text.Json.Internal"
 ## GetStartIndex {#getstartindex}
 
 ```csharp
-int GetStartIndex(int endIndex)
+public abstract int GetStartIndex(int endIndex)
 ```
 
 Gets the start index of the element from the end index.

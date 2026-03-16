@@ -20,7 +20,7 @@ Title: "JsonElement.Source.AddAsProperty Method — Corvus.Text.Json"
 ## AddAsProperty(ReadOnlySpan&lt;byte&gt;, ref ComplexValueBuilder, bool, bool) {#addasproperty-readonlyspan-byte-ref-complexvaluebuilder-bool-bool}
 
 ```csharp
-void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName, bool nameRequiresUnescaping)
+public void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName, bool nameRequiresUnescaping)
 ```
 
 ### Parameters
@@ -37,7 +37,7 @@ void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBui
 ## AddAsProperty(string, ref ComplexValueBuilder) {#addasproperty-string-ref-complexvaluebuilder}
 
 ```csharp
-void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
+public void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
 ```
 
 ### Parameters
@@ -52,7 +52,7 @@ void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
 ## AddAsProperty(ReadOnlySpan&lt;char&gt;, ref ComplexValueBuilder) {#addasproperty-readonlyspan-char-ref-complexvaluebuilder}
 
 ```csharp
-void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
+public void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)
 ```
 
 ### Parameters

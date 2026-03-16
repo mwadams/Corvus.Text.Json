@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.TryGetDouble Method — Corvus.Text.Json"
 ## TryGetDouble {#trygetdouble}
 
 ```csharp
-bool TryGetDouble(ref double value)
+public bool TryGetDouble(ref double value)
 ```
 
 ### Parameters

@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetBoolean Method — Corvus.Text.Json"
 ## GetBoolean {#getboolean}
 
 ```csharp
-bool GetBoolean()
+public bool GetBoolean()
 ```
 
 Parses the current JSON token value from the source as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean). Returns `true` if the TokenType is JsonTokenType.True and `false` if the TokenType is JsonTokenType.False.

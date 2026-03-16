@@ -12,7 +12,7 @@ Title: "JsonElement.TryGetBigNumber Method — Corvus.Text.Json"
 ## TryGetBigNumber {#trygetbignumber}
 
 ```csharp
-bool TryGetBigNumber(ref BigNumber value)
+public bool TryGetBigNumber(ref BigNumber value)
 ```
 
 Attempts to represent the current JSON number as a [`BigNumber`](/api/corvus-numerics-bignumber.html).

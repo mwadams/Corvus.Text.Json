@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.ApplyUnsafe Method — Corvus.Text.Json.Internal"
 ## ApplyUnsafe {#applyunsafe}
 
 ```csharp
-void ApplyUnsafe<TTarget, TSource>(TTarget targetElement, ref TSource sourceElement)
+public static void ApplyUnsafe<TTarget, TSource>(TTarget targetElement, ref TSource sourceElement)
 ```
 
 Applies all properties from a source JSON object element to a target JSON object element.

@@ -12,7 +12,7 @@ Title: "BigNumber.MinusOne Property — Corvus.Numerics"
 ## MinusOne {#minusone}
 
 ```csharp
-BigNumber MinusOne { get; }
+public static BigNumber MinusOne { get; }
 ```
 
 Gets a value representing minus one.

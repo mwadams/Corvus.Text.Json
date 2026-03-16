@@ -22,7 +22,7 @@ Title: "JsonElement.Mutable.InsertItem Method — Corvus.Text.Json"
 ## InsertItem(int, ref JsonElement.Source, int) {#insertitem-int-ref-jsonelement-source-int}
 
 ```csharp
-void InsertItem(int itemIndex, ref JsonElement.Source source, int estimatedMemberCount)
+public void InsertItem(int itemIndex, ref JsonElement.Source source, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -38,7 +38,7 @@ void InsertItem(int itemIndex, ref JsonElement.Source source, int estimatedMembe
 ## InsertItem(int, JsonElement.ObjectBuilder.Build, int) {#insertitem-int-jsonelement-objectbuilder-build-int}
 
 ```csharp
-void InsertItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
+public void InsertItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -54,7 +54,7 @@ void InsertItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int 
 ## InsertItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#insertitem-int-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
-void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
+public void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -71,7 +71,7 @@ void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.Objec
 ## InsertItem(int, JsonElement.ArrayBuilder.Build, int) {#insertitem-int-jsonelement-arraybuilder-build-int}
 
 ```csharp
-void InsertItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
+public void InsertItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters
@@ -87,7 +87,7 @@ void InsertItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int es
 ## InsertItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#insertitem-int-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
-void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
+public void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
 ```
 
 ### Parameters

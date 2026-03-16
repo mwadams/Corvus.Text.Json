@@ -19,7 +19,7 @@ Title: "JsonElement.ToString Method — Corvus.Text.Json"
 ## ToString() {#tostring}
 
 ```csharp
-string ToString()
+public virtual string ToString()
 ```
 
 Gets a string representation for the current value appropriate to the value type.
@@ -45,7 +45,7 @@ For JsonElement built from [`JsonDocument`](/api/corvus-text-json-internal-jsond
 ## ToString(string, IFormatProvider) {#tostring-string-iformatprovider}
 
 ```csharp
-string ToString(string format, IFormatProvider formatProvider)
+public string ToString(string format, IFormatProvider formatProvider)
 ```
 
 ### Parameters

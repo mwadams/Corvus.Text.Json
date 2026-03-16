@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.EnumerateArray Method — Corvus.Text.Json"
 ## EnumerateArray {#enumeratearray}
 
 ```csharp
-ArrayEnumerator<JsonElement.Mutable> EnumerateArray()
+public ArrayEnumerator<JsonElement.Mutable> EnumerateArray()
 ```
 
 ### Returns

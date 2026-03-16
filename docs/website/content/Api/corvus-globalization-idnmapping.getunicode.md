@@ -23,7 +23,7 @@ Title: "IdnMapping.GetUnicode Method — Corvus.Globalization"
 ## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int) {#getunicode-readonlyspan-byte-span-byte-ref-int}
 
 ```csharp
-bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int written)
+public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int written)
 ```
 
 ### Parameters
@@ -43,7 +43,7 @@ bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int writt
 ## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int) {#getunicode-readonlyspan-byte-span-byte-int-ref-int}
 
 ```csharp
-bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, ref int written)
+public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, ref int written)
 ```
 
 ### Parameters
@@ -64,7 +64,7 @@ bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, re
 ## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int) {#getunicode-readonlyspan-byte-span-byte-int-int-ref-int}
 
 ```csharp
-bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, ref int written)
+public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, ref int written)
 ```
 
 ### Parameters
@@ -86,7 +86,7 @@ bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, in
 ## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int) {#getunicode-readonlyspan-char-span-char-ref-int}
 
 ```csharp
-bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int written)
+public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int written)
 ```
 
 ### Parameters
@@ -106,7 +106,7 @@ bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int writt
 ## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int) {#getunicode-readonlyspan-char-span-char-int-ref-int}
 
 ```csharp
-bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, ref int written)
+public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, ref int written)
 ```
 
 ### Parameters
@@ -127,7 +127,7 @@ bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, re
 ## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int) {#getunicode-readonlyspan-char-span-char-int-int-ref-int}
 
 ```csharp
-bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, ref int written)
+public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, ref int written)
 ```
 
 ### Parameters

@@ -20,7 +20,7 @@ Title: "IJsonDocument.GetArrayIndexElement Method — Corvus.Text.Json.Internal"
 ## GetArrayIndexElement(int, int) {#getarrayindexelement-int-int}
 
 ```csharp
-JsonElement GetArrayIndexElement(int currentIndex, int arrayIndex)
+public abstract JsonElement GetArrayIndexElement(int currentIndex, int arrayIndex)
 ```
 
 Gets the element at the specified array index within the current index.
@@ -43,7 +43,7 @@ The JSON element.
 ## GetArrayIndexElement(int, int) {#getarrayindexelement-int-int}
 
 ```csharp
-TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
+public abstract TElement GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
 ```
 
 Gets the element at the specified array index within the current index.
@@ -72,7 +72,7 @@ The JSON element.
 ## GetArrayIndexElement(int, int, ref IJsonDocument, ref int) {#getarrayindexelement-int-int-ref-ijsondocument-ref-int}
 
 ```csharp
-void GetArrayIndexElement(int currentIndex, int arrayIndex, ref IJsonDocument parentDocument, ref int parentDocumentIndex)
+public abstract void GetArrayIndexElement(int currentIndex, int arrayIndex, ref IJsonDocument parentDocument, ref int parentDocumentIndex)
 ```
 
 Gets the element at the specified array index within the current index.

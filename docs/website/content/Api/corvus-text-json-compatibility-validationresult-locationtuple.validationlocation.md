@@ -12,7 +12,7 @@ Title: "ValidationResult.LocationTuple.ValidationLocation Property — Corvus.Te
 ## ValidationLocation {#validationlocation}
 
 ```csharp
-Utf8IriReference ValidationLocation { get; }
+public Utf8IriReference ValidationLocation { get; }
 ```
 
 ### Returns

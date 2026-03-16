@@ -12,7 +12,7 @@ Title: "Utf8IriReference.Authority Property — Corvus.Text.Json"
 ## Authority {#authority}
 
 ```csharp
-ReadOnlySpan<byte> Authority { get; }
+public ReadOnlySpan<byte> Authority { get; }
 ```
 
 Gets the authority component of the reference.

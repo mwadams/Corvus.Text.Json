@@ -12,7 +12,7 @@ Title: "JsonSchemaMessageProvider.EndInvoke Method — Corvus.Text.Json"
 ## EndInvoke {#endinvoke}
 
 ```csharp
-bool EndInvoke(ref int written, IAsyncResult result)
+public virtual bool EndInvoke(ref int written, IAsyncResult result)
 ```
 
 ### Parameters

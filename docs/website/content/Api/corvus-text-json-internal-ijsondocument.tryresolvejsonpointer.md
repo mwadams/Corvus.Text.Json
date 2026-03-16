@@ -12,7 +12,7 @@ Title: "IJsonDocument.TryResolveJsonPointer Method — Corvus.Text.Json.Internal
 ## TryResolveJsonPointer {#tryresolvejsonpointer}
 
 ```csharp
-bool TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, ref TValue value)
+public abstract bool TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, ref TValue value)
 ```
 
 Try to resolve the given JSON pointer.

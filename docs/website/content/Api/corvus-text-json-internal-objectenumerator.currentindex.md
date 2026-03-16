@@ -12,7 +12,7 @@ Title: "ObjectEnumerator.CurrentIndex Property — Corvus.Text.Json.Internal"
 ## CurrentIndex {#currentindex}
 
 ```csharp
-int CurrentIndex { get; }
+public int CurrentIndex { get; }
 ```
 
 Gets the current index in the document.

@@ -12,7 +12,7 @@ Title: "JsonSchemaMessageProvider<TContext> Constructors — Corvus.Text.Json"
 ## JsonSchemaMessageProvider {#jsonschemamessageprovider}
 
 ```csharp
-JsonSchemaMessageProvider(object object, IntPtr method)
+public JsonSchemaMessageProvider(object object, IntPtr method)
 ```
 
 ### Parameters

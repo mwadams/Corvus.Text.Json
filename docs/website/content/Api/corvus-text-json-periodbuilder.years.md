@@ -12,7 +12,7 @@ Title: "PeriodBuilder.Years Property — Corvus.Text.Json"
 ## Years {#years}
 
 ```csharp
-int Years { get; set; }
+public int Years { get; set; }
 ```
 
 Gets or sets the number of years within the period.

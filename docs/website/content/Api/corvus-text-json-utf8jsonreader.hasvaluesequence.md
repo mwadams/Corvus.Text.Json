@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.HasValueSequence Property — Corvus.Text.Json"
 ## HasValueSequence {#hasvaluesequence}
 
 ```csharp
-bool HasValueSequence { get; set; }
+public bool HasValueSequence { get; set; }
 ```
 
 Lets the caller know which of the two 'Value' properties to read to get the token value. For input data within a ReadOnlySpan<byte> this will always return false. For input data within a ReadOnlySequence<byte>, this will only return true if the token value straddles more than a single segment and hence couldn't be represented as a span.

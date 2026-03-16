@@ -12,7 +12,7 @@ Title: "JsonWriterOptions.NewLine Property — Corvus.Text.Json"
 ## NewLine {#newline}
 
 ```csharp
-string NewLine { get; set; }
+public string NewLine { get; set; }
 ```
 
 Gets or sets the new line string to use when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is `true`. The default is the value of [`NewLine`](https://learn.microsoft.com/dotnet/api/system.environment.newline#newline).

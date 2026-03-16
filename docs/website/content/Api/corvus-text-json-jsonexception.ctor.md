@@ -22,7 +22,7 @@ Title: "JsonException Constructors — Corvus.Text.Json"
 ## JsonException(string, string, Nullable&lt;long&gt;, Nullable&lt;long&gt;, Exception) {#jsonexception-string-string-nullable-long-nullable-long-exception}
 
 ```csharp
-JsonException(string message, string path, Nullable<long> lineNumber, Nullable<long> bytePositionInLine, Exception innerException)
+public JsonException(string message, string path, Nullable<long> lineNumber, Nullable<long> bytePositionInLine, Exception innerException)
 ```
 
 Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message, path, line number, byte position, and a reference to the inner exception that is the cause of this exception.
@@ -46,7 +46,7 @@ Note that the `bytePositionInLine` counts the number of bytes (i.e. UTF-8 code u
 ## JsonException(string, string, Nullable&lt;long&gt;, Nullable&lt;long&gt;) {#jsonexception-string-string-nullable-long-nullable-long}
 
 ```csharp
-JsonException(string message, string path, Nullable<long> lineNumber, Nullable<long> bytePositionInLine)
+public JsonException(string message, string path, Nullable<long> lineNumber, Nullable<long> bytePositionInLine)
 ```
 
 Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message, path, line number, and byte position.
@@ -69,7 +69,7 @@ Note that the `bytePositionInLine` counts the number of bytes (i.e. UTF-8 code u
 ## JsonException(string, Exception) {#jsonexception-string-exception}
 
 ```csharp
-JsonException(string message, Exception innerException)
+public JsonException(string message, Exception innerException)
 ```
 
 Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message and a reference to the inner exception that is the cause of this exception.
@@ -86,7 +86,7 @@ Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonex
 ## JsonException(string) {#jsonexception-string}
 
 ```csharp
-JsonException(string message)
+public JsonException(string message)
 ```
 
 Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class with a specified error message.
@@ -102,7 +102,7 @@ Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonex
 ## JsonException() {#jsonexception}
 
 ```csharp
-JsonException()
+public JsonException()
 ```
 
 Initializes a new instance of the [`JsonException`](/api/corvus-text-json-jsonexception.html) class.

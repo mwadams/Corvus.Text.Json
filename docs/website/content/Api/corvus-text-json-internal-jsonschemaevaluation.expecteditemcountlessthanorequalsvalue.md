@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.ExpectedItemCountLessThanOrEqualsValue Method — C
 ## ExpectedItemCountLessThanOrEqualsValue {#expecteditemcountlessthanorequalsvalue}
 
 ```csharp
-bool ExpectedItemCountLessThanOrEqualsValue(int value, Span<byte> buffer, ref int written)
+public static bool ExpectedItemCountLessThanOrEqualsValue(int value, Span<byte> buffer, ref int written)
 ```
 
 ### Parameters

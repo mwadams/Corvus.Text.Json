@@ -12,7 +12,7 @@ Title: "JsonEncodedText.EncodedUtf8Bytes Property — Corvus.Text.Json"
 ## EncodedUtf8Bytes {#encodedutf8bytes}
 
 ```csharp
-ReadOnlySpan<byte> EncodedUtf8Bytes { get; }
+public ReadOnlySpan<byte> EncodedUtf8Bytes { get; }
 ```
 
 Returns the UTF-8 encoded representation of the pre-encoded JSON text.

@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.ApplyEvaluated Method — Corvus.Text.Json.Internal"
 ## ApplyEvaluated {#applyevaluated}
 
 ```csharp
-void ApplyEvaluated(ref JsonSchemaContext childContext)
+public void ApplyEvaluated(ref JsonSchemaContext childContext)
 ```
 
 Applies the evaluated properties/items from the child context to this (parent) context, if appropriate.

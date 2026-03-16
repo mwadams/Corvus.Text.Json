@@ -12,7 +12,7 @@ Title: "JsonSchemaResultsCollector.Result.GetSchemaEvaluationLocationText Method
 ## GetSchemaEvaluationLocationText {#getschemaevaluationlocationtext}
 
 ```csharp
-string GetSchemaEvaluationLocationText()
+public string GetSchemaEvaluationLocationText()
 ```
 
 ### Returns

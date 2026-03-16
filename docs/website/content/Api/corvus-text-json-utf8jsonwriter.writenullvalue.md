@@ -12,7 +12,7 @@ Title: "Utf8JsonWriter.WriteNullValue Method — Corvus.Text.Json"
 ## WriteNullValue {#writenullvalue}
 
 ```csharp
-void WriteNullValue()
+public void WriteNullValue()
 ```
 
 Writes the JSON literal "null" as an element of a JSON array.

@@ -12,7 +12,7 @@ Title: "ParsedJsonDocument<T>.False Property — Corvus.Text.Json"
 ## False {#false}
 
 ```csharp
-T False { get; }
+public static T False { get; }
 ```
 
 Gets the False instance.

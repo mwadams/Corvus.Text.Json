@@ -12,7 +12,7 @@ Title: "JsonSchemaContext.AddLocalEvaluatedProperty Method — Corvus.Text.Json.
 ## AddLocalEvaluatedProperty {#addlocalevaluatedproperty}
 
 ```csharp
-void AddLocalEvaluatedProperty(int index)
+public void AddLocalEvaluatedProperty(int index)
 ```
 
 Adds a property at the specified index to the local evaluated properties collection.

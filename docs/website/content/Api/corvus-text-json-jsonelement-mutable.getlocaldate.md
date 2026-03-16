@@ -12,7 +12,7 @@ Title: "JsonElement.Mutable.GetLocalDate Method — Corvus.Text.Json"
 ## GetLocalDate {#getlocaldate}
 
 ```csharp
-LocalDate GetLocalDate()
+public LocalDate GetLocalDate()
 ```
 
 ### Returns

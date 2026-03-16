@@ -22,7 +22,7 @@ Title: "BigNumber.Explicit Operator — Corvus.Numerics"
 ## explicit operator decimal(BigNumber) {#explicit-operator-decimal-bignumber}
 
 ```csharp
-static explicit operator decimal(BigNumber value)
+public static explicit operator decimal(BigNumber value)
 ```
 
 Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
@@ -42,7 +42,7 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 ## explicit operator double(BigNumber) {#explicit-operator-double-bignumber}
 
 ```csharp
-static explicit operator double(BigNumber value)
+public static explicit operator double(BigNumber value)
 ```
 
 Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
@@ -62,7 +62,7 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 ## explicit operator float(BigNumber) {#explicit-operator-float-bignumber}
 
 ```csharp
-static explicit operator float(BigNumber value)
+public static explicit operator float(BigNumber value)
 ```
 
 Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
@@ -82,7 +82,7 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 ## explicit operator long(BigNumber) {#explicit-operator-long-bignumber}
 
 ```csharp
-static explicit operator long(BigNumber value)
+public static explicit operator long(BigNumber value)
 ```
 
 Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
@@ -102,7 +102,7 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 ## explicit operator ulong(BigNumber) {#explicit-operator-ulong-bignumber}
 
 ```csharp
-static explicit operator ulong(BigNumber value)
+public static explicit operator ulong(BigNumber value)
 ```
 
 Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).

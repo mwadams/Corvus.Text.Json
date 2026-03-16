@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetDouble Method — Corvus.Text.Json"
 ## GetDouble {#getdouble}
 
 ```csharp
-double GetDouble()
+public double GetDouble()
 ```
 
 Parses the current JSON token value from the source as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value. Throws exceptions otherwise.

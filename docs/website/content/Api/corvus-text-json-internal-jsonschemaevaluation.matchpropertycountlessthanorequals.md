@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountLessThanOrEquals Method — Corvu
 ## MatchPropertyCountLessThanOrEquals {#matchpropertycountlessthanorequals}
 
 ```csharp
-bool MatchPropertyCountLessThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchPropertyCountLessThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a property count is less than or equal to the given value.

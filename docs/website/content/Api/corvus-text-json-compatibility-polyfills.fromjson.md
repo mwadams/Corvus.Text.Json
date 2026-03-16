@@ -12,7 +12,7 @@ Title: "Polyfills.FromJson Method — Corvus.Text.Json.Compatibility"
 ## FromJson {#fromjson}
 
 ```csharp
-T FromJson<T, TTarget>(ref TTarget value)
+public static T FromJson<T, TTarget>(ref TTarget value)
 ```
 
 ### Parameters

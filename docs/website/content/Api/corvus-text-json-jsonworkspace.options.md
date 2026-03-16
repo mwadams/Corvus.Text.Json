@@ -12,7 +12,7 @@ Title: "JsonWorkspace.Options Property — Corvus.Text.Json"
 ## Options {#options}
 
 ```csharp
-JsonWriterOptions Options { get; set; }
+public JsonWriterOptions Options { get; set; }
 ```
 
 Gets the JsonWriterOptions

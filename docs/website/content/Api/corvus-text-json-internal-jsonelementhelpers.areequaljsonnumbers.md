@@ -12,7 +12,7 @@ Title: "JsonElementHelpers.AreEqualJsonNumbers Method — Corvus.Text.Json.Inter
 ## AreEqualJsonNumbers {#areequaljsonnumbers}
 
 ```csharp
-bool AreEqualJsonNumbers(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)
+public static bool AreEqualJsonNumbers(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)
 ```
 
 Compares two valid UTF-8 encoded JSON numbers for decimal equality.

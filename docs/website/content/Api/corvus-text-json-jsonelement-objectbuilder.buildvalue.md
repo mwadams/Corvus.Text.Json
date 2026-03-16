@@ -19,7 +19,7 @@ Title: "JsonElement.ObjectBuilder.BuildValue Method — Corvus.Text.Json"
 ## BuildValue(JsonElement.ObjectBuilder.Build, ref ComplexValueBuilder) {#buildvalue-jsonelement-objectbuilder-build-ref-complexvaluebuilder}
 
 ```csharp
-void BuildValue(JsonElement.ObjectBuilder.Build value, ref ComplexValueBuilder valueBuilder)
+public static void BuildValue(JsonElement.ObjectBuilder.Build value, ref ComplexValueBuilder valueBuilder)
 ```
 
 ### Parameters
@@ -34,7 +34,7 @@ void BuildValue(JsonElement.ObjectBuilder.Build value, ref ComplexValueBuilder v
 ## BuildValue(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, ref ComplexValueBuilder) {#buildvalue-ref-tcontext-jsonelement-objectbuilder-build-tcontext-ref-complexvaluebuilder}
 
 ```csharp
-void BuildValue<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value, ref ComplexValueBuilder valueBuilder)
+public static void BuildValue<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value, ref ComplexValueBuilder valueBuilder)
 ```
 
 ### Parameters

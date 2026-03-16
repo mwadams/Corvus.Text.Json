@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetString Method — Corvus.Text.Json"
 ## GetString {#getstring}
 
 ```csharp
-string GetString()
+public string GetString()
 ```
 
 Parses the current JSON token value from the source, unescaped, and transcoded as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).

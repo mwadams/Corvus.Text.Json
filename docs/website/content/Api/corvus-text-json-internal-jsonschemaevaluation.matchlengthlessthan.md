@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchLengthLessThan Method — Corvus.Text.Json.Int
 ## MatchLengthLessThan {#matchlengthlessthan}
 
 ```csharp
-bool MatchLengthLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchLengthLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string length is less than the given value.

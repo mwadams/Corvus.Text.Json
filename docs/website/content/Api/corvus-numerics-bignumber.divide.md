@@ -12,7 +12,7 @@ Title: "BigNumber.Divide Method — Corvus.Numerics"
 ## Divide {#divide}
 
 ```csharp
-BigNumber Divide(BigNumber dividend, BigNumber divisor, int precision)
+public static BigNumber Divide(BigNumber dividend, BigNumber divisor, int precision)
 ```
 
 Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with specified precision.

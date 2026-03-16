@@ -12,7 +12,7 @@ Title: "Utf8Iri.TryFormatCanonical Method — Corvus.Text.Json"
 ## TryFormatCanonical {#tryformatcanonical}
 
 ```csharp
-bool TryFormatCanonical(Span<byte> buffer, ref int writtenBytes)
+public bool TryFormatCanonical(Span<byte> buffer, ref int writtenBytes)
 ```
 
 Gets the IRI in canonical form.

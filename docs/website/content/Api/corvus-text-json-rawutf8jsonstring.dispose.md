@@ -12,7 +12,7 @@ Title: "RawUtf8JsonString.Dispose Method — Corvus.Text.Json"
 ## Dispose {#dispose}
 
 ```csharp
-void Dispose()
+public void Dispose()
 ```
 
 Releases any rented array pool bytes and clears sensitive data.

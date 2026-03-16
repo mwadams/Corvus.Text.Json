@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.GetUInt32 Method — Corvus.Text.Json"
 ## GetUInt32 {#getuint32}
 
 ```csharp
-uint GetUInt32()
+public uint GetUInt32()
 ```
 
 Parses the current JSON token value from the source as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value. Throws exceptions otherwise.

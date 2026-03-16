@@ -19,7 +19,7 @@ Title: "BigNumber.Equals Method — Corvus.Numerics"
 ## Equals(BigNumber) {#equals-bignumber}
 
 ```csharp
-bool Equals(BigNumber other)
+public bool Equals(BigNumber other)
 ```
 
 Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance.
@@ -41,7 +41,7 @@ Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.ht
 ## Equals(object) {#equals-object}
 
 ```csharp
-bool Equals(object obj)
+public virtual bool Equals(object obj)
 ```
 
 Determines whether the specified object is equal to this instance.

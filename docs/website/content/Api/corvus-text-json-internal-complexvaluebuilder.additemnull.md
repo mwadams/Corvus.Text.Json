@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.AddItemNull Method — Corvus.Text.Json.Internal"
 ## AddItemNull {#additemnull}
 
 ```csharp
-void AddItemNull()
+public void AddItemNull()
 ```
 
 Adds a null item to the current array.

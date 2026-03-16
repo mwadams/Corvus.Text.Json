@@ -12,7 +12,7 @@ Title: "Utf8Iri.HasScheme Property — Corvus.Text.Json"
 ## HasScheme {#hasscheme}
 
 ```csharp
-bool HasScheme { get; }
+public bool HasScheme { get; }
 ```
 
 Gets a value indicating whether this reference has a scheme.

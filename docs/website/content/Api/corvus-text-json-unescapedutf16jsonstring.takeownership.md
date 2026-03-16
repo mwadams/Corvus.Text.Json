@@ -12,7 +12,7 @@ Title: "UnescapedUtf16JsonString.TakeOwnership Method — Corvus.Text.Json"
 ## TakeOwnership {#takeownership}
 
 ```csharp
-ReadOnlyMemory<char> TakeOwnership(ref char[] extraRentedArrayPoolChars)
+public ReadOnlyMemory<char> TakeOwnership(ref char[] extraRentedArrayPoolChars)
 ```
 
 Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) characters, if any.

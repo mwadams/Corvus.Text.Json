@@ -25,7 +25,7 @@ Title: "BigNumber.TryParse Method — Corvus.Numerics"
 ## TryParse(string, ref BigNumber) {#tryparse-string-ref-bignumber}
 
 ```csharp
-bool TryParse(string s, ref BigNumber result)
+public static bool TryParse(string s, ref BigNumber result)
 ```
 
 Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -48,7 +48,7 @@ Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.h
 ## TryParse(string, IFormatProvider, ref BigNumber) {#tryparse-string-iformatprovider-ref-bignumber}
 
 ```csharp
-bool TryParse(string s, IFormatProvider provider, ref BigNumber result)
+public static bool TryParse(string s, IFormatProvider provider, ref BigNumber result)
 ```
 
 Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -72,7 +72,7 @@ Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.h
 ## TryParse(ReadOnlySpan&lt;char&gt;, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-char-iformatprovider-ref-bignumber}
 
 ```csharp
-bool TryParse(ReadOnlySpan<char> s, IFormatProvider provider, ref BigNumber result)
+public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider provider, ref BigNumber result)
 ```
 
 Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -96,7 +96,7 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 ## TryParse(ReadOnlySpan&lt;char&gt;, ref BigNumber) {#tryparse-readonlyspan-char-ref-bignumber}
 
 ```csharp
-bool TryParse(ReadOnlySpan<char> s, ref BigNumber result)
+public static bool TryParse(ReadOnlySpan<char> s, ref BigNumber result)
 ```
 
 Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -119,7 +119,7 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 ## TryParse(ReadOnlySpan&lt;byte&gt;, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-byte-iformatprovider-ref-bignumber}
 
 ```csharp
-bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, ref BigNumber result)
+public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, ref BigNumber result)
 ```
 
 Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -143,7 +143,7 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 ## TryParse(ReadOnlySpan&lt;byte&gt;, ref BigNumber) {#tryparse-readonlyspan-byte-ref-bignumber}
 
 ```csharp
-bool TryParse(ReadOnlySpan<byte> s, ref BigNumber result)
+public static bool TryParse(ReadOnlySpan<byte> s, ref BigNumber result)
 ```
 
 Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -166,7 +166,7 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 ## TryParse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-char-numberstyles-iformatprovider-ref-bignumber}
 
 ```csharp
-bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider, ref BigNumber result)
+public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider, ref BigNumber result)
 ```
 
 Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
@@ -191,7 +191,7 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 ## TryParse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-byte-numberstyles-iformatprovider-ref-bignumber}
 
 ```csharp
-bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider, ref BigNumber result)
+public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider, ref BigNumber result)
 ```
 
 Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).

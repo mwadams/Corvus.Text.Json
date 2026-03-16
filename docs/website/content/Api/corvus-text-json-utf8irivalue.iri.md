@@ -12,7 +12,7 @@ Title: "Utf8IriValue.Iri Property — Corvus.Text.Json"
 ## Iri {#iri}
 
 ```csharp
-Utf8Iri Iri { get; }
+public Utf8Iri Iri { get; }
 ```
 
 Gets the UTF-8 IRI value.

@@ -19,7 +19,7 @@ Title: "JsonElementHelpers.TryFormatUriReference Method — Corvus.Text.Json.Int
 ## TryFormatUriReference(Utf8UriReference, bool, ref string) {#tryformaturireference-utf8urireference-bool-ref-string}
 
 ```csharp
-bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, ref string result)
+public static bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, ref string result)
 ```
 
 ### Parameters
@@ -39,7 +39,7 @@ bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, ref st
 ## TryFormatUriReference(Utf8UriReference, bool, Span&lt;char&gt;, ref int) {#tryformaturireference-utf8urireference-bool-span-char-ref-int}
 
 ```csharp
-bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, Span<char> destination, ref int charsWritten)
+public static bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, Span<char> destination, ref int charsWritten)
 ```
 
 ### Parameters

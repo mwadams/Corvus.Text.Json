@@ -12,7 +12,7 @@ Title: "Utf8JsonReader.TokenStartIndex Property — Corvus.Text.Json"
 ## TokenStartIndex {#tokenstartindex}
 
 ```csharp
-long TokenStartIndex { get; set; }
+public long TokenStartIndex { get; set; }
 ```
 
 Returns the index that the last processed JSON token starts at within the given UTF-8 encoded input text, skipping any white space.

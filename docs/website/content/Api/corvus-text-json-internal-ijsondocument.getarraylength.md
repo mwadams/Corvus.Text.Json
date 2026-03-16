@@ -12,7 +12,7 @@ Title: "IJsonDocument.GetArrayLength Method — Corvus.Text.Json.Internal"
 ## GetArrayLength {#getarraylength}
 
 ```csharp
-int GetArrayLength(int index)
+public abstract int GetArrayLength(int index)
 ```
 
 Gets the length of the array at the specified index.

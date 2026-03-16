@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchContainsCountGreaterThanOrEquals Method — Co
 ## MatchContainsCountGreaterThanOrEquals {#matchcontainscountgreaterthanorequals}
 
 ```csharp
-bool MatchContainsCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchContainsCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a contains count is greater than or equal to the given value.

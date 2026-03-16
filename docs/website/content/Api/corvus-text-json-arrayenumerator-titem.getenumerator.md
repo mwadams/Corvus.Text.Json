@@ -12,7 +12,7 @@ Title: "ArrayEnumerator<TItem>.GetEnumerator Method — Corvus.Text.Json"
 ## GetEnumerator {#getenumerator}
 
 ```csharp
-ArrayEnumerator<TItem> GetEnumerator()
+public ArrayEnumerator<TItem> GetEnumerator()
 ```
 
 Returns an enumerator that iterates through the JSON array.

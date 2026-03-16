@@ -12,7 +12,7 @@ Title: "ComplexValueBuilder.AddItemFormattedNumber Method — Corvus.Text.Json.I
 ## AddItemFormattedNumber {#additemformattednumber}
 
 ```csharp
-void AddItemFormattedNumber(ReadOnlySpan<byte> value)
+public void AddItemFormattedNumber(ReadOnlySpan<byte> value)
 ```
 
 Adds a formatted number item to the current array.

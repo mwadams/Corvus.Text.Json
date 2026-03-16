@@ -12,7 +12,7 @@ Title: "BigNumber.Division Operator — Corvus.Numerics"
 ## operator / {#operator}
 
 ```csharp
-static BigNumber operator /(BigNumber dividend, BigNumber divisor)
+public static BigNumber operator /(BigNumber dividend, BigNumber divisor)
 ```
 
 Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with default precision.

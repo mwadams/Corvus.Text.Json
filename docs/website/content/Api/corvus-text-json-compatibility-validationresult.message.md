@@ -12,7 +12,7 @@ Title: "ValidationResult.Message Property — Corvus.Text.Json.Compatibility"
 ## Message {#message}
 
 ```csharp
-string Message { get; }
+public string Message { get; }
 ```
 
 Gets the validation message for this result, if any.

@@ -12,7 +12,7 @@ Title: "JsonSchemaEvaluation.MatchDuration Method — Corvus.Text.Json.Internal"
 ## MatchDuration {#matchduration}
 
 ```csharp
-bool MatchDuration(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+public static bool MatchDuration(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
 
 Validates that a string value conforms to the ISO 8601 duration format.

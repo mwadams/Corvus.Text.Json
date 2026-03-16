@@ -19,7 +19,7 @@ Title: "JsonElementForBooleanFalseSchema.JsonSchema.Evaluate Method — Corvus.T
 ## Evaluate(IJsonDocument, int, ref JsonSchemaContext) {#evaluate-ijsondocument-int-ref-jsonschemacontext}
 
 ```csharp
-void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
+public static void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
 ```
 
 ### Parameters
@@ -35,7 +35,7 @@ void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaConte
 ## Evaluate(IJsonDocument, int, IJsonSchemaResultsCollector) {#evaluate-ijsondocument-int-ijsonschemaresultscollector}
 
 ```csharp
-bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
+public static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)
 ```
 
 ### Parameters
