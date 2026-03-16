@@ -9,7 +9,7 @@ Title: "JsonProperty<TValue>.Name Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Name
+## Name {#name}
 
 ```csharp
 string Name { get; }

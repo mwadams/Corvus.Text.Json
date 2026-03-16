@@ -9,7 +9,7 @@ Title: "JsonElement.TryGetLocalDate Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetLocalDate
+## TryGetLocalDate {#trygetlocaldate}
 
 ```csharp
 bool TryGetLocalDate(ref LocalDate value)

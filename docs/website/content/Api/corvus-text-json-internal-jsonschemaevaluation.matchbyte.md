@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchByte Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchByte `static`
+## MatchByte {#matchbyte}
 
 ```csharp
 bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

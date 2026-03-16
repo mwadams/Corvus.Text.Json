@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetDouble Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetDouble
+## GetDouble {#getdouble}
 
 ```csharp
 double GetDouble()

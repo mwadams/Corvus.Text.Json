@@ -9,7 +9,7 @@ Title: "JsonEncodedText.Value Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Value
+## Value {#value}
 
 ```csharp
 string Value { get; }

@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.Create Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Create `static`
+## Create {#create}
 
 ```csharp
 JsonSchemaResultsCollector Create(JsonSchemaResultsLevel level, int estimatedCapacity)

@@ -13,10 +13,10 @@ Title: "JsonSchemaEvaluation.MatchMultipleOf Method — Corvus.Text.Json.Interna
 
 | Method | Description |
 |--------|-------------|
-| [MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext)](#bool-matchmultipleof-readonlyspan-byte-integral-readonlyspan-byte-fractional-int-exponent-ulong-divisor-int-divisorexponent-string-divisorvalue-readonlyspan-byte-keyword-ref-jsonschemacontext-context) | Matches a JSON number as a multiple of the given divisor. |
-| [MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext)](#bool-matchmultipleof-readonlyspan-byte-integral-readonlyspan-byte-fractional-int-exponent-biginteger-divisor-int-divisorexponent-string-divisorvalue-readonlyspan-byte-keyword-ref-jsonschemacontext-context) | Matches a JSON number as a multiple of the given divisor. |
+| [MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext)](#matchmultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int-string-readonlyspan-byte-ref-jsonschemacontext) | Matches a JSON number as a multiple of the given divisor. |
+| [MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext)](#matchmultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int-string-readonlyspan-byte-ref-jsonschemacontext) | Matches a JSON number as a multiple of the given divisor. |
 
-## MatchMultipleOf `static`
+## MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchmultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int-string-readonlyspan-byte-ref-jsonschemacontext}
 
 ```csharp
 bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
@@ -49,7 +49,7 @@ We do not need to pass the sign of the JSON number as it is irrelevant to the ca
 
 ---
 
-## MatchMultipleOf `static`
+## MatchMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchmultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int-string-readonlyspan-byte-ref-jsonschemacontext}
 
 ```csharp
 bool MatchMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent, string divisorValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.ParseLocalDate Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParseLocalDate `static`
+## ParseLocalDate {#parselocaldate}
 
 ```csharp
 LocalDate ParseLocalDate(ReadOnlySpan<byte> text)

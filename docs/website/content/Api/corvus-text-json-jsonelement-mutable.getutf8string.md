@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetUtf8String Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetUtf8String
+## GetUtf8String {#getutf8string}
 
 ```csharp
 UnescapedUtf8JsonString GetUtf8String()

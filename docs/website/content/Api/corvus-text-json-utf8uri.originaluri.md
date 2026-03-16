@@ -9,7 +9,7 @@ Title: "Utf8Uri.OriginalUri Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## OriginalUri
+## OriginalUri {#originaluri}
 
 ```csharp
 ReadOnlySpan<byte> OriginalUri { get; }

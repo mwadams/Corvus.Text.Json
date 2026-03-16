@@ -13,10 +13,10 @@ Title: "IMutableJsonDocument.GetArrayIndexElement Method — Corvus.Text.Json.In
 
 | Method | Description |
 |--------|-------------|
-| [GetArrayIndexElement(int, int)](#jsonelement-mutable-getarrayindexelement-int-currentindex-int-arrayindex) | Gets the array element at the specified index as a mutable JSON element. |
-| [GetArrayIndexElement(int, int, ref IMutableJsonDocument, ref int)](#void-getarrayindexelement-int-currentindex-int-arrayindex-ref-imutablejsondocument-parentdocument-ref-int-parentdocumentindex) | Gets the element at the specified array index within the current index. |
+| [GetArrayIndexElement(int, int)](#getarrayindexelement-int-int) | Gets the array element at the specified index as a mutable JSON element. |
+| [GetArrayIndexElement(int, int, ref IMutableJsonDocument, ref int)](#getarrayindexelement-int-int-ref-imutablejsondocument-ref-int) | Gets the element at the specified array index within the current index. |
 
-## GetArrayIndexElement `abstract`
+## GetArrayIndexElement(int, int) {#getarrayindexelement-int-int}
 
 ```csharp
 JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex)
@@ -39,7 +39,7 @@ The mutable JSON element at the specified array index.
 
 ---
 
-## GetArrayIndexElement `abstract`
+## GetArrayIndexElement(int, int, ref IMutableJsonDocument, ref int) {#getarrayindexelement-int-int-ref-imutablejsondocument-ref-int}
 
 ```csharp
 void GetArrayIndexElement(int currentIndex, int arrayIndex, ref IMutableJsonDocument parentDocument, ref int parentDocumentIndex)

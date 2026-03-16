@@ -9,7 +9,7 @@ Title: "Utf8UriReference.HasScheme Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasScheme
+## HasScheme {#hasscheme}
 
 ```csharp
 bool HasScheme { get; }

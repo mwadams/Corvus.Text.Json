@@ -9,7 +9,7 @@ Title: "BigIntegerPolyfills.TryFormat Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormat `static`
+## TryFormat {#tryformat}
 
 ```csharp
 bool TryFormat(ref BigInteger value, Span<byte> destination, ref int bytesWritten)

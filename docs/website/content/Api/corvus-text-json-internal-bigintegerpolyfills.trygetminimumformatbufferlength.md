@@ -9,7 +9,7 @@ Title: "BigIntegerPolyfills.TryGetMinimumFormatBufferLength Method — Corvus.Te
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetMinimumFormatBufferLength `static`
+## TryGetMinimumFormatBufferLength {#trygetminimumformatbufferlength}
 
 ```csharp
 bool TryGetMinimumFormatBufferLength(ref BigInteger bigInteger, ref int minimumLength)

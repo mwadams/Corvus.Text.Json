@@ -9,7 +9,7 @@ Title: "BigNumber.Truncate Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Truncate `static`
+## Truncate {#truncate}
 
 ```csharp
 BigNumber Truncate(BigNumber value)

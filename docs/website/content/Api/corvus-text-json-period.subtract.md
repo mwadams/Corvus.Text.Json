@@ -9,7 +9,7 @@ Title: "Period.Subtract Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Subtract `static`
+## Subtract {#subtract}
 
 ```csharp
 Period Subtract(Period minuend, Period subtrahend)

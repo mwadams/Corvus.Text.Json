@@ -9,7 +9,7 @@ Title: "Utf8Uri.GetUri Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetUri
+## GetUri {#geturi}
 
 ```csharp
 Uri GetUri()

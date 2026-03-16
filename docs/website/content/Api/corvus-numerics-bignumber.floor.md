@@ -9,7 +9,7 @@ Title: "BigNumber.Floor Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Floor `static`
+## Floor {#floor}
 
 ```csharp
 BigNumber Floor(BigNumber value)

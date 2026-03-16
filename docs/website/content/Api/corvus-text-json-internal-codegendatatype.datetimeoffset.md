@@ -9,7 +9,7 @@ Title: "CodeGenDataType.DateTimeOffset Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## DateTimeOffset `static`
+## DateTimeOffset {#datetimeoffset}
 
 ```csharp
 CodeGenDataType DateTimeOffset

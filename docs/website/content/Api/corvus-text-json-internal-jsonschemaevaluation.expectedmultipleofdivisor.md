@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedMultipleOfDivisor Method — Corvus.Text.Js
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedMultipleOfDivisor `static`
+## ExpectedMultipleOfDivisor {#expectedmultipleofdivisor}
 
 ```csharp
 bool ExpectedMultipleOfDivisor(string divisor, Span<byte> buffer, ref int written)

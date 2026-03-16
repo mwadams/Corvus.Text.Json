@@ -13,11 +13,11 @@ Title: "JsonElement.TryGetProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [TryGetProperty(string, ref JsonElement)](#bool-trygetproperty-string-propertyname-ref-jsonelement-value) | Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
-| [TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement)](#bool-trygetproperty-readonlyspan-char-propertyname-ref-jsonelement-value) | Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
-| [TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement)](#bool-trygetproperty-readonlyspan-byte-utf8propertyname-ref-jsonelement-value) | Looks for a property named `utf8PropertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
+| [TryGetProperty(string, ref JsonElement)](#trygetproperty-string-ref-jsonelement) | Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
+| [TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement)](#trygetproperty-readonlyspan-char-ref-jsonelement) | Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
+| [TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement)](#trygetproperty-readonlyspan-byte-ref-jsonelement) | Looks for a property named `utf8PropertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
 
-## TryGetProperty
+## TryGetProperty(string, ref JsonElement) {#trygetproperty-string-ref-jsonelement}
 
 ```csharp
 bool TryGetProperty(string propertyName, ref JsonElement value)
@@ -52,7 +52,7 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 
 ---
 
-## TryGetProperty
+## TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement) {#trygetproperty-readonlyspan-char-ref-jsonelement}
 
 ```csharp
 bool TryGetProperty(ReadOnlySpan<char> propertyName, ref JsonElement value)
@@ -86,7 +86,7 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 
 ---
 
-## TryGetProperty
+## TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement) {#trygetproperty-readonlyspan-byte-ref-jsonelement}
 
 ```csharp
 bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, ref JsonElement value)

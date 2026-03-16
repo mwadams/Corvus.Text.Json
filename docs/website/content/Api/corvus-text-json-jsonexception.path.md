@@ -9,7 +9,7 @@ Title: "JsonException.Path Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Path
+## Path {#path}
 
 ```csharp
 string Path { get; set; }

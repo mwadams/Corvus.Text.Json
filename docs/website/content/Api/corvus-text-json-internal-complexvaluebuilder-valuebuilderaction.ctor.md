@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction Constructors — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ComplexValueBuilder.ValueBuilderAction
+## ComplexValueBuilder.ValueBuilderAction {#complexvaluebuilder-valuebuilderaction}
 
 ```csharp
 ComplexValueBuilder.ValueBuilderAction(object object, IntPtr method)

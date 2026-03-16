@@ -9,7 +9,7 @@ Title: "Period.FromNanoseconds Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## FromNanoseconds `static`
+## FromNanoseconds {#fromnanoseconds}
 
 ```csharp
 Period FromNanoseconds(long nanoseconds)

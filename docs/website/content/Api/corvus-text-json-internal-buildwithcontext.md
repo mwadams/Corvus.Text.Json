@@ -16,5 +16,5 @@ public static class BuildWithContext
 
 | Method | Description |
 |--------|-------------|
-| [Create(ref TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext.create.html#buildwithcontext-tcontext-tbuilder-create-tcontext-tbuilder-ref-tcontext-context-tbuilder-build) `static` |  |
+| [Create(ref TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext.create.html#create-ref-tcontext-tbuilder) `static` |  |
 

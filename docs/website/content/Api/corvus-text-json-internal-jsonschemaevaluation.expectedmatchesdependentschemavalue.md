@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method — Corv
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedMatchesDependentSchemaValue `static`
+## ExpectedMatchesDependentSchemaValue {#expectedmatchesdependentschemavalue}
 
 ```csharp
 bool ExpectedMatchesDependentSchemaValue(string propertyName, Span<byte> buffer, ref int written)

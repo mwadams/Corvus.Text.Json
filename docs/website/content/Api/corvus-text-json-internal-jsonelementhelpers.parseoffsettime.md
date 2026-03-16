@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.ParseOffsetTime Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParseOffsetTime `static`
+## ParseOffsetTime {#parseoffsettime}
 
 ```csharp
 OffsetTime ParseOffsetTime(ReadOnlySpan<byte> text)

@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction.EndInvoke Method — Corvus.Text.
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndInvoke `virtual`
+## EndInvoke {#endinvoke}
 
 ```csharp
 void EndInvoke(ref ComplexValueBuilder builder, IAsyncResult result)

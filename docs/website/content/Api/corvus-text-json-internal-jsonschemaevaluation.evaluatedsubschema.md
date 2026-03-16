@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.EvaluatedSubschema Field — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EvaluatedSubschema `static`
+## EvaluatedSubschema {#evaluatedsubschema}
 
 ```csharp
 JsonSchemaMessageProvider EvaluatedSubschema

@@ -13,10 +13,10 @@ Title: "IJsonDocument.TryFormat Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#bool-tryformat-int-index-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-formatprovider) | Formats the value to the provided destination span according to the specified format and format provider. |
-| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#bool-tryformat-int-index-span-byte-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-formatprovider) | Formats the value to the provided destination UTF-8 span according to the specified format and format provider. |
+| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider) | Formats the value to the provided destination span according to the specified format and format provider. |
+| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider) | Formats the value to the provided destination UTF-8 span according to the specified format and format provider. |
 
-## TryFormat `abstract`
+## TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
 bool TryFormat(int index, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
@@ -42,7 +42,7 @@ Formats the value to the provided destination span according to the specified fo
 
 ---
 
-## TryFormat `abstract`
+## TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
 bool TryFormat(int index, Span<byte> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)

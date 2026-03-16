@@ -9,7 +9,7 @@ Title: "Utf8Iri.HasFragment Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasFragment
+## HasFragment {#hasfragment}
 
 ```csharp
 bool HasFragment { get; }

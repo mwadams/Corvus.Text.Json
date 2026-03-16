@@ -9,7 +9,7 @@ Title: "JsonWorkspace.CreateUnrented Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateUnrented `static`
+## CreateUnrented {#createunrented}
 
 ```csharp
 JsonWorkspace CreateUnrented(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)

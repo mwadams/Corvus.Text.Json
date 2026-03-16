@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.EnsurePropertyMap Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EnsurePropertyMap `static`
+## EnsurePropertyMap {#ensurepropertymap}
 
 ```csharp
 void EnsurePropertyMap(ref JsonElement.Mutable element)

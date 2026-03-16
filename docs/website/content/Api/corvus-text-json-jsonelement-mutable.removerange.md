@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.RemoveRange Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## RemoveRange
+## RemoveRange {#removerange}
 
 ```csharp
 void RemoveRange(int startIndex, int count)

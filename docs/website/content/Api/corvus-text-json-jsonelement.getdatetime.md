@@ -9,7 +9,7 @@ Title: "JsonElement.GetDateTime Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetDateTime
+## GetDateTime {#getdatetime}
 
 ```csharp
 DateTime GetDateTime()

@@ -9,7 +9,7 @@ Title: "ArrayEnumerator.MoveNext Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MoveNext
+## MoveNext {#movenext}
 
 ```csharp
 bool MoveNext()

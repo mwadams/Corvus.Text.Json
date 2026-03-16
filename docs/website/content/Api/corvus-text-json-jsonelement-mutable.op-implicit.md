@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.Implicit Operator — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## implicit operator JsonElement `static`
+## implicit operator JsonElement {#implicit-operator-jsonelement}
 
 ```csharp
 static implicit operator JsonElement(JsonElement.Mutable value)

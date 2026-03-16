@@ -13,11 +13,11 @@ Title: "JsonElement.Mutable.SetPropertyNull Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [SetPropertyNull(string)](#void-setpropertynull-string-propertyname) |  |
-| [SetPropertyNull(ReadOnlySpan&lt;char&gt;)](#void-setpropertynull-readonlyspan-char-propertyname) |  |
-| [SetPropertyNull(ReadOnlySpan&lt;byte&gt;)](#void-setpropertynull-readonlyspan-byte-propertyname) |  |
+| [SetPropertyNull(string)](#setpropertynull-string) |  |
+| [SetPropertyNull(ReadOnlySpan&lt;char&gt;)](#setpropertynull-readonlyspan-char) |  |
+| [SetPropertyNull(ReadOnlySpan&lt;byte&gt;)](#setpropertynull-readonlyspan-byte) |  |
 
-## SetPropertyNull
+## SetPropertyNull(string) {#setpropertynull-string}
 
 ```csharp
 void SetPropertyNull(string propertyName)
@@ -31,7 +31,7 @@ void SetPropertyNull(string propertyName)
 
 ---
 
-## SetPropertyNull
+## SetPropertyNull(ReadOnlySpan&lt;char&gt;) {#setpropertynull-readonlyspan-char}
 
 ```csharp
 void SetPropertyNull(ReadOnlySpan<char> propertyName)
@@ -45,7 +45,7 @@ void SetPropertyNull(ReadOnlySpan<char> propertyName)
 
 ---
 
-## SetPropertyNull
+## SetPropertyNull(ReadOnlySpan&lt;byte&gt;) {#setpropertynull-readonlyspan-byte}
 
 ```csharp
 void SetPropertyNull(ReadOnlySpan<byte> propertyName)

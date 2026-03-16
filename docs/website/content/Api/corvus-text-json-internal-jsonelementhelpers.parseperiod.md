@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.ParsePeriod Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParsePeriod `static`
+## ParsePeriod {#parseperiod}
 
 ```csharp
 Period ParsePeriod(ReadOnlySpan<byte> text)

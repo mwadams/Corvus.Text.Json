@@ -9,7 +9,7 @@ Title: "Period.PeriodParser Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## PeriodParser `static`
+## PeriodParser {#periodparser}
 
 ```csharp
 bool PeriodParser(ReadOnlySpan<byte> text, ref PeriodBuilder builder)

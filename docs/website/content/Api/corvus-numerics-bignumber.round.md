@@ -9,7 +9,7 @@ Title: "BigNumber.Round Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Round `static`
+## Round {#round}
 
 ```csharp
 BigNumber Round(BigNumber value, int decimals, MidpointRounding mode)

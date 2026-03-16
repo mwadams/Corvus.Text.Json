@@ -13,10 +13,10 @@ Title: "JsonElement.ObjectBuilder.AddFormattedNumber Method — Corvus.Text.Json
 
 | Method | Description |
 |--------|-------------|
-| [AddFormattedNumber(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addformattednumber-readonlyspan-byte-propertyname-readonlyspan-byte-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddFormattedNumber(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;)](#void-addformattednumber-readonlyspan-char-propertyname-readonlyspan-byte-value) |  |
+| [AddFormattedNumber(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#addformattednumber-readonlyspan-byte-readonlyspan-byte-bool-bool) |  |
+| [AddFormattedNumber(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;)](#addformattednumber-readonlyspan-char-readonlyspan-byte) |  |
 
-## AddFormattedNumber
+## AddFormattedNumber(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addformattednumber-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping)
@@ -33,7 +33,7 @@ void AddFormattedNumber(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> valu
 
 ---
 
-## AddFormattedNumber
+## AddFormattedNumber(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#addformattednumber-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
 void AddFormattedNumber(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value)

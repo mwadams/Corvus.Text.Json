@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## UniqueItemsHashSet
+## UniqueItemsHashSet {#uniqueitemshashset}
 
 ```csharp
 UniqueItemsHashSet(IJsonDocument parentDocument, int itemsCount, Span<int> buckets, Span<byte> entries)

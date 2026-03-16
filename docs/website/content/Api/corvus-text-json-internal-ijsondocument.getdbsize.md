@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetDbSize Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetDbSize `abstract`
+## GetDbSize {#getdbsize}
 
 ```csharp
 int GetDbSize(int index, bool includeEndElement)

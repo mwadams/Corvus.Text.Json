@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetHalf Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetHalf
+## GetHalf {#gethalf}
 
 ```csharp
 Half GetHalf()

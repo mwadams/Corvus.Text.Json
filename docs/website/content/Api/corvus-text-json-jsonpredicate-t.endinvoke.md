@@ -9,7 +9,7 @@ Title: "JsonPredicate<T>.EndInvoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndInvoke `virtual`
+## EndInvoke {#endinvoke}
 
 ```csharp
 bool EndInvoke(ref T item, IAsyncResult result)

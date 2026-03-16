@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchedExactlyOneSchema Field — Corvus.Text.Json.
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchedExactlyOneSchema `static`
+## MatchedExactlyOneSchema {#matchedexactlyoneschema}
 
 ```csharp
 JsonSchemaMessageProvider MatchedExactlyOneSchema

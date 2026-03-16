@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.Apply Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Apply
+## Apply {#apply}
 
 ```csharp
 void Apply<T>(ref T value)

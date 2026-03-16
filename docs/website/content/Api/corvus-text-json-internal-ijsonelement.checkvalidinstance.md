@@ -9,7 +9,7 @@ Title: "IJsonElement.CheckValidInstance Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## CheckValidInstance `abstract`
+## CheckValidInstance {#checkvalidinstance}
 
 ```csharp
 void CheckValidInstance()

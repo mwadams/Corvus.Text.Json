@@ -9,7 +9,7 @@ Title: "JsonMarshal.GetRawUtf8Value Method — Corvus.Runtime.InteropServices"
 **Namespace:** Corvus.Runtime.InteropServices  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetRawUtf8Value `static`
+## GetRawUtf8Value {#getrawutf8value}
 
 ```csharp
 RawUtf8JsonString GetRawUtf8Value<T>(T element)

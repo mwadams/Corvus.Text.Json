@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.InsertAndDispose Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## InsertAndDispose
+## InsertAndDispose {#insertanddispose}
 
 ```csharp
 void InsertAndDispose(int complexObjectStartIndex, int targetIndex, ref MetadataDb targetData)

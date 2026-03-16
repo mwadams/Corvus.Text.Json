@@ -9,7 +9,7 @@ Title: "JsonElement.ArrayBuilder.AddArrayValue Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddArrayValue
+## AddArrayValue {#addarrayvalue}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<ulong> array)

@@ -9,7 +9,7 @@ Title: "IdnMapping.UseStd3AsciiRules Property — Corvus.Globalization"
 **Namespace:** Corvus.Globalization  
 **Assembly:** Corvus.Text.Json.dll
 
-## UseStd3AsciiRules
+## UseStd3AsciiRules {#usestd3asciirules}
 
 ```csharp
 bool UseStd3AsciiRules { get; set; }

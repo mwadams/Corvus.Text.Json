@@ -9,7 +9,7 @@ Title: "JsonElement.ArrayBuilder.Build<T>.Invoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 void Invoke(ref T context, ref JsonElement.ArrayBuilder builder)

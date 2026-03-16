@@ -9,7 +9,7 @@ Title: "BigNumber.Pow Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Pow `static`
+## Pow {#pow}
 
 ```csharp
 BigNumber Pow(BigNumber value, int exponent)

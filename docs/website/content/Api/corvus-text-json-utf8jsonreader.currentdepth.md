@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.CurrentDepth Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CurrentDepth
+## CurrentDepth {#currentdepth}
 
 ```csharp
 int CurrentDepth { get; }

@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.IgnoredNotTypeObject Field — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IgnoredNotTypeObject `static`
+## IgnoredNotTypeObject {#ignorednottypeobject}
 
 ```csharp
 JsonSchemaMessageProvider IgnoredNotTypeObject

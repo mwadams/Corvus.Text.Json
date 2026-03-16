@@ -9,7 +9,7 @@ Title: "JsonElementForBooleanFalseSchema.JsonSchema.SchemaLocationProvider Field
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## SchemaLocationProvider `static`
+## SchemaLocationProvider {#schemalocationprovider}
 
 ```csharp
 JsonSchemaPathProvider SchemaLocationProvider

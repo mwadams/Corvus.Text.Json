@@ -9,7 +9,7 @@ Title: "Utf8UriFormat.UriEscaped Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## UriEscaped `static`
+## UriEscaped {#uriescaped}
 
 ```csharp
 Utf8UriFormat UriEscaped

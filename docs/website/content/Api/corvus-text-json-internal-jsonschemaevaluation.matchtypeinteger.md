@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchTypeInteger Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchTypeInteger `static`
+## MatchTypeInteger {#matchtypeinteger}
 
 ```csharp
 bool MatchTypeInteger(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, int exponent, ref JsonSchemaContext context)

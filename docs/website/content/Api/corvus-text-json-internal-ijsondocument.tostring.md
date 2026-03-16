@@ -13,10 +13,10 @@ Title: "IJsonDocument.ToString Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [ToString(int)](#string-tostring-int-index) | Converts the element at the specified index to a string. |
-| [ToString(int, string, IFormatProvider)](#string-tostring-int-index-string-format-iformatprovider-formatprovider) | Gets the display string representation of the element at the specified index according to the specified format and format provider. |
+| [ToString(int)](#tostring-int) | Converts the element at the specified index to a string. |
+| [ToString(int, string, IFormatProvider)](#tostring-int-string-iformatprovider) | Gets the display string representation of the element at the specified index according to the specified format and format provider. |
 
-## ToString `abstract`
+## ToString(int) {#tostring-int}
 
 ```csharp
 string ToString(int index)
@@ -38,7 +38,7 @@ The string representation of the element.
 
 ---
 
-## ToString `abstract`
+## ToString(int, string, IFormatProvider) {#tostring-int-string-iformatprovider}
 
 ```csharp
 string ToString(int index, string format, IFormatProvider formatProvider)

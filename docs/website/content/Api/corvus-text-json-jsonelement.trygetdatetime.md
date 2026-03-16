@@ -9,7 +9,7 @@ Title: "JsonElement.TryGetDateTime Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetDateTime
+## TryGetDateTime {#trygetdatetime}
 
 ```csharp
 bool TryGetDateTime(ref DateTime value)

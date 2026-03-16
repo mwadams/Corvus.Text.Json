@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Dispose Method — Corvus.T
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Dispose
+## Dispose {#dispose}
 
 ```csharp
 void Dispose()

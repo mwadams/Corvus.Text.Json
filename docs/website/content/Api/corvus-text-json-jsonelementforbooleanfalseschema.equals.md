@@ -13,10 +13,10 @@ Title: "JsonElementForBooleanFalseSchema.Equals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [Equals(object)](#bool-equals-object-obj) | Determines whether the specified object is equal to the current instance. |
-| [Equals(T)](#bool-equals-t-t-other) | Determines whether the specified JSON element is equal to the current instance. |
+| [Equals(object)](#equals-object) | Determines whether the specified object is equal to the current instance. |
+| [Equals(T)](#equals-t) | Determines whether the specified JSON element is equal to the current instance. |
 
-## Equals `virtual`
+## Equals(object) {#equals-object}
 
 ```csharp
 bool Equals(object obj)
@@ -38,7 +38,7 @@ Determines whether the specified object is equal to the current instance.
 
 ---
 
-## Equals
+## Equals(T) {#equals-t}
 
 ```csharp
 bool Equals<T>(T other)

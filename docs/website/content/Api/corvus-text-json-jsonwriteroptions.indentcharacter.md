@@ -9,7 +9,7 @@ Title: "JsonWriterOptions.IndentCharacter Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IndentCharacter
+## IndentCharacter {#indentcharacter}
 
 ```csharp
 char IndentCharacter { get; set; }

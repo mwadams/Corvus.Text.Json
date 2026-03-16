@@ -13,11 +13,11 @@ Title: "Utf8JsonReader.ValueTextEquals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [ValueTextEquals(ReadOnlySpan&lt;byte&gt;)](#bool-valuetextequals-readonlyspan-byte-utf8text) | Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match. |
-| [ValueTextEquals(string)](#bool-valuetextequals-string-text) | Compares the string text to the unescaped JSON token value in the source and returns true if they match. |
-| [ValueTextEquals(ReadOnlySpan&lt;char&gt;)](#bool-valuetextequals-readonlyspan-char-text) | Compares the text to the unescaped JSON token value in the source and returns true if they match. |
+| [ValueTextEquals(ReadOnlySpan&lt;byte&gt;)](#valuetextequals-readonlyspan-byte) | Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match. |
+| [ValueTextEquals(string)](#valuetextequals-string) | Compares the string text to the unescaped JSON token value in the source and returns true if they match. |
+| [ValueTextEquals(ReadOnlySpan&lt;char&gt;)](#valuetextequals-readonlyspan-char) | Compares the text to the unescaped JSON token value in the source and returns true if they match. |
 
-## ValueTextEquals
+## ValueTextEquals(ReadOnlySpan&lt;byte&gt;) {#valuetextequals-readonlyspan-byte}
 
 ```csharp
 bool ValueTextEquals(ReadOnlySpan<byte> utf8Text)
@@ -49,7 +49,7 @@ If the look up text is invalid UTF-8 text, the method will return false since yo
 
 ---
 
-## ValueTextEquals
+## ValueTextEquals(string) {#valuetextequals-string}
 
 ```csharp
 bool ValueTextEquals(string text)
@@ -81,7 +81,7 @@ If the look up text is invalid UTF-8 text, the method will return false since yo
 
 ---
 
-## ValueTextEquals
+## ValueTextEquals(ReadOnlySpan&lt;char&gt;) {#valuetextequals-readonlyspan-char}
 
 ```csharp
 bool ValueTextEquals(ReadOnlySpan<char> text)

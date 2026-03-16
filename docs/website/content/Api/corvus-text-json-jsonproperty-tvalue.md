@@ -28,9 +28,9 @@ Represents a single property for a JSON object.
 
 | Method | Description |
 |--------|-------------|
-| [NameEquals(string)](/api/corvus-text-json-jsonproperty-tvalue.nameequals.html#bool-nameequals-string-text) | Compares `text` to the name of this property. |
-| [NameEquals(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-jsonproperty-tvalue.nameequals.html#bool-nameequals-readonlyspan-byte-utf8text) | Compares the text represented by `utf8Text` to the name of this property. |
-| [NameEquals(ReadOnlySpan&lt;char&gt;)](/api/corvus-text-json-jsonproperty-tvalue.nameequals.html#bool-nameequals-readonlyspan-char-text) | Compares `text` to the name of this property. |
-| [ToString()](/api/corvus-text-json-jsonproperty-tvalue.tostring.html#string-tostring) | Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes. |
-| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsonproperty-tvalue.writeto.html#void-writeto-utf8jsonwriter-writer) | Write the property into the provided writer as a named JSON object property. |
+| [NameEquals(string)](/api/corvus-text-json-jsonproperty-tvalue.nameequals.html#nameequals-string) | Compares `text` to the name of this property. |
+| [NameEquals(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-jsonproperty-tvalue.nameequals.html#nameequals-readonlyspan-byte) | Compares the text represented by `utf8Text` to the name of this property. |
+| [NameEquals(ReadOnlySpan&lt;char&gt;)](/api/corvus-text-json-jsonproperty-tvalue.nameequals.html#nameequals-readonlyspan-char) | Compares `text` to the name of this property. |
+| [ToString()](/api/corvus-text-json-jsonproperty-tvalue.tostring.html#tostring) | Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes. |
+| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsonproperty-tvalue.writeto.html#writeto-utf8jsonwriter) | Write the property into the provided writer as a named JSON object property. |
 

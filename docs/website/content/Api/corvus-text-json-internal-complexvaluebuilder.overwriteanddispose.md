@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.OverwriteAndDispose Method — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## OverwriteAndDispose
+## OverwriteAndDispose {#overwriteanddispose}
 
 ```csharp
 void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref MetadataDb targetData)

@@ -16,13 +16,13 @@ public delegate ComplexValueBuilder.ValueBuilderAction<TContext> : MulticastDele
 
 | Constructor | Description |
 |-------------|-------------|
-| [ComplexValueBuilder.ValueBuilderAction(object, IntPtr)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.ctor.html#complexvaluebuilder-valuebuilderaction-object-object-intptr-method) |  |
+| [ComplexValueBuilder.ValueBuilderAction(object, IntPtr)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.ctor.html#complexvaluebuilder-valuebuilderaction-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(ref TContext, ref ComplexValueBuilder, AsyncCallback, object)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.begininvoke.html#iasyncresult-begininvoke-ref-tcontext-context-ref-complexvaluebuilder-builder-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref TContext, ref ComplexValueBuilder, IAsyncResult)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.endinvoke.html#void-endinvoke-ref-tcontext-context-ref-complexvaluebuilder-builder-iasyncresult-result) |  |
-| [Invoke(ref TContext, ref ComplexValueBuilder)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.invoke.html#void-invoke-ref-tcontext-context-ref-complexvaluebuilder-builder) |  |
+| [BeginInvoke(ref TContext, ref ComplexValueBuilder, AsyncCallback, object)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.begininvoke.html#begininvoke-ref-tcontext-ref-complexvaluebuilder-asynccallback-object) |  |
+| [EndInvoke(ref TContext, ref ComplexValueBuilder, IAsyncResult)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.endinvoke.html#endinvoke-ref-tcontext-ref-complexvaluebuilder-iasyncresult) |  |
+| [Invoke(ref TContext, ref ComplexValueBuilder)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.invoke.html#invoke-ref-tcontext-ref-complexvaluebuilder) |  |
 

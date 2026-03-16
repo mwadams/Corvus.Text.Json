@@ -9,7 +9,7 @@ Title: "JsonElement.Clone Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Clone
+## Clone {#clone}
 
 ```csharp
 JsonElement Clone()

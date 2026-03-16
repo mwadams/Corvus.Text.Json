@@ -13,14 +13,14 @@ Title: "IJsonDocument.TryGetNamedPropertyValue Method — Corvus.Text.Json.Inter
 
 | Method | Description |
 |--------|-------------|
-| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref JsonElement)](#bool-trygetnamedpropertyvalue-int-index-readonlyspan-char-propertyname-ref-jsonelement-value) | Tries to get the value of a named property as a JSON element. |
-| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement)](#bool-trygetnamedpropertyvalue-int-index-readonlyspan-byte-propertyname-ref-jsonelement-value) | Tries to get the value of a named property as a JSON element. |
-| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref TElement)](#bool-trygetnamedpropertyvalue-telement-int-index-readonlyspan-byte-propertyname-ref-telement-value) | Tries to get the value of a named property as a JSON element. |
-| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref TElement)](#bool-trygetnamedpropertyvalue-telement-int-index-readonlyspan-char-propertyname-ref-telement-value) | Tries to get the value of a named property as a JSON element. |
-| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref IJsonDocument, ref int)](#bool-trygetnamedpropertyvalue-int-index-readonlyspan-char-propertyname-ref-ijsondocument-elementparent-ref-int-elementindex) | Tries to get the value of a named property as a mutable JSON element. |
-| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref IJsonDocument, ref int)](#bool-trygetnamedpropertyvalue-int-index-readonlyspan-byte-propertyname-ref-ijsondocument-elementparent-ref-int-elementindex) | Tries to get the value of a named property as a mutable JSON element. |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref JsonElement)](#trygetnamedpropertyvalue-int-readonlyspan-char-ref-jsonelement) | Tries to get the value of a named property as a JSON element. |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement)](#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-jsonelement) | Tries to get the value of a named property as a JSON element. |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref TElement)](#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-telement) | Tries to get the value of a named property as a JSON element. |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref TElement)](#trygetnamedpropertyvalue-int-readonlyspan-char-ref-telement) | Tries to get the value of a named property as a JSON element. |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref IJsonDocument, ref int)](#trygetnamedpropertyvalue-int-readonlyspan-char-ref-ijsondocument-ref-int) | Tries to get the value of a named property as a mutable JSON element. |
+| [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref IJsonDocument, ref int)](#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-ijsondocument-ref-int) | Tries to get the value of a named property as a mutable JSON element. |
 
-## TryGetNamedPropertyValue `abstract`
+## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref JsonElement) {#trygetnamedpropertyvalue-int-readonlyspan-char-ref-jsonelement}
 
 ```csharp
 bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref JsonElement value)
@@ -44,7 +44,7 @@ Tries to get the value of a named property as a JSON element.
 
 ---
 
-## TryGetNamedPropertyValue `abstract`
+## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement) {#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-jsonelement}
 
 ```csharp
 bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, ref JsonElement value)
@@ -68,7 +68,7 @@ Tries to get the value of a named property as a JSON element.
 
 ---
 
-## TryGetNamedPropertyValue `abstract`
+## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref TElement) {#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-telement}
 
 ```csharp
 bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, ref TElement value)
@@ -98,7 +98,7 @@ Tries to get the value of a named property as a JSON element.
 
 ---
 
-## TryGetNamedPropertyValue `abstract`
+## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref TElement) {#trygetnamedpropertyvalue-int-readonlyspan-char-ref-telement}
 
 ```csharp
 bool TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, ref TElement value)
@@ -128,7 +128,7 @@ Tries to get the value of a named property as a JSON element.
 
 ---
 
-## TryGetNamedPropertyValue `abstract`
+## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref IJsonDocument, ref int) {#trygetnamedpropertyvalue-int-readonlyspan-char-ref-ijsondocument-ref-int}
 
 ```csharp
 bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref IJsonDocument elementParent, ref int elementIndex)
@@ -153,7 +153,7 @@ Tries to get the value of a named property as a mutable JSON element.
 
 ---
 
-## TryGetNamedPropertyValue `abstract`
+## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref IJsonDocument, ref int) {#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-ijsondocument-ref-int}
 
 ```csharp
 bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, ref IJsonDocument elementParent, ref int elementIndex)

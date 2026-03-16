@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.RemoveWhereUnsafe Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RemoveWhereUnsafe `static`
+## RemoveWhereUnsafe {#removewhereunsafe}
 
 ```csharp
 void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)

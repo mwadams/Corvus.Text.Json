@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.ParseDateCore Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParseDateCore `static`
+## ParseDateCore {#parsedatecore}
 
 ```csharp
 bool ParseDateCore(ReadOnlySpan<byte> text, ref int year, ref int month, ref int day)

@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.StringConstant Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## StringConstant `static`
+## StringConstant {#stringconstant}
 
 ```csharp
 T StringConstant(byte[] quotedUtf8String)

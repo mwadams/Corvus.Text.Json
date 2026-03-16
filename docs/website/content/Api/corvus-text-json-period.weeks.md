@@ -9,7 +9,7 @@ Title: "Period.Weeks Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Weeks
+## Weeks {#weeks}
 
 ```csharp
 int Weeks { get; }

@@ -9,7 +9,7 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T>.BeginInvoke Method â€
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginInvoke `virtual`
+## BeginInvoke {#begininvoke}
 
 ```csharp
 IAsyncResult BeginInvoke(AsyncCallback callback, object object)

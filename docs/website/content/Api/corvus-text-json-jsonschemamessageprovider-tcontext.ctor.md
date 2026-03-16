@@ -9,7 +9,7 @@ Title: "JsonSchemaMessageProvider<TContext> Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## JsonSchemaMessageProvider
+## JsonSchemaMessageProvider {#jsonschemamessageprovider}
 
 ```csharp
 JsonSchemaMessageProvider(object object, IntPtr method)

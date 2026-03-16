@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.StrongPort Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StrongPort `static`
+## StrongPort {#strongport}
 
 ```csharp
 Utf8UriComponents StrongPort

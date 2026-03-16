@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetArrayLength Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetArrayLength `abstract`
+## GetArrayLength {#getarraylength}
 
 ```csharp
 int GetArrayLength(int index)

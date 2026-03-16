@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.HasValueSequence Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasValueSequence
+## HasValueSequence {#hasvaluesequence}
 
 ```csharp
 bool HasValueSequence { get; set; }

@@ -9,7 +9,7 @@ Title: "ValidationLevel.Basic Field — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Basic `static`
+## Basic {#basic}
 
 ```csharp
 ValidationLevel Basic

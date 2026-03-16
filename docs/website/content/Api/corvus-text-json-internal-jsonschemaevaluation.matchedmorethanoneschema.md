@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchedMoreThanOneSchema Field — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchedMoreThanOneSchema `static`
+## MatchedMoreThanOneSchema {#matchedmorethanoneschema}
 
 ```csharp
 JsonSchemaMessageProvider MatchedMoreThanOneSchema

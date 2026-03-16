@@ -24,13 +24,13 @@ A predicate for a JSON value.
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonPredicate(object, IntPtr)](/api/corvus-text-json-jsonpredicate-t.ctor.html#jsonpredicate-object-object-intptr-method) |  |
+| [JsonPredicate(object, IntPtr)](/api/corvus-text-json-jsonpredicate-t.ctor.html#jsonpredicate-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(ref T, AsyncCallback, object)](/api/corvus-text-json-jsonpredicate-t.begininvoke.html#iasyncresult-begininvoke-ref-t-item-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref T, IAsyncResult)](/api/corvus-text-json-jsonpredicate-t.endinvoke.html#bool-endinvoke-ref-t-item-iasyncresult-result) |  |
-| [Invoke(ref T)](/api/corvus-text-json-jsonpredicate-t.invoke.html#bool-invoke-ref-t-item) |  |
+| [BeginInvoke(ref T, AsyncCallback, object)](/api/corvus-text-json-jsonpredicate-t.begininvoke.html#begininvoke-ref-t-asynccallback-object) |  |
+| [EndInvoke(ref T, IAsyncResult)](/api/corvus-text-json-jsonpredicate-t.endinvoke.html#endinvoke-ref-t-iasyncresult) |  |
+| [Invoke(ref T)](/api/corvus-text-json-jsonpredicate-t.invoke.html#invoke-ref-t) |  |
 

@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TokenStartIndex Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TokenStartIndex
+## TokenStartIndex {#tokenstartindex}
 
 ```csharp
 long TokenStartIndex { get; set; }

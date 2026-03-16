@@ -13,97 +13,97 @@ Title: "ComplexValueBuilder.AddProperty Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ComplexValueBuilder.ValueBuilderAction)](#void-addproperty-readonlyspan-byte-propertyname-complexvaluebuilder-valuebuilderaction-createcomplexvalue) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;)](#void-addproperty-tcontext-readonlyspan-byte-propertyname-ref-tcontext-context-complexvaluebuilder-valuebuilderaction-tcontext-createcomplexvalue) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ComplexValueBuilder.ValueBuilderAction, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-complexvaluebuilder-valuebuilderaction-createcomplexvalue-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;, bool, bool)](#void-addproperty-tcontext-readonlyspan-byte-propertyname-ref-tcontext-context-complexvaluebuilder-valuebuilderaction-tcontext-createcomplexvalue-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ComplexValueBuilder.ValueBuilderAction)](#void-addproperty-readonlyspan-char-propertyname-complexvaluebuilder-valuebuilderaction-createcomplexvalue) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;)](#void-addproperty-tcontext-readonlyspan-char-propertyname-ref-tcontext-context-complexvaluebuilder-valuebuilderaction-tcontext-createcomplexvalue) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;)](#void-addproperty-readonlyspan-byte-propertyname-readonlyspan-byte-utf8string) | Adds a property with a string value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-readonlyspan-byte-utf8string-bool-escapename-bool-escapevalue-bool-namerequiresunescaping-bool-valuerequiresunescaping) | Adds a property with a string value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-readonlyspan-char-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a string value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;)](#void-addproperty-readonlyspan-char-propertyname-readonlyspan-char-value) | Adds a property with a string value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addproperty-readonlyspan-char-propertyname-readonlyspan-byte-value-bool-escapevalue-bool-valuerequiresunescaping) | Adds a property with a string value to the current object, with control over escaping the value. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, bool)](#void-addproperty-readonlyspan-byte-propertyname-bool-value) | Adds a property with a boolean value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-bool-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a boolean value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, bool)](#void-addproperty-readonlyspan-char-propertyname-bool-value) | Adds a property with a boolean value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref T)](#void-addproperty-t-readonlyspan-byte-propertyname-ref-t-value) | Adds a property with a JSON element value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, T, bool, bool)](#void-addproperty-t-readonlyspan-byte-propertyname-t-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a JSON element value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, T)](#void-addproperty-t-readonlyspan-char-propertyname-t-value) | Adds a property with a JSON element value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Guid)](#void-addproperty-readonlyspan-byte-propertyname-guid-value) | Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Guid, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-guid-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, Guid)](#void-addproperty-readonlyspan-char-propertyname-guid-value) | Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime)](#void-addproperty-readonlyspan-byte-propertyname-ref-datetime-value) | Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-datetime-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTime)](#void-addproperty-readonlyspan-char-propertyname-ref-datetime-value) | Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset)](#void-addproperty-readonlyspan-byte-propertyname-ref-datetimeoffset-value) | Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-datetimeoffset-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTimeOffset)](#void-addproperty-readonlyspan-char-propertyname-ref-datetimeoffset-value) | Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsetdatetime-value) | Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsetdatetime-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDateTime)](#void-addproperty-readonlyspan-char-propertyname-ref-offsetdatetime-value) | Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsettime-value) | Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsettime-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetTime)](#void-addproperty-readonlyspan-char-propertyname-ref-offsettime-value) | Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsetdate-value) | Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsetdate-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDate)](#void-addproperty-readonlyspan-char-propertyname-ref-offsetdate-value) | Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate)](#void-addproperty-readonlyspan-byte-propertyname-ref-localdate-value) | Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-localdate-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref LocalDate)](#void-addproperty-readonlyspan-char-propertyname-ref-localdate-value) | Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period)](#void-addproperty-readonlyspan-byte-propertyname-ref-period-value) | Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-period-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref Period)](#void-addproperty-readonlyspan-char-propertyname-ref-period-value) | Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte)](#void-addproperty-readonlyspan-byte-propertyname-sbyte-value) | Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-sbyte-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, sbyte)](#void-addproperty-readonlyspan-char-propertyname-sbyte-value) | Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, byte)](#void-addproperty-readonlyspan-byte-propertyname-byte-value) | Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, byte, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-byte-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, byte)](#void-addproperty-readonlyspan-char-propertyname-byte-value) | Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, int)](#void-addproperty-readonlyspan-byte-propertyname-int-value) | Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, int, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-int-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, int)](#void-addproperty-readonlyspan-char-propertyname-int-value) | Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, uint)](#void-addproperty-readonlyspan-byte-propertyname-uint-value) | Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, uint, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-uint-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, uint)](#void-addproperty-readonlyspan-char-propertyname-uint-value) | Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, long)](#void-addproperty-readonlyspan-byte-propertyname-long-value) | Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, long, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-long-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, long)](#void-addproperty-readonlyspan-char-propertyname-long-value) | Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ulong)](#void-addproperty-readonlyspan-byte-propertyname-ulong-value) | Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ulong, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ulong-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ulong)](#void-addproperty-readonlyspan-char-propertyname-ulong-value) | Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, short)](#void-addproperty-readonlyspan-byte-propertyname-short-value) | Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, short, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-short-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, short)](#void-addproperty-readonlyspan-char-propertyname-short-value) | Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ushort)](#void-addproperty-readonlyspan-byte-propertyname-ushort-value) | Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ushort, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ushort-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ushort)](#void-addproperty-readonlyspan-char-propertyname-ushort-value) | Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, float)](#void-addproperty-readonlyspan-byte-propertyname-float-value) | Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, float, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-float-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, float)](#void-addproperty-readonlyspan-char-propertyname-float-value) | Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, double)](#void-addproperty-readonlyspan-byte-propertyname-double-value) | Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, double, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-double-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, double)](#void-addproperty-readonlyspan-char-propertyname-double-value) | Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, decimal)](#void-addproperty-readonlyspan-byte-propertyname-decimal-value) | Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, decimal, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-decimal-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, decimal)](#void-addproperty-readonlyspan-char-propertyname-decimal-value) | Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger)](#void-addproperty-readonlyspan-byte-propertyname-ref-biginteger-value) | Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-biginteger-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigInteger)](#void-addproperty-readonlyspan-char-propertyname-ref-biginteger-value) | Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber)](#void-addproperty-readonlyspan-byte-propertyname-ref-bignumber-value) | Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-bignumber-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigNumber)](#void-addproperty-readonlyspan-char-propertyname-ref-bignumber-value) | Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Int128)](#void-addproperty-readonlyspan-byte-propertyname-int128-value) | Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Int128, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-int128-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, Int128)](#void-addproperty-readonlyspan-char-propertyname-int128-value) | Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128)](#void-addproperty-readonlyspan-byte-propertyname-uint128-value) | Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-uint128-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, UInt128)](#void-addproperty-readonlyspan-char-propertyname-uint128-value) | Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Half)](#void-addproperty-readonlyspan-byte-propertyname-half-value) | Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value to the current object. |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Half, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-half-value-bool-escapename-bool-namerequiresunescaping) | Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value to the current object, with control over escaping. |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, Half)](#void-addproperty-readonlyspan-char-propertyname-half-value) | Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ComplexValueBuilder.ValueBuilderAction)](#addproperty-readonlyspan-byte-complexvaluebuilder-valuebuilderaction) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;)](#addproperty-readonlyspan-byte-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ComplexValueBuilder.ValueBuilderAction, bool, bool)](#addproperty-readonlyspan-byte-complexvaluebuilder-valuebuilderaction-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;, bool, bool)](#addproperty-readonlyspan-byte-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ComplexValueBuilder.ValueBuilderAction)](#addproperty-readonlyspan-char-complexvaluebuilder-valuebuilderaction) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;)](#addproperty-readonlyspan-char-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;)](#addproperty-readonlyspan-byte-readonlyspan-byte) | Adds a property with a string value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool, bool)](#addproperty-readonlyspan-byte-readonlyspan-byte-bool-bool-bool-bool) | Adds a property with a string value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;, bool, bool)](#addproperty-readonlyspan-byte-readonlyspan-char-bool-bool) | Adds a property with a string value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;)](#addproperty-readonlyspan-char-readonlyspan-char) | Adds a property with a string value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#addproperty-readonlyspan-char-readonlyspan-byte-bool-bool) | Adds a property with a string value to the current object, with control over escaping the value. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, bool)](#addproperty-readonlyspan-byte-bool) | Adds a property with a boolean value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#addproperty-readonlyspan-byte-bool-bool-bool) | Adds a property with a boolean value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, bool)](#addproperty-readonlyspan-char-bool) | Adds a property with a boolean value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref T)](#addproperty-readonlyspan-byte-ref-t) | Adds a property with a JSON element value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, T, bool, bool)](#addproperty-readonlyspan-byte-t-bool-bool) | Adds a property with a JSON element value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, T)](#addproperty-readonlyspan-char-t) | Adds a property with a JSON element value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Guid)](#addproperty-readonlyspan-byte-guid) | Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Guid, bool, bool)](#addproperty-readonlyspan-byte-guid-bool-bool) | Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, Guid)](#addproperty-readonlyspan-char-guid) | Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime)](#addproperty-readonlyspan-byte-ref-datetime) | Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime, bool, bool)](#addproperty-readonlyspan-byte-ref-datetime-bool-bool) | Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTime)](#addproperty-readonlyspan-char-ref-datetime) | Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset)](#addproperty-readonlyspan-byte-ref-datetimeoffset) | Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset, bool, bool)](#addproperty-readonlyspan-byte-ref-datetimeoffset-bool-bool) | Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTimeOffset)](#addproperty-readonlyspan-char-ref-datetimeoffset) | Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime)](#addproperty-readonlyspan-byte-ref-offsetdatetime) | Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime, bool, bool)](#addproperty-readonlyspan-byte-ref-offsetdatetime-bool-bool) | Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDateTime)](#addproperty-readonlyspan-char-ref-offsetdatetime) | Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime)](#addproperty-readonlyspan-byte-ref-offsettime) | Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime, bool, bool)](#addproperty-readonlyspan-byte-ref-offsettime-bool-bool) | Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetTime)](#addproperty-readonlyspan-char-ref-offsettime) | Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate)](#addproperty-readonlyspan-byte-ref-offsetdate) | Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate, bool, bool)](#addproperty-readonlyspan-byte-ref-offsetdate-bool-bool) | Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDate)](#addproperty-readonlyspan-char-ref-offsetdate) | Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate)](#addproperty-readonlyspan-byte-ref-localdate) | Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate, bool, bool)](#addproperty-readonlyspan-byte-ref-localdate-bool-bool) | Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref LocalDate)](#addproperty-readonlyspan-char-ref-localdate) | Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period)](#addproperty-readonlyspan-byte-ref-period) | Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period, bool, bool)](#addproperty-readonlyspan-byte-ref-period-bool-bool) | Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref Period)](#addproperty-readonlyspan-char-ref-period) | Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte)](#addproperty-readonlyspan-byte-sbyte) | Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte, bool, bool)](#addproperty-readonlyspan-byte-sbyte-bool-bool) | Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, sbyte)](#addproperty-readonlyspan-char-sbyte) | Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, byte)](#addproperty-readonlyspan-byte-byte) | Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, byte, bool, bool)](#addproperty-readonlyspan-byte-byte-bool-bool) | Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, byte)](#addproperty-readonlyspan-char-byte) | Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, int)](#addproperty-readonlyspan-byte-int) | Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, int, bool, bool)](#addproperty-readonlyspan-byte-int-bool-bool) | Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, int)](#addproperty-readonlyspan-char-int) | Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, uint)](#addproperty-readonlyspan-byte-uint) | Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, uint, bool, bool)](#addproperty-readonlyspan-byte-uint-bool-bool) | Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, uint)](#addproperty-readonlyspan-char-uint) | Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, long)](#addproperty-readonlyspan-byte-long) | Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, long, bool, bool)](#addproperty-readonlyspan-byte-long-bool-bool) | Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, long)](#addproperty-readonlyspan-char-long) | Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ulong)](#addproperty-readonlyspan-byte-ulong) | Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ulong, bool, bool)](#addproperty-readonlyspan-byte-ulong-bool-bool) | Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ulong)](#addproperty-readonlyspan-char-ulong) | Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, short)](#addproperty-readonlyspan-byte-short) | Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, short, bool, bool)](#addproperty-readonlyspan-byte-short-bool-bool) | Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, short)](#addproperty-readonlyspan-char-short) | Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ushort)](#addproperty-readonlyspan-byte-ushort) | Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ushort, bool, bool)](#addproperty-readonlyspan-byte-ushort-bool-bool) | Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ushort)](#addproperty-readonlyspan-char-ushort) | Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, float)](#addproperty-readonlyspan-byte-float) | Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, float, bool, bool)](#addproperty-readonlyspan-byte-float-bool-bool) | Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, float)](#addproperty-readonlyspan-char-float) | Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, double)](#addproperty-readonlyspan-byte-double) | Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, double, bool, bool)](#addproperty-readonlyspan-byte-double-bool-bool) | Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, double)](#addproperty-readonlyspan-char-double) | Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, decimal)](#addproperty-readonlyspan-byte-decimal) | Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, decimal, bool, bool)](#addproperty-readonlyspan-byte-decimal-bool-bool) | Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, decimal)](#addproperty-readonlyspan-char-decimal) | Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger)](#addproperty-readonlyspan-byte-ref-biginteger) | Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger, bool, bool)](#addproperty-readonlyspan-byte-ref-biginteger-bool-bool) | Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigInteger)](#addproperty-readonlyspan-char-ref-biginteger) | Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber)](#addproperty-readonlyspan-byte-ref-bignumber) | Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber, bool, bool)](#addproperty-readonlyspan-byte-ref-bignumber-bool-bool) | Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigNumber)](#addproperty-readonlyspan-char-ref-bignumber) | Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Int128)](#addproperty-readonlyspan-byte-int128) | Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Int128, bool, bool)](#addproperty-readonlyspan-byte-int128-bool-bool) | Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, Int128)](#addproperty-readonlyspan-char-int128) | Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128)](#addproperty-readonlyspan-byte-uint128) | Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128, bool, bool)](#addproperty-readonlyspan-byte-uint128-bool-bool) | Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, UInt128)](#addproperty-readonlyspan-char-uint128) | Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Half)](#addproperty-readonlyspan-byte-half) | Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value to the current object. |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Half, bool, bool)](#addproperty-readonlyspan-byte-half-bool-bool) | Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value to the current object, with control over escaping. |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, Half)](#addproperty-readonlyspan-char-half) | Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value to the current object. |
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ComplexValueBuilder.ValueBuilderAction) {#addproperty-readonlyspan-byte-complexvaluebuilder-valuebuilderaction}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ComplexValueBuilder.ValueBuilderAction createComplexValue)
@@ -118,7 +118,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ComplexValueBuilder.ValueBuild
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;) {#addproperty-readonlyspan-byte-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext}
 
 ```csharp
 void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context, ComplexValueBuilder.ValueBuilderAction<TContext> createComplexValue)
@@ -134,7 +134,7 @@ void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ComplexValueBuilder.ValueBuilderAction, bool, bool) {#addproperty-readonlyspan-byte-complexvaluebuilder-valuebuilderaction-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ComplexValueBuilder.ValueBuilderAction createComplexValue, bool escapeName, bool nameRequiresUnescaping)
@@ -151,7 +151,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ComplexValueBuilder.ValueBuild
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;, bool, bool) {#addproperty-readonlyspan-byte-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext-bool-bool}
 
 ```csharp
 void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context, ComplexValueBuilder.ValueBuilderAction<TContext> createComplexValue, bool escapeName, bool nameRequiresUnescaping)
@@ -169,7 +169,7 @@ void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ComplexValueBuilder.ValueBuilderAction) {#addproperty-readonlyspan-char-complexvaluebuilder-valuebuilderaction}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ComplexValueBuilder.ValueBuilderAction createComplexValue)
@@ -184,7 +184,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ComplexValueBuilder.ValueBuild
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref TContext, ComplexValueBuilder.ValueBuilderAction&lt;TContext&gt;) {#addproperty-readonlyspan-char-ref-tcontext-complexvaluebuilder-valuebuilderaction-tcontext}
 
 ```csharp
 void AddProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context, ComplexValueBuilder.ValueBuilderAction<TContext> createComplexValue)
@@ -200,7 +200,7 @@ void AddProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#addproperty-readonlyspan-byte-readonlyspan-byte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String)
@@ -217,7 +217,7 @@ Adds a property with a string value to the current object.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool, bool) {#addproperty-readonlyspan-byte-readonlyspan-byte-bool-bool-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName, bool escapeValue, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
@@ -238,7 +238,7 @@ Adds a property with a string value to the current object, with control over esc
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;, bool, bool) {#addproperty-readonlyspan-byte-readonlyspan-char-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool escapeName, bool nameRequiresUnescaping)
@@ -257,7 +257,7 @@ Adds a property with a string value to the current object, with control over esc
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;) {#addproperty-readonlyspan-char-readonlyspan-char}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
@@ -274,7 +274,7 @@ Adds a property with a string value to the current object.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addproperty-readonlyspan-char-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool escapeValue, bool valueRequiresUnescaping)
@@ -293,7 +293,7 @@ Adds a property with a string value to the current object, with control over esc
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, bool) {#addproperty-readonlyspan-byte-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, bool value)
@@ -310,7 +310,7 @@ Adds a property with a boolean value to the current object.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addproperty-readonlyspan-byte-bool-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName, bool nameRequiresUnescaping)
@@ -329,7 +329,7 @@ Adds a property with a boolean value to the current object, with control over es
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, bool) {#addproperty-readonlyspan-char-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, bool value)
@@ -346,7 +346,7 @@ Adds a property with a boolean value to the current object.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref T) {#addproperty-readonlyspan-byte-ref-t}
 
 ```csharp
 void AddProperty<T>(ReadOnlySpan<byte> propertyName, ref T value)
@@ -369,7 +369,7 @@ Adds a property with a JSON element value to the current object.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, T, bool, bool) {#addproperty-readonlyspan-byte-t-bool-bool}
 
 ```csharp
 void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName, bool nameRequiresUnescaping)
@@ -394,7 +394,7 @@ Adds a property with a JSON element value to the current object, with control ov
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, T) {#addproperty-readonlyspan-char-t}
 
 ```csharp
 void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
@@ -417,7 +417,7 @@ Adds a property with a JSON element value to the current object.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Guid) {#addproperty-readonlyspan-byte-guid}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Guid value)
@@ -434,7 +434,7 @@ Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.gu
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Guid, bool, bool) {#addproperty-readonlyspan-byte-guid-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName, bool nameRequiresUnescaping)
@@ -453,7 +453,7 @@ Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.gu
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, Guid) {#addproperty-readonlyspan-char-guid}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, Guid value)
@@ -470,7 +470,7 @@ Adds a property with a [`Guid`](https://learn.microsoft.com/dotnet/api/system.gu
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime) {#addproperty-readonlyspan-byte-ref-datetime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTime value)
@@ -487,7 +487,7 @@ Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/syste
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime, bool, bool) {#addproperty-readonlyspan-byte-ref-datetime-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -506,7 +506,7 @@ Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/syste
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTime) {#addproperty-readonlyspan-char-ref-datetime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref DateTime value)
@@ -523,7 +523,7 @@ Adds a property with a [`DateTime`](https://learn.microsoft.com/dotnet/api/syste
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset) {#addproperty-readonlyspan-byte-ref-datetimeoffset}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTimeOffset value)
@@ -540,7 +540,7 @@ Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset, bool, bool) {#addproperty-readonlyspan-byte-ref-datetimeoffset-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
@@ -559,7 +559,7 @@ Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTimeOffset) {#addproperty-readonlyspan-char-ref-datetimeoffset}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref DateTimeOffset value)
@@ -576,7 +576,7 @@ Adds a property with a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime) {#addproperty-readonlyspan-byte-ref-offsetdatetime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDateTime value)
@@ -593,7 +593,7 @@ Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/Nod
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime, bool, bool) {#addproperty-readonlyspan-byte-ref-offsetdatetime-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDateTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -612,7 +612,7 @@ Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/Nod
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDateTime) {#addproperty-readonlyspan-char-ref-offsetdatetime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetDateTime value)
@@ -629,7 +629,7 @@ Adds a property with a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/Nod
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime) {#addproperty-readonlyspan-byte-ref-offsettime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetTime value)
@@ -646,7 +646,7 @@ Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTim
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime, bool, bool) {#addproperty-readonlyspan-byte-ref-offsettime-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -665,7 +665,7 @@ Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTim
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetTime) {#addproperty-readonlyspan-char-ref-offsettime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetTime value)
@@ -682,7 +682,7 @@ Adds a property with a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTim
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate) {#addproperty-readonlyspan-byte-ref-offsetdate}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDate value)
@@ -699,7 +699,7 @@ Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTim
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate, bool, bool) {#addproperty-readonlyspan-byte-ref-offsetdate-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDate value, bool escapeName, bool nameRequiresUnescaping)
@@ -718,7 +718,7 @@ Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTim
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDate) {#addproperty-readonlyspan-char-ref-offsetdate}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetDate value)
@@ -735,7 +735,7 @@ Adds a property with a [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTim
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate) {#addproperty-readonlyspan-byte-ref-localdate}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref LocalDate value)
@@ -752,7 +752,7 @@ Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate, bool, bool) {#addproperty-readonlyspan-byte-ref-localdate-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref LocalDate value, bool escapeName, bool nameRequiresUnescaping)
@@ -771,7 +771,7 @@ Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref LocalDate) {#addproperty-readonlyspan-char-ref-localdate}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref LocalDate value)
@@ -788,7 +788,7 @@ Adds a property with a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period) {#addproperty-readonlyspan-byte-ref-period}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref Period value)
@@ -805,7 +805,7 @@ Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Pe
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period, bool, bool) {#addproperty-readonlyspan-byte-ref-period-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref Period value, bool escapeName, bool nameRequiresUnescaping)
@@ -824,7 +824,7 @@ Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Pe
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref Period) {#addproperty-readonlyspan-char-ref-period}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref Period value)
@@ -841,7 +841,7 @@ Adds a property with a [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Pe
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte) {#addproperty-readonlyspan-byte-sbyte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value)
@@ -858,7 +858,7 @@ Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte, bool, bool) {#addproperty-readonlyspan-byte-sbyte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName, bool nameRequiresUnescaping)
@@ -877,7 +877,7 @@ Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, sbyte) {#addproperty-readonlyspan-char-sbyte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, sbyte value)
@@ -894,7 +894,7 @@ Adds a property with an [`SByte`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, byte) {#addproperty-readonlyspan-byte-byte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, byte value)
@@ -911,7 +911,7 @@ Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.by
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, byte, bool, bool) {#addproperty-readonlyspan-byte-byte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName, bool nameRequiresUnescaping)
@@ -930,7 +930,7 @@ Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.by
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, byte) {#addproperty-readonlyspan-char-byte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, byte value)
@@ -947,7 +947,7 @@ Adds a property with a [`Byte`](https://learn.microsoft.com/dotnet/api/system.by
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, int) {#addproperty-readonlyspan-byte-int}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, int value)
@@ -964,7 +964,7 @@ Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, int, bool, bool) {#addproperty-readonlyspan-byte-int-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName, bool nameRequiresUnescaping)
@@ -983,7 +983,7 @@ Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, int) {#addproperty-readonlyspan-char-int}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, int value)
@@ -1000,7 +1000,7 @@ Adds a property with an [`Int32`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, uint) {#addproperty-readonlyspan-byte-uint}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, uint value)
@@ -1017,7 +1017,7 @@ Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, uint, bool, bool) {#addproperty-readonlyspan-byte-uint-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName, bool nameRequiresUnescaping)
@@ -1036,7 +1036,7 @@ Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, uint) {#addproperty-readonlyspan-char-uint}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, uint value)
@@ -1053,7 +1053,7 @@ Adds a property with a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, long) {#addproperty-readonlyspan-byte-long}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, long value)
@@ -1070,7 +1070,7 @@ Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.i
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, long, bool, bool) {#addproperty-readonlyspan-byte-long-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName, bool nameRequiresUnescaping)
@@ -1089,7 +1089,7 @@ Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.i
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, long) {#addproperty-readonlyspan-char-long}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, long value)
@@ -1106,7 +1106,7 @@ Adds a property with a [`Int64`](https://learn.microsoft.com/dotnet/api/system.i
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ulong) {#addproperty-readonlyspan-byte-ulong}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ulong value)
@@ -1123,7 +1123,7 @@ Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ulong, bool, bool) {#addproperty-readonlyspan-byte-ulong-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName, bool nameRequiresUnescaping)
@@ -1142,7 +1142,7 @@ Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ulong) {#addproperty-readonlyspan-char-ulong}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ulong value)
@@ -1159,7 +1159,7 @@ Adds a property with a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, short) {#addproperty-readonlyspan-byte-short}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, short value)
@@ -1176,7 +1176,7 @@ Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.i
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, short, bool, bool) {#addproperty-readonlyspan-byte-short-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName, bool nameRequiresUnescaping)
@@ -1195,7 +1195,7 @@ Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.i
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, short) {#addproperty-readonlyspan-char-short}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, short value)
@@ -1212,7 +1212,7 @@ Adds a property with a [`Int16`](https://learn.microsoft.com/dotnet/api/system.i
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ushort) {#addproperty-readonlyspan-byte-ushort}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ushort value)
@@ -1229,7 +1229,7 @@ Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ushort, bool, bool) {#addproperty-readonlyspan-byte-ushort-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName, bool nameRequiresUnescaping)
@@ -1248,7 +1248,7 @@ Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ushort) {#addproperty-readonlyspan-char-ushort}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ushort value)
@@ -1265,7 +1265,7 @@ Adds a property with a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, float) {#addproperty-readonlyspan-byte-float}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, float value)
@@ -1282,7 +1282,7 @@ Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, float, bool, bool) {#addproperty-readonlyspan-byte-float-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName, bool nameRequiresUnescaping)
@@ -1301,7 +1301,7 @@ Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, float) {#addproperty-readonlyspan-char-float}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, float value)
@@ -1318,7 +1318,7 @@ Adds a property with a [`Single`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, double) {#addproperty-readonlyspan-byte-double}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, double value)
@@ -1335,7 +1335,7 @@ Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, double, bool, bool) {#addproperty-readonlyspan-byte-double-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName, bool nameRequiresUnescaping)
@@ -1354,7 +1354,7 @@ Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, double) {#addproperty-readonlyspan-char-double}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, double value)
@@ -1371,7 +1371,7 @@ Adds a property with a [`Double`](https://learn.microsoft.com/dotnet/api/system.
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, decimal) {#addproperty-readonlyspan-byte-decimal}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, decimal value)
@@ -1388,7 +1388,7 @@ Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, decimal, bool, bool) {#addproperty-readonlyspan-byte-decimal-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName, bool nameRequiresUnescaping)
@@ -1407,7 +1407,7 @@ Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, decimal) {#addproperty-readonlyspan-char-decimal}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, decimal value)
@@ -1424,7 +1424,7 @@ Adds a property with a [`Decimal`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger) {#addproperty-readonlyspan-byte-ref-biginteger}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref BigInteger value)
@@ -1441,7 +1441,7 @@ Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/sys
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger, bool, bool) {#addproperty-readonlyspan-byte-ref-biginteger-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref BigInteger value, bool escapeName, bool nameRequiresUnescaping)
@@ -1460,7 +1460,7 @@ Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/sys
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref BigInteger) {#addproperty-readonlyspan-char-ref-biginteger}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref BigInteger value)
@@ -1477,7 +1477,7 @@ Adds a property with a [`BigInteger`](https://learn.microsoft.com/dotnet/api/sys
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber) {#addproperty-readonlyspan-byte-ref-bignumber}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref BigNumber value)
@@ -1494,7 +1494,7 @@ Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber, bool, bool) {#addproperty-readonlyspan-byte-ref-bignumber-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref BigNumber value, bool escapeName, bool nameRequiresUnescaping)
@@ -1513,7 +1513,7 @@ Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref BigNumber) {#addproperty-readonlyspan-char-ref-bignumber}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref BigNumber value)
@@ -1530,7 +1530,7 @@ Adds a property with a [`BigNumber`](/api/corvus-numerics-bignumber.html) value 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Int128) {#addproperty-readonlyspan-byte-int128}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value)
@@ -1547,7 +1547,7 @@ Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Int128, bool, bool) {#addproperty-readonlyspan-byte-int128-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName, bool nameRequiresUnescaping)
@@ -1566,7 +1566,7 @@ Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, Int128) {#addproperty-readonlyspan-char-int128}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, Int128 value)
@@ -1583,7 +1583,7 @@ Adds a property with an [`Int128`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128) {#addproperty-readonlyspan-byte-uint128}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value)
@@ -1600,7 +1600,7 @@ Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128, bool, bool) {#addproperty-readonlyspan-byte-uint128-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName, bool nameRequiresUnescaping)
@@ -1619,7 +1619,7 @@ Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, UInt128) {#addproperty-readonlyspan-char-uint128}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, UInt128 value)
@@ -1636,7 +1636,7 @@ Adds a property with a [`UInt128`](https://learn.microsoft.com/dotnet/api/system
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Half) {#addproperty-readonlyspan-byte-half}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Half value)
@@ -1653,7 +1653,7 @@ Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.ha
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Half, bool, bool) {#addproperty-readonlyspan-byte-half-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName, bool nameRequiresUnescaping)
@@ -1672,7 +1672,7 @@ Adds a property with a [`Half`](https://learn.microsoft.com/dotnet/api/system.ha
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, Half) {#addproperty-readonlyspan-char-half}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, Half value)

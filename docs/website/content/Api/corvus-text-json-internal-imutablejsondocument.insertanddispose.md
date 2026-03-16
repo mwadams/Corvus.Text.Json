@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.InsertAndDispose Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## InsertAndDispose `abstract`
+## InsertAndDispose {#insertanddispose}
 
 ```csharp
 void InsertAndDispose(int complexObjectStartIndex, int index, ref ComplexValueBuilder cvb)

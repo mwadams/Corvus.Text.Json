@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.Result.IsMatch Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsMatch
+## IsMatch {#ismatch}
 
 ```csharp
 bool IsMatch { get; }

@@ -13,10 +13,10 @@ Title: "Utf8JsonWriter.WriteStringValueSegment Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WriteStringValueSegment(ReadOnlySpan&lt;char&gt;, bool)](#void-writestringvaluesegment-readonlyspan-char-value-bool-isfinalsegment) | Writes the text value segment as a partial JSON string. |
-| [WriteStringValueSegment(ReadOnlySpan&lt;byte&gt;, bool)](#void-writestringvaluesegment-readonlyspan-byte-value-bool-isfinalsegment) | Writes the UTF-8 text value segment as a partial JSON string. |
+| [WriteStringValueSegment(ReadOnlySpan&lt;char&gt;, bool)](#writestringvaluesegment-readonlyspan-char-bool) | Writes the text value segment as a partial JSON string. |
+| [WriteStringValueSegment(ReadOnlySpan&lt;byte&gt;, bool)](#writestringvaluesegment-readonlyspan-byte-bool) | Writes the UTF-8 text value segment as a partial JSON string. |
 
-## WriteStringValueSegment
+## WriteStringValueSegment(ReadOnlySpan&lt;char&gt;, bool) {#writestringvaluesegment-readonlyspan-char-bool}
 
 ```csharp
 void WriteStringValueSegment(ReadOnlySpan<char> value, bool isFinalSegment)
@@ -44,7 +44,7 @@ The value is escaped before writing.
 
 ---
 
-## WriteStringValueSegment
+## WriteStringValueSegment(ReadOnlySpan&lt;byte&gt;, bool) {#writestringvaluesegment-readonlyspan-byte-bool}
 
 ```csharp
 void WriteStringValueSegment(ReadOnlySpan<byte> value, bool isFinalSegment)

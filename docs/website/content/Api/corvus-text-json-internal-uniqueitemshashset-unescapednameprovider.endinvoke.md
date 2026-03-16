@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.EndInvoke Method — Corvus.Tex
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndInvoke `virtual`
+## EndInvoke {#endinvoke}
 
 ```csharp
 ReadOnlySpan<byte> EndInvoke(IAsyncResult result)

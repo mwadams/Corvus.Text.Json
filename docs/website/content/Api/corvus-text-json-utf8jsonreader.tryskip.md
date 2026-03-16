@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TrySkip Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TrySkip
+## TrySkip {#tryskip}
 
 ```csharp
 bool TrySkip()

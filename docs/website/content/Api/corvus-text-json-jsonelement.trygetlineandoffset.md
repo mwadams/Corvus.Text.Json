@@ -13,10 +13,10 @@ Title: "JsonElement.TryGetLineAndOffset Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [TryGetLineAndOffset(ref int, ref int)](#bool-trygetlineandoffset-ref-int-line-ref-int-charoffset) | Tries to get the 1-based line number and character offset of this element in the original source document. |
-| [TryGetLineAndOffset(ref int, ref int, ref long)](#bool-trygetlineandoffset-ref-int-line-ref-int-charoffset-ref-long-linebyteoffset) | Tries to get the 1-based line number, character offset, and byte offset of this element in the original source document. |
+| [TryGetLineAndOffset(ref int, ref int)](#trygetlineandoffset-ref-int-ref-int) | Tries to get the 1-based line number and character offset of this element in the original source document. |
+| [TryGetLineAndOffset(ref int, ref int, ref long)](#trygetlineandoffset-ref-int-ref-int-ref-long) | Tries to get the 1-based line number, character offset, and byte offset of this element in the original source document. |
 
-## TryGetLineAndOffset
+## TryGetLineAndOffset(ref int, ref int) {#trygetlineandoffset-ref-int-ref-int}
 
 ```csharp
 bool TryGetLineAndOffset(ref int line, ref int charOffset)
@@ -43,7 +43,7 @@ This method returns `false` when the backing document does not retain the origin
 
 ---
 
-## TryGetLineAndOffset
+## TryGetLineAndOffset(ref int, ref int, ref long) {#trygetlineandoffset-ref-int-ref-int-ref-long}
 
 ```csharp
 bool TryGetLineAndOffset(ref int line, ref int charOffset, ref long lineByteOffset)

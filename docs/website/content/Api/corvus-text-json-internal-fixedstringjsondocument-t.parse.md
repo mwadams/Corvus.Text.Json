@@ -9,7 +9,7 @@ Title: "FixedStringJsonDocument<T>.Parse Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Parse `static`
+## Parse {#parse}
 
 ```csharp
 FixedStringJsonDocument<T> Parse(ReadOnlyMemory<byte> rawJsonStringValue, bool requiresUnescaping)

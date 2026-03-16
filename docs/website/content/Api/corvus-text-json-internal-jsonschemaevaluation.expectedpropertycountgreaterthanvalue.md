@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountGreaterThanValue Method — Co
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedPropertyCountGreaterThanValue `static`
+## ExpectedPropertyCountGreaterThanValue {#expectedpropertycountgreaterthanvalue}
 
 ```csharp
 bool ExpectedPropertyCountGreaterThanValue(int value, Span<byte> buffer, ref int written)

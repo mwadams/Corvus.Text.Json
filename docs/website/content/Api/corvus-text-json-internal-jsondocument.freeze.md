@@ -9,7 +9,7 @@ Title: "JsonDocument.Freeze Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Freeze
+## Freeze {#freeze}
 
 ```csharp
 void Freeze()

@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.TryGetUInt32 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetUInt32
+## TryGetUInt32 {#trygetuint32}
 
 ```csharp
 bool TryGetUInt32(ref uint value)

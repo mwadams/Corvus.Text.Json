@@ -9,7 +9,7 @@ Title: "Utf8IriReference.HasPort Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasPort
+## HasPort {#hasport}
 
 ```csharp
 bool HasPort { get; }

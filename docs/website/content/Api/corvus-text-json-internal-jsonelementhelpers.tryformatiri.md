@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.TryFormatIri Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [TryFormatIri(Utf8Iri, bool, ref string)](#bool-tryformatiri-utf8iri-iri-bool-isdisplay-ref-string-result) |  |
-| [TryFormatIri(Utf8Iri, bool, Span&lt;char&gt;, ref int)](#bool-tryformatiri-utf8iri-iri-bool-isdisplay-span-char-destination-ref-int-charswritten) |  |
+| [TryFormatIri(Utf8Iri, bool, ref string)](#tryformatiri-utf8iri-bool-ref-string) |  |
+| [TryFormatIri(Utf8Iri, bool, Span&lt;char&gt;, ref int)](#tryformatiri-utf8iri-bool-span-char-ref-int) |  |
 
-## TryFormatIri `static`
+## TryFormatIri(Utf8Iri, bool, ref string) {#tryformatiri-utf8iri-bool-ref-string}
 
 ```csharp
 bool TryFormatIri(Utf8Iri iri, bool isDisplay, ref string result)
@@ -36,7 +36,7 @@ bool TryFormatIri(Utf8Iri iri, bool isDisplay, ref string result)
 
 ---
 
-## TryFormatIri `static`
+## TryFormatIri(Utf8Iri, bool, Span&lt;char&gt;, ref int) {#tryformatiri-utf8iri-bool-span-char-ref-int}
 
 ```csharp
 bool TryFormatIri(Utf8Iri iri, bool isDisplay, Span<char> destination, ref int charsWritten)

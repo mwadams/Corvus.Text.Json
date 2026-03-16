@@ -13,12 +13,12 @@ Title: "Utf8JsonWriter.WritePropertyName Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WritePropertyName(JsonEncodedText)](#void-writepropertyname-jsonencodedtext-propertyname) | Writes the pre-encoded property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
-| [WritePropertyName(string)](#void-writepropertyname-string-propertyname) | Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
-| [WritePropertyName(ReadOnlySpan&lt;char&gt;)](#void-writepropertyname-readonlyspan-char-propertyname) | Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
-| [WritePropertyName(ReadOnlySpan&lt;byte&gt;)](#void-writepropertyname-readonlyspan-byte-utf8propertyname) | Writes the UTF-8 property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
+| [WritePropertyName(JsonEncodedText)](#writepropertyname-jsonencodedtext) | Writes the pre-encoded property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
+| [WritePropertyName(string)](#writepropertyname-string) | Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
+| [WritePropertyName(ReadOnlySpan&lt;char&gt;)](#writepropertyname-readonlyspan-char) | Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
+| [WritePropertyName(ReadOnlySpan&lt;byte&gt;)](#writepropertyname-readonlyspan-byte) | Writes the UTF-8 property name (as a JSON string) as the first part of a name/value pair of a JSON object. |
 
-## WritePropertyName
+## WritePropertyName(JsonEncodedText) {#writepropertyname-jsonencodedtext}
 
 ```csharp
 void WritePropertyName(JsonEncodedText propertyName)
@@ -40,7 +40,7 @@ Writes the pre-encoded property name (as a JSON string) as the first part of a n
 
 ---
 
-## WritePropertyName
+## WritePropertyName(string) {#writepropertyname-string}
 
 ```csharp
 void WritePropertyName(string propertyName)
@@ -68,7 +68,7 @@ The property name is escaped before writing.
 
 ---
 
-## WritePropertyName
+## WritePropertyName(ReadOnlySpan&lt;char&gt;) {#writepropertyname-readonlyspan-char}
 
 ```csharp
 void WritePropertyName(ReadOnlySpan<char> propertyName)
@@ -95,7 +95,7 @@ The property name is escaped before writing.
 
 ---
 
-## WritePropertyName
+## WritePropertyName(ReadOnlySpan&lt;byte&gt;) {#writepropertyname-readonlyspan-byte}
 
 ```csharp
 void WritePropertyName(ReadOnlySpan<byte> utf8PropertyName)

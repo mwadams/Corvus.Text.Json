@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction<TContext>.Invoke Method — Corvu
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 void Invoke(ref TContext context, ref ComplexValueBuilder builder)

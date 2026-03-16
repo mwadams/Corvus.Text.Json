@@ -14,7 +14,7 @@ Provides an enumerator and enumerable for iterating over the elements of a JSON 
 
 | Constructor | Description |
 |-------------|-------------|
-| [ArrayEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-arrayenumerator.ctor.html#arrayenumerator-ijsondocument-targetdocument-int-initialindex) | Initializes a new instance of the [`ArrayEnumerator`](/api/corvus-text-json-internal-arrayenumerator.html) struct. |
+| [ArrayEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-arrayenumerator.ctor.html#arrayenumerator-ijsondocument-int) | Initializes a new instance of the [`ArrayEnumerator`](/api/corvus-text-json-internal-arrayenumerator.html) struct. |
 
 ## Properties
 
@@ -26,7 +26,7 @@ Provides an enumerator and enumerable for iterating over the elements of a JSON 
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-internal-arrayenumerator.dispose.html#void-dispose) | Releases resources used by the enumerator. |
-| [MoveNext()](/api/corvus-text-json-internal-arrayenumerator.movenext.html#bool-movenext) | Advances the enumerator to the next element of the collection. |
-| [Reset()](/api/corvus-text-json-internal-arrayenumerator.reset.html#void-reset) | Sets the enumerator to its initial position, which is before the first element in the collection. |
+| [Dispose()](/api/corvus-text-json-internal-arrayenumerator.dispose.html#dispose) | Releases resources used by the enumerator. |
+| [MoveNext()](/api/corvus-text-json-internal-arrayenumerator.movenext.html#movenext) | Advances the enumerator to the next element of the collection. |
+| [Reset()](/api/corvus-text-json-internal-arrayenumerator.reset.html#reset) | Sets the enumerator to its initial position, which is before the first element in the collection. |
 

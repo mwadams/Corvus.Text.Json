@@ -16,13 +16,13 @@ public delegate UniqueItemsHashSet.UnescapedNameProvider : MulticastDelegate, IC
 
 | Constructor | Description |
 |-------------|-------------|
-| [UniqueItemsHashSet.UnescapedNameProvider(object, IntPtr)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.ctor.html#uniqueitemshashset-unescapednameprovider-object-object-intptr-method) |  |
+| [UniqueItemsHashSet.UnescapedNameProvider(object, IntPtr)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.ctor.html#uniqueitemshashset-unescapednameprovider-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(AsyncCallback, object)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.begininvoke.html#iasyncresult-begininvoke-asynccallback-callback-object-object) |  |
-| [EndInvoke(IAsyncResult)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.endinvoke.html#readonlyspan-byte-endinvoke-iasyncresult-result) |  |
-| [Invoke()](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.invoke.html#readonlyspan-byte-invoke) |  |
+| [BeginInvoke(AsyncCallback, object)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.begininvoke.html#begininvoke-asynccallback-object) |  |
+| [EndInvoke(IAsyncResult)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.endinvoke.html#endinvoke-iasyncresult) |  |
+| [Invoke()](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.invoke.html#invoke) |  |
 

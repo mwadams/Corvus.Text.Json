@@ -13,73 +13,73 @@ Title: "JsonElement.ObjectBuilder.AddProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ObjectBuilder.Build, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-jsonelement-objectbuilder-build-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, bool, bool)](#void-addproperty-tcontext-readonlyspan-byte-propertyname-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ArrayBuilder.Build, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-jsonelement-arraybuilder-build-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, bool, bool)](#void-addproperty-tcontext-readonlyspan-byte-propertyname-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-readonlyspan-byte-utf8string-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(string, string)](#void-addproperty-string-propertyname-string-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;)](#void-addproperty-readonlyspan-char-propertyname-readonlyspan-char-value) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-bool-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, T, bool, bool)](#void-addproperty-t-readonlyspan-byte-propertyname-t-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, string, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-string-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-readonlyspan-char-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Guid, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-guid-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-datetime-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-datetimeoffset-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsetdatetime-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsetdate-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-offsettime-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-localdate-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-period-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-sbyte-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, byte, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-byte-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, int, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-int-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, uint, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-uint-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, long, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-long-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ulong, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ulong-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, short, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-short-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ushort, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ushort-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, float, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-float-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, double, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-double-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, decimal, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-decimal-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-biginteger-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-ref-bignumber-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ObjectBuilder.Build)](#void-addproperty-readonlyspan-char-propertyname-jsonelement-objectbuilder-build-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ArrayBuilder.Build)](#void-addproperty-readonlyspan-char-propertyname-jsonelement-arraybuilder-build-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](#void-addproperty-tcontext-readonlyspan-char-propertyname-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addproperty-readonlyspan-char-propertyname-readonlyspan-byte-utf8string-bool-escapevalue-bool-valuerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, bool)](#void-addproperty-readonlyspan-char-propertyname-bool-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, T)](#void-addproperty-t-readonlyspan-char-propertyname-t-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, Guid)](#void-addproperty-readonlyspan-char-propertyname-guid-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTime)](#void-addproperty-readonlyspan-char-propertyname-ref-datetime-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTimeOffset)](#void-addproperty-readonlyspan-char-propertyname-ref-datetimeoffset-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDateTime)](#void-addproperty-readonlyspan-char-propertyname-ref-offsetdatetime-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDate)](#void-addproperty-readonlyspan-char-propertyname-ref-offsetdate-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetTime)](#void-addproperty-readonlyspan-char-propertyname-ref-offsettime-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref LocalDate)](#void-addproperty-readonlyspan-char-propertyname-ref-localdate-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref Period)](#void-addproperty-readonlyspan-char-propertyname-ref-period-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, sbyte)](#void-addproperty-readonlyspan-char-propertyname-sbyte-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, byte)](#void-addproperty-readonlyspan-char-propertyname-byte-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, int)](#void-addproperty-readonlyspan-char-propertyname-int-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, uint)](#void-addproperty-readonlyspan-char-propertyname-uint-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, long)](#void-addproperty-readonlyspan-char-propertyname-long-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ulong)](#void-addproperty-readonlyspan-char-propertyname-ulong-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, short)](#void-addproperty-readonlyspan-char-propertyname-short-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ushort)](#void-addproperty-readonlyspan-char-propertyname-ushort-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, float)](#void-addproperty-readonlyspan-char-propertyname-float-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, double)](#void-addproperty-readonlyspan-char-propertyname-double-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, decimal)](#void-addproperty-readonlyspan-char-propertyname-decimal-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigInteger)](#void-addproperty-readonlyspan-char-propertyname-ref-biginteger-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigNumber)](#void-addproperty-readonlyspan-char-propertyname-ref-bignumber-value) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Int128, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-int128-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-uint128-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;byte&gt;, Half, bool, bool)](#void-addproperty-readonlyspan-byte-propertyname-half-value-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, Int128)](#void-addproperty-readonlyspan-char-propertyname-int128-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, UInt128)](#void-addproperty-readonlyspan-char-propertyname-uint128-value) |  |
-| [AddProperty(ReadOnlySpan&lt;char&gt;, Half)](#void-addproperty-readonlyspan-char-propertyname-half-value) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ObjectBuilder.Build, bool, bool)](#addproperty-readonlyspan-byte-jsonelement-objectbuilder-build-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, bool, bool)](#addproperty-readonlyspan-byte-ref-tcontext-jsonelement-objectbuilder-build-tcontext-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ArrayBuilder.Build, bool, bool)](#addproperty-readonlyspan-byte-jsonelement-arraybuilder-build-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, bool, bool)](#addproperty-readonlyspan-byte-ref-tcontext-jsonelement-arraybuilder-build-tcontext-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#addproperty-readonlyspan-byte-readonlyspan-byte-bool-bool) |  |
+| [AddProperty(string, string)](#addproperty-string-string) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;)](#addproperty-readonlyspan-char-readonlyspan-char) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#addproperty-readonlyspan-byte-bool-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, T, bool, bool)](#addproperty-readonlyspan-byte-t-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, string, bool, bool)](#addproperty-readonlyspan-byte-string-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;, bool, bool)](#addproperty-readonlyspan-byte-readonlyspan-char-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Guid, bool, bool)](#addproperty-readonlyspan-byte-guid-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime, bool, bool)](#addproperty-readonlyspan-byte-ref-datetime-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset, bool, bool)](#addproperty-readonlyspan-byte-ref-datetimeoffset-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime, bool, bool)](#addproperty-readonlyspan-byte-ref-offsetdatetime-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate, bool, bool)](#addproperty-readonlyspan-byte-ref-offsetdate-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime, bool, bool)](#addproperty-readonlyspan-byte-ref-offsettime-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate, bool, bool)](#addproperty-readonlyspan-byte-ref-localdate-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period, bool, bool)](#addproperty-readonlyspan-byte-ref-period-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte, bool, bool)](#addproperty-readonlyspan-byte-sbyte-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, byte, bool, bool)](#addproperty-readonlyspan-byte-byte-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, int, bool, bool)](#addproperty-readonlyspan-byte-int-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, uint, bool, bool)](#addproperty-readonlyspan-byte-uint-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, long, bool, bool)](#addproperty-readonlyspan-byte-long-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ulong, bool, bool)](#addproperty-readonlyspan-byte-ulong-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, short, bool, bool)](#addproperty-readonlyspan-byte-short-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ushort, bool, bool)](#addproperty-readonlyspan-byte-ushort-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, float, bool, bool)](#addproperty-readonlyspan-byte-float-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, double, bool, bool)](#addproperty-readonlyspan-byte-double-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, decimal, bool, bool)](#addproperty-readonlyspan-byte-decimal-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger, bool, bool)](#addproperty-readonlyspan-byte-ref-biginteger-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber, bool, bool)](#addproperty-readonlyspan-byte-ref-bignumber-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ObjectBuilder.Build)](#addproperty-readonlyspan-char-jsonelement-objectbuilder-build) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ArrayBuilder.Build)](#addproperty-readonlyspan-char-jsonelement-arraybuilder-build) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](#addproperty-readonlyspan-char-ref-tcontext-jsonelement-arraybuilder-build-tcontext) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#addproperty-readonlyspan-char-readonlyspan-byte-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, bool)](#addproperty-readonlyspan-char-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, T)](#addproperty-readonlyspan-char-t) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, Guid)](#addproperty-readonlyspan-char-guid) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTime)](#addproperty-readonlyspan-char-ref-datetime) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTimeOffset)](#addproperty-readonlyspan-char-ref-datetimeoffset) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDateTime)](#addproperty-readonlyspan-char-ref-offsetdatetime) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDate)](#addproperty-readonlyspan-char-ref-offsetdate) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetTime)](#addproperty-readonlyspan-char-ref-offsettime) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref LocalDate)](#addproperty-readonlyspan-char-ref-localdate) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref Period)](#addproperty-readonlyspan-char-ref-period) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, sbyte)](#addproperty-readonlyspan-char-sbyte) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, byte)](#addproperty-readonlyspan-char-byte) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, int)](#addproperty-readonlyspan-char-int) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, uint)](#addproperty-readonlyspan-char-uint) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, long)](#addproperty-readonlyspan-char-long) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ulong)](#addproperty-readonlyspan-char-ulong) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, short)](#addproperty-readonlyspan-char-short) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ushort)](#addproperty-readonlyspan-char-ushort) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, float)](#addproperty-readonlyspan-char-float) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, double)](#addproperty-readonlyspan-char-double) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, decimal)](#addproperty-readonlyspan-char-decimal) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigInteger)](#addproperty-readonlyspan-char-ref-biginteger) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, ref BigNumber)](#addproperty-readonlyspan-char-ref-bignumber) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Int128, bool, bool)](#addproperty-readonlyspan-byte-int128-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128, bool, bool)](#addproperty-readonlyspan-byte-uint128-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;byte&gt;, Half, bool, bool)](#addproperty-readonlyspan-byte-half-bool-bool) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, Int128)](#addproperty-readonlyspan-char-int128) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, UInt128)](#addproperty-readonlyspan-char-uint128) |  |
+| [AddProperty(ReadOnlySpan&lt;char&gt;, Half)](#addproperty-readonlyspan-char-half) |  |
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ObjectBuilder.Build, bool, bool) {#addproperty-readonlyspan-byte-jsonelement-objectbuilder-build-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, JsonElement.ObjectBuilder.Build value, bool escapeName, bool nameRequiresUnescaping)
@@ -96,7 +96,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, JsonElement.ObjectBuilder.Buil
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, bool, bool) {#addproperty-readonlyspan-byte-ref-tcontext-jsonelement-objectbuilder-build-tcontext-bool-bool}
 
 ```csharp
 void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value, bool escapeName, bool nameRequiresUnescaping)
@@ -114,7 +114,7 @@ void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, JsonElement.ArrayBuilder.Build, bool, bool) {#addproperty-readonlyspan-byte-jsonelement-arraybuilder-build-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, JsonElement.ArrayBuilder.Build value, bool escapeName, bool nameRequiresUnescaping)
@@ -131,7 +131,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, JsonElement.ArrayBuilder.Build
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, bool, bool) {#addproperty-readonlyspan-byte-ref-tcontext-jsonelement-arraybuilder-build-tcontext-bool-bool}
 
 ```csharp
 void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value, bool escapeName, bool nameRequiresUnescaping)
@@ -149,7 +149,7 @@ void AddProperty<TContext>(ReadOnlySpan<byte> propertyName, ref TContext context
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addproperty-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String, bool escapeName, bool nameRequiresUnescaping)
@@ -166,7 +166,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> utf8String,
 
 ---
 
-## AddProperty
+## AddProperty(string, string) {#addproperty-string-string}
 
 ```csharp
 void AddProperty(string propertyName, string value)
@@ -181,7 +181,7 @@ void AddProperty(string propertyName, string value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;) {#addproperty-readonlyspan-char-readonlyspan-char}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
@@ -196,7 +196,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addproperty-readonlyspan-byte-bool-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName, bool nameRequiresUnescaping)
@@ -213,7 +213,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, bool value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, T, bool, bool) {#addproperty-readonlyspan-byte-t-bool-bool}
 
 ```csharp
 void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName, bool nameRequiresUnescaping)
@@ -230,7 +230,7 @@ void AddProperty<T>(ReadOnlySpan<byte> propertyName, T value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, string, bool, bool) {#addproperty-readonlyspan-byte-string-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, string value, bool escapeName, bool nameRequiresUnescaping)
@@ -247,7 +247,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, string value, bool escapeName,
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;, bool, bool) {#addproperty-readonlyspan-byte-readonlyspan-char-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool escapeName, bool nameRequiresUnescaping)
@@ -264,7 +264,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ReadOnlySpan<char> value, bool
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Guid, bool, bool) {#addproperty-readonlyspan-byte-guid-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName, bool nameRequiresUnescaping)
@@ -281,7 +281,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, Guid value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTime, bool, bool) {#addproperty-readonlyspan-byte-ref-datetime-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -298,7 +298,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTime value, bool escap
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref DateTimeOffset, bool, bool) {#addproperty-readonlyspan-byte-ref-datetimeoffset-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTimeOffset value, bool escapeName, bool nameRequiresUnescaping)
@@ -315,7 +315,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref DateTimeOffset value, bool
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDateTime, bool, bool) {#addproperty-readonlyspan-byte-ref-offsetdatetime-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDateTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -332,7 +332,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDateTime value, bool
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetDate, bool, bool) {#addproperty-readonlyspan-byte-ref-offsetdate-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDate value, bool escapeName, bool nameRequiresUnescaping)
@@ -349,7 +349,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetDate value, bool esc
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref OffsetTime, bool, bool) {#addproperty-readonlyspan-byte-ref-offsettime-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetTime value, bool escapeName, bool nameRequiresUnescaping)
@@ -366,7 +366,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref OffsetTime value, bool esc
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref LocalDate, bool, bool) {#addproperty-readonlyspan-byte-ref-localdate-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref LocalDate value, bool escapeName, bool nameRequiresUnescaping)
@@ -383,7 +383,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref LocalDate value, bool esca
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref Period, bool, bool) {#addproperty-readonlyspan-byte-ref-period-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref Period value, bool escapeName, bool nameRequiresUnescaping)
@@ -400,7 +400,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref Period value, bool escapeN
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, sbyte, bool, bool) {#addproperty-readonlyspan-byte-sbyte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName, bool nameRequiresUnescaping)
@@ -417,7 +417,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, sbyte value, bool escapeName, 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, byte, bool, bool) {#addproperty-readonlyspan-byte-byte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName, bool nameRequiresUnescaping)
@@ -434,7 +434,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, byte value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, int, bool, bool) {#addproperty-readonlyspan-byte-int-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName, bool nameRequiresUnescaping)
@@ -451,7 +451,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, int value, bool escapeName, bo
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, uint, bool, bool) {#addproperty-readonlyspan-byte-uint-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName, bool nameRequiresUnescaping)
@@ -468,7 +468,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, uint value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, long, bool, bool) {#addproperty-readonlyspan-byte-long-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName, bool nameRequiresUnescaping)
@@ -485,7 +485,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, long value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ulong, bool, bool) {#addproperty-readonlyspan-byte-ulong-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName, bool nameRequiresUnescaping)
@@ -502,7 +502,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ulong value, bool escapeName, 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, short, bool, bool) {#addproperty-readonlyspan-byte-short-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName, bool nameRequiresUnescaping)
@@ -519,7 +519,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, short value, bool escapeName, 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ushort, bool, bool) {#addproperty-readonlyspan-byte-ushort-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName, bool nameRequiresUnescaping)
@@ -536,7 +536,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ushort value, bool escapeName,
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, float, bool, bool) {#addproperty-readonlyspan-byte-float-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName, bool nameRequiresUnescaping)
@@ -553,7 +553,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, float value, bool escapeName, 
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, double, bool, bool) {#addproperty-readonlyspan-byte-double-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName, bool nameRequiresUnescaping)
@@ -570,7 +570,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, double value, bool escapeName,
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, decimal, bool, bool) {#addproperty-readonlyspan-byte-decimal-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName, bool nameRequiresUnescaping)
@@ -587,7 +587,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, decimal value, bool escapeName
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigInteger, bool, bool) {#addproperty-readonlyspan-byte-ref-biginteger-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref BigInteger value, bool escapeName, bool nameRequiresUnescaping)
@@ -604,7 +604,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref BigInteger value, bool esc
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, ref BigNumber, bool, bool) {#addproperty-readonlyspan-byte-ref-bignumber-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, ref BigNumber value, bool escapeName, bool nameRequiresUnescaping)
@@ -621,7 +621,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, ref BigNumber value, bool esca
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ObjectBuilder.Build) {#addproperty-readonlyspan-char-jsonelement-objectbuilder-build}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, JsonElement.ObjectBuilder.Build value)
@@ -636,7 +636,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, JsonElement.ObjectBuilder.Buil
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, JsonElement.ArrayBuilder.Build) {#addproperty-readonlyspan-char-jsonelement-arraybuilder-build}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, JsonElement.ArrayBuilder.Build value)
@@ -651,7 +651,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, JsonElement.ArrayBuilder.Build
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;) {#addproperty-readonlyspan-char-ref-tcontext-jsonelement-arraybuilder-build-tcontext}
 
 ```csharp
 void AddProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
@@ -667,7 +667,7 @@ void AddProperty<TContext>(ReadOnlySpan<char> propertyName, ref TContext context
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addproperty-readonlyspan-char-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8String, bool escapeValue, bool valueRequiresUnescaping)
@@ -684,7 +684,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8String,
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, bool) {#addproperty-readonlyspan-char-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, bool value)
@@ -699,7 +699,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, bool value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, T) {#addproperty-readonlyspan-char-t}
 
 ```csharp
 void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
@@ -714,7 +714,7 @@ void AddProperty<T>(ReadOnlySpan<char> propertyName, T value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, Guid) {#addproperty-readonlyspan-char-guid}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, Guid value)
@@ -729,7 +729,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, Guid value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTime) {#addproperty-readonlyspan-char-ref-datetime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref DateTime value)
@@ -744,7 +744,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref DateTime value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref DateTimeOffset) {#addproperty-readonlyspan-char-ref-datetimeoffset}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref DateTimeOffset value)
@@ -759,7 +759,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref DateTimeOffset value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDateTime) {#addproperty-readonlyspan-char-ref-offsetdatetime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetDateTime value)
@@ -774,7 +774,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetDateTime value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetDate) {#addproperty-readonlyspan-char-ref-offsetdate}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetDate value)
@@ -789,7 +789,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetDate value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref OffsetTime) {#addproperty-readonlyspan-char-ref-offsettime}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetTime value)
@@ -804,7 +804,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref OffsetTime value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref LocalDate) {#addproperty-readonlyspan-char-ref-localdate}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref LocalDate value)
@@ -819,7 +819,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref LocalDate value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref Period) {#addproperty-readonlyspan-char-ref-period}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref Period value)
@@ -834,7 +834,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref Period value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, sbyte) {#addproperty-readonlyspan-char-sbyte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, sbyte value)
@@ -849,7 +849,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, sbyte value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, byte) {#addproperty-readonlyspan-char-byte}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, byte value)
@@ -864,7 +864,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, byte value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, int) {#addproperty-readonlyspan-char-int}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, int value)
@@ -879,7 +879,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, int value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, uint) {#addproperty-readonlyspan-char-uint}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, uint value)
@@ -894,7 +894,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, uint value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, long) {#addproperty-readonlyspan-char-long}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, long value)
@@ -909,7 +909,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, long value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ulong) {#addproperty-readonlyspan-char-ulong}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ulong value)
@@ -924,7 +924,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ulong value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, short) {#addproperty-readonlyspan-char-short}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, short value)
@@ -939,7 +939,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, short value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ushort) {#addproperty-readonlyspan-char-ushort}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ushort value)
@@ -954,7 +954,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ushort value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, float) {#addproperty-readonlyspan-char-float}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, float value)
@@ -969,7 +969,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, float value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, double) {#addproperty-readonlyspan-char-double}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, double value)
@@ -984,7 +984,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, double value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, decimal) {#addproperty-readonlyspan-char-decimal}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, decimal value)
@@ -999,7 +999,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, decimal value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref BigInteger) {#addproperty-readonlyspan-char-ref-biginteger}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref BigInteger value)
@@ -1014,7 +1014,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref BigInteger value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, ref BigNumber) {#addproperty-readonlyspan-char-ref-bignumber}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, ref BigNumber value)
@@ -1029,7 +1029,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, ref BigNumber value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Int128, bool, bool) {#addproperty-readonlyspan-byte-int128-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName, bool nameRequiresUnescaping)
@@ -1046,7 +1046,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, Int128 value, bool escapeName,
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, UInt128, bool, bool) {#addproperty-readonlyspan-byte-uint128-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName, bool nameRequiresUnescaping)
@@ -1063,7 +1063,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, UInt128 value, bool escapeName
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;byte&gt;, Half, bool, bool) {#addproperty-readonlyspan-byte-half-bool-bool}
 
 ```csharp
 void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName, bool nameRequiresUnescaping)
@@ -1080,7 +1080,7 @@ void AddProperty(ReadOnlySpan<byte> propertyName, Half value, bool escapeName, b
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, Int128) {#addproperty-readonlyspan-char-int128}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, Int128 value)
@@ -1095,7 +1095,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, Int128 value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, UInt128) {#addproperty-readonlyspan-char-uint128}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, UInt128 value)
@@ -1110,7 +1110,7 @@ void AddProperty(ReadOnlySpan<char> propertyName, UInt128 value)
 
 ---
 
-## AddProperty
+## AddProperty(ReadOnlySpan&lt;char&gt;, Half) {#addproperty-readonlyspan-char-half}
 
 ```csharp
 void AddProperty(ReadOnlySpan<char> propertyName, Half value)

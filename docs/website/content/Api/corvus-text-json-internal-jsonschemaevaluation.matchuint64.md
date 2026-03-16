@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchUInt64 Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchUInt64 `static`
+## MatchUInt64 {#matchuint64}
 
 ```csharp
 bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

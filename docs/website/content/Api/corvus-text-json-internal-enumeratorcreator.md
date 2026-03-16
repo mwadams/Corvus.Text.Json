@@ -16,6 +16,6 @@ public static class EnumeratorCreator
 
 | Method | Description |
 |--------|-------------|
-| [CreateArrayEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createarrayenumerator.html#arrayenumerator-t-createarrayenumerator-t-ijsondocument-parent-int-index) `static` | Creates an enumerator for the items of a JSON array. |
-| [CreateObjectEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createobjectenumerator.html#objectenumerator-t-createobjectenumerator-t-ijsondocument-parent-int-index) `static` | Creates an enumerator for the properties of a JSON object. |
+| [CreateArrayEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createarrayenumerator.html#createarrayenumerator-ijsondocument-int) `static` | Creates an enumerator for the items of a JSON array. |
+| [CreateObjectEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createobjectenumerator.html#createobjectenumerator-ijsondocument-int) `static` | Creates an enumerator for the properties of a JSON object. |
 

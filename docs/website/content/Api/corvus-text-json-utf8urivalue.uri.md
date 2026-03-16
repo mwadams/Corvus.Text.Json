@@ -9,7 +9,7 @@ Title: "Utf8UriValue.Uri Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Uri
+## Uri {#uri}
 
 ```csharp
 Utf8Uri Uri { get; }

@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.RemovePropertyUnsafe Method — Corvus.Text.Json.Inte
 
 | Method | Description |
 |--------|-------------|
-| [RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;char&gt;)](#bool-removepropertyunsafe-imutablejsondocument-parentdocument-int-parentdocumentindex-readonlyspan-char-propertyname) | Removes a property value from a target element. |
-| [RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;byte&gt;)](#bool-removepropertyunsafe-imutablejsondocument-parentdocument-int-parentdocumentindex-readonlyspan-byte-propertyname) | Removes a property value from a target element. |
+| [RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;char&gt;)](#removepropertyunsafe-imutablejsondocument-int-readonlyspan-char) | Removes a property value from a target element. |
+| [RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;byte&gt;)](#removepropertyunsafe-imutablejsondocument-int-readonlyspan-byte) | Removes a property value from a target element. |
 
-## RemovePropertyUnsafe `static`
+## RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;char&gt;) {#removepropertyunsafe-imutablejsondocument-int-readonlyspan-char}
 
 ```csharp
 bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<char> propertyName)
@@ -40,7 +40,7 @@ Removes a property value from a target element.
 
 ---
 
-## RemovePropertyUnsafe `static`
+## RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;byte&gt;) {#removepropertyunsafe-imutablejsondocument-int-readonlyspan-byte}
 
 ```csharp
 bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<byte> propertyName)

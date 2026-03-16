@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.WriteBase64StringSegment Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## WriteBase64StringSegment
+## WriteBase64StringSegment {#writebase64stringsegment}
 
 ```csharp
 void WriteBase64StringSegment(ReadOnlySpan<byte> value, bool isFinalSegment)

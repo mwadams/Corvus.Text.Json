@@ -13,11 +13,11 @@ Title: "JsonElement.ValueEquals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [ValueEquals(string)](#bool-valueequals-string-text) | Compares `text` to the string value of this element. |
-| [ValueEquals(ReadOnlySpan&lt;byte&gt;)](#bool-valueequals-readonlyspan-byte-utf8text) | Compares the text represented by `utf8Text` to the string value of this element. |
-| [ValueEquals(ReadOnlySpan&lt;char&gt;)](#bool-valueequals-readonlyspan-char-text) | Compares `text` to the string value of this element. |
+| [ValueEquals(string)](#valueequals-string) | Compares `text` to the string value of this element. |
+| [ValueEquals(ReadOnlySpan&lt;byte&gt;)](#valueequals-readonlyspan-byte) | Compares the text represented by `utf8Text` to the string value of this element. |
+| [ValueEquals(ReadOnlySpan&lt;char&gt;)](#valueequals-readonlyspan-char) | Compares `text` to the string value of this element. |
 
-## ValueEquals
+## ValueEquals(string) {#valueequals-string}
 
 ```csharp
 bool ValueEquals(string text)
@@ -49,7 +49,7 @@ This method is functionally equal to doing an ordinal comparison of `text` and t
 
 ---
 
-## ValueEquals
+## ValueEquals(ReadOnlySpan&lt;byte&gt;) {#valueequals-readonlyspan-byte}
 
 ```csharp
 bool ValueEquals(ReadOnlySpan<byte> utf8Text)
@@ -81,7 +81,7 @@ This method is functionally equal to doing an ordinal comparison of the string p
 
 ---
 
-## ValueEquals
+## ValueEquals(ReadOnlySpan&lt;char&gt;) {#valueequals-readonlyspan-char}
 
 ```csharp
 bool ValueEquals(ReadOnlySpan<char> text)

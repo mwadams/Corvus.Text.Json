@@ -9,7 +9,7 @@ Title: "Utf8Uri.Host Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Host
+## Host {#host}
 
 ```csharp
 ReadOnlySpan<byte> Host { get; }

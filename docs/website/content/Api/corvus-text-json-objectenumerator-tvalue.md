@@ -24,8 +24,8 @@ An enumerable and enumerator for the properties of a JSON object.
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-objectenumerator-tvalue.dispose.html#void-dispose) |  |
-| [GetEnumerator()](/api/corvus-text-json-objectenumerator-tvalue.getenumerator.html#objectenumerator-tvalue-getenumerator) | Returns an enumerator that iterates the properties of an object. |
-| [MoveNext()](/api/corvus-text-json-objectenumerator-tvalue.movenext.html#bool-movenext) |  |
-| [Reset()](/api/corvus-text-json-objectenumerator-tvalue.reset.html#void-reset) |  |
+| [Dispose()](/api/corvus-text-json-objectenumerator-tvalue.dispose.html#dispose) |  |
+| [GetEnumerator()](/api/corvus-text-json-objectenumerator-tvalue.getenumerator.html#getenumerator) | Returns an enumerator that iterates the properties of an object. |
+| [MoveNext()](/api/corvus-text-json-objectenumerator-tvalue.movenext.html#movenext) |  |
+| [Reset()](/api/corvus-text-json-objectenumerator-tvalue.reset.html#reset) |  |
 

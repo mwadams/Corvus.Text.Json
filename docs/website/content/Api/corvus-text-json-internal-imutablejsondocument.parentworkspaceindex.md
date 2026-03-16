@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.ParentWorkspaceIndex Property — Corvus.Text.Json.
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParentWorkspaceIndex
+## ParentWorkspaceIndex {#parentworkspaceindex}
 
 ```csharp
 int ParentWorkspaceIndex { get; }

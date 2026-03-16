@@ -9,7 +9,7 @@ Title: "Polyfills.As Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## As `static`
+## As {#as}
 
 ```csharp
 TTarget As<T, TTarget>(T element)

@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.TryFormatUri Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [TryFormatUri(Utf8Uri, bool, ref string)](#bool-tryformaturi-utf8uri-uri-bool-isdisplay-ref-string-result) |  |
-| [TryFormatUri(Utf8Uri, bool, Span&lt;char&gt;, ref int)](#bool-tryformaturi-utf8uri-uri-bool-isdisplay-span-char-destination-ref-int-charswritten) |  |
+| [TryFormatUri(Utf8Uri, bool, ref string)](#tryformaturi-utf8uri-bool-ref-string) |  |
+| [TryFormatUri(Utf8Uri, bool, Span&lt;char&gt;, ref int)](#tryformaturi-utf8uri-bool-span-char-ref-int) |  |
 
-## TryFormatUri `static`
+## TryFormatUri(Utf8Uri, bool, ref string) {#tryformaturi-utf8uri-bool-ref-string}
 
 ```csharp
 bool TryFormatUri(Utf8Uri uri, bool isDisplay, ref string result)
@@ -36,7 +36,7 @@ bool TryFormatUri(Utf8Uri uri, bool isDisplay, ref string result)
 
 ---
 
-## TryFormatUri `static`
+## TryFormatUri(Utf8Uri, bool, Span&lt;char&gt;, ref int) {#tryformaturi-utf8uri-bool-span-char-ref-int}
 
 ```csharp
 bool TryFormatUri(Utf8Uri uri, bool isDisplay, Span<char> destination, ref int charsWritten)

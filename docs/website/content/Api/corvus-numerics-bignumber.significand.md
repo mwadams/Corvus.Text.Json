@@ -9,7 +9,7 @@ Title: "BigNumber.Significand Property — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Significand
+## Significand {#significand}
 
 ```csharp
 BigInteger Significand { get; }

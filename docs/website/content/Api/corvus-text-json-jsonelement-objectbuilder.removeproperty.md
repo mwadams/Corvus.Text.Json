@@ -13,11 +13,11 @@ Title: "JsonElement.ObjectBuilder.RemoveProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-removeproperty-readonlyspan-byte-propertyname-bool-escapename-bool-namerequiresunescaping) |  |
-| [RemoveProperty(ReadOnlySpan&lt;char&gt;)](#void-removeproperty-readonlyspan-char-propertyname) |  |
-| [RemoveProperty(string)](#void-removeproperty-string-propertyname) |  |
+| [RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool)](#removeproperty-readonlyspan-byte-bool-bool) |  |
+| [RemoveProperty(ReadOnlySpan&lt;char&gt;)](#removeproperty-readonlyspan-char) |  |
+| [RemoveProperty(string)](#removeproperty-string) |  |
 
-## RemoveProperty
+## RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool) {#removeproperty-readonlyspan-byte-bool-bool}
 
 ```csharp
 void RemoveProperty(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
@@ -33,7 +33,7 @@ void RemoveProperty(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameR
 
 ---
 
-## RemoveProperty
+## RemoveProperty(ReadOnlySpan&lt;char&gt;) {#removeproperty-readonlyspan-char}
 
 ```csharp
 void RemoveProperty(ReadOnlySpan<char> propertyName)
@@ -47,7 +47,7 @@ void RemoveProperty(ReadOnlySpan<char> propertyName)
 
 ---
 
-## RemoveProperty
+## RemoveProperty(string) {#removeproperty-string}
 
 ```csharp
 void RemoveProperty(string propertyName)

@@ -9,7 +9,7 @@ Title: "NormalizedJsonNumber Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## NormalizedJsonNumber
+## NormalizedJsonNumber {#normalizedjsonnumber}
 
 ```csharp
 NormalizedJsonNumber(bool isNegative, byte[] integral, byte[] fractional, int exponent)

@@ -9,7 +9,7 @@ Title: "ValidationContext.Results Property — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Results
+## Results {#results}
 
 ```csharp
 IReadOnlyList<ValidationResult> Results { get; }

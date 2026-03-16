@@ -9,7 +9,7 @@ Title: "EnumeratorCreator.CreateObjectEnumerator Method — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateObjectEnumerator `static`
+## CreateObjectEnumerator {#createobjectenumerator}
 
 ```csharp
 ObjectEnumerator<T> CreateObjectEnumerator<T>(IJsonDocument parent, int index)

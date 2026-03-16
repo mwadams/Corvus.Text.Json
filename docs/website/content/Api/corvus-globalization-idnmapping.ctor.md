@@ -9,7 +9,7 @@ Title: "IdnMapping Constructors — Corvus.Globalization"
 **Namespace:** Corvus.Globalization  
 **Assembly:** Corvus.Text.Json.dll
 
-## IdnMapping
+## IdnMapping {#idnmapping}
 
 ```csharp
 IdnMapping()

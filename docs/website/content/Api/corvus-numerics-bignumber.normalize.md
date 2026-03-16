@@ -9,7 +9,7 @@ Title: "BigNumber.Normalize Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Normalize
+## Normalize {#normalize}
 
 ```csharp
 BigNumber Normalize()

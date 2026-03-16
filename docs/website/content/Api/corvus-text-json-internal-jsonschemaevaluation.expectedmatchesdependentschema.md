@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchema Field — Corvus.Tex
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedMatchesDependentSchema `static`
+## ExpectedMatchesDependentSchema {#expectedmatchesdependentschema}
 
 ```csharp
 JsonSchemaMessageProvider<string> ExpectedMatchesDependentSchema

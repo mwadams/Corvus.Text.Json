@@ -13,11 +13,11 @@ Title: "JsonElement.Mutable.GetProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [GetProperty(string)](#jsonelement-mutable-getproperty-string-propertyname) |  |
-| [GetProperty(ReadOnlySpan&lt;char&gt;)](#jsonelement-mutable-getproperty-readonlyspan-char-propertyname) |  |
-| [GetProperty(ReadOnlySpan&lt;byte&gt;)](#jsonelement-mutable-getproperty-readonlyspan-byte-utf8propertyname) |  |
+| [GetProperty(string)](#getproperty-string) |  |
+| [GetProperty(ReadOnlySpan&lt;char&gt;)](#getproperty-readonlyspan-char) |  |
+| [GetProperty(ReadOnlySpan&lt;byte&gt;)](#getproperty-readonlyspan-byte) |  |
 
-## GetProperty
+## GetProperty(string) {#getproperty-string}
 
 ```csharp
 JsonElement.Mutable GetProperty(string propertyName)
@@ -35,7 +35,7 @@ JsonElement.Mutable GetProperty(string propertyName)
 
 ---
 
-## GetProperty
+## GetProperty(ReadOnlySpan&lt;char&gt;) {#getproperty-readonlyspan-char}
 
 ```csharp
 JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
@@ -53,7 +53,7 @@ JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
 
 ---
 
-## GetProperty
+## GetProperty(ReadOnlySpan&lt;byte&gt;) {#getproperty-readonlyspan-byte}
 
 ```csharp
 JsonElement.Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)

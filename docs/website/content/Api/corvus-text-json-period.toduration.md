@@ -9,7 +9,7 @@ Title: "Period.ToDuration Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ToDuration
+## ToDuration {#toduration}
 
 ```csharp
 Duration ToDuration()

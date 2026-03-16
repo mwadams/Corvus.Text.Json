@@ -9,7 +9,7 @@ Title: "Period.MinValue Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## MinValue `static`
+## MinValue {#minvalue}
 
 ```csharp
 Period MinValue { get; }

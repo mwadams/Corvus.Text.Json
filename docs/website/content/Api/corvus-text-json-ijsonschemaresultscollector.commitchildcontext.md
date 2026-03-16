@@ -13,10 +13,10 @@ Title: "IJsonSchemaResultsCollector.CommitChildContext Method — Corvus.Text.Js
 
 | Method | Description |
 |--------|-------------|
-| [CommitChildContext(int, bool, bool, JsonSchemaMessageProvider)](#void-commitchildcontext-int-sequencenumber-bool-parentismatch-bool-childismatch-jsonschemamessageprovider-messageprovider) | Commits the last child context. |
-| [CommitChildContext(int, bool, bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;)](#void-commitchildcontext-tprovidercontext-int-sequencenumber-bool-parentismatch-bool-childismatch-tprovidercontext-providercontext-jsonschemamessageprovider-tprovidercontext-messageprovider) | Commits the last child context. |
+| [CommitChildContext(int, bool, bool, JsonSchemaMessageProvider)](#commitchildcontext-int-bool-bool-jsonschemamessageprovider) | Commits the last child context. |
+| [CommitChildContext(int, bool, bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;)](#commitchildcontext-int-bool-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext) | Commits the last child context. |
 
-## CommitChildContext `abstract`
+## CommitChildContext(int, bool, bool, JsonSchemaMessageProvider) {#commitchildcontext-int-bool-bool-jsonschemamessageprovider}
 
 ```csharp
 void CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider messageProvider)
@@ -39,7 +39,7 @@ This allows the collector to update the match state, and commit any resources as
 
 ---
 
-## CommitChildContext `abstract`
+## CommitChildContext(int, bool, bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#commitchildcontext-int-bool-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
 ```csharp
 void CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)

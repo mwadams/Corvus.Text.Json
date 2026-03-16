@@ -16,13 +16,13 @@ public delegate RentedBacking.Writer<T> : MulticastDelegate, ICloneable, ISerial
 
 | Constructor | Description |
 |-------------|-------------|
-| [RentedBacking.Writer(object, IntPtr)](/api/corvus-text-json-internal-rentedbacking-writer-t.ctor.html#rentedbacking-writer-object-object-intptr-method) |  |
+| [RentedBacking.Writer(object, IntPtr)](/api/corvus-text-json-internal-rentedbacking-writer-t.ctor.html#rentedbacking-writer-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(T, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-internal-rentedbacking-writer-t.begininvoke.html#iasyncresult-begininvoke-t-value-span-byte-buffer-ref-int-written-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-internal-rentedbacking-writer-t.endinvoke.html#void-endinvoke-ref-int-written-iasyncresult-result) |  |
-| [Invoke(T, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-rentedbacking-writer-t.invoke.html#void-invoke-t-value-span-byte-buffer-ref-int-written) |  |
+| [BeginInvoke(T, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-internal-rentedbacking-writer-t.begininvoke.html#begininvoke-t-span-byte-ref-int-asynccallback-object) |  |
+| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-internal-rentedbacking-writer-t.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
+| [Invoke(T, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-rentedbacking-writer-t.invoke.html#invoke-t-span-byte-ref-int) |  |
 

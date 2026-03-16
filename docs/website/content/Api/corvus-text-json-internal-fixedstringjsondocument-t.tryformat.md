@@ -13,10 +13,10 @@ Title: "FixedStringJsonDocument<T>.TryFormat Method — Corvus.Text.Json.Interna
 
 | Method | Description |
 |--------|-------------|
-| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#bool-tryformat-int-index-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-formatprovider) |  |
-| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#bool-tryformat-int-index-span-byte-destination-ref-int-byteswritten-readonlyspan-char-format-iformatprovider-formatprovider) |  |
+| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider) |  |
+| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
 
-## TryFormat
+## TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
 bool TryFormat(int index, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
@@ -38,7 +38,7 @@ bool TryFormat(int index, Span<char> destination, ref int charsWritten, ReadOnly
 
 ---
 
-## TryFormat
+## TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
 bool TryFormat(int index, Span<byte> destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)

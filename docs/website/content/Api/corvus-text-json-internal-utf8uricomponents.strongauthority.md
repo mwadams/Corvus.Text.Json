@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.StrongAuthority Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StrongAuthority `static`
+## StrongAuthority {#strongauthority}
 
 ```csharp
 Utf8UriComponents StrongAuthority

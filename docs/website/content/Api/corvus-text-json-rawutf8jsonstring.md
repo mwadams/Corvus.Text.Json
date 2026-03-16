@@ -22,7 +22,7 @@ This may use a rented buffer to back the string, so it is disposable.
 
 | Constructor | Description |
 |-------------|-------------|
-| [RawUtf8JsonString(ReadOnlyMemory&lt;byte&gt;, byte\[\])](/api/corvus-text-json-rawutf8jsonstring.ctor.html#rawutf8jsonstring-readonlymemory-byte-utf8bytes-byte-extrarentedarraypoolbytes) | Initializes a new instance of the [`RawUtf8JsonString`](/api/corvus-text-json-rawutf8jsonstring.html) struct. |
+| [RawUtf8JsonString(ReadOnlyMemory&lt;byte&gt;, byte\[\])](/api/corvus-text-json-rawutf8jsonstring.ctor.html#rawutf8jsonstring-readonlymemory-byte-byte) | Initializes a new instance of the [`RawUtf8JsonString`](/api/corvus-text-json-rawutf8jsonstring.html) struct. |
 
 ## Properties
 
@@ -35,6 +35,6 @@ This may use a rented buffer to back the string, so it is disposable.
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-rawutf8jsonstring.dispose.html#void-dispose) | Releases any rented array pool bytes and clears sensitive data. |
-| [TakeOwnership(ref byte\[\])](/api/corvus-text-json-rawutf8jsonstring.takeownership.html#readonlymemory-byte-takeownership-ref-byte-extrarentedarraypoolbytes) | Takes ownership of the underlying memory and any extra rented array pool bytes. |
+| [Dispose()](/api/corvus-text-json-rawutf8jsonstring.dispose.html#dispose) | Releases any rented array pool bytes and clears sensitive data. |
+| [TakeOwnership(ref byte\[\])](/api/corvus-text-json-rawutf8jsonstring.takeownership.html#takeownership-ref-byte) | Takes ownership of the underlying memory and any extra rented array pool bytes. |
 

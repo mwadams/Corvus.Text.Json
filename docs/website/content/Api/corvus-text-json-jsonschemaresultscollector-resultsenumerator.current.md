@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Current Property — Corvus
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Current
+## Current {#current}
 
 ```csharp
 JsonSchemaResultsCollector.Result Current { get; }

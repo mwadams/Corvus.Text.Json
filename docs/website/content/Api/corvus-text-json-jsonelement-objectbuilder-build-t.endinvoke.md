@@ -9,7 +9,7 @@ Title: "JsonElement.ObjectBuilder.Build<T>.EndInvoke Method — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndInvoke `virtual`
+## EndInvoke {#endinvoke}
 
 ```csharp
 void EndInvoke(ref T context, ref JsonElement.ObjectBuilder builder, IAsyncResult result)

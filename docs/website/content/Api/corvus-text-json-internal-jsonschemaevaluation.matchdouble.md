@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchDouble Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchDouble `static`
+## MatchDouble {#matchdouble}
 
 ```csharp
 bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.SchemaLocationForIndexedKeywordWithDependency Metho
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SchemaLocationForIndexedKeywordWithDependency `static`
+## SchemaLocationForIndexedKeywordWithDependency {#schemalocationforindexedkeywordwithdependency}
 
 ```csharp
 bool SchemaLocationForIndexedKeywordWithDependency(ReadOnlySpan<byte> keywordSchemaLocation, ReadOnlySpan<byte> dependencyName, int index, Span<byte> buffer, ref int written)

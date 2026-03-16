@@ -9,7 +9,7 @@ Title: "JsonSchemaMessageProvider<TContext>.EndInvoke Method — Corvus.Text.Jso
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndInvoke `virtual`
+## EndInvoke {#endinvoke}
 
 ```csharp
 bool EndInvoke(ref int written, IAsyncResult result)

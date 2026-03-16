@@ -13,21 +13,21 @@ Title: "JsonElement.ArrayBuilder.AddRange Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddRange(ReadOnlySpan&lt;long&gt;)](#void-addrange-readonlyspan-long-array) |  |
-| [AddRange(ReadOnlySpan&lt;int&gt;)](#void-addrange-readonlyspan-int-array) |  |
-| [AddRange(ReadOnlySpan&lt;short&gt;)](#void-addrange-readonlyspan-short-array) |  |
-| [AddRange(ReadOnlySpan&lt;sbyte&gt;)](#void-addrange-readonlyspan-sbyte-array) |  |
-| [AddRange(ReadOnlySpan&lt;uint&gt;)](#void-addrange-readonlyspan-uint-array) |  |
-| [AddRange(ReadOnlySpan&lt;ushort&gt;)](#void-addrange-readonlyspan-ushort-array) |  |
-| [AddRange(ReadOnlySpan&lt;byte&gt;)](#void-addrange-readonlyspan-byte-array) |  |
-| [AddRange(ReadOnlySpan&lt;decimal&gt;)](#void-addrange-readonlyspan-decimal-array) |  |
-| [AddRange(ReadOnlySpan&lt;double&gt;)](#void-addrange-readonlyspan-double-array) |  |
-| [AddRange(ReadOnlySpan&lt;float&gt;)](#void-addrange-readonlyspan-float-array) |  |
-| [AddRange(ReadOnlySpan&lt;Int128&gt;)](#void-addrange-readonlyspan-int128-array) |  |
-| [AddRange(ReadOnlySpan&lt;UInt128&gt;)](#void-addrange-readonlyspan-uint128-array) |  |
-| [AddRange(ReadOnlySpan&lt;Half&gt;)](#void-addrange-readonlyspan-half-array) |  |
+| [AddRange(ReadOnlySpan&lt;long&gt;)](#addrange-readonlyspan-long) |  |
+| [AddRange(ReadOnlySpan&lt;int&gt;)](#addrange-readonlyspan-int) |  |
+| [AddRange(ReadOnlySpan&lt;short&gt;)](#addrange-readonlyspan-short) |  |
+| [AddRange(ReadOnlySpan&lt;sbyte&gt;)](#addrange-readonlyspan-sbyte) |  |
+| [AddRange(ReadOnlySpan&lt;uint&gt;)](#addrange-readonlyspan-uint) |  |
+| [AddRange(ReadOnlySpan&lt;ushort&gt;)](#addrange-readonlyspan-ushort) |  |
+| [AddRange(ReadOnlySpan&lt;byte&gt;)](#addrange-readonlyspan-byte) |  |
+| [AddRange(ReadOnlySpan&lt;decimal&gt;)](#addrange-readonlyspan-decimal) |  |
+| [AddRange(ReadOnlySpan&lt;double&gt;)](#addrange-readonlyspan-double) |  |
+| [AddRange(ReadOnlySpan&lt;float&gt;)](#addrange-readonlyspan-float) |  |
+| [AddRange(ReadOnlySpan&lt;Int128&gt;)](#addrange-readonlyspan-int128) |  |
+| [AddRange(ReadOnlySpan&lt;UInt128&gt;)](#addrange-readonlyspan-uint128) |  |
+| [AddRange(ReadOnlySpan&lt;Half&gt;)](#addrange-readonlyspan-half) |  |
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;long&gt;) {#addrange-readonlyspan-long}
 
 ```csharp
 void AddRange(ReadOnlySpan<long> array)
@@ -41,7 +41,7 @@ void AddRange(ReadOnlySpan<long> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;int&gt;) {#addrange-readonlyspan-int}
 
 ```csharp
 void AddRange(ReadOnlySpan<int> array)
@@ -55,7 +55,7 @@ void AddRange(ReadOnlySpan<int> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;short&gt;) {#addrange-readonlyspan-short}
 
 ```csharp
 void AddRange(ReadOnlySpan<short> array)
@@ -69,7 +69,7 @@ void AddRange(ReadOnlySpan<short> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;sbyte&gt;) {#addrange-readonlyspan-sbyte}
 
 ```csharp
 void AddRange(ReadOnlySpan<sbyte> array)
@@ -83,7 +83,7 @@ void AddRange(ReadOnlySpan<sbyte> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;uint&gt;) {#addrange-readonlyspan-uint}
 
 ```csharp
 void AddRange(ReadOnlySpan<uint> array)
@@ -97,7 +97,7 @@ void AddRange(ReadOnlySpan<uint> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;ushort&gt;) {#addrange-readonlyspan-ushort}
 
 ```csharp
 void AddRange(ReadOnlySpan<ushort> array)
@@ -111,7 +111,7 @@ void AddRange(ReadOnlySpan<ushort> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;byte&gt;) {#addrange-readonlyspan-byte}
 
 ```csharp
 void AddRange(ReadOnlySpan<byte> array)
@@ -125,7 +125,7 @@ void AddRange(ReadOnlySpan<byte> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;decimal&gt;) {#addrange-readonlyspan-decimal}
 
 ```csharp
 void AddRange(ReadOnlySpan<decimal> array)
@@ -139,7 +139,7 @@ void AddRange(ReadOnlySpan<decimal> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;double&gt;) {#addrange-readonlyspan-double}
 
 ```csharp
 void AddRange(ReadOnlySpan<double> array)
@@ -153,7 +153,7 @@ void AddRange(ReadOnlySpan<double> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;float&gt;) {#addrange-readonlyspan-float}
 
 ```csharp
 void AddRange(ReadOnlySpan<float> array)
@@ -167,7 +167,7 @@ void AddRange(ReadOnlySpan<float> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;Int128&gt;) {#addrange-readonlyspan-int128}
 
 ```csharp
 void AddRange(ReadOnlySpan<Int128> array)
@@ -181,7 +181,7 @@ void AddRange(ReadOnlySpan<Int128> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;UInt128&gt;) {#addrange-readonlyspan-uint128}
 
 ```csharp
 void AddRange(ReadOnlySpan<UInt128> array)
@@ -195,7 +195,7 @@ void AddRange(ReadOnlySpan<UInt128> array)
 
 ---
 
-## AddRange
+## AddRange(ReadOnlySpan&lt;Half&gt;) {#addrange-readonlyspan-half}
 
 ```csharp
 void AddRange(ReadOnlySpan<Half> array)

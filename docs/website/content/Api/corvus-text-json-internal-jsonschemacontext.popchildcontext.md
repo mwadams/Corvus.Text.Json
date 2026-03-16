@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.PopChildContext Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## PopChildContext
+## PopChildContext {#popchildcontext}
 
 ```csharp
 void PopChildContext(ref JsonSchemaContext childContext)

@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.ToValueKind Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ToValueKind `static`
+## ToValueKind {#tovaluekind}
 
 ```csharp
 JsonValueKind ToValueKind(JsonTokenType tokenType)

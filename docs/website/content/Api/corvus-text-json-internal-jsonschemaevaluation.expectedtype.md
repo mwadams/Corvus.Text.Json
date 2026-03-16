@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedType Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedType `static`
+## ExpectedType {#expectedtype}
 
 ```csharp
 bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, ref int written)

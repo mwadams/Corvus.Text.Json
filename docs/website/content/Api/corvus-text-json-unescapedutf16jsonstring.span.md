@@ -9,7 +9,7 @@ Title: "UnescapedUtf16JsonString.Span Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Span
+## Span {#span}
 
 ```csharp
 ReadOnlySpan<char> Span { get; }

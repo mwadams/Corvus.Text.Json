@@ -13,10 +13,10 @@ Title: "JsonElement.ObjectBuilder.AddPropertyNull Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addpropertynull-readonlyspan-byte-propertyname-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddPropertyNull(ReadOnlySpan&lt;char&gt;)](#void-addpropertynull-readonlyspan-char-propertyname) |  |
+| [AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool)](#addpropertynull-readonlyspan-byte-bool-bool) |  |
+| [AddPropertyNull(ReadOnlySpan&lt;char&gt;)](#addpropertynull-readonlyspan-char) |  |
 
-## AddPropertyNull
+## AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool) {#addpropertynull-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
@@ -32,7 +32,7 @@ void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool name
 
 ---
 
-## AddPropertyNull
+## AddPropertyNull(ReadOnlySpan&lt;char&gt;) {#addpropertynull-readonlyspan-char}
 
 ```csharp
 void AddPropertyNull(ReadOnlySpan<char> propertyName)

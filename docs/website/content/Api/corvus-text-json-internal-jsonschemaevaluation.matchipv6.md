@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchIPV6 Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchIPV6 `static`
+## MatchIPV6 {#matchipv6}
 
 ```csharp
 bool MatchIPV6(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

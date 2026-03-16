@@ -9,7 +9,7 @@ Title: "JsonElement.GetPropertyCount Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetPropertyCount
+## GetPropertyCount {#getpropertycount}
 
 ```csharp
 int GetPropertyCount()

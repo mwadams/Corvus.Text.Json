@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetArrayInsertionIndex Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetArrayInsertionIndex `abstract`
+## GetArrayInsertionIndex {#getarrayinsertionindex}
 
 ```csharp
 int GetArrayInsertionIndex(int currentIndex, int arrayIndex)

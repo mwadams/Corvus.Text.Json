@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.GetByte Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetByte
+## GetByte {#getbyte}
 
 ```csharp
 byte GetByte()

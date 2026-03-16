@@ -9,7 +9,7 @@ Title: "Matcher<TMatch, TOut>.EndInvoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndInvoke `virtual`
+## EndInvoke {#endinvoke}
 
 ```csharp
 TOut EndInvoke(ref TMatch match, IAsyncResult result)

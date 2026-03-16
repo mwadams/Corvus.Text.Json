@@ -13,11 +13,11 @@ Title: "JsonElement.Mutable.ValueEquals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [ValueEquals(string)](#bool-valueequals-string-text) |  |
-| [ValueEquals(ReadOnlySpan&lt;byte&gt;)](#bool-valueequals-readonlyspan-byte-utf8text) |  |
-| [ValueEquals(ReadOnlySpan&lt;char&gt;)](#bool-valueequals-readonlyspan-char-text) |  |
+| [ValueEquals(string)](#valueequals-string) |  |
+| [ValueEquals(ReadOnlySpan&lt;byte&gt;)](#valueequals-readonlyspan-byte) |  |
+| [ValueEquals(ReadOnlySpan&lt;char&gt;)](#valueequals-readonlyspan-char) |  |
 
-## ValueEquals
+## ValueEquals(string) {#valueequals-string}
 
 ```csharp
 bool ValueEquals(string text)
@@ -35,7 +35,7 @@ bool ValueEquals(string text)
 
 ---
 
-## ValueEquals
+## ValueEquals(ReadOnlySpan&lt;byte&gt;) {#valueequals-readonlyspan-byte}
 
 ```csharp
 bool ValueEquals(ReadOnlySpan<byte> utf8Text)
@@ -53,7 +53,7 @@ bool ValueEquals(ReadOnlySpan<byte> utf8Text)
 
 ---
 
-## ValueEquals
+## ValueEquals(ReadOnlySpan&lt;char&gt;) {#valueequals-readonlyspan-char}
 
 ```csharp
 bool ValueEquals(ReadOnlySpan<char> text)

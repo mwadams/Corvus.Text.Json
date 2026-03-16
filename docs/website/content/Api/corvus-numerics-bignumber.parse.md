@@ -13,11 +13,11 @@ Title: "BigNumber.Parse Method — Corvus.Numerics"
 
 | Method | Description |
 |--------|-------------|
-| [Parse(string, IFormatProvider)](#bignumber-parse-string-s-iformatprovider-provider) | Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider)](#bignumber-parse-readonlyspan-char-s-numberstyles-style-iformatprovider-provider) | Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider)](#bignumber-parse-readonlyspan-byte-utf8text-numberstyles-style-iformatprovider-provider) | Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Parse(string, IFormatProvider)](#parse-string-iformatprovider) | Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider)](#parse-readonlyspan-char-numberstyles-iformatprovider) | Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider)](#parse-readonlyspan-byte-numberstyles-iformatprovider) | Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
 
-## Parse `static`
+## Parse(string, IFormatProvider) {#parse-string-iformatprovider}
 
 ```csharp
 BigNumber Parse(string s, IFormatProvider provider)
@@ -40,7 +40,7 @@ The parsed number.
 
 ---
 
-## Parse `static`
+## Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider) {#parse-readonlyspan-char-numberstyles-iformatprovider}
 
 ```csharp
 BigNumber Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider)
@@ -64,7 +64,7 @@ The parsed number.
 
 ---
 
-## Parse `static`
+## Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider) {#parse-readonlyspan-byte-numberstyles-iformatprovider}
 
 ```csharp
 BigNumber Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)

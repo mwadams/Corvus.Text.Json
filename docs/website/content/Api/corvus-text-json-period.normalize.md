@@ -9,7 +9,7 @@ Title: "Period.Normalize Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Normalize
+## Normalize {#normalize}
 
 ```csharp
 Period Normalize()

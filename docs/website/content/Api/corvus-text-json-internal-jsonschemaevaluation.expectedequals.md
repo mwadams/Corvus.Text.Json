@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedEquals Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedEquals `static`
+## ExpectedEquals {#expectedequals}
 
 ```csharp
 JsonSchemaMessageProvider<string> ExpectedEquals

@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.SetPropertyUnsafe Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SetPropertyUnsafe `static`
+## SetPropertyUnsafe {#setpropertyunsafe}
 
 ```csharp
 void SetPropertyUnsafe<TTarget, TValue>(TTarget targetElement, JsonProperty<TValue> property)

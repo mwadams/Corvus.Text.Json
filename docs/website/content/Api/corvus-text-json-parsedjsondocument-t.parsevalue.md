@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.ParseValue Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParseValue `static`
+## ParseValue {#parsevalue}
 
 ```csharp
 ParsedJsonDocument<T> ParseValue(ref Utf8JsonReader reader)

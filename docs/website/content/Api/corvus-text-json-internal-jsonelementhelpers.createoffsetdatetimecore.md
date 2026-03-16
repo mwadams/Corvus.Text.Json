@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.CreateOffsetDateTimeCore Method — Corvus.Text.Json.
 
 | Method | Description |
 |--------|-------------|
-| [CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int, int, int)](#offsetdatetime-createoffsetdatetimecore-int-year-int-month-int-day-int-hours-int-minutes-int-seconds-int-milliseconds-int-microseconds-int-nanoseconds-int-offsetseconds) | Creates an offset date time from its individual components including nanosecond precision. |
-| [CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int)](#offsetdatetime-createoffsetdatetimecore-int-year-int-month-int-day-int-hours-int-minutes-int-seconds-int-milliseconds-int-offsetseconds) | Creates an offset date time from its individual components with millisecond precision. |
+| [CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int, int, int)](#createoffsetdatetimecore-int-int-int-int-int-int-int-int-int-int) | Creates an offset date time from its individual components including nanosecond precision. |
+| [CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int)](#createoffsetdatetimecore-int-int-int-int-int-int-int-int) | Creates an offset date time from its individual components with millisecond precision. |
 
-## CreateOffsetDateTimeCore `static`
+## CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int, int, int) {#createoffsetdatetimecore-int-int-int-int-int-int-int-int-int-int}
 
 ```csharp
 OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
@@ -47,7 +47,7 @@ The constructed offset date time.
 
 ---
 
-## CreateOffsetDateTimeCore `static`
+## CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int) {#createoffsetdatetimecore-int-int-int-int-int-int-int-int}
 
 ```csharp
 OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)

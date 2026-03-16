@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.KeepDelimiter Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## KeepDelimiter `static`
+## KeepDelimiter {#keepdelimiter}
 
 ```csharp
 Utf8UriComponents KeepDelimiter

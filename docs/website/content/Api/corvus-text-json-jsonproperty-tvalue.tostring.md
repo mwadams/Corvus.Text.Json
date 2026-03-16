@@ -9,7 +9,7 @@ Title: "JsonProperty<TValue>.ToString Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ToString `virtual`
+## ToString {#tostring}
 
 ```csharp
 string ToString()

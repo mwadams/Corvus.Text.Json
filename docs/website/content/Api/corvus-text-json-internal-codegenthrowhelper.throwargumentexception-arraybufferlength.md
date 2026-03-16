@@ -9,7 +9,7 @@ Title: "CodeGenThrowHelper.ThrowArgumentException_ArrayBufferLength Method — C
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ThrowArgumentException_ArrayBufferLength `static`
+## ThrowArgumentException_ArrayBufferLength {#throwargumentexception-arraybufferlength}
 
 ```csharp
 void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)

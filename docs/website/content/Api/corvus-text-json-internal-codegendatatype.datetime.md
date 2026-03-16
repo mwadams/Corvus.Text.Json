@@ -9,7 +9,7 @@ Title: "CodeGenDataType.DateTime Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## DateTime `static`
+## DateTime {#datetime}
 
 ```csharp
 CodeGenDataType DateTime

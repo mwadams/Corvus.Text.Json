@@ -9,7 +9,7 @@ Title: "Utf8IriReference.Authority Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Authority
+## Authority {#authority}
 
 ```csharp
 ReadOnlySpan<byte> Authority { get; }

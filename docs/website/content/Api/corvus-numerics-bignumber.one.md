@@ -9,7 +9,7 @@ Title: "BigNumber.One Property — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## One `static`
+## One {#one}
 
 ```csharp
 BigNumber One { get; }

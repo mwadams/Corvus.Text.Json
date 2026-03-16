@@ -4,6 +4,8 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Corvus.Text.Json.Compatibility Namespace"
 ---
+Backward-compatibility shims for migrating from Corvus.Json V4 (based on `System.Text.Json`). These types map V4's [`ValidationContext`](/api/corvus-text-json-compatibility-validationcontext.html), [`ValidationResult`](/api/corvus-text-json-compatibility-validationresult.html), and [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) to V5 equivalents, allowing existing code to compile with minimal changes during migration.
+
 | Type | Kind | Description |
 |------|------|-------------|
 | [Polyfills](/api/corvus-text-json-compatibility-polyfills.html) | class | Provides polyfills for Corvus.JsonSchema API compatibility. |

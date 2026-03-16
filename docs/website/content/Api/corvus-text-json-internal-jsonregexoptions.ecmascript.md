@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.ECMAScript Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ECMAScript `static`
+## ECMAScript {#ecmascript}
 
 ```csharp
 JsonRegexOptions ECMAScript

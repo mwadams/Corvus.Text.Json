@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchRegex Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchRegex `static`
+## MatchRegex {#matchregex}
 
 ```csharp
 bool MatchRegex(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

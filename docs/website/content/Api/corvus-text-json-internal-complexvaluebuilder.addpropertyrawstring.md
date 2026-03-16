@@ -13,11 +13,11 @@ Title: "ComplexValueBuilder.AddPropertyRawString Method — Corvus.Text.Json.Int
 
 | Method | Description |
 |--------|-------------|
-| [AddPropertyRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#void-addpropertyrawstring-readonlyspan-byte-propertyname-readonlyspan-byte-value-bool-escapename-bool-namerequiresunescaping-bool-valuerequiresunescaping) | Adds a property with a raw string value to the current object, with control over escaping and unescaping. |
-| [AddPropertyRawString(string, ReadOnlySpan&lt;byte&gt;, bool)](#void-addpropertyrawstring-string-propertyname-readonlyspan-byte-value-bool-valuerequiresunescaping) | Adds a property with a raw string value. |
-| [AddPropertyRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool)](#void-addpropertyrawstring-readonlyspan-char-propertyname-readonlyspan-byte-value-bool-valuerequiresunescaping) | Adds a property with a raw string value. |
+| [AddPropertyRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#addpropertyrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool) | Adds a property with a raw string value to the current object, with control over escaping and unescaping. |
+| [AddPropertyRawString(string, ReadOnlySpan&lt;byte&gt;, bool)](#addpropertyrawstring-string-readonlyspan-byte-bool) | Adds a property with a raw string value. |
+| [AddPropertyRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool)](#addpropertyrawstring-readonlyspan-char-readonlyspan-byte-bool) | Adds a property with a raw string value. |
 
-## AddPropertyRawString
+## AddPropertyRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addpropertyrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool}
 
 ```csharp
 void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
@@ -37,7 +37,7 @@ Adds a property with a raw string value to the current object, with control over
 
 ---
 
-## AddPropertyRawString
+## AddPropertyRawString(string, ReadOnlySpan&lt;byte&gt;, bool) {#addpropertyrawstring-string-readonlyspan-byte-bool}
 
 ```csharp
 void AddPropertyRawString(string propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
@@ -55,7 +55,7 @@ Adds a property with a raw string value.
 
 ---
 
-## AddPropertyRawString
+## AddPropertyRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool) {#addpropertyrawstring-readonlyspan-char-readonlyspan-byte-bool}
 
 ```csharp
 void AddPropertyRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)

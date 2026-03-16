@@ -9,7 +9,7 @@ Title: "BigNumber.TryFormatOptimized Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatOptimized
+## TryFormatOptimized {#tryformatoptimized}
 
 ```csharp
 bool TryFormatOptimized(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)

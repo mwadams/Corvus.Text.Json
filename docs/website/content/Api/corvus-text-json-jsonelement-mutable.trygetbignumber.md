@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.TryGetBigNumber Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetBigNumber
+## TryGetBigNumber {#trygetbignumber}
 
 ```csharp
 bool TryGetBigNumber(ref BigNumber value)

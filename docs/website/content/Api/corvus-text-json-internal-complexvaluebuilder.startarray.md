@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.StartArray Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StartArray
+## StartArray {#startarray}
 
 ```csharp
 void StartArray()

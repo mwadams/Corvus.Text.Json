@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchStringConstantValue Method — Corvus.Text.Jso
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchStringConstantValue `static`
+## MatchStringConstantValue {#matchstringconstantvalue}
 
 ```csharp
 bool MatchStringConstantValue(ReadOnlySpan<byte> actual, ReadOnlySpan<byte> expected, string expectedString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

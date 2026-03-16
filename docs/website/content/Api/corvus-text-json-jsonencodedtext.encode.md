@@ -13,11 +13,11 @@ Title: "JsonEncodedText.Encode Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [Encode(string, JavaScriptEncoder)](#jsonencodedtext-encode-string-value-javascriptencoder-encoder) | Encodes the string text value as a JSON string. |
-| [Encode(ReadOnlySpan&lt;char&gt;, JavaScriptEncoder)](#jsonencodedtext-encode-readonlyspan-char-value-javascriptencoder-encoder) | Encodes the text value as a JSON string. |
-| [Encode(ReadOnlySpan&lt;byte&gt;, JavaScriptEncoder)](#jsonencodedtext-encode-readonlyspan-byte-utf8value-javascriptencoder-encoder) | Encodes the UTF-8 text value as a JSON string. |
+| [Encode(string, JavaScriptEncoder)](#encode-string-javascriptencoder) | Encodes the string text value as a JSON string. |
+| [Encode(ReadOnlySpan&lt;char&gt;, JavaScriptEncoder)](#encode-readonlyspan-char-javascriptencoder) | Encodes the text value as a JSON string. |
+| [Encode(ReadOnlySpan&lt;byte&gt;, JavaScriptEncoder)](#encode-readonlyspan-byte-javascriptencoder) | Encodes the UTF-8 text value as a JSON string. |
 
-## Encode `static`
+## Encode(string, JavaScriptEncoder) {#encode-string-javascriptencoder}
 
 ```csharp
 JsonEncodedText Encode(string value, JavaScriptEncoder encoder)
@@ -45,7 +45,7 @@ Encodes the string text value as a JSON string.
 
 ---
 
-## Encode `static`
+## Encode(ReadOnlySpan&lt;char&gt;, JavaScriptEncoder) {#encode-readonlyspan-char-javascriptencoder}
 
 ```csharp
 JsonEncodedText Encode(ReadOnlySpan<char> value, JavaScriptEncoder encoder)
@@ -72,7 +72,7 @@ Encodes the text value as a JSON string.
 
 ---
 
-## Encode `static`
+## Encode(ReadOnlySpan&lt;byte&gt;, JavaScriptEncoder) {#encode-readonlyspan-byte-javascriptencoder}
 
 ```csharp
 JsonEncodedText Encode(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder encoder)

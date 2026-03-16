@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.BytesCommitted Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BytesCommitted
+## BytesCommitted {#bytescommitted}
 
 ```csharp
 long BytesCommitted { get; set; }

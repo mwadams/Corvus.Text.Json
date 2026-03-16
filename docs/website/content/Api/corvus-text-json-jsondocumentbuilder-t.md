@@ -34,6 +34,6 @@ A mutable JSON document builder that provides functionality to construct and mod
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-jsondocumentbuilder-t.dispose.html#void-dispose) |  |
-| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsondocumentbuilder-t.writeto.html#void-writeto-utf8jsonwriter-writer) | Write the document into the provided writer as a JSON value. |
+| [Dispose()](/api/corvus-text-json-jsondocumentbuilder-t.dispose.html#dispose) |  |
+| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsondocumentbuilder-t.writeto.html#writeto-utf8jsonwriter) | Write the document into the provided writer as a JSON value. |
 

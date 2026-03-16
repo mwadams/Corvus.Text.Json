@@ -13,12 +13,12 @@ Title: "JsonElement.JsonSchema.PushChildContext Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, JsonSchemaPathProvider, JsonSchemaPathProvider)](#jsonschemacontext-pushchildcontext-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-jsonschemapathprovider-schemaevaluationpath-jsonschemapathprovider-documentevaluationpath) |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, TContext, JsonSchemaPathProvider&lt;TContext&gt;, JsonSchemaPathProvider&lt;TContext&gt;)](#jsonschemacontext-pushchildcontext-tcontext-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-tcontext-providercontext-jsonschemapathprovider-tcontext-schemaevaluationpath-jsonschemapathprovider-tcontext-documentevaluationpath) |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider)](#jsonschemacontext-pushchildcontext-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-readonlyspan-byte-propertyname-jsonschemapathprovider-evaluationpath) |  |
-| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, int, JsonSchemaPathProvider)](#jsonschemacontext-pushchildcontext-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-int-itemindex-jsonschemapathprovider-evaluationpath) |  |
+| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, JsonSchemaPathProvider, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-jsonschemapathprovider-jsonschemapathprovider) |  |
+| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, TContext, JsonSchemaPathProvider&lt;TContext&gt;, JsonSchemaPathProvider&lt;TContext&gt;)](#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-tcontext-jsonschemapathprovider-tcontext-jsonschemapathprovider-tcontext) |  |
+| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-readonlyspan-byte-jsonschemapathprovider) |  |
+| [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, int, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-int-jsonschemapathprovider) |  |
 
-## PushChildContext `static`
+## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, JsonSchemaPathProvider, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
 JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, JsonSchemaPathProvider schemaEvaluationPath, JsonSchemaPathProvider documentEvaluationPath)
@@ -40,7 +40,7 @@ JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocum
 
 ---
 
-## PushChildContext `static`
+## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, TContext, JsonSchemaPathProvider&lt;TContext&gt;, JsonSchemaPathProvider&lt;TContext&gt;) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-tcontext-jsonschemapathprovider-tcontext-jsonschemapathprovider-tcontext}
 
 ```csharp
 JsonSchemaContext PushChildContext<TContext>(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, TContext providerContext, JsonSchemaPathProvider<TContext> schemaEvaluationPath, JsonSchemaPathProvider<TContext> documentEvaluationPath)
@@ -63,7 +63,7 @@ JsonSchemaContext PushChildContext<TContext>(IJsonDocument parentDocument, int p
 
 ---
 
-## PushChildContext `static`
+## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-readonlyspan-byte-jsonschemapathprovider}
 
 ```csharp
 JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider evaluationPath)
@@ -85,7 +85,7 @@ JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocum
 
 ---
 
-## PushChildContext `static`
+## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, int, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-int-jsonschemapathprovider}
 
 ```csharp
 JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, int itemIndex, JsonSchemaPathProvider evaluationPath)

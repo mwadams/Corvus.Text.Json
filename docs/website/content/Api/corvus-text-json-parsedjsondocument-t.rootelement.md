@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.RootElement Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## RootElement
+## RootElement {#rootelement}
 
 ```csharp
 T RootElement { get; }

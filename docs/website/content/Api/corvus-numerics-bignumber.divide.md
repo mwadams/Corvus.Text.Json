@@ -9,7 +9,7 @@ Title: "BigNumber.Divide Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Divide `static`
+## Divide {#divide}
 
 ```csharp
 BigNumber Divide(BigNumber dividend, BigNumber divisor, int precision)

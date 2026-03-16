@@ -9,7 +9,7 @@ Title: "JsonElement.GetArrayLength Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetArrayLength
+## GetArrayLength {#getarraylength}
 
 ```csharp
 int GetArrayLength()

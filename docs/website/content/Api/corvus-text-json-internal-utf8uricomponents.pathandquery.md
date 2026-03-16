@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.PathAndQuery Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## PathAndQuery `static`
+## PathAndQuery {#pathandquery}
 
 ```csharp
 Utf8UriComponents PathAndQuery

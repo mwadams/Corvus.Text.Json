@@ -9,7 +9,7 @@ Title: "JsonElement.TryGetBoolean Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetBoolean
+## TryGetBoolean {#trygetboolean}
 
 ```csharp
 bool TryGetBoolean(ref bool value)

@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.TryFormatOffsetDateTime Method — Corvus.Text.Json.I
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatOffsetDateTime `static`
+## TryFormatOffsetDateTime {#tryformatoffsetdatetime}
 
 ```csharp
 bool TryFormatOffsetDateTime(ref OffsetDateTime value, Span<byte> output, ref int bytesWritten)

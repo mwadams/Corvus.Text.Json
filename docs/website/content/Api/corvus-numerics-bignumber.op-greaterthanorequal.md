@@ -9,7 +9,7 @@ Title: "BigNumber.GreaterThanOrEqual Operator — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## operator >= `static`
+## operator &gt;= {#operator}
 
 ```csharp
 static bool operator >=(BigNumber left, BigNumber right)

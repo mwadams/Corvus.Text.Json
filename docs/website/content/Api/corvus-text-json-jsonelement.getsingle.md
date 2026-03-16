@@ -9,7 +9,7 @@ Title: "JsonElement.GetSingle Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetSingle
+## GetSingle {#getsingle}
 
 ```csharp
 float GetSingle()

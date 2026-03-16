@@ -13,10 +13,10 @@ Title: "IMutableJsonDocument.EscapeAndStoreRawStringValue Method — Corvus.Text
 
 | Method | Description |
 |--------|-------------|
-| [EscapeAndStoreRawStringValue(ReadOnlySpan&lt;char&gt;, ref bool)](#int-escapeandstorerawstringvalue-readonlyspan-char-value-ref-bool-requiredescaping) | Escapes and stores a raw string value in the document. |
-| [EscapeAndStoreRawStringValue(ReadOnlySpan&lt;byte&gt;, ref bool)](#int-escapeandstorerawstringvalue-readonlyspan-byte-value-ref-bool-requiredescaping) | Escapes and stores a raw string value in the document. |
+| [EscapeAndStoreRawStringValue(ReadOnlySpan&lt;char&gt;, ref bool)](#escapeandstorerawstringvalue-readonlyspan-char-ref-bool) | Escapes and stores a raw string value in the document. |
+| [EscapeAndStoreRawStringValue(ReadOnlySpan&lt;byte&gt;, ref bool)](#escapeandstorerawstringvalue-readonlyspan-byte-ref-bool) | Escapes and stores a raw string value in the document. |
 
-## EscapeAndStoreRawStringValue `abstract`
+## EscapeAndStoreRawStringValue(ReadOnlySpan&lt;char&gt;, ref bool) {#escapeandstorerawstringvalue-readonlyspan-char-ref-bool}
 
 ```csharp
 int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, ref bool requiredEscaping)
@@ -39,7 +39,7 @@ The index of the stored value.
 
 ---
 
-## EscapeAndStoreRawStringValue `abstract`
+## EscapeAndStoreRawStringValue(ReadOnlySpan&lt;byte&gt;, ref bool) {#escapeandstorerawstringvalue-readonlyspan-byte-ref-bool}
 
 ```csharp
 int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, ref bool requiredEscaping)

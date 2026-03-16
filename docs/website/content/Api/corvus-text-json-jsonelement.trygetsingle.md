@@ -9,7 +9,7 @@ Title: "JsonElement.TryGetSingle Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetSingle
+## TryGetSingle {#trygetsingle}
 
 ```csharp
 bool TryGetSingle(ref float value)

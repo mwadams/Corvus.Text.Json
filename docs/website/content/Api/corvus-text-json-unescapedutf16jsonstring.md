@@ -22,7 +22,7 @@ This uses a rented buffer to back the string, so it is disposable.
 
 | Constructor | Description |
 |-------------|-------------|
-| [UnescapedUtf16JsonString(ReadOnlyMemory&lt;char&gt;, char\[\])](/api/corvus-text-json-unescapedutf16jsonstring.ctor.html#unescapedutf16jsonstring-readonlymemory-char-chars-char-extrarentedarraypoolchars) | Initializes a new instance of the [`UnescapedUtf16JsonString`](/api/corvus-text-json-unescapedutf16jsonstring.html) struct. |
+| [UnescapedUtf16JsonString(ReadOnlyMemory&lt;char&gt;, char\[\])](/api/corvus-text-json-unescapedutf16jsonstring.ctor.html#unescapedutf16jsonstring-readonlymemory-char-char) | Initializes a new instance of the [`UnescapedUtf16JsonString`](/api/corvus-text-json-unescapedutf16jsonstring.html) struct. |
 
 ## Properties
 
@@ -35,6 +35,6 @@ This uses a rented buffer to back the string, so it is disposable.
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-unescapedutf16jsonstring.dispose.html#void-dispose) | Disposes the unescaped UTF-16 JSON string, returning any rented array pool characters. |
-| [TakeOwnership(ref char\[\])](/api/corvus-text-json-unescapedutf16jsonstring.takeownership.html#readonlymemory-char-takeownership-ref-char-extrarentedarraypoolchars) | Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) characters, if any. |
+| [Dispose()](/api/corvus-text-json-unescapedutf16jsonstring.dispose.html#dispose) | Disposes the unescaped UTF-16 JSON string, returning any rented array pool characters. |
+| [TakeOwnership(ref char\[\])](/api/corvus-text-json-unescapedutf16jsonstring.takeownership.html#takeownership-ref-char) | Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) characters, if any. |
 

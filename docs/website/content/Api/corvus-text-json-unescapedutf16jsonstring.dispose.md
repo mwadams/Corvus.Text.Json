@@ -9,7 +9,7 @@ Title: "UnescapedUtf16JsonString.Dispose Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Dispose
+## Dispose {#dispose}
 
 ```csharp
 void Dispose()

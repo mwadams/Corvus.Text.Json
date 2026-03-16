@@ -9,7 +9,7 @@ Title: "JsonElement.ObjectBuilder.TryApply Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryApply
+## TryApply {#tryapply}
 
 ```csharp
 bool TryApply<TApplicator>(ref TApplicator value)

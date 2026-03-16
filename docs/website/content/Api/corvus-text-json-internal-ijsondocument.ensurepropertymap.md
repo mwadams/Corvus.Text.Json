@@ -9,7 +9,7 @@ Title: "IJsonDocument.EnsurePropertyMap Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EnsurePropertyMap `abstract`
+## EnsurePropertyMap {#ensurepropertymap}
 
 ```csharp
 void EnsurePropertyMap(int index)

@@ -9,7 +9,7 @@ Title: "CodeGenNumericType.Int16 Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Int16 `static`
+## Int16 {#int16}
 
 ```csharp
 CodeGenNumericType Int16

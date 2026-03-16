@@ -9,7 +9,7 @@ Title: "BuildWithContext.Create Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Create `static`
+## Create {#create}
 
 ```csharp
 BuildWithContext<TContext, TBuilder> Create<TContext, TBuilder>(ref TContext context, TBuilder build)

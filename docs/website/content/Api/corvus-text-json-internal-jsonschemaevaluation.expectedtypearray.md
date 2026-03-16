@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedTypeArray Field — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedTypeArray `static`
+## ExpectedTypeArray {#expectedtypearray}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeArray

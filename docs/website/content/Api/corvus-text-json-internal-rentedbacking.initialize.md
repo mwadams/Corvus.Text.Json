@@ -9,7 +9,7 @@ Title: "RentedBacking.Initialize Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Initialize `static`
+## Initialize {#initialize}
 
 ```csharp
 void Initialize<T>(ref RentedBacking backing, int minimumLength, ref T value, RentedBacking.Writer<T> writer)

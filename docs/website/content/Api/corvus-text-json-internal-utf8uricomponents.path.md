@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.Path Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Path `static`
+## Path {#path}
 
 ```csharp
 Utf8UriComponents Path

@@ -18,13 +18,13 @@ A matcher for a JSON schema.
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonSchemaMatcher(object, IntPtr)](/api/corvus-text-json-internal-jsonschemamatcher.ctor.html#jsonschemamatcher-object-object-intptr-method) |  |
+| [JsonSchemaMatcher(object, IntPtr)](/api/corvus-text-json-internal-jsonschemamatcher.ctor.html#jsonschemamatcher-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(IJsonDocument, int, ref JsonSchemaContext, AsyncCallback, object)](/api/corvus-text-json-internal-jsonschemamatcher.begininvoke.html#iasyncresult-begininvoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcher.endinvoke.html#void-endinvoke-ref-jsonschemacontext-context-iasyncresult-result) |  |
-| [Invoke(IJsonDocument, int, ref JsonSchemaContext)](/api/corvus-text-json-internal-jsonschemamatcher.invoke.html#void-invoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context) |  |
+| [BeginInvoke(IJsonDocument, int, ref JsonSchemaContext, AsyncCallback, object)](/api/corvus-text-json-internal-jsonschemamatcher.begininvoke.html#begininvoke-ijsondocument-int-ref-jsonschemacontext-asynccallback-object) |  |
+| [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcher.endinvoke.html#endinvoke-ref-jsonschemacontext-iasyncresult) |  |
+| [Invoke(IJsonDocument, int, ref JsonSchemaContext)](/api/corvus-text-json-internal-jsonschemamatcher.invoke.html#invoke-ijsondocument-int-ref-jsonschemacontext) |  |
 

@@ -13,11 +13,11 @@ Title: "Period.Equals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [Equals(object)](#bool-equals-object-other) | Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics. |
-| [Equals(Period)](#bool-equals-period-other) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
-| [Equals(Period)](#bool-equals-period-other) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
+| [Equals(object)](#equals-object) | Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics. |
+| [Equals(Period)](#equals-period) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
+| [Equals(Period)](#equals-period) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
 
-## Equals `virtual`
+## Equals(object) {#equals-object}
 
 ```csharp
 bool Equals(object other)
@@ -39,7 +39,7 @@ true if the other object is a period equal to this one, consistent with [`Equals
 
 ---
 
-## Equals
+## Equals(Period) {#equals-period}
 
 ```csharp
 bool Equals(Period other)
@@ -61,7 +61,7 @@ True if this period has the same values for the same properties as the one speci
 
 ---
 
-## Equals
+## Equals(Period) {#equals-period}
 
 ```csharp
 bool Equals(Period other)

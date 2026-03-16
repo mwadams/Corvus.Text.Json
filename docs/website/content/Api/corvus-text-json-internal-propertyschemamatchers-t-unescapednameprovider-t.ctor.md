@@ -9,7 +9,7 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T> Constructors — Corv
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## PropertySchemaMatchers
+## PropertySchemaMatchers {#propertyschemamatchers}
 
 ```csharp
 PropertySchemaMatchers(object object, IntPtr method)

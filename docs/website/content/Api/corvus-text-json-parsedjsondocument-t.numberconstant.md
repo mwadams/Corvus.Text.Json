@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.NumberConstant Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## NumberConstant `static`
+## NumberConstant {#numberconstant}
 
 ```csharp
 T NumberConstant(byte[] utf8Number)

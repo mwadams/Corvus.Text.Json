@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.CreateUnrented Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateUnrented `static`
+## CreateUnrented {#createunrented}
 
 ```csharp
 JsonSchemaResultsCollector CreateUnrented(JsonSchemaResultsLevel level, int estimatedCapacity)

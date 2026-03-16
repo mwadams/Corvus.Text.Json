@@ -9,7 +9,7 @@ Title: "ArrayReverseEnumerator.CurrentIndex Property — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## CurrentIndex
+## CurrentIndex {#currentindex}
 
 ```csharp
 int CurrentIndex { get; }

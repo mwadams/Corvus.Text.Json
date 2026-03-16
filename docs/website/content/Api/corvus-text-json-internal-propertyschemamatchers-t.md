@@ -22,11 +22,11 @@ This class uses a hash-based approach to enable O(1) average-case lookups of pro
 
 | Constructor | Description |
 |-------------|-------------|
-| [PropertySchemaMatchers(List&lt;ValueTuple&lt;PropertySchemaMatchers&lt;T&gt;.UnescapedNameProvider&lt;T&gt;, T&gt;&gt;)](/api/corvus-text-json-internal-propertyschemamatchers-t.ctor.html#propertyschemamatchers-list-valuetuple-propertyschemamatchers-t-unescapednameprovider-t-t-matchers) |  |
+| [PropertySchemaMatchers(List&lt;ValueTuple&lt;PropertySchemaMatchers&lt;T&gt;.UnescapedNameProvider&lt;T&gt;, T&gt;&gt;)](/api/corvus-text-json-internal-propertyschemamatchers-t.ctor.html#propertyschemamatchers-list-valuetuple-propertyschemamatchers-t-unescapednameprovider-t-t) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [TryGetNamedMatcher(ReadOnlySpan&lt;byte&gt;, ref T)](/api/corvus-text-json-internal-propertyschemamatchers-t.trygetnamedmatcher.html#bool-trygetnamedmatcher-readonlyspan-byte-unescapedutf8name-ref-t-matcher) | Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup. |
+| [TryGetNamedMatcher(ReadOnlySpan&lt;byte&gt;, ref T)](/api/corvus-text-json-internal-propertyschemamatchers-t.trygetnamedmatcher.html#trygetnamedmatcher-readonlyspan-byte-ref-t) | Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup. |
 

@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider Constructors — Corvus.Text.Js
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## UniqueItemsHashSet.UnescapedNameProvider
+## UniqueItemsHashSet.UnescapedNameProvider {#uniqueitemshashset-unescapednameprovider}
 
 ```csharp
 UniqueItemsHashSet.UnescapedNameProvider(object object, IntPtr method)

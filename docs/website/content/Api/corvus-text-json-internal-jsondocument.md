@@ -24,5 +24,5 @@ Base class for JSON document implementations providing common functionality for 
 
 | Method | Description |
 |--------|-------------|
-| [Freeze()](/api/corvus-text-json-internal-jsondocument.freeze.html#void-freeze) | Makes the document immutable. |
+| [Freeze()](/api/corvus-text-json-internal-jsondocument.freeze.html#freeze) | Makes the document immutable. |
 

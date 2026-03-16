@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.EvaluatedBooleanSchema Method — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EvaluatedBooleanSchema
+## EvaluatedBooleanSchema {#evaluatedbooleanschema}
 
 ```csharp
 void EvaluatedBooleanSchema(bool isMatch)

@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.RequiredPropertyPresent Method — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RequiredPropertyPresent `static`
+## RequiredPropertyPresent {#requiredpropertypresent}
 
 ```csharp
 bool RequiredPropertyPresent(ReadOnlySpan<byte> propertyName, Span<byte> buffer, ref int written)

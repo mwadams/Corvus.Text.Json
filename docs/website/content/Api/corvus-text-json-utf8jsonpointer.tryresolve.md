@@ -9,7 +9,7 @@ Title: "Utf8JsonPointer.TryResolve Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryResolve
+## TryResolve {#tryresolve}
 
 ```csharp
 bool TryResolve<T, TResult>(ref T jsonElement, ref TResult value)

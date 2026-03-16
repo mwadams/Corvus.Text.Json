@@ -13,13 +13,13 @@ Title: "JsonElement.Mutable.AddItem Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddItem(ref JsonElement.Source, int)](#void-additem-ref-jsonelement-source-source-int-estimatedmembercount) |  |
-| [AddItem(JsonElement.ObjectBuilder.Build, int)](#void-additem-jsonelement-objectbuilder-build-objectvalue-int-estimatedmembercount) |  |
-| [AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int)](#void-additem-tcontext-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-objectvalue-int-estimatedmembercount) |  |
-| [AddItem(JsonElement.ArrayBuilder.Build, int)](#void-additem-jsonelement-arraybuilder-build-arrayvalue-int-estimatedmembercount) |  |
-| [AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int)](#void-additem-tcontext-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-arrayvalue-int-estimatedmembercount) |  |
+| [AddItem(ref JsonElement.Source, int)](#additem-ref-jsonelement-source-int) |  |
+| [AddItem(JsonElement.ObjectBuilder.Build, int)](#additem-jsonelement-objectbuilder-build-int) |  |
+| [AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int)](#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int) |  |
+| [AddItem(JsonElement.ArrayBuilder.Build, int)](#additem-jsonelement-arraybuilder-build-int) |  |
+| [AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int)](#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int) |  |
 
-## AddItem
+## AddItem(ref JsonElement.Source, int) {#additem-ref-jsonelement-source-int}
 
 ```csharp
 void AddItem(ref JsonElement.Source source, int estimatedMemberCount)
@@ -34,7 +34,7 @@ void AddItem(ref JsonElement.Source source, int estimatedMemberCount)
 
 ---
 
-## AddItem
+## AddItem(JsonElement.ObjectBuilder.Build, int) {#additem-jsonelement-objectbuilder-build-int}
 
 ```csharp
 void AddItem(JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
@@ -49,7 +49,7 @@ void AddItem(JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCou
 
 ---
 
-## AddItem
+## AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
 void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
@@ -65,7 +65,7 @@ void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TCo
 
 ---
 
-## AddItem
+## AddItem(JsonElement.ArrayBuilder.Build, int) {#additem-jsonelement-arraybuilder-build-int}
 
 ```csharp
 void AddItem(JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
@@ -80,7 +80,7 @@ void AddItem(JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount
 
 ---
 
-## AddItem
+## AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
 void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)

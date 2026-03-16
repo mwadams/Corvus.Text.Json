@@ -9,7 +9,7 @@ Title: "Period.NormalizingEqualityComparer Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## NormalizingEqualityComparer `static`
+## NormalizingEqualityComparer {#normalizingequalitycomparer}
 
 ```csharp
 IEqualityComparer<Period> NormalizingEqualityComparer { get; }

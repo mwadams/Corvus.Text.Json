@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchRelativeJsonPointer Method — Corvus.Text.Jso
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchRelativeJsonPointer `static`
+## MatchRelativeJsonPointer {#matchrelativejsonpointer}
 
 ```csharp
 bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

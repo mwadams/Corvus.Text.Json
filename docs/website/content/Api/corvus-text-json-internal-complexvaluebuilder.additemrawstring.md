@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.AddItemRawString Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddItemRawString
+## AddItemRawString {#additemrawstring}
 
 ```csharp
 void AddItemRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)

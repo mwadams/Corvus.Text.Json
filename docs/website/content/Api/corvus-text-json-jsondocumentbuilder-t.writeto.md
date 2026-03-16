@@ -9,7 +9,7 @@ Title: "JsonDocumentBuilder<T>.WriteTo Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## WriteTo
+## WriteTo {#writeto}
 
 ```csharp
 void WriteTo(Utf8JsonWriter writer)

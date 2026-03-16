@@ -16,13 +16,13 @@ public delegate JsonElement.ObjectBuilder.Build : MulticastDelegate, ICloneable,
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonElement.ObjectBuilder.Build(object, IntPtr)](/api/corvus-text-json-jsonelement-objectbuilder-build.ctor.html#jsonelement-objectbuilder-build-object-object-intptr-method) |  |
+| [JsonElement.ObjectBuilder.Build(object, IntPtr)](/api/corvus-text-json-jsonelement-objectbuilder-build.ctor.html#jsonelement-objectbuilder-build-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(ref JsonElement.ObjectBuilder, AsyncCallback, object)](/api/corvus-text-json-jsonelement-objectbuilder-build.begininvoke.html#iasyncresult-begininvoke-ref-jsonelement-objectbuilder-builder-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref JsonElement.ObjectBuilder, IAsyncResult)](/api/corvus-text-json-jsonelement-objectbuilder-build.endinvoke.html#void-endinvoke-ref-jsonelement-objectbuilder-builder-iasyncresult-result) |  |
-| [Invoke(ref JsonElement.ObjectBuilder)](/api/corvus-text-json-jsonelement-objectbuilder-build.invoke.html#void-invoke-ref-jsonelement-objectbuilder-builder) |  |
+| [BeginInvoke(ref JsonElement.ObjectBuilder, AsyncCallback, object)](/api/corvus-text-json-jsonelement-objectbuilder-build.begininvoke.html#begininvoke-ref-jsonelement-objectbuilder-asynccallback-object) |  |
+| [EndInvoke(ref JsonElement.ObjectBuilder, IAsyncResult)](/api/corvus-text-json-jsonelement-objectbuilder-build.endinvoke.html#endinvoke-ref-jsonelement-objectbuilder-iasyncresult) |  |
+| [Invoke(ref JsonElement.ObjectBuilder)](/api/corvus-text-json-jsonelement-objectbuilder-build.invoke.html#invoke-ref-jsonelement-objectbuilder) |  |
 

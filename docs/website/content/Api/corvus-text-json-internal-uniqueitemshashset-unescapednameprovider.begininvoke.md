@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.BeginInvoke Method — Corvus.T
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginInvoke `virtual`
+## BeginInvoke {#begininvoke}
 
 ```csharp
 IAsyncResult BeginInvoke(AsyncCallback callback, object object)

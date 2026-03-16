@@ -9,7 +9,7 @@ Title: "Polyfills.Validate Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Validate `static`
+## Validate {#validate}
 
 ```csharp
 ValidationContext Validate<T>(T element, ref ValidationContext context, ValidationLevel validationLevel)

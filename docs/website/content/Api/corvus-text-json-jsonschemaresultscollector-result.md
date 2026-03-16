@@ -22,8 +22,8 @@ public readonly struct JsonSchemaResultsCollector.Result
 
 | Method | Description |
 |--------|-------------|
-| [GetDocumentEvaluationLocationText()](/api/corvus-text-json-jsonschemaresultscollector-result.getdocumentevaluationlocationtext.html#string-getdocumentevaluationlocationtext) |  |
-| [GetEvaluationLocationText()](/api/corvus-text-json-jsonschemaresultscollector-result.getevaluationlocationtext.html#string-getevaluationlocationtext) |  |
-| [GetMessageText()](/api/corvus-text-json-jsonschemaresultscollector-result.getmessagetext.html#string-getmessagetext) |  |
-| [GetSchemaEvaluationLocationText()](/api/corvus-text-json-jsonschemaresultscollector-result.getschemaevaluationlocationtext.html#string-getschemaevaluationlocationtext) |  |
+| [GetDocumentEvaluationLocationText()](/api/corvus-text-json-jsonschemaresultscollector-result.getdocumentevaluationlocationtext.html#getdocumentevaluationlocationtext) |  |
+| [GetEvaluationLocationText()](/api/corvus-text-json-jsonschemaresultscollector-result.getevaluationlocationtext.html#getevaluationlocationtext) |  |
+| [GetMessageText()](/api/corvus-text-json-jsonschemaresultscollector-result.getmessagetext.html#getmessagetext) |  |
+| [GetSchemaEvaluationLocationText()](/api/corvus-text-json-jsonschemaresultscollector-result.getschemaevaluationlocationtext.html#getschemaevaluationlocationtext) |  |
 

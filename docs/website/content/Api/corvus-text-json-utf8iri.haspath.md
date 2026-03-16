@@ -9,7 +9,7 @@ Title: "Utf8Iri.HasPath Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasPath
+## HasPath {#haspath}
 
 ```csharp
 bool HasPath { get; }

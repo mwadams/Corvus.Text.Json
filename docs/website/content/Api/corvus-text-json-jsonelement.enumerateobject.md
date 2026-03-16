@@ -9,7 +9,7 @@ Title: "JsonElement.EnumerateObject Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EnumerateObject
+## EnumerateObject {#enumerateobject}
 
 ```csharp
 ObjectEnumerator<JsonElement> EnumerateObject()

@@ -30,8 +30,8 @@ Provides an enumerator and enumerable for iterating over the elements of a JSON 
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-arrayenumerator-titem.dispose.html#void-dispose) | Releases resources used by the enumerator. |
-| [GetEnumerator()](/api/corvus-text-json-arrayenumerator-titem.getenumerator.html#arrayenumerator-titem-getenumerator) | Returns an enumerator that iterates through the JSON array. |
-| [MoveNext()](/api/corvus-text-json-arrayenumerator-titem.movenext.html#bool-movenext) | Advances the enumerator to the next element of the collection. |
-| [Reset()](/api/corvus-text-json-arrayenumerator-titem.reset.html#void-reset) | Sets the enumerator to its initial position, which is before the first element in the collection. |
+| [Dispose()](/api/corvus-text-json-arrayenumerator-titem.dispose.html#dispose) | Releases resources used by the enumerator. |
+| [GetEnumerator()](/api/corvus-text-json-arrayenumerator-titem.getenumerator.html#getenumerator) | Returns an enumerator that iterates through the JSON array. |
+| [MoveNext()](/api/corvus-text-json-arrayenumerator-titem.movenext.html#movenext) | Advances the enumerator to the next element of the collection. |
+| [Reset()](/api/corvus-text-json-arrayenumerator-titem.reset.html#reset) | Sets the enumerator to its initial position, which is before the first element in the collection. |
 

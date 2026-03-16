@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.BeginContext Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginContext `static`
+## BeginContext {#begincontext}
 
 ```csharp
 JsonSchemaContext BeginContext<T>(T parentDocument, int parentDocumentIndex, bool usingEvaluatedItems, bool usingEvaluatedProperties, IJsonSchemaResultsCollector resultsCollector)

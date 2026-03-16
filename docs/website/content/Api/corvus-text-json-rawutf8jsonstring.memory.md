@@ -9,7 +9,7 @@ Title: "RawUtf8JsonString.Memory Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Memory
+## Memory {#memory}
 
 ```csharp
 ReadOnlyMemory<byte> Memory { get; }

@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.EndArray Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndArray
+## EndArray {#endarray}
 
 ```csharp
 void EndArray()

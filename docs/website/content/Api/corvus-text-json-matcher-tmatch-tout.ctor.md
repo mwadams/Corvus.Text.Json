@@ -9,7 +9,7 @@ Title: "Matcher<TMatch, TOut> Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Matcher
+## Matcher {#matcher}
 
 ```csharp
 Matcher(object object, IntPtr method)

@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetStartIndex Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetStartIndex `abstract`
+## GetStartIndex {#getstartindex}
 
 ```csharp
 int GetStartIndex(int endIndex)

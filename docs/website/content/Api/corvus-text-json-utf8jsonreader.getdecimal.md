@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.GetDecimal Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetDecimal
+## GetDecimal {#getdecimal}
 
 ```csharp
 decimal GetDecimal()

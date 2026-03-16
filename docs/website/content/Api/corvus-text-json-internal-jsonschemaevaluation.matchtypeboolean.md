@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchTypeBoolean Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchTypeBoolean `static`
+## MatchTypeBoolean {#matchtypeboolean}
 
 ```csharp
 bool MatchTypeBoolean(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)

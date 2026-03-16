@@ -9,7 +9,7 @@ Title: "BigNumber.MinusOne Property — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## MinusOne `static`
+## MinusOne {#minusone}
 
 ```csharp
 BigNumber MinusOne { get; }

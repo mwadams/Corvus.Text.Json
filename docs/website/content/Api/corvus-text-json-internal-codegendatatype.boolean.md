@@ -9,7 +9,7 @@ Title: "CodeGenDataType.Boolean Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Boolean `static`
+## Boolean {#boolean}
 
 ```csharp
 CodeGenDataType Boolean

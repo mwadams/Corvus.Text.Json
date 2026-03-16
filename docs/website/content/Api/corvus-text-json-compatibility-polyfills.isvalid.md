@@ -9,7 +9,7 @@ Title: "Polyfills.IsValid Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsValid `static`
+## IsValid {#isvalid}
 
 ```csharp
 bool IsValid<T>(T element)

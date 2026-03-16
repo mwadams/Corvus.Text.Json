@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetGuid Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetGuid
+## GetGuid {#getguid}
 
 ```csharp
 Guid GetGuid()

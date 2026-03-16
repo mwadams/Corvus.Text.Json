@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.Singleline Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Singleline `static`
+## Singleline {#singleline}
 
 ```csharp
 JsonRegexOptions Singleline

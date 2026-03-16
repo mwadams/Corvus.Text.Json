@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedTypeBoolean Field — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedTypeBoolean `static`
+## ExpectedTypeBoolean {#expectedtypeboolean}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeBoolean

@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchBase64Content Method — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchBase64Content `static`
+## MatchBase64Content {#matchbase64content}
 
 ```csharp
 bool MatchBase64Content(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

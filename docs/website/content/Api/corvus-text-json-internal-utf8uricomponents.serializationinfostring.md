@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.SerializationInfoString Field — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SerializationInfoString `static`
+## SerializationInfoString {#serializationinfostring}
 
 ```csharp
 Utf8UriComponents SerializationInfoString

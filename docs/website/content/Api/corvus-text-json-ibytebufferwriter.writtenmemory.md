@@ -9,7 +9,7 @@ Title: "IByteBufferWriter.WrittenMemory Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## WrittenMemory
+## WrittenMemory {#writtenmemory}
 
 ```csharp
 ReadOnlyMemory<byte> WrittenMemory { get; }

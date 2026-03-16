@@ -13,12 +13,12 @@ Title: "JsonElement.Item Property — Corvus.Text.Json"
 
 | Property | Description |
 |----------|-------------|
-| [this\[int\]](#jsonelement-this-int-index-get) | Get the value at a specified index when the current value is a [`Array`](/api/corvus-text-json-jsonvaluekind.html#array). |
-| [this\[ReadOnlySpan&lt;byte&gt;\]](#jsonelement-this-readonlyspan-byte-propertyname-get) | Gets the value of the property with the given UTF-8 encoded name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
-| [this\[ReadOnlySpan&lt;char&gt;\]](#jsonelement-this-readonlyspan-char-propertyname-get) | Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
-| [this\[string\]](#jsonelement-this-string-propertyname-get) | Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
+| [this\[int\]](#this-int) | Get the value at a specified index when the current value is a [`Array`](/api/corvus-text-json-jsonvaluekind.html#array). |
+| [this\[ReadOnlySpan&lt;byte&gt;\]](#this-readonlyspan-byte) | Gets the value of the property with the given UTF-8 encoded name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
+| [this\[ReadOnlySpan&lt;char&gt;\]](#this-readonlyspan-char) | Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
+| [this\[string\]](#this-string) | Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
 
-## this[int]
+## this[int] {#this-int}
 
 ```csharp
 JsonElement this[int index] { get; }
@@ -46,7 +46,7 @@ Get the value at a specified index when the current value is a [`Array`](/api/co
 
 ---
 
-## this[ReadOnlySpan<byte>]
+## this[ReadOnlySpan&lt;byte&gt;] {#this-readonlyspan-byte}
 
 ```csharp
 JsonElement this[ReadOnlySpan<byte> propertyName] { get; }
@@ -75,7 +75,7 @@ The value of the property with the given name, or a default [`JsonElement`](/api
 
 ---
 
-## this[ReadOnlySpan<char>]
+## this[ReadOnlySpan&lt;char&gt;] {#this-readonlyspan-char}
 
 ```csharp
 JsonElement this[ReadOnlySpan<char> propertyName] { get; }
@@ -104,7 +104,7 @@ The value of the property with the given name, or a default [`JsonElement`](/api
 
 ---
 
-## this[string]
+## this[string] {#this-string}
 
 ```csharp
 JsonElement this[string propertyName] { get; }

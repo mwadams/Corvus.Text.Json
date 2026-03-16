@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.AddLocalEvaluatedItem Method — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddLocalEvaluatedItem
+## AddLocalEvaluatedItem {#addlocalevaluateditem}
 
 ```csharp
 void AddLocalEvaluatedItem(int index)

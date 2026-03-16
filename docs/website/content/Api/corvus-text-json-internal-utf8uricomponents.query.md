@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.Query Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Query `static`
+## Query {#query}
 
 ```csharp
 Utf8UriComponents Query

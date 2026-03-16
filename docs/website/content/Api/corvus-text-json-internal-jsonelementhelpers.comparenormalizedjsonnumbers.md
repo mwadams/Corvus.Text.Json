@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.CompareNormalizedJsonNumbers Method — Corvus.Text.J
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## CompareNormalizedJsonNumbers `static`
+## CompareNormalizedJsonNumbers {#comparenormalizedjsonnumbers}
 
 ```csharp
 int CompareNormalizedJsonNumbers(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent)

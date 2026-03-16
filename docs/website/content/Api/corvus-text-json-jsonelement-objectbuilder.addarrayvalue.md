@@ -13,50 +13,50 @@ Title: "JsonElement.ObjectBuilder.AddArrayValue Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddArrayValue(string, ReadOnlySpan&lt;long&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-long-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;int&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-int-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;short&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-short-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;sbyte&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-sbyte-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;ulong&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-ulong-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;uint&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-uint-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;ushort&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-ushort-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;byte&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-byte-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;decimal&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-decimal-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;double&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-double-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;float&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-float-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;Int128&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-int128-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;UInt128&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-uint128-array) |  |
-| [AddArrayValue(string, ReadOnlySpan&lt;Half&gt;)](#void-addarrayvalue-string-propertyname-readonlyspan-half-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;long&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-long-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;int&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-int-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;short&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-short-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;sbyte&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-sbyte-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ulong&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-ulong-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;uint&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-uint-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ushort&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-ushort-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-byte-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;decimal&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-decimal-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;double&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-double-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;float&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-float-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Int128&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-int128-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;UInt128&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-uint128-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Half&gt;)](#void-addarrayvalue-readonlyspan-char-propertyname-readonlyspan-half-array) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;long&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-long-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;int&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-int-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;short&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-short-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;sbyte&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-sbyte-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ulong&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-ulong-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;uint&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-uint-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ushort&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-ushort-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-byte-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;decimal&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-decimal-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;double&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-double-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;float&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-float-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Int128&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-int128-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;UInt128&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-uint128-array-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Half&gt;, bool, bool)](#void-addarrayvalue-readonlyspan-byte-propertyname-readonlyspan-half-array-bool-escapename-bool-namerequiresunescaping) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;long&gt;)](#addarrayvalue-string-readonlyspan-long) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;int&gt;)](#addarrayvalue-string-readonlyspan-int) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;short&gt;)](#addarrayvalue-string-readonlyspan-short) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;sbyte&gt;)](#addarrayvalue-string-readonlyspan-sbyte) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;ulong&gt;)](#addarrayvalue-string-readonlyspan-ulong) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;uint&gt;)](#addarrayvalue-string-readonlyspan-uint) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;ushort&gt;)](#addarrayvalue-string-readonlyspan-ushort) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;byte&gt;)](#addarrayvalue-string-readonlyspan-byte) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;decimal&gt;)](#addarrayvalue-string-readonlyspan-decimal) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;double&gt;)](#addarrayvalue-string-readonlyspan-double) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;float&gt;)](#addarrayvalue-string-readonlyspan-float) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;Int128&gt;)](#addarrayvalue-string-readonlyspan-int128) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;UInt128&gt;)](#addarrayvalue-string-readonlyspan-uint128) |  |
+| [AddArrayValue(string, ReadOnlySpan&lt;Half&gt;)](#addarrayvalue-string-readonlyspan-half) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;long&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-long) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;int&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-int) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;short&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-short) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;sbyte&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-sbyte) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ulong&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-ulong) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;uint&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-uint) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ushort&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-ushort) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-byte) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;decimal&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-decimal) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;double&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-double) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;float&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-float) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Int128&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-int128) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;UInt128&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-uint128) |  |
+| [AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Half&gt;)](#addarrayvalue-readonlyspan-char-readonlyspan-half) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;long&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-long-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;int&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-int-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;short&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-short-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;sbyte&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-sbyte-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ulong&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-ulong-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;uint&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-uint-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ushort&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-ushort-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-byte-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;decimal&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-decimal-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;double&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-double-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;float&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-float-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Int128&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-int128-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;UInt128&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-uint128-bool-bool) |  |
+| [AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Half&gt;, bool, bool)](#addarrayvalue-readonlyspan-byte-readonlyspan-half-bool-bool) |  |
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;long&gt;) {#addarrayvalue-string-readonlyspan-long}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<long> array)
@@ -71,7 +71,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<long> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;int&gt;) {#addarrayvalue-string-readonlyspan-int}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<int> array)
@@ -86,7 +86,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<int> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;short&gt;) {#addarrayvalue-string-readonlyspan-short}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<short> array)
@@ -101,7 +101,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<short> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;sbyte&gt;) {#addarrayvalue-string-readonlyspan-sbyte}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<sbyte> array)
@@ -116,7 +116,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<sbyte> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;ulong&gt;) {#addarrayvalue-string-readonlyspan-ulong}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<ulong> array)
@@ -131,7 +131,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<ulong> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;uint&gt;) {#addarrayvalue-string-readonlyspan-uint}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<uint> array)
@@ -146,7 +146,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<uint> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;ushort&gt;) {#addarrayvalue-string-readonlyspan-ushort}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<ushort> array)
@@ -161,7 +161,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<ushort> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;byte&gt;) {#addarrayvalue-string-readonlyspan-byte}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<byte> array)
@@ -176,7 +176,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<byte> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;decimal&gt;) {#addarrayvalue-string-readonlyspan-decimal}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<decimal> array)
@@ -191,7 +191,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<decimal> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;double&gt;) {#addarrayvalue-string-readonlyspan-double}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<double> array)
@@ -206,7 +206,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<double> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;float&gt;) {#addarrayvalue-string-readonlyspan-float}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<float> array)
@@ -221,7 +221,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<float> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;Int128&gt;) {#addarrayvalue-string-readonlyspan-int128}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<Int128> array)
@@ -236,7 +236,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<Int128> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;UInt128&gt;) {#addarrayvalue-string-readonlyspan-uint128}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<UInt128> array)
@@ -251,7 +251,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<UInt128> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(string, ReadOnlySpan&lt;Half&gt;) {#addarrayvalue-string-readonlyspan-half}
 
 ```csharp
 void AddArrayValue(string propertyName, ReadOnlySpan<Half> array)
@@ -266,7 +266,7 @@ void AddArrayValue(string propertyName, ReadOnlySpan<Half> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;long&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-long}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<long> array)
@@ -281,7 +281,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<long> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;int&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-int}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<int> array)
@@ -296,7 +296,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<int> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;short&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-short}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<short> array)
@@ -311,7 +311,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<short> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;sbyte&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-sbyte}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<sbyte> array)
@@ -326,7 +326,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<sbyte> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ulong&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-ulong}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ulong> array)
@@ -341,7 +341,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ulong> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;uint&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-uint}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<uint> array)
@@ -356,7 +356,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<uint> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;ushort&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-ushort}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ushort> array)
@@ -371,7 +371,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<ushort> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-byte}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> array)
@@ -386,7 +386,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;decimal&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-decimal}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<decimal> array)
@@ -401,7 +401,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<decimal> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;double&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-double}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<double> array)
@@ -416,7 +416,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<double> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;float&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-float}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<float> array)
@@ -431,7 +431,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<float> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Int128&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-int128}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Int128> array)
@@ -446,7 +446,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Int128> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;UInt128&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-uint128}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<UInt128> array)
@@ -461,7 +461,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<UInt128> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;Half&gt;) {#addarrayvalue-readonlyspan-char-readonlyspan-half}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Half> array)
@@ -476,7 +476,7 @@ void AddArrayValue(ReadOnlySpan<char> propertyName, ReadOnlySpan<Half> array)
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;long&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-long-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<long> array, bool escapeName, bool nameRequiresUnescaping)
@@ -493,7 +493,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<long> array, bo
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;int&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-int-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<int> array, bool escapeName, bool nameRequiresUnescaping)
@@ -510,7 +510,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<int> array, boo
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;short&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-short-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<short> array, bool escapeName, bool nameRequiresUnescaping)
@@ -527,7 +527,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<short> array, b
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;sbyte&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-sbyte-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<sbyte> array, bool escapeName, bool nameRequiresUnescaping)
@@ -544,7 +544,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<sbyte> array, b
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ulong&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-ulong-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ulong> array, bool escapeName, bool nameRequiresUnescaping)
@@ -561,7 +561,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ulong> array, b
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;uint&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-uint-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<uint> array, bool escapeName, bool nameRequiresUnescaping)
@@ -578,7 +578,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<uint> array, bo
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;ushort&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-ushort-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ushort> array, bool escapeName, bool nameRequiresUnescaping)
@@ -595,7 +595,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<ushort> array, 
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> array, bool escapeName, bool nameRequiresUnescaping)
@@ -612,7 +612,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> array, bo
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;decimal&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-decimal-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<decimal> array, bool escapeName, bool nameRequiresUnescaping)
@@ -629,7 +629,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<decimal> array,
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;double&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-double-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<double> array, bool escapeName, bool nameRequiresUnescaping)
@@ -646,7 +646,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<double> array, 
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;float&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-float-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<float> array, bool escapeName, bool nameRequiresUnescaping)
@@ -663,7 +663,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<float> array, b
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Int128&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-int128-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Int128> array, bool escapeName, bool nameRequiresUnescaping)
@@ -680,7 +680,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Int128> array, 
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;UInt128&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-uint128-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<UInt128> array, bool escapeName, bool nameRequiresUnescaping)
@@ -697,7 +697,7 @@ void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<UInt128> array,
 
 ---
 
-## AddArrayValue
+## AddArrayValue(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;Half&gt;, bool, bool) {#addarrayvalue-readonlyspan-byte-readonlyspan-half-bool-bool}
 
 ```csharp
 void AddArrayValue(ReadOnlySpan<byte> propertyName, ReadOnlySpan<Half> array, bool escapeName, bool nameRequiresUnescaping)

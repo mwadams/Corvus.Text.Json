@@ -9,7 +9,7 @@ Title: "IdnMapping.Default Property — Corvus.Globalization"
 **Namespace:** Corvus.Globalization  
 **Assembly:** Corvus.Text.Json.dll
 
-## Default `static`
+## Default {#default}
 
 ```csharp
 IdnMapping Default { get; }

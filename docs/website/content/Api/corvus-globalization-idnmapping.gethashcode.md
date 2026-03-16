@@ -9,7 +9,7 @@ Title: "IdnMapping.GetHashCode Method — Corvus.Globalization"
 **Namespace:** Corvus.Globalization  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetHashCode `virtual`
+## GetHashCode {#gethashcode}
 
 ```csharp
 int GetHashCode()

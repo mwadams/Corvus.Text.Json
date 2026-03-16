@@ -9,7 +9,7 @@ Title: "JsonException.Message Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Message
+## Message {#message}
 
 ```csharp
 string Message { get; }

@@ -9,7 +9,7 @@ Title: "JsonTokenType.Comment Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Comment `static`
+## Comment {#comment}
 
 ```csharp
 JsonTokenType Comment

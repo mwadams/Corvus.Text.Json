@@ -13,11 +13,11 @@ Title: "Utf8JsonWriter.WriteCommentValue Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WriteCommentValue(string)](#void-writecommentvalue-string-value) | Writes the string text value (as a JSON comment). |
-| [WriteCommentValue(ReadOnlySpan&lt;char&gt;)](#void-writecommentvalue-readonlyspan-char-value) | Writes the text value (as a JSON comment). |
-| [WriteCommentValue(ReadOnlySpan&lt;byte&gt;)](#void-writecommentvalue-readonlyspan-byte-utf8value) | Writes the UTF-8 text value (as a JSON comment). |
+| [WriteCommentValue(string)](#writecommentvalue-string) | Writes the string text value (as a JSON comment). |
+| [WriteCommentValue(ReadOnlySpan&lt;char&gt;)](#writecommentvalue-readonlyspan-char) | Writes the text value (as a JSON comment). |
+| [WriteCommentValue(ReadOnlySpan&lt;byte&gt;)](#writecommentvalue-readonlyspan-byte) | Writes the UTF-8 text value (as a JSON comment). |
 
-## WriteCommentValue
+## WriteCommentValue(string) {#writecommentvalue-string}
 
 ```csharp
 void WriteCommentValue(string value)
@@ -44,7 +44,7 @@ The comment value is not escaped before writing.
 
 ---
 
-## WriteCommentValue
+## WriteCommentValue(ReadOnlySpan&lt;char&gt;) {#writecommentvalue-readonlyspan-char}
 
 ```csharp
 void WriteCommentValue(ReadOnlySpan<char> value)
@@ -70,7 +70,7 @@ The comment value is not escaped before writing.
 
 ---
 
-## WriteCommentValue
+## WriteCommentValue(ReadOnlySpan&lt;byte&gt;) {#writecommentvalue-readonlyspan-byte}
 
 ```csharp
 void WriteCommentValue(ReadOnlySpan<byte> utf8Value)

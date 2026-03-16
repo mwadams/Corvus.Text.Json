@@ -13,10 +13,10 @@ Title: "JsonElement.JsonSchema.Evaluate Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [Evaluate(IJsonDocument, int, ref JsonSchemaContext)](#void-evaluate-ijsondocument-parentdocument-int-parentindex-ref-jsonschemacontext-context) |  |
-| [Evaluate(IJsonDocument, int, IJsonSchemaResultsCollector)](#bool-evaluate-ijsondocument-parentdocument-int-parentindex-ijsonschemaresultscollector-resultscollector) |  |
+| [Evaluate(IJsonDocument, int, ref JsonSchemaContext)](#evaluate-ijsondocument-int-ref-jsonschemacontext) |  |
+| [Evaluate(IJsonDocument, int, IJsonSchemaResultsCollector)](#evaluate-ijsondocument-int-ijsonschemaresultscollector) |  |
 
-## Evaluate `static`
+## Evaluate(IJsonDocument, int, ref JsonSchemaContext) {#evaluate-ijsondocument-int-ref-jsonschemacontext}
 
 ```csharp
 void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaContext context)
@@ -32,7 +32,7 @@ void Evaluate(IJsonDocument parentDocument, int parentIndex, ref JsonSchemaConte
 
 ---
 
-## Evaluate `static`
+## Evaluate(IJsonDocument, int, IJsonSchemaResultsCollector) {#evaluate-ijsondocument-int-ijsonschemaresultscollector}
 
 ```csharp
 bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJsonSchemaResultsCollector resultsCollector)

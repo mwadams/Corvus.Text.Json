@@ -9,7 +9,7 @@ Title: "Utf8IriReferenceValue.TryGetValue Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetValue `static`
+## TryGetValue {#trygetvalue}
 
 ```csharp
 bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8IriReferenceValue value)

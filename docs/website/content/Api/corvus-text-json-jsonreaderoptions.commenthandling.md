@@ -9,7 +9,7 @@ Title: "JsonReaderOptions.CommentHandling Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CommentHandling
+## CommentHandling {#commenthandling}
 
 ```csharp
 JsonCommentHandling CommentHandling { get; set; }

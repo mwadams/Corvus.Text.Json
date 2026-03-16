@@ -9,7 +9,7 @@ Title: "JsonElement.EnsurePropertyMap Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EnsurePropertyMap
+## EnsurePropertyMap {#ensurepropertymap}
 
 ```csharp
 void EnsurePropertyMap()

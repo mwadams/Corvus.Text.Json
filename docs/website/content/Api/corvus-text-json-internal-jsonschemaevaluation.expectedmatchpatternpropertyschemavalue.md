@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedMatchPatternPropertySchemaValue Method — 
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedMatchPatternPropertySchemaValue `static`
+## ExpectedMatchPatternPropertySchemaValue {#expectedmatchpatternpropertyschemavalue}
 
 ```csharp
 bool ExpectedMatchPatternPropertySchemaValue(string expression, Span<byte> buffer, ref int written)

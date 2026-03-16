@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.SetAndDispose Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SetAndDispose `abstract`
+## SetAndDispose {#setanddispose}
 
 ```csharp
 void SetAndDispose(ref ComplexValueBuilder cvb)

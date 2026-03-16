@@ -9,7 +9,7 @@ Title: "IByteBufferWriter.Capacity Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Capacity
+## Capacity {#capacity}
 
 ```csharp
 int Capacity { get; }

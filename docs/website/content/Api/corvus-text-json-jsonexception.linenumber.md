@@ -9,7 +9,7 @@ Title: "JsonException.LineNumber Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## LineNumber
+## LineNumber {#linenumber}
 
 ```csharp
 Nullable<long> LineNumber { get; set; }

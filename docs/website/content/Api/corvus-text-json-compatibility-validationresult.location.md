@@ -9,7 +9,7 @@ Title: "ValidationResult.Location Property — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Location
+## Location {#location}
 
 ```csharp
 ValidationResult.LocationTuple Location { get; }

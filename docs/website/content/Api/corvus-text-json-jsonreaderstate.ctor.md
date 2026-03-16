@@ -9,7 +9,7 @@ Title: "JsonReaderState Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## JsonReaderState
+## JsonReaderState {#jsonreaderstate}
 
 ```csharp
 JsonReaderState(JsonReaderOptions options)

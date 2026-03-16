@@ -24,5 +24,5 @@ public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
 
 | Method | Description |
 |--------|-------------|
-| [ClearAndReturnBuffers()](/api/corvus-text-json-ibytebufferwriter.clearandreturnbuffers.html#void-clearandreturnbuffers) |  |
+| [ClearAndReturnBuffers()](/api/corvus-text-json-ibytebufferwriter.clearandreturnbuffers.html#clearandreturnbuffers) |  |
 

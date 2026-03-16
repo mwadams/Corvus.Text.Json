@@ -13,14 +13,14 @@ Title: "BigNumber.Implicit Operator — Corvus.Numerics"
 
 | Operator | Description |
 |----------|-------------|
-| [implicit operator BigNumber(int)](#static-implicit-operator-bignumber-int-value) | Converts an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(long)](#static-implicit-operator-bignumber-long-value) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(ulong)](#static-implicit-operator-bignumber-ulong-value) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(BigInteger)](#static-implicit-operator-bignumber-biginteger-value) | Converts a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(decimal)](#static-implicit-operator-bignumber-decimal-value) | Converts a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [implicit operator BigNumber(double)](#static-implicit-operator-bignumber-double-value) | Converts a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(int)](#implicit-operator-bignumber-int) | Converts an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(long)](#implicit-operator-bignumber-long) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(ulong)](#implicit-operator-bignumber-ulong) | Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(BigInteger)](#implicit-operator-bignumber-biginteger) | Converts a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(decimal)](#implicit-operator-bignumber-decimal) | Converts a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [implicit operator BigNumber(double)](#implicit-operator-bignumber-double) | Converts a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) to a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
 
-## implicit operator BigNumber `static`
+## implicit operator BigNumber(int) {#implicit-operator-bignumber-int}
 
 ```csharp
 static implicit operator BigNumber(int value)
@@ -40,7 +40,7 @@ Converts an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) to a 
 
 ---
 
-## implicit operator BigNumber `static`
+## implicit operator BigNumber(long) {#implicit-operator-bignumber-long}
 
 ```csharp
 static implicit operator BigNumber(long value)
@@ -60,7 +60,7 @@ Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [
 
 ---
 
-## implicit operator BigNumber `static`
+## implicit operator BigNumber(ulong) {#implicit-operator-bignumber-ulong}
 
 ```csharp
 static implicit operator BigNumber(ulong value)
@@ -80,7 +80,7 @@ Converts a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) to a [
 
 ---
 
-## implicit operator BigNumber `static`
+## implicit operator BigNumber(BigInteger) {#implicit-operator-bignumber-biginteger}
 
 ```csharp
 static implicit operator BigNumber(BigInteger value)
@@ -100,7 +100,7 @@ Converts a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics
 
 ---
 
-## implicit operator BigNumber `static`
+## implicit operator BigNumber(decimal) {#implicit-operator-bignumber-decimal}
 
 ```csharp
 static implicit operator BigNumber(decimal value)
@@ -120,7 +120,7 @@ Converts a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) to
 
 ---
 
-## implicit operator BigNumber `static`
+## implicit operator BigNumber(double) {#implicit-operator-bignumber-double}
 
 ```csharp
 static implicit operator BigNumber(double value)

@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.IgnoreCase Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IgnoreCase `static`
+## IgnoreCase {#ignorecase}
 
 ```csharp
 JsonRegexOptions IgnoreCase

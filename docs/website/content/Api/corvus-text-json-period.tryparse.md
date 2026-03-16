@@ -9,7 +9,7 @@ Title: "Period.TryParse Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryParse `static`
+## TryParse {#tryparse}
 
 ```csharp
 bool TryParse(ReadOnlySpan<byte> value, ref Period result)

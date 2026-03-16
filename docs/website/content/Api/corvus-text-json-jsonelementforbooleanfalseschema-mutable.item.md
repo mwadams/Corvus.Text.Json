@@ -9,7 +9,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Item Property — Corvus.Text.J
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## this[int]
+## this[int] {#this-int}
 
 ```csharp
 JsonElementForBooleanFalseSchema.Mutable this[int index] { get; }

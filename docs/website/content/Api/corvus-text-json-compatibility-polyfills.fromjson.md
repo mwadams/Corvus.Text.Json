@@ -9,7 +9,7 @@ Title: "Polyfills.FromJson Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## FromJson `static`
+## FromJson {#fromjson}
 
 ```csharp
 T FromJson<T, TTarget>(ref TTarget value)

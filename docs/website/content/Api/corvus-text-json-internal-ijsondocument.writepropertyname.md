@@ -9,7 +9,7 @@ Title: "IJsonDocument.WritePropertyName Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## WritePropertyName `abstract`
+## WritePropertyName {#writepropertyname}
 
 ```csharp
 void WritePropertyName(int index, Utf8JsonWriter writer)

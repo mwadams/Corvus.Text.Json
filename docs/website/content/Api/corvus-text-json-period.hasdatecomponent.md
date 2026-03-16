@@ -9,7 +9,7 @@ Title: "Period.HasDateComponent Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasDateComponent
+## HasDateComponent {#hasdatecomponent}
 
 ```csharp
 bool HasDateComponent { get; }

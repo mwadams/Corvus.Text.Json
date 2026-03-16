@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchTypeNull Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchTypeNull `static`
+## MatchTypeNull {#matchtypenull}
 
 ```csharp
 bool MatchTypeNull(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)

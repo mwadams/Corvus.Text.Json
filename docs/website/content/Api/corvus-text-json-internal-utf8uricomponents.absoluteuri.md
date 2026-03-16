@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.AbsoluteUri Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AbsoluteUri `static`
+## AbsoluteUri {#absoluteuri}
 
 ```csharp
 Utf8UriComponents AbsoluteUri

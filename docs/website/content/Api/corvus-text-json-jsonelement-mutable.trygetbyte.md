@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.TryGetByte Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetByte
+## TryGetByte {#trygetbyte}
 
 ```csharp
 bool TryGetByte(ref byte value)

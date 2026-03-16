@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchUri Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchUri `static`
+## MatchUri {#matchuri}
 
 ```csharp
 bool MatchUri(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

@@ -9,7 +9,7 @@ Title: "JsonElement.GetPeriod Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetPeriod
+## GetPeriod {#getperiod}
 
 ```csharp
 Period GetPeriod()

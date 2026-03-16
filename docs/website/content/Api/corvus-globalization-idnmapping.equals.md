@@ -9,7 +9,7 @@ Title: "IdnMapping.Equals Method — Corvus.Globalization"
 **Namespace:** Corvus.Globalization  
 **Assembly:** Corvus.Text.Json.dll
 
-## Equals `virtual`
+## Equals {#equals}
 
 ```csharp
 bool Equals(object obj)

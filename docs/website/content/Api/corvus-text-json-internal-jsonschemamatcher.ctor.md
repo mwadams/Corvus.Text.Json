@@ -9,7 +9,7 @@ Title: "JsonSchemaMatcher Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## JsonSchemaMatcher
+## JsonSchemaMatcher {#jsonschemamatcher}
 
 ```csharp
 JsonSchemaMatcher(object object, IntPtr method)

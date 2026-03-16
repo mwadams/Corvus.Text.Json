@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TryGetSByte Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetSByte
+## TryGetSByte {#trygetsbyte}
 
 ```csharp
 bool TryGetSByte(ref sbyte value)

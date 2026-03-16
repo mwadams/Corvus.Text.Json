@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TryGetDouble Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetDouble
+## TryGetDouble {#trygetdouble}
 
 ```csharp
 bool TryGetDouble(ref double value)

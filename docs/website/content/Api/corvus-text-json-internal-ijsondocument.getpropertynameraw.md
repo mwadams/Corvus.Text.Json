@@ -13,10 +13,10 @@ Title: "IJsonDocument.GetPropertyNameRaw Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [GetPropertyNameRaw(int)](#readonlyspan-byte-getpropertynameraw-int-index) | Gets the raw property name as a byte span for the specified index. |
-| [GetPropertyNameRaw(int, bool)](#readonlymemory-byte-getpropertynameraw-int-index-bool-includequotes) | Gets the raw property name as a byte span for the specified index. |
+| [GetPropertyNameRaw(int)](#getpropertynameraw-int) | Gets the raw property name as a byte span for the specified index. |
+| [GetPropertyNameRaw(int, bool)](#getpropertynameraw-int-bool) | Gets the raw property name as a byte span for the specified index. |
 
-## GetPropertyNameRaw `abstract`
+## GetPropertyNameRaw(int) {#getpropertynameraw-int}
 
 ```csharp
 ReadOnlySpan<byte> GetPropertyNameRaw(int index)
@@ -38,7 +38,7 @@ The raw property name as a byte span.
 
 ---
 
-## GetPropertyNameRaw `abstract`
+## GetPropertyNameRaw(int, bool) {#getpropertynameraw-int-bool}
 
 ```csharp
 ReadOnlyMemory<byte> GetPropertyNameRaw(int index, bool includeQuotes)

@@ -9,7 +9,7 @@ Title: "JsonElement.Source.Null Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Null `static`
+## Null {#null}
 
 ```csharp
 JsonElement.Source Null()

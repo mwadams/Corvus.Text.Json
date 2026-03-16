@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsLevel.Basic Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Basic `static`
+## Basic {#basic}
 
 ```csharp
 JsonSchemaResultsLevel Basic

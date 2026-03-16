@@ -9,7 +9,7 @@ Title: "CodeGenNumericType.Decimal Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Decimal `static`
+## Decimal {#decimal}
 
 ```csharp
 CodeGenNumericType Decimal

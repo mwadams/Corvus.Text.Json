@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.RemoveRangeUnsafe Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RemoveRangeUnsafe `static`
+## RemoveRangeUnsafe {#removerangeunsafe}
 
 ```csharp
 void RemoveRangeUnsafe<TArray>(TArray arrayElement, int startIndex, int count)

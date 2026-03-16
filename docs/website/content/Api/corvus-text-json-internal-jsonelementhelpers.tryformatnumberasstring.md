@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.TryFormatNumberAsString Method — Corvus.Text.Json.I
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatNumberAsString `static`
+## TryFormatNumberAsString {#tryformatnumberasstring}
 
 ```csharp
 bool TryFormatNumberAsString(ReadOnlySpan<byte> span, ReadOnlySpan<char> format, IFormatProvider provider, ref string value)

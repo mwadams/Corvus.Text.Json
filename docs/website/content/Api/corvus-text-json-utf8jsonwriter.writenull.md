@@ -13,12 +13,12 @@ Title: "Utf8JsonWriter.WriteNull Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WriteNull(JsonEncodedText)](#void-writenull-jsonencodedtext-propertyname) | Writes the pre-encoded property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
-| [WriteNull(string)](#void-writenull-string-propertyname) | Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
-| [WriteNull(ReadOnlySpan&lt;char&gt;)](#void-writenull-readonlyspan-char-propertyname) | Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
-| [WriteNull(ReadOnlySpan&lt;byte&gt;)](#void-writenull-readonlyspan-byte-utf8propertyname) | Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
+| [WriteNull(JsonEncodedText)](#writenull-jsonencodedtext) | Writes the pre-encoded property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
+| [WriteNull(string)](#writenull-string) | Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
+| [WriteNull(ReadOnlySpan&lt;char&gt;)](#writenull-readonlyspan-char) | Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
+| [WriteNull(ReadOnlySpan&lt;byte&gt;)](#writenull-readonlyspan-byte) | Writes the property name and the JSON literal "null" as part of a name/value pair of a JSON object. |
 
-## WriteNull
+## WriteNull(JsonEncodedText) {#writenull-jsonencodedtext}
 
 ```csharp
 void WriteNull(JsonEncodedText propertyName)
@@ -40,7 +40,7 @@ Writes the pre-encoded property name and the JSON literal "null" as part of a na
 
 ---
 
-## WriteNull
+## WriteNull(string) {#writenull-string}
 
 ```csharp
 void WriteNull(string propertyName)
@@ -68,7 +68,7 @@ The property name is escaped before writing.
 
 ---
 
-## WriteNull
+## WriteNull(ReadOnlySpan&lt;char&gt;) {#writenull-readonlyspan-char}
 
 ```csharp
 void WriteNull(ReadOnlySpan<char> propertyName)
@@ -95,7 +95,7 @@ The property name is escaped before writing.
 
 ---
 
-## WriteNull
+## WriteNull(ReadOnlySpan&lt;byte&gt;) {#writenull-readonlyspan-byte}
 
 ```csharp
 void WriteNull(ReadOnlySpan<byte> utf8PropertyName)

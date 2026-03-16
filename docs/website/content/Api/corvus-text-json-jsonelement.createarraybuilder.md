@@ -9,7 +9,7 @@ Title: "JsonElement.CreateArrayBuilder Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateArrayBuilder `static`
+## CreateArrayBuilder {#createarraybuilder}
 
 ```csharp
 JsonDocumentBuilder<JsonElement.Mutable> CreateArrayBuilder(JsonWorkspace workspace, int estimatedMemberCount)

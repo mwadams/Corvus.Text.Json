@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.StoreBooleanValue Method — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StoreBooleanValue `abstract`
+## StoreBooleanValue {#storebooleanvalue}
 
 ```csharp
 int StoreBooleanValue(bool value)

@@ -9,7 +9,7 @@ Title: "JsonElement.ArrayBuilder.AddFormattedNumber Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddFormattedNumber
+## AddFormattedNumber {#addformattednumber}
 
 ```csharp
 void AddFormattedNumber(ReadOnlySpan<byte> value)

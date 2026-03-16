@@ -9,7 +9,7 @@ Title: "JsonWriterOptions.IndentSize Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IndentSize
+## IndentSize {#indentsize}
 
 ```csharp
 int IndentSize { get; set; }

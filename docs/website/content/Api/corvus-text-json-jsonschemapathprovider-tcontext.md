@@ -24,13 +24,13 @@ Provides a path segment for a JSON Schema location or instance path, using a con
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonSchemaPathProvider(object, IntPtr)](/api/corvus-text-json-jsonschemapathprovider-tcontext.ctor.html#jsonschemapathprovider-object-object-intptr-method) |  |
+| [JsonSchemaPathProvider(object, IntPtr)](/api/corvus-text-json-jsonschemapathprovider-tcontext.ctor.html#jsonschemapathprovider-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(TContext, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-jsonschemapathprovider-tcontext.begininvoke.html#iasyncresult-begininvoke-tcontext-context-span-byte-buffer-ref-int-written-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemapathprovider-tcontext.endinvoke.html#bool-endinvoke-ref-int-written-iasyncresult-result) |  |
-| [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemapathprovider-tcontext.invoke.html#bool-invoke-tcontext-context-span-byte-buffer-ref-int-written) |  |
+| [BeginInvoke(TContext, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-jsonschemapathprovider-tcontext.begininvoke.html#begininvoke-tcontext-span-byte-ref-int-asynccallback-object) |  |
+| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemapathprovider-tcontext.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
+| [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemapathprovider-tcontext.invoke.html#invoke-tcontext-span-byte-ref-int) |  |
 

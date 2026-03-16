@@ -9,7 +9,7 @@ Title: "IJsonDocument.ValueIsEscaped Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueIsEscaped `abstract`
+## ValueIsEscaped {#valueisescaped}
 
 ```csharp
 bool ValueIsEscaped(int index, bool isPropertyName)

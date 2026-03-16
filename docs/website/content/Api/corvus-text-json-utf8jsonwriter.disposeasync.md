@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.DisposeAsync Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## DisposeAsync
+## DisposeAsync {#disposeasync}
 
 ```csharp
 ValueTask DisposeAsync()

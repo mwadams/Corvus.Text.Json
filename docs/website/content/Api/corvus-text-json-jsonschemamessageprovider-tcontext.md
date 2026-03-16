@@ -24,13 +24,13 @@ Provides a message for a JSON Schema validation result, using a context value.
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonSchemaMessageProvider(object, IntPtr)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.ctor.html#jsonschemamessageprovider-object-object-intptr-method) |  |
+| [JsonSchemaMessageProvider(object, IntPtr)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.ctor.html#jsonschemamessageprovider-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(TContext, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.begininvoke.html#iasyncresult-begininvoke-tcontext-context-span-byte-buffer-ref-int-written-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.endinvoke.html#bool-endinvoke-ref-int-written-iasyncresult-result) |  |
-| [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.invoke.html#bool-invoke-tcontext-context-span-byte-buffer-ref-int-written) |  |
+| [BeginInvoke(TContext, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.begininvoke.html#begininvoke-tcontext-span-byte-ref-int-asynccallback-object) |  |
+| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
+| [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.invoke.html#invoke-tcontext-span-byte-ref-int) |  |
 

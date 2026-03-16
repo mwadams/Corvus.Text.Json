@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchLengthLessThan Method — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchLengthLessThan `static`
+## MatchLengthLessThan {#matchlengthlessthan}
 
 ```csharp
 bool MatchLengthLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

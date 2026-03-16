@@ -9,7 +9,7 @@ Title: "JsonTokenType.StartArray Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StartArray `static`
+## StartArray {#startarray}
 
 ```csharp
 JsonTokenType StartArray

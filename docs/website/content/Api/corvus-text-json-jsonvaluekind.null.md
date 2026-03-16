@@ -9,7 +9,7 @@ Title: "JsonValueKind.Null Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Null `static`
+## Null {#null}
 
 ```csharp
 JsonValueKind Null

@@ -9,7 +9,7 @@ Title: "JsonElement.TryGetUInt64 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetUInt64
+## TryGetUInt64 {#trygetuint64}
 
 ```csharp
 bool TryGetUInt64(ref ulong value)

@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.CurrentState Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CurrentState
+## CurrentState {#currentstate}
 
 ```csharp
 JsonReaderState CurrentState { get; }

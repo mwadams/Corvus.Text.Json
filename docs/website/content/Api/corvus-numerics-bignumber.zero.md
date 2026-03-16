@@ -9,7 +9,7 @@ Title: "BigNumber.Zero Property — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Zero `static`
+## Zero {#zero}
 
 ```csharp
 BigNumber Zero { get; }

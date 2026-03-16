@@ -9,7 +9,7 @@ Title: "BigNumber.Sign Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Sign `static`
+## Sign {#sign}
 
 ```csharp
 int Sign(BigNumber value)

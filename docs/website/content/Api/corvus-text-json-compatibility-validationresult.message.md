@@ -9,7 +9,7 @@ Title: "ValidationResult.Message Property — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Message
+## Message {#message}
 
 ```csharp
 string Message { get; }

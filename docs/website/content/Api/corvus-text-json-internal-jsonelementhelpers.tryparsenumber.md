@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.TryParseNumber Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryParseNumber `static`
+## TryParseNumber {#tryparsenumber}
 
 ```csharp
 bool TryParseNumber(ReadOnlySpan<byte> span, ref bool isNegative, ref ReadOnlySpan<byte> integral, ref ReadOnlySpan<byte> fractional, ref int exponent)

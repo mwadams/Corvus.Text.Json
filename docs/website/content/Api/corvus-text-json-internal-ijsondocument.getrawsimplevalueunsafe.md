@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetRawSimpleValueUnsafe Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetRawSimpleValueUnsafe `abstract`
+## GetRawSimpleValueUnsafe {#getrawsimplevalueunsafe}
 
 ```csharp
 ReadOnlyMemory<byte> GetRawSimpleValueUnsafe(int index)

@@ -13,10 +13,10 @@ Title: "JsonElementForBooleanFalseSchema.Equality Operator — Corvus.Text.Json"
 
 | Operator | Description |
 |----------|-------------|
-| [operator ==(JsonElementForBooleanFalseSchema, JsonElementForBooleanFalseSchema)](#static-bool-operator-jsonelementforbooleanfalseschema-left-jsonelementforbooleanfalseschema-right) | Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instances are equal. |
-| [operator ==(JsonElementForBooleanFalseSchema, JsonElement)](#static-bool-operator-jsonelementforbooleanfalseschema-left-jsonelement-right) | Determines whether a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) and a [`JsonElement`](/api/corvus-text-json-jsonelement.html) are equal. |
+| [operator ==(JsonElementForBooleanFalseSchema, JsonElementForBooleanFalseSchema)](#operator-jsonelementforbooleanfalseschema-jsonelementforbooleanfalseschema) | Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instances are equal. |
+| [operator ==(JsonElementForBooleanFalseSchema, JsonElement)](#operator-jsonelementforbooleanfalseschema-jsonelement) | Determines whether a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) and a [`JsonElement`](/api/corvus-text-json-jsonelement.html) are equal. |
 
-## operator == `static`
+## operator ==(JsonElementForBooleanFalseSchema, JsonElementForBooleanFalseSchema) {#operator-jsonelementforbooleanfalseschema-jsonelementforbooleanfalseschema}
 
 ```csharp
 static bool operator ==(JsonElementForBooleanFalseSchema left, JsonElementForBooleanFalseSchema right)
@@ -39,7 +39,7 @@ Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-jso
 
 ---
 
-## operator == `static`
+## operator ==(JsonElementForBooleanFalseSchema, JsonElement) {#operator-jsonelementforbooleanfalseschema-jsonelement}
 
 ```csharp
 static bool operator ==(JsonElementForBooleanFalseSchema left, JsonElement right)

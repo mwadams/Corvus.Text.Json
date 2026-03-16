@@ -9,7 +9,7 @@ Title: "JsonElement.JsonSchema.SchemaLocationProvider Field — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## SchemaLocationProvider `static`
+## SchemaLocationProvider {#schemalocationprovider}
 
 ```csharp
 JsonSchemaPathProvider SchemaLocationProvider

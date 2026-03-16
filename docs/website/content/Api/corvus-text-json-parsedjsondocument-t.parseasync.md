@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.ParseAsync Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ParseAsync `static`
+## ParseAsync {#parseasync}
 
 ```csharp
 Task<ParsedJsonDocument<T>> ParseAsync(Stream utf8Json, JsonDocumentOptions options, CancellationToken cancellationToken)

@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.AddItemIfNotExists Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddItemIfNotExists
+## AddItemIfNotExists {#additemifnotexists}
 
 ```csharp
 bool AddItemIfNotExists(int parentDocumentIndex)

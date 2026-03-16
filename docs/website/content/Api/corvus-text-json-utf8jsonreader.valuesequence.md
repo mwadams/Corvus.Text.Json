@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.ValueSequence Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueSequence
+## ValueSequence {#valuesequence}
 
 ```csharp
 ReadOnlySequence<byte> ValueSequence { get; set; }

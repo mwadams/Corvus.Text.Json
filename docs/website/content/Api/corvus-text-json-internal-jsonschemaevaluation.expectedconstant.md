@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedConstant Field — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedConstant `static`
+## ExpectedConstant {#expectedconstant}
 
 ```csharp
 JsonSchemaMessageProvider<string> ExpectedConstant

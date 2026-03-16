@@ -9,7 +9,7 @@ Title: "JsonTokenType.Null Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Null `static`
+## Null {#null}
 
 ```csharp
 JsonTokenType Null

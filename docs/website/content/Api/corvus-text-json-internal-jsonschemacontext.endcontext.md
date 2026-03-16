@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.EndContext Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndContext
+## EndContext {#endcontext}
 
 ```csharp
 void EndContext()

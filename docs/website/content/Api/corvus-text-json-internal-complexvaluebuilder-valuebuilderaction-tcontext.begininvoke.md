@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.ValueBuilderAction<TContext>.BeginInvoke Method — 
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginInvoke `virtual`
+## BeginInvoke {#begininvoke}
 
 ```csharp
 IAsyncResult BeginInvoke(ref TContext context, ref ComplexValueBuilder builder, AsyncCallback callback, object object)

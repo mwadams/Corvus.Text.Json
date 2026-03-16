@@ -13,37 +13,37 @@ Title: "JsonElement.Source.Implicit Operator — Corvus.Text.Json"
 
 | Operator | Description |
 |----------|-------------|
-| [implicit operator JsonElement.Source(ref JsonElement)](#static-implicit-operator-jsonelement-source-ref-jsonelement-value) |  |
-| [implicit operator JsonElement.Source(ref JsonElement.Mutable)](#static-implicit-operator-jsonelement-source-ref-jsonelement-mutable-value) |  |
-| [implicit operator JsonElement.Source(ReadOnlySpan&lt;byte&gt;)](#static-implicit-operator-jsonelement-source-readonlyspan-byte-value) |  |
-| [implicit operator JsonElement.Source(ReadOnlySpan&lt;char&gt;)](#static-implicit-operator-jsonelement-source-readonlyspan-char-value) |  |
-| [implicit operator JsonElement.Source(string)](#static-implicit-operator-jsonelement-source-string-value) |  |
-| [implicit operator JsonElement.Source(DateTimeOffset)](#static-implicit-operator-jsonelement-source-datetimeoffset-value) |  |
-| [implicit operator JsonElement.Source(DateTime)](#static-implicit-operator-jsonelement-source-datetime-value) |  |
-| [implicit operator JsonElement.Source(OffsetDateTime)](#static-implicit-operator-jsonelement-source-offsetdatetime-value) |  |
-| [implicit operator JsonElement.Source(OffsetDate)](#static-implicit-operator-jsonelement-source-offsetdate-value) |  |
-| [implicit operator JsonElement.Source(OffsetTime)](#static-implicit-operator-jsonelement-source-offsettime-value) |  |
-| [implicit operator JsonElement.Source(LocalDate)](#static-implicit-operator-jsonelement-source-localdate-value) |  |
-| [implicit operator JsonElement.Source(Period)](#static-implicit-operator-jsonelement-source-period-value) |  |
-| [implicit operator JsonElement.Source(Guid)](#static-implicit-operator-jsonelement-source-guid-value) |  |
-| [implicit operator JsonElement.Source(Uri)](#static-implicit-operator-jsonelement-source-uri-value) |  |
-| [implicit operator JsonElement.Source(bool)](#static-implicit-operator-jsonelement-source-bool-value) |  |
-| [implicit operator JsonElement.Source(long)](#static-implicit-operator-jsonelement-source-long-value) |  |
-| [implicit operator JsonElement.Source(int)](#static-implicit-operator-jsonelement-source-int-value) |  |
-| [implicit operator JsonElement.Source(short)](#static-implicit-operator-jsonelement-source-short-value) |  |
-| [implicit operator JsonElement.Source(sbyte)](#static-implicit-operator-jsonelement-source-sbyte-value) |  |
-| [implicit operator JsonElement.Source(ulong)](#static-implicit-operator-jsonelement-source-ulong-value) |  |
-| [implicit operator JsonElement.Source(uint)](#static-implicit-operator-jsonelement-source-uint-value) |  |
-| [implicit operator JsonElement.Source(ushort)](#static-implicit-operator-jsonelement-source-ushort-value) |  |
-| [implicit operator JsonElement.Source(byte)](#static-implicit-operator-jsonelement-source-byte-value) |  |
-| [implicit operator JsonElement.Source(decimal)](#static-implicit-operator-jsonelement-source-decimal-value) |  |
-| [implicit operator JsonElement.Source(double)](#static-implicit-operator-jsonelement-source-double-value) |  |
-| [implicit operator JsonElement.Source(float)](#static-implicit-operator-jsonelement-source-float-value) |  |
-| [implicit operator JsonElement.Source(Int128)](#static-implicit-operator-jsonelement-source-int128-value) |  |
-| [implicit operator JsonElement.Source(UInt128)](#static-implicit-operator-jsonelement-source-uint128-value) |  |
-| [implicit operator JsonElement.Source(Half)](#static-implicit-operator-jsonelement-source-half-value) |  |
+| [implicit operator JsonElement.Source(ref JsonElement)](#implicit-operator-jsonelement-source-ref-jsonelement) |  |
+| [implicit operator JsonElement.Source(ref JsonElement.Mutable)](#implicit-operator-jsonelement-source-ref-jsonelement-mutable) |  |
+| [implicit operator JsonElement.Source(ReadOnlySpan&lt;byte&gt;)](#implicit-operator-jsonelement-source-readonlyspan-byte) |  |
+| [implicit operator JsonElement.Source(ReadOnlySpan&lt;char&gt;)](#implicit-operator-jsonelement-source-readonlyspan-char) |  |
+| [implicit operator JsonElement.Source(string)](#implicit-operator-jsonelement-source-string) |  |
+| [implicit operator JsonElement.Source(DateTimeOffset)](#implicit-operator-jsonelement-source-datetimeoffset) |  |
+| [implicit operator JsonElement.Source(DateTime)](#implicit-operator-jsonelement-source-datetime) |  |
+| [implicit operator JsonElement.Source(OffsetDateTime)](#implicit-operator-jsonelement-source-offsetdatetime) |  |
+| [implicit operator JsonElement.Source(OffsetDate)](#implicit-operator-jsonelement-source-offsetdate) |  |
+| [implicit operator JsonElement.Source(OffsetTime)](#implicit-operator-jsonelement-source-offsettime) |  |
+| [implicit operator JsonElement.Source(LocalDate)](#implicit-operator-jsonelement-source-localdate) |  |
+| [implicit operator JsonElement.Source(Period)](#implicit-operator-jsonelement-source-period) |  |
+| [implicit operator JsonElement.Source(Guid)](#implicit-operator-jsonelement-source-guid) |  |
+| [implicit operator JsonElement.Source(Uri)](#implicit-operator-jsonelement-source-uri) |  |
+| [implicit operator JsonElement.Source(bool)](#implicit-operator-jsonelement-source-bool) |  |
+| [implicit operator JsonElement.Source(long)](#implicit-operator-jsonelement-source-long) |  |
+| [implicit operator JsonElement.Source(int)](#implicit-operator-jsonelement-source-int) |  |
+| [implicit operator JsonElement.Source(short)](#implicit-operator-jsonelement-source-short) |  |
+| [implicit operator JsonElement.Source(sbyte)](#implicit-operator-jsonelement-source-sbyte) |  |
+| [implicit operator JsonElement.Source(ulong)](#implicit-operator-jsonelement-source-ulong) |  |
+| [implicit operator JsonElement.Source(uint)](#implicit-operator-jsonelement-source-uint) |  |
+| [implicit operator JsonElement.Source(ushort)](#implicit-operator-jsonelement-source-ushort) |  |
+| [implicit operator JsonElement.Source(byte)](#implicit-operator-jsonelement-source-byte) |  |
+| [implicit operator JsonElement.Source(decimal)](#implicit-operator-jsonelement-source-decimal) |  |
+| [implicit operator JsonElement.Source(double)](#implicit-operator-jsonelement-source-double) |  |
+| [implicit operator JsonElement.Source(float)](#implicit-operator-jsonelement-source-float) |  |
+| [implicit operator JsonElement.Source(Int128)](#implicit-operator-jsonelement-source-int128) |  |
+| [implicit operator JsonElement.Source(UInt128)](#implicit-operator-jsonelement-source-uint128) |  |
+| [implicit operator JsonElement.Source(Half)](#implicit-operator-jsonelement-source-half) |  |
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(ref JsonElement) {#implicit-operator-jsonelement-source-ref-jsonelement}
 
 ```csharp
 static implicit operator JsonElement.Source(ref JsonElement value)
@@ -61,7 +61,7 @@ static implicit operator JsonElement.Source(ref JsonElement value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(ref JsonElement.Mutable) {#implicit-operator-jsonelement-source-ref-jsonelement-mutable}
 
 ```csharp
 static implicit operator JsonElement.Source(ref JsonElement.Mutable value)
@@ -79,7 +79,7 @@ static implicit operator JsonElement.Source(ref JsonElement.Mutable value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(ReadOnlySpan&lt;byte&gt;) {#implicit-operator-jsonelement-source-readonlyspan-byte}
 
 ```csharp
 static implicit operator JsonElement.Source(ReadOnlySpan<byte> value)
@@ -97,7 +97,7 @@ static implicit operator JsonElement.Source(ReadOnlySpan<byte> value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(ReadOnlySpan&lt;char&gt;) {#implicit-operator-jsonelement-source-readonlyspan-char}
 
 ```csharp
 static implicit operator JsonElement.Source(ReadOnlySpan<char> value)
@@ -115,7 +115,7 @@ static implicit operator JsonElement.Source(ReadOnlySpan<char> value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(string) {#implicit-operator-jsonelement-source-string}
 
 ```csharp
 static implicit operator JsonElement.Source(string value)
@@ -133,7 +133,7 @@ static implicit operator JsonElement.Source(string value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(DateTimeOffset) {#implicit-operator-jsonelement-source-datetimeoffset}
 
 ```csharp
 static implicit operator JsonElement.Source(DateTimeOffset value)
@@ -151,7 +151,7 @@ static implicit operator JsonElement.Source(DateTimeOffset value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(DateTime) {#implicit-operator-jsonelement-source-datetime}
 
 ```csharp
 static implicit operator JsonElement.Source(DateTime value)
@@ -169,7 +169,7 @@ static implicit operator JsonElement.Source(DateTime value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(OffsetDateTime) {#implicit-operator-jsonelement-source-offsetdatetime}
 
 ```csharp
 static implicit operator JsonElement.Source(OffsetDateTime value)
@@ -187,7 +187,7 @@ static implicit operator JsonElement.Source(OffsetDateTime value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(OffsetDate) {#implicit-operator-jsonelement-source-offsetdate}
 
 ```csharp
 static implicit operator JsonElement.Source(OffsetDate value)
@@ -205,7 +205,7 @@ static implicit operator JsonElement.Source(OffsetDate value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(OffsetTime) {#implicit-operator-jsonelement-source-offsettime}
 
 ```csharp
 static implicit operator JsonElement.Source(OffsetTime value)
@@ -223,7 +223,7 @@ static implicit operator JsonElement.Source(OffsetTime value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(LocalDate) {#implicit-operator-jsonelement-source-localdate}
 
 ```csharp
 static implicit operator JsonElement.Source(LocalDate value)
@@ -241,7 +241,7 @@ static implicit operator JsonElement.Source(LocalDate value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(Period) {#implicit-operator-jsonelement-source-period}
 
 ```csharp
 static implicit operator JsonElement.Source(Period value)
@@ -259,7 +259,7 @@ static implicit operator JsonElement.Source(Period value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(Guid) {#implicit-operator-jsonelement-source-guid}
 
 ```csharp
 static implicit operator JsonElement.Source(Guid value)
@@ -277,7 +277,7 @@ static implicit operator JsonElement.Source(Guid value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(Uri) {#implicit-operator-jsonelement-source-uri}
 
 ```csharp
 static implicit operator JsonElement.Source(Uri value)
@@ -295,7 +295,7 @@ static implicit operator JsonElement.Source(Uri value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(bool) {#implicit-operator-jsonelement-source-bool}
 
 ```csharp
 static implicit operator JsonElement.Source(bool value)
@@ -313,7 +313,7 @@ static implicit operator JsonElement.Source(bool value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(long) {#implicit-operator-jsonelement-source-long}
 
 ```csharp
 static implicit operator JsonElement.Source(long value)
@@ -331,7 +331,7 @@ static implicit operator JsonElement.Source(long value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(int) {#implicit-operator-jsonelement-source-int}
 
 ```csharp
 static implicit operator JsonElement.Source(int value)
@@ -349,7 +349,7 @@ static implicit operator JsonElement.Source(int value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(short) {#implicit-operator-jsonelement-source-short}
 
 ```csharp
 static implicit operator JsonElement.Source(short value)
@@ -367,7 +367,7 @@ static implicit operator JsonElement.Source(short value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(sbyte) {#implicit-operator-jsonelement-source-sbyte}
 
 ```csharp
 static implicit operator JsonElement.Source(sbyte value)
@@ -385,7 +385,7 @@ static implicit operator JsonElement.Source(sbyte value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(ulong) {#implicit-operator-jsonelement-source-ulong}
 
 ```csharp
 static implicit operator JsonElement.Source(ulong value)
@@ -403,7 +403,7 @@ static implicit operator JsonElement.Source(ulong value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(uint) {#implicit-operator-jsonelement-source-uint}
 
 ```csharp
 static implicit operator JsonElement.Source(uint value)
@@ -421,7 +421,7 @@ static implicit operator JsonElement.Source(uint value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(ushort) {#implicit-operator-jsonelement-source-ushort}
 
 ```csharp
 static implicit operator JsonElement.Source(ushort value)
@@ -439,7 +439,7 @@ static implicit operator JsonElement.Source(ushort value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(byte) {#implicit-operator-jsonelement-source-byte}
 
 ```csharp
 static implicit operator JsonElement.Source(byte value)
@@ -457,7 +457,7 @@ static implicit operator JsonElement.Source(byte value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(decimal) {#implicit-operator-jsonelement-source-decimal}
 
 ```csharp
 static implicit operator JsonElement.Source(decimal value)
@@ -475,7 +475,7 @@ static implicit operator JsonElement.Source(decimal value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(double) {#implicit-operator-jsonelement-source-double}
 
 ```csharp
 static implicit operator JsonElement.Source(double value)
@@ -493,7 +493,7 @@ static implicit operator JsonElement.Source(double value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(float) {#implicit-operator-jsonelement-source-float}
 
 ```csharp
 static implicit operator JsonElement.Source(float value)
@@ -511,7 +511,7 @@ static implicit operator JsonElement.Source(float value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(Int128) {#implicit-operator-jsonelement-source-int128}
 
 ```csharp
 static implicit operator JsonElement.Source(Int128 value)
@@ -529,7 +529,7 @@ static implicit operator JsonElement.Source(Int128 value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(UInt128) {#implicit-operator-jsonelement-source-uint128}
 
 ```csharp
 static implicit operator JsonElement.Source(UInt128 value)
@@ -547,7 +547,7 @@ static implicit operator JsonElement.Source(UInt128 value)
 
 ---
 
-## implicit operator JsonElement.Source `static`
+## implicit operator JsonElement.Source(Half) {#implicit-operator-jsonelement-source-half}
 
 ```csharp
 static implicit operator JsonElement.Source(Half value)

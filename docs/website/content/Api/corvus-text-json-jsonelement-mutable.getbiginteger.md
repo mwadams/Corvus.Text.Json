@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetBigInteger Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetBigInteger
+## GetBigInteger {#getbiginteger}
 
 ```csharp
 BigInteger GetBigInteger()

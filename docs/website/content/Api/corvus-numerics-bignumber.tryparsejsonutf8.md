@@ -9,7 +9,7 @@ Title: "BigNumber.TryParseJsonUtf8 Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryParseJsonUtf8 `static`
+## TryParseJsonUtf8 {#tryparsejsonutf8}
 
 ```csharp
 bool TryParseJsonUtf8(ReadOnlySpan<byte> utf8Source, ref BigNumber result)

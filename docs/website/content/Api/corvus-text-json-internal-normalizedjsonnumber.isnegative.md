@@ -9,7 +9,7 @@ Title: "NormalizedJsonNumber.IsNegative Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsNegative
+## IsNegative {#isnegative}
 
 ```csharp
 bool IsNegative { get; }

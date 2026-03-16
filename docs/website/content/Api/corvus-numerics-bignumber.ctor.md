@@ -9,7 +9,7 @@ Title: "BigNumber Constructors — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## BigNumber
+## BigNumber {#bignumber}
 
 ```csharp
 BigNumber(BigInteger significand, int exponent)

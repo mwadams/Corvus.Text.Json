@@ -13,12 +13,12 @@ Title: "Utf8JsonReader Constructors — Corvus.Text.Json"
 
 | Constructor | Description |
 |-------------|-------------|
-| [Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, bool, JsonReaderState)](#utf8jsonreader-readonlyspan-byte-jsondata-bool-isfinalblock-jsonreaderstate-state) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
-| [Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, JsonReaderOptions)](#utf8jsonreader-readonlyspan-byte-jsondata-jsonreaderoptions-options) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
-| [Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, bool, JsonReaderState)](#utf8jsonreader-readonlysequence-byte-jsondata-bool-isfinalblock-jsonreaderstate-state) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
-| [Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, JsonReaderOptions)](#utf8jsonreader-readonlysequence-byte-jsondata-jsonreaderoptions-options) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
+| [Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, bool, JsonReaderState)](#utf8jsonreader-readonlyspan-byte-bool-jsonreaderstate) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
+| [Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, JsonReaderOptions)](#utf8jsonreader-readonlyspan-byte-jsonreaderoptions) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
+| [Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, bool, JsonReaderState)](#utf8jsonreader-readonlysequence-byte-bool-jsonreaderstate) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
+| [Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, JsonReaderOptions)](#utf8jsonreader-readonlysequence-byte-jsonreaderoptions) | Constructs a new [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) instance. |
 
-## Utf8JsonReader
+## Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, bool, JsonReaderState) {#utf8jsonreader-readonlyspan-byte-bool-jsonreaderstate}
 
 ```csharp
 Utf8JsonReader(ReadOnlySpan<byte> jsonData, bool isFinalBlock, JsonReaderState state)
@@ -40,7 +40,7 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 
 ---
 
-## Utf8JsonReader
+## Utf8JsonReader(ReadOnlySpan&lt;byte&gt;, JsonReaderOptions) {#utf8jsonreader-readonlyspan-byte-jsonreaderoptions}
 
 ```csharp
 Utf8JsonReader(ReadOnlySpan<byte> jsonData, JsonReaderOptions options)
@@ -61,7 +61,7 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 
 ---
 
-## Utf8JsonReader
+## Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, bool, JsonReaderState) {#utf8jsonreader-readonlysequence-byte-bool-jsonreaderstate}
 
 ```csharp
 Utf8JsonReader(ReadOnlySequence<byte> jsonData, bool isFinalBlock, JsonReaderState state)
@@ -83,7 +83,7 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 
 ---
 
-## Utf8JsonReader
+## Utf8JsonReader(ReadOnlySequence&lt;byte&gt;, JsonReaderOptions) {#utf8jsonreader-readonlysequence-byte-jsonreaderoptions}
 
 ```csharp
 Utf8JsonReader(ReadOnlySequence<byte> jsonData, JsonReaderOptions options)

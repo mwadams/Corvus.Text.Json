@@ -9,7 +9,7 @@ Title: "JsonWriterOptions.NewLine Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## NewLine
+## NewLine {#newline}
 
 ```csharp
 string NewLine { get; set; }

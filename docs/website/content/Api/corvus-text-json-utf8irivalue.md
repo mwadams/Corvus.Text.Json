@@ -28,6 +28,6 @@ This type should be used in a using declaration to ensure that the underlying me
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-utf8irivalue.dispose.html#void-dispose) | Disposes the underlying resources used to store the UTF-8 string backing the IRI value. |
-| [TryGetValue(ref T, int, ref Utf8IriValue)](/api/corvus-text-json-utf8irivalue.trygetvalue.html#bool-trygetvalue-t-ref-t-jsondocument-int-index-ref-utf8irivalue-value) `static` | Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html). |
+| [Dispose()](/api/corvus-text-json-utf8irivalue.dispose.html#dispose) | Disposes the underlying resources used to store the UTF-8 string backing the IRI value. |
+| [TryGetValue(ref T, int, ref Utf8IriValue)](/api/corvus-text-json-utf8irivalue.trygetvalue.html#trygetvalue-ref-t-int-ref-utf8irivalue) `static` | Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html). |
 

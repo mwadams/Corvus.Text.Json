@@ -9,7 +9,7 @@ Title: "JsonEncodedText.EncodedUtf8Bytes Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## EncodedUtf8Bytes
+## EncodedUtf8Bytes {#encodedutf8bytes}
 
 ```csharp
 ReadOnlySpan<byte> EncodedUtf8Bytes { get; }

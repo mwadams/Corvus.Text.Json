@@ -13,10 +13,10 @@ Title: "JsonEncodedText.Equals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [Equals(JsonEncodedText)](#bool-equals-jsonencodedtext-other) | Determines whether this instance and another specified [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance have the same value. |
-| [Equals(object)](#bool-equals-object-obj) | Determines whether this instance and a specified object, which must also be a [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance, have the same value. |
+| [Equals(JsonEncodedText)](#equals-jsonencodedtext) | Determines whether this instance and another specified [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance have the same value. |
+| [Equals(object)](#equals-object) | Determines whether this instance and a specified object, which must also be a [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance, have the same value. |
 
-## Equals
+## Equals(JsonEncodedText) {#equals-jsonencodedtext}
 
 ```csharp
 bool Equals(JsonEncodedText other)
@@ -40,7 +40,7 @@ Default instances of [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.h
 
 ---
 
-## Equals `virtual`
+## Equals(object) {#equals-object}
 
 ```csharp
 bool Equals(object obj)

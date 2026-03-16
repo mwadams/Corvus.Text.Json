@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.Result.GetMessageText Method — Corvus.Text.
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetMessageText
+## GetMessageText {#getmessagetext}
 
 ```csharp
 string GetMessageText()

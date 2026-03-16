@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetBoolean Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetBoolean
+## GetBoolean {#getboolean}
 
 ```csharp
 bool GetBoolean()

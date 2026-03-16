@@ -9,7 +9,7 @@ Title: "BigNumber.TryGetMinimumFormatBufferLength Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetMinimumFormatBufferLength
+## TryGetMinimumFormatBufferLength {#trygetminimumformatbufferlength}
 
 ```csharp
 bool TryGetMinimumFormatBufferLength(ref int minimumLength)

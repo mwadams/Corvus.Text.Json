@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.AddItemFormattedNumber Method — Corvus.Text.Json.I
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddItemFormattedNumber
+## AddItemFormattedNumber {#additemformattednumber}
 
 ```csharp
 void AddItemFormattedNumber(ReadOnlySpan<byte> value)

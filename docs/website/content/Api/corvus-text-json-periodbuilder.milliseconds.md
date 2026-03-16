@@ -9,7 +9,7 @@ Title: "PeriodBuilder.Milliseconds Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Milliseconds
+## Milliseconds {#milliseconds}
 
 ```csharp
 long Milliseconds { get; set; }

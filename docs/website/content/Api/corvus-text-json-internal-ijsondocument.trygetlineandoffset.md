@@ -9,7 +9,7 @@ Title: "IJsonDocument.TryGetLineAndOffset Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetLineAndOffset `abstract`
+## TryGetLineAndOffset {#trygetlineandoffset}
 
 ```csharp
 bool TryGetLineAndOffset(int index, ref int line, ref int charOffset, ref long lineByteOffset)

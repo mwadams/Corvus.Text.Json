@@ -9,7 +9,7 @@ Title: "JsonReaderOptions.AllowMultipleValues Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## AllowMultipleValues
+## AllowMultipleValues {#allowmultiplevalues}
 
 ```csharp
 bool AllowMultipleValues { get; set; }

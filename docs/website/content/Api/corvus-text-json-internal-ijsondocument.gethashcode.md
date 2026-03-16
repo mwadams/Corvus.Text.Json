@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetHashCode Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetHashCode `abstract`
+## GetHashCode {#gethashcode}
 
 ```csharp
 int GetHashCode(int index)

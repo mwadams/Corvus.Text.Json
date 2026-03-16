@@ -9,7 +9,7 @@ Title: "CodeGenNumericType.Half Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Half `static`
+## Half {#half}
 
 ```csharp
 CodeGenNumericType Half

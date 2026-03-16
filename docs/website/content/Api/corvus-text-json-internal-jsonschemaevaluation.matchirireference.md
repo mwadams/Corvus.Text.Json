@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchIriReference Method — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchIriReference `static`
+## MatchIriReference {#matchirireference}
 
 ```csharp
 bool MatchIriReference(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

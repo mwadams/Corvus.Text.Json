@@ -9,7 +9,7 @@ Title: "Utf8Iri.TryFormatDisplay Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatDisplay
+## TryFormatDisplay {#tryformatdisplay}
 
 ```csharp
 bool TryFormatDisplay(Span<byte> buffer, ref int writtenBytes)

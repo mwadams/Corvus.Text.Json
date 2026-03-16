@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.True Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## True `static`
+## True {#true}
 
 ```csharp
 T True { get; }

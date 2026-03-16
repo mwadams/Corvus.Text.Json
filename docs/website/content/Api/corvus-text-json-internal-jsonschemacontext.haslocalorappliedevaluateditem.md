@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.HasLocalOrAppliedEvaluatedItem Method — Corvus.Text.
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasLocalOrAppliedEvaluatedItem
+## HasLocalOrAppliedEvaluatedItem {#haslocalorappliedevaluateditem}
 
 ```csharp
 bool HasLocalOrAppliedEvaluatedItem(int index)

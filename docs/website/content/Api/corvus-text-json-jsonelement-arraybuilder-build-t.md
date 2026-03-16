@@ -16,13 +16,13 @@ public delegate JsonElement.ArrayBuilder.Build<T> : MulticastDelegate, ICloneabl
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonElement.ArrayBuilder.Build(object, IntPtr)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.ctor.html#jsonelement-arraybuilder-build-object-object-intptr-method) |  |
+| [JsonElement.ArrayBuilder.Build(object, IntPtr)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.ctor.html#jsonelement-arraybuilder-build-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(ref T, ref JsonElement.ArrayBuilder, AsyncCallback, object)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.begininvoke.html#iasyncresult-begininvoke-ref-t-context-ref-jsonelement-arraybuilder-builder-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref T, ref JsonElement.ArrayBuilder, IAsyncResult)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.endinvoke.html#void-endinvoke-ref-t-context-ref-jsonelement-arraybuilder-builder-iasyncresult-result) |  |
-| [Invoke(ref T, ref JsonElement.ArrayBuilder)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.invoke.html#void-invoke-ref-t-context-ref-jsonelement-arraybuilder-builder) |  |
+| [BeginInvoke(ref T, ref JsonElement.ArrayBuilder, AsyncCallback, object)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.begininvoke.html#begininvoke-ref-t-ref-jsonelement-arraybuilder-asynccallback-object) |  |
+| [EndInvoke(ref T, ref JsonElement.ArrayBuilder, IAsyncResult)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.endinvoke.html#endinvoke-ref-t-ref-jsonelement-arraybuilder-iasyncresult) |  |
+| [Invoke(ref T, ref JsonElement.ArrayBuilder)](/api/corvus-text-json-jsonelement-arraybuilder-build-t.invoke.html#invoke-ref-t-ref-jsonelement-arraybuilder) |  |
 

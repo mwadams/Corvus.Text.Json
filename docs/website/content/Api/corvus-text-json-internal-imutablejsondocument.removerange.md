@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.RemoveRange Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RemoveRange `abstract`
+## RemoveRange {#removerange}
 
 ```csharp
 void RemoveRange(int complexObjectStartIndex, int startIndex, int endIndex, int membersToRemove)

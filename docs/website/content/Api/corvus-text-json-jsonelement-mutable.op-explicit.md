@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.Explicit Operator — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## explicit operator JsonElement.Mutable `static`
+## explicit operator JsonElement.Mutable {#explicit-operator-jsonelement-mutable}
 
 ```csharp
 static explicit operator JsonElement.Mutable(JsonElement value)

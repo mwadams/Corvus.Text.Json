@@ -9,7 +9,7 @@ Title: "Period.Add Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Add `static`
+## Add {#add}
 
 ```csharp
 Period Add(Period left, Period right)

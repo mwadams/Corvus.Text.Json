@@ -9,7 +9,7 @@ Title: "Utf8Iri.HasUser Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasUser
+## HasUser {#hasuser}
 
 ```csharp
 bool HasUser { get; }

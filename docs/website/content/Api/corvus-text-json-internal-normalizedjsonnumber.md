@@ -14,7 +14,7 @@ Represents a normalized JSON number.
 
 | Constructor | Description |
 |-------------|-------------|
-| [NormalizedJsonNumber(bool, byte\[\], byte\[\], int)](/api/corvus-text-json-internal-normalizedjsonnumber.ctor.html#normalizedjsonnumber-bool-isnegative-byte-integral-byte-fractional-int-exponent) |  |
+| [NormalizedJsonNumber(bool, byte\[\], byte\[\], int)](/api/corvus-text-json-internal-normalizedjsonnumber.ctor.html#normalizedjsonnumber-bool-byte-byte-int) |  |
 
 ## Properties
 

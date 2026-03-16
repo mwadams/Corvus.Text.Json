@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchIPV4 Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchIPV4 `static`
+## MatchIPV4 {#matchipv4}
 
 ```csharp
 bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

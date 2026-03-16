@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedTypeObject Field — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedTypeObject `static`
+## ExpectedTypeObject {#expectedtypeobject}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeObject

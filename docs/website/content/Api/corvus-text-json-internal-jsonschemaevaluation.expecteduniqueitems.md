@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedUniqueItems Field — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedUniqueItems `static`
+## ExpectedUniqueItems {#expecteduniqueitems}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedUniqueItems

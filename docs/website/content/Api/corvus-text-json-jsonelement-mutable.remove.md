@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.Remove Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Remove
+## Remove {#remove}
 
 ```csharp
 bool Remove(ref JsonElement item)

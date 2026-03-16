@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ItemIndex Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ItemIndex `static`
+## ItemIndex {#itemindex}
 
 ```csharp
 JsonSchemaPathProvider<int> ItemIndex

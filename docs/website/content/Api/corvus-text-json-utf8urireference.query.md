@@ -9,7 +9,7 @@ Title: "Utf8UriReference.Query Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Query
+## Query {#query}
 
 ```csharp
 ReadOnlySpan<byte> Query { get; }

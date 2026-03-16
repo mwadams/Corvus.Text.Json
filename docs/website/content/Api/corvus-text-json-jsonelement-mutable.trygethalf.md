@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.TryGetHalf Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetHalf
+## TryGetHalf {#trygethalf}
 
 ```csharp
 bool TryGetHalf(ref Half value)

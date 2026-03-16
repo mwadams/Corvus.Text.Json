@@ -9,7 +9,7 @@ Title: "ValidationLevel.Verbose Field — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Verbose `static`
+## Verbose {#verbose}
 
 ```csharp
 ValidationLevel Verbose

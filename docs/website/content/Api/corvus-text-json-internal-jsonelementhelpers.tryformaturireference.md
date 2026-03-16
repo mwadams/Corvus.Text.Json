@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.TryFormatUriReference Method — Corvus.Text.Json.Int
 
 | Method | Description |
 |--------|-------------|
-| [TryFormatUriReference(Utf8UriReference, bool, ref string)](#bool-tryformaturireference-utf8urireference-urireference-bool-isdisplay-ref-string-result) |  |
-| [TryFormatUriReference(Utf8UriReference, bool, Span&lt;char&gt;, ref int)](#bool-tryformaturireference-utf8urireference-urireference-bool-isdisplay-span-char-destination-ref-int-charswritten) |  |
+| [TryFormatUriReference(Utf8UriReference, bool, ref string)](#tryformaturireference-utf8urireference-bool-ref-string) |  |
+| [TryFormatUriReference(Utf8UriReference, bool, Span&lt;char&gt;, ref int)](#tryformaturireference-utf8urireference-bool-span-char-ref-int) |  |
 
-## TryFormatUriReference `static`
+## TryFormatUriReference(Utf8UriReference, bool, ref string) {#tryformaturireference-utf8urireference-bool-ref-string}
 
 ```csharp
 bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, ref string result)
@@ -36,7 +36,7 @@ bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, ref st
 
 ---
 
-## TryFormatUriReference `static`
+## TryFormatUriReference(Utf8UriReference, bool, Span&lt;char&gt;, ref int) {#tryformaturireference-utf8urireference-bool-span-char-ref-int}
 
 ```csharp
 bool TryFormatUriReference(Utf8UriReference uriReference, bool isDisplay, Span<char> destination, ref int charsWritten)

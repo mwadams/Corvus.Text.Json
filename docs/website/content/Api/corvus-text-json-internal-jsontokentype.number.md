@@ -9,7 +9,7 @@ Title: "JsonTokenType.Number Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Number `static`
+## Number {#number}
 
 ```csharp
 JsonTokenType Number

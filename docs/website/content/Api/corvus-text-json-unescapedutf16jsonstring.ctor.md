@@ -9,7 +9,7 @@ Title: "UnescapedUtf16JsonString Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## UnescapedUtf16JsonString
+## UnescapedUtf16JsonString {#unescapedutf16jsonstring}
 
 ```csharp
 UnescapedUtf16JsonString(ReadOnlyMemory<char> chars, char[] extraRentedArrayPoolChars)

@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountLessThanOrEquals Method — Corvu
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchPropertyCountLessThanOrEquals `static`
+## MatchPropertyCountLessThanOrEquals {#matchpropertycountlessthanorequals}
 
 ```csharp
 bool MatchPropertyCountLessThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

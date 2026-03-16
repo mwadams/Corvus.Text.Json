@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.InsertItemNull Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## InsertItemNull
+## InsertItemNull {#insertitemnull}
 
 ```csharp
 void InsertItemNull(int itemIndex)

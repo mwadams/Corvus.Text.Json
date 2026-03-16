@@ -9,7 +9,7 @@ Title: "Period.FromDays Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## FromDays `static`
+## FromDays {#fromdays}
 
 ```csharp
 Period FromDays(int days)

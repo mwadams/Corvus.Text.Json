@@ -9,7 +9,7 @@ Title: "ComplexValueBuilder.SetAndDispose Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SetAndDispose
+## SetAndDispose {#setanddispose}
 
 ```csharp
 void SetAndDispose(ref MetadataDb targetData)

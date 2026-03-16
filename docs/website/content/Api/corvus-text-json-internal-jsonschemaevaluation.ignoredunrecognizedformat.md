@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.IgnoredUnrecognizedFormat Method — Corvus.Text.Js
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IgnoredUnrecognizedFormat `static`
+## IgnoredUnrecognizedFormat {#ignoredunrecognizedformat}
 
 ```csharp
 bool IgnoredUnrecognizedFormat(Span<byte> buffer, ref int written)

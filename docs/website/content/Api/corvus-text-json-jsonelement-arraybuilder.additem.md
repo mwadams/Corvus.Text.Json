@@ -13,41 +13,41 @@ Title: "JsonElement.ArrayBuilder.AddItem Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddItem(JsonElement.ObjectBuilder.Build)](#void-additem-jsonelement-objectbuilder-build-value) |  |
-| [AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;)](#void-additem-tcontext-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-value) |  |
-| [AddItem(JsonElement.ArrayBuilder.Build)](#void-additem-jsonelement-arraybuilder-build-value) |  |
-| [AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](#void-additem-tcontext-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-value) |  |
-| [AddItem(string)](#void-additem-string-value) |  |
-| [AddItem(ReadOnlySpan&lt;char&gt;)](#void-additem-readonlyspan-char-value) |  |
-| [AddItem(ReadOnlySpan&lt;byte&gt;)](#void-additem-readonlyspan-byte-utf8string) |  |
-| [AddItem(bool)](#void-additem-bool-value) |  |
-| [AddItem(T)](#void-additem-t-t-value) |  |
-| [AddItem(Guid)](#void-additem-guid-value) |  |
-| [AddItem(ref DateTime)](#void-additem-ref-datetime-value) |  |
-| [AddItem(ref DateTimeOffset)](#void-additem-ref-datetimeoffset-value) |  |
-| [AddItem(ref OffsetDateTime)](#void-additem-ref-offsetdatetime-value) |  |
-| [AddItem(ref OffsetDate)](#void-additem-ref-offsetdate-value) |  |
-| [AddItem(ref OffsetTime)](#void-additem-ref-offsettime-value) |  |
-| [AddItem(ref LocalDate)](#void-additem-ref-localdate-value) |  |
-| [AddItem(ref Period)](#void-additem-ref-period-value) |  |
-| [AddItem(sbyte)](#void-additem-sbyte-value) |  |
-| [AddItem(byte)](#void-additem-byte-value) |  |
-| [AddItem(int)](#void-additem-int-value) |  |
-| [AddItem(uint)](#void-additem-uint-value) |  |
-| [AddItem(long)](#void-additem-long-value) |  |
-| [AddItem(ulong)](#void-additem-ulong-value) |  |
-| [AddItem(short)](#void-additem-short-value) |  |
-| [AddItem(ushort)](#void-additem-ushort-value) |  |
-| [AddItem(float)](#void-additem-float-value) |  |
-| [AddItem(double)](#void-additem-double-value) |  |
-| [AddItem(decimal)](#void-additem-decimal-value) |  |
-| [AddItem(ref BigInteger)](#void-additem-ref-biginteger-value) |  |
-| [AddItem(ref BigNumber)](#void-additem-ref-bignumber-value) |  |
-| [AddItem(Int128)](#void-additem-int128-value) |  |
-| [AddItem(UInt128)](#void-additem-uint128-value) |  |
-| [AddItem(Half)](#void-additem-half-value) |  |
+| [AddItem(JsonElement.ObjectBuilder.Build)](#additem-jsonelement-objectbuilder-build) |  |
+| [AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;)](#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext) |  |
+| [AddItem(JsonElement.ArrayBuilder.Build)](#additem-jsonelement-arraybuilder-build) |  |
+| [AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext) |  |
+| [AddItem(string)](#additem-string) |  |
+| [AddItem(ReadOnlySpan&lt;char&gt;)](#additem-readonlyspan-char) |  |
+| [AddItem(ReadOnlySpan&lt;byte&gt;)](#additem-readonlyspan-byte) |  |
+| [AddItem(bool)](#additem-bool) |  |
+| [AddItem(T)](#additem-t) |  |
+| [AddItem(Guid)](#additem-guid) |  |
+| [AddItem(ref DateTime)](#additem-ref-datetime) |  |
+| [AddItem(ref DateTimeOffset)](#additem-ref-datetimeoffset) |  |
+| [AddItem(ref OffsetDateTime)](#additem-ref-offsetdatetime) |  |
+| [AddItem(ref OffsetDate)](#additem-ref-offsetdate) |  |
+| [AddItem(ref OffsetTime)](#additem-ref-offsettime) |  |
+| [AddItem(ref LocalDate)](#additem-ref-localdate) |  |
+| [AddItem(ref Period)](#additem-ref-period) |  |
+| [AddItem(sbyte)](#additem-sbyte) |  |
+| [AddItem(byte)](#additem-byte) |  |
+| [AddItem(int)](#additem-int) |  |
+| [AddItem(uint)](#additem-uint) |  |
+| [AddItem(long)](#additem-long) |  |
+| [AddItem(ulong)](#additem-ulong) |  |
+| [AddItem(short)](#additem-short) |  |
+| [AddItem(ushort)](#additem-ushort) |  |
+| [AddItem(float)](#additem-float) |  |
+| [AddItem(double)](#additem-double) |  |
+| [AddItem(decimal)](#additem-decimal) |  |
+| [AddItem(ref BigInteger)](#additem-ref-biginteger) |  |
+| [AddItem(ref BigNumber)](#additem-ref-bignumber) |  |
+| [AddItem(Int128)](#additem-int128) |  |
+| [AddItem(UInt128)](#additem-uint128) |  |
+| [AddItem(Half)](#additem-half) |  |
 
-## AddItem
+## AddItem(JsonElement.ObjectBuilder.Build) {#additem-jsonelement-objectbuilder-build}
 
 ```csharp
 void AddItem(JsonElement.ObjectBuilder.Build value)
@@ -61,7 +61,7 @@ void AddItem(JsonElement.ObjectBuilder.Build value)
 
 ---
 
-## AddItem
+## AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;) {#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext}
 
 ```csharp
 void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
@@ -76,7 +76,7 @@ void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TCo
 
 ---
 
-## AddItem
+## AddItem(JsonElement.ArrayBuilder.Build) {#additem-jsonelement-arraybuilder-build}
 
 ```csharp
 void AddItem(JsonElement.ArrayBuilder.Build value)
@@ -90,7 +90,7 @@ void AddItem(JsonElement.ArrayBuilder.Build value)
 
 ---
 
-## AddItem
+## AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;) {#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext}
 
 ```csharp
 void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
@@ -105,7 +105,7 @@ void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TCon
 
 ---
 
-## AddItem
+## AddItem(string) {#additem-string}
 
 ```csharp
 void AddItem(string value)
@@ -119,7 +119,7 @@ void AddItem(string value)
 
 ---
 
-## AddItem
+## AddItem(ReadOnlySpan&lt;char&gt;) {#additem-readonlyspan-char}
 
 ```csharp
 void AddItem(ReadOnlySpan<char> value)
@@ -133,7 +133,7 @@ void AddItem(ReadOnlySpan<char> value)
 
 ---
 
-## AddItem
+## AddItem(ReadOnlySpan&lt;byte&gt;) {#additem-readonlyspan-byte}
 
 ```csharp
 void AddItem(ReadOnlySpan<byte> utf8String)
@@ -147,7 +147,7 @@ void AddItem(ReadOnlySpan<byte> utf8String)
 
 ---
 
-## AddItem
+## AddItem(bool) {#additem-bool}
 
 ```csharp
 void AddItem(bool value)
@@ -161,7 +161,7 @@ void AddItem(bool value)
 
 ---
 
-## AddItem
+## AddItem(T) {#additem-t}
 
 ```csharp
 void AddItem<T>(T value)
@@ -175,7 +175,7 @@ void AddItem<T>(T value)
 
 ---
 
-## AddItem
+## AddItem(Guid) {#additem-guid}
 
 ```csharp
 void AddItem(Guid value)
@@ -189,7 +189,7 @@ void AddItem(Guid value)
 
 ---
 
-## AddItem
+## AddItem(ref DateTime) {#additem-ref-datetime}
 
 ```csharp
 void AddItem(ref DateTime value)
@@ -203,7 +203,7 @@ void AddItem(ref DateTime value)
 
 ---
 
-## AddItem
+## AddItem(ref DateTimeOffset) {#additem-ref-datetimeoffset}
 
 ```csharp
 void AddItem(ref DateTimeOffset value)
@@ -217,7 +217,7 @@ void AddItem(ref DateTimeOffset value)
 
 ---
 
-## AddItem
+## AddItem(ref OffsetDateTime) {#additem-ref-offsetdatetime}
 
 ```csharp
 void AddItem(ref OffsetDateTime value)
@@ -231,7 +231,7 @@ void AddItem(ref OffsetDateTime value)
 
 ---
 
-## AddItem
+## AddItem(ref OffsetDate) {#additem-ref-offsetdate}
 
 ```csharp
 void AddItem(ref OffsetDate value)
@@ -245,7 +245,7 @@ void AddItem(ref OffsetDate value)
 
 ---
 
-## AddItem
+## AddItem(ref OffsetTime) {#additem-ref-offsettime}
 
 ```csharp
 void AddItem(ref OffsetTime value)
@@ -259,7 +259,7 @@ void AddItem(ref OffsetTime value)
 
 ---
 
-## AddItem
+## AddItem(ref LocalDate) {#additem-ref-localdate}
 
 ```csharp
 void AddItem(ref LocalDate value)
@@ -273,7 +273,7 @@ void AddItem(ref LocalDate value)
 
 ---
 
-## AddItem
+## AddItem(ref Period) {#additem-ref-period}
 
 ```csharp
 void AddItem(ref Period value)
@@ -287,7 +287,7 @@ void AddItem(ref Period value)
 
 ---
 
-## AddItem
+## AddItem(sbyte) {#additem-sbyte}
 
 ```csharp
 void AddItem(sbyte value)
@@ -301,7 +301,7 @@ void AddItem(sbyte value)
 
 ---
 
-## AddItem
+## AddItem(byte) {#additem-byte}
 
 ```csharp
 void AddItem(byte value)
@@ -315,7 +315,7 @@ void AddItem(byte value)
 
 ---
 
-## AddItem
+## AddItem(int) {#additem-int}
 
 ```csharp
 void AddItem(int value)
@@ -329,7 +329,7 @@ void AddItem(int value)
 
 ---
 
-## AddItem
+## AddItem(uint) {#additem-uint}
 
 ```csharp
 void AddItem(uint value)
@@ -343,7 +343,7 @@ void AddItem(uint value)
 
 ---
 
-## AddItem
+## AddItem(long) {#additem-long}
 
 ```csharp
 void AddItem(long value)
@@ -357,7 +357,7 @@ void AddItem(long value)
 
 ---
 
-## AddItem
+## AddItem(ulong) {#additem-ulong}
 
 ```csharp
 void AddItem(ulong value)
@@ -371,7 +371,7 @@ void AddItem(ulong value)
 
 ---
 
-## AddItem
+## AddItem(short) {#additem-short}
 
 ```csharp
 void AddItem(short value)
@@ -385,7 +385,7 @@ void AddItem(short value)
 
 ---
 
-## AddItem
+## AddItem(ushort) {#additem-ushort}
 
 ```csharp
 void AddItem(ushort value)
@@ -399,7 +399,7 @@ void AddItem(ushort value)
 
 ---
 
-## AddItem
+## AddItem(float) {#additem-float}
 
 ```csharp
 void AddItem(float value)
@@ -413,7 +413,7 @@ void AddItem(float value)
 
 ---
 
-## AddItem
+## AddItem(double) {#additem-double}
 
 ```csharp
 void AddItem(double value)
@@ -427,7 +427,7 @@ void AddItem(double value)
 
 ---
 
-## AddItem
+## AddItem(decimal) {#additem-decimal}
 
 ```csharp
 void AddItem(decimal value)
@@ -441,7 +441,7 @@ void AddItem(decimal value)
 
 ---
 
-## AddItem
+## AddItem(ref BigInteger) {#additem-ref-biginteger}
 
 ```csharp
 void AddItem(ref BigInteger value)
@@ -455,7 +455,7 @@ void AddItem(ref BigInteger value)
 
 ---
 
-## AddItem
+## AddItem(ref BigNumber) {#additem-ref-bignumber}
 
 ```csharp
 void AddItem(ref BigNumber value)
@@ -469,7 +469,7 @@ void AddItem(ref BigNumber value)
 
 ---
 
-## AddItem
+## AddItem(Int128) {#additem-int128}
 
 ```csharp
 void AddItem(Int128 value)
@@ -483,7 +483,7 @@ void AddItem(Int128 value)
 
 ---
 
-## AddItem
+## AddItem(UInt128) {#additem-uint128}
 
 ```csharp
 void AddItem(UInt128 value)
@@ -497,7 +497,7 @@ void AddItem(UInt128 value)
 
 ---
 
-## AddItem
+## AddItem(Half) {#additem-half}
 
 ```csharp
 void AddItem(Half value)

@@ -25,13 +25,13 @@ A callback for a pattern match method.
 
 | Constructor | Description |
 |-------------|-------------|
-| [Matcher(object, IntPtr)](/api/corvus-text-json-matcher-tmatch-tout.ctor.html#matcher-object-object-intptr-method) |  |
+| [Matcher(object, IntPtr)](/api/corvus-text-json-matcher-tmatch-tout.ctor.html#matcher-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(ref TMatch, AsyncCallback, object)](/api/corvus-text-json-matcher-tmatch-tout.begininvoke.html#iasyncresult-begininvoke-ref-tmatch-match-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref TMatch, IAsyncResult)](/api/corvus-text-json-matcher-tmatch-tout.endinvoke.html#tout-endinvoke-ref-tmatch-match-iasyncresult-result) |  |
-| [Invoke(ref TMatch)](/api/corvus-text-json-matcher-tmatch-tout.invoke.html#tout-invoke-ref-tmatch-match) |  |
+| [BeginInvoke(ref TMatch, AsyncCallback, object)](/api/corvus-text-json-matcher-tmatch-tout.begininvoke.html#begininvoke-ref-tmatch-asynccallback-object) |  |
+| [EndInvoke(ref TMatch, IAsyncResult)](/api/corvus-text-json-matcher-tmatch-tout.endinvoke.html#endinvoke-ref-tmatch-iasyncresult) |  |
+| [Invoke(ref TMatch)](/api/corvus-text-json-matcher-tmatch-tout.invoke.html#invoke-ref-tmatch) |  |
 

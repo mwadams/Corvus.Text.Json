@@ -9,7 +9,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.ValueKind Property — Corvus.T
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueKind
+## ValueKind {#valuekind}
 
 ```csharp
 JsonValueKind ValueKind { get; }

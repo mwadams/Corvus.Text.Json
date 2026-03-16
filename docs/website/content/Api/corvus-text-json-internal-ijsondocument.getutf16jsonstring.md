@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetUtf16JsonString Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetUtf16JsonString `abstract`
+## GetUtf16JsonString {#getutf16jsonstring}
 
 ```csharp
 UnescapedUtf16JsonString GetUtf16JsonString(int index, JsonTokenType expectedType)

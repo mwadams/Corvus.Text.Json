@@ -9,7 +9,7 @@ Title: "JsonMarshal.GetRawUtf8PropertyName Method — Corvus.Runtime.InteropServ
 **Namespace:** Corvus.Runtime.InteropServices  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetRawUtf8PropertyName `static`
+## GetRawUtf8PropertyName {#getrawutf8propertyname}
 
 ```csharp
 ReadOnlySpan<byte> GetRawUtf8PropertyName<T>(JsonProperty<T> property)

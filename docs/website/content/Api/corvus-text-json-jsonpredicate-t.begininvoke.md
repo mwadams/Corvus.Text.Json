@@ -9,7 +9,7 @@ Title: "JsonPredicate<T>.BeginInvoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginInvoke `virtual`
+## BeginInvoke {#begininvoke}
 
 ```csharp
 IAsyncResult BeginInvoke(ref T item, AsyncCallback callback, object object)

@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyNameMatchesRegularExpression Field 
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedPropertyNameMatchesRegularExpression `static`
+## ExpectedPropertyNameMatchesRegularExpression {#expectedpropertynamematchesregularexpression}
 
 ```csharp
 JsonSchemaMessageProvider<string> ExpectedPropertyNameMatchesRegularExpression

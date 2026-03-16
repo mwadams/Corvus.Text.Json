@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.ValueIsEscaped Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueIsEscaped
+## ValueIsEscaped {#valueisescaped}
 
 ```csharp
 bool ValueIsEscaped { get; set; }

@@ -9,7 +9,7 @@ Title: "ValidationContext.IsValid Property — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsValid
+## IsValid {#isvalid}
 
 ```csharp
 bool IsValid { get; }

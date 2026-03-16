@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.Fragment Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Fragment `static`
+## Fragment {#fragment}
 
 ```csharp
 Utf8UriComponents Fragment

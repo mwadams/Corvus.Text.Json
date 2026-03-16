@@ -13,11 +13,11 @@ Title: "ComplexValueBuilder.RemoveProperty Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [RemoveProperty(string)](#void-removeproperty-string-name) | Removes a property from the current object. |
-| [RemoveProperty(ReadOnlySpan&lt;char&gt;)](#void-removeproperty-readonlyspan-char-name) | Removes a property from the current object. |
-| [RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-removeproperty-readonlyspan-byte-utf8name-bool-escapename-bool-namerequiresunescaping) | Removes a property from the current object. |
+| [RemoveProperty(string)](#removeproperty-string) | Removes a property from the current object. |
+| [RemoveProperty(ReadOnlySpan&lt;char&gt;)](#removeproperty-readonlyspan-char) | Removes a property from the current object. |
+| [RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool)](#removeproperty-readonlyspan-byte-bool-bool) | Removes a property from the current object. |
 
-## RemoveProperty
+## RemoveProperty(string) {#removeproperty-string}
 
 ```csharp
 void RemoveProperty(string name)
@@ -33,7 +33,7 @@ Removes a property from the current object.
 
 ---
 
-## RemoveProperty
+## RemoveProperty(ReadOnlySpan&lt;char&gt;) {#removeproperty-readonlyspan-char}
 
 ```csharp
 void RemoveProperty(ReadOnlySpan<char> name)
@@ -49,7 +49,7 @@ Removes a property from the current object.
 
 ---
 
-## RemoveProperty
+## RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool) {#removeproperty-readonlyspan-byte-bool-bool}
 
 ```csharp
 void RemoveProperty(ReadOnlySpan<byte> utf8Name, bool escapeName, bool nameRequiresUnescaping)

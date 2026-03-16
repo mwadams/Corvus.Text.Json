@@ -9,7 +9,7 @@ Title: "JsonElement.TryParseValue Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryParseValue `static`
+## TryParseValue {#tryparsevalue}
 
 ```csharp
 bool TryParseValue(ref Utf8JsonReader reader, ref Nullable<JsonElement> element)

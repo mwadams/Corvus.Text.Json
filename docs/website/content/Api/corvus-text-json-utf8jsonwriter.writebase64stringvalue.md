@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.WriteBase64StringValue Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## WriteBase64StringValue
+## WriteBase64StringValue {#writebase64stringvalue}
 
 ```csharp
 void WriteBase64StringValue(ReadOnlySpan<byte> bytes)

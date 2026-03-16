@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.Invoke Method — Corvus.Text.J
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 ReadOnlySpan<byte> Invoke()

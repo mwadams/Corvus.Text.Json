@@ -9,7 +9,7 @@ Title: "JsonPredicate<T>.Invoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 bool Invoke(ref T item)

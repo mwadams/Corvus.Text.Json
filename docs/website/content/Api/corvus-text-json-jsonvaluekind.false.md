@@ -9,7 +9,7 @@ Title: "JsonValueKind.False Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## False `static`
+## False {#false}
 
 ```csharp
 JsonValueKind False

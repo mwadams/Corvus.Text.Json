@@ -13,10 +13,10 @@ Title: "BigNumber.Equals Method — Corvus.Numerics"
 
 | Method | Description |
 |--------|-------------|
-| [Equals(BigNumber)](#bool-equals-bignumber-other) |  |
-| [Equals(object)](#bool-equals-object-obj) |  |
+| [Equals(BigNumber)](#equals-bignumber) |  |
+| [Equals(object)](#equals-object) |  |
 
-## Equals
+## Equals(BigNumber) {#equals-bignumber}
 
 ```csharp
 bool Equals(BigNumber other)
@@ -34,7 +34,7 @@ bool Equals(BigNumber other)
 
 ---
 
-## Equals `virtual`
+## Equals(object) {#equals-object}
 
 ```csharp
 bool Equals(object obj)

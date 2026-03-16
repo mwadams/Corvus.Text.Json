@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.MoveNext Method — Corvus.
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## MoveNext
+## MoveNext {#movenext}
 
 ```csharp
 bool MoveNext()

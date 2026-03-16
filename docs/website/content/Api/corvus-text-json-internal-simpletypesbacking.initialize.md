@@ -9,7 +9,7 @@ Title: "SimpleTypesBacking.Initialize Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Initialize `static`
+## Initialize {#initialize}
 
 ```csharp
 void Initialize<T>(ref SimpleTypesBacking backing, ref T value, SimpleTypesBacking.Writer<T> writer)

@@ -9,7 +9,7 @@ Title: "FixedStringJsonDocument<T>.RootElement Property — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RootElement
+## RootElement {#rootelement}
 
 ```csharp
 T RootElement { get; }

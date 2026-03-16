@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsLevel.Verbose Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Verbose `static`
+## Verbose {#verbose}
 
 ```csharp
 JsonSchemaResultsLevel Verbose

@@ -9,7 +9,7 @@ Title: "JsonElement.ArrayBuilder Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## JsonElement.ArrayBuilder
+## JsonElement.ArrayBuilder {#jsonelement-arraybuilder}
 
 ```csharp
 JsonElement.ArrayBuilder()

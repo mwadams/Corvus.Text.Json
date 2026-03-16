@@ -9,7 +9,7 @@ Title: "JsonElement.GetBigNumber Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetBigNumber
+## GetBigNumber {#getbignumber}
 
 ```csharp
 BigNumber GetBigNumber()

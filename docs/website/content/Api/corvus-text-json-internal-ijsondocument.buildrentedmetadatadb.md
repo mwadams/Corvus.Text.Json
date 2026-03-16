@@ -9,7 +9,7 @@ Title: "IJsonDocument.BuildRentedMetadataDb Method — Corvus.Text.Json.Internal
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## BuildRentedMetadataDb `abstract`
+## BuildRentedMetadataDb {#buildrentedmetadatadb}
 
 ```csharp
 int BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, ref byte[] rentedBacking)

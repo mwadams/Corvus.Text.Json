@@ -9,7 +9,7 @@ Title: "JsonWriterOptions.Encoder Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Encoder
+## Encoder {#encoder}
 
 ```csharp
 JavaScriptEncoder Encoder { get; set; }

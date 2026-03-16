@@ -18,7 +18,7 @@ Polyfills for [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numer
 
 | Method | Description |
 |--------|-------------|
-| [TryFormat(ref BigInteger, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-bigintegerpolyfills.tryformat.html#bool-tryformat-ref-biginteger-value-span-byte-destination-ref-int-byteswritten) `static` | Tries to format the value of the current [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) instance into the provided span of bytes. |
-| [TryGetMinimumFormatBufferLength(ref BigInteger, ref int)](/api/corvus-text-json-internal-bigintegerpolyfills.trygetminimumformatbufferlength.html#bool-trygetminimumformatbufferlength-ref-biginteger-biginteger-ref-int-minimumlength) `static` | Gets the minimum format buffer length. |
-| [TryParse(ReadOnlySpan&lt;byte&gt;, ref BigInteger)](/api/corvus-text-json-internal-bigintegerpolyfills.tryparse.html#bool-tryparse-readonlyspan-byte-segment-ref-biginteger-value) `static` |  |
+| [TryFormat(ref BigInteger, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-bigintegerpolyfills.tryformat.html#tryformat-ref-biginteger-span-byte-ref-int) `static` | Tries to format the value of the current [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) instance into the provided span of bytes. |
+| [TryGetMinimumFormatBufferLength(ref BigInteger, ref int)](/api/corvus-text-json-internal-bigintegerpolyfills.trygetminimumformatbufferlength.html#trygetminimumformatbufferlength-ref-biginteger-ref-int) `static` | Gets the minimum format buffer length. |
+| [TryParse(ReadOnlySpan&lt;byte&gt;, ref BigInteger)](/api/corvus-text-json-internal-bigintegerpolyfills.tryparse.html#tryparse-readonlyspan-byte-ref-biginteger) `static` |  |
 

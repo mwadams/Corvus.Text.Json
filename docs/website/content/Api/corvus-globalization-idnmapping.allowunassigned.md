@@ -9,7 +9,7 @@ Title: "IdnMapping.AllowUnassigned Property — Corvus.Globalization"
 **Namespace:** Corvus.Globalization  
 **Assembly:** Corvus.Text.Json.dll
 
-## AllowUnassigned
+## AllowUnassigned {#allowunassigned}
 
 ```csharp
 bool AllowUnassigned { get; set; }

@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.Workspace Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Workspace
+## Workspace {#workspace}
 
 ```csharp
 JsonWorkspace Workspace { get; }

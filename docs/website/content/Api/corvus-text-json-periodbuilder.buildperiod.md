@@ -9,7 +9,7 @@ Title: "PeriodBuilder.BuildPeriod Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BuildPeriod
+## BuildPeriod {#buildperiod}
 
 ```csharp
 Period BuildPeriod()

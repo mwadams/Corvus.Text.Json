@@ -9,7 +9,7 @@ Title: "BigNumber.Exponent Property — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Exponent
+## Exponent {#exponent}
 
 ```csharp
 int Exponent { get; }

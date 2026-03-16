@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetOffsetDate Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetOffsetDate
+## GetOffsetDate {#getoffsetdate}
 
 ```csharp
 OffsetDate GetOffsetDate()

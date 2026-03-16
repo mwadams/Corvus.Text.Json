@@ -22,7 +22,7 @@ This is typically used as a backing field in a `[MyJsonElementType].Builder.Sour
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-internal-rentedbacking.dispose.html#void-dispose) |  |
-| [Initialize(ref RentedBacking, int, ref T, RentedBacking.Writer&lt;T&gt;)](/api/corvus-text-json-internal-rentedbacking.initialize.html#void-initialize-t-ref-rentedbacking-backing-int-minimumlength-ref-t-value-rentedbacking-writer-t-writer) `static` |  |
-| [Span()](/api/corvus-text-json-internal-rentedbacking.span.html#readonlyspan-byte-span) | Gets the written value as a span |
+| [Dispose()](/api/corvus-text-json-internal-rentedbacking.dispose.html#dispose) |  |
+| [Initialize(ref RentedBacking, int, ref T, RentedBacking.Writer&lt;T&gt;)](/api/corvus-text-json-internal-rentedbacking.initialize.html#initialize-ref-rentedbacking-int-ref-t-rentedbacking-writer-t) `static` |  |
+| [Span()](/api/corvus-text-json-internal-rentedbacking.span.html#span) | Gets the written value as a span |
 

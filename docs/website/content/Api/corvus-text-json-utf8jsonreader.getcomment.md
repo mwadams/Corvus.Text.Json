@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.GetComment Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetComment
+## GetComment {#getcomment}
 
 ```csharp
 string GetComment()

@@ -9,7 +9,7 @@ Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetNamedMatcher
+## TryGetNamedMatcher {#trygetnamedmatcher}
 
 ```csharp
 bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, ref T matcher)

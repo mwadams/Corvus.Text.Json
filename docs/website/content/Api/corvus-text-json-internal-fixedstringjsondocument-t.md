@@ -38,8 +38,8 @@ This type uses an internal cache to avoid allocations for evaluatoin of string v
 
 | Method | Description |
 |--------|-------------|
-| [Parse(ReadOnlyMemory&lt;byte&gt;, bool)](/api/corvus-text-json-internal-fixedstringjsondocument-t.parse.html#fixedstringjsondocument-t-parse-readonlymemory-byte-rawjsonstringvalue-bool-requiresunescaping) `static` | Parse an instance of the fixed string to a document, using caching. |
-| [ToString(int, string, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tostring.html#string-tostring-int-index-string-format-iformatprovider-formatprovider) |  |
-| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#bool-tryformat-int-index-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-formatprovider) |  |
-| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#bool-tryformat-int-index-span-byte-destination-ref-int-byteswritten-readonlyspan-char-format-iformatprovider-formatprovider) |  |
+| [Parse(ReadOnlyMemory&lt;byte&gt;, bool)](/api/corvus-text-json-internal-fixedstringjsondocument-t.parse.html#parse-readonlymemory-byte-bool) `static` | Parse an instance of the fixed string to a document, using caching. |
+| [ToString(int, string, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tostring.html#tostring-int-string-iformatprovider) |  |
+| [TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider) |  |
+| [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
 

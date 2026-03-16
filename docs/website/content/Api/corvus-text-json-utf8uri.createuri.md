@@ -9,7 +9,7 @@ Title: "Utf8Uri.CreateUri Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateUri `static`
+## CreateUri {#createuri}
 
 ```csharp
 Utf8Uri CreateUri(ReadOnlySpan<byte> uri)

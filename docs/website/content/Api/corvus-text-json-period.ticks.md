@@ -9,7 +9,7 @@ Title: "Period.Ticks Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Ticks
+## Ticks {#ticks}
 
 ```csharp
 long Ticks { get; }

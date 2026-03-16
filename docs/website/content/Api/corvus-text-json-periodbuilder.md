@@ -30,5 +30,5 @@ A mutable builder class for [`Period`](/api/corvus-text-json-period.html) values
 
 | Method | Description |
 |--------|-------------|
-| [BuildPeriod()](/api/corvus-text-json-periodbuilder.buildperiod.html#period-buildperiod) | Builds a period from the properties in this builder. |
+| [BuildPeriod()](/api/corvus-text-json-periodbuilder.buildperiod.html#buildperiod) | Builds a period from the properties in this builder. |
 

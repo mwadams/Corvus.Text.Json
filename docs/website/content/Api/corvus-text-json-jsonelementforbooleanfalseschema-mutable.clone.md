@@ -9,7 +9,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Clone Method — Corvus.Text.Js
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Clone
+## Clone {#clone}
 
 ```csharp
 JsonElement Clone()

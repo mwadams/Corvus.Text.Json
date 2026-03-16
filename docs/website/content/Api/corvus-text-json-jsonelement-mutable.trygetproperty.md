@@ -13,11 +13,11 @@ Title: "JsonElement.Mutable.TryGetProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [TryGetProperty(string, ref JsonElement.Mutable)](#bool-trygetproperty-string-propertyname-ref-jsonelement-mutable-value) |  |
-| [TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement.Mutable)](#bool-trygetproperty-readonlyspan-char-propertyname-ref-jsonelement-mutable-value) |  |
-| [TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable)](#bool-trygetproperty-readonlyspan-byte-utf8propertyname-ref-jsonelement-mutable-value) |  |
+| [TryGetProperty(string, ref JsonElement.Mutable)](#trygetproperty-string-ref-jsonelement-mutable) |  |
+| [TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement.Mutable)](#trygetproperty-readonlyspan-char-ref-jsonelement-mutable) |  |
+| [TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable)](#trygetproperty-readonlyspan-byte-ref-jsonelement-mutable) |  |
 
-## TryGetProperty
+## TryGetProperty(string, ref JsonElement.Mutable) {#trygetproperty-string-ref-jsonelement-mutable}
 
 ```csharp
 bool TryGetProperty(string propertyName, ref JsonElement.Mutable value)
@@ -36,7 +36,7 @@ bool TryGetProperty(string propertyName, ref JsonElement.Mutable value)
 
 ---
 
-## TryGetProperty
+## TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement.Mutable) {#trygetproperty-readonlyspan-char-ref-jsonelement-mutable}
 
 ```csharp
 bool TryGetProperty(ReadOnlySpan<char> propertyName, ref JsonElement.Mutable value)
@@ -55,7 +55,7 @@ bool TryGetProperty(ReadOnlySpan<char> propertyName, ref JsonElement.Mutable val
 
 ---
 
-## TryGetProperty
+## TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable) {#trygetproperty-readonlyspan-byte-ref-jsonelement-mutable}
 
 ```csharp
 bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, ref JsonElement.Mutable value)

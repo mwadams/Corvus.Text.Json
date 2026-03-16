@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method — Corvus.Tex
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchPropertyCountGreaterThan `static`
+## MatchPropertyCountGreaterThan {#matchpropertycountgreaterthan}
 
 ```csharp
 bool MatchPropertyCountGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

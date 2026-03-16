@@ -13,11 +13,11 @@ Title: "ComplexValueBuilder.StartProperty Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [StartProperty(ReadOnlySpan&lt;byte&gt;, bool, bool)](#complexvaluebuilder-complexvaluehandle-startproperty-readonlyspan-byte-stringvalue-bool-escape-bool-ifnotescaperequiresuenscaping) | Add a property name to the current object. |
-| [StartProperty(ReadOnlySpan&lt;char&gt;)](#complexvaluebuilder-complexvaluehandle-startproperty-readonlyspan-char-propertyname) | Add a property name to the current object. |
-| [StartProperty(string)](#complexvaluebuilder-complexvaluehandle-startproperty-string-propertyname) | Add a property name to the current object. |
+| [StartProperty(ReadOnlySpan&lt;byte&gt;, bool, bool)](#startproperty-readonlyspan-byte-bool-bool) | Add a property name to the current object. |
+| [StartProperty(ReadOnlySpan&lt;char&gt;)](#startproperty-readonlyspan-char) | Add a property name to the current object. |
+| [StartProperty(string)](#startproperty-string) | Add a property name to the current object. |
 
-## StartProperty
+## StartProperty(ReadOnlySpan&lt;byte&gt;, bool, bool) {#startproperty-readonlyspan-byte-bool-bool}
 
 ```csharp
 ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
@@ -41,7 +41,7 @@ The handle for the property.
 
 ---
 
-## StartProperty
+## StartProperty(ReadOnlySpan&lt;char&gt;) {#startproperty-readonlyspan-char}
 
 ```csharp
 ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<char> propertyName)
@@ -63,7 +63,7 @@ The handle for the property.
 
 ---
 
-## StartProperty
+## StartProperty(string) {#startproperty-string}
 
 ```csharp
 ComplexValueBuilder.ComplexValueHandle StartProperty(string propertyName)

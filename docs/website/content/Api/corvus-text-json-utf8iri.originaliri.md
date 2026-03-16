@@ -9,7 +9,7 @@ Title: "Utf8Iri.OriginalIri Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## OriginalIri
+## OriginalIri {#originaliri}
 
 ```csharp
 ReadOnlySpan<byte> OriginalIri { get; }

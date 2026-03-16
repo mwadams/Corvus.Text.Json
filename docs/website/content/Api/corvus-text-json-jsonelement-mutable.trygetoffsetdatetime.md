@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.TryGetOffsetDateTime Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetOffsetDateTime
+## TryGetOffsetDateTime {#trygetoffsetdatetime}
 
 ```csharp
 bool TryGetOffsetDateTime(ref OffsetDateTime value)

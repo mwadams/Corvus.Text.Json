@@ -9,7 +9,7 @@ Title: "Polyfills.get_HasJsonElementBacking Method — Corvus.Text.Json.Compatib
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## get_HasJsonElementBacking `static`
+## get_HasJsonElementBacking {#get-hasjsonelementbacking}
 
 ```csharp
 bool get_HasJsonElementBacking<T>(T element)

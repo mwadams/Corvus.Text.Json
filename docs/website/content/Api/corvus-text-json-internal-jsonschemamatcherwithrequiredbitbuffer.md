@@ -18,13 +18,13 @@ A matcher for a JSON schema that requires a bit buffer for tracking required pro
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonSchemaMatcherWithRequiredBitBuffer(object, IntPtr)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.ctor.html#jsonschemamatcherwithrequiredbitbuffer-object-object-intptr-method) |  |
+| [JsonSchemaMatcherWithRequiredBitBuffer(object, IntPtr)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.ctor.html#jsonschemamatcherwithrequiredbitbuffer-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;, AsyncCallback, object)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.begininvoke.html#iasyncresult-begininvoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-span-int-requiredbitbuffer-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.endinvoke.html#void-endinvoke-ref-jsonschemacontext-context-iasyncresult-result) |  |
-| [Invoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.invoke.html#void-invoke-ijsondocument-parentdocument-int-parentdocumentindex-ref-jsonschemacontext-context-span-int-requiredbitbuffer) |  |
+| [BeginInvoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;, AsyncCallback, object)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.begininvoke.html#begininvoke-ijsondocument-int-ref-jsonschemacontext-span-int-asynccallback-object) |  |
+| [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.endinvoke.html#endinvoke-ref-jsonschemacontext-iasyncresult) |  |
+| [Invoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.invoke.html#invoke-ijsondocument-int-ref-jsonschemacontext-span-int) |  |
 

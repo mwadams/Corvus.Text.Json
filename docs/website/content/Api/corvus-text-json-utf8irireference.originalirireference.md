@@ -9,7 +9,7 @@ Title: "Utf8IriReference.OriginalIriReference Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## OriginalIriReference
+## OriginalIriReference {#originalirireference}
 
 ```csharp
 ReadOnlySpan<byte> OriginalIriReference { get; }

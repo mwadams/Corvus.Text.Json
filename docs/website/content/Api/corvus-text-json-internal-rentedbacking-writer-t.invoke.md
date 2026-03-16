@@ -9,7 +9,7 @@ Title: "RentedBacking.Writer<T>.Invoke Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 void Invoke(T value, Span<byte> buffer, ref int written)

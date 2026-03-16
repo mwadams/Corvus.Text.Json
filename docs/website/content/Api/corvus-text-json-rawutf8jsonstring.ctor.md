@@ -9,7 +9,7 @@ Title: "RawUtf8JsonString Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## RawUtf8JsonString
+## RawUtf8JsonString {#rawutf8jsonstring}
 
 ```csharp
 RawUtf8JsonString(ReadOnlyMemory<byte> utf8Bytes, byte[] extraRentedArrayPoolBytes)

@@ -13,10 +13,10 @@ Title: "IJsonDocument.TextEquals Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [TextEquals(int, ReadOnlySpan&lt;char&gt;, bool)](#bool-textequals-int-index-readonlyspan-char-othertext-bool-ispropertyname) | Determines whether the text at the specified index equals the specified text. |
-| [TextEquals(int, ReadOnlySpan&lt;byte&gt;, bool, bool)](#bool-textequals-int-index-readonlyspan-byte-otherutf8text-bool-ispropertyname-bool-shouldunescape) | Determines whether the UTF-8 text at the specified index equals the specified text. |
+| [TextEquals(int, ReadOnlySpan&lt;char&gt;, bool)](#textequals-int-readonlyspan-char-bool) | Determines whether the text at the specified index equals the specified text. |
+| [TextEquals(int, ReadOnlySpan&lt;byte&gt;, bool, bool)](#textequals-int-readonlyspan-byte-bool-bool) | Determines whether the UTF-8 text at the specified index equals the specified text. |
 
-## TextEquals `abstract`
+## TextEquals(int, ReadOnlySpan&lt;char&gt;, bool) {#textequals-int-readonlyspan-char-bool}
 
 ```csharp
 bool TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
@@ -40,7 +40,7 @@ Determines whether the text at the specified index equals the specified text.
 
 ---
 
-## TextEquals `abstract`
+## TextEquals(int, ReadOnlySpan&lt;byte&gt;, bool, bool) {#textequals-int-readonlyspan-byte-bool-bool}
 
 ```csharp
 bool TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)

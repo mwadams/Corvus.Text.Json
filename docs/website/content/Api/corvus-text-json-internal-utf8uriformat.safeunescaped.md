@@ -9,7 +9,7 @@ Title: "Utf8UriFormat.SafeUnescaped Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SafeUnescaped `static`
+## SafeUnescaped {#safeunescaped}
 
 ```csharp
 Utf8UriFormat SafeUnescaped

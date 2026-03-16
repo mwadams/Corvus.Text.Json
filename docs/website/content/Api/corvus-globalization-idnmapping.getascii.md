@@ -13,11 +13,11 @@ Title: "IdnMapping.GetAscii Method — Corvus.Globalization"
 
 | Method | Description |
 |--------|-------------|
-| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-ref-int-written) |  |
-| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-int-index-ref-int-written) |  |
-| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-int-index-int-count-ref-int-written) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](#getascii-readonlyspan-char-span-char-ref-int) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](#getascii-readonlyspan-char-span-char-int-ref-int) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](#getascii-readonlyspan-char-span-char-int-int-ref-int) |  |
 
-## GetAscii
+## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int) {#getascii-readonlyspan-char-span-char-ref-int}
 
 ```csharp
 bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int written)
@@ -37,7 +37,7 @@ bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int writt
 
 ---
 
-## GetAscii
+## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int) {#getascii-readonlyspan-char-span-char-int-ref-int}
 
 ```csharp
 bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, ref int written)
@@ -58,7 +58,7 @@ bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, re
 
 ---
 
-## GetAscii
+## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int) {#getascii-readonlyspan-char-span-char-int-int-ref-int}
 
 ```csharp
 bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, ref int written)

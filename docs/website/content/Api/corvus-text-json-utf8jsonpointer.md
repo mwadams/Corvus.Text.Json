@@ -18,7 +18,7 @@ public readonly struct Utf8JsonPointer
 
 | Method | Description |
 |--------|-------------|
-| [TryCreateJsonPointer(ReadOnlySpan&lt;byte&gt;, ref Utf8JsonPointer)](/api/corvus-text-json-utf8jsonpointer.trycreatejsonpointer.html#bool-trycreatejsonpointer-readonlyspan-byte-jsonpointer-ref-utf8jsonpointer-utf8jsonpointer) `static` | Tries to create a new UTF-8 JSON Pointer from the specified UTF-8 bytes. |
-| [TryGetLineAndOffset(ref T, ref int, ref int, ref long)](/api/corvus-text-json-utf8jsonpointer.trygetlineandoffset.html#bool-trygetlineandoffset-t-ref-t-jsonelement-ref-int-line-ref-int-charoffset-ref-long-linebyteoffset) | Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the 1-based line number and character offset of the target element in the original source document. |
-| [TryResolve(ref T, ref TResult)](/api/corvus-text-json-utf8jsonpointer.tryresolve.html#bool-tryresolve-t-tresult-ref-t-jsonelement-ref-tresult-value) | Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the value at that path if it exists. |
+| [TryCreateJsonPointer(ReadOnlySpan&lt;byte&gt;, ref Utf8JsonPointer)](/api/corvus-text-json-utf8jsonpointer.trycreatejsonpointer.html#trycreatejsonpointer-readonlyspan-byte-ref-utf8jsonpointer) `static` | Tries to create a new UTF-8 JSON Pointer from the specified UTF-8 bytes. |
+| [TryGetLineAndOffset(ref T, ref int, ref int, ref long)](/api/corvus-text-json-utf8jsonpointer.trygetlineandoffset.html#trygetlineandoffset-ref-t-ref-int-ref-int-ref-long) | Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the 1-based line number and character offset of the target element in the original source document. |
+| [TryResolve(ref T, ref TResult)](/api/corvus-text-json-utf8jsonpointer.tryresolve.html#tryresolve-ref-t-ref-tresult) | Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the value at that path if it exists. |
 

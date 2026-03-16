@@ -13,10 +13,10 @@ Title: "JsonElement.Mutable.ToString Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [ToString()](#string-tostring) |  |
-| [ToString(string, IFormatProvider)](#string-tostring-string-format-iformatprovider-formatprovider) |  |
+| [ToString()](#tostring) |  |
+| [ToString(string, IFormatProvider)](#tostring-string-iformatprovider) |  |
 
-## ToString `virtual`
+## ToString() {#tostring}
 
 ```csharp
 string ToString()
@@ -28,7 +28,7 @@ string ToString()
 
 ---
 
-## ToString
+## ToString(string, IFormatProvider) {#tostring-string-iformatprovider}
 
 ```csharp
 string ToString(string format, IFormatProvider formatProvider)

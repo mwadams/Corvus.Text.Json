@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.None Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## None `static`
+## None {#none}
 
 ```csharp
 JsonRegexOptions None

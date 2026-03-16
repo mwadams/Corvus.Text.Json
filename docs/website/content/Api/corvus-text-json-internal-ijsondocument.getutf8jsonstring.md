@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetUtf8JsonString Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetUtf8JsonString `abstract`
+## GetUtf8JsonString {#getutf8jsonstring}
 
 ```csharp
 UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType)

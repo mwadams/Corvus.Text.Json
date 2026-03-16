@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.TryFormatLocalDate Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatLocalDate `static`
+## TryFormatLocalDate {#tryformatlocaldate}
 
 ```csharp
 bool TryFormatLocalDate(ref LocalDate value, Span<byte> output, ref int bytesWritten)

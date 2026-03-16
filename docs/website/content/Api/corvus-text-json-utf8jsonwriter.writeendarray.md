@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.WriteEndArray Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## WriteEndArray
+## WriteEndArray {#writeendarray}
 
 ```csharp
 void WriteEndArray()

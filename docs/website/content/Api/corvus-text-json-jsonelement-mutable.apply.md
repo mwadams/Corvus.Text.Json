@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.Apply Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Apply
+## Apply {#apply}
 
 ```csharp
 void Apply<T>(ref T value)

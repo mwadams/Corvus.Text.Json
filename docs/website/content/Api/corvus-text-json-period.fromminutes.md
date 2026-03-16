@@ -9,7 +9,7 @@ Title: "Period.FromMinutes Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## FromMinutes `static`
+## FromMinutes {#fromminutes}
 
 ```csharp
 Period FromMinutes(long minutes)

@@ -9,7 +9,7 @@ Title: "JsonElement.GetHashCode Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetHashCode `virtual`
+## GetHashCode {#gethashcode}
 
 ```csharp
 int GetHashCode()

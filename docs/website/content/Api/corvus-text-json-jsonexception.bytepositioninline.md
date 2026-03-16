@@ -9,7 +9,7 @@ Title: "JsonException.BytePositionInLine Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BytePositionInLine
+## BytePositionInLine {#bytepositioninline}
 
 ```csharp
 Nullable<long> BytePositionInLine { get; set; }

@@ -9,7 +9,7 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T>.Invoke Method — Cor
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 ReadOnlySpan<byte> Invoke()

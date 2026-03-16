@@ -9,7 +9,7 @@ Title: "Utf8IriReference.User Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## User
+## User {#user}
 
 ```csharp
 ReadOnlySpan<byte> User { get; }

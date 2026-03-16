@@ -9,7 +9,7 @@ Title: "JsonElementForBooleanFalseSchema.Implicit Operator — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## implicit operator int `static`
+## implicit operator int {#implicit-operator-int}
 
 ```csharp
 static implicit operator int(JsonElementForBooleanFalseSchema age)

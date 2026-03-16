@@ -9,7 +9,7 @@ Title: "IByteBufferWriter.ClearAndReturnBuffers Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ClearAndReturnBuffers `abstract`
+## ClearAndReturnBuffers {#clearandreturnbuffers}
 
 ```csharp
 void ClearAndReturnBuffers()

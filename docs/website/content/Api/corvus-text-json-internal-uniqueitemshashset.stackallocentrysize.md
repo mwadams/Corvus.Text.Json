@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.StackAllocEntrySize Field — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StackAllocEntrySize `static`
+## StackAllocEntrySize {#stackallocentrysize}
 
 ```csharp
 int StackAllocEntrySize

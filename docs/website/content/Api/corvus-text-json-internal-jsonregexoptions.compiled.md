@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.Compiled Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Compiled `static`
+## Compiled {#compiled}
 
 ```csharp
 JsonRegexOptions Compiled

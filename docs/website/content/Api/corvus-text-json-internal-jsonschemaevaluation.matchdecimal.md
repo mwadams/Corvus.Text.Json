@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchDecimal Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchDecimal `static`
+## MatchDecimal {#matchdecimal}
 
 ```csharp
 bool MatchDecimal(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

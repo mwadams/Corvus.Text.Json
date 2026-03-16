@@ -9,7 +9,7 @@ Title: "JsonElementExtensions.IsNull Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsNull `static`
+## IsNull {#isnull}
 
 ```csharp
 bool IsNull<T>(T value)

@@ -9,7 +9,7 @@ Title: "BigNumber.GetHashCode Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetHashCode `virtual`
+## GetHashCode {#gethashcode}
 
 ```csharp
 int GetHashCode()

@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.DeepEquals Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## DeepEquals `static`
+## DeepEquals {#deepequals}
 
 ```csharp
 bool DeepEquals<TLeft, TRight>(ref TLeft element1, ref TRight element2)

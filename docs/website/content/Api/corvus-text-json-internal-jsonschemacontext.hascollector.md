@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.HasCollector Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasCollector
+## HasCollector {#hascollector}
 
 ```csharp
 bool HasCollector { get; }

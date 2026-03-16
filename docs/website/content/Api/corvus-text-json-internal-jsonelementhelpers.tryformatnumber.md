@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.TryFormatNumber Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#bool-tryformatnumber-readonlyspan-byte-span-span-char-destination-ref-int-charswritten-readonlyspan-char-format-iformatprovider-provider) |  |
-| [TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#bool-tryformatnumber-readonlyspan-byte-span-span-byte-destination-ref-int-byteswritten-readonlyspan-char-format-iformatprovider-provider) |  |
+| [TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformatnumber-readonlyspan-byte-span-char-ref-int-readonlyspan-char-iformatprovider) |  |
+| [TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformatnumber-readonlyspan-byte-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
 
-## TryFormatNumber `static`
+## TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformatnumber-readonlyspan-byte-span-char-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
 bool TryFormatNumber(ReadOnlySpan<byte> span, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
@@ -38,7 +38,7 @@ bool TryFormatNumber(ReadOnlySpan<byte> span, Span<char> destination, ref int ch
 
 ---
 
-## TryFormatNumber `static`
+## TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformatnumber-readonlyspan-byte-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
 ```csharp
 bool TryFormatNumber(ReadOnlySpan<byte> span, Span<byte> destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)

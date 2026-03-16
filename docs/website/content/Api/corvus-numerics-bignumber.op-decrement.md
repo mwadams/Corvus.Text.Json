@@ -9,7 +9,7 @@ Title: "BigNumber.Decrement Operator — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## operator -- `static`
+## operator -- {#operator}
 
 ```csharp
 static BigNumber operator --(BigNumber value)

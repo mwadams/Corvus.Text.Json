@@ -44,12 +44,12 @@ A UTF-8 URI Reference.
 
 | Method | Description |
 |--------|-------------|
-| [CreateUriReference(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-utf8urireference.createurireference.html#utf8urireference-createurireference-readonlyspan-byte-uri) `static` | Creates a new UTF-8 URI Reference from the specified URI bytes. |
-| [GetUri()](/api/corvus-text-json-utf8urireference.geturi.html#uri-geturi) | Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri). |
-| [ToString()](/api/corvus-text-json-utf8urireference.tostring.html#string-tostring) | Returns a string representation of the URI reference in display format. |
-| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8urireference.tryapply.html#bool-tryapply-ref-utf8urireference-urireference-span-byte-buffer-ref-utf8uri-result) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
-| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8urireference.tryapply.html#bool-tryapply-ref-utf8uri-uri-span-byte-buffer-ref-utf8uri-result) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
-| [TryCreateUriReference(ReadOnlySpan&lt;byte&gt;, ref Utf8UriReference)](/api/corvus-text-json-utf8urireference.trycreateurireference.html#bool-trycreateurireference-readonlyspan-byte-uri-ref-utf8urireference-utf8urireference) `static` | Tries to create a new UTF-8 URI Reference from the specified URI bytes. |
-| [TryFormatCanonical(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8urireference.tryformatcanonical.html#bool-tryformatcanonical-span-byte-buffer-ref-int-writtenbytes) | Gets the URI reference in canonical form. |
-| [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8urireference.tryformatdisplay.html#bool-tryformatdisplay-span-byte-buffer-ref-int-writtenbytes) | Gets the URI reference in canonical form for display. |
+| [CreateUriReference(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-utf8urireference.createurireference.html#createurireference-readonlyspan-byte) `static` | Creates a new UTF-8 URI Reference from the specified URI bytes. |
+| [GetUri()](/api/corvus-text-json-utf8urireference.geturi.html#geturi) | Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri). |
+| [ToString()](/api/corvus-text-json-utf8urireference.tostring.html#tostring) | Returns a string representation of the URI reference in display format. |
+| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8urireference.tryapply.html#tryapply-ref-utf8urireference-span-byte-ref-utf8uri) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
+| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8urireference.tryapply.html#tryapply-ref-utf8uri-span-byte-ref-utf8uri) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
+| [TryCreateUriReference(ReadOnlySpan&lt;byte&gt;, ref Utf8UriReference)](/api/corvus-text-json-utf8urireference.trycreateurireference.html#trycreateurireference-readonlyspan-byte-ref-utf8urireference) `static` | Tries to create a new UTF-8 URI Reference from the specified URI bytes. |
+| [TryFormatCanonical(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8urireference.tryformatcanonical.html#tryformatcanonical-span-byte-ref-int) | Gets the URI reference in canonical form. |
+| [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8urireference.tryformatdisplay.html#tryformatdisplay-span-byte-ref-int) | Gets the URI reference in canonical form for display. |
 

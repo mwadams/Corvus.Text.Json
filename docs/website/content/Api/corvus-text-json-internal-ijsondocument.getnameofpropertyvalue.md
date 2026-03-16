@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetNameOfPropertyValue Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetNameOfPropertyValue `abstract`
+## GetNameOfPropertyValue {#getnameofpropertyvalue}
 
 ```csharp
 string GetNameOfPropertyValue(int index)

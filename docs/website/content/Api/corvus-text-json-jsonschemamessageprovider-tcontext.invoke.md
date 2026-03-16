@@ -9,7 +9,7 @@ Title: "JsonSchemaMessageProvider<TContext>.Invoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 bool Invoke(TContext context, Span<byte> buffer, ref int written)

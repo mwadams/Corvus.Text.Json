@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchItemCountNotEquals Method — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchItemCountNotEquals `static`
+## MatchItemCountNotEquals {#matchitemcountnotequals}
 
 ```csharp
 bool MatchItemCountNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.Null Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Null `static`
+## Null {#null}
 
 ```csharp
 T Null { get; }

@@ -9,7 +9,7 @@ Title: "Matcher<TMatch, TContext, TResult>.BeginInvoke Method — Corvus.Text.Js
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginInvoke `virtual`
+## BeginInvoke {#begininvoke}
 
 ```csharp
 IAsyncResult BeginInvoke(ref TMatch match, ref TContext context, AsyncCallback callback, object object)

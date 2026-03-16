@@ -9,7 +9,7 @@ Title: "Period.Zero Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Zero `static`
+## Zero {#zero}
 
 ```csharp
 Period Zero { get; }

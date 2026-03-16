@@ -9,7 +9,7 @@ Title: "Utf8Iri.IsRelative Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsRelative
+## IsRelative {#isrelative}
 
 ```csharp
 bool IsRelative { get; }

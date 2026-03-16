@@ -13,10 +13,10 @@ Title: "Utf8Uri.TryApply Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri)](#bool-tryapply-ref-utf8urireference-urireference-span-byte-buffer-ref-utf8uri-result) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
-| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri)](#bool-tryapply-ref-utf8uri-uri-span-byte-buffer-ref-utf8uri-result) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
+| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri)](#tryapply-ref-utf8urireference-span-byte-ref-utf8uri) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
+| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri)](#tryapply-ref-utf8uri-span-byte-ref-utf8uri) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
 
-## TryApply
+## TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri) {#tryapply-ref-utf8urireference-span-byte-ref-utf8uri}
 
 ```csharp
 bool TryApply(ref Utf8UriReference uriReference, Span<byte> buffer, ref Utf8Uri result)
@@ -40,7 +40,7 @@ Applies the given URI reference to the current (base) URI and writes the result 
 
 ---
 
-## TryApply
+## TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri) {#tryapply-ref-utf8uri-span-byte-ref-utf8uri}
 
 ```csharp
 bool TryApply(ref Utf8Uri uri, Span<byte> buffer, ref Utf8Uri result)

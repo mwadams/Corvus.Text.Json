@@ -16,13 +16,13 @@ public delegate SimpleTypesBacking.Writer<T> : MulticastDelegate, ICloneable, IS
 
 | Constructor | Description |
 |-------------|-------------|
-| [SimpleTypesBacking.Writer(object, IntPtr)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.ctor.html#simpletypesbacking-writer-object-object-intptr-method) |  |
+| [SimpleTypesBacking.Writer(object, IntPtr)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.ctor.html#simpletypesbacking-writer-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(T, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.begininvoke.html#iasyncresult-begininvoke-t-value-span-byte-buffer-ref-int-written-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.endinvoke.html#void-endinvoke-ref-int-written-iasyncresult-result) |  |
-| [Invoke(T, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.invoke.html#void-invoke-t-value-span-byte-buffer-ref-int-written) |  |
+| [BeginInvoke(T, Span&lt;byte&gt;, ref int, AsyncCallback, object)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.begininvoke.html#begininvoke-t-span-byte-ref-int-asynccallback-object) |  |
+| [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
+| [Invoke(T, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.invoke.html#invoke-t-span-byte-ref-int) |  |
 

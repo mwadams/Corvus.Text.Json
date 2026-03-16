@@ -13,12 +13,12 @@ Title: "JsonElement.Mutable.Item Property — Corvus.Text.Json"
 
 | Property | Description |
 |----------|-------------|
-| [this\[int\]](#jsonelement-mutable-this-int-index-get) |  |
-| [this\[ReadOnlySpan&lt;byte&gt;\]](#jsonelement-mutable-this-readonlyspan-byte-propertyname-get) |  |
-| [this\[ReadOnlySpan&lt;char&gt;\]](#jsonelement-mutable-this-readonlyspan-char-propertyname-get) |  |
-| [this\[string\]](#jsonelement-mutable-this-string-propertyname-get) |  |
+| [this\[int\]](#this-int) |  |
+| [this\[ReadOnlySpan&lt;byte&gt;\]](#this-readonlyspan-byte) |  |
+| [this\[ReadOnlySpan&lt;char&gt;\]](#this-readonlyspan-char) |  |
+| [this\[string\]](#this-string) |  |
 
-## this[int]
+## this[int] {#this-int}
 
 ```csharp
 JsonElement.Mutable this[int index] { get; }
@@ -36,7 +36,7 @@ JsonElement.Mutable this[int index] { get; }
 
 ---
 
-## this[ReadOnlySpan<byte>]
+## this[ReadOnlySpan&lt;byte&gt;] {#this-readonlyspan-byte}
 
 ```csharp
 JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
@@ -54,7 +54,7 @@ JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
 
 ---
 
-## this[ReadOnlySpan<char>]
+## this[ReadOnlySpan&lt;char&gt;] {#this-readonlyspan-char}
 
 ```csharp
 JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
@@ -72,7 +72,7 @@ JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
 
 ---
 
-## this[string]
+## this[string] {#this-string}
 
 ```csharp
 JsonElement.Mutable this[string propertyName] { get; }

@@ -16,13 +16,13 @@ public delegate PropertySchemaMatchers<T>.UnescapedNameProvider<T> : MulticastDe
 
 | Constructor | Description |
 |-------------|-------------|
-| [PropertySchemaMatchers(object, IntPtr)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.ctor.html#propertyschemamatchers-object-object-intptr-method) |  |
+| [PropertySchemaMatchers(object, IntPtr)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.ctor.html#propertyschemamatchers-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(AsyncCallback, object)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.begininvoke.html#iasyncresult-begininvoke-asynccallback-callback-object-object) |  |
-| [EndInvoke(IAsyncResult)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.endinvoke.html#readonlyspan-byte-endinvoke-iasyncresult-result) |  |
-| [Invoke()](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.invoke.html#readonlyspan-byte-invoke) |  |
+| [BeginInvoke(AsyncCallback, object)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.begininvoke.html#begininvoke-asynccallback-object) |  |
+| [EndInvoke(IAsyncResult)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.endinvoke.html#endinvoke-iasyncresult) |  |
+| [Invoke()](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.invoke.html#invoke) |  |
 

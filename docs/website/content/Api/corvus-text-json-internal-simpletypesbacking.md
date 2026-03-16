@@ -18,6 +18,6 @@ This is typically used as a backing field in a `[MyJsonElementType].Builder.Sour
 
 | Method | Description |
 |--------|-------------|
-| [Initialize(ref SimpleTypesBacking, ref T, SimpleTypesBacking.Writer&lt;T&gt;)](/api/corvus-text-json-internal-simpletypesbacking.initialize.html#void-initialize-t-ref-simpletypesbacking-backing-ref-t-value-simpletypesbacking-writer-t-writer) `static` |  |
-| [Span()](/api/corvus-text-json-internal-simpletypesbacking.span.html#readonlyspan-byte-span) | Gets the written value as a span |
+| [Initialize(ref SimpleTypesBacking, ref T, SimpleTypesBacking.Writer&lt;T&gt;)](/api/corvus-text-json-internal-simpletypesbacking.initialize.html#initialize-ref-simpletypesbacking-ref-t-simpletypesbacking-writer-t) `static` |  |
+| [Span()](/api/corvus-text-json-internal-simpletypesbacking.span.html#span) | Gets the written value as a span |
 

@@ -9,7 +9,7 @@ Title: "JsonElement.CreateObjectBuilder Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateObjectBuilder `static`
+## CreateObjectBuilder {#createobjectbuilder}
 
 ```csharp
 JsonDocumentBuilder<JsonElement.Mutable> CreateObjectBuilder(JsonWorkspace workspace, int estimatedMemberCount)

@@ -13,35 +13,35 @@ Title: "IJsonDocument.TryGetValue Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [TryGetValue(int, ref byte\[\])](#bool-trygetvalue-int-index-ref-byte-value) | Tries to get the value of the element at the specified index as a byte array. |
-| [TryGetValue(int, ref sbyte)](#bool-trygetvalue-int-index-ref-sbyte-value) | Tries to get the value of the element at the specified index as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte). |
-| [TryGetValue(int, ref byte)](#bool-trygetvalue-int-index-ref-byte-value) | Tries to get the value of the element at the specified index as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte). |
-| [TryGetValue(int, ref short)](#bool-trygetvalue-int-index-ref-short-value) | Tries to get the value of the element at the specified index as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16). |
-| [TryGetValue(int, ref ushort)](#bool-trygetvalue-int-index-ref-ushort-value) | Tries to get the value of the element at the specified index as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16). |
-| [TryGetValue(int, ref int)](#bool-trygetvalue-int-index-ref-int-value) | Tries to get the value of the element at the specified index as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). |
-| [TryGetValue(int, ref uint)](#bool-trygetvalue-int-index-ref-uint-value) | Tries to get the value of the element at the specified index as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32). |
-| [TryGetValue(int, ref long)](#bool-trygetvalue-int-index-ref-long-value) | Tries to get the value of the element at the specified index as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). |
-| [TryGetValue(int, ref ulong)](#bool-trygetvalue-int-index-ref-ulong-value) | Tries to get the value of the element at the specified index as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). |
-| [TryGetValue(int, ref double)](#bool-trygetvalue-int-index-ref-double-value) | Tries to get the value of the element at the specified index as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). |
-| [TryGetValue(int, ref float)](#bool-trygetvalue-int-index-ref-float-value) | Tries to get the value of the element at the specified index as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). |
-| [TryGetValue(int, ref decimal)](#bool-trygetvalue-int-index-ref-decimal-value) | Tries to get the value of the element at the specified index as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
-| [TryGetValue(int, ref BigInteger)](#bool-trygetvalue-int-index-ref-biginteger-value) | Tries to get the value of the element at the specified index as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger). |
-| [TryGetValue(int, ref BigNumber)](#bool-trygetvalue-int-index-ref-bignumber-value) | Tries to get the value of the element at the specified index as a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
-| [TryGetValue(int, ref DateTime)](#bool-trygetvalue-int-index-ref-datetime-value) | Tries to get the value of the element at the specified index as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime). |
-| [TryGetValue(int, ref DateTimeOffset)](#bool-trygetvalue-int-index-ref-datetimeoffset-value) | Tries to get the value of the element at the specified index as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset). |
-| [TryGetValue(int, ref OffsetDateTime)](#bool-trygetvalue-int-index-ref-offsetdatetime-value) | Tries to get the value of the element at the specified index as an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html). |
-| [TryGetValue(int, ref OffsetDate)](#bool-trygetvalue-int-index-ref-offsetdate-value) | Tries to get the value of the element at the specified index as an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html). |
-| [TryGetValue(int, ref OffsetTime)](#bool-trygetvalue-int-index-ref-offsettime-value) | Tries to get the value of the element at the specified index as an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html). |
-| [TryGetValue(int, ref LocalDate)](#bool-trygetvalue-int-index-ref-localdate-value) | Tries to get the value of the element at the specified index as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html). |
-| [TryGetValue(int, ref Period)](#bool-trygetvalue-int-index-ref-period-value) | Tries to get the value of the element at the specified index as a [`Period`](/api/corvus-text-json-period.html). |
-| [TryGetValue(int, ref Guid)](#bool-trygetvalue-int-index-ref-guid-value) | Tries to get the value of the element at the specified index as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid). |
-| [TryGetValue(int, ref Int128)](#bool-trygetvalue-int-index-ref-int128-value) | Tries to get the value of the element at the specified index as an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128). |
-| [TryGetValue(int, ref UInt128)](#bool-trygetvalue-int-index-ref-uint128-value) | Tries to get the value of the element at the specified index as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128). |
-| [TryGetValue(int, ref Half)](#bool-trygetvalue-int-index-ref-half-value) | Tries to get the value of the element at the specified index as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half). |
-| [TryGetValue(int, ref DateOnly)](#bool-trygetvalue-int-index-ref-dateonly-value) | Tries to get the value of the element at the specified index as a [`DateOnly`](https://learn.microsoft.com/dotnet/api/system.dateonly). |
-| [TryGetValue(int, ref TimeOnly)](#bool-trygetvalue-int-index-ref-timeonly-value) | Tries to get the value of the element at the specified index as a [`TimeOnly`](https://learn.microsoft.com/dotnet/api/system.timeonly). |
+| [TryGetValue(int, ref byte\[\])](#trygetvalue-int-ref-byte) | Tries to get the value of the element at the specified index as a byte array. |
+| [TryGetValue(int, ref sbyte)](#trygetvalue-int-ref-sbyte) | Tries to get the value of the element at the specified index as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte). |
+| [TryGetValue(int, ref byte)](#trygetvalue-int-ref-byte) | Tries to get the value of the element at the specified index as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte). |
+| [TryGetValue(int, ref short)](#trygetvalue-int-ref-short) | Tries to get the value of the element at the specified index as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16). |
+| [TryGetValue(int, ref ushort)](#trygetvalue-int-ref-ushort) | Tries to get the value of the element at the specified index as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16). |
+| [TryGetValue(int, ref int)](#trygetvalue-int-ref-int) | Tries to get the value of the element at the specified index as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). |
+| [TryGetValue(int, ref uint)](#trygetvalue-int-ref-uint) | Tries to get the value of the element at the specified index as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32). |
+| [TryGetValue(int, ref long)](#trygetvalue-int-ref-long) | Tries to get the value of the element at the specified index as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). |
+| [TryGetValue(int, ref ulong)](#trygetvalue-int-ref-ulong) | Tries to get the value of the element at the specified index as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). |
+| [TryGetValue(int, ref double)](#trygetvalue-int-ref-double) | Tries to get the value of the element at the specified index as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). |
+| [TryGetValue(int, ref float)](#trygetvalue-int-ref-float) | Tries to get the value of the element at the specified index as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). |
+| [TryGetValue(int, ref decimal)](#trygetvalue-int-ref-decimal) | Tries to get the value of the element at the specified index as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
+| [TryGetValue(int, ref BigInteger)](#trygetvalue-int-ref-biginteger) | Tries to get the value of the element at the specified index as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger). |
+| [TryGetValue(int, ref BigNumber)](#trygetvalue-int-ref-bignumber) | Tries to get the value of the element at the specified index as a [`BigNumber`](/api/corvus-numerics-bignumber.html). |
+| [TryGetValue(int, ref DateTime)](#trygetvalue-int-ref-datetime) | Tries to get the value of the element at the specified index as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime). |
+| [TryGetValue(int, ref DateTimeOffset)](#trygetvalue-int-ref-datetimeoffset) | Tries to get the value of the element at the specified index as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset). |
+| [TryGetValue(int, ref OffsetDateTime)](#trygetvalue-int-ref-offsetdatetime) | Tries to get the value of the element at the specified index as an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html). |
+| [TryGetValue(int, ref OffsetDate)](#trygetvalue-int-ref-offsetdate) | Tries to get the value of the element at the specified index as an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html). |
+| [TryGetValue(int, ref OffsetTime)](#trygetvalue-int-ref-offsettime) | Tries to get the value of the element at the specified index as an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html). |
+| [TryGetValue(int, ref LocalDate)](#trygetvalue-int-ref-localdate) | Tries to get the value of the element at the specified index as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html). |
+| [TryGetValue(int, ref Period)](#trygetvalue-int-ref-period) | Tries to get the value of the element at the specified index as a [`Period`](/api/corvus-text-json-period.html). |
+| [TryGetValue(int, ref Guid)](#trygetvalue-int-ref-guid) | Tries to get the value of the element at the specified index as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid). |
+| [TryGetValue(int, ref Int128)](#trygetvalue-int-ref-int128) | Tries to get the value of the element at the specified index as an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128). |
+| [TryGetValue(int, ref UInt128)](#trygetvalue-int-ref-uint128) | Tries to get the value of the element at the specified index as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128). |
+| [TryGetValue(int, ref Half)](#trygetvalue-int-ref-half) | Tries to get the value of the element at the specified index as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half). |
+| [TryGetValue(int, ref DateOnly)](#trygetvalue-int-ref-dateonly) | Tries to get the value of the element at the specified index as a [`DateOnly`](https://learn.microsoft.com/dotnet/api/system.dateonly). |
+| [TryGetValue(int, ref TimeOnly)](#trygetvalue-int-ref-timeonly) | Tries to get the value of the element at the specified index as a [`TimeOnly`](https://learn.microsoft.com/dotnet/api/system.timeonly). |
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref byte[]) {#trygetvalue-int-ref-byte}
 
 ```csharp
 bool TryGetValue(int index, ref byte[] value)
@@ -64,7 +64,7 @@ Tries to get the value of the element at the specified index as a byte array.
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref sbyte) {#trygetvalue-int-ref-sbyte}
 
 ```csharp
 bool TryGetValue(int index, ref sbyte value)
@@ -87,7 +87,7 @@ Tries to get the value of the element at the specified index as an [`SByte`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref byte) {#trygetvalue-int-ref-byte}
 
 ```csharp
 bool TryGetValue(int index, ref byte value)
@@ -110,7 +110,7 @@ Tries to get the value of the element at the specified index as a [`Byte`](https
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref short) {#trygetvalue-int-ref-short}
 
 ```csharp
 bool TryGetValue(int index, ref short value)
@@ -133,7 +133,7 @@ Tries to get the value of the element at the specified index as a [`Int16`](http
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref ushort) {#trygetvalue-int-ref-ushort}
 
 ```csharp
 bool TryGetValue(int index, ref ushort value)
@@ -156,7 +156,7 @@ Tries to get the value of the element at the specified index as a [`UInt16`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref int) {#trygetvalue-int-ref-int}
 
 ```csharp
 bool TryGetValue(int index, ref int value)
@@ -179,7 +179,7 @@ Tries to get the value of the element at the specified index as an [`Int32`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref uint) {#trygetvalue-int-ref-uint}
 
 ```csharp
 bool TryGetValue(int index, ref uint value)
@@ -202,7 +202,7 @@ Tries to get the value of the element at the specified index as a [`UInt32`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref long) {#trygetvalue-int-ref-long}
 
 ```csharp
 bool TryGetValue(int index, ref long value)
@@ -225,7 +225,7 @@ Tries to get the value of the element at the specified index as a [`Int64`](http
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref ulong) {#trygetvalue-int-ref-ulong}
 
 ```csharp
 bool TryGetValue(int index, ref ulong value)
@@ -248,7 +248,7 @@ Tries to get the value of the element at the specified index as a [`UInt64`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref double) {#trygetvalue-int-ref-double}
 
 ```csharp
 bool TryGetValue(int index, ref double value)
@@ -271,7 +271,7 @@ Tries to get the value of the element at the specified index as a [`Double`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref float) {#trygetvalue-int-ref-float}
 
 ```csharp
 bool TryGetValue(int index, ref float value)
@@ -294,7 +294,7 @@ Tries to get the value of the element at the specified index as a [`Single`](htt
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref decimal) {#trygetvalue-int-ref-decimal}
 
 ```csharp
 bool TryGetValue(int index, ref decimal value)
@@ -317,7 +317,7 @@ Tries to get the value of the element at the specified index as a [`Decimal`](ht
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref BigInteger) {#trygetvalue-int-ref-biginteger}
 
 ```csharp
 bool TryGetValue(int index, ref BigInteger value)
@@ -340,7 +340,7 @@ Tries to get the value of the element at the specified index as a [`BigInteger`]
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref BigNumber) {#trygetvalue-int-ref-bignumber}
 
 ```csharp
 bool TryGetValue(int index, ref BigNumber value)
@@ -363,7 +363,7 @@ Tries to get the value of the element at the specified index as a [`BigNumber`](
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref DateTime) {#trygetvalue-int-ref-datetime}
 
 ```csharp
 bool TryGetValue(int index, ref DateTime value)
@@ -386,7 +386,7 @@ Tries to get the value of the element at the specified index as a [`DateTime`](h
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref DateTimeOffset) {#trygetvalue-int-ref-datetimeoffset}
 
 ```csharp
 bool TryGetValue(int index, ref DateTimeOffset value)
@@ -409,7 +409,7 @@ Tries to get the value of the element at the specified index as a [`DateTimeOffs
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref OffsetDateTime) {#trygetvalue-int-ref-offsetdatetime}
 
 ```csharp
 bool TryGetValue(int index, ref OffsetDateTime value)
@@ -432,7 +432,7 @@ Tries to get the value of the element at the specified index as an [`OffsetDateT
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref OffsetDate) {#trygetvalue-int-ref-offsetdate}
 
 ```csharp
 bool TryGetValue(int index, ref OffsetDate value)
@@ -455,7 +455,7 @@ Tries to get the value of the element at the specified index as an [`OffsetDate`
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref OffsetTime) {#trygetvalue-int-ref-offsettime}
 
 ```csharp
 bool TryGetValue(int index, ref OffsetTime value)
@@ -478,7 +478,7 @@ Tries to get the value of the element at the specified index as an [`OffsetTime`
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref LocalDate) {#trygetvalue-int-ref-localdate}
 
 ```csharp
 bool TryGetValue(int index, ref LocalDate value)
@@ -501,7 +501,7 @@ Tries to get the value of the element at the specified index as a [`LocalDate`](
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref Period) {#trygetvalue-int-ref-period}
 
 ```csharp
 bool TryGetValue(int index, ref Period value)
@@ -524,7 +524,7 @@ Tries to get the value of the element at the specified index as a [`Period`](/ap
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref Guid) {#trygetvalue-int-ref-guid}
 
 ```csharp
 bool TryGetValue(int index, ref Guid value)
@@ -547,7 +547,7 @@ Tries to get the value of the element at the specified index as a [`Guid`](https
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref Int128) {#trygetvalue-int-ref-int128}
 
 ```csharp
 bool TryGetValue(int index, ref Int128 value)
@@ -570,7 +570,7 @@ Tries to get the value of the element at the specified index as an [`Int128`](ht
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref UInt128) {#trygetvalue-int-ref-uint128}
 
 ```csharp
 bool TryGetValue(int index, ref UInt128 value)
@@ -593,7 +593,7 @@ Tries to get the value of the element at the specified index as a [`UInt128`](ht
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref Half) {#trygetvalue-int-ref-half}
 
 ```csharp
 bool TryGetValue(int index, ref Half value)
@@ -616,7 +616,7 @@ Tries to get the value of the element at the specified index as a [`Half`](https
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref DateOnly) {#trygetvalue-int-ref-dateonly}
 
 ```csharp
 bool TryGetValue(int index, ref DateOnly value)
@@ -639,7 +639,7 @@ Tries to get the value of the element at the specified index as a [`DateOnly`](h
 
 ---
 
-## TryGetValue `abstract`
+## TryGetValue(int, ref TimeOnly) {#trygetvalue-int-ref-timeonly}
 
 ```csharp
 bool TryGetValue(int index, ref TimeOnly value)

@@ -13,12 +13,12 @@ Title: "Utf8Iri.TryApply Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [TryApply(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8Iri)](#bool-tryapply-ref-utf8iri-iri-span-byte-buffer-ref-utf8iri-result) | Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including hand... |
-| [TryApply(ref Utf8IriReference, Span&lt;byte&gt;, ref Utf8Iri)](#bool-tryapply-ref-utf8irireference-irireference-span-byte-buffer-ref-utf8iri-result) | Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
-| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Iri)](#bool-tryapply-ref-utf8urireference-urireference-span-byte-buffer-ref-utf8iri-result) | Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
-| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Iri)](#bool-tryapply-ref-utf8uri-uri-span-byte-buffer-ref-utf8iri-result) | Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
+| [TryApply(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8Iri)](#tryapply-ref-utf8iri-span-byte-ref-utf8iri) | Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including hand... |
+| [TryApply(ref Utf8IriReference, Span&lt;byte&gt;, ref Utf8Iri)](#tryapply-ref-utf8irireference-span-byte-ref-utf8iri) | Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
+| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Iri)](#tryapply-ref-utf8urireference-span-byte-ref-utf8iri) | Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
+| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Iri)](#tryapply-ref-utf8uri-span-byte-ref-utf8iri) | Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, incl... |
 
-## TryApply
+## TryApply(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8iri-span-byte-ref-utf8iri}
 
 ```csharp
 bool TryApply(ref Utf8Iri iri, Span<byte> buffer, ref Utf8Iri result)
@@ -42,7 +42,7 @@ Applies the given IRI to the current (base) IRI and writes the result to the pro
 
 ---
 
-## TryApply
+## TryApply(ref Utf8IriReference, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8irireference-span-byte-ref-utf8iri}
 
 ```csharp
 bool TryApply(ref Utf8IriReference iriReference, Span<byte> buffer, ref Utf8Iri result)
@@ -66,7 +66,7 @@ Applies the given IRI reference to the current (base) IRI and writes the result 
 
 ---
 
-## TryApply
+## TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8urireference-span-byte-ref-utf8iri}
 
 ```csharp
 bool TryApply(ref Utf8UriReference uriReference, Span<byte> buffer, ref Utf8Iri result)
@@ -90,7 +90,7 @@ Applies the given URI reference to the current (base) IRI and writes the result 
 
 ---
 
-## TryApply
+## TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8uri-span-byte-ref-utf8iri}
 
 ```csharp
 bool TryApply(ref Utf8Uri uri, Span<byte> buffer, ref Utf8Iri result)

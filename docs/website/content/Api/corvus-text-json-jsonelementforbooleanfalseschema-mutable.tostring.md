@@ -9,7 +9,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.ToString Method — Corvus.Text
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ToString `virtual`
+## ToString {#tostring}
 
 ```csharp
 string ToString()

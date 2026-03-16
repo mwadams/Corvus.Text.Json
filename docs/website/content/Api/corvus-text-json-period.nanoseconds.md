@@ -9,7 +9,7 @@ Title: "Period.Nanoseconds Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Nanoseconds
+## Nanoseconds {#nanoseconds}
 
 ```csharp
 long Nanoseconds { get; }

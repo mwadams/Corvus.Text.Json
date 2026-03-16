@@ -9,7 +9,7 @@ Title: "Period.Inequality Operator — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## operator != `static`
+## operator != {#operator}
 
 ```csharp
 static bool operator !=(Period left, Period right)

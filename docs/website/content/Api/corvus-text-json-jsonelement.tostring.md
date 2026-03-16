@@ -13,10 +13,10 @@ Title: "JsonElement.ToString Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [ToString()](#string-tostring) | Gets a string representation for the current value appropriate to the value type. |
-| [ToString(string, IFormatProvider)](#string-tostring-string-format-iformatprovider-formatprovider) |  |
+| [ToString()](#tostring) | Gets a string representation for the current value appropriate to the value type. |
+| [ToString(string, IFormatProvider)](#tostring-string-iformatprovider) |  |
 
-## ToString `virtual`
+## ToString() {#tostring}
 
 ```csharp
 string ToString()
@@ -42,7 +42,7 @@ For JsonElement built from [`JsonDocument`](/api/corvus-text-json-internal-jsond
 
 ---
 
-## ToString
+## ToString(string, IFormatProvider) {#tostring-string-iformatprovider}
 
 ```csharp
 string ToString(string format, IFormatProvider formatProvider)

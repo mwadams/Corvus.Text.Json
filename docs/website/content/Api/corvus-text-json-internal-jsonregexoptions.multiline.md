@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.Multiline Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Multiline `static`
+## Multiline {#multiline}
 
 ```csharp
 JsonRegexOptions Multiline

@@ -13,10 +13,10 @@ Title: "JsonElement.ObjectBuilder.AddRawString Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#void-addrawstring-readonlyspan-byte-propertyname-readonlyspan-byte-value-bool-valuerequiresunescaping-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool)](#void-addrawstring-readonlyspan-char-propertyname-readonlyspan-byte-value-bool-valuerequiresunescaping) |  |
+| [AddRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool)](#addrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool) |  |
+| [AddRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool)](#addrawstring-readonlyspan-char-readonlyspan-byte-bool) |  |
 
-## AddRawString
+## AddRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool}
 
 ```csharp
 void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping, bool escapeName, bool nameRequiresUnescaping)
@@ -34,7 +34,7 @@ void AddRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, boo
 
 ---
 
-## AddRawString
+## AddRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool) {#addrawstring-readonlyspan-char-readonlyspan-byte-bool}
 
 ```csharp
 void AddRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)

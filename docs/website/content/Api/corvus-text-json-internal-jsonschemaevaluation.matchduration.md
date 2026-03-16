@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchDuration Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchDuration `static`
+## MatchDuration {#matchduration}
 
 ```csharp
 bool MatchDuration(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

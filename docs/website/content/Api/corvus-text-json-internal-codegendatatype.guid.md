@@ -9,7 +9,7 @@ Title: "CodeGenDataType.Guid Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Guid `static`
+## Guid {#guid}
 
 ```csharp
 CodeGenDataType Guid

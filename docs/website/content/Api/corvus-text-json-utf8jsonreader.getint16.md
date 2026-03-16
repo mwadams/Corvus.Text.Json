@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.GetInt16 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetInt16
+## GetInt16 {#getint16}
 
 ```csharp
 short GetInt16()

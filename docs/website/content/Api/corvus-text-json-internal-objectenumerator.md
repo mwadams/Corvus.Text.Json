@@ -14,7 +14,7 @@ An enumerable and enumerator for the properties of a JSON object.
 
 | Constructor | Description |
 |-------------|-------------|
-| [ObjectEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-objectenumerator.ctor.html#objectenumerator-ijsondocument-targetdocument-int-initialindex) | Initializes a new instance of the [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) struct. |
+| [ObjectEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-objectenumerator.ctor.html#objectenumerator-ijsondocument-int) | Initializes a new instance of the [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) struct. |
 
 ## Properties
 
@@ -26,7 +26,7 @@ An enumerable and enumerator for the properties of a JSON object.
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-internal-objectenumerator.dispose.html#void-dispose) | Releases resources used by the enumerator. |
-| [MoveNext()](/api/corvus-text-json-internal-objectenumerator.movenext.html#bool-movenext) |  |
-| [Reset()](/api/corvus-text-json-internal-objectenumerator.reset.html#void-reset) | Sets the enumerator to its initial position, which is before the first element. |
+| [Dispose()](/api/corvus-text-json-internal-objectenumerator.dispose.html#dispose) | Releases resources used by the enumerator. |
+| [MoveNext()](/api/corvus-text-json-internal-objectenumerator.movenext.html#movenext) |  |
+| [Reset()](/api/corvus-text-json-internal-objectenumerator.reset.html#reset) | Sets the enumerator to its initial position, which is before the first element. |
 

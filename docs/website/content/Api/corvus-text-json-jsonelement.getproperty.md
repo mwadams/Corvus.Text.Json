@@ -13,11 +13,11 @@ Title: "JsonElement.GetProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [GetProperty(string)](#jsonelement-getproperty-string-propertyname) | Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`. |
-| [GetProperty(ReadOnlySpan&lt;char&gt;)](#jsonelement-getproperty-readonlyspan-char-propertyname) | Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`. |
-| [GetProperty(ReadOnlySpan&lt;byte&gt;)](#jsonelement-getproperty-readonlyspan-byte-utf8propertyname) | Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `utf8PropertyName`. |
+| [GetProperty(string)](#getproperty-string) | Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`. |
+| [GetProperty(ReadOnlySpan&lt;char&gt;)](#getproperty-readonlyspan-char) | Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`. |
+| [GetProperty(ReadOnlySpan&lt;byte&gt;)](#getproperty-readonlyspan-byte) | Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `utf8PropertyName`. |
 
-## GetProperty
+## GetProperty(string) {#getproperty-string}
 
 ```csharp
 JsonElement GetProperty(string propertyName)
@@ -52,7 +52,7 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 
 ---
 
-## GetProperty
+## GetProperty(ReadOnlySpan&lt;char&gt;) {#getproperty-readonlyspan-char}
 
 ```csharp
 JsonElement GetProperty(ReadOnlySpan<char> propertyName)
@@ -86,7 +86,7 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 
 ---
 
-## GetProperty
+## GetProperty(ReadOnlySpan&lt;byte&gt;) {#getproperty-readonlyspan-byte}
 
 ```csharp
 JsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)

@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TokenType Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TokenType
+## TokenType {#tokentype}
 
 ```csharp
 JsonTokenType TokenType { get; }

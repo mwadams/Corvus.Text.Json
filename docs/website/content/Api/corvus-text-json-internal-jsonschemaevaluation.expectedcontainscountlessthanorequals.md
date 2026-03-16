@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEquals Field — Cor
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedContainsCountLessThanOrEquals `static`
+## ExpectedContainsCountLessThanOrEquals {#expectedcontainscountlessthanorequals}
 
 ```csharp
 JsonSchemaMessageProvider<int> ExpectedContainsCountLessThanOrEquals

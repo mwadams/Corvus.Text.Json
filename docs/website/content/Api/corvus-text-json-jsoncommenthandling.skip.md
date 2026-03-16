@@ -9,7 +9,7 @@ Title: "JsonCommentHandling.Skip Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Skip `static`
+## Skip {#skip}
 
 ```csharp
 JsonCommentHandling Skip

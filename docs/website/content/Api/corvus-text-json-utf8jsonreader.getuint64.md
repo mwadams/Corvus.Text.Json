@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.GetUInt64 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetUInt64
+## GetUInt64 {#getuint64}
 
 ```csharp
 ulong GetUInt64()

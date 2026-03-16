@@ -20,9 +20,9 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector, ID
 
 | Method | Description |
 |--------|-------------|
-| [Create(JsonSchemaResultsLevel, int)](/api/corvus-text-json-jsonschemaresultscollector.create.html#jsonschemaresultscollector-create-jsonschemaresultslevel-level-int-estimatedcapacity) `static` |  |
-| [CreateUnrented(JsonSchemaResultsLevel, int)](/api/corvus-text-json-jsonschemaresultscollector.createunrented.html#jsonschemaresultscollector-createunrented-jsonschemaresultslevel-level-int-estimatedcapacity) `static` |  |
-| [Dispose()](/api/corvus-text-json-jsonschemaresultscollector.dispose.html#void-dispose) |  |
-| [EnumerateResults()](/api/corvus-text-json-jsonschemaresultscollector.enumerateresults.html#jsonschemaresultscollector-resultsenumerator-enumerateresults) |  |
-| [GetResultCount()](/api/corvus-text-json-jsonschemaresultscollector.getresultcount.html#int-getresultcount) |  |
+| [Create(JsonSchemaResultsLevel, int)](/api/corvus-text-json-jsonschemaresultscollector.create.html#create-jsonschemaresultslevel-int) `static` |  |
+| [CreateUnrented(JsonSchemaResultsLevel, int)](/api/corvus-text-json-jsonschemaresultscollector.createunrented.html#createunrented-jsonschemaresultslevel-int) `static` |  |
+| [Dispose()](/api/corvus-text-json-jsonschemaresultscollector.dispose.html#dispose) |  |
+| [EnumerateResults()](/api/corvus-text-json-jsonschemaresultscollector.enumerateresults.html#enumerateresults) |  |
+| [GetResultCount()](/api/corvus-text-json-jsonschemaresultscollector.getresultcount.html#getresultcount) |  |
 

@@ -13,32 +13,32 @@ Title: "IMutableJsonDocument.StoreValue Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [StoreValue(Guid)](#int-storevalue-guid-value) | Stores a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value in the document. |
-| [StoreValue(ref DateTime)](#int-storevalue-ref-datetime-value) | Stores a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value in the document. |
-| [StoreValue(ref DateTimeOffset)](#int-storevalue-ref-datetimeoffset-value) | Stores a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value in the document. |
-| [StoreValue(ref OffsetDateTime)](#int-storevalue-ref-offsetdatetime-value) | Stores an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value in the document. |
-| [StoreValue(ref OffsetDate)](#int-storevalue-ref-offsetdate-value) | Stores an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value in the document. |
-| [StoreValue(ref OffsetTime)](#int-storevalue-ref-offsettime-value) | Stores an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value in the document. |
-| [StoreValue(ref LocalDate)](#int-storevalue-ref-localdate-value) | Stores a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value in the document. |
-| [StoreValue(ref Period)](#int-storevalue-ref-period-value) | Stores a [`Period`](/api/corvus-text-json-period.html) value in the document. |
-| [StoreValue(sbyte)](#int-storevalue-sbyte-value) | Stores an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value in the document. |
-| [StoreValue(byte)](#int-storevalue-byte-value) | Stores a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value in the document. |
-| [StoreValue(int)](#int-storevalue-int-value) | Stores an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value in the document. |
-| [StoreValue(uint)](#int-storevalue-uint-value) | Stores a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value in the document. |
-| [StoreValue(long)](#int-storevalue-long-value) | Stores a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value in the document. |
-| [StoreValue(ulong)](#int-storevalue-ulong-value) | Stores a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value in the document. |
-| [StoreValue(short)](#int-storevalue-short-value) | Stores a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value in the document. |
-| [StoreValue(ushort)](#int-storevalue-ushort-value) | Stores a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value in the document. |
-| [StoreValue(float)](#int-storevalue-float-value) | Stores a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value in the document. |
-| [StoreValue(double)](#int-storevalue-double-value) | Stores a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value in the document. |
-| [StoreValue(decimal)](#int-storevalue-decimal-value) | Stores a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value in the document. |
-| [StoreValue(ref BigInteger)](#int-storevalue-ref-biginteger-value) | Stores a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value in the document. |
-| [StoreValue(ref BigNumber)](#int-storevalue-ref-bignumber-value) | Stores a [`BigNumber`](/api/corvus-numerics-bignumber.html) value in the document. |
-| [StoreValue(Int128)](#int-storevalue-int128-value) | Stores an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value in the document. |
-| [StoreValue(UInt128)](#int-storevalue-uint128-value) | Stores a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value in the document. |
-| [StoreValue(Half)](#int-storevalue-half-value) | Stores a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value in the document. |
+| [StoreValue(Guid)](#storevalue-guid) | Stores a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value in the document. |
+| [StoreValue(ref DateTime)](#storevalue-ref-datetime) | Stores a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value in the document. |
+| [StoreValue(ref DateTimeOffset)](#storevalue-ref-datetimeoffset) | Stores a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value in the document. |
+| [StoreValue(ref OffsetDateTime)](#storevalue-ref-offsetdatetime) | Stores an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) value in the document. |
+| [StoreValue(ref OffsetDate)](#storevalue-ref-offsetdate) | Stores an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) value in the document. |
+| [StoreValue(ref OffsetTime)](#storevalue-ref-offsettime) | Stores an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) value in the document. |
+| [StoreValue(ref LocalDate)](#storevalue-ref-localdate) | Stores a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) value in the document. |
+| [StoreValue(ref Period)](#storevalue-ref-period) | Stores a [`Period`](/api/corvus-text-json-period.html) value in the document. |
+| [StoreValue(sbyte)](#storevalue-sbyte) | Stores an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte) value in the document. |
+| [StoreValue(byte)](#storevalue-byte) | Stores a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte) value in the document. |
+| [StoreValue(int)](#storevalue-int) | Stores an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value in the document. |
+| [StoreValue(uint)](#storevalue-uint) | Stores a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value in the document. |
+| [StoreValue(long)](#storevalue-long) | Stores a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value in the document. |
+| [StoreValue(ulong)](#storevalue-ulong) | Stores a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value in the document. |
+| [StoreValue(short)](#storevalue-short) | Stores a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value in the document. |
+| [StoreValue(ushort)](#storevalue-ushort) | Stores a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16) value in the document. |
+| [StoreValue(float)](#storevalue-float) | Stores a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value in the document. |
+| [StoreValue(double)](#storevalue-double) | Stores a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value in the document. |
+| [StoreValue(decimal)](#storevalue-decimal) | Stores a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value in the document. |
+| [StoreValue(ref BigInteger)](#storevalue-ref-biginteger) | Stores a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) value in the document. |
+| [StoreValue(ref BigNumber)](#storevalue-ref-bignumber) | Stores a [`BigNumber`](/api/corvus-numerics-bignumber.html) value in the document. |
+| [StoreValue(Int128)](#storevalue-int128) | Stores an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) value in the document. |
+| [StoreValue(UInt128)](#storevalue-uint128) | Stores a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) value in the document. |
+| [StoreValue(Half)](#storevalue-half) | Stores a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) value in the document. |
 
-## StoreValue `abstract`
+## StoreValue(Guid) {#storevalue-guid}
 
 ```csharp
 int StoreValue(Guid value)
@@ -60,7 +60,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref DateTime) {#storevalue-ref-datetime}
 
 ```csharp
 int StoreValue(ref DateTime value)
@@ -82,7 +82,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref DateTimeOffset) {#storevalue-ref-datetimeoffset}
 
 ```csharp
 int StoreValue(ref DateTimeOffset value)
@@ -104,7 +104,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref OffsetDateTime) {#storevalue-ref-offsetdatetime}
 
 ```csharp
 int StoreValue(ref OffsetDateTime value)
@@ -126,7 +126,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref OffsetDate) {#storevalue-ref-offsetdate}
 
 ```csharp
 int StoreValue(ref OffsetDate value)
@@ -148,7 +148,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref OffsetTime) {#storevalue-ref-offsettime}
 
 ```csharp
 int StoreValue(ref OffsetTime value)
@@ -170,7 +170,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref LocalDate) {#storevalue-ref-localdate}
 
 ```csharp
 int StoreValue(ref LocalDate value)
@@ -192,7 +192,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref Period) {#storevalue-ref-period}
 
 ```csharp
 int StoreValue(ref Period value)
@@ -214,7 +214,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(sbyte) {#storevalue-sbyte}
 
 ```csharp
 int StoreValue(sbyte value)
@@ -236,7 +236,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(byte) {#storevalue-byte}
 
 ```csharp
 int StoreValue(byte value)
@@ -258,7 +258,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(int) {#storevalue-int}
 
 ```csharp
 int StoreValue(int value)
@@ -280,7 +280,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(uint) {#storevalue-uint}
 
 ```csharp
 int StoreValue(uint value)
@@ -302,7 +302,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(long) {#storevalue-long}
 
 ```csharp
 int StoreValue(long value)
@@ -324,7 +324,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ulong) {#storevalue-ulong}
 
 ```csharp
 int StoreValue(ulong value)
@@ -346,7 +346,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(short) {#storevalue-short}
 
 ```csharp
 int StoreValue(short value)
@@ -368,7 +368,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ushort) {#storevalue-ushort}
 
 ```csharp
 int StoreValue(ushort value)
@@ -390,7 +390,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(float) {#storevalue-float}
 
 ```csharp
 int StoreValue(float value)
@@ -412,7 +412,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(double) {#storevalue-double}
 
 ```csharp
 int StoreValue(double value)
@@ -434,7 +434,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(decimal) {#storevalue-decimal}
 
 ```csharp
 int StoreValue(decimal value)
@@ -456,7 +456,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref BigInteger) {#storevalue-ref-biginteger}
 
 ```csharp
 int StoreValue(ref BigInteger value)
@@ -478,7 +478,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(ref BigNumber) {#storevalue-ref-bignumber}
 
 ```csharp
 int StoreValue(ref BigNumber value)
@@ -500,7 +500,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(Int128) {#storevalue-int128}
 
 ```csharp
 int StoreValue(Int128 value)
@@ -522,7 +522,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(UInt128) {#storevalue-uint128}
 
 ```csharp
 int StoreValue(UInt128 value)
@@ -544,7 +544,7 @@ The index of the stored value.
 
 ---
 
-## StoreValue `abstract`
+## StoreValue(Half) {#storevalue-half}
 
 ```csharp
 int StoreValue(Half value)

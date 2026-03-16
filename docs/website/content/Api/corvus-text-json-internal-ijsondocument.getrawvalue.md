@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetRawValue Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetRawValue `abstract`
+## GetRawValue {#getrawvalue}
 
 ```csharp
 RawUtf8JsonString GetRawValue(int index, bool includeQuotes)

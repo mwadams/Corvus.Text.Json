@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchUInt32 Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchUInt32 `static`
+## MatchUInt32 {#matchuint32}
 
 ```csharp
 bool MatchUInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

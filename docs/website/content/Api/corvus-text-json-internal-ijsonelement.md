@@ -27,7 +27,7 @@ Implemented by JsonElement-derived types.
 
 | Method | Description |
 |--------|-------------|
-| [CheckValidInstance()](/api/corvus-text-json-internal-ijsonelement.checkvalidinstance.html#void-checkvalidinstance) | Checks that this instance is valid. |
-| [EvaluateSchema(IJsonSchemaResultsCollector)](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html#bool-evaluateschema-ijsonschemaresultscollector-resultscollector) | Evaluates the schema for this element. |
-| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-internal-ijsonelement.writeto.html#void-writeto-utf8jsonwriter-writer) | Writes this element to the specified [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). |
+| [CheckValidInstance()](/api/corvus-text-json-internal-ijsonelement.checkvalidinstance.html#checkvalidinstance) | Checks that this instance is valid. |
+| [EvaluateSchema(IJsonSchemaResultsCollector)](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html#evaluateschema-ijsonschemaresultscollector) | Evaluates the schema for this element. |
+| [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-internal-ijsonelement.writeto.html#writeto-utf8jsonwriter) | Writes this element to the specified [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). |
 

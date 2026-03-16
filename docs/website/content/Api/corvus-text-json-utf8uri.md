@@ -44,13 +44,13 @@ A UTF-8 URI.
 
 | Method | Description |
 |--------|-------------|
-| [CreateUri(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-utf8uri.createuri.html#utf8uri-createuri-readonlyspan-byte-uri) `static` | Creates a new UTF-8 URI from the specified URI bytes. |
-| [GetUri()](/api/corvus-text-json-utf8uri.geturi.html#uri-geturi) | Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri). |
-| [ToString()](/api/corvus-text-json-utf8uri.tostring.html#string-tostring) | Returns a string representation of the URI in display format. |
-| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8uri.tryapply.html#bool-tryapply-ref-utf8urireference-urireference-span-byte-buffer-ref-utf8uri-result) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
-| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8uri.tryapply.html#bool-tryapply-ref-utf8uri-uri-span-byte-buffer-ref-utf8uri-result) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
-| [TryCreateUri(ReadOnlySpan&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8uri.trycreateuri.html#bool-trycreateuri-readonlyspan-byte-uri-ref-utf8uri-utf8uri) `static` | Tries to create a new UTF-8 URI from the specified URI bytes. |
-| [TryFormatCanonical(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8uri.tryformatcanonical.html#bool-tryformatcanonical-span-byte-buffer-ref-int-writtenbytes) | Gets the URI in canonical form. |
-| [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8uri.tryformatdisplay.html#bool-tryformatdisplay-span-byte-buffer-ref-int-writtenbytes) | Gets the URI in canonical form for display. |
-| [TryMakeRelative(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8UriReference)](/api/corvus-text-json-utf8uri.trymakerelative.html#bool-trymakerelative-ref-utf8uri-targeturi-span-byte-buffer-ref-utf8urireference-result) | Makes a relative URI reference from the current (base) URI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned. |
+| [CreateUri(ReadOnlySpan&lt;byte&gt;)](/api/corvus-text-json-utf8uri.createuri.html#createuri-readonlyspan-byte) `static` | Creates a new UTF-8 URI from the specified URI bytes. |
+| [GetUri()](/api/corvus-text-json-utf8uri.geturi.html#geturi) | Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri). |
+| [ToString()](/api/corvus-text-json-utf8uri.tostring.html#tostring) | Returns a string representation of the URI in display format. |
+| [TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8uri.tryapply.html#tryapply-ref-utf8urireference-span-byte-ref-utf8uri) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
+| [TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8uri.tryapply.html#tryapply-ref-utf8uri-span-byte-ref-utf8uri) | Applies the given URI reference to the current (base) URI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base URI, incl... |
+| [TryCreateUri(ReadOnlySpan&lt;byte&gt;, ref Utf8Uri)](/api/corvus-text-json-utf8uri.trycreateuri.html#trycreateuri-readonlyspan-byte-ref-utf8uri) `static` | Tries to create a new UTF-8 URI from the specified URI bytes. |
+| [TryFormatCanonical(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8uri.tryformatcanonical.html#tryformatcanonical-span-byte-ref-int) | Gets the URI in canonical form. |
+| [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8uri.tryformatdisplay.html#tryformatdisplay-span-byte-ref-int) | Gets the URI in canonical form for display. |
+| [TryMakeRelative(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8UriReference)](/api/corvus-text-json-utf8uri.trymakerelative.html#trymakerelative-ref-utf8uri-span-byte-ref-utf8urireference) | Makes a relative URI reference from the current (base) URI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned. |
 

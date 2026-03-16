@@ -13,11 +13,11 @@ Title: "ComplexValueBuilder.AddPropertyNull Method — Corvus.Text.Json.Internal
 
 | Method | Description |
 |--------|-------------|
-| [AddPropertyNull(ReadOnlySpan&lt;byte&gt;)](#void-addpropertynull-readonlyspan-byte-propertyname) | Adds a property with a null value to the current object. |
-| [AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool)](#void-addpropertynull-readonlyspan-byte-propertyname-bool-escapename-bool-namerequiresunescaping) | Adds a property with a null value to the current object, with control over escaping. |
-| [AddPropertyNull(ReadOnlySpan&lt;char&gt;)](#void-addpropertynull-readonlyspan-char-propertyname) | Adds a property with a null value to the current object. |
+| [AddPropertyNull(ReadOnlySpan&lt;byte&gt;)](#addpropertynull-readonlyspan-byte) | Adds a property with a null value to the current object. |
+| [AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool)](#addpropertynull-readonlyspan-byte-bool-bool) | Adds a property with a null value to the current object, with control over escaping. |
+| [AddPropertyNull(ReadOnlySpan&lt;char&gt;)](#addpropertynull-readonlyspan-char) | Adds a property with a null value to the current object. |
 
-## AddPropertyNull
+## AddPropertyNull(ReadOnlySpan&lt;byte&gt;) {#addpropertynull-readonlyspan-byte}
 
 ```csharp
 void AddPropertyNull(ReadOnlySpan<byte> propertyName)
@@ -33,7 +33,7 @@ Adds a property with a null value to the current object.
 
 ---
 
-## AddPropertyNull
+## AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool) {#addpropertynull-readonlyspan-byte-bool-bool}
 
 ```csharp
 void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
@@ -51,7 +51,7 @@ Adds a property with a null value to the current object, with control over escap
 
 ---
 
-## AddPropertyNull
+## AddPropertyNull(ReadOnlySpan&lt;char&gt;) {#addpropertynull-readonlyspan-char}
 
 ```csharp
 void AddPropertyNull(ReadOnlySpan<char> propertyName)

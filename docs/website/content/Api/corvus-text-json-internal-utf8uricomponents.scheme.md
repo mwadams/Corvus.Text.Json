@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.Scheme Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Scheme `static`
+## Scheme {#scheme}
 
 ```csharp
 Utf8UriComponents Scheme

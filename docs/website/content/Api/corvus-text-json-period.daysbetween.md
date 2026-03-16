@@ -9,7 +9,7 @@ Title: "Period.DaysBetween Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## DaysBetween `static`
+## DaysBetween {#daysbetween}
 
 ```csharp
 int DaysBetween(LocalDate start, LocalDate end)

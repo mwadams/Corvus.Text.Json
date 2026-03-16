@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchSingle Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchSingle `static`
+## MatchSingle {#matchsingle}
 
 ```csharp
 bool MatchSingle(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.UserInfo Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## UserInfo `static`
+## UserInfo {#userinfo}
 
 ```csharp
 Utf8UriComponents UserInfo

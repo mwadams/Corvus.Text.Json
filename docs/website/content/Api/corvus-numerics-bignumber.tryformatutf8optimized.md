@@ -9,7 +9,7 @@ Title: "BigNumber.TryFormatUtf8Optimized Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatUtf8Optimized
+## TryFormatUtf8Optimized {#tryformatutf8optimized}
 
 ```csharp
 bool TryFormatUtf8Optimized(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)

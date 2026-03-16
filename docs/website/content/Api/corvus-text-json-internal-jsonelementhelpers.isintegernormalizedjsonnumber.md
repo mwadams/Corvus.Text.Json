@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method — Corvus.Text.
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsIntegerNormalizedJsonNumber `static`
+## IsIntegerNormalizedJsonNumber {#isintegernormalizedjsonnumber}
 
 ```csharp
 bool IsIntegerNormalizedJsonNumber(int exponent)

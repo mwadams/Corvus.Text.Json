@@ -9,7 +9,7 @@ Title: "JsonTokenType.True Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## True `static`
+## True {#true}
 
 ```csharp
 JsonTokenType True

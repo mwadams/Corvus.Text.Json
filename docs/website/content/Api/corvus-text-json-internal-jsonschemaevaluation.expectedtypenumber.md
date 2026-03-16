@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedTypeNumber Field — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedTypeNumber `static`
+## ExpectedTypeNumber {#expectedtypenumber}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeNumber

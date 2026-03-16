@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountGreaterThan Field — Corvus.T
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedPropertyCountGreaterThan `static`
+## ExpectedPropertyCountGreaterThan {#expectedpropertycountgreaterthan}
 
 ```csharp
 JsonSchemaMessageProvider<int> ExpectedPropertyCountGreaterThan

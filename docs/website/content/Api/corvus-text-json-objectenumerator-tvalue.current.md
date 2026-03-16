@@ -9,7 +9,7 @@ Title: "ObjectEnumerator<TValue>.Current Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Current
+## Current {#current}
 
 ```csharp
 JsonProperty<TValue> Current { get; }

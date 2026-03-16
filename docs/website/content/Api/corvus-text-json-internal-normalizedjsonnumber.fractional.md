@@ -9,7 +9,7 @@ Title: "NormalizedJsonNumber.Fractional Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Fractional
+## Fractional {#fractional}
 
 ```csharp
 ReadOnlySpan<byte> Fractional { get; }

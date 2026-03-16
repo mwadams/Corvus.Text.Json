@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.GetResultCount Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetResultCount
+## GetResultCount {#getresultcount}
 
 ```csharp
 int GetResultCount()

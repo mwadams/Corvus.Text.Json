@@ -9,7 +9,7 @@ Title: "CodeGenNumericType.Byte Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Byte `static`
+## Byte {#byte}
 
 ```csharp
 CodeGenNumericType Byte

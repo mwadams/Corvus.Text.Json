@@ -13,10 +13,10 @@ Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Tex
 
 | Method | Description |
 |--------|-------------|
-| [EvaluatedBooleanSchema(bool, JsonSchemaMessageProvider)](#void-evaluatedbooleanschema-bool-ismatch-jsonschemamessageprovider-messageprovider) | Indicates that a boolean schema was evaluated. |
-| [EvaluatedBooleanSchema(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;)](#void-evaluatedbooleanschema-tprovidercontext-bool-ismatch-tprovidercontext-providercontext-jsonschemamessageprovider-tprovidercontext-messageprovider) | Indicates that a boolean schema was evaluated. |
+| [EvaluatedBooleanSchema(bool, JsonSchemaMessageProvider)](#evaluatedbooleanschema-bool-jsonschemamessageprovider) | Indicates that a boolean schema was evaluated. |
+| [EvaluatedBooleanSchema(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;)](#evaluatedbooleanschema-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext) | Indicates that a boolean schema was evaluated. |
 
-## EvaluatedBooleanSchema `abstract`
+## EvaluatedBooleanSchema(bool, JsonSchemaMessageProvider) {#evaluatedbooleanschema-bool-jsonschemamessageprovider}
 
 ```csharp
 void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider messageProvider)
@@ -37,7 +37,7 @@ This is used when evaluating a schema of the form `true` or `false`.
 
 ---
 
-## EvaluatedBooleanSchema `abstract`
+## EvaluatedBooleanSchema(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#evaluatedbooleanschema-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
 ```csharp
 void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)

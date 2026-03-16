@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.Flush Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Flush
+## Flush {#flush}
 
 ```csharp
 void Flush()

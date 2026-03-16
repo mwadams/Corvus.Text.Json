@@ -9,7 +9,7 @@ Title: "JsonElementExtensions.IsNotNullOrUndefined Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsNotNullOrUndefined `static`
+## IsNotNullOrUndefined {#isnotnullorundefined}
 
 ```csharp
 bool IsNotNullOrUndefined<T>(T value)

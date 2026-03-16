@@ -9,7 +9,7 @@ Title: "BigNumber.Abs Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Abs `static`
+## Abs {#abs}
 
 ```csharp
 BigNumber Abs(BigNumber value)

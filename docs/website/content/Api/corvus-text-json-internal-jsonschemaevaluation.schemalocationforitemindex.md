@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.SchemaLocationForItemIndex Method — Corvus.Text.J
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SchemaLocationForItemIndex `static`
+## SchemaLocationForItemIndex {#schemalocationforitemindex}
 
 ```csharp
 bool SchemaLocationForItemIndex(ReadOnlySpan<byte> arraySchemaLocation, int itemIndex, Span<byte> buffer, ref int written)

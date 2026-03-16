@@ -9,7 +9,7 @@ Title: "JsonWorkspace.ReturnWriter Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ReturnWriter
+## ReturnWriter {#returnwriter}
 
 ```csharp
 void ReturnWriter(Utf8JsonWriter writer)

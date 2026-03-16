@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchIdnHostname Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchIdnHostname `static`
+## MatchIdnHostname {#matchidnhostname}
 
 ```csharp
 bool MatchIdnHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

@@ -13,10 +13,10 @@ Title: "IJsonDocument.GetRawSimpleValue Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [GetRawSimpleValue(int, bool)](#readonlymemory-byte-getrawsimplevalue-int-index-bool-includequotes) | Gets the raw simple value of the element at the specified index. |
-| [GetRawSimpleValue(int)](#readonlymemory-byte-getrawsimplevalue-int-index) | Gets the raw simple value of the element at the specified index. |
+| [GetRawSimpleValue(int, bool)](#getrawsimplevalue-int-bool) | Gets the raw simple value of the element at the specified index. |
+| [GetRawSimpleValue(int)](#getrawsimplevalue-int) | Gets the raw simple value of the element at the specified index. |
 
-## GetRawSimpleValue `abstract`
+## GetRawSimpleValue(int, bool) {#getrawsimplevalue-int-bool}
 
 ```csharp
 ReadOnlyMemory<byte> GetRawSimpleValue(int index, bool includeQuotes)
@@ -39,7 +39,7 @@ The raw simple value.
 
 ---
 
-## GetRawSimpleValue `abstract`
+## GetRawSimpleValue(int) {#getrawsimplevalue-int}
 
 ```csharp
 ReadOnlyMemory<byte> GetRawSimpleValue(int index)

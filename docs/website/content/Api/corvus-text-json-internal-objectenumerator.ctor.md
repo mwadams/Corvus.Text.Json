@@ -9,7 +9,7 @@ Title: "ObjectEnumerator Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ObjectEnumerator
+## ObjectEnumerator {#objectenumerator}
 
 ```csharp
 ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)

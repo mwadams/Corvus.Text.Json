@@ -9,7 +9,7 @@ Title: "PeriodBuilder.Item Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## this[PeriodUnits]
+## this[PeriodUnits] {#this-periodunits}
 
 ```csharp
 long this[PeriodUnits unit] { get; set; }

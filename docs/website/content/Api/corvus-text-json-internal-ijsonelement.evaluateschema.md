@@ -9,7 +9,7 @@ Title: "IJsonElement.EvaluateSchema Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EvaluateSchema `abstract`
+## EvaluateSchema {#evaluateschema}
 
 ```csharp
 bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)

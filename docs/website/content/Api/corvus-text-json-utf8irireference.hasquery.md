@@ -9,7 +9,7 @@ Title: "Utf8IriReference.HasQuery Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasQuery
+## HasQuery {#hasquery}
 
 ```csharp
 bool HasQuery { get; }

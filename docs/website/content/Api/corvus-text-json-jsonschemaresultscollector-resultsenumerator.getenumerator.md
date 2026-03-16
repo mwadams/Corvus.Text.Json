@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.GetEnumerator Method — Co
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetEnumerator
+## GetEnumerator {#getenumerator}
 
 ```csharp
 IEnumerator<JsonSchemaResultsCollector.Result> GetEnumerator()

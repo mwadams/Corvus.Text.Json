@@ -13,10 +13,10 @@ Title: "JsonElement.Source Constructors — Corvus.Text.Json"
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonElement.Source(JsonElement.ArrayBuilder.Build)](#jsonelement-source-jsonelement-arraybuilder-build-value) |  |
-| [JsonElement.Source(JsonElement.ObjectBuilder.Build)](#jsonelement-source-jsonelement-objectbuilder-build-value) |  |
+| [JsonElement.Source(JsonElement.ArrayBuilder.Build)](#jsonelement-source-jsonelement-arraybuilder-build) |  |
+| [JsonElement.Source(JsonElement.ObjectBuilder.Build)](#jsonelement-source-jsonelement-objectbuilder-build) |  |
 
-## JsonElement.Source
+## JsonElement.Source(JsonElement.ArrayBuilder.Build) {#jsonelement-source-jsonelement-arraybuilder-build}
 
 ```csharp
 JsonElement.Source(JsonElement.ArrayBuilder.Build value)
@@ -30,7 +30,7 @@ JsonElement.Source(JsonElement.ArrayBuilder.Build value)
 
 ---
 
-## JsonElement.Source
+## JsonElement.Source(JsonElement.ObjectBuilder.Build) {#jsonelement-source-jsonelement-objectbuilder-build}
 
 ```csharp
 JsonElement.Source(JsonElement.ObjectBuilder.Build value)

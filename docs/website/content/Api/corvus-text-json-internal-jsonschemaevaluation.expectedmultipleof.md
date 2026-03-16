@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedMultipleOf Field — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedMultipleOf `static`
+## ExpectedMultipleOf {#expectedmultipleof}
 
 ```csharp
 JsonSchemaMessageProvider<string> ExpectedMultipleOf

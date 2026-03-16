@@ -9,7 +9,7 @@ Title: "BuildWithContext<TContext, TBuilder> Constructors — Corvus.Text.Json.I
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## BuildWithContext
+## BuildWithContext {#buildwithcontext}
 
 ```csharp
 BuildWithContext(TContext context, TBuilder build)

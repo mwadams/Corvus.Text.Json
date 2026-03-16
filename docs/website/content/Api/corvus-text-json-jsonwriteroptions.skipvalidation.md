@@ -9,7 +9,7 @@ Title: "JsonWriterOptions.SkipValidation Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## SkipValidation
+## SkipValidation {#skipvalidation}
 
 ```csharp
 bool SkipValidation { get; set; }

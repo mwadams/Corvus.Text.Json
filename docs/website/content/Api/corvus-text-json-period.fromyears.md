@@ -9,7 +9,7 @@ Title: "Period.FromYears Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## FromYears `static`
+## FromYears {#fromyears}
 
 ```csharp
 Period FromYears(int years)

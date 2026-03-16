@@ -9,7 +9,7 @@ Title: "CodeGenDataType.TimeOnly Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TimeOnly `static`
+## TimeOnly {#timeonly}
 
 ```csharp
 CodeGenDataType TimeOnly

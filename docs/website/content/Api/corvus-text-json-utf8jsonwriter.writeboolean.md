@@ -13,12 +13,12 @@ Title: "Utf8JsonWriter.WriteBoolean Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WriteBoolean(JsonEncodedText, bool)](#void-writeboolean-jsonencodedtext-propertyname-bool-value) | Writes the pre-encoded property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
-| [WriteBoolean(string, bool)](#void-writeboolean-string-propertyname-bool-value) | Writes the property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
-| [WriteBoolean(ReadOnlySpan&lt;char&gt;, bool)](#void-writeboolean-readonlyspan-char-propertyname-bool-value) | Writes the property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
-| [WriteBoolean(ReadOnlySpan&lt;byte&gt;, bool)](#void-writeboolean-readonlyspan-byte-utf8propertyname-bool-value) | Writes the property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
+| [WriteBoolean(JsonEncodedText, bool)](#writeboolean-jsonencodedtext-bool) | Writes the pre-encoded property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
+| [WriteBoolean(string, bool)](#writeboolean-string-bool) | Writes the property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
+| [WriteBoolean(ReadOnlySpan&lt;char&gt;, bool)](#writeboolean-readonlyspan-char-bool) | Writes the property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
+| [WriteBoolean(ReadOnlySpan&lt;byte&gt;, bool)](#writeboolean-readonlyspan-byte-bool) | Writes the property name and [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean) value (as a JSON literal "true" or "false") as part of a name/value pair of a JSON object. |
 
-## WriteBoolean
+## WriteBoolean(JsonEncodedText, bool) {#writeboolean-jsonencodedtext-bool}
 
 ```csharp
 void WriteBoolean(JsonEncodedText propertyName, bool value)
@@ -41,7 +41,7 @@ Writes the pre-encoded property name and [`Boolean`](https://learn.microsoft.com
 
 ---
 
-## WriteBoolean
+## WriteBoolean(string, bool) {#writeboolean-string-bool}
 
 ```csharp
 void WriteBoolean(string propertyName, bool value)
@@ -70,7 +70,7 @@ The property name is escaped before writing.
 
 ---
 
-## WriteBoolean
+## WriteBoolean(ReadOnlySpan&lt;char&gt;, bool) {#writeboolean-readonlyspan-char-bool}
 
 ```csharp
 void WriteBoolean(ReadOnlySpan<char> propertyName, bool value)
@@ -98,7 +98,7 @@ The property name is escaped before writing.
 
 ---
 
-## WriteBoolean
+## WriteBoolean(ReadOnlySpan&lt;byte&gt;, bool) {#writeboolean-readonlyspan-byte-bool}
 
 ```csharp
 void WriteBoolean(ReadOnlySpan<byte> utf8PropertyName, bool value)

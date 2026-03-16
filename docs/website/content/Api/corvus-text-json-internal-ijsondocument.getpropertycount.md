@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetPropertyCount Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetPropertyCount `abstract`
+## GetPropertyCount {#getpropertycount}
 
 ```csharp
 int GetPropertyCount(int index)

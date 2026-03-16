@@ -13,10 +13,10 @@ Title: "JsonSchemaContext.EvaluatedKeywordPath Method — Corvus.Text.Json.Inter
 
 | Method | Description |
 |--------|-------------|
-| [EvaluatedKeywordPath(bool, JsonSchemaMessageProvider, JsonSchemaPathProvider)](#void-evaluatedkeywordpath-bool-ismatch-jsonschemamessageprovider-messageprovider-jsonschemapathprovider-keywordpath) | Records the evaluation of a schema keyword using a path-based approach. |
-| [EvaluatedKeywordPath(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;)](#void-evaluatedkeywordpath-tprovidercontext-bool-ismatch-tprovidercontext-providercontext-jsonschemamessageprovider-tprovidercontext-messageprovider-jsonschemapathprovider-tprovidercontext-keywordpath) | Records the evaluation of a schema keyword using a path-based approach with a provider context. |
+| [EvaluatedKeywordPath(bool, JsonSchemaMessageProvider, JsonSchemaPathProvider)](#evaluatedkeywordpath-bool-jsonschemamessageprovider-jsonschemapathprovider) | Records the evaluation of a schema keyword using a path-based approach. |
+| [EvaluatedKeywordPath(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;)](#evaluatedkeywordpath-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext) | Records the evaluation of a schema keyword using a path-based approach with a provider context. |
 
-## EvaluatedKeywordPath
+## EvaluatedKeywordPath(bool, JsonSchemaMessageProvider, JsonSchemaPathProvider) {#evaluatedkeywordpath-bool-jsonschemamessageprovider-jsonschemapathprovider}
 
 ```csharp
 void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider keywordPath)
@@ -34,7 +34,7 @@ Records the evaluation of a schema keyword using a path-based approach.
 
 ---
 
-## EvaluatedKeywordPath
+## EvaluatedKeywordPath(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#evaluatedkeywordpath-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
 ```csharp
 void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> keywordPath)

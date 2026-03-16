@@ -9,7 +9,7 @@ Title: "JsonValueKind.Number Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Number `static`
+## Number {#number}
 
 ```csharp
 JsonValueKind Number

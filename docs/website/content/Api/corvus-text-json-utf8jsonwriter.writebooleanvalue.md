@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.WriteBooleanValue Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## WriteBooleanValue
+## WriteBooleanValue {#writebooleanvalue}
 
 ```csharp
 void WriteBooleanValue(bool value)

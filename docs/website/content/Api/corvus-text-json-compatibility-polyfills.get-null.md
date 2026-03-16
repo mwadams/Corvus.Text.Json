@@ -9,7 +9,7 @@ Title: "Polyfills.get_Null Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## get_Null `static`
+## get_Null {#get-null}
 
 ```csharp
 T get_Null<T>()

@@ -13,10 +13,10 @@ Title: "JsonElement.ArrayBuilder.BuildValue Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [BuildValue(JsonElement.ArrayBuilder.Build, ref ComplexValueBuilder)](#void-buildvalue-jsonelement-arraybuilder-build-value-ref-complexvaluebuilder-valuebuilder) |  |
-| [BuildValue(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, ref ComplexValueBuilder)](#void-buildvalue-tcontext-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-value-ref-complexvaluebuilder-valuebuilder) |  |
+| [BuildValue(JsonElement.ArrayBuilder.Build, ref ComplexValueBuilder)](#buildvalue-jsonelement-arraybuilder-build-ref-complexvaluebuilder) |  |
+| [BuildValue(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, ref ComplexValueBuilder)](#buildvalue-ref-tcontext-jsonelement-arraybuilder-build-tcontext-ref-complexvaluebuilder) |  |
 
-## BuildValue `static`
+## BuildValue(JsonElement.ArrayBuilder.Build, ref ComplexValueBuilder) {#buildvalue-jsonelement-arraybuilder-build-ref-complexvaluebuilder}
 
 ```csharp
 void BuildValue(JsonElement.ArrayBuilder.Build value, ref ComplexValueBuilder valueBuilder)
@@ -31,7 +31,7 @@ void BuildValue(JsonElement.ArrayBuilder.Build value, ref ComplexValueBuilder va
 
 ---
 
-## BuildValue `static`
+## BuildValue(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, ref ComplexValueBuilder) {#buildvalue-ref-tcontext-jsonelement-arraybuilder-build-tcontext-ref-complexvaluebuilder}
 
 ```csharp
 void BuildValue<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value, ref ComplexValueBuilder valueBuilder)

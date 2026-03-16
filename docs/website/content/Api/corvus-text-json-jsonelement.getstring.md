@@ -9,7 +9,7 @@ Title: "JsonElement.GetString Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetString
+## GetString {#getstring}
 
 ```csharp
 string GetString()

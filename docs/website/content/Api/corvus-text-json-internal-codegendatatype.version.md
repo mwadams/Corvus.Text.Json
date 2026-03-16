@@ -9,7 +9,7 @@ Title: "CodeGenDataType.Version Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Version `static`
+## Version {#version}
 
 ```csharp
 CodeGenDataType Version

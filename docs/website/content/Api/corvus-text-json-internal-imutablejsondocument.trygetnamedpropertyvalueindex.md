@@ -13,11 +13,11 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValueIndex Method — Corvus.Tex
 
 | Method | Description |
 |--------|-------------|
-| [TryGetNamedPropertyValueIndex(ref MetadataDb, int, int, ReadOnlySpan&lt;byte&gt;, ref int)](#bool-trygetnamedpropertyvalueindex-ref-metadatadb-parseddata-int-startindex-int-endindex-readonlyspan-byte-propertyname-ref-int-valueindex) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
-| [TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;char&gt;, ref int)](#bool-trygetnamedpropertyvalueindex-int-index-readonlyspan-char-propertyname-ref-int-valueindex) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
-| [TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;byte&gt;, ref int)](#bool-trygetnamedpropertyvalueindex-int-index-readonlyspan-byte-propertyname-ref-int-valueindex) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
+| [TryGetNamedPropertyValueIndex(ref MetadataDb, int, int, ReadOnlySpan&lt;byte&gt;, ref int)](#trygetnamedpropertyvalueindex-ref-metadatadb-int-int-readonlyspan-byte-ref-int) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
+| [TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;char&gt;, ref int)](#trygetnamedpropertyvalueindex-int-readonlyspan-char-ref-int) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
+| [TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;byte&gt;, ref int)](#trygetnamedpropertyvalueindex-int-readonlyspan-byte-ref-int) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
 
-## TryGetNamedPropertyValueIndex `abstract`
+## TryGetNamedPropertyValueIndex(ref MetadataDb, int, int, ReadOnlySpan&lt;byte&gt;, ref int) {#trygetnamedpropertyvalueindex-ref-metadatadb-int-int-readonlyspan-byte-ref-int}
 
 ```csharp
 bool TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, ref int valueIndex)
@@ -43,7 +43,7 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 
 ---
 
-## TryGetNamedPropertyValueIndex `abstract`
+## TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;char&gt;, ref int) {#trygetnamedpropertyvalueindex-int-readonlyspan-char-ref-int}
 
 ```csharp
 bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, ref int valueIndex)
@@ -67,7 +67,7 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 
 ---
 
-## TryGetNamedPropertyValueIndex `abstract`
+## TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;byte&gt;, ref int) {#trygetnamedpropertyvalueindex-int-readonlyspan-byte-ref-int}
 
 ```csharp
 bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, ref int valueIndex)

@@ -13,10 +13,10 @@ Title: "JsonElement.Equals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [Equals(object)](#bool-equals-object-obj) | Determines whether the specified object is equal to the current JsonElement. |
-| [Equals(T)](#bool-equals-t-t-other) | Determines whether the current JsonElement is equal to another JsonElement-like value through deep comparison. |
+| [Equals(object)](#equals-object) | Determines whether the specified object is equal to the current JsonElement. |
+| [Equals(T)](#equals-t) | Determines whether the current JsonElement is equal to another JsonElement-like value through deep comparison. |
 
-## Equals `virtual`
+## Equals(object) {#equals-object}
 
 ```csharp
 bool Equals(object obj)
@@ -38,7 +38,7 @@ Determines whether the specified object is equal to the current JsonElement.
 
 ---
 
-## Equals
+## Equals(T) {#equals-t}
 
 ```csharp
 bool Equals<T>(T other)

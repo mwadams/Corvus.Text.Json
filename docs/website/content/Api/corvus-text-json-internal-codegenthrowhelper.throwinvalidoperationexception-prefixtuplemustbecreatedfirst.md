@@ -9,7 +9,7 @@ Title: "CodeGenThrowHelper.ThrowInvalidOperationException_PrefixTupleMustBeCreat
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst `static`
+## ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst {#throwinvalidoperationexception-prefixtuplemustbecreatedfirst}
 
 ```csharp
 void ThrowInvalidOperationException_PrefixTupleMustBeCreatedFirst()

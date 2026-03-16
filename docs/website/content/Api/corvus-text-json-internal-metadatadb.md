@@ -18,5 +18,5 @@ Database storing metadata for parsed JSON document structure, including token in
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-internal-metadatadb.dispose.html#void-dispose) | Releases resources used by the metadata database, returning rented arrays to the pool. |
+| [Dispose()](/api/corvus-text-json-internal-metadatadb.dispose.html#dispose) | Releases resources used by the metadata database, returning rented arrays to the pool. |
 

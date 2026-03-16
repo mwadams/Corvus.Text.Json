@@ -13,12 +13,12 @@ Title: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
 
 | Method | Description |
 |--------|-------------|
-| [Parse(string, JsonDocumentOptions)](#t-parse-t-string-value-jsondocumentoptions-options) |  |
-| [Parse(Stream, JsonDocumentOptions)](#t-parse-t-stream-value-jsondocumentoptions-options) |  |
-| [Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions)](#t-parse-t-readonlymemory-byte-value-jsondocumentoptions-options) |  |
-| [Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions)](#t-parse-t-readonlymemory-char-value-jsondocumentoptions-options) |  |
+| [Parse(string, JsonDocumentOptions)](#parse-string-jsondocumentoptions) |  |
+| [Parse(Stream, JsonDocumentOptions)](#parse-stream-jsondocumentoptions) |  |
+| [Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions)](#parse-readonlymemory-byte-jsondocumentoptions) |  |
+| [Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions)](#parse-readonlymemory-char-jsondocumentoptions) |  |
 
-## Parse `static`
+## Parse(string, JsonDocumentOptions) {#parse-string-jsondocumentoptions}
 
 ```csharp
 T Parse<T>(string value, JsonDocumentOptions options)
@@ -37,7 +37,7 @@ T Parse<T>(string value, JsonDocumentOptions options)
 
 ---
 
-## Parse `static`
+## Parse(Stream, JsonDocumentOptions) {#parse-stream-jsondocumentoptions}
 
 ```csharp
 T Parse<T>(Stream value, JsonDocumentOptions options)
@@ -56,7 +56,7 @@ T Parse<T>(Stream value, JsonDocumentOptions options)
 
 ---
 
-## Parse `static`
+## Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlymemory-byte-jsondocumentoptions}
 
 ```csharp
 T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options)
@@ -75,7 +75,7 @@ T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options)
 
 ---
 
-## Parse `static`
+## Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions) {#parse-readonlymemory-char-jsondocumentoptions}
 
 ```csharp
 T Parse<T>(ReadOnlyMemory<char> value, JsonDocumentOptions options)

@@ -30,15 +30,15 @@ public sealed class IdnMapping
 
 | Method | Description |
 |--------|-------------|
-| [Equals(object)](/api/corvus-globalization-idnmapping.equals.html#bool-equals-object-obj) |  |
-| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](/api/corvus-globalization-idnmapping.getascii.html#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-ref-int-written) |  |
-| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getascii.html#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-int-index-ref-int-written) |  |
-| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getascii.html#bool-getascii-readonlyspan-char-unicode-span-char-outputbuffer-int-index-int-count-ref-int-written) |  |
-| [GetHashCode()](/api/corvus-globalization-idnmapping.gethashcode.html#int-gethashcode) |  |
-| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-int-index-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-int-index-int-count-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-int-index-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-int-index-int-count-ref-int-written) |  |
+| [Equals(object)](/api/corvus-globalization-idnmapping.equals.html#equals-object) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](/api/corvus-globalization-idnmapping.getascii.html#getascii-readonlyspan-char-span-char-ref-int) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getascii.html#getascii-readonlyspan-char-span-char-int-ref-int) |  |
+| [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getascii.html#getascii-readonlyspan-char-span-char-int-int-ref-int) |  |
+| [GetHashCode()](/api/corvus-globalization-idnmapping.gethashcode.html#gethashcode) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#getunicode-readonlyspan-byte-span-byte-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#getunicode-readonlyspan-byte-span-byte-int-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#getunicode-readonlyspan-byte-span-byte-int-int-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#getunicode-readonlyspan-char-span-char-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#getunicode-readonlyspan-char-span-char-int-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](/api/corvus-globalization-idnmapping.getunicode.html#getunicode-readonlyspan-char-span-char-int-int-ref-int) |  |
 

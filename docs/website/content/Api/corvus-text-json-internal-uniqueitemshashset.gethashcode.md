@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.GetHashCode Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetHashCode
+## GetHashCode {#gethashcode}
 
 ```csharp
 int GetHashCode(int documentIndex)

@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetJsonTokenType Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetJsonTokenType `abstract`
+## GetJsonTokenType {#getjsontokentype}
 
 ```csharp
 JsonTokenType GetJsonTokenType(int index)

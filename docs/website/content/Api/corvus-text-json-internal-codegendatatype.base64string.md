@@ -9,7 +9,7 @@ Title: "CodeGenDataType.Base64String Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Base64String `static`
+## Base64String {#base64string}
 
 ```csharp
 CodeGenDataType Base64String

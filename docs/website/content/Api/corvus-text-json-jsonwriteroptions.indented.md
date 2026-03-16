@@ -9,7 +9,7 @@ Title: "JsonWriterOptions.Indented Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Indented
+## Indented {#indented}
 
 ```csharp
 bool Indented { get; set; }

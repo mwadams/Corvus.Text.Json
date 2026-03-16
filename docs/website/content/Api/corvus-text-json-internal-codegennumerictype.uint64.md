@@ -9,7 +9,7 @@ Title: "CodeGenNumericType.UInt64 Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## UInt64 `static`
+## UInt64 {#uint64}
 
 ```csharp
 CodeGenNumericType UInt64

@@ -9,7 +9,7 @@ Title: "JsonValueKind.True Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## True `static`
+## True {#true}
 
 ```csharp
 JsonValueKind True

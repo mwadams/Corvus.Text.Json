@@ -9,7 +9,7 @@ Title: "Utf8UriReference.OriginalUriReference Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## OriginalUriReference
+## OriginalUriReference {#originalurireference}
 
 ```csharp
 ReadOnlySpan<byte> OriginalUriReference { get; }

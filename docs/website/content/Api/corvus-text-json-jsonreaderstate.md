@@ -14,7 +14,7 @@ Defines an opaque type that holds and saves all the relevant state information w
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonReaderState(JsonReaderOptions)](/api/corvus-text-json-jsonreaderstate.ctor.html#jsonreaderstate-jsonreaderoptions-options) | Constructs a new [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) instance. |
+| [JsonReaderState(JsonReaderOptions)](/api/corvus-text-json-jsonreaderstate.ctor.html#jsonreaderstate-jsonreaderoptions) | Constructs a new [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) instance. |
 
 ## Properties
 

@@ -9,7 +9,7 @@ Title: "SimpleTypesBacking.Span Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Span
+## Span {#span}
 
 ```csharp
 ReadOnlySpan<byte> Span()

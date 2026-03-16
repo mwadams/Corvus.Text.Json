@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.HasLocalOrAppliedEvaluatedProperty Method — Corvus.T
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasLocalOrAppliedEvaluatedProperty
+## HasLocalOrAppliedEvaluatedProperty {#haslocalorappliedevaluatedproperty}
 
 ```csharp
 bool HasLocalOrAppliedEvaluatedProperty(int index)

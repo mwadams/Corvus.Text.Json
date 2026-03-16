@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.NormalizedHost Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## NormalizedHost `static`
+## NormalizedHost {#normalizedhost}
 
 ```csharp
 Utf8UriComponents NormalizedHost

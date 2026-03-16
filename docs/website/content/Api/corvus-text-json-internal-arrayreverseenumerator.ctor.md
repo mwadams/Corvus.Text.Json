@@ -9,7 +9,7 @@ Title: "ArrayReverseEnumerator Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ArrayReverseEnumerator
+## ArrayReverseEnumerator {#arrayreverseenumerator}
 
 ```csharp
 ArrayReverseEnumerator(IJsonDocument targetDocument, int arrayDocumentIndex)

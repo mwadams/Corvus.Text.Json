@@ -9,7 +9,7 @@ Title: "IJsonElement.ValueKind Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueKind
+## ValueKind {#valuekind}
 
 ```csharp
 JsonValueKind ValueKind { get; }

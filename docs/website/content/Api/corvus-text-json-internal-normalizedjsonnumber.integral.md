@@ -9,7 +9,7 @@ Title: "NormalizedJsonNumber.Integral Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Integral
+## Integral {#integral}
 
 ```csharp
 ReadOnlySpan<byte> Integral { get; }

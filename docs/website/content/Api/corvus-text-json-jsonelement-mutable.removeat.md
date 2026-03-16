@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.RemoveAt Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## RemoveAt
+## RemoveAt {#removeat}
 
 ```csharp
 void RemoveAt(int index)

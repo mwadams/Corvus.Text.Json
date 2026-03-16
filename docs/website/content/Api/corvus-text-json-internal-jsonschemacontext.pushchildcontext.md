@@ -13,12 +13,12 @@ Title: "JsonSchemaContext.PushChildContext Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [PushChildContext(IJsonDocument, int, bool, bool, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider, JsonSchemaPathProvider)](#jsonschemacontext-pushchildcontext-ijsondocument-parentdocument-int-parentdocumentindex-bool-useevaluateditems-bool-useevaluatedproperties-readonlyspan-byte-escapedpropertyname-jsonschemapathprovider-evaluationpath-jsonschemapathprovider-schemaevaluationpath) |  |
-| [PushChildContext(IJsonDocument, int, bool, bool, int, JsonSchemaPathProvider, JsonSchemaPathProvider)](#jsonschemacontext-pushchildcontext-ijsondocument-parentdocument-int-parentdocumentindex-bool-useevaluateditems-bool-useevaluatedproperties-int-itemindex-jsonschemapathprovider-evaluationpath-jsonschemapathprovider-schemaevaluationpath) |  |
-| [PushChildContext(IJsonDocument, int, bool, bool, TProviderContext, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;)](#jsonschemacontext-pushchildcontext-tprovidercontext-ijsondocument-parentdocument-int-parentdocumentindex-bool-useevaluateditems-bool-useevaluatedproperties-tprovidercontext-providercontext-jsonschemapathprovider-tprovidercontext-evaluationpath-jsonschemapathprovider-tprovidercontext-schemaevaluationpath-jsonschemapathprovider-tprovidercontext-documentevaluationpath) | Creates a new child context for schema evaluation with typed provider context for path generation. |
-| [PushChildContext(IJsonDocument, int, bool, bool, JsonSchemaPathProvider, JsonSchemaPathProvider, JsonSchemaPathProvider)](#jsonschemacontext-pushchildcontext-ijsondocument-parentdocument-int-parentdocumentindex-bool-useevaluateditems-bool-useevaluatedproperties-jsonschemapathprovider-evaluationpath-jsonschemapathprovider-schemaevaluationpath-jsonschemapathprovider-documentevaluationpath) | Creates a new child context for schema evaluation with optional path providers. |
+| [PushChildContext(IJsonDocument, int, bool, bool, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-bool-bool-readonlyspan-byte-jsonschemapathprovider-jsonschemapathprovider) |  |
+| [PushChildContext(IJsonDocument, int, bool, bool, int, JsonSchemaPathProvider, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-bool-bool-int-jsonschemapathprovider-jsonschemapathprovider) |  |
+| [PushChildContext(IJsonDocument, int, bool, bool, TProviderContext, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;)](#pushchildcontext-ijsondocument-int-bool-bool-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext) | Creates a new child context for schema evaluation with typed provider context for path generation. |
+| [PushChildContext(IJsonDocument, int, bool, bool, JsonSchemaPathProvider, JsonSchemaPathProvider, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-bool-bool-jsonschemapathprovider-jsonschemapathprovider-jsonschemapathprovider) | Creates a new child context for schema evaluation with optional path providers. |
 
-## PushChildContext
+## PushChildContext(IJsonDocument, int, bool, bool, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-bool-bool-readonlyspan-byte-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
 JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties, ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider evaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
@@ -42,7 +42,7 @@ JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocum
 
 ---
 
-## PushChildContext
+## PushChildContext(IJsonDocument, int, bool, bool, int, JsonSchemaPathProvider, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-bool-bool-int-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
 JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties, int itemIndex, JsonSchemaPathProvider evaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
@@ -66,7 +66,7 @@ JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocum
 
 ---
 
-## PushChildContext
+## PushChildContext(IJsonDocument, int, bool, bool, TProviderContext, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#pushchildcontext-ijsondocument-int-bool-bool-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
 ```csharp
 JsonSchemaContext PushChildContext<TProviderContext>(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> evaluationPath, JsonSchemaPathProvider<TProviderContext> schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath)
@@ -105,7 +105,7 @@ This overload provides strongly-typed context support for custom path providers.
 
 ---
 
-## PushChildContext
+## PushChildContext(IJsonDocument, int, bool, bool, JsonSchemaPathProvider, JsonSchemaPathProvider, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-bool-bool-jsonschemapathprovider-jsonschemapathprovider-jsonschemapathprovider}
 
 ```csharp
 JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties, JsonSchemaPathProvider evaluationPath, JsonSchemaPathProvider schemaEvaluationPath, JsonSchemaPathProvider documentEvaluationPath)

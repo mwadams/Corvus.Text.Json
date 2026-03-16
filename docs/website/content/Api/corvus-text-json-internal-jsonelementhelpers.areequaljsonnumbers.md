@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.AreEqualJsonNumbers Method — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AreEqualJsonNumbers `static`
+## AreEqualJsonNumbers {#areequaljsonnumbers}
 
 ```csharp
 bool AreEqualJsonNumbers(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)

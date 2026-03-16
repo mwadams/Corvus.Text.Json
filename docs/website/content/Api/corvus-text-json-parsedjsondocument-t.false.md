@@ -9,7 +9,7 @@ Title: "ParsedJsonDocument<T>.False Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## False `static`
+## False {#false}
 
 ```csharp
 T False { get; }

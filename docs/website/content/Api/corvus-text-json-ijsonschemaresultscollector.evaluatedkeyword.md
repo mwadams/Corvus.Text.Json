@@ -13,10 +13,10 @@ Title: "IJsonSchemaResultsCollector.EvaluatedKeyword Method — Corvus.Text.Json
 
 | Method | Description |
 |--------|-------------|
-| [EvaluatedKeyword(bool, JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;)](#void-evaluatedkeyword-bool-ismatch-jsonschemamessageprovider-messageprovider-readonlyspan-byte-encodedkeyword) | Updates the match state for the given evaluated keyword. |
-| [EvaluatedKeyword(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;)](#void-evaluatedkeyword-tprovidercontext-bool-ismatch-tprovidercontext-providercontext-jsonschemamessageprovider-tprovidercontext-messageprovider-readonlyspan-byte-encodedkeyword) | Updates the match state for the given evaluated keyword. |
+| [EvaluatedKeyword(bool, JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;)](#evaluatedkeyword-bool-jsonschemamessageprovider-readonlyspan-byte) | Updates the match state for the given evaluated keyword. |
+| [EvaluatedKeyword(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;)](#evaluatedkeyword-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-readonlyspan-byte) | Updates the match state for the given evaluated keyword. |
 
-## EvaluatedKeyword `abstract`
+## EvaluatedKeyword(bool, JsonSchemaMessageProvider, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeyword-bool-jsonschemamessageprovider-readonlyspan-byte}
 
 ```csharp
 void EvaluatedKeyword(bool isMatch, JsonSchemaMessageProvider messageProvider, ReadOnlySpan<byte> encodedKeyword)
@@ -34,7 +34,7 @@ Updates the match state for the given evaluated keyword.
 
 ---
 
-## EvaluatedKeyword `abstract`
+## EvaluatedKeyword(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, ReadOnlySpan&lt;byte&gt;) {#evaluatedkeyword-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-readonlyspan-byte}
 
 ```csharp
 void EvaluatedKeyword<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, ReadOnlySpan<byte> encodedKeyword)

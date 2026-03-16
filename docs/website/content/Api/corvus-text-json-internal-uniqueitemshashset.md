@@ -22,16 +22,16 @@ This class uses a hash-based approach to enable O(1) average-case lookups of pro
 
 | Constructor | Description |
 |-------------|-------------|
-| [UniqueItemsHashSet(IJsonDocument, int, Span&lt;int&gt;, Span&lt;byte&gt;)](/api/corvus-text-json-internal-uniqueitemshashset.ctor.html#uniqueitemshashset-ijsondocument-parentdocument-int-itemscount-span-int-buckets-span-byte-entries) | Creates a validator map for efficient property lookup based on the provided matchers. |
+| [UniqueItemsHashSet(IJsonDocument, int, Span&lt;int&gt;, Span&lt;byte&gt;)](/api/corvus-text-json-internal-uniqueitemshashset.ctor.html#uniqueitemshashset-ijsondocument-int-span-int-span-byte) | Creates a validator map for efficient property lookup based on the provided matchers. |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [AddItemIfNotExists(int)](/api/corvus-text-json-internal-uniqueitemshashset.additemifnotexists.html#bool-additemifnotexists-int-parentdocumentindex) | Adds the item identified by the parent document index to the map if it does not already exist, returning true if it was added and false if it already existed. |
-| [Dispose()](/api/corvus-text-json-internal-uniqueitemshashset.dispose.html#void-dispose) |  |
-| [GetHashCode(int)](/api/corvus-text-json-internal-uniqueitemshashset.gethashcode.html#int-gethashcode-int-documentindex) |  |
-| [ValueEquals(int, int)](/api/corvus-text-json-internal-uniqueitemshashset.valueequals.html#bool-valueequals-int-leftindex-int-rightindex) |  |
+| [AddItemIfNotExists(int)](/api/corvus-text-json-internal-uniqueitemshashset.additemifnotexists.html#additemifnotexists-int) | Adds the item identified by the parent document index to the map if it does not already exist, returning true if it was added and false if it already existed. |
+| [Dispose()](/api/corvus-text-json-internal-uniqueitemshashset.dispose.html#dispose) |  |
+| [GetHashCode(int)](/api/corvus-text-json-internal-uniqueitemshashset.gethashcode.html#gethashcode-int) |  |
+| [ValueEquals(int, int)](/api/corvus-text-json-internal-uniqueitemshashset.valueequals.html#valueequals-int-int) |  |
 
 ## Fields
 

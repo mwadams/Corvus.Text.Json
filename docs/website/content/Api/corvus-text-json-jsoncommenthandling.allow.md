@@ -9,7 +9,7 @@ Title: "JsonCommentHandling.Allow Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Allow `static`
+## Allow {#allow}
 
 ```csharp
 JsonCommentHandling Allow

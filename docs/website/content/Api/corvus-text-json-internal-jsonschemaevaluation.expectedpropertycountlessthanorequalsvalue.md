@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountLessThanOrEqualsValue Method â
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedPropertyCountLessThanOrEqualsValue `static`
+## ExpectedPropertyCountLessThanOrEqualsValue {#expectedpropertycountlessthanorequalsvalue}
 
 ```csharp
 bool ExpectedPropertyCountLessThanOrEqualsValue(int value, Span<byte> buffer, ref int written)

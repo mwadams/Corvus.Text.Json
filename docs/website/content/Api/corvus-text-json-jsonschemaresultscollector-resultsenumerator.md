@@ -22,8 +22,8 @@ public readonly struct JsonSchemaResultsCollector.ResultsEnumerator : IEnumerabl
 
 | Method | Description |
 |--------|-------------|
-| [Dispose()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.dispose.html#void-dispose) |  |
-| [GetEnumerator()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.getenumerator.html#ienumerator-jsonschemaresultscollector-result-getenumerator) |  |
-| [MoveNext()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.movenext.html#bool-movenext) |  |
-| [Reset()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.reset.html#void-reset) |  |
+| [Dispose()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.dispose.html#dispose) |  |
+| [GetEnumerator()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.getenumerator.html#getenumerator) |  |
+| [MoveNext()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.movenext.html#movenext) |  |
+| [Reset()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.reset.html#reset) |  |
 

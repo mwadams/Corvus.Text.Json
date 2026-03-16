@@ -13,13 +13,13 @@ Title: "JsonElement.Mutable.InsertItem Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [InsertItem(int, ref JsonElement.Source, int)](#void-insertitem-int-itemindex-ref-jsonelement-source-source-int-estimatedmembercount) |  |
-| [InsertItem(int, JsonElement.ObjectBuilder.Build, int)](#void-insertitem-int-itemindex-jsonelement-objectbuilder-build-objectvalue-int-estimatedmembercount) |  |
-| [InsertItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int)](#void-insertitem-tcontext-int-itemindex-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-objectvalue-int-estimatedmembercount) |  |
-| [InsertItem(int, JsonElement.ArrayBuilder.Build, int)](#void-insertitem-int-itemindex-jsonelement-arraybuilder-build-arrayvalue-int-estimatedmembercount) |  |
-| [InsertItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int)](#void-insertitem-tcontext-int-itemindex-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-arrayvalue-int-estimatedmembercount) |  |
+| [InsertItem(int, ref JsonElement.Source, int)](#insertitem-int-ref-jsonelement-source-int) |  |
+| [InsertItem(int, JsonElement.ObjectBuilder.Build, int)](#insertitem-int-jsonelement-objectbuilder-build-int) |  |
+| [InsertItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int)](#insertitem-int-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int) |  |
+| [InsertItem(int, JsonElement.ArrayBuilder.Build, int)](#insertitem-int-jsonelement-arraybuilder-build-int) |  |
+| [InsertItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int)](#insertitem-int-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int) |  |
 
-## InsertItem
+## InsertItem(int, ref JsonElement.Source, int) {#insertitem-int-ref-jsonelement-source-int}
 
 ```csharp
 void InsertItem(int itemIndex, ref JsonElement.Source source, int estimatedMemberCount)
@@ -35,7 +35,7 @@ void InsertItem(int itemIndex, ref JsonElement.Source source, int estimatedMembe
 
 ---
 
-## InsertItem
+## InsertItem(int, JsonElement.ObjectBuilder.Build, int) {#insertitem-int-jsonelement-objectbuilder-build-int}
 
 ```csharp
 void InsertItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
@@ -51,7 +51,7 @@ void InsertItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int 
 
 ---
 
-## InsertItem
+## InsertItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#insertitem-int-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
 void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
@@ -68,7 +68,7 @@ void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.Objec
 
 ---
 
-## InsertItem
+## InsertItem(int, JsonElement.ArrayBuilder.Build, int) {#insertitem-int-jsonelement-arraybuilder-build-int}
 
 ```csharp
 void InsertItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
@@ -84,7 +84,7 @@ void InsertItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int es
 
 ---
 
-## InsertItem
+## InsertItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#insertitem-int-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
 void InsertItem<TContext>(int itemIndex, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)

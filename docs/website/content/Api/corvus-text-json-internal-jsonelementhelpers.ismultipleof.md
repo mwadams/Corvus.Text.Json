@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
 
 | Method | Description |
 |--------|-------------|
-| [IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int)](#bool-ismultipleof-readonlyspan-byte-integral-readonlyspan-byte-fractional-int-exponent-ulong-divisor-int-divisorexponent) | Determines whether the normalized JSON number is an exact multiple of the given integer divisor. |
-| [IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int)](#bool-ismultipleof-readonlyspan-byte-integral-readonlyspan-byte-fractional-int-exponent-biginteger-divisor-int-divisorexponent) | Determines whether the normalized JSON number is an exact multiple of the given integer divisor. |
+| [IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int)](#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int) | Determines whether the normalized JSON number is an exact multiple of the given integer divisor. |
+| [IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int)](#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int) | Determines whether the normalized JSON number is an exact multiple of the given integer divisor. |
 
-## IsMultipleOf `static`
+## IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int) {#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int}
 
 ```csharp
 bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent)
@@ -46,7 +46,7 @@ We do not need to pass the sign of the JSON number as it is irrelevant to the ca
 
 ---
 
-## IsMultipleOf `static`
+## IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int) {#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int}
 
 ```csharp
 bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent)

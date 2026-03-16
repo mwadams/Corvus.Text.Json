@@ -9,7 +9,7 @@ Title: "Matcher<TMatch, TContext, TResult>.Invoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Invoke `virtual`
+## Invoke {#invoke}
 
 ```csharp
 TResult Invoke(ref TMatch match, ref TContext context)

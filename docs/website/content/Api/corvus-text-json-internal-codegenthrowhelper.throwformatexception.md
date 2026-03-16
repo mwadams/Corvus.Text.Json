@@ -13,10 +13,10 @@ Title: "CodeGenThrowHelper.ThrowFormatException Method — Corvus.Text.Json.Inte
 
 | Method | Description |
 |--------|-------------|
-| [ThrowFormatException()](#void-throwformatexception) | Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for format-related errors. |
-| [ThrowFormatException(CodeGenNumericType)](#void-throwformatexception-codegennumerictype-numerictype) | Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for numeric type formatting errors. |
+| [ThrowFormatException()](#throwformatexception) | Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for format-related errors. |
+| [ThrowFormatException(CodeGenNumericType)](#throwformatexception-codegennumerictype) | Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for numeric type formatting errors. |
 
-## ThrowFormatException `static`
+## ThrowFormatException() {#throwformatexception}
 
 ```csharp
 void ThrowFormatException()
@@ -32,7 +32,7 @@ Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/syst
 
 ---
 
-## ThrowFormatException `static`
+## ThrowFormatException(CodeGenNumericType) {#throwformatexception-codegennumerictype}
 
 ```csharp
 void ThrowFormatException(CodeGenNumericType numericType)

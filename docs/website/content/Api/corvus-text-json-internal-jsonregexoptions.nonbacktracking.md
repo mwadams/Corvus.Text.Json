@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.NonBacktracking Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## NonBacktracking `static`
+## NonBacktracking {#nonbacktracking}
 
 ```csharp
 JsonRegexOptions NonBacktracking

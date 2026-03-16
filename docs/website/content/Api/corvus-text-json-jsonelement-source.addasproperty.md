@@ -13,11 +13,11 @@ Title: "JsonElement.Source.AddAsProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [AddAsProperty(ReadOnlySpan&lt;byte&gt;, ref ComplexValueBuilder, bool, bool)](#void-addasproperty-readonlyspan-byte-utf8name-ref-complexvaluebuilder-valuebuilder-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddAsProperty(string, ref ComplexValueBuilder)](#void-addasproperty-string-name-ref-complexvaluebuilder-valuebuilder) |  |
-| [AddAsProperty(ReadOnlySpan&lt;char&gt;, ref ComplexValueBuilder)](#void-addasproperty-readonlyspan-char-name-ref-complexvaluebuilder-valuebuilder) |  |
+| [AddAsProperty(ReadOnlySpan&lt;byte&gt;, ref ComplexValueBuilder, bool, bool)](#addasproperty-readonlyspan-byte-ref-complexvaluebuilder-bool-bool) |  |
+| [AddAsProperty(string, ref ComplexValueBuilder)](#addasproperty-string-ref-complexvaluebuilder) |  |
+| [AddAsProperty(ReadOnlySpan&lt;char&gt;, ref ComplexValueBuilder)](#addasproperty-readonlyspan-char-ref-complexvaluebuilder) |  |
 
-## AddAsProperty
+## AddAsProperty(ReadOnlySpan&lt;byte&gt;, ref ComplexValueBuilder, bool, bool) {#addasproperty-readonlyspan-byte-ref-complexvaluebuilder-bool-bool}
 
 ```csharp
 void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBuilder, bool escapeName, bool nameRequiresUnescaping)
@@ -34,7 +34,7 @@ void AddAsProperty(ReadOnlySpan<byte> utf8Name, ref ComplexValueBuilder valueBui
 
 ---
 
-## AddAsProperty
+## AddAsProperty(string, ref ComplexValueBuilder) {#addasproperty-string-ref-complexvaluebuilder}
 
 ```csharp
 void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
@@ -49,7 +49,7 @@ void AddAsProperty(string name, ref ComplexValueBuilder valueBuilder)
 
 ---
 
-## AddAsProperty
+## AddAsProperty(ReadOnlySpan&lt;char&gt;, ref ComplexValueBuilder) {#addasproperty-readonlyspan-char-ref-complexvaluebuilder}
 
 ```csharp
 void AddAsProperty(ReadOnlySpan<char> name, ref ComplexValueBuilder valueBuilder)

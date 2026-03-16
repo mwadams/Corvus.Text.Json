@@ -28,5 +28,5 @@ Implemented by JsonElement-derived types.
 
 | Method | Description |
 |--------|-------------|
-| [CreateInstance(IJsonDocument, int)](/api/corvus-text-json-internal-ijsonelement-t.createinstance.html#t-createinstance-ijsondocument-parentdocument-int-parentdocumentindex) `static` | Creates an instance of the element from the parent document and the handle of the element in the parent document. |
+| [CreateInstance(IJsonDocument, int)](/api/corvus-text-json-internal-ijsonelement-t.createinstance.html#createinstance-ijsondocument-int) `static` | Creates an instance of the element from the parent document and the handle of the element in the parent document. |
 

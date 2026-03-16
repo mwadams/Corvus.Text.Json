@@ -13,10 +13,10 @@ Title: "Utf8JsonWriter Constructors — Corvus.Text.Json"
 
 | Constructor | Description |
 |-------------|-------------|
-| [Utf8JsonWriter(IBufferWriter&lt;byte&gt;, JsonWriterOptions)](#utf8jsonwriter-ibufferwriter-byte-bufferwriter-jsonwriteroptions-options) | Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `bufferWriter`. |
-| [Utf8JsonWriter(Stream, JsonWriterOptions)](#utf8jsonwriter-stream-utf8json-jsonwriteroptions-options) | Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `utf8Json`. |
+| [Utf8JsonWriter(IBufferWriter&lt;byte&gt;, JsonWriterOptions)](#utf8jsonwriter-ibufferwriter-byte-jsonwriteroptions) | Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `bufferWriter`. |
+| [Utf8JsonWriter(Stream, JsonWriterOptions)](#utf8jsonwriter-stream-jsonwriteroptions) | Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `utf8Json`. |
 
-## Utf8JsonWriter
+## Utf8JsonWriter(IBufferWriter&lt;byte&gt;, JsonWriterOptions) {#utf8jsonwriter-ibufferwriter-byte-jsonwriteroptions}
 
 ```csharp
 Utf8JsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterOptions options)
@@ -39,7 +39,7 @@ Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) i
 
 ---
 
-## Utf8JsonWriter
+## Utf8JsonWriter(Stream, JsonWriterOptions) {#utf8jsonwriter-stream-jsonwriteroptions}
 
 ```csharp
 Utf8JsonWriter(Stream utf8Json, JsonWriterOptions options)

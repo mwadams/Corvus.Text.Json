@@ -9,7 +9,7 @@ Title: "Utf8IriReference.HasAuthority Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## HasAuthority
+## HasAuthority {#hasauthority}
 
 ```csharp
 bool HasAuthority { get; }

@@ -9,7 +9,7 @@ Title: "Utf8IriValue.Iri Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Iri
+## Iri {#iri}
 
 ```csharp
 Utf8Iri Iri { get; }

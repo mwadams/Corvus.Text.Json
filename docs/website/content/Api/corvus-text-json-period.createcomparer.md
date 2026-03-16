@@ -9,7 +9,7 @@ Title: "Period.CreateComparer Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateComparer `static`
+## CreateComparer {#createcomparer}
 
 ```csharp
 IComparer<Period> CreateComparer(LocalDateTime baseDateTime)

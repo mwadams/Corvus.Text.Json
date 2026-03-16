@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.Options Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Options
+## Options {#options}
 
 ```csharp
 JsonWriterOptions Options { get; }

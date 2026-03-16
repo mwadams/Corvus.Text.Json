@@ -18,10 +18,10 @@ Extension methods for [`IJsonElement`](/api/corvus-text-json-internal-ijsoneleme
 
 | Method | Description |
 |--------|-------------|
-| [IsNotNull(T)](/api/corvus-text-json-jsonelementextensions.isnotnull.html#bool-isnotnull-t-t-value) `static` | Gets a value indicating whether this value is not null. |
-| [IsNotNullOrUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnotnullorundefined.html#bool-isnotnullorundefined-t-t-value) `static` | Gets a value indicating whether this value is neither null nor undefined. |
-| [IsNotUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnotundefined.html#bool-isnotundefined-t-t-value) `static` | Gets a value indicating whether this value is not undefined. |
-| [IsNull(T)](/api/corvus-text-json-jsonelementextensions.isnull.html#bool-isnull-t-t-value) `static` | Gets a value indicating whether this value is null. |
-| [IsNullOrUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnullorundefined.html#bool-isnullorundefined-t-t-value) `static` | Gets a value indicating whether this value is null or undefined. |
-| [IsUndefined(T)](/api/corvus-text-json-jsonelementextensions.isundefined.html#bool-isundefined-t-t-value) `static` | Gets a value indicating whether this value is undefined. |
+| [IsNotNull(T)](/api/corvus-text-json-jsonelementextensions.isnotnull.html#isnotnull-t) `static` | Gets a value indicating whether this value is not null. |
+| [IsNotNullOrUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnotnullorundefined.html#isnotnullorundefined-t) `static` | Gets a value indicating whether this value is neither null nor undefined. |
+| [IsNotUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnotundefined.html#isnotundefined-t) `static` | Gets a value indicating whether this value is not undefined. |
+| [IsNull(T)](/api/corvus-text-json-jsonelementextensions.isnull.html#isnull-t) `static` | Gets a value indicating whether this value is null. |
+| [IsNullOrUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnullorundefined.html#isnullorundefined-t) `static` | Gets a value indicating whether this value is null or undefined. |
+| [IsUndefined(T)](/api/corvus-text-json-jsonelementextensions.isundefined.html#isundefined-t) `static` | Gets a value indicating whether this value is undefined. |
 

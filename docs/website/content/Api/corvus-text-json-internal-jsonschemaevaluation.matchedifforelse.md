@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchedIfForElse Field — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchedIfForElse `static`
+## MatchedIfForElse {#matchedifforelse}
 
 ```csharp
 JsonSchemaMessageProvider MatchedIfForElse

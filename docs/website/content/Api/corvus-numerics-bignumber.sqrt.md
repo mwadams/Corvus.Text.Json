@@ -9,7 +9,7 @@ Title: "BigNumber.Sqrt Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Sqrt `static`
+## Sqrt {#sqrt}
 
 ```csharp
 BigNumber Sqrt(BigNumber value, int precision)

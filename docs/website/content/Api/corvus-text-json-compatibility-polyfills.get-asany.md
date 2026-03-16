@@ -9,7 +9,7 @@ Title: "Polyfills.get_AsAny Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## get_AsAny `static`
+## get_AsAny {#get-asany}
 
 ```csharp
 JsonElement get_AsAny<T>(T element)

@@ -9,7 +9,7 @@ Title: "ValidationContext.InvalidContext Field — Corvus.Text.Json.Compatibilit
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## InvalidContext `static`
+## InvalidContext {#invalidcontext}
 
 ```csharp
 ValidationContext InvalidContext

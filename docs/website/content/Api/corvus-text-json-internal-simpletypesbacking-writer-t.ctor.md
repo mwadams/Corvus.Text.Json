@@ -9,7 +9,7 @@ Title: "SimpleTypesBacking.Writer<T> Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## SimpleTypesBacking.Writer
+## SimpleTypesBacking.Writer {#simpletypesbacking-writer}
 
 ```csharp
 SimpleTypesBacking.Writer(object object, IntPtr method)

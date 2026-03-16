@@ -13,10 +13,10 @@ Title: "JsonWorkspace.CreateBuilder Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [CreateBuilder(TElement)](#jsondocumentbuilder-tmutableelement-createbuilder-telement-tmutableelement-telement-sourceelement) | Creates a document builder for building mutable JSON documents from an existing element. |
-| [CreateBuilder(int, int)](#jsondocumentbuilder-telement-createbuilder-telement-int-initialcapacity-int-initialvaluebuffersize) | Creates a document builder for building mutable JSON documents. |
+| [CreateBuilder(TElement)](#createbuilder-telement) | Creates a document builder for building mutable JSON documents from an existing element. |
+| [CreateBuilder(int, int)](#createbuilder-int-int) | Creates a document builder for building mutable JSON documents. |
 
-## CreateBuilder
+## CreateBuilder(TElement) {#createbuilder-telement}
 
 ```csharp
 JsonDocumentBuilder<TMutableElement> CreateBuilder<TElement, TMutableElement>(TElement sourceElement)
@@ -45,7 +45,7 @@ A document builder for the mutable element type.
 
 ---
 
-## CreateBuilder
+## CreateBuilder(int, int) {#createbuilder-int-int}
 
 ```csharp
 JsonDocumentBuilder<TElement> CreateBuilder<TElement>(int initialCapacity, int initialValueBufferSize)

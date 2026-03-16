@@ -13,12 +13,12 @@ Title: "Utf8JsonWriter.WriteRawValue Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WriteRawValue(string, bool)](#void-writerawvalue-string-json-bool-skipinputvalidation) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
-| [WriteRawValue(ReadOnlySpan&lt;char&gt;, bool)](#void-writerawvalue-readonlyspan-char-json-bool-skipinputvalidation) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
-| [WriteRawValue(ReadOnlySpan&lt;byte&gt;, bool)](#void-writerawvalue-readonlyspan-byte-utf8json-bool-skipinputvalidation) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
-| [WriteRawValue(ReadOnlySequence&lt;byte&gt;, bool)](#void-writerawvalue-readonlysequence-byte-utf8json-bool-skipinputvalidation) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
+| [WriteRawValue(string, bool)](#writerawvalue-string-bool) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
+| [WriteRawValue(ReadOnlySpan&lt;char&gt;, bool)](#writerawvalue-readonlyspan-char-bool) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
+| [WriteRawValue(ReadOnlySpan&lt;byte&gt;, bool)](#writerawvalue-readonlyspan-byte-bool) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
+| [WriteRawValue(ReadOnlySequence&lt;byte&gt;, bool)](#writerawvalue-readonlysequence-byte-bool) | Writes the input as JSON content. It is expected that the input content is a single complete JSON value. |
 
-## WriteRawValue
+## WriteRawValue(string, bool) {#writerawvalue-string-bool}
 
 ```csharp
 void WriteRawValue(string json, bool skipInputValidation)
@@ -47,7 +47,7 @@ When writing untrused JSON values, do not set `skipInputValidation` to `true` as
 
 ---
 
-## WriteRawValue
+## WriteRawValue(ReadOnlySpan&lt;char&gt;, bool) {#writerawvalue-readonlyspan-char-bool}
 
 ```csharp
 void WriteRawValue(ReadOnlySpan<char> json, bool skipInputValidation)
@@ -75,7 +75,7 @@ When writing untrused JSON values, do not set `skipInputValidation` to `true` as
 
 ---
 
-## WriteRawValue
+## WriteRawValue(ReadOnlySpan&lt;byte&gt;, bool) {#writerawvalue-readonlyspan-byte-bool}
 
 ```csharp
 void WriteRawValue(ReadOnlySpan<byte> utf8Json, bool skipInputValidation)
@@ -103,7 +103,7 @@ When writing untrused JSON values, do not set `skipInputValidation` to `true` as
 
 ---
 
-## WriteRawValue
+## WriteRawValue(ReadOnlySequence&lt;byte&gt;, bool) {#writerawvalue-readonlysequence-byte-bool}
 
 ```csharp
 void WriteRawValue(ReadOnlySequence<byte> utf8Json, bool skipInputValidation)

@@ -13,11 +13,11 @@ Title: "JsonProperty<TValue>.NameEquals Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [NameEquals(string)](#bool-nameequals-string-text) | Compares `text` to the name of this property. |
-| [NameEquals(ReadOnlySpan&lt;byte&gt;)](#bool-nameequals-readonlyspan-byte-utf8text) | Compares the text represented by `utf8Text` to the name of this property. |
-| [NameEquals(ReadOnlySpan&lt;char&gt;)](#bool-nameequals-readonlyspan-char-text) | Compares `text` to the name of this property. |
+| [NameEquals(string)](#nameequals-string) | Compares `text` to the name of this property. |
+| [NameEquals(ReadOnlySpan&lt;byte&gt;)](#nameequals-readonlyspan-byte) | Compares the text represented by `utf8Text` to the name of this property. |
+| [NameEquals(ReadOnlySpan&lt;char&gt;)](#nameequals-readonlyspan-char) | Compares `text` to the name of this property. |
 
-## NameEquals
+## NameEquals(string) {#nameequals-string}
 
 ```csharp
 bool NameEquals(string text)
@@ -49,7 +49,7 @@ This method is functionally equal to doing an ordinal comparison of `text` and [
 
 ---
 
-## NameEquals
+## NameEquals(ReadOnlySpan&lt;byte&gt;) {#nameequals-readonlyspan-byte}
 
 ```csharp
 bool NameEquals(ReadOnlySpan<byte> utf8Text)
@@ -81,7 +81,7 @@ This method is functionally equal to doing an ordinal comparison of `utf8Text` a
 
 ---
 
-## NameEquals
+## NameEquals(ReadOnlySpan&lt;char&gt;) {#nameequals-readonlyspan-char}
 
 ```csharp
 bool NameEquals(ReadOnlySpan<char> text)

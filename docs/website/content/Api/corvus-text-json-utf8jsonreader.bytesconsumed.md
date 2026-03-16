@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.BytesConsumed Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BytesConsumed
+## BytesConsumed {#bytesconsumed}
 
 ```csharp
 long BytesConsumed { get; }

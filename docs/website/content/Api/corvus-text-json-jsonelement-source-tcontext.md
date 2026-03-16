@@ -12,9 +12,9 @@ public readonly struct JsonElement.Source<TContext>
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonElement.Source(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](/api/corvus-text-json-jsonelement-source-tcontext.ctor.html#jsonelement-source-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-value) |  |
-| [JsonElement.Source(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;)](/api/corvus-text-json-jsonelement-source-tcontext.ctor.html#jsonelement-source-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-value) |  |
-| [JsonElement.Source(JsonElement.Source)](/api/corvus-text-json-jsonelement-source-tcontext.ctor.html#jsonelement-source-jsonelement-source-source) |  |
+| [JsonElement.Source(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](/api/corvus-text-json-jsonelement-source-tcontext.ctor.html#jsonelement-source-ref-tcontext-jsonelement-arraybuilder-build-tcontext) |  |
+| [JsonElement.Source(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;)](/api/corvus-text-json-jsonelement-source-tcontext.ctor.html#jsonelement-source-ref-tcontext-jsonelement-objectbuilder-build-tcontext) |  |
+| [JsonElement.Source(JsonElement.Source)](/api/corvus-text-json-jsonelement-source-tcontext.ctor.html#jsonelement-source-jsonelement-source) |  |
 
 ## Properties
 
@@ -26,14 +26,14 @@ public readonly struct JsonElement.Source<TContext>
 
 | Method | Description |
 |--------|-------------|
-| [AddAsItem(ref ComplexValueBuilder)](/api/corvus-text-json-jsonelement-source-tcontext.addasitem.html#void-addasitem-ref-complexvaluebuilder-valuebuilder) |  |
-| [AddAsProperty(ReadOnlySpan&lt;byte&gt;, ref ComplexValueBuilder, bool, bool)](/api/corvus-text-json-jsonelement-source-tcontext.addasproperty.html#void-addasproperty-readonlyspan-byte-utf8name-ref-complexvaluebuilder-valuebuilder-bool-escapename-bool-namerequiresunescaping) |  |
-| [AddAsProperty(string, ref ComplexValueBuilder)](/api/corvus-text-json-jsonelement-source-tcontext.addasproperty.html#void-addasproperty-string-name-ref-complexvaluebuilder-valuebuilder) |  |
-| [AddAsProperty(ReadOnlySpan&lt;char&gt;, ref ComplexValueBuilder)](/api/corvus-text-json-jsonelement-source-tcontext.addasproperty.html#void-addasproperty-readonlyspan-char-name-ref-complexvaluebuilder-valuebuilder) |  |
+| [AddAsItem(ref ComplexValueBuilder)](/api/corvus-text-json-jsonelement-source-tcontext.addasitem.html#addasitem-ref-complexvaluebuilder) |  |
+| [AddAsProperty(ReadOnlySpan&lt;byte&gt;, ref ComplexValueBuilder, bool, bool)](/api/corvus-text-json-jsonelement-source-tcontext.addasproperty.html#addasproperty-readonlyspan-byte-ref-complexvaluebuilder-bool-bool) |  |
+| [AddAsProperty(string, ref ComplexValueBuilder)](/api/corvus-text-json-jsonelement-source-tcontext.addasproperty.html#addasproperty-string-ref-complexvaluebuilder) |  |
+| [AddAsProperty(ReadOnlySpan&lt;char&gt;, ref ComplexValueBuilder)](/api/corvus-text-json-jsonelement-source-tcontext.addasproperty.html#addasproperty-readonlyspan-char-ref-complexvaluebuilder) |  |
 
 ## Operators
 
 | Operator | Description |
 |----------|-------------|
-| [implicit operator JsonElement.Source&lt;TContext&gt;(JsonElement.Source)](/api/corvus-text-json-jsonelement-source-tcontext.op-implicit.html#static-implicit-operator-jsonelement-source-tcontext-jsonelement-source-source) |  |
+| [implicit operator JsonElement.Source&lt;TContext&gt;(JsonElement.Source)](/api/corvus-text-json-jsonelement-source-tcontext.op-implicit.html#implicit-operator-jsonelement-source-tcontext-jsonelement-source) |  |
 

@@ -9,7 +9,7 @@ Title: "Period.FromTicks Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## FromTicks `static`
+## FromTicks {#fromticks}
 
 ```csharp
 Period FromTicks(long ticks)

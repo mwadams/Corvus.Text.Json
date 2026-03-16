@@ -9,7 +9,7 @@ Title: "JsonElement.From Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## From `static`
+## From {#from}
 
 ```csharp
 JsonElement From<T>(ref T instance)

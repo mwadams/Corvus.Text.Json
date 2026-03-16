@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.ApplyUnsafe Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ApplyUnsafe `static`
+## ApplyUnsafe {#applyunsafe}
 
 ```csharp
 void ApplyUnsafe<TTarget, TSource>(TTarget targetElement, ref TSource sourceElement)

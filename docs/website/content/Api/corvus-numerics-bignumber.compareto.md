@@ -13,10 +13,10 @@ Title: "BigNumber.CompareTo Method — Corvus.Numerics"
 
 | Method | Description |
 |--------|-------------|
-| [CompareTo(BigNumber)](#int-compareto-bignumber-other) |  |
-| [CompareTo(object)](#int-compareto-object-obj) |  |
+| [CompareTo(BigNumber)](#compareto-bignumber) |  |
+| [CompareTo(object)](#compareto-object) |  |
 
-## CompareTo
+## CompareTo(BigNumber) {#compareto-bignumber}
 
 ```csharp
 int CompareTo(BigNumber other)
@@ -34,7 +34,7 @@ int CompareTo(BigNumber other)
 
 ---
 
-## CompareTo
+## CompareTo(object) {#compareto-object}
 
 ```csharp
 int CompareTo(object obj)

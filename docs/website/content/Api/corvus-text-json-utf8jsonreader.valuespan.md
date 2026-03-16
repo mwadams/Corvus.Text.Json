@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.ValueSpan Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueSpan
+## ValueSpan {#valuespan}
 
 ```csharp
 ReadOnlySpan<byte> ValueSpan { get; set; }

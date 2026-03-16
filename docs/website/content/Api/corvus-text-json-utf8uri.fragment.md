@@ -9,7 +9,7 @@ Title: "Utf8Uri.Fragment Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Fragment
+## Fragment {#fragment}
 
 ```csharp
 ReadOnlySpan<byte> Fragment { get; }

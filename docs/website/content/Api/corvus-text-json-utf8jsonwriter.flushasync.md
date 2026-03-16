@@ -9,7 +9,7 @@ Title: "Utf8JsonWriter.FlushAsync Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## FlushAsync
+## FlushAsync {#flushasync}
 
 ```csharp
 Task FlushAsync(CancellationToken cancellationToken)

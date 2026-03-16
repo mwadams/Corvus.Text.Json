@@ -9,7 +9,7 @@ Title: "BigNumber.Ceiling Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Ceiling `static`
+## Ceiling {#ceiling}
 
 ```csharp
 BigNumber Ceiling(BigNumber value)

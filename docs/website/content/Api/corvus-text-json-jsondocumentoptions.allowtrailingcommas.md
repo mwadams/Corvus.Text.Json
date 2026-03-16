@@ -9,7 +9,7 @@ Title: "JsonDocumentOptions.AllowTrailingCommas Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## AllowTrailingCommas
+## AllowTrailingCommas {#allowtrailingcommas}
 
 ```csharp
 bool AllowTrailingCommas { get; set; }

@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.Read Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Read
+## Read {#read}
 
 ```csharp
 bool Read()

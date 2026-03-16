@@ -9,7 +9,7 @@ Title: "Utf8UriReference.CreateUriReference Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## CreateUriReference `static`
+## CreateUriReference {#createurireference}
 
 ```csharp
 Utf8UriReference CreateUriReference(ReadOnlySpan<byte> uri)

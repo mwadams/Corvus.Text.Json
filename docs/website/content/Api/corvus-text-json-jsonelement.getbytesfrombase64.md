@@ -9,7 +9,7 @@ Title: "JsonElement.GetBytesFromBase64 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetBytesFromBase64
+## GetBytesFromBase64 {#getbytesfrombase64}
 
 ```csharp
 byte[] GetBytesFromBase64()

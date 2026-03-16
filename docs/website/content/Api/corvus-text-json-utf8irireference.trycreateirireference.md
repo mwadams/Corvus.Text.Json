@@ -9,7 +9,7 @@ Title: "Utf8IriReference.TryCreateIriReference Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryCreateIriReference `static`
+## TryCreateIriReference {#trycreateirireference}
 
 ```csharp
 bool TryCreateIriReference(ReadOnlySpan<byte> iri, ref Utf8IriReference utf8Iri)

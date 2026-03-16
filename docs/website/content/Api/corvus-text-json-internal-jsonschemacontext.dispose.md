@@ -9,7 +9,7 @@ Title: "JsonSchemaContext.Dispose Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Dispose
+## Dispose {#dispose}
 
 ```csharp
 void Dispose()

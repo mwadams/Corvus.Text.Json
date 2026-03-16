@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.CountRunes Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## CountRunes `static`
+## CountRunes {#countrunes}
 
 ```csharp
 int CountRunes(ReadOnlySpan<byte> utf8String)

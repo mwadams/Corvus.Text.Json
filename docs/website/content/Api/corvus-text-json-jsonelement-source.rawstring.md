@@ -9,7 +9,7 @@ Title: "JsonElement.Source.RawString Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## RawString `static`
+## RawString {#rawstring}
 
 ```csharp
 JsonElement.Source RawString(ReadOnlySpan<byte> value, bool requiresUnescaping)

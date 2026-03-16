@@ -9,7 +9,7 @@ Title: "JsonSchemaResultsCollector.Result.Message Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Message
+## Message {#message}
 
 ```csharp
 ReadOnlySpan<byte> Message { get; }

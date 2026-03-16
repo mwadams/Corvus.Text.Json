@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedTypeNull Field — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedTypeNull `static`
+## ExpectedTypeNull {#expectedtypenull}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeNull

@@ -16,13 +16,13 @@ public delegate ComplexValueBuilder.ValueBuilderAction : MulticastDelegate, IClo
 
 | Constructor | Description |
 |-------------|-------------|
-| [ComplexValueBuilder.ValueBuilderAction(object, IntPtr)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.ctor.html#complexvaluebuilder-valuebuilderaction-object-object-intptr-method) |  |
+| [ComplexValueBuilder.ValueBuilderAction(object, IntPtr)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.ctor.html#complexvaluebuilder-valuebuilderaction-object-intptr) |  |
 
 ## Methods
 
 | Method | Description |
 |--------|-------------|
-| [BeginInvoke(ref ComplexValueBuilder, AsyncCallback, object)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.begininvoke.html#iasyncresult-begininvoke-ref-complexvaluebuilder-builder-asynccallback-callback-object-object) |  |
-| [EndInvoke(ref ComplexValueBuilder, IAsyncResult)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.endinvoke.html#void-endinvoke-ref-complexvaluebuilder-builder-iasyncresult-result) |  |
-| [Invoke(ref ComplexValueBuilder)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.invoke.html#void-invoke-ref-complexvaluebuilder-builder) |  |
+| [BeginInvoke(ref ComplexValueBuilder, AsyncCallback, object)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.begininvoke.html#begininvoke-ref-complexvaluebuilder-asynccallback-object) |  |
+| [EndInvoke(ref ComplexValueBuilder, IAsyncResult)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.endinvoke.html#endinvoke-ref-complexvaluebuilder-iasyncresult) |  |
+| [Invoke(ref ComplexValueBuilder)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.invoke.html#invoke-ref-complexvaluebuilder) |  |
 

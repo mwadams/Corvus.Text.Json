@@ -9,7 +9,7 @@ Title: "Utf8Iri.IsValid Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsValid
+## IsValid {#isvalid}
 
 ```csharp
 bool IsValid { get; }

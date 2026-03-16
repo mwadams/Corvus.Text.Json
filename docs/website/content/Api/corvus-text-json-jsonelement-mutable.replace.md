@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.Replace Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Replace
+## Replace {#replace}
 
 ```csharp
 bool Replace(ref JsonElement oldItem, ref JsonElement.Source newItem)

@@ -13,13 +13,13 @@ Title: "JsonElement.Mutable.SetItem Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [SetItem(int, ref JsonElement.Source, int)](#void-setitem-int-itemindex-ref-jsonelement-source-source-int-estimatedmembercount) |  |
-| [SetItem(int, JsonElement.ObjectBuilder.Build, int)](#void-setitem-int-itemindex-jsonelement-objectbuilder-build-objectvalue-int-estimatedmembercount) |  |
-| [SetItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int)](#void-setitem-tcontext-int-itemindex-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-objectvalue-int-estimatedmembercount) |  |
-| [SetItem(int, JsonElement.ArrayBuilder.Build, int)](#void-setitem-int-itemindex-jsonelement-arraybuilder-build-arrayvalue-int-estimatedmembercount) |  |
-| [SetItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int)](#void-setitem-tcontext-int-itemindex-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-arrayvalue-int-estimatedmembercount) |  |
+| [SetItem(int, ref JsonElement.Source, int)](#setitem-int-ref-jsonelement-source-int) |  |
+| [SetItem(int, JsonElement.ObjectBuilder.Build, int)](#setitem-int-jsonelement-objectbuilder-build-int) |  |
+| [SetItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int)](#setitem-int-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int) |  |
+| [SetItem(int, JsonElement.ArrayBuilder.Build, int)](#setitem-int-jsonelement-arraybuilder-build-int) |  |
+| [SetItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int)](#setitem-int-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int) |  |
 
-## SetItem
+## SetItem(int, ref JsonElement.Source, int) {#setitem-int-ref-jsonelement-source-int}
 
 ```csharp
 void SetItem(int itemIndex, ref JsonElement.Source source, int estimatedMemberCount)
@@ -35,7 +35,7 @@ void SetItem(int itemIndex, ref JsonElement.Source source, int estimatedMemberCo
 
 ---
 
-## SetItem
+## SetItem(int, JsonElement.ObjectBuilder.Build, int) {#setitem-int-jsonelement-objectbuilder-build-int}
 
 ```csharp
 void SetItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
@@ -51,7 +51,7 @@ void SetItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int est
 
 ---
 
-## SetItem
+## SetItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#setitem-int-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
 
 ```csharp
 void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
@@ -68,7 +68,7 @@ void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.ObjectBu
 
 ---
 
-## SetItem
+## SetItem(int, JsonElement.ArrayBuilder.Build, int) {#setitem-int-jsonelement-arraybuilder-build-int}
 
 ```csharp
 void SetItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
@@ -84,7 +84,7 @@ void SetItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int estim
 
 ---
 
-## SetItem
+## SetItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#setitem-int-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
 
 ```csharp
 void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)

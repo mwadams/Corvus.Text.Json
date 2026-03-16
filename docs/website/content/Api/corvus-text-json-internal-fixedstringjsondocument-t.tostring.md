@@ -9,7 +9,7 @@ Title: "FixedStringJsonDocument<T>.ToString Method — Corvus.Text.Json.Internal
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ToString
+## ToString {#tostring}
 
 ```csharp
 string ToString(int index, string format, IFormatProvider formatProvider)

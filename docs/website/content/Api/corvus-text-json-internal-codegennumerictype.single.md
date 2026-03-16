@@ -9,7 +9,7 @@ Title: "CodeGenNumericType.Single Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Single `static`
+## Single {#single}
 
 ```csharp
 CodeGenNumericType Single

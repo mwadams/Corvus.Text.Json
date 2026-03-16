@@ -13,10 +13,10 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Equals Method — Corvus.Text.J
 
 | Method | Description |
 |--------|-------------|
-| [Equals(object)](#bool-equals-object-obj) |  |
-| [Equals(T)](#bool-equals-t-t-other) |  |
+| [Equals(object)](#equals-object) |  |
+| [Equals(T)](#equals-t) |  |
 
-## Equals `virtual`
+## Equals(object) {#equals-object}
 
 ```csharp
 bool Equals(object obj)
@@ -34,7 +34,7 @@ bool Equals(object obj)
 
 ---
 
-## Equals
+## Equals(T) {#equals-t}
 
 ```csharp
 bool Equals<T>(T other)

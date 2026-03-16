@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchIdnEmail Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchIdnEmail `static`
+## MatchIdnEmail {#matchidnemail}
 
 ```csharp
 bool MatchIdnEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

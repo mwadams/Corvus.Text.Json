@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchGreaterThanOrEquals Method — Corvus.Text.Jso
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchGreaterThanOrEquals `static`
+## MatchGreaterThanOrEquals {#matchgreaterthanorequals}
 
 ```csharp
 bool MatchGreaterThanOrEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

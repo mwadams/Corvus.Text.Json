@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.StoreRawStringValue Method — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StoreRawStringValue `abstract`
+## StoreRawStringValue {#storerawstringvalue}
 
 ```csharp
 int StoreRawStringValue(ReadOnlySpan<byte> value)

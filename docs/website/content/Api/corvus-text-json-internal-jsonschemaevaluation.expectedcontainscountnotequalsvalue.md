@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedContainsCountNotEqualsValue Method — Corv
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedContainsCountNotEqualsValue `static`
+## ExpectedContainsCountNotEqualsValue {#expectedcontainscountnotequalsvalue}
 
 ```csharp
 bool ExpectedContainsCountNotEqualsValue(int value, Span<byte> buffer, ref int written)

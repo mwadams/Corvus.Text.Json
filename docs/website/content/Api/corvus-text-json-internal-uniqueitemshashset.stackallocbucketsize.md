@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.StackAllocBucketSize Field — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StackAllocBucketSize `static`
+## StackAllocBucketSize {#stackallocbucketsize}
 
 ```csharp
 int StackAllocBucketSize

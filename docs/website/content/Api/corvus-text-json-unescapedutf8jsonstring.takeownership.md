@@ -9,7 +9,7 @@ Title: "UnescapedUtf8JsonString.TakeOwnership Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TakeOwnership
+## TakeOwnership {#takeownership}
 
 ```csharp
 ReadOnlyMemory<byte> TakeOwnership(ref byte[] extraRentedArrayPoolBytes)

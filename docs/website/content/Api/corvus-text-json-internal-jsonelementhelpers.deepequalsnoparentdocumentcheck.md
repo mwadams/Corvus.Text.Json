@@ -13,10 +13,10 @@ Title: "JsonElementHelpers.DeepEqualsNoParentDocumentCheck Method — Corvus.Tex
 
 | Method | Description |
 |--------|-------------|
-| [DeepEqualsNoParentDocumentCheck(ref TLeft, JsonTokenType, IJsonDocument, int)](#bool-deepequalsnoparentdocumentcheck-tleft-ref-tleft-element1-jsontokentype-element2tokentype-ijsondocument-element2parentdocument-int-element2parentdocumentindex) | Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) values for equality, including the values of all descendant elements. |
-| [DeepEqualsNoParentDocumentCheck(IJsonDocument, int, IJsonDocument, int)](#bool-deepequalsnoparentdocumentcheck-ijsondocument-element1parentdocument-int-element1parentdocumentindex-ijsondocument-element2parentdocument-int-element2parentdocumentindex) | Compares the values of two JSON values for equality, including the values of all descendant elements. |
+| [DeepEqualsNoParentDocumentCheck(ref TLeft, JsonTokenType, IJsonDocument, int)](#deepequalsnoparentdocumentcheck-ref-tleft-jsontokentype-ijsondocument-int) | Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) values for equality, including the values of all descendant elements. |
+| [DeepEqualsNoParentDocumentCheck(IJsonDocument, int, IJsonDocument, int)](#deepequalsnoparentdocumentcheck-ijsondocument-int-ijsondocument-int) | Compares the values of two JSON values for equality, including the values of all descendant elements. |
 
-## DeepEqualsNoParentDocumentCheck `static`
+## DeepEqualsNoParentDocumentCheck(ref TLeft, JsonTokenType, IJsonDocument, int) {#deepequalsnoparentdocumentcheck-ref-tleft-jsontokentype-ijsondocument-int}
 
 ```csharp
 bool DeepEqualsNoParentDocumentCheck<TLeft>(ref TLeft element1, JsonTokenType element2TokenType, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
@@ -51,7 +51,7 @@ Deep equality of two JSON values is defined as follows: - JSON values of differe
 
 ---
 
-## DeepEqualsNoParentDocumentCheck `static`
+## DeepEqualsNoParentDocumentCheck(IJsonDocument, int, IJsonDocument, int) {#deepequalsnoparentdocumentcheck-ijsondocument-int-ijsondocument-int}
 
 ```csharp
 bool DeepEqualsNoParentDocumentCheck(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)

@@ -9,7 +9,7 @@ Title: "JsonWorkspace.ReturnWriterAndBuffer Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## ReturnWriterAndBuffer
+## ReturnWriterAndBuffer {#returnwriterandbuffer}
 
 ```csharp
 void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)

@@ -9,7 +9,7 @@ Title: "ObjectEnumerator<TValue>.Reset Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Reset
+## Reset {#reset}
 
 ```csharp
 void Reset()

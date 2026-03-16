@@ -9,7 +9,7 @@ Title: "JsonPredicate<T> Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## JsonPredicate
+## JsonPredicate {#jsonpredicate}
 
 ```csharp
 JsonPredicate(object object, IntPtr method)

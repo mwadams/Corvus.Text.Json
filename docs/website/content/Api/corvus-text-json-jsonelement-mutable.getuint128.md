@@ -9,7 +9,7 @@ Title: "JsonElement.Mutable.GetUInt128 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetUInt128
+## GetUInt128 {#getuint128}
 
 ```csharp
 UInt128 GetUInt128()

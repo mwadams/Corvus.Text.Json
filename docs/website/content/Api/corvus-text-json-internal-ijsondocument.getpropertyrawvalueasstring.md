@@ -9,7 +9,7 @@ Title: "IJsonDocument.GetPropertyRawValueAsString Method — Corvus.Text.Json.In
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetPropertyRawValueAsString `abstract`
+## GetPropertyRawValueAsString {#getpropertyrawvalueasstring}
 
 ```csharp
 string GetPropertyRawValueAsString(int valueIndex)

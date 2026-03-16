@@ -9,7 +9,7 @@ Title: "IJsonDocument.TryGetString Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetString `abstract`
+## TryGetString {#trygetstring}
 
 ```csharp
 bool TryGetString(int index, JsonTokenType expectedType, ref string result)

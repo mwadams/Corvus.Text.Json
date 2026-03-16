@@ -13,10 +13,10 @@ Title: "JsonElement.Mutable.Inequality Operator — Corvus.Text.Json"
 
 | Operator | Description |
 |----------|-------------|
-| [operator !=(JsonElement.Mutable, JsonElement.Mutable)](#static-bool-operator-jsonelement-mutable-left-jsonelement-mutable-right) |  |
-| [operator !=(JsonElement.Mutable, JsonElement)](#static-bool-operator-jsonelement-mutable-left-jsonelement-right) |  |
+| [operator !=(JsonElement.Mutable, JsonElement.Mutable)](#operator-jsonelement-mutable-jsonelement-mutable) |  |
+| [operator !=(JsonElement.Mutable, JsonElement)](#operator-jsonelement-mutable-jsonelement) |  |
 
-## operator != `static`
+## operator !=(JsonElement.Mutable, JsonElement.Mutable) {#operator-jsonelement-mutable-jsonelement-mutable}
 
 ```csharp
 static bool operator !=(JsonElement.Mutable left, JsonElement.Mutable right)
@@ -35,7 +35,7 @@ static bool operator !=(JsonElement.Mutable left, JsonElement.Mutable right)
 
 ---
 
-## operator != `static`
+## operator !=(JsonElement.Mutable, JsonElement) {#operator-jsonelement-mutable-jsonelement}
 
 ```csharp
 static bool operator !=(JsonElement.Mutable left, JsonElement right)

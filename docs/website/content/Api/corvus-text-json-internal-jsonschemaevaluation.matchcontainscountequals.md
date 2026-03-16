@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchContainsCountEquals Method — Corvus.Text.Jso
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchContainsCountEquals `static`
+## MatchContainsCountEquals {#matchcontainscountequals}
 
 ```csharp
 bool MatchContainsCountEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

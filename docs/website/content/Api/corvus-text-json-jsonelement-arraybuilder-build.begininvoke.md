@@ -9,7 +9,7 @@ Title: "JsonElement.ArrayBuilder.Build.BeginInvoke Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## BeginInvoke `virtual`
+## BeginInvoke {#begininvoke}
 
 ```csharp
 IAsyncResult BeginInvoke(ref JsonElement.ArrayBuilder builder, AsyncCallback callback, object object)

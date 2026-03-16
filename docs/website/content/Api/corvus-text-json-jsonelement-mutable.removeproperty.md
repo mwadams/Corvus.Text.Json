@@ -13,11 +13,11 @@ Title: "JsonElement.Mutable.RemoveProperty Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [RemoveProperty(string)](#bool-removeproperty-string-propertyname) |  |
-| [RemoveProperty(ReadOnlySpan&lt;char&gt;)](#bool-removeproperty-readonlyspan-char-propertyname) |  |
-| [RemoveProperty(ReadOnlySpan&lt;byte&gt;)](#bool-removeproperty-readonlyspan-byte-propertyname) |  |
+| [RemoveProperty(string)](#removeproperty-string) |  |
+| [RemoveProperty(ReadOnlySpan&lt;char&gt;)](#removeproperty-readonlyspan-char) |  |
+| [RemoveProperty(ReadOnlySpan&lt;byte&gt;)](#removeproperty-readonlyspan-byte) |  |
 
-## RemoveProperty
+## RemoveProperty(string) {#removeproperty-string}
 
 ```csharp
 bool RemoveProperty(string propertyName)
@@ -35,7 +35,7 @@ bool RemoveProperty(string propertyName)
 
 ---
 
-## RemoveProperty
+## RemoveProperty(ReadOnlySpan&lt;char&gt;) {#removeproperty-readonlyspan-char}
 
 ```csharp
 bool RemoveProperty(ReadOnlySpan<char> propertyName)
@@ -53,7 +53,7 @@ bool RemoveProperty(ReadOnlySpan<char> propertyName)
 
 ---
 
-## RemoveProperty
+## RemoveProperty(ReadOnlySpan&lt;byte&gt;) {#removeproperty-readonlyspan-byte}
 
 ```csharp
 bool RemoveProperty(ReadOnlySpan<byte> propertyName)

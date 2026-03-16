@@ -9,7 +9,7 @@ Title: "JsonElement.GetRawText Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetRawText
+## GetRawText {#getrawtext}
 
 ```csharp
 string GetRawText()

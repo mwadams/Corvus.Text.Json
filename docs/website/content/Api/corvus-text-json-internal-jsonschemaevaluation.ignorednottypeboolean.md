@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.IgnoredNotTypeBoolean Field — Corvus.Text.Json.In
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IgnoredNotTypeBoolean `static`
+## IgnoredNotTypeBoolean {#ignorednottypeboolean}
 
 ```csharp
 JsonSchemaMessageProvider IgnoredNotTypeBoolean

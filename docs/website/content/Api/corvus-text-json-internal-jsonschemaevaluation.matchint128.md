@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchInt128 Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchInt128 `static`
+## MatchInt128 {#matchint128}
 
 ```csharp
 bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

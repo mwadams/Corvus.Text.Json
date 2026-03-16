@@ -13,36 +13,36 @@ Title: "Utf8JsonWriter.WriteNumber Method — Corvus.Text.Json"
 
 | Method | Description |
 |--------|-------------|
-| [WriteNumber(JsonEncodedText, decimal)](#void-writenumber-jsonencodedtext-propertyname-decimal-value) | Writes the pre-encoded property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, decimal)](#void-writenumber-string-propertyname-decimal-value) | Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, decimal)](#void-writenumber-readonlyspan-char-propertyname-decimal-value) | Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, decimal)](#void-writenumber-readonlyspan-byte-utf8propertyname-decimal-value) | Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(JsonEncodedText, double)](#void-writenumber-jsonencodedtext-propertyname-double-value) | Writes the pre-encoded property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, double)](#void-writenumber-string-propertyname-double-value) | Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, double)](#void-writenumber-readonlyspan-char-propertyname-double-value) | Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, double)](#void-writenumber-readonlyspan-byte-utf8propertyname-double-value) | Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(JsonEncodedText, float)](#void-writenumber-jsonencodedtext-propertyname-float-value) | Writes the pre-encoded property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, float)](#void-writenumber-string-propertyname-float-value) | Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, float)](#void-writenumber-readonlyspan-char-propertyname-float-value) | Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, float)](#void-writenumber-readonlyspan-byte-utf8propertyname-float-value) | Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(JsonEncodedText, long)](#void-writenumber-jsonencodedtext-propertyname-long-value) | Writes the pre-encoded property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, long)](#void-writenumber-string-propertyname-long-value) | Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, long)](#void-writenumber-readonlyspan-char-propertyname-long-value) | Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, long)](#void-writenumber-readonlyspan-byte-utf8propertyname-long-value) | Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(JsonEncodedText, int)](#void-writenumber-jsonencodedtext-propertyname-int-value) | Writes the pre-encoded property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, int)](#void-writenumber-string-propertyname-int-value) | Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, int)](#void-writenumber-readonlyspan-char-propertyname-int-value) | Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, int)](#void-writenumber-readonlyspan-byte-utf8propertyname-int-value) | Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(JsonEncodedText, ulong)](#void-writenumber-jsonencodedtext-propertyname-ulong-value) | Writes the pre-encoded property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, ulong)](#void-writenumber-string-propertyname-ulong-value) | Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, ulong)](#void-writenumber-readonlyspan-char-propertyname-ulong-value) | Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, ulong)](#void-writenumber-readonlyspan-byte-utf8propertyname-ulong-value) | Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(JsonEncodedText, uint)](#void-writenumber-jsonencodedtext-propertyname-uint-value) | Writes the pre-encoded property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(string, uint)](#void-writenumber-string-propertyname-uint-value) | Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;char&gt;, uint)](#void-writenumber-readonlyspan-char-propertyname-uint-value) | Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
-| [WriteNumber(ReadOnlySpan&lt;byte&gt;, uint)](#void-writenumber-readonlyspan-byte-utf8propertyname-uint-value) | Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, decimal)](#writenumber-jsonencodedtext-decimal) | Writes the pre-encoded property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, decimal)](#writenumber-string-decimal) | Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, decimal)](#writenumber-readonlyspan-char-decimal) | Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, decimal)](#writenumber-readonlyspan-byte-decimal) | Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, double)](#writenumber-jsonencodedtext-double) | Writes the pre-encoded property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, double)](#writenumber-string-double) | Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, double)](#writenumber-readonlyspan-char-double) | Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, double)](#writenumber-readonlyspan-byte-double) | Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, float)](#writenumber-jsonencodedtext-float) | Writes the pre-encoded property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, float)](#writenumber-string-float) | Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, float)](#writenumber-readonlyspan-char-float) | Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, float)](#writenumber-readonlyspan-byte-float) | Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, long)](#writenumber-jsonencodedtext-long) | Writes the pre-encoded property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, long)](#writenumber-string-long) | Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, long)](#writenumber-readonlyspan-char-long) | Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, long)](#writenumber-readonlyspan-byte-long) | Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, int)](#writenumber-jsonencodedtext-int) | Writes the pre-encoded property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, int)](#writenumber-string-int) | Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, int)](#writenumber-readonlyspan-char-int) | Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, int)](#writenumber-readonlyspan-byte-int) | Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, ulong)](#writenumber-jsonencodedtext-ulong) | Writes the pre-encoded property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, ulong)](#writenumber-string-ulong) | Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, ulong)](#writenumber-readonlyspan-char-ulong) | Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, ulong)](#writenumber-readonlyspan-byte-ulong) | Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(JsonEncodedText, uint)](#writenumber-jsonencodedtext-uint) | Writes the pre-encoded property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(string, uint)](#writenumber-string-uint) | Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;char&gt;, uint)](#writenumber-readonlyspan-char-uint) | Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
+| [WriteNumber(ReadOnlySpan&lt;byte&gt;, uint)](#writenumber-readonlyspan-byte-uint) | Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object. |
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, decimal) {#writenumber-jsonencodedtext-decimal}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, decimal value)
@@ -69,7 +69,7 @@ Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) us
 
 ---
 
-## WriteNumber
+## WriteNumber(string, decimal) {#writenumber-string-decimal}
 
 ```csharp
 void WriteNumber(string propertyName, decimal value)
@@ -98,7 +98,7 @@ Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) us
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, decimal) {#writenumber-readonlyspan-char-decimal}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, decimal value)
@@ -126,7 +126,7 @@ Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) us
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, decimal) {#writenumber-readonlyspan-byte-decimal}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, decimal value)
@@ -154,7 +154,7 @@ Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) us
 
 ---
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, double) {#writenumber-jsonencodedtext-double}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, double value)
@@ -181,7 +181,7 @@ Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(string, double) {#writenumber-string-double}
 
 ```csharp
 void WriteNumber(string propertyName, double value)
@@ -210,7 +210,7 @@ Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, double) {#writenumber-readonlyspan-char-double}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, double value)
@@ -238,7 +238,7 @@ Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, double) {#writenumber-readonlyspan-byte-double}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, double value)
@@ -266,7 +266,7 @@ Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, float) {#writenumber-jsonencodedtext-float}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, float value)
@@ -293,7 +293,7 @@ Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(string, float) {#writenumber-string-float}
 
 ```csharp
 void WriteNumber(string propertyName, float value)
@@ -322,7 +322,7 @@ Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, float) {#writenumber-readonlyspan-char-float}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, float value)
@@ -350,7 +350,7 @@ Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, float) {#writenumber-readonlyspan-byte-float}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, float value)
@@ -378,7 +378,7 @@ Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, long) {#writenumber-jsonencodedtext-long}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, long value)
@@ -405,7 +405,7 @@ Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(string, long) {#writenumber-string-long}
 
 ```csharp
 void WriteNumber(string propertyName, long value)
@@ -434,7 +434,7 @@ Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, long) {#writenumber-readonlyspan-char-long}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, long value)
@@ -462,7 +462,7 @@ Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, long) {#writenumber-readonlyspan-byte-long}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, long value)
@@ -490,7 +490,7 @@ Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, int) {#writenumber-jsonencodedtext-int}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, int value)
@@ -517,7 +517,7 @@ Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(string, int) {#writenumber-string-int}
 
 ```csharp
 void WriteNumber(string propertyName, int value)
@@ -546,7 +546,7 @@ Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, int) {#writenumber-readonlyspan-char-int}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, int value)
@@ -574,7 +574,7 @@ Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, int) {#writenumber-readonlyspan-byte-int}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, int value)
@@ -602,7 +602,7 @@ Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using 
 
 ---
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, ulong) {#writenumber-jsonencodedtext-ulong}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, ulong value)
@@ -629,7 +629,7 @@ Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(string, ulong) {#writenumber-string-ulong}
 
 ```csharp
 void WriteNumber(string propertyName, ulong value)
@@ -658,7 +658,7 @@ Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, ulong) {#writenumber-readonlyspan-char-ulong}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, ulong value)
@@ -686,7 +686,7 @@ Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, ulong) {#writenumber-readonlyspan-byte-ulong}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, ulong value)
@@ -714,7 +714,7 @@ Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(JsonEncodedText, uint) {#writenumber-jsonencodedtext-uint}
 
 ```csharp
 void WriteNumber(JsonEncodedText propertyName, uint value)
@@ -741,7 +741,7 @@ Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(string, uint) {#writenumber-string-uint}
 
 ```csharp
 void WriteNumber(string propertyName, uint value)
@@ -770,7 +770,7 @@ Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;char&gt;, uint) {#writenumber-readonlyspan-char-uint}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<char> propertyName, uint value)
@@ -798,7 +798,7 @@ Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) usin
 
 ---
 
-## WriteNumber
+## WriteNumber(ReadOnlySpan&lt;byte&gt;, uint) {#writenumber-readonlyspan-byte-uint}
 
 ```csharp
 void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, uint value)

@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.GetParentDocumentAndIndex Method — Corvus.Text.Json
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetParentDocumentAndIndex `static`
+## GetParentDocumentAndIndex {#getparentdocumentandindex}
 
 ```csharp
 ValueTuple<IJsonDocument, int> GetParentDocumentAndIndex<TElement>(TElement value)

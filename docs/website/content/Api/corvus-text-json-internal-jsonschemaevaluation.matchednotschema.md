@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchedNotSchema Field — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchedNotSchema `static`
+## MatchedNotSchema {#matchednotschema}
 
 ```csharp
 JsonSchemaMessageProvider MatchedNotSchema

@@ -9,7 +9,7 @@ Title: "JsonElement.ObjectBuilder.Build Constructors — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## JsonElement.ObjectBuilder.Build
+## JsonElement.ObjectBuilder.Build {#jsonelement-objectbuilder-build}
 
 ```csharp
 JsonElement.ObjectBuilder.Build(object object, IntPtr method)

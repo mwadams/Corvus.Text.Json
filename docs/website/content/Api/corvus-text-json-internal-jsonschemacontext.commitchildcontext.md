@@ -13,10 +13,10 @@ Title: "JsonSchemaContext.CommitChildContext Method — Corvus.Text.Json.Interna
 
 | Method | Description |
 |--------|-------------|
-| [CommitChildContext(bool, ref JsonSchemaContext, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;)](#void-commitchildcontext-tprovidercontext-bool-ismatch-ref-jsonschemacontext-childcontext-tprovidercontext-providercontext-jsonschemamessageprovider-tprovidercontext-messageprovider) |  |
-| [CommitChildContext(bool, ref JsonSchemaContext, JsonSchemaMessageProvider)](#void-commitchildcontext-bool-ismatch-ref-jsonschemacontext-childcontext-jsonschemamessageprovider-messageprovider) | Commits a child context back to its parent, merging validation results and cleaning up resources. |
+| [CommitChildContext(bool, ref JsonSchemaContext, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;)](#commitchildcontext-bool-ref-jsonschemacontext-tprovidercontext-jsonschemamessageprovider-tprovidercontext) |  |
+| [CommitChildContext(bool, ref JsonSchemaContext, JsonSchemaMessageProvider)](#commitchildcontext-bool-ref-jsonschemacontext-jsonschemamessageprovider) | Commits a child context back to its parent, merging validation results and cleaning up resources. |
 
-## CommitChildContext
+## CommitChildContext(bool, ref JsonSchemaContext, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#commitchildcontext-bool-ref-jsonschemacontext-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
 ```csharp
 void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
@@ -33,7 +33,7 @@ void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaContext ch
 
 ---
 
-## CommitChildContext
+## CommitChildContext(bool, ref JsonSchemaContext, JsonSchemaMessageProvider) {#commitchildcontext-bool-ref-jsonschemacontext-jsonschemamessageprovider}
 
 ```csharp
 void CommitChildContext(bool isMatch, ref JsonSchemaContext childContext, JsonSchemaMessageProvider messageProvider)

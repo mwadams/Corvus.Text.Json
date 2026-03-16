@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedItemCountNotEquals Field — Corvus.Text.Js
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedItemCountNotEquals `static`
+## ExpectedItemCountNotEquals {#expecteditemcountnotequals}
 
 ```csharp
 JsonSchemaMessageProvider<int> ExpectedItemCountNotEquals

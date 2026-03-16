@@ -9,7 +9,7 @@ Title: "JsonValueKind.Undefined Field — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Undefined `static`
+## Undefined {#undefined}
 
 ```csharp
 JsonValueKind Undefined

@@ -9,7 +9,7 @@ Title: "IMutableJsonDocument.OverwriteAndDispose Method — Corvus.Text.Json.Int
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## OverwriteAndDispose `abstract`
+## OverwriteAndDispose {#overwriteanddispose}
 
 ```csharp
 void OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int membersToOverwrite, ref ComplexValueBuilder cvb)

@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.IsFinalBlock Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsFinalBlock
+## IsFinalBlock {#isfinalblock}
 
 ```csharp
 bool IsFinalBlock { get; }

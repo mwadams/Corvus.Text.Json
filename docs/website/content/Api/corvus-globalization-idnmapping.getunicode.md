@@ -13,14 +13,14 @@ Title: "IdnMapping.GetUnicode Method — Corvus.Globalization"
 
 | Method | Description |
 |--------|-------------|
-| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int)](#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int)](#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-int-index-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int)](#bool-getunicode-readonlyspan-byte-ascii-span-byte-outputbuffer-int-index-int-count-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-int-index-ref-int-written) |  |
-| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](#bool-getunicode-readonlyspan-char-ascii-span-char-outputbuffer-int-index-int-count-ref-int-written) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int)](#getunicode-readonlyspan-byte-span-byte-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int)](#getunicode-readonlyspan-byte-span-byte-int-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int)](#getunicode-readonlyspan-byte-span-byte-int-int-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int)](#getunicode-readonlyspan-char-span-char-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int)](#getunicode-readonlyspan-char-span-char-int-ref-int) |  |
+| [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](#getunicode-readonlyspan-char-span-char-int-int-ref-int) |  |
 
-## GetUnicode
+## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int) {#getunicode-readonlyspan-byte-span-byte-ref-int}
 
 ```csharp
 bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int written)
@@ -40,7 +40,7 @@ bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int writt
 
 ---
 
-## GetUnicode
+## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int) {#getunicode-readonlyspan-byte-span-byte-int-ref-int}
 
 ```csharp
 bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, ref int written)
@@ -61,7 +61,7 @@ bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, re
 
 ---
 
-## GetUnicode
+## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int) {#getunicode-readonlyspan-byte-span-byte-int-int-ref-int}
 
 ```csharp
 bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, ref int written)
@@ -83,7 +83,7 @@ bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, in
 
 ---
 
-## GetUnicode
+## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int) {#getunicode-readonlyspan-char-span-char-ref-int}
 
 ```csharp
 bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int written)
@@ -103,7 +103,7 @@ bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int writt
 
 ---
 
-## GetUnicode
+## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int) {#getunicode-readonlyspan-char-span-char-int-ref-int}
 
 ```csharp
 bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, ref int written)
@@ -124,7 +124,7 @@ bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, re
 
 ---
 
-## GetUnicode
+## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int) {#getunicode-readonlyspan-char-span-char-int-int-ref-int}
 
 ```csharp
 bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, ref int written)

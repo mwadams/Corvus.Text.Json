@@ -9,7 +9,7 @@ Title: "Utf8Uri.Path Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Path
+## Path {#path}
 
 ```csharp
 ReadOnlySpan<byte> Path { get; }

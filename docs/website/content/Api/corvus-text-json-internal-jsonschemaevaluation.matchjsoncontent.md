@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchJsonContent Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchJsonContent `static`
+## MatchJsonContent {#matchjsoncontent}
 
 ```csharp
 bool MatchJsonContent(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

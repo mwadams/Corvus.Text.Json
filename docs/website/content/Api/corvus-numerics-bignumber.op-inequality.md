@@ -9,7 +9,7 @@ Title: "BigNumber.Inequality Operator — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## operator != `static`
+## operator != {#operator}
 
 ```csharp
 static bool operator !=(BigNumber left, BigNumber right)

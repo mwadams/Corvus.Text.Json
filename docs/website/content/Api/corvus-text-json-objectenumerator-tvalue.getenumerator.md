@@ -9,7 +9,7 @@ Title: "ObjectEnumerator<TValue>.GetEnumerator Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## GetEnumerator
+## GetEnumerator {#getenumerator}
 
 ```csharp
 ObjectEnumerator<TValue> GetEnumerator()

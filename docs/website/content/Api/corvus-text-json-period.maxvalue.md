@@ -9,7 +9,7 @@ Title: "Period.MaxValue Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## MaxValue `static`
+## MaxValue {#maxvalue}
 
 ```csharp
 Period MaxValue { get; }

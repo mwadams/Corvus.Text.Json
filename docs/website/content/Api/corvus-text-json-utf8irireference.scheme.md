@@ -9,7 +9,7 @@ Title: "Utf8IriReference.Scheme Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Scheme
+## Scheme {#scheme}
 
 ```csharp
 ReadOnlySpan<byte> Scheme { get; }

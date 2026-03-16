@@ -9,7 +9,7 @@ Title: "BigIntegerPolyfills.TryParse Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryParse `static`
+## TryParse {#tryparse}
 
 ```csharp
 bool TryParse(ReadOnlySpan<byte> segment, ref BigInteger value)

@@ -9,7 +9,7 @@ Title: "Utf8UriKind.Relative Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Relative `static`
+## Relative {#relative}
 
 ```csharp
 Utf8UriKind Relative

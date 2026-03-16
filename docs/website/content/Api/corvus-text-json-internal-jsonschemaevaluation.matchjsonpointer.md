@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchJsonPointer Method — Corvus.Text.Json.Intern
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchJsonPointer `static`
+## MatchJsonPointer {#matchjsonpointer}
 
 ```csharp
 bool MatchJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

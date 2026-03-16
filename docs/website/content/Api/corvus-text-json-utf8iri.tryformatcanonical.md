@@ -9,7 +9,7 @@ Title: "Utf8Iri.TryFormatCanonical Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatCanonical
+## TryFormatCanonical {#tryformatcanonical}
 
 ```csharp
 bool TryFormatCanonical(Span<byte> buffer, ref int writtenBytes)

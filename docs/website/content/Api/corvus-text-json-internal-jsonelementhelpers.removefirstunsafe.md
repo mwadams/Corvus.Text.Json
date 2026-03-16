@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.RemoveFirstUnsafe Method — Corvus.Text.Json.Interna
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RemoveFirstUnsafe `static`
+## RemoveFirstUnsafe {#removefirstunsafe}
 
 ```csharp
 bool RemoveFirstUnsafe<TArray, T>(TArray arrayElement, ref T item)

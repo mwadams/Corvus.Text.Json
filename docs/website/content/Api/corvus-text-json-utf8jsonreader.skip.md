@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.Skip Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Skip
+## Skip {#skip}
 
 ```csharp
 void Skip()

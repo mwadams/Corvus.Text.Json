@@ -9,7 +9,7 @@ Title: "IJsonDocument.AppendElementToMetadataDb Method — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## AppendElementToMetadataDb `abstract`
+## AppendElementToMetadataDb {#appendelementtometadatadb}
 
 ```csharp
 void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)

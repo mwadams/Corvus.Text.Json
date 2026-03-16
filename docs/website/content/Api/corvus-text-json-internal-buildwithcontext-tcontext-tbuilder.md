@@ -12,7 +12,7 @@ public readonly struct BuildWithContext<TContext, TBuilder>
 
 | Constructor | Description |
 |-------------|-------------|
-| [BuildWithContext(TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.ctor.html#buildwithcontext-tcontext-context-tbuilder-build) |  |
+| [BuildWithContext(TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.ctor.html#buildwithcontext-tcontext-tbuilder) |  |
 
 ## Properties
 

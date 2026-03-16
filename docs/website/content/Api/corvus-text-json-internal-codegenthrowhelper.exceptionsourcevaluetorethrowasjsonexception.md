@@ -9,7 +9,7 @@ Title: "CodeGenThrowHelper.ExceptionSourceValueToRethrowAsJsonException Field â€
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExceptionSourceValueToRethrowAsJsonException `static`
+## ExceptionSourceValueToRethrowAsJsonException {#exceptionsourcevaluetorethrowasjsonexception}
 
 ```csharp
 string ExceptionSourceValueToRethrowAsJsonException

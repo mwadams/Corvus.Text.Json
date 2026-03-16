@@ -9,7 +9,7 @@ Title: "BigNumber.Radix Property — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## Radix `static`
+## Radix {#radix}
 
 ```csharp
 int Radix { get; }

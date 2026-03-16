@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchUuid Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchUuid `static`
+## MatchUuid {#matchuuid}
 
 ```csharp
 bool MatchUuid(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

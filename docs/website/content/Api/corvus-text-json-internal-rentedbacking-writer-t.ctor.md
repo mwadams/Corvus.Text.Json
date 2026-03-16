@@ -9,7 +9,7 @@ Title: "RentedBacking.Writer<T> Constructors — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## RentedBacking.Writer
+## RentedBacking.Writer {#rentedbacking-writer}
 
 ```csharp
 RentedBacking.Writer(object object, IntPtr method)

@@ -9,7 +9,7 @@ Title: "Utf8UriComponents.HttpRequestUrl Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## HttpRequestUrl `static`
+## HttpRequestUrl {#httprequesturl}
 
 ```csharp
 Utf8UriComponents HttpRequestUrl

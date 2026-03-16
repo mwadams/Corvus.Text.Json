@@ -13,11 +13,11 @@ Title: "JsonElement.Source<TContext> Constructors — Corvus.Text.Json"
 
 | Constructor | Description |
 |-------------|-------------|
-| [JsonElement.Source(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](#jsonelement-source-ref-tcontext-context-jsonelement-arraybuilder-build-tcontext-value) |  |
-| [JsonElement.Source(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;)](#jsonelement-source-ref-tcontext-context-jsonelement-objectbuilder-build-tcontext-value) |  |
-| [JsonElement.Source(JsonElement.Source)](#jsonelement-source-jsonelement-source-source) |  |
+| [JsonElement.Source(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;)](#jsonelement-source-ref-tcontext-jsonelement-arraybuilder-build-tcontext) |  |
+| [JsonElement.Source(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;)](#jsonelement-source-ref-tcontext-jsonelement-objectbuilder-build-tcontext) |  |
+| [JsonElement.Source(JsonElement.Source)](#jsonelement-source-jsonelement-source) |  |
 
-## JsonElement.Source
+## JsonElement.Source(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;) {#jsonelement-source-ref-tcontext-jsonelement-arraybuilder-build-tcontext}
 
 ```csharp
 JsonElement.Source(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
@@ -32,7 +32,7 @@ JsonElement.Source(ref TContext context, JsonElement.ArrayBuilder.Build<TContext
 
 ---
 
-## JsonElement.Source
+## JsonElement.Source(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;) {#jsonelement-source-ref-tcontext-jsonelement-objectbuilder-build-tcontext}
 
 ```csharp
 JsonElement.Source(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
@@ -47,7 +47,7 @@ JsonElement.Source(ref TContext context, JsonElement.ObjectBuilder.Build<TContex
 
 ---
 
-## JsonElement.Source
+## JsonElement.Source(JsonElement.Source) {#jsonelement-source-jsonelement-source}
 
 ```csharp
 JsonElement.Source(JsonElement.Source source)

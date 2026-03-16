@@ -43,38 +43,38 @@ A [`Period`](/api/corvus-text-json-period.html) contains a set of properties suc
 
 | Method | Description |
 |--------|-------------|
-| [Add(Period, Period)](/api/corvus-text-json-period.add.html#period-add-period-left-period-right) `static` | Adds two periods together, by simply adding the values for each property. |
-| [CreateComparer(LocalDateTime)](/api/corvus-text-json-period.createcomparer.html#icomparer-period-createcomparer-localdatetime-basedatetime) `static` | Creates an [`IComparer`](https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1) for periods, using the given "base" local date/time. |
-| [DaysBetween(LocalDate, LocalDate)](/api/corvus-text-json-period.daysbetween.html#int-daysbetween-localdate-start-localdate-end) `static` | Returns the number of days between two [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) objects. |
-| [Equals(object)](/api/corvus-text-json-period.equals.html#bool-equals-object-other) | Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics. |
-| [Equals(Period)](/api/corvus-text-json-period.equals.html#bool-equals-period-other) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
-| [Equals(Period)](/api/corvus-text-json-period.equals.html#bool-equals-period-other) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
-| [FromDays(int)](/api/corvus-text-json-period.fromdays.html#period-fromdays-int-days) `static` | Creates a period representing the specified number of days. |
-| [FromHours(long)](/api/corvus-text-json-period.fromhours.html#period-fromhours-long-hours) `static` | Creates a period representing the specified number of hours. |
-| [FromMilliseconds(long)](/api/corvus-text-json-period.frommilliseconds.html#period-frommilliseconds-long-milliseconds) `static` | Creates a period representing the specified number of milliseconds. |
-| [FromMinutes(long)](/api/corvus-text-json-period.fromminutes.html#period-fromminutes-long-minutes) `static` | Creates a period representing the specified number of minutes. |
-| [FromMonths(int)](/api/corvus-text-json-period.frommonths.html#period-frommonths-int-months) `static` | Creates a period representing the specified number of months. |
-| [FromNanoseconds(long)](/api/corvus-text-json-period.fromnanoseconds.html#period-fromnanoseconds-long-nanoseconds) `static` | Creates a period representing the specified number of nanoseconds. |
-| [FromSeconds(long)](/api/corvus-text-json-period.fromseconds.html#period-fromseconds-long-seconds) `static` | Creates a period representing the specified number of seconds. |
-| [FromTicks(long)](/api/corvus-text-json-period.fromticks.html#period-fromticks-long-ticks) `static` | Creates a period representing the specified number of ticks. |
-| [FromWeeks(int)](/api/corvus-text-json-period.fromweeks.html#period-fromweeks-int-weeks) `static` | Creates a period representing the specified number of weeks. |
-| [FromYears(int)](/api/corvus-text-json-period.fromyears.html#period-fromyears-int-years) `static` | Creates a period representing the specified number of years. |
-| [GetHashCode()](/api/corvus-text-json-period.gethashcode.html#int-gethashcode) | Returns the hash code for this period, consistent with [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics. |
-| [Normalize()](/api/corvus-text-json-period.normalize.html#period-normalize) | Returns a normalized version of this period, such that equivalent (but potentially non-equal) periods are changed to the same representation. |
-| [PeriodParser(ReadOnlySpan&lt;byte&gt;, ref PeriodBuilder)](/api/corvus-text-json-period.periodparser.html#bool-periodparser-readonlyspan-byte-text-ref-periodbuilder-builder) `static` | A parser for a json period. |
-| [Subtract(Period, Period)](/api/corvus-text-json-period.subtract.html#period-subtract-period-minuend-period-subtrahend) `static` | Subtracts one period from another, by simply subtracting each property value. |
-| [ToDuration()](/api/corvus-text-json-period.toduration.html#duration-toduration) | For periods that do not contain a non-zero number of years or months, returns a duration for this period assuming a standard 7-day week, 24-hour day, 60-minute hour etc. |
-| [ToString()](/api/corvus-text-json-period.tostring.html#string-tostring) | Returns this string formatted according to the ISO8601 duration specification used by JSON schema. |
-| [TryParse(ReadOnlySpan&lt;byte&gt;, ref Period)](/api/corvus-text-json-period.tryparse.html#bool-tryparse-readonlyspan-byte-value-ref-period-result) `static` | Parses a string into a Period. |
+| [Add(Period, Period)](/api/corvus-text-json-period.add.html#add-period-period) `static` | Adds two periods together, by simply adding the values for each property. |
+| [CreateComparer(LocalDateTime)](/api/corvus-text-json-period.createcomparer.html#createcomparer-localdatetime) `static` | Creates an [`IComparer`](https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1) for periods, using the given "base" local date/time. |
+| [DaysBetween(LocalDate, LocalDate)](/api/corvus-text-json-period.daysbetween.html#daysbetween-localdate-localdate) `static` | Returns the number of days between two [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) objects. |
+| [Equals(object)](/api/corvus-text-json-period.equals.html#equals-object) | Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics. |
+| [Equals(Period)](/api/corvus-text-json-period.equals.html#equals-period) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
+| [Equals(Period)](/api/corvus-text-json-period.equals.html#equals-period) | Compares the given period for equality with this one. See the type documentation for a description of equality semantics. |
+| [FromDays(int)](/api/corvus-text-json-period.fromdays.html#fromdays-int) `static` | Creates a period representing the specified number of days. |
+| [FromHours(long)](/api/corvus-text-json-period.fromhours.html#fromhours-long) `static` | Creates a period representing the specified number of hours. |
+| [FromMilliseconds(long)](/api/corvus-text-json-period.frommilliseconds.html#frommilliseconds-long) `static` | Creates a period representing the specified number of milliseconds. |
+| [FromMinutes(long)](/api/corvus-text-json-period.fromminutes.html#fromminutes-long) `static` | Creates a period representing the specified number of minutes. |
+| [FromMonths(int)](/api/corvus-text-json-period.frommonths.html#frommonths-int) `static` | Creates a period representing the specified number of months. |
+| [FromNanoseconds(long)](/api/corvus-text-json-period.fromnanoseconds.html#fromnanoseconds-long) `static` | Creates a period representing the specified number of nanoseconds. |
+| [FromSeconds(long)](/api/corvus-text-json-period.fromseconds.html#fromseconds-long) `static` | Creates a period representing the specified number of seconds. |
+| [FromTicks(long)](/api/corvus-text-json-period.fromticks.html#fromticks-long) `static` | Creates a period representing the specified number of ticks. |
+| [FromWeeks(int)](/api/corvus-text-json-period.fromweeks.html#fromweeks-int) `static` | Creates a period representing the specified number of weeks. |
+| [FromYears(int)](/api/corvus-text-json-period.fromyears.html#fromyears-int) `static` | Creates a period representing the specified number of years. |
+| [GetHashCode()](/api/corvus-text-json-period.gethashcode.html#gethashcode) | Returns the hash code for this period, consistent with [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics. |
+| [Normalize()](/api/corvus-text-json-period.normalize.html#normalize) | Returns a normalized version of this period, such that equivalent (but potentially non-equal) periods are changed to the same representation. |
+| [PeriodParser(ReadOnlySpan&lt;byte&gt;, ref PeriodBuilder)](/api/corvus-text-json-period.periodparser.html#periodparser-readonlyspan-byte-ref-periodbuilder) `static` | A parser for a json period. |
+| [Subtract(Period, Period)](/api/corvus-text-json-period.subtract.html#subtract-period-period) `static` | Subtracts one period from another, by simply subtracting each property value. |
+| [ToDuration()](/api/corvus-text-json-period.toduration.html#toduration) | For periods that do not contain a non-zero number of years or months, returns a duration for this period assuming a standard 7-day week, 24-hour day, 60-minute hour etc. |
+| [ToString()](/api/corvus-text-json-period.tostring.html#tostring) | Returns this string formatted according to the ISO8601 duration specification used by JSON schema. |
+| [TryParse(ReadOnlySpan&lt;byte&gt;, ref Period)](/api/corvus-text-json-period.tryparse.html#tryparse-readonlyspan-byte-ref-period) `static` | Parses a string into a Period. |
 
 ## Operators
 
 | Operator | Description |
 |----------|-------------|
-| [operator +(Period, Period)](/api/corvus-text-json-period.op-addition.html#static-period-operator-period-left-period-right) | Adds two periods together, by simply adding the values for each property. |
-| [operator ==(Period, Period)](/api/corvus-text-json-period.op-equality.html#static-bool-operator-period-left-period-right) | Implements the operator == (equality). See the type documentation for a description of equality semantics. |
-| [implicit operator Period(ref Period)](/api/corvus-text-json-period.op-implicit.html#static-implicit-operator-period-ref-period-value) | Convert to a NodaTime.Period. |
-| [implicit operator Period(Period)](/api/corvus-text-json-period.op-implicit.html#static-implicit-operator-period-period-value) | Convert to a NodaTime.Period. |
-| [operator !=(Period, Period)](/api/corvus-text-json-period.op-inequality.html#static-bool-operator-period-left-period-right) | Implements the operator != (inequality). See the type documentation for a description of equality semantics. |
-| [operator -(Period, Period)](/api/corvus-text-json-period.op-subtraction.html#static-period-operator-period-minuend-period-subtrahend) | Subtracts one period from another, by simply subtracting each property value. |
+| [operator +(Period, Period)](/api/corvus-text-json-period.op-addition.html#operator-period-period) | Adds two periods together, by simply adding the values for each property. |
+| [operator ==(Period, Period)](/api/corvus-text-json-period.op-equality.html#operator-period-period) | Implements the operator == (equality). See the type documentation for a description of equality semantics. |
+| [implicit operator Period(ref Period)](/api/corvus-text-json-period.op-implicit.html#implicit-operator-period-ref-period) | Convert to a NodaTime.Period. |
+| [implicit operator Period(Period)](/api/corvus-text-json-period.op-implicit.html#implicit-operator-period-period) | Convert to a NodaTime.Period. |
+| [operator !=(Period, Period)](/api/corvus-text-json-period.op-inequality.html#operator-period-period) | Implements the operator != (inequality). See the type documentation for a description of equality semantics. |
+| [operator -(Period, Period)](/api/corvus-text-json-period.op-subtraction.html#operator-period-period) | Subtracts one period from another, by simply subtracting each property value. |
 

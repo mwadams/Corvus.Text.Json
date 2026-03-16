@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema Field — Cor
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedPropertyMatchesFallbackSchema `static`
+## ExpectedPropertyMatchesFallbackSchema {#expectedpropertymatchesfallbackschema}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedPropertyMatchesFallbackSchema

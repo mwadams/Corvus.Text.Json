@@ -9,7 +9,7 @@ Title: "JsonWorkspace.RentWriterAndBuffer Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## RentWriterAndBuffer
+## RentWriterAndBuffer {#rentwriterandbuffer}
 
 ```csharp
 Utf8JsonWriter RentWriterAndBuffer(int defaultBufferSize, ref IByteBufferWriter bufferWriter)

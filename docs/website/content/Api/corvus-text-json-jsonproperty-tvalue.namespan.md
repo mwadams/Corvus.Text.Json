@@ -9,7 +9,7 @@ Title: "JsonProperty<TValue>.NameSpan Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## NameSpan
+## NameSpan {#namespan}
 
 ```csharp
 UnescapedUtf8JsonString NameSpan { get; }

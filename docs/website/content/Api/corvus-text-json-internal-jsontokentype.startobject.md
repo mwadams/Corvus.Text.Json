@@ -9,7 +9,7 @@ Title: "JsonTokenType.StartObject Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## StartObject `static`
+## StartObject {#startobject}
 
 ```csharp
 JsonTokenType StartObject

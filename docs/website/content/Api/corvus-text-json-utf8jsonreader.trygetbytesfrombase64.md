@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TryGetBytesFromBase64 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetBytesFromBase64
+## TryGetBytesFromBase64 {#trygetbytesfrombase64}
 
 ```csharp
 bool TryGetBytesFromBase64(ref byte[] value)

@@ -9,7 +9,7 @@ Title: "Utf8JsonReader.TryGetInt64 Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryGetInt64
+## TryGetInt64 {#trygetint64}
 
 ```csharp
 bool TryGetInt64(ref long value)

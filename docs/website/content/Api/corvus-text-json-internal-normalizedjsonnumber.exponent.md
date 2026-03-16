@@ -9,7 +9,7 @@ Title: "NormalizedJsonNumber.Exponent Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## Exponent
+## Exponent {#exponent}
 
 ```csharp
 int Exponent { get; }

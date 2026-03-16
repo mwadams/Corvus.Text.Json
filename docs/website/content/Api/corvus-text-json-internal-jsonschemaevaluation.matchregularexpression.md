@@ -13,10 +13,10 @@ Title: "JsonSchemaEvaluation.MatchRegularExpression Method — Corvus.Text.Json.
 
 | Method | Description |
 |--------|-------------|
-| [MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext)](#bool-matchregularexpression-readonlyspan-byte-value-regex-regularexpression-string-originalexpressionstring-readonlyspan-byte-keyword-ref-jsonschemacontext-context) | Validates that a string length equals the given value. |
-| [MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex)](#bool-matchregularexpression-readonlyspan-byte-value-regex-regularexpression) | Validates that a string length equals the given value. |
+| [MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext)](#matchregularexpression-readonlyspan-byte-regex-string-readonlyspan-byte-ref-jsonschemacontext) | Validates that a string length equals the given value. |
+| [MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex)](#matchregularexpression-readonlyspan-byte-regex) | Validates that a string length equals the given value. |
 
-## MatchRegularExpression `static`
+## MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchregularexpression-readonlyspan-byte-regex-string-readonlyspan-byte-ref-jsonschemacontext}
 
 ```csharp
 bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
@@ -42,7 +42,7 @@ Validates that a string length equals the given value.
 
 ---
 
-## MatchRegularExpression `static`
+## MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex) {#matchregularexpression-readonlyspan-byte-regex}
 
 ```csharp
 bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression)

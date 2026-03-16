@@ -9,7 +9,7 @@ Title: "BigNumber.IsInteger Method — Corvus.Numerics"
 **Namespace:** Corvus.Numerics  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsInteger
+## IsInteger {#isinteger}
 
 ```csharp
 bool IsInteger()

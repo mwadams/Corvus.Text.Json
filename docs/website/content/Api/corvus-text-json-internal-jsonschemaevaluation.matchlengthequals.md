@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.MatchLengthEquals Method — Corvus.Text.Json.Inter
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## MatchLengthEquals `static`
+## MatchLengthEquals {#matchlengthequals}
 
 ```csharp
 bool MatchLengthEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)

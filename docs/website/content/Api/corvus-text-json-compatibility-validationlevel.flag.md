@@ -9,7 +9,7 @@ Title: "ValidationLevel.Flag Field — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## Flag `static`
+## Flag {#flag}
 
 ```csharp
 ValidationLevel Flag

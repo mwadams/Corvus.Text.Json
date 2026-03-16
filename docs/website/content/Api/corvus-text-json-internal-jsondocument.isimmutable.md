@@ -9,7 +9,7 @@ Title: "JsonDocument.IsImmutable Property — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IsImmutable
+## IsImmutable {#isimmutable}
 
 ```csharp
 bool IsImmutable { get; }

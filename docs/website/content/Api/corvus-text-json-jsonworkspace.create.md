@@ -9,7 +9,7 @@ Title: "JsonWorkspace.Create Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Create `static`
+## Create {#create}
 
 ```csharp
 JsonWorkspace Create(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)

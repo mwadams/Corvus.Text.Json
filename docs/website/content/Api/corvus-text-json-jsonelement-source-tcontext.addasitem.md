@@ -9,7 +9,7 @@ Title: "JsonElement.Source<TContext>.AddAsItem Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## AddAsItem
+## AddAsItem {#addasitem}
 
 ```csharp
 void AddAsItem(ref ComplexValueBuilder valueBuilder)

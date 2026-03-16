@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedItemCountEqualsValue Method — Corvus.Text
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedItemCountEqualsValue `static`
+## ExpectedItemCountEqualsValue {#expecteditemcountequalsvalue}
 
 ```csharp
 bool ExpectedItemCountEqualsValue(int value, Span<byte> buffer, ref int written)

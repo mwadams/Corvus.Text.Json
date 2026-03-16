@@ -9,7 +9,7 @@ Title: "UniqueItemsHashSet.ValueEquals Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ValueEquals
+## ValueEquals {#valueequals}
 
 ```csharp
 bool ValueEquals(int leftIndex, int rightIndex)

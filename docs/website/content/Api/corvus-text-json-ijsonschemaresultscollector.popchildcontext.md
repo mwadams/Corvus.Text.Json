@@ -9,7 +9,7 @@ Title: "IJsonSchemaResultsCollector.PopChildContext Method — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## PopChildContext `abstract`
+## PopChildContext {#popchildcontext}
 
 ```csharp
 void PopChildContext(int sequenceNumber)

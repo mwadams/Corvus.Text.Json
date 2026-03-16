@@ -9,7 +9,7 @@ Title: "JsonReaderState.Options Property — Corvus.Text.Json"
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll
 
-## Options
+## Options {#options}
 
 ```csharp
 JsonReaderOptions Options { get; }

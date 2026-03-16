@@ -9,7 +9,7 @@ Title: "JsonSchemaEvaluation.ExpectedTypeInteger Field — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## ExpectedTypeInteger `static`
+## ExpectedTypeInteger {#expectedtypeinteger}
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeInteger

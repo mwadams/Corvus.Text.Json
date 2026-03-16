@@ -9,7 +9,7 @@ Title: "JsonTokenType.False Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## False `static`
+## False {#false}
 
 ```csharp
 JsonTokenType False

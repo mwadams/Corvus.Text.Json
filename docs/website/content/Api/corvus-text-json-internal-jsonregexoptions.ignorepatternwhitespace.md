@@ -9,7 +9,7 @@ Title: "JsonRegexOptions.IgnorePatternWhitespace Field — Corvus.Text.Json.Inte
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## IgnorePatternWhitespace `static`
+## IgnorePatternWhitespace {#ignorepatternwhitespace}
 
 ```csharp
 JsonRegexOptions IgnorePatternWhitespace

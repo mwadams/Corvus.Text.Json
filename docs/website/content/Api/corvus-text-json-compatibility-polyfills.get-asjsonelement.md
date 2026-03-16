@@ -9,7 +9,7 @@ Title: "Polyfills.get_AsJsonElement Method — Corvus.Text.Json.Compatibility"
 **Namespace:** Corvus.Text.Json.Compatibility  
 **Assembly:** Corvus.Text.Json.dll
 
-## get_AsJsonElement `static`
+## get_AsJsonElement {#get-asjsonelement}
 
 ```csharp
 JsonElement get_AsJsonElement<T>(T element)

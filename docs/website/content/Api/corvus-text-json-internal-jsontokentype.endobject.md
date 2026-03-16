@@ -9,7 +9,7 @@ Title: "JsonTokenType.EndObject Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## EndObject `static`
+## EndObject {#endobject}
 
 ```csharp
 JsonTokenType EndObject

@@ -9,7 +9,7 @@ Title: "CodeGenDataType.TimeSpan Field — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TimeSpan `static`
+## TimeSpan {#timespan}
 
 ```csharp
 CodeGenDataType TimeSpan

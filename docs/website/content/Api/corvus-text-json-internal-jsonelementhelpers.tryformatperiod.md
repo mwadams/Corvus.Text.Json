@@ -9,7 +9,7 @@ Title: "JsonElementHelpers.TryFormatPeriod Method — Corvus.Text.Json.Internal"
 **Namespace:** Corvus.Text.Json.Internal  
 **Assembly:** Corvus.Text.Json.dll
 
-## TryFormatPeriod `static`
+## TryFormatPeriod {#tryformatperiod}
 
 ```csharp
 bool TryFormatPeriod(ref Period value, Span<byte> output, ref int bytesWritten)
