@@ -40,7 +40,7 @@
 
     &-toggle {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: var(--space-xs);
       width: 100%;
       padding: var(--space-xs) var(--space-sm);
@@ -50,6 +50,9 @@
       font-size: var(--font-size-sm);
       cursor: pointer;
       border-radius: var(--radius-sm);
+      overflow-wrap: break-word;
+      word-break: break-word;
+      text-align: left;
       transition: background var(--transition-fast), color var(--transition-fast);
 
       &:hover {
@@ -82,6 +85,8 @@
       color: var(--color-gray-dark);
       text-decoration: none;
       border-radius: var(--radius-sm);
+      overflow-wrap: break-word;
+      word-break: break-word;
       transition: color var(--transition-fast), background var(--transition-fast);
 
       &:hover {
