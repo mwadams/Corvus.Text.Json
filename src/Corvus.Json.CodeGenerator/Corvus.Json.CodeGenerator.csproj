@@ -125,4 +125,8 @@
     <PackageReference Include="Roslynator.Analyzers" Version="4.13.1" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+
 </Project>

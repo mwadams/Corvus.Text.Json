@@ -1,14 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<Import Project="$(EndjinProjectPropsPath)" Condition="$(EndjinProjectPropsPath) != ''" />
 
 	<PropertyGroup>
-		<TargetFrameworks>net481;net8.0;net9.0;net10.0</TargetFrameworks>
+		<TargetFrameworks>net481;net9.0;net10.0</TargetFrameworks>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
 		<PreserveCompilationContext>true</PreserveCompilationContext>
 		<IsTestProject>true</IsTestProject>
-		<NoWarn>RCS1029;CS1591;NU1510</NoWarn>
+		<NoWarn>RCS1029;RCS1118;RCS1146;RC1251;CS1591;NU1510</NoWarn>
 	</PropertyGroup>
 
   <PropertyGroup>

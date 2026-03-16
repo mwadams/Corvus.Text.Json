@@ -1,6 +1,0 @@
-MSBUILD : error MSB1001: Unknown switch.
-    Full command line: 'C:\Program Files\dotnet\sdk\10.0.104\MSBuild.dll -maxcpucount --verbosity:m -tlp:default=auto --property:VSTestNoBuild=true --property:NuGetInteractive=false --property:VSTestArtifactsProcessingMode=collect --property:VSTestSessionCorrelationId=52640_f3ce13d7-36f7-48c7-bf7c-84e77c1d8e9c --target:VSTest -nodereuse:false -nologo tests/Corvus.Text.Json.Tests/Corvus.Text.Json.Tests.csproj -k GenerateCode_Emits_ComposedFormatTypes -distributedlogger:Microsoft.DotNet.Cli.Commands.MSBuild.MSBuildLogger,C:\Program Files\dotnet\sdk\10.0.104\dotnet.dll*Microsoft.DotNet.Cli.Commands.MSBuild.MSBuildForwardingLogger,C:\Program Files\dotnet\sdk\10.0.104\dotnet.dll'
-  Switches appended by response files:
-Switch: -k
-
-For switch syntax, type "MSBuild -help"
