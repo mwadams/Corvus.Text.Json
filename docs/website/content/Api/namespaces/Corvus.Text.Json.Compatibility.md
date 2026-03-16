@@ -1,0 +1,1 @@
+Backward-compatibility shims for migrating from Corvus.Json V4 (based on `System.Text.Json`). These types map V4's `ValidationContext`, `ValidationResult`, and `ValidationLevel` to V5 equivalents, allowing existing code to compile with minimal changes during migration.

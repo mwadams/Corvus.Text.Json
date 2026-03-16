@@ -1,0 +1,1 @@
+Provides Unicode and internationalization helpers for processing domain names and character categories in JSON string values. These types support IDN (Internationalized Domain Names) encoding used by URI and IRI validation.

@@ -8,6 +8,7 @@ string? htmlOutputPath = null;
 string? siteTitleArg = null;
 string? apiViewsDir = null;
 string? repoUrl = null;
+string? nsDescriptionsDir = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -37,6 +38,9 @@ for (int i = 0; i < args.Length - 1; i++)
         case "--repo-url":
             repoUrl = args[++i];
             break;
+        case "--ns-descriptions":
+            nsDescriptionsDir = args[++i];
+            break;
     }
 }
 
@@ -51,6 +55,7 @@ if (xmlPath is null || assemblyPath is null || outputPath is null || taxonomyOut
     Console.Error.WriteLine("  --html-output      (Optional) Output directory for standalone per-type HTML pages");
     Console.Error.WriteLine("  --site-title       (Optional) Site title for standalone HTML pages");
     Console.Error.WriteLine("  --repo-url         (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
+    Console.Error.WriteLine("  --ns-descriptions  (Optional) Directory containing {Namespace}.md files with namespace descriptions");
     return 1;
 }
 
@@ -171,7 +176,7 @@ Directory.CreateDirectory(outputPath);
 Directory.CreateDirectory(taxonomyOutputPath);
 
 Console.WriteLine($"Generating namespace markdown to: {outputPath}");
-MarkdownGenerator markdownGen = new(outputPath);
+MarkdownGenerator markdownGen = new(outputPath, nsDescriptionsDir);
 markdownGen.Generate(namespaces);
 markdownGen.GeneratePerType(namespaces);
 markdownGen.GenerateMemberPages(namespaces);

@@ -57,12 +57,14 @@ Write-Host "  XML documentation generated." -ForegroundColor Green
 # ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
 Write-Host "`n[2/9] Generating API namespace pages & taxonomy..." -ForegroundColor Cyan
 $apiViewsDir = Join-Path $here "theme\corvus\views\api"
+$nsDescriptionsDir = Join-Path $here "content\Api\namespaces"
 & dotnet run --project $toolProject -c Release -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
     --output $apiContentDir `
     --taxonomy-output $apiTaxonomyDir `
-    --api-views-dir $apiViewsDir
+    --api-views-dir $apiViewsDir `
+    --ns-descriptions $nsDescriptionsDir
 if ($LASTEXITCODE -ne 0) { throw "API namespace generation failed" }
 Write-Host "  Namespace markdown, taxonomy & API views generated." -ForegroundColor Green
 
@@ -469,7 +471,8 @@ $apiHtmlDir = Join-Path $outputDir "api"
     --output $apiContentDir `
     --taxonomy-output $apiTaxonomyDir `
     --html-output $apiHtmlDir `
-    --site-title "Corvus.Text.Json"
+    --site-title "Corvus.Text.Json" `
+    --ns-descriptions $nsDescriptionsDir
 if ($LASTEXITCODE -ne 0) {
     Write-Warning "Per-type HTML generation failed — namespace summary pages still available."
 } else {

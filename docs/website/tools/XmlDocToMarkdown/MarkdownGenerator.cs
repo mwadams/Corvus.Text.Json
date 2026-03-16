@@ -5,7 +5,7 @@ namespace XmlDocToMarkdown;
 /// <summary>
 /// Generates one Vellum markdown file per namespace containing all public types.
 /// </summary>
-public sealed class MarkdownGenerator(string outputDir)
+public sealed class MarkdownGenerator(string outputDir, string? namespaceDescriptionsDir = null)
 {
     private const string FrontmatterDate = "2026-03-15T00:00:00.0+00:00";
 
@@ -145,9 +145,20 @@ public sealed class MarkdownGenerator(string outputDir)
         File.WriteAllText(filePath, sb.ToString());
     }
 
-    private static void WriteNamespaceContent(StringBuilder sb, NamespaceInfo nsInfo)
+    private void WriteNamespaceContent(StringBuilder sb, NamespaceInfo nsInfo)
     {
         string nsSlug = NamespaceToFileName(nsInfo.Name);
+
+        if (namespaceDescriptionsDir is not null)
+        {
+            string descPath = Path.Combine(namespaceDescriptionsDir, nsInfo.Name + ".md");
+            if (File.Exists(descPath))
+            {
+                sb.Append(File.ReadAllText(descPath).TrimEnd());
+                sb.AppendLine();
+                sb.AppendLine();
+            }
+        }
 
         sb.AppendLine("| Type | Kind | Description |");
         sb.AppendLine("|------|------|-------------|");
