@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Sidebar collapsible sections
+  // Sidebar collapsible sections (namespace headings)
   document.querySelectorAll('.sidebar__heading').forEach((toggle) => {
     toggle.addEventListener('click', () => {
       const section = toggle.closest('.sidebar__section');
@@ -53,6 +53,25 @@ document.addEventListener('DOMContentLoaded', () => {
         toggle.classList.toggle('is-collapsed');
       }
     });
+  });
+
+  // Sidebar collapsible member categories
+  document.querySelectorAll('.sidebar__cat-toggle').forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      const body = toggle.nextElementSibling;
+      if (body && body.classList.contains('sidebar__cat-body')) {
+        body.classList.toggle('is-collapsed');
+        toggle.classList.toggle('is-collapsed');
+      }
+    });
+  });
+
+  // Scroll active sidebar item into view after page load
+  requestAnimationFrame(() => {
+    const activeItem = document.querySelector('.sidebar__link.is-active, .sidebar__link--member.is-active');
+    if (activeItem) {
+      activeItem.scrollIntoView({ block: 'center', behavior: 'instant' });
+    }
   });
 
   // Smooth scroll for anchor links

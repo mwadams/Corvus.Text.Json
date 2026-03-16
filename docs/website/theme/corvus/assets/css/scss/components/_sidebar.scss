@@ -261,18 +261,61 @@
     padding: 0 0 0 var(--space-sm);
   }
 
-  // ---- Member category header (Properties, Methods, etc.) ----
-  &__category {
-    display: block;
-    padding: var(--space-xs) var(--space-sm);
-    padding-left: var(--space-md);
-    margin-top: var(--space-xs);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-dark);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
+  // ---- Member category header (collapsible toggle — Properties, Methods, etc.) ----
+  &__cat-section {
     list-style: none;
+  }
+
+  &__cat-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: var(--space-xs) var(--space-sm);
+    padding-left: calc(var(--space-md) + var(--space-sm));
+    background: none;
+    border: none;
+    color: var(--color-gray-med);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition-fast);
+
+    &:hover {
+      background: var(--color-bg-raised);
+      color: var(--color-white);
+    }
+
+    // Chevron indicator (same as namespace heading)
+    &::after {
+      content: '';
+      display: block;
+      width: 0.4em;
+      height: 0.4em;
+      border-right: 2px solid var(--color-gray-dark);
+      border-bottom: 2px solid var(--color-gray-dark);
+      transform: rotate(45deg);
+      transition: transform var(--transition-fast);
+      flex-shrink: 0;
+      margin-left: var(--space-xs);
+    }
+
+    &.is-collapsed::after {
+      transform: rotate(-45deg);
+    }
+  }
+
+  &__cat-body {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-base);
+
+    &.is-collapsed {
+      max-height: 0 !important;
+    }
   }
 
   // ---- Individual member link ----
@@ -283,8 +326,8 @@
   &__link--member {
     display: block;
     padding: 0.15em var(--space-sm);
-    padding-left: calc(var(--space-md) + var(--space-sm));
-    font-size: var(--font-size-xs);
+    padding-left: calc(var(--space-md) + var(--space-lg));
+    font-size: var(--font-size-sm);
     color: var(--color-gray-med);
     border-left: 2px solid transparent;
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;

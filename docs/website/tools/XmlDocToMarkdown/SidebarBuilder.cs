@@ -78,8 +78,10 @@ internal static class SidebarBuilder
     }
 
     /// <summary>
-    /// Renders the member sub-tree for a type: category headers with
-    /// individual member links beneath each.
+    /// Renders the member sub-tree for a type. Each member category
+    /// (Constructors, Properties, Methods, etc.) is a collapsible node
+    /// matching the MS Docs tree pattern. A category is expanded when it
+    /// contains the currently-active member; otherwise it is collapsed.
     /// </summary>
     private static void AppendMemberTree(
         StringBuilder sb,
@@ -94,80 +96,118 @@ internal static class SidebarBuilder
         if (type.Constructors.Count > 0)
         {
             string ctorFileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, "ctor");
-            string ctorActive = ctorFileBase == currentMemberFileBase ? " is-active" : "";
-            sb.AppendLine("                                <li class=\"sidebar__category\">Constructors</li>");
-            sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}</a></li>");
+            bool categoryActive = ctorFileBase == currentMemberFileBase;
+            AppendCategoryStart(sb, "Constructors", categoryActive);
+            string ctorActive = categoryActive ? " is-active" : "";
+            sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}</a></li>");
+            AppendCategoryEnd(sb);
         }
 
-        // Properties (one entry per overload group — indexers share a name)
+        // Properties
         if (type.Properties.Count > 0)
         {
-            sb.AppendLine("                                <li class=\"sidebar__category\">Properties</li>");
+            bool categoryActive = IsCategoryActive(type.Properties, nsSlug, typeSlug, currentMemberFileBase);
+            AppendCategoryStart(sb, "Properties", categoryActive);
             foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey).OrderBy(g => g.Key))
             {
                 string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                // For indexers (multiple overloads sharing "Item"), show "Item[]"
                 string displayName = group.Count() > 1 && group.Key == "Item" ? "Item[]" : group.First().Name;
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
             }
+            AppendCategoryEnd(sb);
         }
 
-        // Methods (one entry per overload group)
+        // Methods
         if (type.Methods.Count > 0)
         {
-            sb.AppendLine("                                <li class=\"sidebar__category\">Methods</li>");
+            bool categoryActive = IsCategoryActive(type.Methods, nsSlug, typeSlug, currentMemberFileBase);
+            AppendCategoryStart(sb, "Methods", categoryActive);
             foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey).OrderBy(g => g.Key))
             {
                 string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(group.Key)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(group.Key)}</a></li>");
             }
+            AppendCategoryEnd(sb);
         }
 
-        // Operators (one entry per operator kind)
+        // Operators
         if (type.Operators.Count > 0)
         {
-            sb.AppendLine("                                <li class=\"sidebar__category\">Operators</li>");
+            bool categoryActive = IsCategoryActive(type.Operators, nsSlug, typeSlug, currentMemberFileBase);
+            AppendCategoryStart(sb, "Operators", categoryActive);
             foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey).OrderBy(g => g.Key))
             {
                 string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
                 string displayName = GetOperatorGroupDisplayName(group.Key);
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
             }
+            AppendCategoryEnd(sb);
         }
 
         // Fields
         if (type.Fields.Count > 0)
         {
-            sb.AppendLine("                                <li class=\"sidebar__category\">Fields</li>");
+            bool categoryActive = IsCategoryActive(type.Fields, nsSlug, typeSlug, currentMemberFileBase);
+            AppendCategoryStart(sb, "Fields", categoryActive);
             foreach (MemberInfo field in type.Fields.OrderBy(f => f.Name))
             {
                 string memberSlug = MarkdownGenerator.MemberToSlug(field.GroupKey);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(field.Name)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(field.Name)}</a></li>");
             }
+            AppendCategoryEnd(sb);
         }
 
         // Events
         if (type.Events.Count > 0)
         {
-            sb.AppendLine("                                <li class=\"sidebar__category\">Events</li>");
+            bool categoryActive = IsCategoryActive(type.Events, nsSlug, typeSlug, currentMemberFileBase);
+            AppendCategoryStart(sb, "Events", categoryActive);
             foreach (MemberInfo evt in type.Events.OrderBy(e => e.Name))
             {
                 string memberSlug = MarkdownGenerator.MemberToSlug(evt.GroupKey);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(evt.Name)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(evt.Name)}</a></li>");
             }
+            AppendCategoryEnd(sb);
         }
 
         sb.AppendLine("                            </ul>");
+    }
+
+    /// <summary>Opens a collapsible category node.</summary>
+    private static void AppendCategoryStart(StringBuilder sb, string label, bool expanded)
+    {
+        string collapsed = expanded ? "" : " is-collapsed";
+        sb.AppendLine($"                                <li class=\"sidebar__cat-section\">");
+        sb.AppendLine($"                                    <button class=\"sidebar__cat-toggle{collapsed}\">{HtmlEncode(label)}</button>");
+        sb.AppendLine($"                                    <ul class=\"sidebar__cat-body{collapsed}\">");
+    }
+
+    /// <summary>Closes a collapsible category node.</summary>
+    private static void AppendCategoryEnd(StringBuilder sb)
+    {
+        sb.AppendLine("                                    </ul>");
+        sb.AppendLine("                                </li>");
+    }
+
+    /// <summary>Returns <c>true</c> when the current member page belongs to this category.</summary>
+    private static bool IsCategoryActive(
+        List<MemberInfo> members, string nsSlug, string typeSlug, string? currentMemberFileBase)
+    {
+        if (currentMemberFileBase is null) return false;
+        return members
+            .Select(m => MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(m.GroupKey)))
+            .Distinct()
+            .Any(fb => fb == currentMemberFileBase);
     }
 
     private static string GetOperatorGroupDisplayName(string clrName) => clrName switch
