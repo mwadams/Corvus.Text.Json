@@ -57,7 +57,7 @@ internal static class SidebarBuilder
                     ? (currentMemberFileBase is null ? " is-active" : " is-current")
                     : "";
                 sb.AppendLine($"                        <li class=\"sidebar__item\">");
-                sb.AppendLine($"                            <a class=\"sidebar__link sidebar__link--type{typeClass}\" href=\"/api/{fileBase}.html\">{HtmlEncode(type.Name)}</a>");
+                sb.AppendLine($"                            <a class=\"sidebar__link sidebar__link--type{typeClass}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(type.Name)}</a>");
 
                 // Expand member tree for the active type
                 if (isActiveType)
@@ -96,7 +96,7 @@ internal static class SidebarBuilder
             string ctorFileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, "ctor");
             string ctorActive = ctorFileBase == currentMemberFileBase ? " is-active" : "";
             sb.AppendLine("                                <li class=\"sidebar__category\">Constructors</li>");
-            sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncode(type.Constructors[0].Name)}(…)</a></li>");
+            sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}(…)</a></li>");
         }
 
         // Properties (one entry per overload group — indexers share a name)
@@ -110,7 +110,7 @@ internal static class SidebarBuilder
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
                 // For indexers (multiple overloads sharing "Item"), show "Item[]"
                 string displayName = group.Count() > 1 && group.Key == "Item" ? "Item[]" : group.First().Name;
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(displayName)}</a></li>");
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
             }
         }
 
@@ -123,7 +123,7 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(group.Key)}</a></li>");
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(group.Key)}</a></li>");
             }
         }
 
@@ -137,7 +137,7 @@ internal static class SidebarBuilder
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
                 string displayName = GetOperatorGroupDisplayName(group.Key);
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(displayName)}</a></li>");
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
             }
         }
 
@@ -150,7 +150,7 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(field.GroupKey);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(field.Name)}</a></li>");
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(field.Name)}</a></li>");
             }
         }
 
@@ -163,7 +163,7 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(evt.GroupKey);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncode(evt.Name)}</a></li>");
+                sb.AppendLine($"                                <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(evt.Name)}</a></li>");
             }
         }
 
@@ -192,4 +192,39 @@ internal static class SidebarBuilder
     }
 
     private static string HtmlEncode(string text) => HttpUtility.HtmlEncode(text);
+
+    /// <summary>
+    /// HTML-encodes the text and inserts <c>&lt;wbr&gt;</c> word-break opportunities
+    /// at PascalCase boundaries (e.g. before an uppercase letter that follows a
+    /// lowercase letter) and after dots, so the browser can wrap long type names
+    /// like <c>JsonElement.ObjectBuilder</c> within the narrow sidebar.
+    /// </summary>
+    private static string HtmlEncodeWithBreaks(string text)
+    {
+        string encoded = HttpUtility.HtmlEncode(text);
+        StringBuilder result = new(encoded.Length + encoded.Length / 4);
+
+        for (int i = 0; i < encoded.Length; i++)
+        {
+            char c = encoded[i];
+
+            // After a dot, insert a break opportunity
+            if (c == '.' && i + 1 < encoded.Length)
+            {
+                result.Append(c);
+                result.Append("<wbr>");
+                continue;
+            }
+
+            // Before an uppercase letter that follows a lowercase letter
+            if (i > 0 && char.IsUpper(c) && char.IsLower(encoded[i - 1]))
+            {
+                result.Append("<wbr>");
+            }
+
+            result.Append(c);
+        }
+
+        return result.ToString();
+    }
 }

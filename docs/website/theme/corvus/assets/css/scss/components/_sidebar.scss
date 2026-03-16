@@ -182,8 +182,6 @@
     font-size: var(--font-size-sm);
     color: var(--color-gray-med);
     border-left: 2px solid transparent;
-    overflow-wrap: break-word;
-    word-break: break-word;
     border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     transition:
       color var(--transition-fast),
