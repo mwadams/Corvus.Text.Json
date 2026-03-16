@@ -41,6 +41,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
 
     private PooledByteBufferWriter? _extraPooledByteBufferWriter;
 
+    /// <inheritdoc />
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool IJsonDocument.IsDisposable => _isDisposable;
 
@@ -394,6 +395,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetUtf8JsonStringUnsafe(index, expectedType);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     UnescapedUtf16JsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
     {
@@ -604,6 +606,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes)
     {
@@ -1035,6 +1038,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out OffsetDateTime value)
     {
         CheckNotDisposed();
@@ -1049,6 +1053,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out OffsetDate value)
     {
         CheckNotDisposed();
@@ -1069,6 +1074,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out OffsetTime value)
     {
         CheckNotDisposed();
@@ -1083,6 +1089,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out LocalDate value)
     {
         CheckNotDisposed();
@@ -1097,6 +1104,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out Period value)
     {
         CheckNotDisposed();
@@ -1174,6 +1182,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return JsonReaderHelper.TranscodeHelper(segment.Span);
     }
 
+    /// <inheritdoc />
     string IJsonDocument.ToString(int index)
     {
         CheckNotDisposed();
@@ -1210,6 +1219,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         }
     }
 
+    /// <inheritdoc />
     string IJsonDocument.ToString(int index, string? format, IFormatProvider? formatProvider)
     {
         if (_parsedData.GetJsonTokenType(index) == JsonTokenType.Number)
@@ -1224,6 +1234,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         return ((IJsonDocument)this).ToString(index);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryFormat(int index, Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
     {
         CheckNotDisposed();
@@ -1294,6 +1305,7 @@ public sealed partial class ParsedJsonDocument<T> : JsonDocument, IJsonDocument,
         }
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
     {
         CheckNotDisposed();

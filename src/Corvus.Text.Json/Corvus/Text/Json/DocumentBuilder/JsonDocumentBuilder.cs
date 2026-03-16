@@ -37,15 +37,19 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         _workspace = workspace;
     }
 
+    /// <inheritdoc />
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     bool IJsonDocument.IsDisposable => true;
 
+    /// <inheritdoc />
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     int IMutableJsonDocument.ParentWorkspaceIndex => _parentWorkspaceIndex;
 
+    /// <inheritdoc />
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     ulong IMutableJsonDocument.Version => _version;
 
+    /// <inheritdoc />
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonWorkspace IMutableJsonDocument.Workspace => _workspace;
 
@@ -126,6 +130,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         _parentWorkspaceIndex = -1;
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     JsonTokenType IJsonDocument.GetJsonTokenType(int index)
     {
@@ -134,6 +139,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return _parsedData.GetJsonTokenType(index);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IJsonDocument.EnsurePropertyMap(int index)
     {
@@ -141,6 +147,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         EnsurePropertyMapUnsafe(index);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IJsonDocument.ValueIsEscaped(int index, bool isPropertyName)
     {
@@ -149,6 +156,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return ValueIsEscapedUnsafe(index, isPropertyName);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetArrayLength(int index)
     {
@@ -157,6 +165,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetArrayLengthUnsafe(index);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetPropertyCount(int index)
     {
@@ -169,6 +178,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return row.SizeOrLengthOrPropertyMapIndex;
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     JsonElement IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
     {
@@ -177,6 +187,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return new JsonElement(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     JsonElement.Mutable IMutableJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex)
     {
@@ -185,6 +196,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return new JsonElement.Mutable(this, GetArrayIndexElementUnsafe(currentIndex, arrayIndex));
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     TElement IJsonDocument.GetArrayIndexElement<TElement>(int currentIndex, int arrayIndex)
     {
@@ -197,6 +209,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 #endif
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex)
     {
@@ -206,6 +219,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         parentDocumentIndex = GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IMutableJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IMutableJsonDocument parentDocument, out int parentDocumentIndex)
     {
@@ -229,6 +243,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetArrayIndexElementUnsafe(currentIndex, arrayIndex);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetDbSize(int index, bool includeEndElement)
     {
@@ -237,6 +252,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetDbSizeUnsafe(index, includeEndElement);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     int IJsonDocument.GetStartIndex(int endIndex)
     {
@@ -265,6 +281,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return base.GetDbSizeUnsafe(index, includeEndElement);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     RawUtf8JsonString IJsonDocument.GetRawValue(int index, bool includeQuotes)
     {
@@ -272,6 +289,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetRawValueUnsafe(index, includeQuotes);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IMutableJsonDocument.InsertAndDispose(int complexObjectStartIndex, int index, ref ComplexValueBuilder cvb)
     {
@@ -280,6 +298,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         cvb.InsertAndDispose(complexObjectStartIndex, index, ref _parsedData);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IMutableJsonDocument.SetAndDispose(ref ComplexValueBuilder cvb)
     {
@@ -288,6 +307,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         cvb.SetAndDispose(ref _parsedData);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IMutableJsonDocument.OverwriteAndDispose(int complexObjectStartIndex, int startIndex, int endIndex, int memberCountToReplace, ref ComplexValueBuilder cvb)
     {
@@ -308,6 +328,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     /// values that are removed. Instead, it simply removes the specified range of members
     /// from the document, effectively shifting subsequent members up.
     /// </remarks>
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     void IMutableJsonDocument.RemoveRange(int complexObjectStartIndex, int startIndex, int endIndex, int membersToRemove)
     {
@@ -359,6 +380,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index, bool includeQuotes)
     {
@@ -367,6 +389,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetRawSimpleValueUnsafe(index, includeQuotes);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValue(int index)
     {
@@ -441,6 +464,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return ReadRawSimpleDynamicValue(row.LocationOrIndex);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     string? IJsonDocument.GetString(int index, JsonTokenType expectedType)
     {
@@ -492,6 +516,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
             : JsonReaderHelper.TranscodeHelper(segment);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     UnescapedUtf8JsonString IJsonDocument.GetUtf8JsonString(int index, JsonTokenType expectedType)
     {
@@ -499,6 +524,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetUtf8JsonStringUnsafe(index, expectedType);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     UnescapedUtf16JsonString IJsonDocument.GetUtf16JsonString(int index, JsonTokenType expectedType)
     {
@@ -647,6 +673,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IJsonDocument.TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
     {
@@ -654,6 +681,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return TextEqualsUnsafe(index, otherText, isPropertyName);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     bool IJsonDocument.TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
     {
@@ -661,6 +689,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return TextEqualsUnsafe(index, otherUtf8Text, isPropertyName, shouldUnescape);
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     string IJsonDocument.GetNameOfPropertyValue(int index)
     {
@@ -670,6 +699,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName)!;
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     ReadOnlySpan<byte> IJsonDocument.GetPropertyNameRaw(int index)
     {
@@ -679,6 +709,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetRawSimpleValueUnsafe(index - DbRow.Size, false).Span;
     }
 
+    /// <inheritdoc />
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     ReadOnlyMemory<byte> IJsonDocument.GetPropertyNameRaw(int index, bool includeQuotes)
     {
@@ -708,6 +739,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return GetUtf8JsonStringUnsafe(index - DbRow.Size, JsonTokenType.PropertyName);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, [NotNullWhen(true)] out byte[]? value)
     {
         CheckNotDisposed();
@@ -728,6 +760,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryDecodeBase64(segment, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out sbyte value)
     {
         CheckNotDisposed();
@@ -749,6 +782,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out byte value)
     {
         CheckNotDisposed();
@@ -770,6 +804,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out short value)
     {
         CheckNotDisposed();
@@ -791,6 +826,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out ushort value)
     {
         CheckNotDisposed();
@@ -812,6 +848,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out int value)
     {
         CheckNotDisposed();
@@ -833,6 +870,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out uint value)
     {
         CheckNotDisposed();
@@ -854,6 +892,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out long value)
     {
         CheckNotDisposed();
@@ -875,6 +914,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out ulong value)
     {
         CheckNotDisposed();
@@ -896,6 +936,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out double value)
     {
         CheckNotDisposed();
@@ -917,6 +958,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out float value)
     {
         CheckNotDisposed();
@@ -938,6 +980,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out decimal value)
     {
         CheckNotDisposed();
@@ -1054,6 +1097,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
 
 #endif
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out DateTime value)
     {
         CheckNotDisposed();
@@ -1066,6 +1110,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out DateTimeOffset value)
     {
         CheckNotDisposed();
@@ -1079,6 +1124,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out OffsetDateTime value)
     {
         CheckNotDisposed();
@@ -1091,6 +1137,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out OffsetDate value)
     {
         CheckNotDisposed();
@@ -1103,6 +1150,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out OffsetTime value)
     {
         CheckNotDisposed();
@@ -1115,6 +1163,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out LocalDate value)
     {
         CheckNotDisposed();
@@ -1127,6 +1176,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out Period value)
     {
         CheckNotDisposed();
@@ -1140,6 +1190,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     }
 
 #if NET
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out DateOnly value)
     {
         CheckNotDisposed();
@@ -1152,6 +1203,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TryGetValue(segment, row.HasComplexChildren, out value);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out TimeOnly value)
     {
         CheckNotDisposed();
@@ -1165,6 +1217,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
     }
 #endif
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetValue(int index, out Guid value)
     {
         CheckNotDisposed();
@@ -1201,6 +1254,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     string IJsonDocument.GetRawValueAsString(int index)
     {
         CheckNotDisposed();
@@ -1215,6 +1269,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return JsonReaderHelper.TranscodeHelper(segment.Span);
     }
 
+    /// <inheritdoc />
     string IJsonDocument.ToString(int index)
     {
         CheckNotDisposed();
@@ -1251,6 +1306,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     string IJsonDocument.GetPropertyRawValueAsString(int valueIndex)
     {
         CheckNotDisposed();
@@ -1303,11 +1359,13 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     JsonElement IJsonDocument.CloneElement(int index)
     {
         return CloneElement<JsonElement>(index);
     }
 
+    /// <inheritdoc />
     TElement IJsonDocument.CloneElement<TElement>(int index)
     {
         return CloneElement<TElement>(index);
@@ -1338,6 +1396,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return newDocument.RootElement;
     }
 
+    /// <inheritdoc />
     void IJsonDocument.WriteElementTo(
         int index,
         Utf8JsonWriter writer)
@@ -1465,6 +1524,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     void IJsonDocument.WritePropertyName(int index, Utf8JsonWriter writer)
     {
         CheckNotDisposed();
@@ -1515,6 +1575,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement value)
     {
         CheckNotDisposed();
@@ -1532,6 +1593,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement value)
     {
         CheckNotDisposed();
@@ -1549,6 +1611,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<byte> propertyName, out TElement value)
     {
         CheckNotDisposed();
@@ -1570,6 +1633,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, out JsonElement.Mutable value)
     {
         CheckNotDisposed();
@@ -1587,6 +1651,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IMutableJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, out JsonElement.Mutable value)
     {
         CheckNotDisposed();
@@ -1604,6 +1669,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIdx)
     {
         CheckNotDisposed();
@@ -1623,6 +1689,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, [NotNullWhen(true)] out IJsonDocument? elementParent, out int elementIdx)
     {
         CheckNotDisposed();
@@ -1642,6 +1709,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetNamedPropertyValue<TElement>(int index, ReadOnlySpan<char> propertyName, out TElement value)
     {
         CheckNotDisposed();
@@ -1663,12 +1731,14 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     int IJsonDocument.GetHashCode(int index)
     {
         CheckNotDisposed();
         return GetHashCodeUnsafe(index);
     }
 
+    /// <inheritdoc />
     int IJsonDocument.BuildRentedMetadataDb(int index, JsonWorkspace workspace, out byte[] rentedBacking)
     {
         CheckNotDisposed();
@@ -1705,6 +1775,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return db.TakeOwnership(out rentedBacking);
     }
 
+    /// <inheritdoc />
     void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)
     {
         CheckNotDisposed();
@@ -1788,6 +1859,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         Debug.Fail($"Unexpected encounter with JsonTokenType {_parsedData.GetJsonTokenType(index)}");
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> fragment, int index, out TValue value)
     {
         CheckNotDisposed();
@@ -1806,6 +1878,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetLineAndOffset(int index, out int line, out int charOffset, out long lineByteOffset)
     {
         line = 0;
@@ -1814,6 +1887,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetLineAndOffsetForPointer(ReadOnlySpan<byte> jsonPointer, int index, out int line, out int charOffset, out long lineByteOffset)
     {
         line = 0;
@@ -1822,12 +1896,14 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetLine(int lineNumber, out ReadOnlyMemory<byte> line)
     {
         line = default;
         return false;
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryGetLine(int lineNumber, [NotNullWhen(true)] out string? line)
     {
         line = null;
@@ -1862,89 +1938,125 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     ReadOnlyMemory<byte> IJsonDocument.GetRawSimpleValueUnsafe(int index) => GetRawSimpleValueUnsafe(index);
 
+    /// <inheritdoc />
     bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, out int valueIndex)
     {
         CheckNotDisposed();
         return TryGetNamedPropertyValueIndexUnsafe(ref parsedData, startIndex, endIndex, propertyName, out valueIndex);
     }
 
+    /// <inheritdoc />
     bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, out int valueIndex)
     {
         CheckNotDisposed();
         return TryGetNamedPropertyValueIndexUnsafe(index, propertyName, out valueIndex);
     }
 
+    /// <inheritdoc />
     bool IMutableJsonDocument.TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, out int valueIndex)
     {
         CheckNotDisposed();
         return TryGetNamedPropertyValueIndexUnsafe(index, propertyName, out valueIndex);
     }
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreBooleanValue(bool value) => StoreBooleanValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreNullValue() => StoreNullValue();
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreRawNumberValue(ReadOnlySpan<byte> value) => StoreRawNumberValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping, _workspace.Options.Encoder);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, out bool requiredEscaping) => EscapeAndStoreRawStringValue(value, out requiredEscaping, _workspace.Options.Encoder);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreRawStringValue(ReadOnlySpan<byte> value) => StoreRawStringValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(Guid value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in DateTime value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in DateTimeOffset value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in OffsetDateTime value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in OffsetDate value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in OffsetTime value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in LocalDate value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in Period value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(sbyte value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(byte value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(int value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(uint value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(long value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(ulong value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(short value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(ushort value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(float value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(double value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(decimal value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in BigNumber value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(in BigInteger value) => StoreValue(value);
 
 #if NET
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(Int128 value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(UInt128 value) => StoreValue(value);
 
+    /// <inheritdoc />
     int IMutableJsonDocument.StoreValue(Half value) => StoreValue(value);
 
 #endif
+
+    /// <inheritdoc />
     string IJsonDocument.ToString(int index, string? format, IFormatProvider? formatProvider)
     {
         if (_parsedData.GetJsonTokenType(index) == JsonTokenType.Number)
@@ -1959,6 +2071,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         return ((IJsonDocument)this).ToString(index);
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryFormat(int index, Span<byte> destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
     {
         CheckNotDisposed();
@@ -2029,6 +2142,7 @@ public sealed partial class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonD
         }
     }
 
+    /// <inheritdoc />
     bool IJsonDocument.TryFormat(int index, Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? formatProvider)
     {
         CheckNotDisposed();

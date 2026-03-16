@@ -5957,10 +5957,12 @@ public readonly partial struct JsonElement
             }
         }
 
+        /// <inheritdoc />
         readonly void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
 
+        /// <inheritdoc />
         static Mutable IJsonElement<Mutable>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 
 #endif
@@ -5975,15 +5977,19 @@ public readonly partial struct JsonElement
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private readonly string DebuggerDisplay => $"JsonElement.Mutable: ValueKind = {ValueKind} : \"{ToString()}\"";
 
+        /// <inheritdoc />
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly IJsonDocument IJsonElement.ParentDocument => _parent;
 
+        /// <inheritdoc />
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly int IJsonElement.ParentDocumentIndex => _idx;
 
+        /// <inheritdoc />
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly JsonTokenType IJsonElement.TokenType => TokenType;
 
+        /// <inheritdoc />
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         readonly JsonValueKind IJsonElement.ValueKind => ValueKind;
     }

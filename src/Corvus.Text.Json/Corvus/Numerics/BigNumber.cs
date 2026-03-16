@@ -248,7 +248,11 @@ public readonly partial struct BigNumber :
         return normalized.Exponent >= 0;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Determines whether the specified <see cref="BigNumber"/> is equal to this instance.
+    /// </summary>
+    /// <param name="other">The <see cref="BigNumber"/> to compare with this instance.</param>
+    /// <returns><c>true</c> if the specified value is equal to this instance; otherwise, <c>false</c>.</returns>
     public bool Equals(BigNumber other)
     {
         // Fast path: Same exponent - compare significands directly
@@ -263,10 +267,17 @@ public readonly partial struct BigNumber :
         return left.Significand == right.Significand && left.Exponent == right.Exponent;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Determines whether the specified object is equal to this instance.
+    /// </summary>
+    /// <param name="obj">The object to compare with this instance.</param>
+    /// <returns><c>true</c> if the specified object is a <see cref="BigNumber"/> equal to this instance; otherwise, <c>false</c>.</returns>
     public override bool Equals([NotNullWhen(true)] object? obj) => obj is BigNumber other && Equals(other);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Returns a hash code for this instance.
+    /// </summary>
+    /// <returns>A hash code for this <see cref="BigNumber"/> value.</returns>
     public override int GetHashCode()
     {
         BigNumber normalized = Normalize();
@@ -283,7 +294,11 @@ public readonly partial struct BigNumber :
 #endif
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Compares this instance with another <see cref="BigNumber"/> value.
+    /// </summary>
+    /// <param name="other">The <see cref="BigNumber"/> to compare with this instance.</param>
+    /// <returns>A value that indicates the relative order of the values being compared.</returns>
     public int CompareTo(BigNumber other)
     {
         // Fast path: Exact same values (including denormalized)
@@ -339,7 +354,11 @@ public readonly partial struct BigNumber :
         return leftAdjusted.CompareTo(rightAdjusted);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Compares this instance with a specified object.
+    /// </summary>
+    /// <param name="obj">The object to compare with this instance.</param>
+    /// <returns>A value that indicates the relative order of the values being compared.</returns>
     public int CompareTo(object? obj)
     {
         if (obj is null)
@@ -355,10 +374,18 @@ public readonly partial struct BigNumber :
         throw new ArgumentException($"Object must be of type {nameof(BigNumber)}.", nameof(obj));
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Returns the string representation of this <see cref="BigNumber"/> value.
+    /// </summary>
+    /// <returns>The string representation of this instance.</returns>
     public override string ToString() => ToString(null, null);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Formats this <see cref="BigNumber"/> value using the specified format string and format provider.
+    /// </summary>
+    /// <param name="format">The format string.</param>
+    /// <param name="formatProvider">The format provider.</param>
+    /// <returns>The formatted string representation of this instance.</returns>
     public string ToString(string? format, IFormatProvider? formatProvider)
     {
         if (Significand.IsZero)
@@ -933,14 +960,28 @@ public readonly partial struct BigNumber :
         return true;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Tries to format this <see cref="BigNumber"/> value into the provided character span.
+    /// </summary>
+    /// <param name="destination">The destination span.</param>
+    /// <param name="charsWritten">The number of characters written to the destination.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="provider">The format provider.</param>
+    /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
     public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         // Use the optimized zero-allocation implementation
         return TryFormatOptimized(destination, out charsWritten, format, provider);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Tries to format this <see cref="BigNumber"/> value into the provided UTF-8 byte span.
+    /// </summary>
+    /// <param name="utf8Destination">The destination UTF-8 byte span.</param>
+    /// <param name="bytesWritten">The number of bytes written to the destination.</param>
+    /// <param name="format">The format string.</param>
+    /// <param name="provider">The format provider.</param>
+    /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
     public bool TryFormat(Span<byte> utf8Destination, out int bytesWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
     {
         // Use the optimized zero-allocation implementation
@@ -948,14 +989,24 @@ public readonly partial struct BigNumber :
     }
 #endif
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Tries to format this <see cref="BigNumber"/> value into the provided character span using default formatting.
+    /// </summary>
+    /// <param name="destination">The destination span.</param>
+    /// <param name="charsWritten">The number of characters written to the destination.</param>
+    /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
     public bool TryFormat(Span<char> destination, out int charsWritten)
     {
         // Use the optimized zero-allocation implementation
         return TryFormatOptimized(destination, out charsWritten, default, null);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Tries to format this <see cref="BigNumber"/> value into the provided UTF-8 byte span using default formatting.
+    /// </summary>
+    /// <param name="destination">The destination UTF-8 byte span.</param>
+    /// <param name="bytesWritten">The number of bytes written to the destination.</param>
+    /// <returns><c>true</c> if formatting succeeded; otherwise, <c>false</c>.</returns>
     public bool TryFormat(Span<byte> destination, out int bytesWritten)
     {
         // Use the optimized zero-allocation implementation
