@@ -138,6 +138,78 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+#if NET
+        #region Int128/UInt128/Half Edge Cases
+
+        [Theory]
+        [InlineData("170141183460469231731687303715884105727")] // Int128.MaxValue
+        [InlineData("-170141183460469231731687303715884105728")] // Int128.MinValue
+        [InlineData("99999999999999999999999999999999999999")] // Large but within Int128 range
+        public void GetInt128_ExtremePrecisionValues_HandlesCorrectly(string json)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Int128 result = element.GetInt128();
+            Assert.Equal(Int128.Parse(json), result);
+        }
+
+        [Theory]
+        [InlineData("340282366920938463463374607431768211455")] // UInt128.MaxValue
+        [InlineData("99999999999999999999999999999999999999")] // Large but within UInt128 range
+        public void GetUInt128_ExtremePrecisionValues_HandlesCorrectly(string json)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            UInt128 result = element.GetUInt128();
+            Assert.Equal(UInt128.Parse(json), result);
+        }
+
+        [Theory]
+        [InlineData("65504", 65504.0)] // Half.MaxValue
+        [InlineData("-65504", -65504.0)] // -Half.MaxValue
+        [InlineData("0.000061035", 0.00006103515625)] // Near Half.Epsilon
+        public void GetHalf_ExtremePrecisionValues_HandlesCorrectly(string json, double expectedDouble)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Half result = element.GetHalf();
+            Half expected = (Half)expectedDouble;
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [InlineData("170141183460469231731687303715884105727")] // Int128.MaxValue
+        [InlineData("-170141183460469231731687303715884105728")] // Int128.MinValue
+        public void GetInt128_Mutable_ExtremePrecisionValues_HandlesCorrectly(string json)
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Int128 result = element.GetInt128();
+            Assert.Equal(Int128.Parse(json), result);
+        }
+
+        [Theory]
+        [InlineData("340282366920938463463374607431768211455")] // UInt128.MaxValue
+        public void GetUInt128_Mutable_ExtremePrecisionValues_HandlesCorrectly(string json)
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            UInt128 result = element.GetUInt128();
+            Assert.Equal(UInt128.Parse(json), result);
+        }
+
+        #endregion
+#endif
+
         #region Large Number Tests
 
         [Theory]

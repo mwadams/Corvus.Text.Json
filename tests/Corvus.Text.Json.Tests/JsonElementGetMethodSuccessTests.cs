@@ -301,6 +301,168 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+#if NET
+        #region Int128/UInt128/Half Success Tests
+
+        [Theory]
+        [MemberData(nameof(GetInt128TestData))]
+        public void GetInt128_ValidValues_ReturnsExpected(string json, string expectedStr)
+        {
+            Int128 expected = Int128.Parse(expectedStr);
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Int128 result = element.GetInt128();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetInt128TestData))]
+        public void GetInt128_Mutable_ValidValues_ReturnsExpected(string json, string expectedStr)
+        {
+            Int128 expected = Int128.Parse(expectedStr);
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Int128 result = element.GetInt128();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetInt128TestData))]
+        public void TryGetInt128_ValidValues_ReturnsTrue(string json, string expectedStr)
+        {
+            Int128 expected = Int128.Parse(expectedStr);
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Assert.True(element.TryGetInt128(out Int128 result));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetInt128TestData))]
+        public void TryGetInt128_Mutable_ValidValues_ReturnsTrue(string json, string expectedStr)
+        {
+            Int128 expected = Int128.Parse(expectedStr);
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Assert.True(element.TryGetInt128(out Int128 result));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUInt128TestData))]
+        public void GetUInt128_ValidValues_ReturnsExpected(string json, string expectedStr)
+        {
+            UInt128 expected = UInt128.Parse(expectedStr);
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            UInt128 result = element.GetUInt128();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUInt128TestData))]
+        public void GetUInt128_Mutable_ValidValues_ReturnsExpected(string json, string expectedStr)
+        {
+            UInt128 expected = UInt128.Parse(expectedStr);
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            UInt128 result = element.GetUInt128();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUInt128TestData))]
+        public void TryGetUInt128_ValidValues_ReturnsTrue(string json, string expectedStr)
+        {
+            UInt128 expected = UInt128.Parse(expectedStr);
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Assert.True(element.TryGetUInt128(out UInt128 result));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetUInt128TestData))]
+        public void TryGetUInt128_Mutable_ValidValues_ReturnsTrue(string json, string expectedStr)
+        {
+            UInt128 expected = UInt128.Parse(expectedStr);
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Assert.True(element.TryGetUInt128(out UInt128 result));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetHalfTestData))]
+        public void GetHalf_ValidValues_ReturnsExpected(string json, double expectedDouble)
+        {
+            Half expected = (Half)expectedDouble;
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Half result = element.GetHalf();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetHalfTestData))]
+        public void GetHalf_Mutable_ValidValues_ReturnsExpected(string json, double expectedDouble)
+        {
+            Half expected = (Half)expectedDouble;
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Half result = element.GetHalf();
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetHalfTestData))]
+        public void TryGetHalf_ValidValues_ReturnsTrue(string json, double expectedDouble)
+        {
+            Half expected = (Half)expectedDouble;
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Assert.True(element.TryGetHalf(out Half result));
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetHalfTestData))]
+        public void TryGetHalf_Mutable_ValidValues_ReturnsTrue(string json, double expectedDouble)
+        {
+            Half expected = (Half)expectedDouble;
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(JsonValueKind.Number, element.ValueKind);
+            Assert.True(element.TryGetHalf(out Half result));
+            Assert.Equal(expected, result);
+        }
+
+        #endregion
+#endif
+
         #region Boolean Success Tests
 
         [Theory]
@@ -654,6 +816,55 @@ namespace Corvus.Text.Json.Tests
                 new object[] { 0.0000000000000000000000000001m },
             };
         }
+
+#if NET
+        public static IEnumerable<object[]> GetInt128TestData()
+        {
+            return new object[][]
+            {
+                new object[] { "0", "0" },
+                new object[] { "1", "1" },
+                new object[] { "-1", "-1" },
+                new object[] { "42", "42" },
+                new object[] { "-42", "-42" },
+                new object[] { "1000000000000", "1000000000000" },
+                new object[] { "-1000000000000", "-1000000000000" },
+                new object[] { "9223372036854775807", "9223372036854775807" }, // long.MaxValue
+                new object[] { "-9223372036854775808", "-9223372036854775808" }, // long.MinValue
+                new object[] { "9223372036854775808", "9223372036854775808" }, // long.MaxValue + 1
+                new object[] { "170141183460469231731687303715884105727", "170141183460469231731687303715884105727" }, // Int128.MaxValue
+                new object[] { "-170141183460469231731687303715884105728", "-170141183460469231731687303715884105728" }, // Int128.MinValue
+            };
+        }
+
+        public static IEnumerable<object[]> GetUInt128TestData()
+        {
+            return new object[][]
+            {
+                new object[] { "0", "0" },
+                new object[] { "1", "1" },
+                new object[] { "42", "42" },
+                new object[] { "1000000000000", "1000000000000" },
+                new object[] { "18446744073709551615", "18446744073709551615" }, // ulong.MaxValue
+                new object[] { "18446744073709551616", "18446744073709551616" }, // ulong.MaxValue + 1
+                new object[] { "340282366920938463463374607431768211455", "340282366920938463463374607431768211455" }, // UInt128.MaxValue
+            };
+        }
+
+        public static IEnumerable<object[]> GetHalfTestData()
+        {
+            return new object[][]
+            {
+                new object[] { "0", 0.0 },
+                new object[] { "1", 1.0 },
+                new object[] { "-1", -1.0 },
+                new object[] { "0.5", 0.5 },
+                new object[] { "-0.5", -0.5 },
+                new object[] { "3.14", 3.140625 }, // Half rounds to 3.140625
+                new object[] { "42", 42.0 },
+            };
+        }
+#endif
 
         #endregion
     }

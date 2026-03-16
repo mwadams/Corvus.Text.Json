@@ -227,6 +227,210 @@ namespace Corvus.Text.Json.Tests
 
         #endregion
 
+#if NET
+        #region InvalidOperationException Tests - Int128/UInt128/Half
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void GetInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.GetInt128());
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void GetInt128_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.GetInt128());
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void TryGetInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.TryGetInt128(out _));
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void GetUInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.GetUInt128());
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void GetUInt128_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.GetUInt128());
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void TryGetUInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.TryGetUInt128(out _));
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void GetHalf_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.GetHalf());
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void GetHalf_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+            JsonElement.Mutable element = doc.RootElement;
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.GetHalf());
+        }
+
+        [Theory]
+        [MemberData(nameof(InvalidValueKindsForNumeric))]
+        public void TryGetHalf_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
+        {
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Equal(expectedKind, element.ValueKind);
+            Assert.Throws<InvalidOperationException>(() => element.TryGetHalf(out _));
+        }
+
+        [Fact]
+        public void GetInt128_Overflow_ThrowsFormatException()
+        {
+            // Int128.MaxValue + 1
+            string json = "170141183460469231731687303715884105728";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Throws<FormatException>(() => element.GetInt128());
+        }
+
+        [Fact]
+        public void TryGetInt128_Overflow_ReturnsFalse()
+        {
+            // Int128.MaxValue + 1
+            string json = "170141183460469231731687303715884105728";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.False(element.TryGetInt128(out Int128 value));
+            Assert.Equal(default, value);
+        }
+
+        [Fact]
+        public void GetInt128_Underflow_ThrowsFormatException()
+        {
+            // Int128.MinValue - 1
+            string json = "-170141183460469231731687303715884105729";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Throws<FormatException>(() => element.GetInt128());
+        }
+
+        [Fact]
+        public void TryGetInt128_Underflow_ReturnsFalse()
+        {
+            // Int128.MinValue - 1
+            string json = "-170141183460469231731687303715884105729";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.False(element.TryGetInt128(out Int128 value));
+            Assert.Equal(default, value);
+        }
+
+        [Fact]
+        public void GetUInt128_Overflow_ThrowsFormatException()
+        {
+            // UInt128.MaxValue + 1
+            string json = "340282366920938463463374607431768211456";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Throws<FormatException>(() => element.GetUInt128());
+        }
+
+        [Fact]
+        public void TryGetUInt128_Overflow_ReturnsFalse()
+        {
+            // UInt128.MaxValue + 1
+            string json = "340282366920938463463374607431768211456";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.False(element.TryGetUInt128(out UInt128 value));
+            Assert.Equal(default, value);
+        }
+
+        [Fact]
+        public void GetUInt128_Negative_ThrowsFormatException()
+        {
+            string json = "-1";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.Throws<FormatException>(() => element.GetUInt128());
+        }
+
+        [Fact]
+        public void TryGetUInt128_Negative_ReturnsFalse()
+        {
+            string json = "-1";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.False(element.TryGetUInt128(out UInt128 value));
+            Assert.Equal(default, value);
+        }
+
+        [Fact]
+        public void TryGetInt128_FractionalValue_ReturnsFalse()
+        {
+            string json = "1.5";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.False(element.TryGetInt128(out Int128 value));
+            Assert.Equal(default, value);
+        }
+
+        [Fact]
+        public void TryGetUInt128_FractionalValue_ReturnsFalse()
+        {
+            string json = "1.5";
+            JsonElement element = JsonElement.ParseValue(json);
+
+            Assert.False(element.TryGetUInt128(out UInt128 value));
+            Assert.Equal(default, value);
+        }
+
+        #endregion
+#endif
+
         #region InvalidOperationException Tests - String Parsing Types
 
         [Theory]
