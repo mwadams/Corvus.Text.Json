@@ -213,7 +213,7 @@
     background: transparent;
     border-right: none;
     transform: none;
-    transition: transform 0.25s ease, max-height 0.15s ease-out;
+    transition: transform 0.25s ease;
     z-index: 10;
 
     .sidebar__inner {

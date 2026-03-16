@@ -76,25 +76,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Footer-aware sidebar height ─────────────────────────────────────────
   // When the footer scrolls into view, shrink the sidebar so it doesn't
-  // overlap. Uses IntersectionObserver with a fine-grained threshold so the
-  // sidebar height adjusts smoothly as the user scrolls.
+  // overlap. Measures actual distance from sidebar top to footer top.
   const sidebarEl = document.querySelector('.sidebar');
   const footer = document.querySelector('.site-footer');
 
   if (sidebarEl && footer && window.matchMedia('(min-width: 60rem)').matches) {
-    const headerHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) * 16 || 64;
-    const spaceMd = 16; // --space-md
+    const gap = 16; // breathing room (px) between sidebar bottom and footer
 
     function adjustSidebarHeight() {
-      const footerRect = footer.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
+      const sidebarTop = sidebarEl.getBoundingClientRect().top;
+      const footerTop = footer.getBoundingClientRect().top;
+      const fullHeight = window.innerHeight - sidebarTop - gap;
+      const availableToFooter = footerTop - sidebarTop - gap;
 
-      if (footerRect.top < viewportHeight) {
-        // Footer is partially visible — shrink sidebar
-        const available = footerRect.top - headerHeight - spaceMd;
-        sidebarEl.style.setProperty('--sidebar-available-height', Math.max(100, available) + 'px');
+      if (availableToFooter < fullHeight) {
+        // Footer is encroaching — shrink sidebar
+        const h = Math.max(100, availableToFooter);
+        sidebarEl.style.setProperty('--sidebar-available-height', h + 'px');
       } else {
-        // Footer is off-screen — use full height
+        // Footer is far away — use full viewport height
         sidebarEl.style.removeProperty('--sidebar-available-height');
       }
     }
