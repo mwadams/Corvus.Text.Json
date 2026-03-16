@@ -356,6 +356,7 @@ public sealed class HtmlPageGenerator(string htmlOutputDir, string siteTitle, So
             sb.AppendLine("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/csharp.min.js\" defer></script>");
             sb.AppendLine("<script>document.addEventListener('DOMContentLoaded',()=>hljs.highlightAll())</script>");
             sb.AppendLine("<script src=\"/assets/js/main.js\" defer></script>");
+            sb.AppendLine("<script src=\"/assets/js/sidebar-search.js\" defer></script>");
             sb.AppendLine("</body>");
             sb.AppendLine("</html>");
         }

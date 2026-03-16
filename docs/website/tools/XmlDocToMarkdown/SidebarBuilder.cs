@@ -29,6 +29,12 @@ internal static class SidebarBuilder
         sb.AppendLine("    <aside class=\"sidebar\" data-has-member-nav>");
         sb.AppendLine("        <div class=\"sidebar__inner\">");
 
+        // Search box at the top of the sidebar
+        sb.AppendLine("            <div class=\"sidebar-search\">");
+        sb.AppendLine("                <input id=\"sidebar-search-input\" class=\"sidebar-search__input\" type=\"search\" placeholder=\"Filter\u2026\" autocomplete=\"off\" />");
+        sb.AppendLine("                <div id=\"sidebar-search-dropdown\" class=\"sidebar-search__dropdown\" hidden></div>");
+        sb.AppendLine("            </div>");
+
         foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
         {
             string ns = kvp.Key;
