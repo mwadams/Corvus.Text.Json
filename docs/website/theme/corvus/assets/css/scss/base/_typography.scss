@@ -55,7 +55,7 @@ p {
 // ---- Links ----
 
 .content a,
-.doc__content a:not(.card--link),
+.doc__content a:not(.card--link):not(.api-browser__item-link),
 .text-content a,
 a.link {
   color: var(--color-brand);
