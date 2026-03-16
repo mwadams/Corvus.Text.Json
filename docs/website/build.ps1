@@ -36,6 +36,7 @@ $outputDir = Join-Path $here ".output"
 # Paths used by multiple steps
 $xmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
 $assemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.dll"
+$ns20AssemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\netstandard2.0\Corvus.Text.Json.dll"
 $apiContentDir = Join-Path $here "content\Api"
 $apiTaxonomyDir = Join-Path $here "taxonomy\api"
 $toolProject = Join-Path $here "tools\XmlDocToMarkdown"
@@ -51,7 +52,9 @@ function ConvertTo-KebabCase([string]$text) {
 Write-Host "`n[1/9] Building Corvus.Text.Json..." -ForegroundColor Cyan
 $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
 & dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
-if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json" }
+if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
+& dotnet build $mainProject -c Release -f netstandard2.0 --no-incremental -v q
+if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2.0)" }
 Write-Host "  XML documentation generated." -ForegroundColor Green
 
 # ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
@@ -61,6 +64,7 @@ $nsDescriptionsDir = Join-Path $here "content\Api\namespaces"
 & dotnet run --project $toolProject -c Release -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
+    --ns20-assembly $ns20AssemblyPath `
     --output $apiContentDir `
     --taxonomy-output $apiTaxonomyDir `
     --api-views-dir $apiViewsDir `
@@ -468,6 +472,7 @@ $apiHtmlDir = Join-Path $outputDir "api"
 & dotnet run --project $toolProject -c Release --no-build -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
+    --ns20-assembly $ns20AssemblyPath `
     --html-output $apiHtmlDir `
     --site-title "Corvus.Text.Json" `
     --ns-descriptions $nsDescriptionsDir
