@@ -15,3 +15,7 @@ Title: "ObjectEnumerator<TValue>.Reset Method — Corvus.Text.Json"
 public void Reset()
 ```
 
+### Implements
+
+[`IEnumerator.Reset`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.reset)
+

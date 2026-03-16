@@ -19,3 +19,9 @@ public IEnumerator<JsonSchemaResultsCollector.Result> GetEnumerator()
 
 [`IEnumerator<JsonSchemaResultsCollector.Result>`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1)
 
+### Implements
+
+[`IEnumerable&lt;JsonSchemaResultsCollector.Result&gt;.GetEnumerator`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable.getenumerator)
+
+[`IEnumerable.GetEnumerator`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerable.getenumerator)
+

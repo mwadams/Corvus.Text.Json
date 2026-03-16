@@ -620,6 +620,20 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             sb.AppendLine();
         }
 
+        // Implements (interface implementations)
+        if (member.Implements.Count > 0)
+        {
+            sb.AppendLine($"{heading}# Implements");
+            sb.AppendLine();
+            foreach (ImplementsInfo impl in member.Implements)
+            {
+                string displayText = $"{impl.InterfaceDisplayName}.{impl.MemberName}";
+                string memberLink = ResolveInterfaceMemberLink(displayText, impl.InterfaceFullName, impl.MemberName);
+                sb.AppendLine(memberLink);
+                sb.AppendLine();
+            }
+        }
+
         // Remarks
         if (!string.IsNullOrEmpty(member.Documentation?.Remarks))
         {
@@ -924,6 +938,56 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             {
                 string nodaUrl = GetNodaTimeTypeUrl(fullName);
                 return $"[`{escaped}`]({nodaUrl})";
+            }
+        }
+
+        return $"`{escaped}`";
+    }
+
+    /// <summary>
+    /// Resolves a link to a specific member on an interface type.
+    /// For BCL types: https://learn.microsoft.com/dotnet/api/system.idisposable.dispose
+    /// For local types: links to the member page in our API docs.
+    /// </summary>
+    private static string ResolveInterfaceMemberLink(string displayText, string? interfaceFullName, string memberName)
+    {
+        string escaped = displayText.Replace("|", "\\|").Replace("<", "&lt;").Replace(">", "&gt;");
+
+        if (interfaceFullName is not null)
+        {
+            // Strip generic arity for URL construction (e.g. "IEquatable`1" → "IEquatable")
+            string baseFullName = interfaceFullName;
+            int backtick = baseFullName.IndexOf('`');
+            if (backtick >= 0)
+            {
+                baseFullName = baseFullName[..backtick];
+            }
+
+            // Try local type URL first — link to the member page
+            string? localUrl = XmlDocParser.ResolveTypeUrl(interfaceFullName);
+            if (localUrl is not null)
+            {
+                // Convert type page URL to member page URL
+                // e.g. /api/corvus-text-json-internal-ijsonelement.html → /api/corvus-text-json-internal-ijsonelement.dispose.html
+                string memberUrl = localUrl.Replace(".html", $".{memberName.ToLowerInvariant()}.html");
+                return $"[`{escaped}`]({memberUrl})";
+            }
+
+            // BCL types
+            if (interfaceFullName.StartsWith("System.", StringComparison.Ordinal) ||
+                interfaceFullName.StartsWith("Microsoft.", StringComparison.Ordinal))
+            {
+                string urlName = baseFullName.ToLowerInvariant();
+                string memberUrl = $"https://learn.microsoft.com/dotnet/api/{urlName}.{memberName.ToLowerInvariant()}";
+                return $"[`{escaped}`]({memberUrl})";
+            }
+
+            // NodaTime types
+            if (interfaceFullName.StartsWith("NodaTime.", StringComparison.Ordinal))
+            {
+                string urlName = interfaceFullName.Replace('`', '-');
+                string memberUrl = $"https://nodatime.org/3.2.x/api/{urlName}.html";
+                return $"[`{escaped}`]({memberUrl})";
             }
         }
 

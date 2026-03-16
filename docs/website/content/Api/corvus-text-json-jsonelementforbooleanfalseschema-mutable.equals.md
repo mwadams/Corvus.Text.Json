@@ -19,7 +19,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Equals Method — Corvus.Text.J
 ## Equals(object) {#equals-object}
 
 ```csharp
-public virtual bool Equals(object obj)
+public override bool Equals(object obj)
 ```
 
 ### Parameters

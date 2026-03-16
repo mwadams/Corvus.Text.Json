@@ -19,7 +19,7 @@ Title: "JsonElement.Mutable.Equals Method — Corvus.Text.Json"
 ## Equals(object) {#equals-object}
 
 ```csharp
-public virtual bool Equals(object obj)
+public override bool Equals(object obj)
 ```
 
 ### Parameters

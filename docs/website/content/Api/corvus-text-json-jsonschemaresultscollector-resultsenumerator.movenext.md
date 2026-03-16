@@ -19,3 +19,7 @@ public bool MoveNext()
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+### Implements
+
+[`IEnumerator.MoveNext`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.movenext)
+

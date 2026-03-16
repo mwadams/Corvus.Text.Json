@@ -35,6 +35,10 @@ public bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+### Implements
+
+[`ISpanFormattable.TryFormat`](https://learn.microsoft.com/dotnet/api/system.ispanformattable.tryformat)
+
 ---
 
 ## TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-byte-ref-int-readonlyspan-char-iformatprovider}
@@ -55,6 +59,10 @@ public bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnly
 ### Returns
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+### Implements
+
+[`IUtf8SpanFormattable.TryFormat`](https://learn.microsoft.com/dotnet/api/system.iutf8spanformattable.tryformat)
 
 ---
 

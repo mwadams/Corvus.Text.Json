@@ -37,6 +37,12 @@ Gets the array element at the specified index as a mutable JSON element.
 
 The mutable JSON element at the specified array index.
 
+### Implements
+
+[`IJsonDocument.GetArrayIndexElement`](/api/corvus-text-json-internal-ijsondocument.getarrayindexelement.html)
+
+[`IJsonDocument.GetArrayIndexElement`](/api/corvus-text-json-internal-ijsondocument.getarrayindexelement.html)
+
 ---
 
 ## GetArrayIndexElement(int, int, ref IMutableJsonDocument, ref int) {#getarrayindexelement-int-int-ref-imutablejsondocument-ref-int}

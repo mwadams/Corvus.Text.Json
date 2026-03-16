@@ -17,3 +17,7 @@ public void Dispose()
 
 Releases resources used by the enumerator.
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+

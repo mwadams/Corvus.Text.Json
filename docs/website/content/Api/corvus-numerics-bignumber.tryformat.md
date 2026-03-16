@@ -41,6 +41,10 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 
 `true` if formatting succeeded; otherwise, `false`.
 
+### Implements
+
+[`ISpanFormattable.TryFormat`](https://learn.microsoft.com/dotnet/api/system.ispanformattable.tryformat)
+
 ---
 
 ## TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-byte-ref-int-readonlyspan-char-iformatprovider}
@@ -65,6 +69,10 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
 `true` if formatting succeeded; otherwise, `false`.
+
+### Implements
+
+[`IUtf8SpanFormattable.TryFormat`](https://learn.microsoft.com/dotnet/api/system.iutf8spanformattable.tryformat)
 
 ---
 

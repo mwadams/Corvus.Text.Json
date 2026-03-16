@@ -57,6 +57,21 @@ public sealed class MemberInfo
     public string XmlDocKey { get; set; } = string.Empty;
 
     /// <summary>
+    /// Interface methods that this member implements.
+    /// </summary>
+    public List<ImplementsInfo> Implements { get; set; } = [];
+
+    /// <summary>
+    /// If this member overrides a base type member, the declaring type of the base definition.
+    /// </summary>
+    public string? OverridesType { get; set; }
+
+    /// <summary>
+    /// Full name of the overrides type for link resolution.
+    /// </summary>
+    public string? OverridesTypeFullName { get; set; }
+
+    /// <summary>
     /// Key used to group overloads on the same member detail page.
     /// For methods: the base method name (no generic arity).
     /// For operators: the CLR method name (e.g. "op_Implicit").
@@ -73,6 +88,21 @@ public sealed class ParameterInfo
     public string? TypeFullName { get; set; }
     public bool IsOptional { get; set; }
     public string? DefaultValue { get; set; }
+}
+
+/// <summary>
+/// Describes an interface method that a member implements.
+/// </summary>
+public sealed class ImplementsInfo
+{
+    /// <summary>Display name of the interface (e.g. "IEquatable&lt;JsonElement&gt;").</summary>
+    public string InterfaceDisplayName { get; set; } = string.Empty;
+
+    /// <summary>Full CLR name used for link resolution.</summary>
+    public string? InterfaceFullName { get; set; }
+
+    /// <summary>Name of the member on the interface.</summary>
+    public string MemberName { get; set; } = string.Empty;
 }
 
 /// <summary>
@@ -423,6 +453,16 @@ public sealed class AssemblyInspector(string assemblyPath)
         }
 
         System.Reflection.MethodInfo? getter = prop.GetGetMethod();
+        Type? declaringType = prop.DeclaringType;
+
+        // Detect overrides and interface implementations
+        Type? baseDefType = FindPropertyBaseDefinitionType(prop);
+        List<ImplementsInfo> implements = [];
+        if (declaringType is not null && !(getter?.IsStatic ?? false))
+        {
+            implements = FindPropertyInterfaceImplementations(prop, declaringType);
+        }
+
         return new MemberInfo
         {
             Name = displayName,
@@ -432,6 +472,10 @@ public sealed class AssemblyInspector(string assemblyPath)
             ReturnTypeFullName = GetTypeFullName(prop.PropertyType),
             Documentation = docs,
             IsStatic = getter?.IsStatic ?? false,
+            IsOverride = baseDefType is not null,
+            OverridesType = baseDefType is not null ? FormatTypeName(baseDefType) : null,
+            OverridesTypeFullName = baseDefType is not null ? GetTypeFullName(baseDefType) : null,
+            Implements = implements,
             XmlDocKey = xmlKey,
             Parameters = parameters,
         };
@@ -449,20 +493,19 @@ public sealed class AssemblyInspector(string assemblyPath)
             genericSuffix = $"<{string.Join(", ", genericArgs.Select(g => g.Name))}>";
         }
 
-        // GetBaseDefinition() is not supported by MetadataLoadContext, so we
-        // approximate "override" by checking for IsVirtual + !IsAbstract on a
-        // non-interface declaring type that itself did not introduce the slot.
-        bool isOverride = false;
-        try
-        {
-            isOverride = method.GetBaseDefinition().DeclaringType != method.DeclaringType;
-        }
-        catch (NotSupportedException)
-        {
-            // MetadataLoadContext does not support GetBaseDefinition; skip override detection.
-        }
+        // Walk the base type chain to detect overrides (GetBaseDefinition() is not
+        // supported by MetadataLoadContext).
+        Type? baseDefType = FindBaseDefinitionType(method);
+        bool isOverride = baseDefType is not null;
 
         string modifiers = BuildMethodModifiers(method, isOverride);
+
+        // Find interface implementations
+        List<ImplementsInfo> implements = [];
+        if (method.DeclaringType is not null && !method.IsStatic)
+        {
+            implements = FindInterfaceImplementations(method, method.DeclaringType);
+        }
 
         return new MemberInfo
         {
@@ -484,6 +527,9 @@ public sealed class AssemblyInspector(string assemblyPath)
             IsVirtual = method.IsVirtual && !method.IsFinal,
             IsAbstract = method.IsAbstract,
             IsOverride = isOverride,
+            OverridesType = baseDefType is not null ? FormatTypeName(baseDefType) : null,
+            OverridesTypeFullName = baseDefType is not null ? GetTypeFullName(baseDefType) : null,
+            Implements = implements,
             XmlDocKey = xmlKey,
         };
     }
@@ -563,6 +609,139 @@ public sealed class AssemblyInspector(string assemblyPath)
             IsStatic = true,
             XmlDocKey = xmlKey,
         };
+    }
+
+    /// <summary>
+    /// Checks whether two methods have matching parameter type signatures.
+    /// </summary>
+    private static bool ParameterTypesMatch(System.Reflection.ParameterInfo[] a, System.Reflection.ParameterInfo[] b)
+    {
+        if (a.Length != b.Length)
+        {
+            return false;
+        }
+
+        for (int i = 0; i < a.Length; i++)
+        {
+            if (a[i].ParameterType.FullName != b[i].ParameterType.FullName)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /// <summary>
+    /// Walks the base type chain to find the declaring type of the original virtual method.
+    /// Returns null if no base definition was found (i.e. the method is not an override).
+    /// </summary>
+    private static Type? FindBaseDefinitionType(System.Reflection.MethodInfo method)
+    {
+        if (method.IsStatic || !method.IsVirtual)
+        {
+            return null;
+        }
+
+        Type? declaringType = method.DeclaringType;
+        if (declaringType is null)
+        {
+            return null;
+        }
+
+        System.Reflection.ParameterInfo[] methodParams = method.GetParameters();
+        Type? baseType = declaringType.BaseType;
+
+        while (baseType is not null)
+        {
+            System.Reflection.MethodInfo[] baseMethods = baseType.GetMethods(
+                BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (System.Reflection.MethodInfo baseMethod in baseMethods)
+            {
+                if (baseMethod.Name == method.Name
+                    && baseMethod.IsVirtual
+                    && ParameterTypesMatch(baseMethod.GetParameters(), methodParams))
+                {
+                    return baseType;
+                }
+            }
+
+            baseType = baseType.BaseType;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Walks the base type chain to find the declaring type of the original virtual property.
+    /// </summary>
+    private static Type? FindPropertyBaseDefinitionType(System.Reflection.PropertyInfo prop)
+    {
+        System.Reflection.MethodInfo? accessor = prop.GetGetMethod() ?? prop.GetSetMethod();
+        if (accessor is null)
+        {
+            return null;
+        }
+
+        return FindBaseDefinitionType(accessor);
+    }
+
+    /// <summary>
+    /// Finds interfaces whose methods match the given method by name and parameter types.
+    /// </summary>
+    private static List<ImplementsInfo> FindInterfaceImplementations(
+        System.Reflection.MethodInfo method, Type declaringType)
+    {
+        List<ImplementsInfo> result = [];
+        System.Reflection.ParameterInfo[] methodParams = method.GetParameters();
+
+        foreach (Type iface in declaringType.GetInterfaces())
+        {
+            foreach (System.Reflection.MethodInfo ifaceMethod in iface.GetMethods())
+            {
+                if (ifaceMethod.Name == method.Name
+                    && ParameterTypesMatch(ifaceMethod.GetParameters(), methodParams))
+                {
+                    result.Add(new ImplementsInfo
+                    {
+                        InterfaceDisplayName = FormatTypeName(iface),
+                        InterfaceFullName = GetTypeFullName(iface),
+                        MemberName = ifaceMethod.Name,
+                    });
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Finds interfaces whose properties match the given property by name.
+    /// </summary>
+    private static List<ImplementsInfo> FindPropertyInterfaceImplementations(
+        System.Reflection.PropertyInfo prop, Type declaringType)
+    {
+        List<ImplementsInfo> result = [];
+
+        foreach (Type iface in declaringType.GetInterfaces())
+        {
+            System.Reflection.PropertyInfo? ifaceProp = iface.GetProperty(
+                prop.Name, BindingFlags.Public | BindingFlags.Instance);
+
+            if (ifaceProp is not null
+                && ifaceProp.PropertyType.FullName == prop.PropertyType.FullName)
+            {
+                result.Add(new ImplementsInfo
+                {
+                    InterfaceDisplayName = FormatTypeName(iface),
+                    InterfaceFullName = GetTypeFullName(iface),
+                    MemberName = prop.Name,
+                });
+            }
+        }
+
+        return result;
     }
 
     /// <summary>

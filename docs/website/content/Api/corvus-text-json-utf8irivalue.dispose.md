@@ -17,3 +17,7 @@ public void Dispose()
 
 Disposes the underlying resources used to store the UTF-8 string backing the IRI value.
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+

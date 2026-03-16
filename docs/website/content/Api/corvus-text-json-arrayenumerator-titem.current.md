@@ -21,3 +21,7 @@ Gets the current element in the collection.
 
 `TItem`
 
+### Implements
+
+[`IEnumerator&lt;TItem&gt;.Current`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator.current)
+

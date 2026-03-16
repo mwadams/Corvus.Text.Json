@@ -17,3 +17,7 @@ public void Dispose()
 
 Releases resources used by the metadata database, returning rented arrays to the pool.
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+

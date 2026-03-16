@@ -25,3 +25,7 @@ public bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+### Implements
+
+[`IJsonElement.EvaluateSchema`](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html)
+

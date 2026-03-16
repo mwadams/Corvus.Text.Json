@@ -36,12 +36,16 @@ Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.ht
 
 `true` if the specified value is equal to this instance; otherwise, `false`.
 
+### Implements
+
+[`IEquatable&lt;BigNumber&gt;.Equals`](https://learn.microsoft.com/dotnet/api/system.iequatable.equals)
+
 ---
 
 ## Equals(object) {#equals-object}
 
 ```csharp
-public virtual bool Equals(object obj)
+public override bool Equals(object obj)
 ```
 
 Determines whether the specified object is equal to this instance.

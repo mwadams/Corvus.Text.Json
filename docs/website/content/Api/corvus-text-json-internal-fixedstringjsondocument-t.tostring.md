@@ -27,3 +27,7 @@ public string ToString(int index, string format, IFormatProvider formatProvider)
 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
 
+### Implements
+
+[`IJsonDocument.ToString`](/api/corvus-text-json-internal-ijsondocument.tostring.html)
+

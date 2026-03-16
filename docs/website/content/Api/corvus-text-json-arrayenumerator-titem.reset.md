@@ -17,3 +17,7 @@ public void Reset()
 
 Sets the enumerator to its initial position, which is before the first element in the collection.
 
+### Implements
+
+[`IEnumerator.Reset`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.reset)
+

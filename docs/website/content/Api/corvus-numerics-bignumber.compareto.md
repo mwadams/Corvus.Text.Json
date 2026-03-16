@@ -36,6 +36,10 @@ Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber
 
 A value that indicates the relative order of the values being compared.
 
+### Implements
+
+[`IComparable&lt;BigNumber&gt;.CompareTo`](https://learn.microsoft.com/dotnet/api/system.icomparable.compareto)
+
 ---
 
 ## CompareTo(object) {#compareto-object}
@@ -57,6 +61,10 @@ Compares this instance with a specified object.
 [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
 
 A value that indicates the relative order of the values being compared.
+
+### Implements
+
+[`IComparable.CompareTo`](https://learn.microsoft.com/dotnet/api/system.icomparable.compareto)
 
 ---
 

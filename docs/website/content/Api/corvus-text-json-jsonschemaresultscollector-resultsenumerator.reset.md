@@ -15,3 +15,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method — Corvus.Tex
 public void Reset()
 ```
 
+### Implements
+
+[`IEnumerator.Reset`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.reset)
+

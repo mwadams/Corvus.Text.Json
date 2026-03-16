@@ -34,6 +34,10 @@ Determines whether this instance and another specified [`JsonEncodedText`](/api/
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+### Implements
+
+[`IEquatable&lt;JsonEncodedText&gt;.Equals`](https://learn.microsoft.com/dotnet/api/system.iequatable.equals)
+
 ### Remarks
 
 Default instances of [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) are treated as equal.
@@ -43,7 +47,7 @@ Default instances of [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.h
 ## Equals(object) {#equals-object}
 
 ```csharp
-public virtual bool Equals(object obj)
+public override bool Equals(object obj)
 ```
 
 Determines whether this instance and a specified object, which must also be a [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance, have the same value.

@@ -17,3 +17,7 @@ public void Dispose()
 
 Disposes the unescaped UTF-16 JSON string, returning any rented array pool characters.
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+

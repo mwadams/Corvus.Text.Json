@@ -19,7 +19,7 @@ Title: "JsonElement.Mutable.ToString Method — Corvus.Text.Json"
 ## ToString() {#tostring}
 
 ```csharp
-public virtual string ToString()
+public override string ToString()
 ```
 
 ### Returns
@@ -44,6 +44,10 @@ public string ToString(string format, IFormatProvider formatProvider)
 ### Returns
 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
+
+### Implements
+
+[`IFormattable.ToString`](https://learn.microsoft.com/dotnet/api/system.iformattable.tostring)
 
 ---
 

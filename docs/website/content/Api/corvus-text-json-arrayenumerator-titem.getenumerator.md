@@ -23,3 +23,9 @@ Returns an enumerator that iterates through the JSON array.
 
 An [`ArrayEnumerator`](/api/corvus-text-json-arrayenumerator-titem.html) value that can be used to iterate through the array.
 
+### Implements
+
+[`IEnumerable&lt;TItem&gt;.GetEnumerator`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerable.getenumerator)
+
+[`IEnumerable.GetEnumerator`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerable.getenumerator)
+

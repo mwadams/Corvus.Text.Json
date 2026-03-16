@@ -19,3 +19,7 @@ public JsonSchemaResultsCollector.Result Current { get; }
 
 [`JsonSchemaResultsCollector.Result`](/api/corvus-text-json-jsonschemaresultscollector-result.html)
 
+### Implements
+
+[`IEnumerator&lt;JsonSchemaResultsCollector.Result&gt;.Current`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator.current)
+

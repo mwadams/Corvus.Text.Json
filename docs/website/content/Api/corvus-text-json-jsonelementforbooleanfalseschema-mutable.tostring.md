@@ -12,7 +12,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.ToString Method — Corvus.Text
 ## ToString {#tostring}
 
 ```csharp
-public virtual string ToString()
+public override string ToString()
 ```
 
 ### Returns

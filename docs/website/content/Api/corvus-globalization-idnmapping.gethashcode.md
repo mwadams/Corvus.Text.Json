@@ -12,7 +12,7 @@ Title: "IdnMapping.GetHashCode Method — Corvus.Globalization"
 ## GetHashCode {#gethashcode}
 
 ```csharp
-public virtual int GetHashCode()
+public override int GetHashCode()
 ```
 
 ### Returns

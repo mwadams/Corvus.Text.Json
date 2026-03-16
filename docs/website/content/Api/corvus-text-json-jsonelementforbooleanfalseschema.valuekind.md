@@ -27,3 +27,7 @@ The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value i
 |-----------|-------------|
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
 
+### Implements
+
+[`IJsonElement.ValueKind`](/api/corvus-text-json-internal-ijsonelement.valuekind.html)
+

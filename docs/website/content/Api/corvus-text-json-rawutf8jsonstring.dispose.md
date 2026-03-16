@@ -17,3 +17,7 @@ public void Dispose()
 
 Releases any rented array pool bytes and clears sensitive data.
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+

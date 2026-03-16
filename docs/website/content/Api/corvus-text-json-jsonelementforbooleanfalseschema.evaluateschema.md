@@ -29,3 +29,7 @@ Evaluates this element against the boolean false schema.
 
 `false` because this represents a boolean false schema.
 
+### Implements
+
+[`IJsonElement.EvaluateSchema`](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html)
+

@@ -21,3 +21,7 @@ Gets the current element in the enumeration.
 
 [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html)
 
+### Implements
+
+[`IEnumerator&lt;JsonProperty&lt;TValue&gt;&gt;.Current`](https://learn.microsoft.com/dotnet/api/system.collections.generic.ienumerator.current)
+

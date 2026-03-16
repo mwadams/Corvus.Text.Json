@@ -17,6 +17,10 @@ public void Dispose()
 
 Commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+
 ### Remarks
 
 In the case of IBufferWriter, this advances the underlying [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1) based on what has been written so far. In the case of Stream, this writes the data to the stream and flushes it. The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance cannot be re-used after disposing.

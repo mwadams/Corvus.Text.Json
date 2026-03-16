@@ -36,6 +36,10 @@ public bool TryFormat(int index, Span<char> destination, ref int charsWritten, R
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+### Implements
+
+[`IJsonDocument.TryFormat`](/api/corvus-text-json-internal-ijsondocument.tryformat.html)
+
 ---
 
 ## TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider}
@@ -57,6 +61,10 @@ public bool TryFormat(int index, Span<byte> destination, ref int bytesWritten, R
 ### Returns
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
+
+### Implements
+
+[`IJsonDocument.TryFormat`](/api/corvus-text-json-internal-ijsondocument.tryformat.html)
 
 ---
 

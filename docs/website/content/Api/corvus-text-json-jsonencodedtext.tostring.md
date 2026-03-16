@@ -12,7 +12,7 @@ Title: "JsonEncodedText.ToString Method — Corvus.Text.Json"
 ## ToString {#tostring}
 
 ```csharp
-public virtual string ToString()
+public override string ToString()
 ```
 
 Converts the value of this instance to a [`String`](https://learn.microsoft.com/dotnet/api/system.string).

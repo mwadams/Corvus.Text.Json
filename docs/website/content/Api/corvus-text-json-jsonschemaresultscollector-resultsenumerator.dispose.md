@@ -15,3 +15,7 @@ Title: "JsonSchemaResultsCollector.ResultsEnumerator.Dispose Method — Corvus.T
 public void Dispose()
 ```
 
+### Implements
+
+[`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
+

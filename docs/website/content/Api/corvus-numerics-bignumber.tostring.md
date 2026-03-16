@@ -19,7 +19,7 @@ Title: "BigNumber.ToString Method — Corvus.Numerics"
 ## ToString() {#tostring}
 
 ```csharp
-public virtual string ToString()
+public override string ToString()
 ```
 
 Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
@@ -52,6 +52,10 @@ Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
 
 The formatted string representation of this instance.
+
+### Implements
+
+[`IFormattable.ToString`](https://learn.microsoft.com/dotnet/api/system.iformattable.tostring)
 
 ---
 

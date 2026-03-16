@@ -12,7 +12,7 @@ Title: "IdnMapping.Equals Method — Corvus.Globalization"
 ## Equals {#equals}
 
 ```csharp
-public virtual bool Equals(object obj)
+public override bool Equals(object obj)
 ```
 
 ### Parameters

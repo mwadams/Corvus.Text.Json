@@ -19,3 +19,7 @@ public JsonValueKind ValueKind { get; }
 
 [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html)
 
+### Implements
+
+[`IJsonElement.ValueKind`](/api/corvus-text-json-internal-ijsonelement.valuekind.html)
+

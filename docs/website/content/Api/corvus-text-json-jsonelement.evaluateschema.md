@@ -29,3 +29,7 @@ Evaluates the JSON Schema for this element.
 
 `true` if the element is valid according to its schema; otherwise, `false`.
 
+### Implements
+
+[`IJsonElement.EvaluateSchema`](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html)
+

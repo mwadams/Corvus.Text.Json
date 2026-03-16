@@ -12,7 +12,7 @@ Title: "Utf8IriReference.ToString Method — Corvus.Text.Json"
 ## ToString {#tostring}
 
 ```csharp
-public virtual string ToString()
+public override string ToString()
 ```
 
 Returns a string representation of the IRI reference in display format.

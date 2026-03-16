@@ -21,3 +21,7 @@ public void WriteTo(Utf8JsonWriter writer)
 |------|------|-------------|
 | `writer` | [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) |  |
 
+### Implements
+
+[`IJsonElement.WriteTo`](/api/corvus-text-json-internal-ijsonelement.writeto.html)
+
