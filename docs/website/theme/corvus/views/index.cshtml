@@ -138,8 +138,8 @@ root.SetAge(31);
                         <tr><td>Mutable Documents</td><td>JsonNode (allocates per node)</td><td>Builder pattern on the same pooled memory model — no data copying in JSON pipelines</td></tr>
                         <tr><td>Schema Validation</td><td>None built-in</td><td>Draft 4, 6, 7, 2019-09, and 2020-12 with full diagnostics. 10x+ faster than other .NET validators</td></tr>
                         <tr><td>Code Generation</td><td>Source generation for serialization to/from fixed .NET POCOs</td><td>Source generator + CLI tool producing strongly-typed entities with composition, pattern matching, and resilience to invalid schema</td></tr>
-                        <tr><td>Date/Time Types</td><td>System.DateTime</td><td>NodaTime (LocalDate, OffsetDateTime)</td></tr>
-                        <tr><td>Numeric Precision</td><td>decimal (28 digits)</td><td>BigNumber (arbitrary precision)</td></tr>
+                        <tr><td>Date/Time Types</td><td>System.DateTime, DateTimeOffset</td><td>All .NET types (DateTime, DateOnly, TimeOnly where available) plus NodaTime (LocalDate, OffsetDateTime, Period)</td></tr>
+                        <tr><td>Numeric Precision</td><td>decimal (28 digits); Int128, UInt128, Half via custom serializers</td><td>BigNumber (arbitrary precision) plus native Int128, UInt128, and Half support where available</td></tr>
                     </tbody>
                 </table>
             </div>

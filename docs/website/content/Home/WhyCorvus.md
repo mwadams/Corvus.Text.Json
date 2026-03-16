@@ -23,5 +23,5 @@ If you're building APIs, data pipelines, or any system that processes JSON at vo
 | Mutable Documents | JsonNode (allocates per node) | Builder pattern on the same pooled memory model — no data copying in JSON pipelines |
 | Schema Validation | None built-in | Draft 4, 6, 7, 2019-09, and 2020-12 with full diagnostics. 10x+ faster than other .NET validators |
 | Code Generation | Source generation for serialization to/from fixed .NET POCOs | Source generator + CLI tool producing strongly-typed entities with composition, pattern matching, and resilience to invalid schema |
-| Date/Time Types | System.DateTime | NodaTime (LocalDate, OffsetDateTime) |
-| Numeric Precision | decimal (28 digits) | BigNumber (arbitrary precision) |
+| Date/Time Types | System.DateTime, DateTimeOffset | All .NET types (DateTime, DateOnly, TimeOnly where available) plus NodaTime (LocalDate, OffsetDateTime, Period) |
+| Numeric Precision | decimal (28 digits); Int128, UInt128, Half via custom serializers | BigNumber (arbitrary precision) plus native Int128, UInt128, and Half support where available |
