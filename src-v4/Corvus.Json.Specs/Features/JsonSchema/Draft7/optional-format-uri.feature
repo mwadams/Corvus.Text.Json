@@ -72,3 +72,23 @@ Scenario Outline: validation of URIs
         | #/000/tests/024/data | false | an invalid URI with spaces and missing scheme                                    |
         # bar,baz:foo
         | #/000/tests/025/data | false | an invalid URI with comma in scheme                                              |
+        # https://[@example.org/test.txt
+        | #/000/tests/026/data | false | invalid userinfo                                                                 |
+        # https://example.org/foobar®.txt
+        | #/000/tests/027/data | false | unescaped non US-ASCII characters                                                |
+        # https://example.org/foobar\.txt
+        | #/000/tests/028/data | false | invalid backslash character                                                      |
+        # https://example.org/foobar".txt
+        | #/000/tests/029/data | false | invalid " character                                                              |
+        # https://example.org/foobar<>.txt
+        | #/000/tests/030/data | false | invalid <> characters                                                            |
+        # https://example.org/foobar{}.txt
+        | #/000/tests/031/data | false | invalid {} characters                                                            |
+        # https://example.org/foobar^.txt
+        | #/000/tests/032/data | false | invalid ^ character                                                              |
+        # https://example.org/foobar`.txt
+        | #/000/tests/033/data | false | invalid ` character                                                              |
+        # https://example.org/foo bar.txt
+        | #/000/tests/034/data | false | invalid SPACE character                                                          |
+        # https://example.org/foobar|.txt
+        | #/000/tests/035/data | false | invalid \| character                                                             |

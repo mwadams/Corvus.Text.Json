@@ -110,3 +110,5 @@ Scenario Outline: validation of time strings
         | #/000/tests/043/data | false | offset not starting with plus or minus                                           |
         # ab:cd:ef
         | #/000/tests/044/data | false | contains letters                                                                 |
+        # 2020-11-28T23:55:45Z
+        | #/000/tests/045/data | false | an invalid time string in date-time format                                       |

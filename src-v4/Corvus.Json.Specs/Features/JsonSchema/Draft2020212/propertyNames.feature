@@ -35,11 +35,11 @@ Scenario Outline: propertyNames validation
         # 12
         | #/000/tests/005/data | true  | ignores other non-objects                                                        |
 
-Scenario Outline: propertyNames with boolean schema true
+Scenario Outline: propertyNames validation with pattern
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "propertyNames": true
+            "propertyNames": { "pattern": "^a+$" }
         }
 */
     Given the input JSON file "propertyNames.json"
@@ -52,16 +52,18 @@ Scenario Outline: propertyNames with boolean schema true
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # {"foo": 1}
-        | #/001/tests/000/data | true  | object with any properties is valid                                              |
+        # { "a": {}, "aa": {}, "aaa": {} }
+        | #/001/tests/000/data | true  | matching property names valid                                                    |
+        # { "aaA": {} }
+        | #/001/tests/001/data | false | non-matching property name is invalid                                            |
         # {}
-        | #/001/tests/001/data | true  | empty object is valid                                                            |
+        | #/001/tests/002/data | true  | object without properties is valid                                               |
 
-Scenario Outline: propertyNames with boolean schema false
+Scenario Outline: propertyNames with boolean schema true
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "propertyNames": false
+            "propertyNames": true
         }
 */
     Given the input JSON file "propertyNames.json"
@@ -75,6 +77,78 @@ Scenario Outline: propertyNames with boolean schema false
     Examples:
         | inputDataReference   | valid | description                                                                      |
         # {"foo": 1}
-        | #/002/tests/000/data | false | object with any properties is invalid                                            |
+        | #/002/tests/000/data | true  | object with any properties is valid                                              |
         # {}
         | #/002/tests/001/data | true  | empty object is valid                                                            |
+
+Scenario Outline: propertyNames with boolean schema false
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "propertyNames": false
+        }
+*/
+    Given the input JSON file "propertyNames.json"
+    And the schema at "#/3/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # {"foo": 1}
+        | #/003/tests/000/data | false | object with any properties is invalid                                            |
+        # {}
+        | #/003/tests/001/data | true  | empty object is valid                                                            |
+
+Scenario Outline: propertyNames with const
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "propertyNames": {"const": "foo"}
+        }
+*/
+    Given the input JSON file "propertyNames.json"
+    And the schema at "#/4/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # {"foo": 1}
+        | #/004/tests/000/data | true  | object with property foo is valid                                                |
+        # {"bar": 1}
+        | #/004/tests/001/data | false | object with any other property is invalid                                        |
+        # {}
+        | #/004/tests/002/data | true  | empty object is valid                                                            |
+
+Scenario Outline: propertyNames with enum
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "propertyNames": {"enum": ["foo", "bar"]}
+        }
+*/
+    Given the input JSON file "propertyNames.json"
+    And the schema at "#/5/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # {"foo": 1}
+        | #/005/tests/000/data | true  | object with property foo is valid                                                |
+        # {"foo": 1, "bar": 1}
+        | #/005/tests/001/data | true  | object with property foo and bar is valid                                        |
+        # {"baz": 1}
+        | #/005/tests/002/data | false | object with any other property is invalid                                        |
+        # {}
+        | #/005/tests/003/data | true  | empty object is valid                                                            |

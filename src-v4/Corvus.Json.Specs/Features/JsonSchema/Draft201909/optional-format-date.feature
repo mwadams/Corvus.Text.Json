@@ -116,3 +116,5 @@ Scenario Outline: validation of date strings
         | #/000/tests/045/data | false | ISO8601 / non-RFC3339: week number with day of week (2023-03-28)                 |
         # 2022W527
         | #/000/tests/046/data | false | ISO8601 / non-RFC3339: week number rollover to next year (2023-01-01)            |
+        # 2020-11-28T23:55:45Z
+        | #/000/tests/047/data | false | an invalid time string in date-time format                                       |

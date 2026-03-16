@@ -88,7 +88,7 @@ public sealed class JsonSchemaPartial : ICodeFileBuilder
                     .EndClassStructOrEnumDeclaration()
                 .EndTypeDeclarationNesting(typeDeclaration)
                 .EndNamespace()
-            .EndFile(typeDeclaration, string.Empty);
+            .EndFile(typeDeclaration, "JsonSchema");
 
         return generator;
     }

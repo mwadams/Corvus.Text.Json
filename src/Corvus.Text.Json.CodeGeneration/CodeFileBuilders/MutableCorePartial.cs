@@ -122,7 +122,7 @@ public sealed class MutableCorePartial : ICodeFileBuilder
                     .EndClassStructOrEnumDeclaration()
                 .EndTypeDeclarationNesting(typeDeclaration)
                 .EndNamespace()
-            .EndFile(typeDeclaration, string.Empty);
+            .EndFile(typeDeclaration, "Mutable");
 
         return generator;
     }

@@ -624,15 +624,24 @@ Scenario Outline: order of evaluation: $id and $anchor and $ref
         # 50
         | #/019/tests/001/data | false | data is invalid against first definition                                         |
 
-Scenario Outline: simple URN base URI with $ref via the URN
+Scenario Outline: order of evaluation: $id and $ref on nested schema
 /* Schema: 
 {
-            "$comment": "URIs do not have to have HTTP(s) schemes",
+            "$comment": "$id must be evaluated before $ref to get the proper $ref destination",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:uuid:deadbeef-1234-ffff-ffff-4321feebdaed",
-            "minimum": 30,
-            "properties": {
-                "foo": {"$ref": "urn:uuid:deadbeef-1234-ffff-ffff-4321feebdaed"}
+            "$id": "https://example.com/draft2020-12/ref-and-id3/base.json",
+            "$ref": "nested/foo.json",
+            "$defs": {
+                "foo": {
+                    "$comment": "canonical uri: https://example.com/draft2020-12/ref-and-id3/nested/foo.json",
+                    "$id": "nested/foo.json",
+                    "$ref": "./bar.json"
+                },
+                "bar": {
+                    "$comment": "canonical uri: https://example.com/draft2020-12/ref-and-id3/nested/bar.json",
+                    "$id": "nested/bar.json",
+                    "type": "number"
+                }
             }
         }
 */
@@ -646,22 +655,20 @@ Scenario Outline: simple URN base URI with $ref via the URN
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # {"foo": 37}
-        | #/020/tests/000/data | true  | valid under the URN IDed schema                                                  |
-        # {"foo": 12}
-        | #/020/tests/001/data | false | invalid under the URN IDed schema                                                |
+        # 5
+        | #/020/tests/000/data | true  | data is valid against nested sibling                                             |
+        # a
+        | #/020/tests/001/data | false | data is invalid against nested sibling                                           |
 
-Scenario Outline: simple URN base URI with JSON pointer
+Scenario Outline: simple URN base URI with $ref via the URN
 /* Schema: 
 {
             "$comment": "URIs do not have to have HTTP(s) schemes",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:uuid:deadbeef-1234-00ff-ff00-4321feebdaed",
+            "$id": "urn:uuid:deadbeef-1234-ffff-ffff-4321feebdaed",
+            "minimum": 30,
             "properties": {
-                "foo": {"$ref": "#/$defs/bar"}
-            },
-            "$defs": {
-                "bar": {"type": "string"}
+                "foo": {"$ref": "urn:uuid:deadbeef-1234-ffff-ffff-4321feebdaed"}
             }
         }
 */
@@ -675,17 +682,17 @@ Scenario Outline: simple URN base URI with JSON pointer
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # {"foo": "bar"}
-        | #/021/tests/000/data | true  | a string is valid                                                                |
+        # {"foo": 37}
+        | #/021/tests/000/data | true  | valid under the URN IDed schema                                                  |
         # {"foo": 12}
-        | #/021/tests/001/data | false | a non-string is invalid                                                          |
+        | #/021/tests/001/data | false | invalid under the URN IDed schema                                                |
 
-Scenario Outline: URN base URI with NSS
+Scenario Outline: simple URN base URI with JSON pointer
 /* Schema: 
 {
-            "$comment": "RFC 8141 §2.2",
+            "$comment": "URIs do not have to have HTTP(s) schemes",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:example:1/406/47452/2",
+            "$id": "urn:uuid:deadbeef-1234-00ff-ff00-4321feebdaed",
             "properties": {
                 "foo": {"$ref": "#/$defs/bar"}
             },
@@ -709,12 +716,12 @@ Scenario Outline: URN base URI with NSS
         # {"foo": 12}
         | #/022/tests/001/data | false | a non-string is invalid                                                          |
 
-Scenario Outline: URN base URI with r-component
+Scenario Outline: URN base URI with NSS
 /* Schema: 
 {
-            "$comment": "RFC 8141 §2.3.1",
+            "$comment": "RFC 8141 §2.2",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:example:foo-bar-baz-qux?+CCResolve:cc=uk",
+            "$id": "urn:example:1/406/47452/2",
             "properties": {
                 "foo": {"$ref": "#/$defs/bar"}
             },
@@ -738,12 +745,12 @@ Scenario Outline: URN base URI with r-component
         # {"foo": 12}
         | #/023/tests/001/data | false | a non-string is invalid                                                          |
 
-Scenario Outline: URN base URI with q-component
+Scenario Outline: URN base URI with r-component
 /* Schema: 
 {
-            "$comment": "RFC 8141 §2.3.2",
+            "$comment": "RFC 8141 §2.3.1",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:example:weather?=op=map&lat=39.56&lon=-104.85&datetime=1969-07-21T02:56:15Z",
+            "$id": "urn:example:foo-bar-baz-qux?+CCResolve:cc=uk",
             "properties": {
                 "foo": {"$ref": "#/$defs/bar"}
             },
@@ -767,13 +774,14 @@ Scenario Outline: URN base URI with q-component
         # {"foo": 12}
         | #/024/tests/001/data | false | a non-string is invalid                                                          |
 
-Scenario Outline: URN base URI with URN and JSON pointer ref
+Scenario Outline: URN base URI with q-component
 /* Schema: 
 {
+            "$comment": "RFC 8141 §2.3.2",
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:uuid:deadbeef-1234-0000-0000-4321feebdaed",
+            "$id": "urn:example:weather?=op=map&lat=39.56&lon=-104.85&datetime=1969-07-21T02:56:15Z",
             "properties": {
-                "foo": {"$ref": "urn:uuid:deadbeef-1234-0000-0000-4321feebdaed#/$defs/bar"}
+                "foo": {"$ref": "#/$defs/bar"}
             },
             "$defs": {
                 "bar": {"type": "string"}
@@ -795,19 +803,16 @@ Scenario Outline: URN base URI with URN and JSON pointer ref
         # {"foo": 12}
         | #/025/tests/001/data | false | a non-string is invalid                                                          |
 
-Scenario Outline: URN base URI with URN and anchor ref
+Scenario Outline: URN base URI with URN and JSON pointer ref
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "urn:uuid:deadbeef-1234-ff00-00ff-4321feebdaed",
+            "$id": "urn:uuid:deadbeef-1234-0000-0000-4321feebdaed",
             "properties": {
-                "foo": {"$ref": "urn:uuid:deadbeef-1234-ff00-00ff-4321feebdaed#something"}
+                "foo": {"$ref": "urn:uuid:deadbeef-1234-0000-0000-4321feebdaed#/$defs/bar"}
             },
             "$defs": {
-                "bar": {
-                    "$anchor": "something",
-                    "type": "string"
-                }
+                "bar": {"type": "string"}
             }
         }
 */
@@ -826,6 +831,37 @@ Scenario Outline: URN base URI with URN and anchor ref
         # {"foo": 12}
         | #/026/tests/001/data | false | a non-string is invalid                                                          |
 
+Scenario Outline: URN base URI with URN and anchor ref
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": "urn:uuid:deadbeef-1234-ff00-00ff-4321feebdaed",
+            "properties": {
+                "foo": {"$ref": "urn:uuid:deadbeef-1234-ff00-00ff-4321feebdaed#something"}
+            },
+            "$defs": {
+                "bar": {
+                    "$anchor": "something",
+                    "type": "string"
+                }
+            }
+        }
+*/
+    Given the input JSON file "ref.json"
+    And the schema at "#/27/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # {"foo": "bar"}
+        | #/027/tests/000/data | true  | a string is valid                                                                |
+        # {"foo": 12}
+        | #/027/tests/001/data | false | a non-string is invalid                                                          |
+
 Scenario Outline: URN ref with nested pointer ref
 /* Schema: 
 {
@@ -841,32 +877,6 @@ Scenario Outline: URN ref with nested pointer ref
         }
 */
     Given the input JSON file "ref.json"
-    And the schema at "#/27/schema"
-    And the input data at "<inputDataReference>"
-    And I generate a type for the schema
-    And I construct an instance of the schema type from the data
-    When I validate the instance
-    Then the result will be <valid>
-
-    Examples:
-        | inputDataReference   | valid | description                                                                      |
-        # bar
-        | #/027/tests/000/data | true  | a string is valid                                                                |
-        # 12
-        | #/027/tests/001/data | false | a non-string is invalid                                                          |
-
-Scenario Outline: ref to if
-/* Schema: 
-{
-            "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$ref": "http://example.com/ref/if",
-            "if": {
-                "$id": "http://example.com/ref/if",
-                "type": "integer"
-            }
-        }
-*/
-    Given the input JSON file "ref.json"
     And the schema at "#/28/schema"
     And the input data at "<inputDataReference>"
     And I generate a type for the schema
@@ -876,18 +886,18 @@ Scenario Outline: ref to if
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # foo
-        | #/028/tests/000/data | false | a non-integer is invalid due to the $ref                                         |
+        # bar
+        | #/028/tests/000/data | true  | a string is valid                                                                |
         # 12
-        | #/028/tests/001/data | true  | an integer is valid                                                              |
+        | #/028/tests/001/data | false | a non-string is invalid                                                          |
 
-Scenario Outline: ref to then
+Scenario Outline: ref to if
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$ref": "http://example.com/ref/then",
-            "then": {
-                "$id": "http://example.com/ref/then",
+            "$ref": "http://example.com/ref/if",
+            "if": {
+                "$id": "http://example.com/ref/if",
                 "type": "integer"
             }
         }
@@ -907,13 +917,13 @@ Scenario Outline: ref to then
         # 12
         | #/029/tests/001/data | true  | an integer is valid                                                              |
 
-Scenario Outline: ref to else
+Scenario Outline: ref to then
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$ref": "http://example.com/ref/else",
-            "else": {
-                "$id": "http://example.com/ref/else",
+            "$ref": "http://example.com/ref/then",
+            "then": {
+                "$id": "http://example.com/ref/then",
                 "type": "integer"
             }
         }
@@ -932,6 +942,32 @@ Scenario Outline: ref to else
         | #/030/tests/000/data | false | a non-integer is invalid due to the $ref                                         |
         # 12
         | #/030/tests/001/data | true  | an integer is valid                                                              |
+
+Scenario Outline: ref to else
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$ref": "http://example.com/ref/else",
+            "else": {
+                "$id": "http://example.com/ref/else",
+                "type": "integer"
+            }
+        }
+*/
+    Given the input JSON file "ref.json"
+    And the schema at "#/31/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # foo
+        | #/031/tests/000/data | false | a non-integer is invalid due to the $ref                                         |
+        # 12
+        | #/031/tests/001/data | true  | an integer is valid                                                              |
 
 Scenario Outline: ref with absolute-path-reference
 /* Schema: 
@@ -952,34 +988,6 @@ Scenario Outline: ref with absolute-path-reference
         }
 */
     Given the input JSON file "ref.json"
-    And the schema at "#/31/schema"
-    And the input data at "<inputDataReference>"
-    And I generate a type for the schema
-    And I construct an instance of the schema type from the data
-    When I validate the instance
-    Then the result will be <valid>
-
-    Examples:
-        | inputDataReference   | valid | description                                                                      |
-        # foo
-        | #/031/tests/000/data | true  | a string is valid                                                                |
-        # 12
-        | #/031/tests/001/data | false | an integer is invalid                                                            |
-
-Scenario Outline: $id with file URI still resolves pointers - *nix
-/* Schema: 
-{
-            "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "file:///folder/file.json",
-            "$defs": {
-                "foo": {
-                    "type": "number"
-                }
-            },
-            "$ref": "#/$defs/foo"
-        }
-*/
-    Given the input JSON file "ref.json"
     And the schema at "#/32/schema"
     And the input data at "<inputDataReference>"
     And I generate a type for the schema
@@ -989,16 +997,16 @@ Scenario Outline: $id with file URI still resolves pointers - *nix
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # 1
-        | #/032/tests/000/data | true  | number is valid                                                                  |
-        # a
-        | #/032/tests/001/data | false | non-number is invalid                                                            |
+        # foo
+        | #/032/tests/000/data | true  | a string is valid                                                                |
+        # 12
+        | #/032/tests/001/data | false | an integer is invalid                                                            |
 
-Scenario Outline: $id with file URI still resolves pointers - windows
+Scenario Outline: $id with file URI still resolves pointers - *nix
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$id": "file:///c:/folder/file.json",
+            "$id": "file:///folder/file.json",
             "$defs": {
                 "foo": {
                     "type": "number"
@@ -1022,6 +1030,34 @@ Scenario Outline: $id with file URI still resolves pointers - windows
         # a
         | #/033/tests/001/data | false | non-number is invalid                                                            |
 
+Scenario Outline: $id with file URI still resolves pointers - windows
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": "file:///c:/folder/file.json",
+            "$defs": {
+                "foo": {
+                    "type": "number"
+                }
+            },
+            "$ref": "#/$defs/foo"
+        }
+*/
+    Given the input JSON file "ref.json"
+    And the schema at "#/34/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # 1
+        | #/034/tests/000/data | true  | number is valid                                                                  |
+        # a
+        | #/034/tests/001/data | false | non-number is invalid                                                            |
+
 Scenario Outline: empty tokens in $ref json-pointer
 /* Schema: 
 {
@@ -1041,7 +1077,7 @@ Scenario Outline: empty tokens in $ref json-pointer
         }
 */
     Given the input JSON file "ref.json"
-    And the schema at "#/34/schema"
+    And the schema at "#/35/schema"
     And the input data at "<inputDataReference>"
     And I generate a type for the schema
     And I construct an instance of the schema type from the data
@@ -1051,6 +1087,6 @@ Scenario Outline: empty tokens in $ref json-pointer
     Examples:
         | inputDataReference   | valid | description                                                                      |
         # 1
-        | #/034/tests/000/data | true  | number is valid                                                                  |
+        | #/035/tests/000/data | true  | number is valid                                                                  |
         # a
-        | #/034/tests/001/data | false | non-number is invalid                                                            |
+        | #/035/tests/001/data | false | non-number is invalid                                                            |

@@ -287,7 +287,7 @@ Scenario Outline: remote HTTP ref with different $id
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$ref": "http://localhost:1234/different-id-ref-string.json"
+            "$ref": "http://localhost:1234/draft2020-12/different-id-ref-string.json"
         }
 */
     Given the input JSON file "refRemote.json"
@@ -309,7 +309,7 @@ Scenario Outline: remote HTTP ref with different URN $id
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$ref": "http://localhost:1234/urn-ref-string.json"
+            "$ref": "http://localhost:1234/draft2020-12/urn-ref-string.json"
         }
 */
     Given the input JSON file "refRemote.json"
@@ -331,7 +331,7 @@ Scenario Outline: remote HTTP ref with nested absolute ref
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "$ref": "http://localhost:1234/nested-absolute-ref-to-string.json"
+            "$ref": "http://localhost:1234/draft2020-12/nested-absolute-ref-to-string.json"
         }
 */
     Given the input JSON file "refRemote.json"

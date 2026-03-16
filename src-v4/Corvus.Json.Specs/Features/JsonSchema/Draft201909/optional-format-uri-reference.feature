@@ -48,3 +48,7 @@ Scenario Outline: validation of URI References
         | #/000/tests/011/data | true  | a valid URI fragment                                                             |
         # #frag\ment
         | #/000/tests/012/data | false | an invalid URI fragment                                                          |
+        # /foobar®.txt
+        | #/000/tests/013/data | false | unescaped non US-ASCII characters                                                |
+        # https://example.org/foobar\.txt
+        | #/000/tests/014/data | false | invalid backslash character                                                      |

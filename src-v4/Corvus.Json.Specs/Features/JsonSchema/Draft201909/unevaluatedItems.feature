@@ -753,3 +753,31 @@ Scenario Outline: unevaluatedItems can see annotations from if without then and 
         | #/024/tests/000/data | true  | valid in case if is evaluated                                                    |
         # [ "b" ]
         | #/024/tests/001/data | false | invalid in case if is evaluated                                                  |
+
+Scenario Outline: Evaluated items collection needs to consider instance location
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "items": [
+                {
+                    "items": [
+                        true,
+                        { "type": "string" }
+                    ]
+                }
+            ],
+            "unevaluatedItems": false
+        }
+*/
+    Given the input JSON file "unevaluatedItems.json"
+    And the schema at "#/25/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # [ ["foo", "bar"], "bar" ]
+        | #/025/tests/000/data | false | with an unevaluated item that exists at another location                         |

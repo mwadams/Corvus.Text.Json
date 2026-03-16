@@ -39,37 +39,39 @@ Scenario Outline: validation of duration strings
         | #/000/tests/006/data | true  | a valid duration string                                                          |
         # PT1D
         | #/000/tests/007/data | false | an invalid duration string                                                       |
+        # 4DT12H30M5S
+        | #/000/tests/008/data | false | must start with P                                                                |
         # P
-        | #/000/tests/008/data | false | no elements present                                                              |
+        | #/000/tests/009/data | false | no elements present                                                              |
         # P1YT
-        | #/000/tests/009/data | false | no time elements present                                                         |
+        | #/000/tests/010/data | false | no time elements present                                                         |
         # PT
-        | #/000/tests/010/data | false | no date or time elements present                                                 |
+        | #/000/tests/011/data | false | no date or time elements present                                                 |
         # P2D1Y
-        | #/000/tests/011/data | false | elements out of order                                                            |
+        | #/000/tests/012/data | false | elements out of order                                                            |
         # P1D2H
-        | #/000/tests/012/data | false | missing time separator                                                           |
+        | #/000/tests/013/data | false | missing time separator                                                           |
         # P2S
-        | #/000/tests/013/data | false | time element in the date position                                                |
+        | #/000/tests/014/data | false | time element in the date position                                                |
         # P4Y
-        | #/000/tests/014/data | true  | four years duration                                                              |
+        | #/000/tests/015/data | true  | four years duration                                                              |
         # PT0S
-        | #/000/tests/015/data | true  | zero time, in seconds                                                            |
+        | #/000/tests/016/data | true  | zero time, in seconds                                                            |
         # P0D
-        | #/000/tests/016/data | true  | zero time, in days                                                               |
+        | #/000/tests/017/data | true  | zero time, in days                                                               |
         # P1M
-        | #/000/tests/017/data | true  | one month duration                                                               |
+        | #/000/tests/018/data | true  | one month duration                                                               |
         # PT1M
-        | #/000/tests/018/data | true  | one minute duration                                                              |
+        | #/000/tests/019/data | true  | one minute duration                                                              |
         # PT36H
-        | #/000/tests/019/data | true  | one and a half days, in hours                                                    |
+        | #/000/tests/020/data | true  | one and a half days, in hours                                                    |
         # P1DT12H
-        | #/000/tests/020/data | true  | one and a half days, in days and hours                                           |
+        | #/000/tests/021/data | true  | one and a half days, in days and hours                                           |
         # P2W
-        | #/000/tests/021/data | true  | two weeks                                                                        |
+        | #/000/tests/022/data | true  | two weeks                                                                        |
         # P1Y2W
-        | #/000/tests/022/data | false | weeks cannot be combined with other units                                        |
+        | #/000/tests/023/data | false | weeks cannot be combined with other units                                        |
         # P২Y
-        | #/000/tests/023/data | false | invalid non-ASCII '২' (a Bengali 2)                                              |
+        | #/000/tests/024/data | false | invalid non-ASCII '২' (a Bengali 2)                                              |
         # P1
-        | #/000/tests/024/data | false | element without unit                                                             |
+        | #/000/tests/025/data | false | element without unit                                                             |

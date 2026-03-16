@@ -67,3 +67,7 @@ Scenario Outline: validation of e-mail addresses
         | #/000/tests/020/data | false | an invalid domain                                                                |
         # joe.bloggs@[127.0.0.300]
         | #/000/tests/021/data | false | an invalid IPv4-address-literal                                                  |
+        # user1@oceania.org, user2@oceania.org
+        | #/000/tests/022/data | false | two email addresses is not valid                                                 |
+        # "Winston Smith" <winston.smith@recdep.minitrue> (Records Department)
+        | #/000/tests/023/data | false | full "From" header is invalid                                                    |

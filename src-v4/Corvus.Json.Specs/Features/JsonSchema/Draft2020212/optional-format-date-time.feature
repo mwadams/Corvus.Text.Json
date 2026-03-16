@@ -73,3 +73,5 @@ Scenario Outline: validation of date-time strings
         | #/000/tests/023/data | false | invalid non-ASCII '৪' (a Bengali 4) in date portion                              |
         # 1963-06-11T0৪:00:00Z
         | #/000/tests/024/data | false | invalid non-ASCII '৪' (a Bengali 4) in time portion                              |
+        # +11963-06-19T08:30:06.283185Z
+        | #/000/tests/025/data | false | invalid extended year                                                            |

@@ -36,6 +36,10 @@ Scenario Outline: required validation
         | #/000/tests/003/data | true  | ignores strings                                                                  |
         # 12
         | #/000/tests/004/data | true  | ignores other non-objects                                                        |
+        # 
+        | #/000/tests/005/data | true  | ignores null                                                                     |
+        # True
+        | #/000/tests/006/data | true  | ignores boolean                                                                  |
 
 Scenario Outline: required default validation
 /* Schema: 

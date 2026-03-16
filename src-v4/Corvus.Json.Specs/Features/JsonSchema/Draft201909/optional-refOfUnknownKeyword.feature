@@ -30,13 +30,13 @@ Scenario Outline: reference of a root arbitrary keyword
         # {"bar": true}
         | #/000/tests/001/data | false | mismatch                                                                         |
 
-Scenario Outline: reference of an arbitrary keyword of a sub-schema
+Scenario Outline: reference of a root arbitrary keyword with encoded ref
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "unknown/keyword": {"type": "integer"},
             "properties": {
-                "foo": {"unknown-keyword": {"type": "integer"}},
-                "bar": {"$ref": "#/properties/foo/unknown-keyword"}
+                "bar": {"$ref": "#/unknown~1keyword"}
             }
         }
 */
@@ -55,15 +55,14 @@ Scenario Outline: reference of an arbitrary keyword of a sub-schema
         # {"bar": true}
         | #/001/tests/001/data | false | mismatch                                                                         |
 
-Scenario Outline: reference internals of known non-applicator
+Scenario Outline: reference of an arbitrary keyword of a sub-schema
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2019-09/schema",
-            "$id": "/base",
-            "examples": [
-              { "type": "string" }
-            ],
-            "$ref": "#/examples/0"
+            "properties": {
+                "foo": {"unknown-keyword": {"type": "integer"}},
+                "bar": {"$ref": "#/properties/foo/unknown-keyword"}
+            }
         }
 */
     Given the input JSON file "optional/refOfUnknownKeyword.json"
@@ -76,7 +75,58 @@ Scenario Outline: reference internals of known non-applicator
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # a string
+        # {"bar": 3}
         | #/002/tests/000/data | true  | match                                                                            |
-        # 42
+        # {"bar": true}
         | #/002/tests/001/data | false | mismatch                                                                         |
+
+Scenario Outline: reference internals of known non-applicator
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "$id": "/base",
+            "examples": [
+              { "type": "string" }
+            ],
+            "$ref": "#/examples/0"
+        }
+*/
+    Given the input JSON file "optional/refOfUnknownKeyword.json"
+    And the schema at "#/3/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # a string
+        | #/003/tests/000/data | true  | match                                                                            |
+        # 42
+        | #/003/tests/001/data | false | mismatch                                                                         |
+
+Scenario Outline: reference of an arbitrary keyword of a sub-schema with encoded ref
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "properties": {
+                "foo": {"unknown/keyword": {"type": "integer"}},
+                "bar": {"$ref": "#/properties/foo/unknown~1keyword"}
+            }
+        }
+*/
+    Given the input JSON file "optional/refOfUnknownKeyword.json"
+    And the schema at "#/4/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # {"bar": 3}
+        | #/004/tests/000/data | true  | match                                                                            |
+        # {"bar": true}
+        | #/004/tests/001/data | false | mismatch                                                                         |

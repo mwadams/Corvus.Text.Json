@@ -152,7 +152,7 @@ internal static partial class SpecWriter
         }
 
         string description = test.GetProperty("description").GetString() ?? throw new Exception("Expected a 'description' property with a string value.");
-        description = description.PadRight(80);
+        description = description.Replace("|", "\\|").PadRight(80);
         builder.Append("        ").Append(omit ? '#' : '|').Append(' ').Append(inputDataReference).Append(" | ").Append(valid).Append(" | ").Append(description).AppendLine(" |");
     }
 

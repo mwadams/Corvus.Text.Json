@@ -759,10 +759,12 @@ Scenario Outline: unevaluatedItems and contains interact to control item depende
         # [ "c", "a", "c", "a", "c" ]
         | #/023/tests/007/data | false | only a's and c's are invalid                                                     |
 
-Scenario Outline: non-array instances are valid
+Scenario Outline: unevaluatedItems with minContains  equals  0
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "contains": {"type": "string"},
+            "minContains": 0,
             "unevaluatedItems": false
         }
 */
@@ -776,26 +778,20 @@ Scenario Outline: non-array instances are valid
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # True
-        | #/024/tests/000/data | true  | ignores booleans                                                                 |
-        # 123
-        | #/024/tests/001/data | true  | ignores integers                                                                 |
-        # 1.0
-        | #/024/tests/002/data | true  | ignores floats                                                                   |
-        # {}
-        | #/024/tests/003/data | true  | ignores objects                                                                  |
-        # foo
-        | #/024/tests/004/data | true  | ignores strings                                                                  |
-        # 
-        | #/024/tests/005/data | true  | ignores null                                                                     |
+        # []
+        | #/024/tests/000/data | true  | empty array is valid                                                             |
+        # [0]
+        | #/024/tests/001/data | false | no items evaluated by contains                                                   |
+        # ["foo", 0]
+        | #/024/tests/002/data | false | some but not all items evaluated by contains                                     |
+        # ["foo", "bar"]
+        | #/024/tests/003/data | true  | all items evaluated by contains                                                  |
 
-Scenario Outline: unevaluatedItems with null instance elements
+Scenario Outline: non-array instances are valid
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "unevaluatedItems": {
-                "type": "null"
-            }
+            "unevaluatedItems": false
         }
 */
     Given the input JSON file "unevaluatedItems.json"
@@ -808,17 +804,26 @@ Scenario Outline: unevaluatedItems with null instance elements
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # [ null ]
-        | #/025/tests/000/data | true  | allows null elements                                                             |
+        # True
+        | #/025/tests/000/data | true  | ignores booleans                                                                 |
+        # 123
+        | #/025/tests/001/data | true  | ignores integers                                                                 |
+        # 1.0
+        | #/025/tests/002/data | true  | ignores floats                                                                   |
+        # {}
+        | #/025/tests/003/data | true  | ignores objects                                                                  |
+        # foo
+        | #/025/tests/004/data | true  | ignores strings                                                                  |
+        # 
+        | #/025/tests/005/data | true  | ignores null                                                                     |
 
-Scenario Outline: unevaluatedItems can see annotations from if without then and else
+Scenario Outline: unevaluatedItems with null instance elements
 /* Schema: 
 {
             "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "if": {
-                "prefixItems": [{"const": "a"}]
-            },
-            "unevaluatedItems": false
+            "unevaluatedItems": {
+                "type": "null"
+            }
         }
 */
     Given the input JSON file "unevaluatedItems.json"
@@ -831,7 +836,58 @@ Scenario Outline: unevaluatedItems can see annotations from if without then and 
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
+        # [ null ]
+        | #/026/tests/000/data | true  | allows null elements                                                             |
+
+Scenario Outline: unevaluatedItems can see annotations from if without then and else
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "if": {
+                "prefixItems": [{"const": "a"}]
+            },
+            "unevaluatedItems": false
+        }
+*/
+    Given the input JSON file "unevaluatedItems.json"
+    And the schema at "#/27/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
         # [ "a" ]
-        | #/026/tests/000/data | true  | valid in case if is evaluated                                                    |
+        | #/027/tests/000/data | true  | valid in case if is evaluated                                                    |
         # [ "b" ]
-        | #/026/tests/001/data | false | invalid in case if is evaluated                                                  |
+        | #/027/tests/001/data | false | invalid in case if is evaluated                                                  |
+
+Scenario Outline: Evaluated items collection needs to consider instance location
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "prefixItems": [
+                {
+                    "prefixItems": [
+                        true,
+                        { "type": "string" }
+                    ]
+                }
+            ],
+            "unevaluatedItems": false
+        }
+*/
+    Given the input JSON file "unevaluatedItems.json"
+    And the schema at "#/28/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # [ ["foo", "bar"], "bar" ]
+        | #/028/tests/000/data | false | with an unevaluated item that exists at another location                         |

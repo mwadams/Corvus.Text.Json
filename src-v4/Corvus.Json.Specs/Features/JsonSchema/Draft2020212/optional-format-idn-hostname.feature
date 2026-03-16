@@ -135,3 +135,64 @@ Scenario Outline: validation of internationalized host names
         | #/000/tests/054/data | true  | single label starting with digit                                                 |
         # hostnam3
         | #/000/tests/055/data | true  | single label ending with digit                                                   |
+        # 
+        | #/000/tests/056/data | false | empty string                                                                     |
+
+Scenario Outline: validation of separators in internationalized host names
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "format": "idn-hostname"
+        }
+*/
+    Given the input JSON file "optional/format/idn-hostname.json"
+    And the schema at "#/1/schema"
+    And the input data at "<inputDataReference>"
+    And I assert format
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # .
+        | #/001/tests/000/data | false | single dot                                                                       |
+        # 。
+        | #/001/tests/001/data | false | single ideographic full stop                                                     |
+        # ．
+        | #/001/tests/002/data | false | single fullwidth full stop                                                       |
+        # ｡
+        | #/001/tests/003/data | false | single halfwidth ideographic full stop                                           |
+        # a.b
+        | #/001/tests/004/data | true  | dot as label separator                                                           |
+        # a。b
+        | #/001/tests/005/data | true  | ideographic full stop as label separator                                         |
+        # a．b
+        | #/001/tests/006/data | true  | fullwidth full stop as label separator                                           |
+        # a｡b
+        | #/001/tests/007/data | true  | halfwidth ideographic full stop as label separator                               |
+        # .example
+        | #/001/tests/008/data | false | leading dot                                                                      |
+        # 。example
+        | #/001/tests/009/data | false | leading ideographic full stop                                                    |
+        # ．example
+        | #/001/tests/010/data | false | leading fullwidth full stop                                                      |
+        # ｡example
+        | #/001/tests/011/data | false | leading halfwidth ideographic full stop                                          |
+        # example.
+        | #/001/tests/012/data | false | trailing dot                                                                     |
+        # example。
+        | #/001/tests/013/data | false | trailing ideographic full stop                                                   |
+        # example．
+        | #/001/tests/014/data | false | trailing fullwidth full stop                                                     |
+        # example｡
+        | #/001/tests/015/data | false | trailing halfwidth ideographic full stop                                         |
+        # παράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπα.com
+        | #/001/tests/016/data | true  | label too long if separator ignored (full stop)                                  |
+        # παράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπα。com
+        | #/001/tests/017/data | true  | label too long if separator ignored (ideographic full stop)                      |
+        # παράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπα．com
+        | #/001/tests/018/data | true  | label too long if separator ignored (fullwidth full stop)                        |
+        # παράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπαράδειγμαπα｡com
+        | #/001/tests/019/data | true  | label too long if separator ignored (halfwidth ideographic full stop)            |

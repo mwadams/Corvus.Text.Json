@@ -14,6 +14,11 @@ internal static class CodeGeneratorRunner
             "..", "..", "..", "..", "..",
             "src", "Corvus.Json.CodeGenerator", "Corvus.Json.CodeGenerator.csproj"));
 
+    // Derive the build configuration (Debug/Release) from the test output path.
+    // AppContext.BaseDirectory is e.g. .../bin/Debug/net10.0/
+    private static readonly string BuildConfiguration =
+        new DirectoryInfo(AppContext.BaseDirectory).Parent!.Name;
+
     /// <summary>
     /// Runs the code generator with the specified arguments and returns the result.
     /// </summary>
@@ -24,7 +29,7 @@ internal static class CodeGeneratorRunner
         ProcessStartInfo psi = new()
         {
             FileName = "dotnet",
-            Arguments = $"run --no-build --no-launch-profile --framework net10.0 --project \"{CodeGeneratorProjectPath}\" -- {arguments}",
+            Arguments = $"run --no-build --no-launch-profile -c {BuildConfiguration} --framework net10.0 --project \"{CodeGeneratorProjectPath}\" -- {arguments}",
             WorkingDirectory = effectiveWorkingDirectory,
             RedirectStandardOutput = true,
             RedirectStandardError = true,

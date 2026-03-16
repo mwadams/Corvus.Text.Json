@@ -64,3 +64,13 @@ Scenario Outline: validation of host names
         | #/000/tests/020/data | true  | single label with digits                                                         |
         # hostnam3
         | #/000/tests/021/data | true  | single label ending with digit                                                   |
+        # 
+        | #/000/tests/022/data | false | empty string                                                                     |
+        # .
+        | #/000/tests/023/data | false | single dot                                                                       |
+        # .example
+        | #/000/tests/024/data | false | leading dot                                                                      |
+        # example.
+        | #/000/tests/025/data | false | trailing dot                                                                     |
+        # example．com
+        | #/000/tests/026/data | false | IDN label separator                                                              |

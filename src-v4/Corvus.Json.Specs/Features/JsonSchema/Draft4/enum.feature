@@ -327,3 +327,49 @@ Scenario Outline: nul characters in strings
         | #/013/tests/000/data | true  | match string with nul                                                            |
         # hellothere
         | #/013/tests/001/data | false | do not match string lacking nul                                                  |
+
+Scenario Outline: characters with the same visual representation but different codepoint
+/* Schema: 
+{
+            "enum": ["μ"],
+            "$comment": "U+03BC"
+        }
+*/
+    Given the input JSON file "enum.json"
+    And the schema at "#/14/schema"
+    And the input data at "<inputDataReference>"
+    And I assert format
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # μ
+        | #/014/tests/000/data | true  | character uses the same codepoint                                                |
+        # µ
+        | #/014/tests/001/data | false | character looks the same but uses a different codepoint                          |
+
+Scenario Outline: characters with the same visual representation, but different number of codepoints
+/* Schema: 
+{
+            "enum": ["ä"],
+            "$comment": "U+00E4"
+        }
+*/
+    Given the input JSON file "enum.json"
+    And the schema at "#/15/schema"
+    And the input data at "<inputDataReference>"
+    And I assert format
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # ä
+        | #/015/tests/000/data | true  | character uses the same codepoint                                                |
+        # ä
+        | #/015/tests/001/data | false | character looks the same but uses combining marks                                |

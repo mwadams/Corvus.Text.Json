@@ -2,7 +2,7 @@
   "profiles": {
     "Corvus.JsonSchema.SpecGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "D:\\source\\corvus-dotnet\\Corvus.JsonSchema\\JSON-Schema-Test-Suite D:\\source\\corvus-dotnet\\Corvus.JsonSchema\\Solutions\\Corvus.Json.Specs\\Features\\JsonSchema\\ JsonSchemaOrgTestSuiteSelector.jsonc"
+      "commandLineArgs": "D:\\source\\mwadams\\Corvus.Text.Json\\JSON-Schema-Test-Suite D:\\source\\mwadams\\Corvus.Text.Json\\src-v4\\Corvus.Json.Specs\\Features\\JsonSchema\\ JsonSchemaOrgTestSuiteSelector.jsonc"
     }
   }
 }

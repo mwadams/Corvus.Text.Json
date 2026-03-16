@@ -50,3 +50,7 @@ Scenario Outline: validation of e-mail addresses
         | #/000/tests/013/data | true  | two separated dots inside local part are valid                                   |
         # te..st@example.com
         | #/000/tests/014/data | false | two subsequent dots inside local part are not valid                              |
+        # user1@oceania.org, user2@oceania.org
+        | #/000/tests/015/data | false | two email addresses is not valid                                                 |
+        # "Winston Smith" <winston.smith@recdep.minitrue> (Records Department)
+        | #/000/tests/016/data | false | full "From" header is invalid                                                    |

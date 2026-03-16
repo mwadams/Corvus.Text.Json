@@ -56,11 +56,13 @@ Scenario Outline: uuid format
         | #/000/tests/015/data | false | too many dashes                                                                  |
         # 2eb8aa08aa9811eab4aa73b441d16380----
         | #/000/tests/016/data | false | dashes in the wrong spot                                                         |
+        # 2eb8aa0-8aa98-11e-ab4aa7-3b441d16380
+        | #/000/tests/017/data | false | shifted dashes                                                                   |
         # 98d80576-482e-427f-8434-7f86890ab222
-        | #/000/tests/017/data | true  | valid version 4                                                                  |
+        | #/000/tests/018/data | true  | valid version 4                                                                  |
         # 99c17cbb-656f-564a-940f-1a4568f03487
-        | #/000/tests/018/data | true  | valid version 5                                                                  |
+        | #/000/tests/019/data | true  | valid version 5                                                                  |
         # 99c17cbb-656f-664a-940f-1a4568f03487
-        | #/000/tests/019/data | true  | hypothetical version 6                                                           |
+        | #/000/tests/020/data | true  | hypothetical version 6                                                           |
         # 99c17cbb-656f-f64a-940f-1a4568f03487
-        | #/000/tests/020/data | true  | hypothetical version 15                                                          |
+        | #/000/tests/021/data | true  | hypothetical version 15                                                          |

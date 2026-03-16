@@ -806,3 +806,64 @@ Scenario Outline: $dynamicRef skips over intermediate resources - direct referen
         | #/019/tests/000/data | true  | integer property passes                                                          |
         # { "bar-item": { "content": "value" } }
         | #/019/tests/001/data | false | string property fails                                                            |
+
+Scenario Outline: $dynamicRef avoids the root of each schema, but scopes are still registered
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "$id": "https://test.json-schema.org/dynamic-ref-avoids-root-of-each-schema/base",
+            "$ref": "first#/$defs/stuff",
+            "$defs": {
+                "first": {
+                    "$id": "first",
+                    "$defs": {
+                        "stuff": {
+                            "$ref": "second#/$defs/stuff"
+                        },
+                        "length": {
+                            "$comment": "unused, because there is no $dynamicAnchor here",
+                            "maxLength": 1
+                        }
+                    }
+                },
+                "second": {
+                    "$id": "second",
+                    "$defs": {
+                        "stuff": {
+                            "$ref": "third#/$defs/stuff"
+                        },
+                        "length": {
+                            "$dynamicAnchor": "length",
+                            "maxLength": 2
+                        }
+                    }
+                },
+                "third": {
+                    "$id": "third",
+                    "$defs": {
+                        "stuff": {
+                            "$dynamicRef": "#length"
+                        },
+                        "length": {
+                            "$dynamicAnchor": "length",
+                            "maxLength": 3
+                        }
+                    }
+                }
+            }
+        }
+*/
+    Given the input JSON file "dynamicRef.json"
+    And the schema at "#/20/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # hi
+        | #/020/tests/000/data | true  | data is sufficient for schema at second#/$defs/length                            |
+        # hey
+        | #/020/tests/001/data | false | data is not sufficient for schema at second#/$defs/length                        |

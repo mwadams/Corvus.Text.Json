@@ -486,9 +486,9 @@ Scenario Outline: unevaluatedProperties with if/then/else, then not defined
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
+        # { "foo": "then" }
+        | #/014/tests/000/data | true  | when if is true and has no unevaluated properties                                |
         # { "foo": "then", "bar": "bar" }
-        | #/014/tests/000/data | false | when if is true and has no unevaluated properties                                |
-        # { "foo": "then", "bar": "bar", "baz": "baz" }
         | #/014/tests/001/data | false | when if is true and has unevaluated properties                                   |
         # { "baz": "baz" }
         | #/014/tests/002/data | true  | when if is false and has no unevaluated properties                               |
@@ -1392,3 +1392,30 @@ Scenario Outline: dependentSchemas with unevaluatedProperties
         | #/039/tests/001/data | false | unevaluatedProperties doesn't see bar when foo2 is absent                        |
         # { "foo2": "", "bar": ""}
         | #/039/tests/002/data | true  | unevaluatedProperties sees bar when foo2 is present                              |
+
+Scenario Outline: Evaluated properties collection needs to consider instance location
+/* Schema: 
+{
+            "$schema": "https://json-schema.org/draft/2019-09/schema",
+            "properties": {
+                "foo": {
+                    "properties": {
+                        "bar": { "type": "string" }
+                    }
+                }
+            },
+            "unevaluatedProperties": false
+        }
+*/
+    Given the input JSON file "unevaluatedProperties.json"
+    And the schema at "#/40/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # { "foo": { "bar": "foo" }, "bar": "bar" }
+        | #/040/tests/000/data | false | with an unevaluated property that exists at another location                     |

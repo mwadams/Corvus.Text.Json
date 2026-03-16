@@ -282,3 +282,47 @@ Scenario Outline: if appears at the end when serialized (keyword processing sequ
         | #/009/tests/002/data | false | no redirects to then and fails                                                   |
         # invalid
         | #/009/tests/003/data | false | invalid redirects to else and fails                                              |
+
+Scenario Outline: then: false fails when condition matches
+/* Schema: 
+{
+            "if": { "const": 1 },
+            "then": false
+        }
+*/
+    Given the input JSON file "if-then-else.json"
+    And the schema at "#/10/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # 1
+        | #/010/tests/000/data | false | matches if → then=false → invalid                                                |
+        # 2
+        | #/010/tests/001/data | true  | does not match if → then ignored → valid                                         |
+
+Scenario Outline: else: false fails when condition does not match
+/* Schema: 
+{
+            "if": { "const": 1 },
+            "else": false
+        }
+*/
+    Given the input JSON file "if-then-else.json"
+    And the schema at "#/11/schema"
+    And the input data at "<inputDataReference>"
+    And I generate a type for the schema
+    And I construct an instance of the schema type from the data
+    When I validate the instance
+    Then the result will be <valid>
+
+    Examples:
+        | inputDataReference   | valid | description                                                                      |
+        # 1
+        | #/011/tests/000/data | true  | matches if → else ignored → valid                                                |
+        # 2
+        | #/011/tests/001/data | false | does not match if → else executes → invalid                                      |

@@ -143,12 +143,13 @@ Scenario Outline: additionalItems are allowed by default
         # [1, "foo", false]
         | #/005/tests/000/data | true  | only the first item is validated                                                 |
 
-Scenario Outline: additionalItems does not look in applicators, valid case
+Scenario Outline: additionalItems does not look in applicators, invalid case
 /* Schema: 
 {
             "allOf": [
-                { "items": [ { "type": "integer" } ] }
+                { "items": [ { "type": "integer" }, { "type": "string" } ] }
             ],
+            "items": [ {"type": "integer" } ],
             "additionalItems": { "type": "boolean" }
         }
 */
@@ -163,17 +164,14 @@ Scenario Outline: additionalItems does not look in applicators, valid case
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # [ 1, null ]
-        | #/006/tests/000/data | true  | items defined in allOf are not examined                                          |
+        # [ 1, "hello" ]
+        | #/006/tests/000/data | false | items defined in allOf are not examined                                          |
 
-Scenario Outline: additionalItems does not look in applicators, invalid case
+Scenario Outline: items validation adjusts the starting index for additionalItems
 /* Schema: 
 {
-            "allOf": [
-                { "items": [ { "type": "integer" }, { "type": "string" } ] }
-            ],
-            "items": [ {"type": "integer" } ],
-            "additionalItems": { "type": "boolean" }
+            "items": [ { "type": "string" } ],
+            "additionalItems": { "type": "integer" }
         }
 */
     Given the input JSON file "additionalItems.json"
@@ -187,14 +185,16 @@ Scenario Outline: additionalItems does not look in applicators, invalid case
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # [ 1, "hello" ]
-        | #/007/tests/000/data | false | items defined in allOf are not examined                                          |
+        # [ "x", 2, 3 ]
+        | #/007/tests/000/data | true  | valid items                                                                      |
+        # [ "x", "y" ]
+        | #/007/tests/001/data | false | wrong type of second item                                                        |
 
-Scenario Outline: items validation adjusts the starting index for additionalItems
+Scenario Outline: additionalItems with heterogeneous array
 /* Schema: 
 {
-            "items": [ { "type": "string" } ],
-            "additionalItems": { "type": "integer" }
+            "items": [{}],
+            "additionalItems": false
         }
 */
     Given the input JSON file "additionalItems.json"
@@ -208,16 +208,17 @@ Scenario Outline: items validation adjusts the starting index for additionalItem
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # [ "x", 2, 3 ]
-        | #/008/tests/000/data | true  | valid items                                                                      |
-        # [ "x", "y" ]
-        | #/008/tests/001/data | false | wrong type of second item                                                        |
+        # [ "foo", "bar", 37 ]
+        | #/008/tests/000/data | false | heterogeneous invalid instance                                                   |
+        # [ null ]
+        | #/008/tests/001/data | true  | valid instance                                                                   |
 
-Scenario Outline: additionalItems with heterogeneous array
+Scenario Outline: additionalItems with null instance elements
 /* Schema: 
 {
-            "items": [{}],
-            "additionalItems": false
+            "additionalItems": {
+                "type": "null"
+            }
         }
 */
     Given the input JSON file "additionalItems.json"
@@ -231,29 +232,5 @@ Scenario Outline: additionalItems with heterogeneous array
 
     Examples:
         | inputDataReference   | valid | description                                                                      |
-        # [ "foo", "bar", 37 ]
-        | #/009/tests/000/data | false | heterogeneous invalid instance                                                   |
         # [ null ]
-        | #/009/tests/001/data | true  | valid instance                                                                   |
-
-Scenario Outline: additionalItems with null instance elements
-/* Schema: 
-{
-            "additionalItems": {
-                "type": "null"
-            }
-        }
-*/
-    Given the input JSON file "additionalItems.json"
-    And the schema at "#/10/schema"
-    And the input data at "<inputDataReference>"
-    And I assert format
-    And I generate a type for the schema
-    And I construct an instance of the schema type from the data
-    When I validate the instance
-    Then the result will be <valid>
-
-    Examples:
-        | inputDataReference   | valid | description                                                                      |
-        # [ null ]
-        | #/010/tests/000/data | true  | allows null elements                                                             |
+        | #/009/tests/000/data | true  | allows null elements                                                             |
