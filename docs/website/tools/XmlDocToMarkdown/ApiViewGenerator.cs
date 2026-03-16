@@ -29,7 +29,16 @@ internal static class ApiViewGenerator
         sb.AppendLine("        <div class=\"doc__content\">");
         sb.AppendLine("            <h1>API Reference</h1>");
         sb.AppendLine("            <p>Browse the public API by namespace. Each namespace section in the sidebar lists its types.</p>");
-        sb.AppendLine("            <div class=\"card-grid\" style=\"margin-top:var(--space-lg)\">");
+
+        // Search / filter UI
+        sb.AppendLine("            <div class=\"api-browser\">");
+        sb.AppendLine("                <input id=\"api-browser-input\" class=\"api-browser__input\" type=\"search\"");
+        sb.AppendLine("                       placeholder=\"Search types and members\u2026\" autocomplete=\"off\" />");
+        sb.AppendLine("                <div id=\"api-browser-status\" class=\"api-browser__status\"></div>");
+        sb.AppendLine("            </div>");
+        sb.AppendLine("            <div id=\"api-browser-results\" class=\"api-browser__results\" hidden></div>");
+
+        sb.AppendLine("            <div id=\"api-browser-default\" class=\"card-grid\" style=\"margin-top:var(--space-lg)\">");
 
         foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
         {
@@ -49,6 +58,9 @@ internal static class ApiViewGenerator
         sb.AppendLine("        </div>");
         sb.AppendLine("    </main>");
         sb.AppendLine("</div>");
+        sb.AppendLine("@section scripts {");
+        sb.AppendLine("    <script src=\"/assets/js/api-browser.js\" defer></script>");
+        sb.AppendLine("}");
 
         string outputPath = Path.Combine(viewsDir, "index.cshtml");
         File.WriteAllText(outputPath, sb.ToString());
