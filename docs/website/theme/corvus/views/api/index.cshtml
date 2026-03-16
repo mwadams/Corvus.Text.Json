@@ -391,7 +391,16 @@
         <div class="doc__content">
             <h1>API Reference</h1>
             <p>Browse the public API by namespace. Each namespace section in the sidebar lists its types.</p>
-            <div class="card-grid" style="margin-top:var(--space-lg)">
+
+            <div class="api-browser">
+                <input id="api-browser-input" class="api-browser__input" type="search"
+                       placeholder="Filter types and members\u2026" autocomplete="off" spellcheck="false" />
+                <div id="api-browser-status" class="api-browser__status"></div>
+            </div>
+
+            <div id="api-browser-results" class="api-browser__results" hidden></div>
+
+            <div id="api-browser-default" class="card-grid" style="margin-top:var(--space-lg)">
                 <a class="card card--link" href="/api/corvus-globalization.html">
                     <h3 class="card__title">Corvus.Globalization</h3>
                     <p class="card__body">Globalization helpers and culture-sensitive formatting</p>
@@ -424,5 +433,6 @@
                 </a>
             </div>
         </div>
+        <script src="/api-browser.js"></script>
     </main>
 </div>
