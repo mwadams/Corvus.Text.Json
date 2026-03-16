@@ -124,13 +124,7 @@ public class JsonWorkspace : IDisposable
         else
         {
             // Dispose the documents
-            foreach (IJsonDocument document in _documents.AsSpan(0, _length))
-            {
-                if (document is IMutableJsonDocument)
-                {
-                    document.Dispose();
-                }
-            }
+            DisposeMutable();
 
             if (_length > 0)
             {
@@ -253,10 +247,7 @@ public class JsonWorkspace : IDisposable
     {
         if (_length >= 0)
         {
-            foreach (IJsonDocument document in _documents.AsSpan(0, _length))
-            {
-                document.Dispose();
-            }
+            DisposeMutable();
 
             Array.Clear(_documents, 0, _length);
             _length = -1;
@@ -265,6 +256,17 @@ public class JsonWorkspace : IDisposable
         }
 
         ThrowHelper.ThrowObjectDisposedException_JsonWorkspace();
+    }
+
+    private void DisposeMutable()
+    {
+        foreach (IJsonDocument document in _documents.AsSpan(0, _length))
+        {
+            if (document is IMutableJsonDocument)
+            {
+                document.Dispose();
+            }
+        }
     }
 
     /// <summary>
