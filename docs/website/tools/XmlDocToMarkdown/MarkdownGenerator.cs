@@ -476,14 +476,8 @@ public sealed class MarkdownGenerator(string outputDir)
     {
         string heading = new('#', headingLevel);
 
-        string modifiers = "";
-        if (member.IsStatic) modifiers += " `static`";
-        if (member.IsAbstract) modifiers += " `abstract`";
-        if (member.IsVirtual && !member.IsAbstract) modifiers += " `virtual`";
-        if (member.IsOverride) modifiers += " `override`";
-
         string headingText = useSignatureHeading ? FormatShortSignature(member) : member.Name;
-        sb.AppendLine($"{heading} {headingText}{modifiers}");
+        sb.AppendLine($"{heading} {headingText}");
         sb.AppendLine();
         sb.AppendLine("```csharp");
         sb.AppendLine(member.Signature);
