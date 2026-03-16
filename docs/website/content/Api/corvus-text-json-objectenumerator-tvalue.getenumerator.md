@@ -33,3 +33,10 @@ An [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) va
 
 The enumerator will enumerate the properties in the order they are declared, and when an object has multiple definitions of a single property they will all individually be returned (each in the order they appear in the content).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

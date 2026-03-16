@@ -35,3 +35,10 @@ A callback for a pattern match method.
 | [EndInvoke(ref TMatch, IAsyncResult)](/api/corvus-text-json-matcher-tmatch-tout.endinvoke.html#endinvoke-ref-tmatch-iasyncresult) |  |
 | [Invoke(ref TMatch)](/api/corvus-text-json-matcher-tmatch-tout.invoke.html#invoke-ref-tmatch) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

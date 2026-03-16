@@ -30,3 +30,10 @@ Tries to create a new UTF-8 URI Reference from the specified URI bytes.
 
 `true` if the UTF-8 URI Reference was created successfully; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

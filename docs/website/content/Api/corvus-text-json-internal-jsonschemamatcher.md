@@ -28,3 +28,10 @@ A matcher for a JSON schema.
 | [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcher.endinvoke.html#endinvoke-ref-jsonschemacontext-iasyncresult) |  |
 | [Invoke(IJsonDocument, int, ref JsonSchemaContext)](/api/corvus-text-json-internal-jsonschemamatcher.invoke.html#invoke-ijsondocument-int-ref-jsonschemacontext) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

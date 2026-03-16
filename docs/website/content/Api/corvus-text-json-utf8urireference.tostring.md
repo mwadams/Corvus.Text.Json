@@ -23,3 +23,10 @@ Returns a string representation of the URI reference in display format.
 
 A string representation of the URI reference.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

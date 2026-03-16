@@ -31,3 +31,10 @@ Builds a rented metadata database for the specified parent document index.
 
 The size of the metadata database.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

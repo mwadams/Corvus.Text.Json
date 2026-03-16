@@ -32,3 +32,10 @@ Gets DB index of the item at the array index within the array that starts at `cu
 
 Note that this is the DB index in the current document. Contrast with [`GetArrayIndexElement`](/api/corvus-text-json-internal-ijsondocument.html#getarrayindexelement) overloads which return the document and index of the actual element value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

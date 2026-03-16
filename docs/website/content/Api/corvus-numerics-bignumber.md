@@ -84,3 +84,10 @@ Internally represented as: value = significand × 10^exponent where significand 
 | [operator -(BigNumber)](/api/corvus-numerics-bignumber.op-unarynegation.html#operator-bignumber) | Negates a value. |
 | [operator +(BigNumber)](/api/corvus-numerics-bignumber.op-unaryplus.html#operator-bignumber) | Returns the value unchanged (unary plus). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

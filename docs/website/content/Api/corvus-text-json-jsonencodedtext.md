@@ -34,3 +34,10 @@ This can be used to cache and store known strings used for writing JSON ahead of
 | [GetHashCode()](/api/corvus-text-json-jsonencodedtext.gethashcode.html#gethashcode) | Returns the hash code for this [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html). |
 | [ToString()](/api/corvus-text-json-jsonencodedtext.tostring.html#tostring) | Converts the value of this instance to a [`String`](https://learn.microsoft.com/dotnet/api/system.string). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

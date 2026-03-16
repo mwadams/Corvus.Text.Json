@@ -22,3 +22,10 @@ public Matcher(object object, IntPtr method)
 | `object` | [`object`](https://learn.microsoft.com/dotnet/api/system.object) |  |
 | `method` | [`IntPtr`](https://learn.microsoft.com/dotnet/api/system.intptr) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

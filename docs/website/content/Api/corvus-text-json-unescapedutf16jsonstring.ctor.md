@@ -24,3 +24,10 @@ Initializes a new instance of the [`UnescapedUtf16JsonString`](/api/corvus-text-
 | `chars` | [`ReadOnlyMemory<char>`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1) | The UTF-16 characters representing the JSON string. |
 | `extraRentedArrayPoolChars` | [`char[]`](https://learn.microsoft.com/dotnet/api/system.char) | Optional rented array pool characters. *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

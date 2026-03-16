@@ -25,3 +25,10 @@ Defines whether the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html
 
 By default, it's set to false, and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown if trailing content is encountered after the first top-level JSON value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

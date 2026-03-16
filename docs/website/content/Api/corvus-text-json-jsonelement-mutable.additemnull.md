@@ -15,3 +15,10 @@ Title: "JsonElement.Mutable.AddItemNull Method — Corvus.Text.Json"
 public void AddItemNull()
 ```
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

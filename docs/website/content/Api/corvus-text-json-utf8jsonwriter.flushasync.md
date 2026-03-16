@@ -37,3 +37,10 @@ Asynchronously commits the JSON text written so far which makes it visible to th
 
 In the case of IBufferWriter, this advances the underlying [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1) based on what has been written so far. In the case of Stream, this writes the data to the stream and flushes it asynchronously, while monitoring cancellation requests.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

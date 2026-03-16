@@ -32,3 +32,10 @@ A mutable builder class for [`Period`](/api/corvus-text-json-period.html) values
 |--------|-------------|
 | [BuildPeriod()](/api/corvus-text-json-periodbuilder.buildperiod.html#buildperiod) | Builds a period from the properties in this builder. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

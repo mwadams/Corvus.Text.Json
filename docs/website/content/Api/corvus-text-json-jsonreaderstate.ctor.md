@@ -27,3 +27,10 @@ Constructs a new [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html)
 
 An instance of this state must be passed to the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) ctor with the JSON data. Unlike the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html), which is a ref struct, the state can survive across async/await boundaries and hence this type is required to provide support for reading in more data asynchronously before continuing with a new instance of the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

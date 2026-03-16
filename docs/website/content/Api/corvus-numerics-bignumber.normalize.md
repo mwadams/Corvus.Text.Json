@@ -23,3 +23,10 @@ Returns a normalized copy of this number with trailing zeros removed from the si
 
 A normalized [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

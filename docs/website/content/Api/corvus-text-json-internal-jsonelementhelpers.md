@@ -67,3 +67,10 @@ Core helper methods for parsing and processing JSON numeric values into their co
 | [TryParsePeriod(ReadOnlySpan&lt;byte&gt;, ref Period)](/api/corvus-text-json-internal-jsonelementhelpers.tryparseperiod.html#tryparseperiod-readonlyspan-byte-ref-period) `static` | Parse a period from a string for the `duration` format. |
 | [TryParseValue(ref Utf8JsonReader, ref Nullable&lt;T&gt;)](/api/corvus-text-json-internal-jsonelementhelpers.tryparsevalue.html#tryparsevalue-ref-utf8jsonreader-ref-nullable-t) `static` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

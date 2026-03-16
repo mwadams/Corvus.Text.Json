@@ -31,3 +31,10 @@ Sets a property value on a target element.
 | `targetElement` | `TTarget` | The target element instance. |
 | `property` | [`JsonProperty<TValue>`](/api/corvus-text-json-jsonproperty-tvalue.html) | The property to set. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

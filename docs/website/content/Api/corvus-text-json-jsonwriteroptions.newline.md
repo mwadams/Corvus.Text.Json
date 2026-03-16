@@ -28,3 +28,10 @@ Gets or sets the new line string to use when [`Indented`](/api/corvus-text-json-
 | [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | Thrown when the new line string is `null`. |
 | [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when the new line string is not `\n` or `\r\n`. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

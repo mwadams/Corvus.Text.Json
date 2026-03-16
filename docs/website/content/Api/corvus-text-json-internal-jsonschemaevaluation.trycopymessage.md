@@ -31,3 +31,10 @@ Tries to copy a message to the specified buffer.
 
 `true` if the copy succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

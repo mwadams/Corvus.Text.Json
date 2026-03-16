@@ -16,3 +16,10 @@ public readonly struct ValidationResult.LocationTuple
 | [SchemaLocation](/api/corvus-text-json-compatibility-validationresult-locationtuple.schemalocation.html) | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) |  |
 | [ValidationLocation](/api/corvus-text-json-compatibility-validationresult-locationtuple.validationlocation.html) | [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

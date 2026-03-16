@@ -34,3 +34,10 @@ The value of the element as an [`UnescapedUtf8JsonString`](/api/corvus-text-json
 
 The [`UnescapedUtf8JsonString`](/api/corvus-text-json-unescapedutf8jsonstring.html) should be disposed when it is finished with, as it may have rented storage to provide the unescaped value. It is only valid for as long as the source [`JsonElement`](/api/corvus-text-json-jsonelement.html) is valid.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

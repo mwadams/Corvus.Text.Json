@@ -38,3 +38,10 @@ This may use a rented buffer to back the string, so it is disposable.
 | [Dispose()](/api/corvus-text-json-unescapedutf8jsonstring.dispose.html#dispose) | Disposes the unescaped UTF-8 JSON string, returning any rented array pool bytes. |
 | [TakeOwnership(ref byte\[\])](/api/corvus-text-json-unescapedutf8jsonstring.takeownership.html#takeownership-ref-byte) | Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) bytes, if any. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

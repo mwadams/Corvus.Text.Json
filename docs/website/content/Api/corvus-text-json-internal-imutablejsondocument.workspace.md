@@ -21,3 +21,10 @@ Gets the JSON workspace associated with this document.
 
 [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

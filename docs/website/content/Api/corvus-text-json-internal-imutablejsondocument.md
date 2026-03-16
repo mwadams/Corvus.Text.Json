@@ -44,3 +44,10 @@ Represents a mutable JSON document that supports editing and value storage opera
 | [TryGetNamedPropertyValue](/api/corvus-text-json-internal-imutablejsondocument.trygetnamedpropertyvalue.html) |  |
 | [TryGetNamedPropertyValueIndex](/api/corvus-text-json-internal-imutablejsondocument.trygetnamedpropertyvalueindex.html) | Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

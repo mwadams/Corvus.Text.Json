@@ -31,3 +31,10 @@ Format a period as a UTF-8 string for the `duration` format.
 
 `true` if the period was formatted successfully.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

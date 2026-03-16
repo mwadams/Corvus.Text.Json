@@ -24,3 +24,10 @@ Initializes a new instance of the [`ArrayReverseEnumerator`](/api/corvus-text-js
 | `targetDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) | The document containing the array to enumerate. |
 | `arrayDocumentIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The initial index of the array element in the document. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

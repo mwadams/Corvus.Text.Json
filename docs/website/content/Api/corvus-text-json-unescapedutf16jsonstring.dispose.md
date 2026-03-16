@@ -21,3 +21,10 @@ Disposes the unescaped UTF-16 JSON string, returning any rented array pool chara
 
 [`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

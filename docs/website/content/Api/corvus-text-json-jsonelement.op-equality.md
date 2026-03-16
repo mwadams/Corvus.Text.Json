@@ -30,3 +30,10 @@ Compares two JsonElement values for equality.
 
 `true` if the JsonElement values are equal; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

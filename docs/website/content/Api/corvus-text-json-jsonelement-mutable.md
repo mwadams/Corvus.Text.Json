@@ -120,3 +120,10 @@ public readonly struct JsonElement.Mutable : IMutableJsonElement<JsonElement.Mut
 | [implicit operator JsonElement(JsonElement.Mutable)](/api/corvus-text-json-jsonelement-mutable.op-implicit.html#implicit-operator-jsonelement-jsonelement-mutable) |  |
 | [Inequality](/api/corvus-text-json-jsonelement-mutable.op-inequality.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

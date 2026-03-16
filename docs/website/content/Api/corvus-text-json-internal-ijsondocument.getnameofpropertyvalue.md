@@ -29,3 +29,10 @@ Gets the name of the property value at the specified index.
 
 The name of the property value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

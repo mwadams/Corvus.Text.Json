@@ -27,3 +27,10 @@ A JsonElement which can be safely stored beyond the lifetime of the original [`J
 
 If this JsonElement is itself the output of a previous call to Clone, or a value contained within another JsonElement which was the output of a previous call to Clone, this method results in no additional memory allocation.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

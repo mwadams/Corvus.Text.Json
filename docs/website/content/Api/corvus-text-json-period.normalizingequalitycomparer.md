@@ -27,3 +27,10 @@ Gets an equality comparer which compares periods by first normalizing them - so 
 
 An equality comparer which compares periods by first normalizing them.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

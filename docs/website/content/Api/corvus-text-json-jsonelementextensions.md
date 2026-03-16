@@ -25,3 +25,10 @@ Extension methods for [`IJsonElement`](/api/corvus-text-json-internal-ijsoneleme
 | [IsNullOrUndefined(T)](/api/corvus-text-json-jsonelementextensions.isnullorundefined.html#isnullorundefined-t) `static` | Gets a value indicating whether this value is null or undefined. |
 | [IsUndefined(T)](/api/corvus-text-json-jsonelementextensions.isundefined.html#isundefined-t) `static` | Gets a value indicating whether this value is undefined. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -29,3 +29,10 @@ Creates a period representing the specified number of years.
 
 A period consisting of the given number of years.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

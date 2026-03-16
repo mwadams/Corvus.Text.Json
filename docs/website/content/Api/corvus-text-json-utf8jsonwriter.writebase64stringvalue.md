@@ -34,3 +34,10 @@ Writes the raw bytes value as a Base64 encoded JSON string as an element of a JS
 
 The bytes are encoded before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

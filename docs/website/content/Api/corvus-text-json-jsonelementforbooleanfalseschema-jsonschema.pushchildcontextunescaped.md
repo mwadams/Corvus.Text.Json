@@ -29,3 +29,10 @@ public static JsonSchemaContext PushChildContextUnescaped(IJsonDocument parentDo
 
 [`JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

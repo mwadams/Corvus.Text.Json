@@ -62,3 +62,10 @@ Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) i
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

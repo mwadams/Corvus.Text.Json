@@ -66,3 +66,10 @@ It writes the text sequentially with no caching and adheres to the JSON RFC by d
 | [WriteStringValue](/api/corvus-text-json-utf8jsonwriter.writestringvalue.html) | Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as an element of a JSON array. |
 | [WriteStringValueSegment](/api/corvus-text-json-utf8jsonwriter.writestringvaluesegment.html) | Writes the text value segment as a partial JSON string. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

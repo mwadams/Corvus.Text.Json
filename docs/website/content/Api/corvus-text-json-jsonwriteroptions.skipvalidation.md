@@ -25,3 +25,10 @@ Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html
 
 If the JSON being written is known to be correct, then skipping validation (by setting it to true) could improve performance. An example of invalid JSON where the writer will throw (when SkipValidation is set to false) is when you write a value within a JSON object without a property name.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

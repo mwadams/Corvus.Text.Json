@@ -36,3 +36,10 @@ Format the number as a string.
 
 This will always return `false` if the formatted result exceeds 2048 characters in size.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

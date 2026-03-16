@@ -19,3 +19,10 @@ public abstract ReadOnlyMemory<byte> WrittenMemory { get; }
 
 [`ReadOnlyMemory<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

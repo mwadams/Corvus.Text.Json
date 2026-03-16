@@ -27,3 +27,10 @@ Overwrites values in the document and disposes the provided [`ComplexValueBuilde
 | `membersToOverwrite` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of members to overwrite. |
 | `cvb` | [`ref ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) | The [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) to overwrite and dispose. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

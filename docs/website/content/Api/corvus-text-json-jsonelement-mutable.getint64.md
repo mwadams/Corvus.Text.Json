@@ -19,3 +19,10 @@ public long GetInt64()
 
 [`long`](https://learn.microsoft.com/dotnet/api/system.int64)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

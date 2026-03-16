@@ -80,3 +80,10 @@ Deep equality of two JSON values is defined as follows: - JSON values of differe
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

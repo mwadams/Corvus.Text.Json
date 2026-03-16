@@ -26,3 +26,10 @@ public delegate ComplexValueBuilder.ValueBuilderAction<TContext> : MulticastDele
 | [EndInvoke(ref TContext, ref ComplexValueBuilder, IAsyncResult)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.endinvoke.html#endinvoke-ref-tcontext-ref-complexvaluebuilder-iasyncresult) |  |
 | [Invoke(ref TContext, ref ComplexValueBuilder)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction-tcontext.invoke.html#invoke-ref-tcontext-ref-complexvaluebuilder) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

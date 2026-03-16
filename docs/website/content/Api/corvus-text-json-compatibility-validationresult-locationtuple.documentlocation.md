@@ -19,3 +19,10 @@ public Utf8IriReference DocumentLocation { get; }
 
 [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

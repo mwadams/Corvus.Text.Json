@@ -35,3 +35,10 @@ The current JSON number as a [`UInt16`](https://learn.microsoft.com/dotnet/api/s
 
 This method does not parse the contents of a JSON string value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

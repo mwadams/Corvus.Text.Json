@@ -30,3 +30,10 @@ This class uses a hash-based approach to enable O(1) average-case lookups of pro
 |--------|-------------|
 | [TryGetNamedMatcher(ReadOnlySpan&lt;byte&gt;, ref T)](/api/corvus-text-json-internal-propertyschemamatchers-t.trygetnamedmatcher.html#trygetnamedmatcher-readonlyspan-byte-ref-t) | Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

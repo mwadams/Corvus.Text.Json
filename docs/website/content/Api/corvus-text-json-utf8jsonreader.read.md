@@ -29,3 +29,10 @@ True if the token was read successfully, else false.
 |-----------|-------------|
 | [`JsonException`](/api/corvus-text-json-jsonexception.html) | Thrown when an invalid JSON token is encountered according to the JSON RFC or if the current depth exceeds the recursive limit set by the max depth. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

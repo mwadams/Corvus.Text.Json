@@ -24,3 +24,10 @@ Initializes a new instance of the [`BigNumber`](/api/corvus-numerics-bignumber.h
 | `significand` | [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) | The significand. |
 | `exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The exponent (power of 10). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

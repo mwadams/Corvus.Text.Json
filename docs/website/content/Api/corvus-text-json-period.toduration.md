@@ -30,3 +30,10 @@ The duration of the period.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The month or year property in the period is non-zero. |
 | [`OverflowException`](https://learn.microsoft.com/dotnet/api/system.overflowexception) | The period doesn't have years or months, but the calculation overflows the bounds of [`Duration`](https://www.nodatime.org/3.3.x/api/NodaTime.Duration.html). In some cases this may occur even though the theoretical result would be valid due to balancing positive and negative values, but for simplicity there is no attempt to work around this - in realistic periods, it shouldn't be a problem. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

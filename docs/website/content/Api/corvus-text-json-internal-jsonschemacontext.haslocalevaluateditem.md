@@ -29,3 +29,10 @@ Determines whether a specific item at the given index has been locally evaluated
 
 `true` if the item at the specified index has been locally evaluated; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

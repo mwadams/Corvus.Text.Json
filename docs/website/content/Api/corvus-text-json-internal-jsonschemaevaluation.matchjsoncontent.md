@@ -31,3 +31,10 @@ Validates that a string value contains valid JSON content.
 
 `true` if the value is valid JSON content; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

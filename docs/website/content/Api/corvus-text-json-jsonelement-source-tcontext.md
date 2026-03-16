@@ -33,3 +33,10 @@ public readonly struct JsonElement.Source<TContext>
 |----------|-------------|
 | [implicit operator JsonElement.Source&lt;TContext&gt;(JsonElement.Source)](/api/corvus-text-json-jsonelement-source-tcontext.op-implicit.html#implicit-operator-jsonelement-source-tcontext-jsonelement-source) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

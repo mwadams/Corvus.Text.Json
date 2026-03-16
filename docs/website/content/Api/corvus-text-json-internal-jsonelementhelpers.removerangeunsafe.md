@@ -38,3 +38,10 @@ Removes a range of items from an array element.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element's [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) is not [`Array`](/api/corvus-text-json-jsonvaluekind.html#array), or the element reference is stale due to document mutations. |
 | [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | `startIndex` is negative or greater than the current array length, or `count` is negative or causes the operation to exceed the array bounds. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

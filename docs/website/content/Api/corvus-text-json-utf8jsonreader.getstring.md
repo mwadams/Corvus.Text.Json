@@ -31,3 +31,10 @@ Parses the current JSON token value from the source, unescaped, and transcoded a
 
 Returns `null` when [`TokenType`](/api/corvus-text-json-utf8jsonreader.html#tokentype) is [`Null`](/api/corvus-text-json-internal-jsontokentype.html#null).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

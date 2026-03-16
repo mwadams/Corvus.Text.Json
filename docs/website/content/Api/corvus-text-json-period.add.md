@@ -30,3 +30,10 @@ Adds two periods together, by simply adding the values for each property.
 
 The sum of the two periods. The units of the result will be the union of those in both periods.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

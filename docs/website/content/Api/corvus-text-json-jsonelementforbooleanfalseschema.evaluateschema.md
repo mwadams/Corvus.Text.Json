@@ -33,3 +33,10 @@ Evaluates this element against the boolean false schema.
 
 [`IJsonElement.EvaluateSchema`](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

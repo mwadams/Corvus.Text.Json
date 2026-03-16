@@ -21,3 +21,10 @@ Indicates that a value is the JSON value `null`.
 
 [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

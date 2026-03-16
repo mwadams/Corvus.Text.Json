@@ -52,3 +52,10 @@ A UTF-8 IRI Reference.
 | [TryFormatCanonical(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8irireference.tryformatcanonical.html#tryformatcanonical-span-byte-ref-int) | Gets the IRI reference in canonical form. |
 | [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8irireference.tryformatdisplay.html#tryformatdisplay-span-byte-ref-int) | Gets the IRI reference in canonical form for display. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

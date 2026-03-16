@@ -37,3 +37,10 @@ A mutable JSON document builder that provides functionality to construct and mod
 | [Dispose()](/api/corvus-text-json-jsondocumentbuilder-t.dispose.html#dispose) |  |
 | [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsondocumentbuilder-t.writeto.html#writeto-utf8jsonwriter) | Write the document into the provided writer as a JSON value. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

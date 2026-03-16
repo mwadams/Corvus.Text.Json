@@ -25,3 +25,10 @@ public static JsonElementForBooleanFalseSchema.Mutable From<T>(ref T instance)
 
 [`JsonElementForBooleanFalseSchema.Mutable`](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

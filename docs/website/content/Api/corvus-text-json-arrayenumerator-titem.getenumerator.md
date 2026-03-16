@@ -29,3 +29,10 @@ An [`ArrayEnumerator`](/api/corvus-text-json-arrayenumerator-titem.html) value t
 
 [`IEnumerable.GetEnumerator`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerable.getenumerator)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

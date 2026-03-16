@@ -21,3 +21,10 @@ The host and port components, including default ports.
 
 [`Utf8UriComponents`](/api/corvus-text-json-internal-utf8uricomponents.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

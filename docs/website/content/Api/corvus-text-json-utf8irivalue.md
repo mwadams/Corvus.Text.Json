@@ -31,3 +31,10 @@ This type should be used in a using declaration to ensure that the underlying me
 | [Dispose()](/api/corvus-text-json-utf8irivalue.dispose.html#dispose) | Disposes the underlying resources used to store the UTF-8 string backing the IRI value. |
 | [TryGetValue(ref T, int, ref Utf8IriValue)](/api/corvus-text-json-utf8irivalue.trygetvalue.html#trygetvalue-ref-t-int-ref-utf8irivalue) `static` | Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

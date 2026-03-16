@@ -21,3 +21,10 @@ Gets the location information for this validation result.
 
 [`ValidationResult.LocationTuple`](/api/corvus-text-json-compatibility-validationresult-locationtuple.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

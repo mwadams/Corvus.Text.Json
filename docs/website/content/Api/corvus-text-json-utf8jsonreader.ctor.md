@@ -104,3 +104,10 @@ Since this type is a ref struct, it is a stack-only type and all the limitations
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

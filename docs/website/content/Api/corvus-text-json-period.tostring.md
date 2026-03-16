@@ -23,3 +23,10 @@ Returns this string formatted according to the ISO8601 duration specification us
 
 A formatted representation of this period.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

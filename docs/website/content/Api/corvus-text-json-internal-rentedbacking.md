@@ -26,3 +26,10 @@ This is typically used as a backing field in a `[MyJsonElementType].Builder.Sour
 | [Initialize(ref RentedBacking, int, ref T, RentedBacking.Writer&lt;T&gt;)](/api/corvus-text-json-internal-rentedbacking.initialize.html#initialize-ref-rentedbacking-int-ref-t-rentedbacking-writer-t) `static` |  |
 | [Span()](/api/corvus-text-json-internal-rentedbacking.span.html#span) | Gets the written value as a span |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

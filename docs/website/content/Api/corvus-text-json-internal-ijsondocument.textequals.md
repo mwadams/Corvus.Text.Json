@@ -65,3 +65,10 @@ Determines whether the UTF-8 text at the specified index equals the specified te
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

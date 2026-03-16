@@ -31,3 +31,10 @@ Implemented by JsonElement-derived types.
 | [EvaluateSchema(IJsonSchemaResultsCollector)](/api/corvus-text-json-internal-ijsonelement.evaluateschema.html#evaluateschema-ijsonschemaresultscollector) | Evaluates the schema for this element. |
 | [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-internal-ijsonelement.writeto.html#writeto-utf8jsonwriter) | Writes this element to the specified [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -35,3 +35,10 @@ Gets the parent document and document index for a JSON element.
 
 A tuple containing the parent document and the document index.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

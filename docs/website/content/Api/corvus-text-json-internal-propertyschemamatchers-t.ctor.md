@@ -21,3 +21,10 @@ public PropertySchemaMatchers(List<ValueTuple<PropertySchemaMatchers<T>.Unescape
 |------|------|-------------|
 | `matchers` | [`List<ValueTuple<PropertySchemaMatchers<T>.UnescapedNameProvider<T>, T>>`](https://learn.microsoft.com/dotnet/api/system.collections.generic.list-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

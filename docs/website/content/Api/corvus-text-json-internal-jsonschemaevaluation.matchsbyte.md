@@ -34,3 +34,10 @@ Matches a JSON number against the SByte type constraint, validating it as an 8-b
 
 `true` if the number is a valid SByte; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

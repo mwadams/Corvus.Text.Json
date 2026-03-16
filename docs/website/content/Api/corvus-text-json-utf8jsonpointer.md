@@ -22,3 +22,10 @@ public readonly struct Utf8JsonPointer
 | [TryGetLineAndOffset(ref T, ref int, ref int, ref long)](/api/corvus-text-json-utf8jsonpointer.trygetlineandoffset.html#trygetlineandoffset-ref-t-ref-int-ref-int-ref-long) | Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the 1-based line number and character offset of the target element in the original source document. |
 | [TryResolve(ref T, ref TResult)](/api/corvus-text-json-utf8jsonpointer.tryresolve.html#tryresolve-ref-t-ref-tresult) | Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the value at that path if it exists. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

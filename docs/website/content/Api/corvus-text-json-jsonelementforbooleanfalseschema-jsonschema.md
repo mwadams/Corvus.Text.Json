@@ -33,3 +33,10 @@ public static class JsonElementForBooleanFalseSchema.JsonSchema
 | [SchemaLocationProvider](/api/corvus-text-json-jsonelementforbooleanfalseschema-jsonschema.schemalocationprovider.html) `static` | [`JsonSchemaPathProvider`](/api/corvus-text-json-jsonschemapathprovider.html) |  |
 | [SchemaLocation](/api/corvus-text-json-jsonelementforbooleanfalseschema-jsonschema.schemalocation.html) `static` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

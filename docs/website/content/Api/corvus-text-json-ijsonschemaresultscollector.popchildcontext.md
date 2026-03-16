@@ -27,3 +27,10 @@ Abandons the last child context.
 
 This will not update the match state, and allows the collector to release any resources associated with the child context.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

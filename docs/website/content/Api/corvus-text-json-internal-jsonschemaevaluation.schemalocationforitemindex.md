@@ -32,3 +32,10 @@ Writes the schema location for an item at a specific index in an array.
 
 `true` if the schema location was successfully written; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

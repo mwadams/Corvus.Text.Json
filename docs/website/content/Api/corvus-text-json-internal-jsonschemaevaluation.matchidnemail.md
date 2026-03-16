@@ -31,3 +31,10 @@ Validates that a string value is a valid internationalized domain name (IDN) ema
 
 `true` if the value is a valid IDN email address; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

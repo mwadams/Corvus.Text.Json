@@ -31,3 +31,10 @@ public string ToString(int index, string format, IFormatProvider formatProvider)
 
 [`IJsonDocument.ToString`](/api/corvus-text-json-internal-ijsondocument.tostring.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

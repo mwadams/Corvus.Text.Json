@@ -39,3 +39,10 @@ A new child context initialized for the specified element.
 
 This is the unescaped variant of [`PushChildContext`](/api/corvus-text-json-internal-jsonschemacontext.html#pushchildcontext). Use this method when the property name is already in unescaped form to avoid unnecessary processing overhead. The context lifecycle and buffer management behavior is identical to the escaped variant. The only difference is that the property name is passed directly to the results collector without additional escaping processing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

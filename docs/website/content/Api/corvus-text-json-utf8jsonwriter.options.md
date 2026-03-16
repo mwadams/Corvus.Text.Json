@@ -21,3 +21,10 @@ Gets the custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/cor
 
 [`JsonWriterOptions`](/api/corvus-text-json-jsonwriteroptions.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

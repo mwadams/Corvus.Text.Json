@@ -21,3 +21,10 @@ Disposes the workspace. If the workspace was rented from the cache, returns it; 
 
 [`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

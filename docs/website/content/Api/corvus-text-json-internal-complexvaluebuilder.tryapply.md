@@ -39,3 +39,10 @@ Tries to apply an object instance value to the document.
 
 If the value is a JSON object, its properties (if any) will be set on the current document, replacing any existing values if present, and the method returns `true`. Otherwise, no changes are made, and the method returns `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

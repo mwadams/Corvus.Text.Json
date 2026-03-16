@@ -32,3 +32,10 @@ Validates that a contains count does not equal the given value.
 
 `true` if the value is not equal to the given value; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

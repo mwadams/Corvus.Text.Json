@@ -25,3 +25,10 @@ Inserts a value into the document and disposes the provided [`ComplexValueBuilde
 | `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index at which to insert. |
 | `cvb` | [`ref ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) | The [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) to insert and dispose. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

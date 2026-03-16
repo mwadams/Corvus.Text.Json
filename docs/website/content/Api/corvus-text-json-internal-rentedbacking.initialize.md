@@ -24,3 +24,10 @@ public static void Initialize<T>(ref RentedBacking backing, int minimumLength, r
 | `value` | `ref T` |  |
 | `writer` | [`RentedBacking.Writer<T>`](/api/corvus-text-json-internal-rentedbacking-writer-t.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

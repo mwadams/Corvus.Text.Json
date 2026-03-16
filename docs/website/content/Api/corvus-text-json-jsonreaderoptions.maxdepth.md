@@ -31,3 +31,10 @@ Gets or sets the maximum depth allowed when reading JSON, with the default (i.e.
 
 Reading past this depth will throw a [`JsonException`](/api/corvus-text-json-jsonexception.html).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

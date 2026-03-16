@@ -30,3 +30,10 @@ Tries to write a message indicating that the format was not recognized.
 
 `true` if the operation succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

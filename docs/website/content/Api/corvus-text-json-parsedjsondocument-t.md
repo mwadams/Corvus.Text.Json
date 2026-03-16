@@ -44,3 +44,10 @@ This class utilizes resources from pooled memory to minimize the garbage collect
 | [TryParseValue(ref Utf8JsonReader, ref ParsedJsonDocument&lt;T&gt;)](/api/corvus-text-json-parsedjsondocument-t.tryparsevalue.html#tryparsevalue-ref-utf8jsonreader-ref-parsedjsondocument-t) `static` | Attempts to parse one JSON value (including objects or arrays) from the provided reader. |
 | [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-parsedjsondocument-t.writeto.html#writeto-utf8jsonwriter) | Write the document into the provided writer as a JSON value. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

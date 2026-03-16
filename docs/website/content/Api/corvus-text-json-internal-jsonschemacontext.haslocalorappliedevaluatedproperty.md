@@ -29,3 +29,10 @@ Determines whether a specific property at the given index has been either locall
 
 `true` if the property at the specified index has been locally or applied evaluated; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

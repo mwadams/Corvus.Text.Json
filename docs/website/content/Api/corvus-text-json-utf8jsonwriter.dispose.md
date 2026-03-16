@@ -25,3 +25,10 @@ Commits any left over JSON text that has not yet been flushed and releases all r
 
 In the case of IBufferWriter, this advances the underlying [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1) based on what has been written so far. In the case of Stream, this writes the data to the stream and flushes it. The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance cannot be re-used after disposing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

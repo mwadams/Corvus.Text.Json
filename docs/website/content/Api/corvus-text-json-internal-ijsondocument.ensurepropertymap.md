@@ -23,3 +23,10 @@ Ensures the property map is available for the specified index.
 |------|------|-------------|
 | `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the element. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

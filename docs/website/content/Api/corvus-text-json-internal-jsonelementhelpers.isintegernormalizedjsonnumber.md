@@ -29,3 +29,10 @@ Determines if a JSON number is an integer.
 
 True if the normalized JSON number represents an integer.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

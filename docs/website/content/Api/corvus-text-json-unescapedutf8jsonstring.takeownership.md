@@ -29,3 +29,10 @@ Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/syste
 
 The UTF-8 memory representing the rented bytes.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

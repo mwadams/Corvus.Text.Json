@@ -37,3 +37,10 @@ Try to resolve the path specified by this JSON Pointer against the provided JSON
 
 `true` if the value was resolved successfully; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

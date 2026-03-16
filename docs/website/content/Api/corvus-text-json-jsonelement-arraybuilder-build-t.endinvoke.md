@@ -23,3 +23,10 @@ public virtual void EndInvoke(ref T context, ref JsonElement.ArrayBuilder builde
 | `builder` | [`ref JsonElement.ArrayBuilder`](/api/corvus-text-json-jsonelement-arraybuilder.html) |  |
 | `result` | [`IAsyncResult`](https://learn.microsoft.com/dotnet/api/system.iasyncresult) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

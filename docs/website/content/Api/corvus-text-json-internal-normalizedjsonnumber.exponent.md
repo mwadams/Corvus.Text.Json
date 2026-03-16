@@ -21,3 +21,10 @@ The exponent to apply after concatenating the integral and fractional parts.
 
 [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

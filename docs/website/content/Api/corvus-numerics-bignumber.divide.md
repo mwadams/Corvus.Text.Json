@@ -38,3 +38,10 @@ The quotient.
 | [`DivideByZeroException`](https://learn.microsoft.com/dotnet/api/system.dividebyzeroexception) | Thrown when divisor is zero. |
 | [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when precision is negative. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

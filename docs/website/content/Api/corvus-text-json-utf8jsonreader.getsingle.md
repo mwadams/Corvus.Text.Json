@@ -28,3 +28,10 @@ Parses the current JSON token value from the source as a [`Single`](https://lear
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if trying to get the value of a JSON token that is not a [`Number`](/api/corvus-text-json-internal-jsontokentype.html#number). |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | On any framework that is not .NET Core 3.0 or higher, thrown if the JSON token value represents a number less than [`MinValue`](https://learn.microsoft.com/dotnet/api/system.single.minvalue#minvalue) or greater than [`MaxValue`](https://learn.microsoft.com/dotnet/api/system.single.maxvalue#maxvalue). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

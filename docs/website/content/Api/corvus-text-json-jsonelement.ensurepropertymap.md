@@ -21,3 +21,10 @@ Ensures that a fast-lookup property map is created for this element.
 
 This enables dictionary-based lookup of property values in the element. If the cost of lookups exceeds the cost of building the map, this can provide substantial performance improvements. It is a zero-allocation operation.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

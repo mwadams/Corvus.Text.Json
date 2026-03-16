@@ -31,3 +31,10 @@ Matches a JSON token type against the "number" type constraint.
 
 `true` if the token type is a number; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

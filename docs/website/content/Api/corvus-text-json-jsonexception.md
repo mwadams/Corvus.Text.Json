@@ -33,3 +33,10 @@ Represents errors that occur during JSON parsing, reading, or writing operations
 | [Message](/api/corvus-text-json-jsonexception.message.html) | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | Gets a message that describes the current exception. |
 | [Path](/api/corvus-text-json-jsonexception.path.html) | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | Gets the path within the JSON where the exception was encountered. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

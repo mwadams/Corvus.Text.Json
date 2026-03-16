@@ -21,3 +21,10 @@ The URI is represented with URI escaping applied.
 
 [`Utf8UriFormat`](/api/corvus-text-json-internal-utf8uriformat.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

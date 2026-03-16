@@ -26,3 +26,10 @@ public static JsonSchemaResultsCollector Create(JsonSchemaResultsLevel level, in
 
 [`JsonSchemaResultsCollector`](/api/corvus-text-json-jsonschemaresultscollector.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

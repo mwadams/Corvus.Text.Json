@@ -21,3 +21,10 @@ Gets the significand of the number.
 
 [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

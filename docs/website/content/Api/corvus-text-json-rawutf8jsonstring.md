@@ -38,3 +38,10 @@ This may use a rented buffer to back the string, so it is disposable.
 | [Dispose()](/api/corvus-text-json-rawutf8jsonstring.dispose.html#dispose) | Releases any rented array pool bytes and clears sensitive data. |
 | [TakeOwnership(ref byte\[\])](/api/corvus-text-json-rawutf8jsonstring.takeownership.html#takeownership-ref-byte) | Takes ownership of the underlying memory and any extra rented array pool bytes. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

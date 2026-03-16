@@ -17,3 +17,10 @@ public void StartArray()
 
 Starts a new JSON array in the builder.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

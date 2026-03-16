@@ -21,3 +21,10 @@ Represents a base64-encoded string.
 
 [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

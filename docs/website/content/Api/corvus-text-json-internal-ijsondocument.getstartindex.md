@@ -29,3 +29,10 @@ Gets the start index of the element from the end index.
 
 The start index of the element.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

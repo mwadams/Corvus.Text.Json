@@ -30,3 +30,10 @@ Rents a UTF-8 JSON writer and associated buffer writer from the pool.
 
 A rented UTF-8 JSON writer configured with the workspace options.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

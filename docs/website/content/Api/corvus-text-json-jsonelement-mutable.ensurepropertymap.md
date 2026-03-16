@@ -21,3 +21,10 @@ public static void EnsurePropertyMap(ref JsonElement.Mutable element)
 |------|------|-------------|
 | `element` | [`ref JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

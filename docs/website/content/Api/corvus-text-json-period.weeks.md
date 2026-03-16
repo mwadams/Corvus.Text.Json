@@ -31,3 +31,10 @@ The number of weeks within this period.
 
 This property returns zero both when the property has been explicitly set to zero and when the period does not contain this property.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

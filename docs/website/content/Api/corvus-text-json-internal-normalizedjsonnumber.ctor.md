@@ -24,3 +24,10 @@ public NormalizedJsonNumber(bool isNegative, byte[] integral, byte[] fractional,
 | `fractional` | [`byte[]`](https://learn.microsoft.com/dotnet/api/system.byte) |  |
 | `exponent` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

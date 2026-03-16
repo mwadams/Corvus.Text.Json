@@ -36,3 +36,10 @@ Creates an enumerator for the properties of a JSON object.
 
 An [`ObjectEnumerator`](/api/corvus-text-json-objectenumerator-tvalue.html) for the object.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

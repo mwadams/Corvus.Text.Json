@@ -33,3 +33,10 @@ The mutable root element of the document.
 |-----------|-------------|
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | Thrown when the document has been disposed. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

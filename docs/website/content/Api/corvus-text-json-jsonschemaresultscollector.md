@@ -26,3 +26,10 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector, ID
 | [EnumerateResults()](/api/corvus-text-json-jsonschemaresultscollector.enumerateresults.html#enumerateresults) |  |
 | [GetResultCount()](/api/corvus-text-json-jsonschemaresultscollector.getresultcount.html#getresultcount) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -59,3 +59,10 @@ This is used when evaluating a schema of the form `true` or `false`.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -30,3 +30,10 @@ A parser for a json period.
 
 A period builder parsed from the read only span.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -31,3 +31,10 @@ Provides an enumerator and enumerable for iterating over the elements of a JSON 
 | [MoveNext()](/api/corvus-text-json-internal-arrayreverseenumerator.movenext.html#movenext) | Advances the enumerator to the next element of the collection. |
 | [Reset()](/api/corvus-text-json-internal-arrayreverseenumerator.reset.html#reset) | Sets the enumerator to its initial position, which is before the first element in the collection. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

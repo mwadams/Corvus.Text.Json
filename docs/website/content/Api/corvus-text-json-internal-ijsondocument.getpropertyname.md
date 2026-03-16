@@ -29,3 +29,10 @@ Gets the property name as a JSON element.
 
 The raw property name as a byte span.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

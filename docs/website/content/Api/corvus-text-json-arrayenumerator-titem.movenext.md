@@ -27,3 +27,10 @@ Advances the enumerator to the next element of the collection.
 
 [`IEnumerator.MoveNext`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.movenext)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

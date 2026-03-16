@@ -32,3 +32,10 @@ Parses a date string in ISO 8601 format (YYYY-MM-DD) and extracts the year, mont
 
 `true` if the date was successfully parsed; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

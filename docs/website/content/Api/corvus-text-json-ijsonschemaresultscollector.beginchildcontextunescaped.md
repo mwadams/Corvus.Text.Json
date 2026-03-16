@@ -36,3 +36,10 @@ The sequence number of the child context.
 
 Begins evaluation of a schema in a child context. The context may later be committed with [`CommitChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#commitchildcontext) or abandoned with [`PopChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#popchildcontext).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

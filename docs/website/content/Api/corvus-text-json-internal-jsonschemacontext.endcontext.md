@@ -21,3 +21,10 @@ Ends the root evaluation context, committing any pending results to the results 
 
 This method must be called after the root `Evaluate` completes to ensure that results written directly at the root level (e.g., `required` keyword failures) are committed to the results collector. Without this call, such results are orphaned because [`BeginContext`](/api/corvus-text-json-internal-jsonschemacontext.html#begincontext) opens a child context on the collector that is never otherwise committed.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

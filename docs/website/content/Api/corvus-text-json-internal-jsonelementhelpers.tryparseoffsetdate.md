@@ -30,3 +30,10 @@ Parse a date time from a string for the `date-time` format.
 
 `true` if the date could be parsed.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

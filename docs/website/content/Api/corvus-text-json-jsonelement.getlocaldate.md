@@ -35,3 +35,10 @@ The value of the element as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/N
 
 This method does not create a LocalDate representation of values other than JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

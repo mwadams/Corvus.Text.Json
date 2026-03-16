@@ -23,3 +23,10 @@ Advances the enumerator to the next element of the collection.
 
 `true` if the enumerator was successfully advanced to the next element; `false` if the enumerator has passed the end of the collection.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

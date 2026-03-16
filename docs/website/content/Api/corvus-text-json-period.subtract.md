@@ -30,3 +30,10 @@ Subtracts one period from another, by simply subtracting each property value.
 
 The result of subtracting all the values in the second operand from the values in the first. The units of the result will be the union of both periods, even if the subtraction caused some properties to become zero (so "2 weeks, 1 days" minus "2 weeks" is "zero weeks, 1 days", not "1 days").
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

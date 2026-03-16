@@ -22,3 +22,10 @@ Defines the kind of URI, controlling whether absolute or relative URIs are used.
 | [Absolute](/api/corvus-text-json-internal-utf8urikind.absolute.html) `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is an absolute URI. |
 | [Relative](/api/corvus-text-json-internal-utf8urikind.relative.html) `static` | [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html) | The URI is a relative URI. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

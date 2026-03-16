@@ -61,3 +61,10 @@ public JsonElement.Source(JsonElement.Source source)
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

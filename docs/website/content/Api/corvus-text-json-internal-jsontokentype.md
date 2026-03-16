@@ -31,3 +31,10 @@ This enum defines the various JSON tokens that make up a JSON text and is used b
 | [False](/api/corvus-text-json-internal-jsontokentype.false.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `false`. |
 | [Null](/api/corvus-text-json-internal-jsontokentype.null.html) `static` | [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html) | Indicates that the token type is the JSON literal `null`. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

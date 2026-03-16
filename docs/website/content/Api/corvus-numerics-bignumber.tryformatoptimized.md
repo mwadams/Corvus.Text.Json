@@ -32,3 +32,10 @@ Tries to format this instance into the provided UTF-16 span with zero allocation
 
 `true` if formatting succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

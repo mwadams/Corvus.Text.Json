@@ -33,3 +33,10 @@ The original input data backing this value, returning it as a [`String`](https:/
 
 Note that this method allocates.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

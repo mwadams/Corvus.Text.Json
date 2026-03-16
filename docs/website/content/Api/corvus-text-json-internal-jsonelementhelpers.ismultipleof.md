@@ -76,3 +76,10 @@ We do not need to pass the sign of the JSON number as it is irrelevant to the ca
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

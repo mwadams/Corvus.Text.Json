@@ -31,3 +31,10 @@ Creates a message indicating that a required property is present.
 
 `true` if the message was successfully written; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

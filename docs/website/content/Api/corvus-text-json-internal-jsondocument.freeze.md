@@ -21,3 +21,10 @@ Makes the document immutable.
 
 You can only create a new document from this document once it is frozen. Immutable documents (like [`ParsedJsonDocument`](/api/corvus-text-json-parsedjsondocument-t.html) are frozen once they are created, and there is no need to call freeze on them. Mutable documents (like [`JsonDocumentBuilder`](/api/corvus-text-json-jsondocumentbuilder-t.html) must be frozen before you can create a child document from one of its elements. Once a mutable document is frozen, any methods that would modify the document will throw.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

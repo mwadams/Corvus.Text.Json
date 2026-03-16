@@ -34,3 +34,10 @@ Matches a JSON number against the Single type constraint, validating it as a sin
 
 `true` if the number is a valid Single; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -473,6 +473,8 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             }
             sb.AppendLine();
         }
+
+        WriteAppliesTo(sb);
     }
 
     /// <summary>
@@ -500,6 +502,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
         if (members.Count == 1)
         {
             WriteMemberDetail(sb, members[0], 2);
+            WriteAppliesTo(sb);
             return;
         }
 
@@ -523,6 +526,22 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             sb.AppendLine("---");
             sb.AppendLine();
         }
+
+        WriteAppliesTo(sb);
+    }
+
+    /// <summary>
+    /// Writes the "Applies To" section showing the target frameworks.
+    /// </summary>
+    private static void WriteAppliesTo(StringBuilder sb)
+    {
+        sb.AppendLine("## Applies To");
+        sb.AppendLine();
+        sb.AppendLine("| Product | Versions |");
+        sb.AppendLine("|---------|----------|");
+        sb.AppendLine("| .NET | 8, 9, 10 |");
+        sb.AppendLine("| .NET Standard | 2.0 |");
+        sb.AppendLine();
     }
 
     /// <summary>

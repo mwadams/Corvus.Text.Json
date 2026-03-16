@@ -53,3 +53,10 @@ A UTF-8 IRI.
 | [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8iri.tryformatdisplay.html#tryformatdisplay-span-byte-ref-int) | Gets the IRI in canonical form for display. |
 | [TryMakeRelative](/api/corvus-text-json-utf8iri.trymakerelative.html) | Makes a relative IRI reference from the current (base) IRI to the target IRI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target IRI is returned. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -26,3 +26,10 @@ public virtual TResult Invoke(ref TMatch match, ref TContext context)
 
 `TResult`
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

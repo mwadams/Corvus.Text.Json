@@ -34,3 +34,10 @@ Matches a JSON number against the Decimal type constraint, validating it as a de
 
 `true` if the number is a valid Decimal; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -41,3 +41,10 @@ public readonly struct JsonElementForBooleanFalseSchema.Mutable : IMutableJsonEl
 | [implicit operator JsonElementForBooleanFalseSchema(JsonElementForBooleanFalseSchema.Mutable)](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-implicit.html#implicit-operator-jsonelementforbooleanfalseschema-jsonelementforbooleanfalseschema-mutable) |  |
 | [Inequality](/api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.op-inequality.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

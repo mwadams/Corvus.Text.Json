@@ -39,3 +39,10 @@ Begins a new JSON schema evaluation context for the specified document.
 
 A new [`JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) for the evaluation.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

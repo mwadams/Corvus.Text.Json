@@ -29,3 +29,10 @@ Tries to get the value as a boolean
 
 `true` if the value was a boolean, otherwise false.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

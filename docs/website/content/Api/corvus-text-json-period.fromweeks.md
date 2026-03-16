@@ -29,3 +29,10 @@ Creates a period representing the specified number of weeks.
 
 A period consisting of the given number of weeks.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

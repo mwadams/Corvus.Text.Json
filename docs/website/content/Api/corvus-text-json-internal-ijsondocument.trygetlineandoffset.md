@@ -32,3 +32,10 @@ Tries to get the line number and character offset in the original source documen
 
 `true` if the line and offset were successfully determined; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -21,3 +21,10 @@ Allow comments within the JSON input and treat them as valid tokens. While readi
 
 [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

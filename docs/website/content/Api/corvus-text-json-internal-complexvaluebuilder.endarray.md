@@ -17,3 +17,10 @@ public void EndArray()
 
 Ends the current JSON array, finalizing its structure in the builder.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -30,3 +30,10 @@ Provides polyfills for Corvus.JsonSchema API compatibility.
 | [Parse](/api/corvus-text-json-compatibility-polyfills.parse.html) `static` |  |
 | [Validate(T, ref ValidationContext, ValidationLevel)](/api/corvus-text-json-compatibility-polyfills.validate.html#validate-t-ref-validationcontext-validationlevel) `static` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

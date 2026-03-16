@@ -64,3 +64,10 @@ Determines whether the specified object is equal to this instance.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

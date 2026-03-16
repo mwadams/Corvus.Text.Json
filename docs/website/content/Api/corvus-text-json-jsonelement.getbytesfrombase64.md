@@ -35,3 +35,10 @@ The value decode to bytes.
 
 This method does not create a byte[] representation of values other than Base64 encoded JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

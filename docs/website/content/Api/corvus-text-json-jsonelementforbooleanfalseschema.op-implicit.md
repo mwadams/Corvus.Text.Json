@@ -35,3 +35,10 @@ The integer value of the JSON element.
 |-----------|-------------|
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | The JSON element cannot be converted to an integer. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

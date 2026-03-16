@@ -30,3 +30,10 @@ Creates a new [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvalu
 
 A new [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

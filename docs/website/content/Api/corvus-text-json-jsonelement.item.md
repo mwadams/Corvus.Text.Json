@@ -134,3 +134,10 @@ The value of the property with the given name, or a default [`JsonElement`](/api
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

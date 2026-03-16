@@ -131,3 +131,10 @@ When writing untrused JSON values, do not set `skipInputValidation` to `true` as
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

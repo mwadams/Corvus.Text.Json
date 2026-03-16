@@ -28,3 +28,10 @@ Parses the current JSON token value from the source and decodes the Base64 encod
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if trying to get the value of a JSON token that is not a [`String`](/api/corvus-text-json-internal-jsontokentype.html#string). |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | The JSON string contains data outside of the expected Base64 range, or if it contains invalid/more than two padding characters, or is incomplete (i.e. the JSON string length is not a multiple of 4). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

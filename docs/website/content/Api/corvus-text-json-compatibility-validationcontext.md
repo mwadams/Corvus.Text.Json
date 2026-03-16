@@ -24,3 +24,10 @@ Represents the context for a JSON schema validation operation, including validit
 | [InvalidContext](/api/corvus-text-json-compatibility-validationcontext.invalidcontext.html) `static` | [`ValidationContext`](/api/corvus-text-json-compatibility-validationcontext.html) | Gets an invalid context. |
 | [ValidContext](/api/corvus-text-json-compatibility-validationcontext.validcontext.html) `static` | [`ValidationContext`](/api/corvus-text-json-compatibility-validationcontext.html) | Gets a valid context. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

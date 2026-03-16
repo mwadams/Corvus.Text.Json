@@ -21,3 +21,10 @@ public virtual void Invoke(ref ComplexValueBuilder builder)
 |------|------|-------------|
 | `builder` | [`ref ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

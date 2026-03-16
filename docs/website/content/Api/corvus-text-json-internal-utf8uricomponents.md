@@ -36,3 +36,10 @@ Specifies the parts of a URI that should be included when retrieving URI compone
 | [HttpRequestUrl](/api/corvus-text-json-internal-utf8uricomponents.httprequesturl.html) `static` | [`Utf8UriComponents`](/api/corvus-text-json-internal-utf8uricomponents.html) | The components typically used in HTTP request URLs. |
 | [PathAndQuery](/api/corvus-text-json-internal-utf8uricomponents.pathandquery.html) `static` | [`Utf8UriComponents`](/api/corvus-text-json-internal-utf8uricomponents.html) | The path and query components. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

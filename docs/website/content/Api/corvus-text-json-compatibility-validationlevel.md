@@ -23,3 +23,10 @@ The validation level.
 | [Detailed](/api/corvus-text-json-compatibility-validationlevel.detailed.html) `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.3. Detailed. |
 | [Verbose](/api/corvus-text-json-compatibility-validationlevel.verbose.html) `static` | [`ValidationLevel`](/api/corvus-text-json-compatibility-validationlevel.html) | 10.4.4. Verbose. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

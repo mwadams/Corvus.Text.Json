@@ -34,3 +34,10 @@ Provides a message for a JSON Schema validation result, using a context value.
 | [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
 | [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemamessageprovider-tcontext.invoke.html#invoke-tcontext-span-byte-ref-int) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -31,3 +31,10 @@ Validates that a string value conforms to the ISO 8601 offset date-time format.
 
 `true` if the value is a valid ISO 8601 offset date-time; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -35,3 +35,10 @@ The number of Unicode characters in the string.
 |-----------|-------------|
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the span contains invalid UTF-8 sequences. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

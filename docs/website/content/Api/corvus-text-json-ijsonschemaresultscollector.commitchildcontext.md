@@ -63,3 +63,10 @@ This allows the collector to update the match state, and commit any resources as
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

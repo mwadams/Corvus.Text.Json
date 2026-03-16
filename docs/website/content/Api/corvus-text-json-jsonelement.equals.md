@@ -66,3 +66,10 @@ Determines whether the current JsonElement is equal to another JsonElement-like 
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -21,3 +21,10 @@ Gets the number of members (properties or items) added to the current object or 
 
 [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

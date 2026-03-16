@@ -25,3 +25,10 @@ Returns the index that the last processed JSON token starts at within the given 
 
 For JSON strings (including property names), this points to before the start quote. For comments, this points to before the first comment delimiter (i.e. '/').
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

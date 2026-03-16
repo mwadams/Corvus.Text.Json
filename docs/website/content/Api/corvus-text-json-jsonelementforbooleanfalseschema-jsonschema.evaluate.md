@@ -52,3 +52,10 @@ public static bool Evaluate(IJsonDocument parentDocument, int parentIndex, IJson
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

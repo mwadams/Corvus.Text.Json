@@ -29,3 +29,10 @@ Gets the JSON token type for the specified index.
 
 The JSON token type.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

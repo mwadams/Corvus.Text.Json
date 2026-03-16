@@ -68,3 +68,10 @@ A value that indicates the relative order of the values being compared.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

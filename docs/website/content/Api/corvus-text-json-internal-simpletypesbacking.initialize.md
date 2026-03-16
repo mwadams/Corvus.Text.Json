@@ -23,3 +23,10 @@ public static void Initialize<T>(ref SimpleTypesBacking backing, ref T value, Si
 | `value` | `ref T` |  |
 | `writer` | [`SimpleTypesBacking.Writer<T>`](/api/corvus-text-json-internal-simpletypesbacking-writer-t.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

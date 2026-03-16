@@ -91,3 +91,10 @@ The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will continue 
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

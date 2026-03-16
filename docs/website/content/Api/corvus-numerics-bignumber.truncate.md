@@ -29,3 +29,10 @@ Truncates a value to an integer by removing the fractional part.
 
 The truncated value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

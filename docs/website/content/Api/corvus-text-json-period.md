@@ -75,3 +75,10 @@ A [`Period`](/api/corvus-text-json-period.html) contains a set of properties suc
 | [operator !=(Period, Period)](/api/corvus-text-json-period.op-inequality.html#operator-period-period) | Implements the operator != (inequality). See the type documentation for a description of equality semantics. |
 | [operator -(Period, Period)](/api/corvus-text-json-period.op-subtraction.html#operator-period-period) | Subtracts one period from another, by simply subtracting each property value. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

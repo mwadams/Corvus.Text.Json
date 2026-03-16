@@ -27,3 +27,10 @@ public readonly struct JsonElement.ObjectBuilder
 | [RemoveProperty](/api/corvus-text-json-jsonelement-objectbuilder.removeproperty.html) |  |
 | [TryApply(ref TApplicator)](/api/corvus-text-json-jsonelement-objectbuilder.tryapply.html#tryapply-ref-tapplicator) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

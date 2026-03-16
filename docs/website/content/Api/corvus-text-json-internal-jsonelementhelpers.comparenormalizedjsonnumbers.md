@@ -36,3 +36,10 @@ Compares two normalized JSON numbers for equality.
 
 -1 if the LHS is less than the RHS, 0 if the are equal, and 1 if the LHS is greater than the RHS.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

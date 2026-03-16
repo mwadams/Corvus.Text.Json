@@ -23,3 +23,10 @@ Records the evaluation of a boolean schema.
 |------|------|-------------|
 | `isMatch` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | A value indicating whether the boolean schema matched. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -50,3 +50,10 @@ Provides a high-performance, low-allocation builder for constructing complex JSO
 | [StartProperty](/api/corvus-text-json-internal-complexvaluebuilder.startproperty.html) | Add a property name to the current object. |
 | [TryApply(ref T)](/api/corvus-text-json-internal-complexvaluebuilder.tryapply.html#tryapply-ref-t) | Tries to apply an object instance value to the document. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

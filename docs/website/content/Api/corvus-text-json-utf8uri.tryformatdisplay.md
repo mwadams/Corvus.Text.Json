@@ -30,3 +30,10 @@ Gets the URI in canonical form for display.
 
 `true` if the result was successfully written to the buffer; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

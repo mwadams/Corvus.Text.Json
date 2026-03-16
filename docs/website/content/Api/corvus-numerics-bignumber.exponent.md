@@ -21,3 +21,10 @@ Gets the exponent (power of 10) of the number.
 
 [`int`](https://learn.microsoft.com/dotnet/api/system.int32)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

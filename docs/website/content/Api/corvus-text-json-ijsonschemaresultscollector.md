@@ -32,3 +32,10 @@ Implemented by types that accumulate the results of a JSON Schema evaluation.
 | [IgnoredKeyword](/api/corvus-text-json-ijsonschemaresultscollector.ignoredkeyword.html) | Indicates that a schema keyword was ignored. |
 | [PopChildContext(int)](/api/corvus-text-json-ijsonschemaresultscollector.popchildcontext.html#popchildcontext-int) | Abandons the last child context. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

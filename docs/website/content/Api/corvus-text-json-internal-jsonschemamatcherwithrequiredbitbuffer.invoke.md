@@ -24,3 +24,10 @@ public virtual void Invoke(IJsonDocument parentDocument, int parentDocumentIndex
 | `context` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) |  |
 | `requiredBitBuffer` | [`Span<int>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

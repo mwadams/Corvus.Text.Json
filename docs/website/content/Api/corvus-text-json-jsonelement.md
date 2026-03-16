@@ -106,3 +106,10 @@ Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json
 | [operator ==(JsonElement, JsonElement)](/api/corvus-text-json-jsonelement.op-equality.html#operator-jsonelement-jsonelement) | Compares two JsonElement values for equality. |
 | [operator !=(JsonElement, JsonElement)](/api/corvus-text-json-jsonelement.op-inequality.html#operator-jsonelement-jsonelement) | Compares two JsonElement values for inequality. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -19,3 +19,10 @@ public void Reset()
 
 [`IEnumerator.Reset`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.reset)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

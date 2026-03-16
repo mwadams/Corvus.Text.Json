@@ -64,3 +64,10 @@ Makes a relative IRI reference from the current (base) IRI to the target URI. If
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

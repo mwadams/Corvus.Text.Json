@@ -35,3 +35,10 @@ public sealed class IdnMapping
 | [GetHashCode()](/api/corvus-globalization-idnmapping.gethashcode.html#gethashcode) |  |
 | [GetUnicode](/api/corvus-globalization-idnmapping.getunicode.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

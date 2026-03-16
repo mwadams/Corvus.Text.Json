@@ -71,3 +71,10 @@ This method returns `false` when the backing document does not retain the origin
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

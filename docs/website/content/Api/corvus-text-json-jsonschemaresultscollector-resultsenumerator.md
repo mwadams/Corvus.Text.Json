@@ -27,3 +27,10 @@ public readonly struct JsonSchemaResultsCollector.ResultsEnumerator : IEnumerabl
 | [MoveNext()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.movenext.html#movenext) |  |
 | [Reset()](/api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.reset.html#reset) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

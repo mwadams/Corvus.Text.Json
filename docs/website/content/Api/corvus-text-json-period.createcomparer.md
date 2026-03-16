@@ -33,3 +33,10 @@ The new comparer.
 
 Certain periods can't naturally be compared without more context - how "one month" compares to "30 days" depends on where you start. In order to compare two periods, the returned comparer effectively adds both periods to the "base" specified by `baseDateTime` and compares the results. In some cases this arithmetic isn't actually required - when two periods can be converted to durations, the comparer uses that conversion for efficiency.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

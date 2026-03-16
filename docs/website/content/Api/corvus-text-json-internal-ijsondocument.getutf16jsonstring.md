@@ -34,3 +34,10 @@ The UTF-16 JSON string value.
 
 You are permitted to pass [`None`](/api/corvus-text-json-internal-jsontokentype.html#none) as the `expectedType` which will check both String and PropertyName as valid types.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

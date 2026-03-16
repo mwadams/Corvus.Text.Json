@@ -68,3 +68,10 @@ Formats the value to the provided destination UTF-8 span according to the specif
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

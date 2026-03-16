@@ -31,3 +31,10 @@ Parses a JSON number into its component parts using normal-form decimal represen
 
 The returned components use a normal-form decimal representation: Number := sign * <integral + fractional> * 10^exponent where integral and fractional are sequences of digits whose concatenation represents the significand of the number without leading or trailing zeros. Two such normal-form numbers are treated as equal if and only if they have equal signs, significands, and exponents.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

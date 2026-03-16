@@ -40,3 +40,10 @@ Attempts to represent the current JSON string as a [`OffsetDate`](https://www.no
 
 This method does not create a OffsetDate representation of values other than JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

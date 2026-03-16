@@ -17,3 +17,10 @@ public void AddItemNull()
 
 Adds a null item to the current array.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

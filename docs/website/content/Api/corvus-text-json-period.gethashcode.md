@@ -23,3 +23,10 @@ Returns the hash code for this period, consistent with [`Equals`](/api/corvus-te
 
 The hash code for this period.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

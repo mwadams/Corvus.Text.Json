@@ -28,3 +28,10 @@ Specifies the data type used in code generation scenarios.
 | [Guid](/api/corvus-text-json-internal-codegendatatype.guid.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a GUID value. |
 | [Version](/api/corvus-text-json-internal-codegendatatype.version.html) `static` | [`CodeGenDataType`](/api/corvus-text-json-internal-codegendatatype.html) | Represents a version value. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

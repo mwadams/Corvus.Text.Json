@@ -26,3 +26,10 @@ public delegate SimpleTypesBacking.Writer<T> : MulticastDelegate, ICloneable, IS
 | [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
 | [Invoke(T, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-internal-simpletypesbacking-writer-t.invoke.html#invoke-t-span-byte-ref-int) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

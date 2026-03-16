@@ -26,3 +26,10 @@ public delegate JsonElement.ObjectBuilder.Build : MulticastDelegate, ICloneable,
 | [EndInvoke(ref JsonElement.ObjectBuilder, IAsyncResult)](/api/corvus-text-json-jsonelement-objectbuilder-build.endinvoke.html#endinvoke-ref-jsonelement-objectbuilder-iasyncresult) |  |
 | [Invoke(ref JsonElement.ObjectBuilder)](/api/corvus-text-json-jsonelement-objectbuilder-build.invoke.html#invoke-ref-jsonelement-objectbuilder) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

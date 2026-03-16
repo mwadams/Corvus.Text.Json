@@ -29,3 +29,10 @@ Gets the number of properties for the element at the specified index.
 
 The number of properties.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

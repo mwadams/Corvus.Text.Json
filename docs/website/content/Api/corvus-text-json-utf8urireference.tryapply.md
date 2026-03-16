@@ -64,3 +64,10 @@ Applies the given URI reference to the current (base) URI and writes the result 
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

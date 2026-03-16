@@ -28,3 +28,10 @@ public enum JsonRegexOptions : IComparable, ISpanFormattable, IFormattable, ICon
 | [CultureInvariant](/api/corvus-text-json-internal-jsonregexoptions.cultureinvariant.html) `static` | [`JsonRegexOptions`](/api/corvus-text-json-internal-jsonregexoptions.html) | Ignore cultural differences in language. |
 | [NonBacktracking](/api/corvus-text-json-internal-jsonregexoptions.nonbacktracking.html) `static` | [`JsonRegexOptions`](/api/corvus-text-json-internal-jsonregexoptions.html) | Enable matching using an approach that avoids backtracking and guarantees linear-time processing in the length of the input. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -29,3 +29,10 @@ Provides helper methods for throwing exceptions in code generation and runtime s
 |-------|------|-------------|
 | [ExceptionSourceValueToRethrowAsJsonException](/api/corvus-text-json-internal-codegenthrowhelper.exceptionsourcevaluetorethrowasjsonexception.html) `static` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

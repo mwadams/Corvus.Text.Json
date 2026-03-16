@@ -18,3 +18,10 @@ Represents the result of a single JSON schema validation, including validity, me
 | [Message](/api/corvus-text-json-compatibility-validationresult.message.html) | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | Gets the validation message for this result, if any. |
 | [Valid](/api/corvus-text-json-compatibility-validationresult.valid.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Gets a value indicating whether the validation result is valid. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

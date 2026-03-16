@@ -35,3 +35,10 @@ Creates a new [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonele
 
 A new [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

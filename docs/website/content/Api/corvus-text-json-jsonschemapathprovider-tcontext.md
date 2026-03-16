@@ -34,3 +34,10 @@ Provides a path segment for a JSON Schema location or instance path, using a con
 | [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemapathprovider-tcontext.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
 | [Invoke(TContext, Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemapathprovider-tcontext.invoke.html#invoke-tcontext-span-byte-ref-int) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

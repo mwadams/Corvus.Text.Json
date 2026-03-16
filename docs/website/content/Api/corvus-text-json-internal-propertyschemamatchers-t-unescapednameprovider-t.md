@@ -26,3 +26,10 @@ public delegate PropertySchemaMatchers<T>.UnescapedNameProvider<T> : MulticastDe
 | [EndInvoke(IAsyncResult)](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.endinvoke.html#endinvoke-iasyncresult) |  |
 | [Invoke()](/api/corvus-text-json-internal-propertyschemamatchers-t-unescapednameprovider-t.invoke.html#invoke) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

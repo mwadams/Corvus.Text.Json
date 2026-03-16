@@ -47,3 +47,10 @@ public static void BuildValue<TContext>(ref TContext context, JsonElement.Object
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

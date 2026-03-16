@@ -56,3 +56,10 @@ public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> prop
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

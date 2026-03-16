@@ -21,3 +21,10 @@ Sets the enumerator to its initial position, which is before the first element i
 
 [`IEnumerator.Reset`](https://learn.microsoft.com/dotnet/api/system.collections.ienumerator.reset)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -82,3 +82,10 @@ Unlike [`GetString`](/api/corvus-text-json-utf8jsonreader.html#getstring), this 
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

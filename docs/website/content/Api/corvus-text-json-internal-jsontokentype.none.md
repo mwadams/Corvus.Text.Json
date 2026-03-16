@@ -25,3 +25,10 @@ Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-jso
 
 This is the default token type if no data has been read by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

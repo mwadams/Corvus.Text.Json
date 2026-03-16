@@ -35,3 +35,10 @@ Gets a value indicating whether this value is null.
 
 `True` if the value is null.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

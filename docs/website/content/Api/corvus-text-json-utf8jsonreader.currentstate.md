@@ -21,3 +21,10 @@ Returns the current snapshot of the [`Utf8JsonReader`](/api/corvus-text-json-utf
 
 [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

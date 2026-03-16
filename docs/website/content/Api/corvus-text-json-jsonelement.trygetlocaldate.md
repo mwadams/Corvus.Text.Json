@@ -40,3 +40,10 @@ Attempts to represent the current JSON string as a [`LocalDate`](https://www.nod
 
 This method does not create a LocalDate representation of values other than JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

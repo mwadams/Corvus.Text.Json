@@ -57,3 +57,10 @@ public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isD
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -96,3 +96,10 @@ public void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Bui
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

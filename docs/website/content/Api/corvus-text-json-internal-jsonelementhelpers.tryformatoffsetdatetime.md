@@ -31,3 +31,10 @@ Format an offset date time as a UTF-8 string.
 
 `true` if the date was formatted successfully.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

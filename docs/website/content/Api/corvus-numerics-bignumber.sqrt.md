@@ -37,3 +37,10 @@ The square root.
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when value is negative. |
 | [`ArgumentOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.argumentoutofrangeexception) | Thrown when precision is negative. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

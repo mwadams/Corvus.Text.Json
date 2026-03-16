@@ -19,3 +19,10 @@ public decimal GetDecimal()
 
 [`decimal`](https://learn.microsoft.com/dotnet/api/system.decimal)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

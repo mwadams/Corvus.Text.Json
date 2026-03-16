@@ -40,3 +40,10 @@ Attempts to represent the current JSON number as a [`Double`](https://learn.micr
 
 This method does not parse the contents of a JSON string value. On .NET Core this method does not return `false` for values larger than [`MaxValue`](https://learn.microsoft.com/dotnet/api/system.double.maxvalue#maxvalue) (or smaller than [`MinValue`](https://learn.microsoft.com/dotnet/api/system.double.minvalue#minvalue)), instead `true` is returned and [`PositiveInfinity`](https://learn.microsoft.com/dotnet/api/system.double.positiveinfinity#positiveinfinity) (or [`NegativeInfinity`](https://learn.microsoft.com/dotnet/api/system.double.negativeinfinity#negativeinfinity)) is emitted.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

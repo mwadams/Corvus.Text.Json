@@ -57,3 +57,10 @@ public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, Span<char> destinat
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

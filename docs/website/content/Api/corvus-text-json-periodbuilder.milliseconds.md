@@ -27,3 +27,10 @@ Gets or sets the number of milliseconds within the period.
 
 The number of milliseconds within the period.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

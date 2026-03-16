@@ -21,3 +21,10 @@ Releases resources used by the metadata database, returning rented arrays to the
 
 [`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

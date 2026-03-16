@@ -22,3 +22,10 @@ public virtual void Invoke(ref TContext context, ref ComplexValueBuilder builder
 | `context` | `ref TContext` |  |
 | `builder` | [`ref ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

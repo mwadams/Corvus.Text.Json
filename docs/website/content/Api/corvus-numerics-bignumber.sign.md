@@ -29,3 +29,10 @@ Returns the sign of the number.
 
 -1 for negative, 0 for zero, 1 for positive.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -35,3 +35,10 @@ Write the element into the provided writer as a JSON value.
 
 [`IJsonElement.WriteTo`](/api/corvus-text-json-internal-ijsonelement.writeto.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

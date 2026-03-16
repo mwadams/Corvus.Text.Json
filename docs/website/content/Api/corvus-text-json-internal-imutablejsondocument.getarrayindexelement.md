@@ -64,3 +64,10 @@ Gets the element at the specified array index within the current index.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

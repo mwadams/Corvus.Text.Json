@@ -26,3 +26,10 @@ public readonly struct JsonElement.ArrayBuilder
 | [AddRawString(ReadOnlySpan&lt;byte&gt;, bool)](/api/corvus-text-json-jsonelement-arraybuilder.addrawstring.html#addrawstring-readonlyspan-byte-bool) |  |
 | [BuildValue](/api/corvus-text-json-jsonelement-arraybuilder.buildvalue.html) `static` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

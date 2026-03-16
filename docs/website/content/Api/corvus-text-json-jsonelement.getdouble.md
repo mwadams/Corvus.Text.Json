@@ -35,3 +35,10 @@ The current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/s
 
 This method does not parse the contents of a JSON string value. On .NET Core this method returns [`PositiveInfinity`](https://learn.microsoft.com/dotnet/api/system.double.positiveinfinity#positiveinfinity) (or [`NegativeInfinity`](https://learn.microsoft.com/dotnet/api/system.double.negativeinfinity#negativeinfinity)) for values larger than [`MaxValue`](https://learn.microsoft.com/dotnet/api/system.double.maxvalue#maxvalue) (or smaller than [`MinValue`](https://learn.microsoft.com/dotnet/api/system.double.minvalue#minvalue)).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

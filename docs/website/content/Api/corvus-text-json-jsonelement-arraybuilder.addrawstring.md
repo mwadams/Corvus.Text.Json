@@ -22,3 +22,10 @@ public void AddRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
 | `value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 | `requiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

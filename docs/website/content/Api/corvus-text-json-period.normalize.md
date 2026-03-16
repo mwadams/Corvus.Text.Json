@@ -33,3 +33,10 @@ The normalized period.
 
 Months and years are unchanged (as they can vary in length), but weeks are multiplied by 7 and added to the Days property, and all time properties are normalized to their natural range. Sub-second values are normalized to millisecond and "nanosecond within millisecond" values. So for example, a period of 25 hours becomes a period of 1 day and 1 hour. A period of 1,500,750,000 nanoseconds becomes 1 second, 500 milliseconds and 750,000 nanoseconds. Aside from months and years, either all the properties end up positive, or they all end up negative. "Week" and "tick" units in the returned period are always 0.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

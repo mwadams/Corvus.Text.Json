@@ -27,3 +27,10 @@ Specifies the data type of a JSON value.
 | [False](/api/corvus-text-json-jsonvaluekind.false.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `false`. |
 | [Null](/api/corvus-text-json-jsonvaluekind.null.html) `static` | [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) | Indicates that a value is the JSON value `null`. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

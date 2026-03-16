@@ -21,3 +21,10 @@ Disposes the underlying resources used to store the UTF-8 string backing the URI
 
 [`IDisposable.Dispose`](https://learn.microsoft.com/dotnet/api/system.idisposable.dispose)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

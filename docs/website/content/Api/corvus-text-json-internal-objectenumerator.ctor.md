@@ -24,3 +24,10 @@ Initializes a new instance of the [`ObjectEnumerator`](/api/corvus-text-json-int
 | `targetDocument` | [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html) | The target document containing the object to enumerate. |
 | `initialIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The initial index of the object in the document. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

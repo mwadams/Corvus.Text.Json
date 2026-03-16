@@ -37,3 +37,10 @@ Tries to get the value of the element at the specified index as a [`Utf8UriValue
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

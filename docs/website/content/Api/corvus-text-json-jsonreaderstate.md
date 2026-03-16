@@ -22,3 +22,10 @@ Defines an opaque type that holds and saves all the relevant state information w
 |----------|------|-------------|
 | [Options](/api/corvus-text-json-jsonreaderstate.options.html) | [`JsonReaderOptions`](/api/corvus-text-json-jsonreaderoptions.html) | Gets the custom behavior when reading JSON using the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) that may deviate from strict adherence to the JSON specification, which is the def... |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

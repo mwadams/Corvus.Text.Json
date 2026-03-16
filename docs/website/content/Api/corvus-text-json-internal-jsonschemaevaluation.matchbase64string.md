@@ -31,3 +31,10 @@ Validates that a string value is a valid Base64-encoded string.
 
 `true` if the value is a valid Base64-encoded string; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

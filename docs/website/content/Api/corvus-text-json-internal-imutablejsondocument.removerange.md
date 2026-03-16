@@ -30,3 +30,10 @@ Removes a range of values from the document.
 
 This is similar to [`OverwriteAndDispose`](/api/corvus-text-json-internal-imutablejsondocument.html#overwriteanddispose), but it does not replace the values that are removed. Instead, it simply removes the specified range of members from the document, effectively shifting subsequent members up.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

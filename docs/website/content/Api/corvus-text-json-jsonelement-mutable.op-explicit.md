@@ -25,3 +25,10 @@ public static explicit operator JsonElement.Mutable(JsonElement value)
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

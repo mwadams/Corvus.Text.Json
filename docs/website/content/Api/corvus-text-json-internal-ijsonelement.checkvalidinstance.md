@@ -17,3 +17,10 @@ public abstract void CheckValidInstance()
 
 Checks that this instance is valid.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

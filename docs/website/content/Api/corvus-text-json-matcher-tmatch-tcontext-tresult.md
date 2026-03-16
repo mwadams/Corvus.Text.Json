@@ -36,3 +36,10 @@ A callback for a pattern match method.
 | [EndInvoke(ref TMatch, ref TContext, IAsyncResult)](/api/corvus-text-json-matcher-tmatch-tcontext-tresult.endinvoke.html#endinvoke-ref-tmatch-ref-tcontext-iasyncresult) |  |
 | [Invoke(ref TMatch, ref TContext)](/api/corvus-text-json-matcher-tmatch-tcontext-tresult.invoke.html#invoke-ref-tmatch-ref-tcontext) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

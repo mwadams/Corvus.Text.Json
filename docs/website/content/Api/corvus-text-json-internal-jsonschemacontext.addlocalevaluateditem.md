@@ -23,3 +23,10 @@ Adds an item at the specified index to the local evaluated items collection.
 |------|------|-------------|
 | `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the item to mark as locally evaluated. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

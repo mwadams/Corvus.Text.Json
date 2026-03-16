@@ -21,3 +21,10 @@ This is typically used as a backing field in a `[MyJsonElementType].Builder.Sour
 | [Initialize(ref SimpleTypesBacking, ref T, SimpleTypesBacking.Writer&lt;T&gt;)](/api/corvus-text-json-internal-simpletypesbacking.initialize.html#initialize-ref-simpletypesbacking-ref-t-simpletypesbacking-writer-t) `static` |  |
 | [Span()](/api/corvus-text-json-internal-simpletypesbacking.span.html#span) | Gets the written value as a span |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

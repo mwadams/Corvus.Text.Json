@@ -31,3 +31,10 @@ Defines how the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) sh
 
 By default a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown if a comment is encountered.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

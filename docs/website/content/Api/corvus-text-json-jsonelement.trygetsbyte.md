@@ -40,3 +40,10 @@ Attempts to represent the current JSON number as an [`SByte`](https://learn.micr
 
 This method does not parse the contents of a JSON string value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

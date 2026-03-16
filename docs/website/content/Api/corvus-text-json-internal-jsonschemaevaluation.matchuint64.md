@@ -34,3 +34,10 @@ Matches a JSON number against the UInt64 type constraint, validating it as a 64-
 
 `true` if the number is a valid UInt64; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

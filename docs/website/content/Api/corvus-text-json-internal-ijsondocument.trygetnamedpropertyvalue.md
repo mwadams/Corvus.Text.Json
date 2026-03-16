@@ -178,3 +178,10 @@ Tries to get the value of a named property as a mutable JSON element.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

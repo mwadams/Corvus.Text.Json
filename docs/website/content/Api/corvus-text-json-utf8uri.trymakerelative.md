@@ -31,3 +31,10 @@ Makes a relative URI reference from the current (base) URI to the target URI. If
 
 `true` if the result was successfully written; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

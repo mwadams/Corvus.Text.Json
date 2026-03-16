@@ -30,3 +30,10 @@ Throws an [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.ar
 |-----------|-------------|
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Always thrown. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

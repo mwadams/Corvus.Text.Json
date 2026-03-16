@@ -39,3 +39,10 @@ Matches a JSON number not equals.
 
 True if the left hand side does not equal the right hand side.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

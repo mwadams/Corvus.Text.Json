@@ -23,3 +23,10 @@ Transfers the built data to the specified [`MetadataDb`](/api/corvus-text-json-i
 |------|------|-------------|
 | `targetData` | [`ref MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) | The target metadata database to receive the data. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

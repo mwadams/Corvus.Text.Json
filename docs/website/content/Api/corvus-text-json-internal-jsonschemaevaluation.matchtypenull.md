@@ -31,3 +31,10 @@ Matches a JSON token type against the "null" type constraint.
 
 `true` if the token type is null; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

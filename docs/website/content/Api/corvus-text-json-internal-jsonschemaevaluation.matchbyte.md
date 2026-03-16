@@ -34,3 +34,10 @@ Matches a JSON number against the Byte type constraint, validating it as an 8-bi
 
 `true` if the number is a valid Byte; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

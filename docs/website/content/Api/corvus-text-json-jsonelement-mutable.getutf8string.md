@@ -19,3 +19,10 @@ public UnescapedUtf8JsonString GetUtf8String()
 
 [`UnescapedUtf8JsonString`](/api/corvus-text-json-unescapedutf8jsonstring.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

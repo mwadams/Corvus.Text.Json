@@ -8,3 +8,10 @@ Title: "JsonSchemaContext.EvaluatedIndexBuffer — Corvus.Text.Json.Internal"
 public readonly struct JsonSchemaContext.EvaluatedIndexBuffer
 ```
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

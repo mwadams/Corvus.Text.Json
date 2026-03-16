@@ -825,3 +825,10 @@ The property name and value are escaped before writing. If `value` is `null` the
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

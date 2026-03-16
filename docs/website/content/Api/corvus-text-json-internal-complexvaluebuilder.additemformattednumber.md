@@ -23,3 +23,10 @@ Adds a formatted number item to the current array.
 |------|------|-------------|
 | `value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The number value as a UTF-8 byte span. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

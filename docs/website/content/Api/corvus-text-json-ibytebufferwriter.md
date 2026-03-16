@@ -26,3 +26,10 @@ public interface IByteBufferWriter : IBufferWriter<byte>, IDisposable
 |--------|-------------|
 | [ClearAndReturnBuffers()](/api/corvus-text-json-ibytebufferwriter.clearandreturnbuffers.html#clearandreturnbuffers) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

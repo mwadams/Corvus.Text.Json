@@ -66,3 +66,10 @@ Determines whether the specified JSON element is equal to the current instance.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

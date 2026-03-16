@@ -21,3 +21,10 @@ public virtual void Invoke(ref JsonElement.ObjectBuilder builder)
 |------|------|-------------|
 | `builder` | [`ref JsonElement.ObjectBuilder`](/api/corvus-text-json-jsonelement-objectbuilder.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

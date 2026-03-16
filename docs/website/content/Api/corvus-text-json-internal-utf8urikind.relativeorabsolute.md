@@ -21,3 +21,10 @@ The kind of URI is indeterminate. The URI can be either relative or absolute.
 
 [`Utf8UriKind`](/api/corvus-text-json-internal-utf8urikind.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

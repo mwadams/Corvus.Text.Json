@@ -40,3 +40,10 @@ Attempts to represent the current JSON string as bytes assuming it is Base64 enc
 
 This method does not create a byte[] representation of values other than base 64 encoded JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

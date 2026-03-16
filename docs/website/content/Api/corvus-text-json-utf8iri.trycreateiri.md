@@ -30,3 +30,10 @@ Tries to create a new UTF-8 IRI from the specified IRI bytes.
 
 `true` if the UTF-8 IRI was created successfully; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

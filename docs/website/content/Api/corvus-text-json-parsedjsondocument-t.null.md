@@ -21,3 +21,10 @@ Gets the null instance.
 
 `T`
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

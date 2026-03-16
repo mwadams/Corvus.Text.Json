@@ -490,3 +490,10 @@ Tries to copy the higher-rank array data from the instance to the given array.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

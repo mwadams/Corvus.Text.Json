@@ -120,3 +120,10 @@ Property name matching is performed as an ordinal, case-sensitive, comparison. I
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

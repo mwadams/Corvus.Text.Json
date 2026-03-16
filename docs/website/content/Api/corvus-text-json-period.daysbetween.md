@@ -36,3 +36,10 @@ The number of days between the given dates.
 |-----------|-------------|
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | `start` and `end` use different calendars. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

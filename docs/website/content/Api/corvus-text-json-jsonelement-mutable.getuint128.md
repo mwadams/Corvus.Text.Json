@@ -19,3 +19,10 @@ public UInt128 GetUInt128()
 
 [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

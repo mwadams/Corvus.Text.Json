@@ -21,3 +21,10 @@ Change the search direction. Search moves from right to left instead of from lef
 
 [`JsonRegexOptions`](/api/corvus-text-json-internal-jsonregexoptions.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

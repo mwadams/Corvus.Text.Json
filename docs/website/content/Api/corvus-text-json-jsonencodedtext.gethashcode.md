@@ -25,3 +25,10 @@ Returns the hash code for this [`JsonEncodedText`](/api/corvus-text-json-jsonenc
 
 Returns 0 on a default instance of [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

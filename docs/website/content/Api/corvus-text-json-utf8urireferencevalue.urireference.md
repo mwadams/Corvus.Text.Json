@@ -21,3 +21,10 @@ Gets the UTF-8 URI reference value.
 
 [`Utf8UriReference`](/api/corvus-text-json-utf8urireference.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

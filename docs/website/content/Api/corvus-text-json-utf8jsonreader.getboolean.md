@@ -27,3 +27,10 @@ Parses the current JSON token value from the source as a [`Boolean`](https://lea
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if trying to get the value of a JSON token that is not a boolean (i.e. [`True`](/api/corvus-text-json-internal-jsontokentype.html#true) or [`False`](/api/corvus-text-json-internal-jsontokentype.html#false)). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

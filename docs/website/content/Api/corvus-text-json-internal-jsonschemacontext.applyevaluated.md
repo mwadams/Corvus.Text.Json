@@ -23,3 +23,10 @@ Applies the evaluated properties/items from the child context to this (parent) c
 |------|------|-------------|
 | `childContext` | [`ref JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html) | The child context from which to apply evaluated properties/items |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

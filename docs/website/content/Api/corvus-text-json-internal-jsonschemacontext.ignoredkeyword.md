@@ -57,3 +57,10 @@ Records that a keyword was ignored during schema evaluation with a provider cont
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -113,3 +113,10 @@ This method is functionally equal to doing an ordinal comparison of `utf8Text` a
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

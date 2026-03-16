@@ -29,3 +29,10 @@ Creates a period representing the specified number of days.
 
 A period consisting of the given number of days.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

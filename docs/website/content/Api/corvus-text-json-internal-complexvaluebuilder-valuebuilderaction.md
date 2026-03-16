@@ -26,3 +26,10 @@ public delegate ComplexValueBuilder.ValueBuilderAction : MulticastDelegate, IClo
 | [EndInvoke(ref ComplexValueBuilder, IAsyncResult)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.endinvoke.html#endinvoke-ref-complexvaluebuilder-iasyncresult) |  |
 | [Invoke(ref ComplexValueBuilder)](/api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.invoke.html#invoke-ref-complexvaluebuilder) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

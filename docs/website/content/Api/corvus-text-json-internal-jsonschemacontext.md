@@ -46,3 +46,10 @@ The context for a JSON schema evaluation.
 | [PushChildContext](/api/corvus-text-json-internal-jsonschemacontext.pushchildcontext.html) |  |
 | [PushChildContextUnescaped(IJsonDocument, int, bool, bool, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider, JsonSchemaPathProvider)](/api/corvus-text-json-internal-jsonschemacontext.pushchildcontextunescaped.html#pushchildcontextunescaped-ijsondocument-int-bool-bool-readonlyspan-byte-jsonschemapathprovider-jsonschemapathprovider) | Creates a new child context for schema evaluation with unescaped property name tracking. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

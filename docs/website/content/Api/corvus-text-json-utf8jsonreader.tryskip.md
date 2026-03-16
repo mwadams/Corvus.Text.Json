@@ -33,3 +33,10 @@ True if there was enough data for the children to be skipped successfully, else 
 
 If the reader did not have enough data to completely skip the children of the current token, it will be reset to the state it was in before the method was called. When [`TokenType`](/api/corvus-text-json-utf8jsonreader.html#tokentype) is [`PropertyName`](/api/corvus-text-json-internal-jsontokentype.html#propertyname), the reader first moves to the property value. When [`TokenType`](/api/corvus-text-json-utf8jsonreader.html#tokentype) (originally, or after advancing) is [`StartObject`](/api/corvus-text-json-internal-jsontokentype.html#startobject) or [`StartArray`](/api/corvus-text-json-internal-jsontokentype.html#startarray), the reader advances to the matching [`EndObject`](/api/corvus-text-json-internal-jsontokentype.html#endobject) or [`EndArray`](/api/corvus-text-json-internal-jsontokentype.html#endarray). For all other token types, the reader does not move. After the next call to [`Read`](/api/corvus-text-json-utf8jsonreader.html#read), the reader will be at the next value (when in an array), the next property name (when in an object), or the end array/object token.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

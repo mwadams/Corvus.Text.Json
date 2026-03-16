@@ -21,3 +21,10 @@ Allow comments within the JSON input and ignore them. The [`Utf8JsonReader`](/ap
 
 [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

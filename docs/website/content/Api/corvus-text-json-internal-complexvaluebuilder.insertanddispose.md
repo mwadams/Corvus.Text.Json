@@ -25,3 +25,10 @@ Inserts the built data into the specified [`MetadataDb`](/api/corvus-text-json-i
 | `targetIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index at which to insert the data. |
 | `targetData` | [`ref MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) | The target metadata database to receive the data. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -26,3 +26,10 @@ public delegate UniqueItemsHashSet.UnescapedNameProvider : MulticastDelegate, IC
 | [EndInvoke(IAsyncResult)](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.endinvoke.html#endinvoke-iasyncresult) |  |
 | [Invoke()](/api/corvus-text-json-internal-uniqueitemshashset-unescapednameprovider.invoke.html#invoke) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

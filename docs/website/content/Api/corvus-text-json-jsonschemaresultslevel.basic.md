@@ -21,3 +21,10 @@ Includes basic location and message information about schema matching failures.
 
 [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

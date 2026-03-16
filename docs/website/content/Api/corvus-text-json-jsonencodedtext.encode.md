@@ -99,3 +99,10 @@ Encodes the UTF-8 text value as a JSON string.
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

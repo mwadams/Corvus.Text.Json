@@ -30,3 +30,10 @@ Creates an instance of the element from the parent document and the handle of th
 
 An instance of the implementing element type.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -28,3 +28,10 @@ A matcher for a JSON schema that requires a bit buffer for tracking required pro
 | [EndInvoke(ref JsonSchemaContext, IAsyncResult)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.endinvoke.html#endinvoke-ref-jsonschemacontext-iasyncresult) |  |
 | [Invoke(IJsonDocument, int, ref JsonSchemaContext, Span&lt;int&gt;)](/api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.invoke.html#invoke-ijsondocument-int-ref-jsonschemacontext-span-int) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

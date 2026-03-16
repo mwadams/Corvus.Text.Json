@@ -38,3 +38,10 @@ This uses a rented buffer to back the string, so it is disposable.
 | [Dispose()](/api/corvus-text-json-unescapedutf16jsonstring.dispose.html#dispose) | Disposes the unescaped UTF-16 JSON string, returning any rented array pool characters. |
 | [TakeOwnership(ref char\[\])](/api/corvus-text-json-unescapedutf16jsonstring.takeownership.html#takeownership-ref-char) | Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) characters, if any. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

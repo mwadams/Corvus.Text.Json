@@ -22,3 +22,10 @@ Provides the ability for the user to define custom behavior when writing JSON us
 | [NewLine](/api/corvus-text-json-jsonwriteroptions.newline.html) | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | Gets or sets the new line string to use when [`Indented`](/api/corvus-text-json-jsonwriteroptions.html#indented) is `true`. The default is the value of \[`NewLine`\](https://learn.microsoft.com/dotne... |
 | [SkipValidation](/api/corvus-text-json-jsonwriteroptions.skipvalidation.html) | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any ... |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

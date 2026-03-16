@@ -25,3 +25,10 @@ Defines whether an extra comma at the end of a list of JSON values in an object 
 
 By default, it's set to false, and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown if a trailing comma is encountered.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

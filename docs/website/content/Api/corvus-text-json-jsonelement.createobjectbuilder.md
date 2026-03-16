@@ -30,3 +30,10 @@ Creates an empty mutable object document builder.
 
 A JSON document builder containing an empty object.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

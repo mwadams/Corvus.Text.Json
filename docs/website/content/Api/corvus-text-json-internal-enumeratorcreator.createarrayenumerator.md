@@ -36,3 +36,10 @@ Creates an enumerator for the items of a JSON array.
 
 An [`ArrayEnumerator`](/api/corvus-text-json-arrayenumerator-titem.html) for the array.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

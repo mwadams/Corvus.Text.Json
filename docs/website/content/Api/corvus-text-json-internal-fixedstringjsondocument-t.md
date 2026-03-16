@@ -42,3 +42,10 @@ This type uses an internal cache to avoid allocations for evaluatoin of string v
 | [ToString(int, string, IFormatProvider)](/api/corvus-text-json-internal-fixedstringjsondocument-t.tostring.html#tostring-int-string-iformatprovider) |  |
 | [TryFormat](/api/corvus-text-json-internal-fixedstringjsondocument-t.tryformat.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

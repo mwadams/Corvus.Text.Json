@@ -31,3 +31,10 @@ Validates that a string value is a valid ECMAScript regular expression format.
 
 `true` if the value is a valid regex; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

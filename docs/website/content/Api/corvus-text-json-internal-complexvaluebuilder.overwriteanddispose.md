@@ -27,3 +27,10 @@ Overwrites a range of data in the specified [`MetadataDb`](/api/corvus-text-json
 | `memberCountToReplace` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The number of members to replace. |
 | `targetData` | [`ref MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) | The target metadata database to receive the data. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

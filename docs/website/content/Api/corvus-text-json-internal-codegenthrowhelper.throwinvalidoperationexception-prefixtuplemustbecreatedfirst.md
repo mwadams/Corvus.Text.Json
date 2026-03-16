@@ -23,3 +23,10 @@ Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/s
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Always thrown. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

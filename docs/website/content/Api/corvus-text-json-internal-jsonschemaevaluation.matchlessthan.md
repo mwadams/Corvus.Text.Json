@@ -39,3 +39,10 @@ Matches a JSON number less than.
 
 True if the left hand side is less than the right hand side.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -25,3 +25,10 @@ Returns the amount of bytes committed to the output by the [`Utf8JsonWriter`](/a
 
 In the case of IBufferwriter, this is how much the IBufferWriter has advanced. In the case of Stream, this is how much data has been written to the stream.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -30,3 +30,10 @@ Parse a period from a string for the `duration` format.
 
 `true` if the duration could be parsed.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

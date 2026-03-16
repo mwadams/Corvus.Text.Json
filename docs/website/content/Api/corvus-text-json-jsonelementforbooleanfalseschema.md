@@ -42,3 +42,10 @@ Represents a placeholder for the `false` boolean schema which disallows any valu
 | [implicit operator int(JsonElementForBooleanFalseSchema)](/api/corvus-text-json-jsonelementforbooleanfalseschema.op-implicit.html#implicit-operator-int-jsonelementforbooleanfalseschema) | Implicitly converts a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) to an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). |
 | [Inequality](/api/corvus-text-json-jsonelementforbooleanfalseschema.op-inequality.html) | Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instances are not equal. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

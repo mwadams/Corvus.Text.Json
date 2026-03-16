@@ -26,3 +26,10 @@ public static JsonElement.Source RawString(ReadOnlySpan<byte> value, bool requir
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

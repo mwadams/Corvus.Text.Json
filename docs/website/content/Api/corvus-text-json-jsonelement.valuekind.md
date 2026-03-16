@@ -31,3 +31,10 @@ The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value i
 
 [`IJsonElement.ValueKind`](/api/corvus-text-json-internal-ijsonelement.valuekind.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

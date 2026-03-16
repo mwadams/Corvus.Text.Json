@@ -30,3 +30,10 @@ Creates an empty mutable array document builder.
 
 A JSON document builder containing an empty array.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

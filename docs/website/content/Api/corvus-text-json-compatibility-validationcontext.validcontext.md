@@ -21,3 +21,10 @@ Gets a valid context.
 
 [`ValidationContext`](/api/corvus-text-json-compatibility-validationcontext.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -39,3 +39,10 @@ The span containing the raw JSON data of the `property` name. This will not incl
 
 While the method itself does check for disposal of the underlying [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html), it is possible that it could be disposed after the method returns, which would result in the span pointing to a buffer that has been returned to the shared pool. Callers should take extra care to make sure that such a scenario isn't possible to avoid potential data corruption.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

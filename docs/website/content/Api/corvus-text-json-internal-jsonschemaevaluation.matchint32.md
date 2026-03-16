@@ -34,3 +34,10 @@ Matches a JSON number against the Int32 type constraint, validating it as a 32-b
 
 `true` if the number is a valid Int32; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

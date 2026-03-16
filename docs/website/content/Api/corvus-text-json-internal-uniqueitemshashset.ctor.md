@@ -26,3 +26,10 @@ Creates a validator map for efficient property lookup based on the provided matc
 | `buckets` | [`Span<int>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
 | `entries` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) | A working buffer for the buckets. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

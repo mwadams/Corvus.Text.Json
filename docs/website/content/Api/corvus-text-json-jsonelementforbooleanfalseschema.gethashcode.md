@@ -23,3 +23,10 @@ Gets the hash code for the current instance.
 
 A hash code for the current instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

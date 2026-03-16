@@ -19,3 +19,10 @@ public static class EnumeratorCreator
 | [CreateArrayEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createarrayenumerator.html#createarrayenumerator-ijsondocument-int) `static` | Creates an enumerator for the items of a JSON array. |
 | [CreateObjectEnumerator(IJsonDocument, int)](/api/corvus-text-json-internal-enumeratorcreator.createobjectenumerator.html#createobjectenumerator-ijsondocument-int) `static` | Creates an enumerator for the properties of a JSON object. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

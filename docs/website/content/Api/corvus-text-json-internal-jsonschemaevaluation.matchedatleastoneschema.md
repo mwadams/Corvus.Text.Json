@@ -21,3 +21,10 @@ Message provider for validation errors when at least one schema matches in a com
 
 [`JsonSchemaMessageProvider`](/api/corvus-text-json-jsonschemamessageprovider.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

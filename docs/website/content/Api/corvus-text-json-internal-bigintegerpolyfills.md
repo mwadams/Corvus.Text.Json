@@ -22,3 +22,10 @@ Polyfills for [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numer
 | [TryGetMinimumFormatBufferLength(ref BigInteger, ref int)](/api/corvus-text-json-internal-bigintegerpolyfills.trygetminimumformatbufferlength.html#trygetminimumformatbufferlength-ref-biginteger-ref-int) `static` | Gets the minimum format buffer length. |
 | [TryParse(ReadOnlySpan&lt;byte&gt;, ref BigInteger)](/api/corvus-text-json-internal-bigintegerpolyfills.tryparse.html#tryparse-readonlyspan-byte-ref-biginteger) `static` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

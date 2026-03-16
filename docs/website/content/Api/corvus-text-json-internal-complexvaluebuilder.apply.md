@@ -39,3 +39,10 @@ Apply an object instance value to the document.
 
 The value must be a JSON object. Its properties will be set on the current document, replacing any existing values if present.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

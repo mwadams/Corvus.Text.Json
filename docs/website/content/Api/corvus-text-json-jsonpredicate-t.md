@@ -34,3 +34,10 @@ A predicate for a JSON value.
 | [EndInvoke(ref T, IAsyncResult)](/api/corvus-text-json-jsonpredicate-t.endinvoke.html#endinvoke-ref-t-iasyncresult) |  |
 | [Invoke(ref T)](/api/corvus-text-json-jsonpredicate-t.invoke.html#invoke-ref-t) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -31,3 +31,10 @@ Defines the indentation size used by [`Utf8JsonWriter`](/api/corvus-text-json-ut
 
 Allowed values are integers between 0 and 127, included.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

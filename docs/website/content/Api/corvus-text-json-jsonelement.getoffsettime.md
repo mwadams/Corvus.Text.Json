@@ -35,3 +35,10 @@ The value of the element as a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/
 
 This method does not create a OffsetTime representation of values other than JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

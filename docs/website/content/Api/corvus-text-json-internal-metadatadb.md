@@ -20,3 +20,10 @@ Database storing metadata for parsed JSON document structure, including token in
 |--------|-------------|
 | [Dispose()](/api/corvus-text-json-internal-metadatadb.dispose.html#dispose) | Releases resources used by the metadata database, returning rented arrays to the pool. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

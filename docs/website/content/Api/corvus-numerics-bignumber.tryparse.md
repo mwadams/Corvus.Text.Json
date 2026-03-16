@@ -213,3 +213,10 @@ Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumbe
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

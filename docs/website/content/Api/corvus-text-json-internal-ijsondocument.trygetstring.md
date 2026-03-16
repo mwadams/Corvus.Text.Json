@@ -31,3 +31,10 @@ Tries to get the string value of the element at the specified index.
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -19,3 +19,10 @@ public static IdnMapping Default { get; }
 
 [`IdnMapping`](/api/corvus-globalization-idnmapping.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

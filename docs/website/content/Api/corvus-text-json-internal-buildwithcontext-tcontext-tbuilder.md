@@ -21,3 +21,10 @@ public readonly struct BuildWithContext<TContext, TBuilder>
 | [Build](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.build.html) | `TBuilder` |  |
 | [Context](/api/corvus-text-json-internal-buildwithcontext-tcontext-tbuilder.context.html) | `TContext` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -30,3 +30,10 @@ Implements the operator != (inequality). See the type documentation for a descri
 
 `true` if values are not equal to each other, otherwise `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

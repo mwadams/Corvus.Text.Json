@@ -30,3 +30,10 @@ Parse an instance of the fixed string to a document, using caching.
 
 A fixed string document representing the value, from the cache.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

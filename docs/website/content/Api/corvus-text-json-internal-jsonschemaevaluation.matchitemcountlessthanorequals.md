@@ -32,3 +32,10 @@ Validates that a item count is less than or equal to the given value.
 
 `true` if the value is less than or equal to the given value; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

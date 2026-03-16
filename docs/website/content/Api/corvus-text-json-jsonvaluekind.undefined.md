@@ -21,3 +21,10 @@ Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-jso
 
 [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

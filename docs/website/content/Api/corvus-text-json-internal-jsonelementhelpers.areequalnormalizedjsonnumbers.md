@@ -36,3 +36,10 @@ Compares two valid normalized JSON numbers for decimal equality.
 
 `true` if the two normalized JSON numbers are equal; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

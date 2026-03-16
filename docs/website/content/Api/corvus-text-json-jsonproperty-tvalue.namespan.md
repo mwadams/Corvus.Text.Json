@@ -25,3 +25,10 @@ Gets the name as an unescaped UTF-8 JSON string.
 
 Note that this does not allocate. The result should be disposed when it is no longer needed, as it may use a rented buffer to back the string. It is only valid for the lifetime of the document that contains this property.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

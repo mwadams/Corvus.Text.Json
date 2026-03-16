@@ -26,3 +26,10 @@ public static bool TryParse(ReadOnlySpan<byte> segment, ref BigInteger value)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

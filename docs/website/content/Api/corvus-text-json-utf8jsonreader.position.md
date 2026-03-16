@@ -21,3 +21,10 @@ Returns the current [`SequencePosition`](https://learn.microsoft.com/dotnet/api/
 
 [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

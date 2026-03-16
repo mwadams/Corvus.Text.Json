@@ -25,3 +25,10 @@ Enable matching using an approach that avoids backtracking and guarantees linear
 
 Certain features aren't available when this option is set, including balancing groups, backreferences, positive and negative lookaheads and lookbehinds, and atomic groups. Capture groups are also ignored, such that the only capture available is that for the top-level match.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

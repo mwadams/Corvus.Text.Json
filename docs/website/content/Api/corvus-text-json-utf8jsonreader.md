@@ -75,3 +75,10 @@ Provides a high-performance API for forward-only, read-only access to the UTF-8 
 | [TrySkip()](/api/corvus-text-json-utf8jsonreader.tryskip.html#tryskip) | Tries to skip the children of the current JSON token. |
 | [ValueTextEquals](/api/corvus-text-json-utf8jsonreader.valuetextequals.html) | Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

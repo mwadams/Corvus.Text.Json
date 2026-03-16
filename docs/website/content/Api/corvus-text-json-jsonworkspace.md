@@ -37,3 +37,10 @@ A workspace for manipulating JSON documents.
 | [ReturnWriter(Utf8JsonWriter)](/api/corvus-text-json-jsonworkspace.returnwriter.html#returnwriter-utf8jsonwriter) | Returns a rented UTF-8 JSON writer to the pool. |
 | [ReturnWriterAndBuffer(Utf8JsonWriter, IByteBufferWriter)](/api/corvus-text-json-jsonworkspace.returnwriterandbuffer.html#returnwriterandbuffer-utf8jsonwriter-ibytebufferwriter) | Returns a rented UTF-8 JSON writer and buffer writer to the pool. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

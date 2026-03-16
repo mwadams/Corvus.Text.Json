@@ -31,3 +31,10 @@ The current JSON number as an [`Int32`](https://learn.microsoft.com/dotnet/api/s
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | The value cannot be represented as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). |
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

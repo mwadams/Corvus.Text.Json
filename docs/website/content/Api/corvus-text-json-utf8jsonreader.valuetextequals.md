@@ -113,3 +113,10 @@ If the look up text is invalid or incomplete UTF-16 text (i.e. unpaired surrogat
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -28,3 +28,10 @@ Provides a message for a JSON Schema validation result.
 | [EndInvoke(ref int, IAsyncResult)](/api/corvus-text-json-jsonschemamessageprovider.endinvoke.html#endinvoke-ref-int-iasyncresult) |  |
 | [Invoke(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-jsonschemamessageprovider.invoke.html#invoke-span-byte-ref-int) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

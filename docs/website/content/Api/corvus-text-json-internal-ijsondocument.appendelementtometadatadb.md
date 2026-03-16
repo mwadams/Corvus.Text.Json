@@ -25,3 +25,10 @@ Appends the element at the specified index to the metadata database.
 | `workspace` | [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html) | The JSON workspace. |
 | `db` | [`ref MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) | The metadata database. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

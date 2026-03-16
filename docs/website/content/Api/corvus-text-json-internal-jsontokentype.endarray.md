@@ -21,3 +21,10 @@ Indicates that the token type is the end of a JSON array.
 
 [`JsonTokenType`](/api/corvus-text-json-internal-jsontokentype.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

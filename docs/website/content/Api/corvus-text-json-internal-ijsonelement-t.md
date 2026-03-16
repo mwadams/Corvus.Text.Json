@@ -30,3 +30,10 @@ Implemented by JsonElement-derived types.
 |--------|-------------|
 | [CreateInstance(IJsonDocument, int)](/api/corvus-text-json-internal-ijsonelement-t.createinstance.html#createinstance-ijsondocument-int) `static` | Creates an instance of the element from the parent document and the handle of the element in the parent document. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

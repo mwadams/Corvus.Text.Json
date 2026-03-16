@@ -53,3 +53,10 @@ A UTF-8 URI.
 | [TryFormatDisplay(Span&lt;byte&gt;, ref int)](/api/corvus-text-json-utf8uri.tryformatdisplay.html#tryformatdisplay-span-byte-ref-int) | Gets the URI in canonical form for display. |
 | [TryMakeRelative(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8UriReference)](/api/corvus-text-json-utf8uri.trymakerelative.html#trymakerelative-ref-utf8uri-span-byte-ref-utf8urireference) | Makes a relative URI reference from the current (base) URI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

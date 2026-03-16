@@ -14,3 +14,10 @@ This class implements a set of methods for retrieving character type information
 
 [`Object`](https://learn.microsoft.com/dotnet/api/system.object) → **CharUnicodeInfo**
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

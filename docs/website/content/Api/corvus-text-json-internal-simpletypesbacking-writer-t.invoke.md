@@ -23,3 +23,10 @@ public virtual void Invoke(T value, Span<byte> buffer, ref int written)
 | `buffer` | [`Span<byte>`](https://learn.microsoft.com/dotnet/api/system.span-1) |  |
 | `written` | [`ref int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

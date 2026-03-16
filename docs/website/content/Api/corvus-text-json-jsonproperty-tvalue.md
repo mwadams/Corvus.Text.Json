@@ -32,3 +32,10 @@ Represents a single property for a JSON object.
 | [ToString()](/api/corvus-text-json-jsonproperty-tvalue.tostring.html#tostring) | Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes. |
 | [WriteTo(Utf8JsonWriter)](/api/corvus-text-json-jsonproperty-tvalue.writeto.html#writeto-utf8jsonwriter) | Write the property into the provided writer as a named JSON object property. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

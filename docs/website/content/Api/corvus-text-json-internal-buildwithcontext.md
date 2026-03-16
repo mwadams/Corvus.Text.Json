@@ -18,3 +18,10 @@ public static class BuildWithContext
 |--------|-------------|
 | [Create(ref TContext, TBuilder)](/api/corvus-text-json-internal-buildwithcontext.create.html#create-ref-tcontext-tbuilder) `static` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

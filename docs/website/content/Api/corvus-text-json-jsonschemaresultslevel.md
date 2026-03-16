@@ -22,3 +22,10 @@ The level of result to collect for an [`IJsonSchemaResultsCollector`](/api/corvu
 | [Detailed](/api/corvus-text-json-jsonschemaresultslevel.detailed.html) `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes detailed location and message information about schema matching failures. |
 | [Verbose](/api/corvus-text-json-jsonschemaresultslevel.verbose.html) `static` | [`JsonSchemaResultsLevel`](/api/corvus-text-json-jsonschemaresultslevel.html) | Includes full location and message information for schema matching. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

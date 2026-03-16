@@ -87,3 +87,10 @@ True if this period has the same values for the same properties as the one speci
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

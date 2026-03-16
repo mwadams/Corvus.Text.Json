@@ -91,3 +91,10 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

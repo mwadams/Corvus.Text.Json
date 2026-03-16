@@ -35,3 +35,10 @@ Gets a value indicating whether this value is undefined.
 
 `True` if the value is undefined.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

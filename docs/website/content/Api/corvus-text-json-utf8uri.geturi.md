@@ -23,3 +23,10 @@ Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri).
 
 The URI representation of the UTF-8 URI.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

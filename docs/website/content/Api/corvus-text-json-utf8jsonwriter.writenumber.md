@@ -826,3 +826,10 @@ Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) usin
 
 ---
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -25,3 +25,10 @@ public void WriteTo(Utf8JsonWriter writer)
 
 [`IJsonElement.WriteTo`](/api/corvus-text-json-internal-ijsonelement.writeto.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

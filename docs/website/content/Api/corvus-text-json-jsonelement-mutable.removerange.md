@@ -22,3 +22,10 @@ public void RemoveRange(int startIndex, int count)
 | `startIndex` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
 | `count` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -26,3 +26,10 @@ Base class for JSON document implementations providing common functionality for 
 |--------|-------------|
 | [Freeze()](/api/corvus-text-json-internal-jsondocument.freeze.html#freeze) | Makes the document immutable. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

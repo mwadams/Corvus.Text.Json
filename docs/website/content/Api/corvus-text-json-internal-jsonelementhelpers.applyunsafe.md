@@ -41,3 +41,10 @@ Applies all properties from a source JSON object element to a target JSON object
 
 This method performs a merge of properties from the source JSON object to the target JSON object. Each property from the source object is copied to the target object, replacing any existing properties with the same name. The source element must be a JSON object element. The target element is assumed to be valid and is not validated by this method. This method is not CLS-compliant due to its generic constraint requirements.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

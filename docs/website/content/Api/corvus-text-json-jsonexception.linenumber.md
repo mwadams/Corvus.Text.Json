@@ -21,3 +21,10 @@ Gets the number of lines read so far before the exception (starting at 0).
 
 [`Nullable<long>`](https://learn.microsoft.com/dotnet/api/system.nullable-1)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

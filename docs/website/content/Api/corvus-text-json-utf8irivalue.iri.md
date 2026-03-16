@@ -21,3 +21,10 @@ Gets the UTF-8 IRI value.
 
 [`Utf8Iri`](/api/corvus-text-json-utf8iri.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

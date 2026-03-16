@@ -30,3 +30,10 @@ An enumerable and enumerator for the properties of a JSON object.
 | [MoveNext()](/api/corvus-text-json-internal-objectenumerator.movenext.html#movenext) |  |
 | [Reset()](/api/corvus-text-json-internal-objectenumerator.reset.html#reset) | Sets the enumerator to its initial position, which is before the first element. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

@@ -19,3 +19,10 @@ public DateTimeOffset GetDateTimeOffset()
 
 [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

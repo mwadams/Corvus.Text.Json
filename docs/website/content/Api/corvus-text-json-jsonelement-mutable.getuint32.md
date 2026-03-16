@@ -19,3 +19,10 @@ public uint GetUInt32()
 
 [`uint`](https://learn.microsoft.com/dotnet/api/system.uint32)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

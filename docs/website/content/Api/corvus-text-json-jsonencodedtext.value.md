@@ -21,3 +21,10 @@ Returns the UTF-16 encoded representation of the pre-encoded JSON text as a [`St
 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

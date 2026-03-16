@@ -33,3 +33,10 @@ Specifies the numeric type used in code generation scenarios.
 | [Double](/api/corvus-text-json-internal-codegennumerictype.double.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 64-bit floating point number. |
 | [Decimal](/api/corvus-text-json-internal-codegennumerictype.decimal.html) `static` | [`CodeGenNumericType`](/api/corvus-text-json-internal-codegennumerictype.html) | Represents a 128-bit decimal number. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

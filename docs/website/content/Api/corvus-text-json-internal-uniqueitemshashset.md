@@ -40,3 +40,10 @@ This class uses a hash-based approach to enable O(1) average-case lookups of pro
 | [StackAllocBucketSize](/api/corvus-text-json-internal-uniqueitemshashset.stackallocbucketsize.html) `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The recommended size for a stack allocated bucket buffer. |
 | [StackAllocEntrySize](/api/corvus-text-json-internal-uniqueitemshashset.stackallocentrysize.html) `static` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The recommended size for a stack allocated entries buffer. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

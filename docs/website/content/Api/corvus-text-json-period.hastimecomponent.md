@@ -27,3 +27,10 @@ Gets a value indicating whether or not this period contains any non-zero-valued 
 
 true if the period contains any non-zero-valued time-based properties (hours or lower); false otherwise.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

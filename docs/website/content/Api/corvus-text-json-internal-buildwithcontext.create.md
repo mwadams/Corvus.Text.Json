@@ -26,3 +26,10 @@ public static BuildWithContext<TContext, TBuilder> Create<TContext, TBuilder>(re
 
 [`BuildWithContext<TContext, TBuilder>`](/api/corvus-text-json-internal-buildwithcontext.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

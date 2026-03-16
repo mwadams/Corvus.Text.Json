@@ -24,3 +24,10 @@ Writes the property name at the specified index to the provided JSON writer.
 | `index` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) | The index of the property name. |
 | `writer` | [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) | The JSON writer. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

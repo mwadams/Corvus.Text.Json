@@ -35,3 +35,10 @@ The value of the element as a [`DateTime`](https://learn.microsoft.com/dotnet/ap
 
 This method does not create a DateTime representation of values other than JSON strings.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

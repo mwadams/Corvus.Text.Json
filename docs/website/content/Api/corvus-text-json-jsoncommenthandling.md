@@ -22,3 +22,10 @@ This enum defines the various ways the [`Utf8JsonReader`](/api/corvus-text-json-
 | [Skip](/api/corvus-text-json-jsoncommenthandling.skip.html) `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | Allow comments within the JSON input and ignore them. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) will behave as if no comments were present. |
 | [Allow](/api/corvus-text-json-jsoncommenthandling.allow.html) `static` | [`JsonCommentHandling`](/api/corvus-text-json-jsoncommenthandling.html) | Allow comments within the JSON input and treat them as valid tokens. While reading, the caller will be able to access the comment values. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+

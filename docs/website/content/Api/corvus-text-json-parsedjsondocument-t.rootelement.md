@@ -21,3 +21,10 @@ The [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) represent
 
 `T`
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
