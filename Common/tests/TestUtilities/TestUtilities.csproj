@@ -164,21 +164,18 @@
   </ItemGroup>-->
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Json.CodeGeneration" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.201909" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.202012" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.4" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.6" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.7" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.CorvusVocabulary" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.HttpClientDocumentResolver" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.OpenApi30" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.CodeGeneration.YamlPreProcessor" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.ExtendedTypes" Version="4.6.6" />
-    <PackageReference Include="Corvus.Json.SourceGenerator" Version="4.6.6">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration\Corvus.Json.CodeGeneration.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.201909\Corvus.Json.CodeGeneration.201909.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.202012\Corvus.Json.CodeGeneration.202012.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.4\Corvus.Json.CodeGeneration.4.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.6\Corvus.Json.CodeGeneration.6.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.7\Corvus.Json.CodeGeneration.7.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.CorvusVocabulary\Corvus.Json.CodeGeneration.CorvusVocabulary.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.HttpClientDocumentResolver\Corvus.Json.CodeGeneration.HttpClientDocumentResolver.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.OpenApi30\Corvus.Json.CodeGeneration.OpenApi30.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.CodeGeneration.YamlPreProcessor\Corvus.Json.CodeGeneration.YamlPreProcessor.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.ExtendedTypes\Corvus.Json.ExtendedTypes.csproj" />
+    <ProjectReference Include="..\..\..\src-v4\Corvus.Json.SourceGenerator\Corvus.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <PackageReference Include="Microsoft.Bcl.Memory" Version="10.0.4" />
     <PackageReference Include="Microsoft.DotNet.RemoteExecutor" Version="10.0.0-beta.25228.101" />
     <PackageReference Include="Microsoft.DotNet.XUnitExtensions" Version="10.0.0-beta.25227.101" />

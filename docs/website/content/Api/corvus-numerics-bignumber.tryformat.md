@@ -127,5 +127,4 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
-| .NET Standard | 2.0 |
 

@@ -9,6 +9,7 @@ string? siteTitleArg = null;
 string? apiViewsDir = null;
 string? repoUrl = null;
 string? nsDescriptionsDir = null;
+string? ns20AssemblyPath = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -40,6 +41,9 @@ for (int i = 0; i < args.Length - 1; i++)
             break;
         case "--ns-descriptions":
             nsDescriptionsDir = args[++i];
+            break;
+        case "--ns20-assembly":
+            ns20AssemblyPath = args[++i];
             break;
     }
 }
@@ -121,6 +125,33 @@ foreach (TypeInfo typeInfo in allTypes)
 foreach (KeyValuePair<string, NamespaceInfo> ns in namespaces)
 {
     Console.WriteLine($"    {ns.Key}: {ns.Value.Types.Count} type(s)");
+}
+
+// Scan netstandard2.0 assembly to determine TFM-specific member availability
+if (ns20AssemblyPath is not null && File.Exists(ns20AssemblyPath))
+{
+    Console.WriteLine($"Scanning netstandard2.0 assembly: {ns20AssemblyPath}");
+    HashSet<string> ns20Keys = AssemblyInspector.ScanMemberKeys(ns20AssemblyPath);
+    Console.WriteLine($"  Found {ns20Keys.Count} members in netstandard2.0 build.");
+
+    // Mark types and members not present in the ns2.0 assembly
+    foreach (TypeInfo typeInfo in allTypes)
+    {
+        if (!ns20Keys.Contains($"T:{typeInfo.FullName}"))
+        {
+            typeInfo.AvailableOnNetStandard20 = false;
+        }
+
+        foreach (MemberInfo m in typeInfo.Constructors.Concat(typeInfo.Properties)
+            .Concat(typeInfo.Methods).Concat(typeInfo.Operators)
+            .Concat(typeInfo.Fields).Concat(typeInfo.Events))
+        {
+            if (!ns20Keys.Contains(m.XmlDocKey))
+            {
+                m.AvailableOnNetStandard20 = false;
+            }
+        }
+    }
 }
 
 // Build source URL map from PDB if possible

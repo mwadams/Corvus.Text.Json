@@ -362,3 +362,23 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /src/src.sln
+
+# Cobertura code coverage file
+coverage.cobertura.xml
+
+# VS Code config files
+/.vscode
+/Solutions/Menes.Specs/appsettings.local.json
+*.diagsession
+
+# Generated SpecFlow files
+*.feature.cs
+
+# NCrunch files
+*.ncrunchsolution
+*.ncrunchproject
+
+# Scripted build artifacts
+/_codeCoverage
+/_packages
+*.sbom.*

@@ -568,5 +568,4 @@ Adds a [`Half`](https://learn.microsoft.com/dotnet/api/system.half) item to the 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
-| .NET Standard | 2.0 |
 

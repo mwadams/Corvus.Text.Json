@@ -35,5 +35,4 @@ An instance of the implementing element type.
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
-| .NET Standard | 2.0 |
 

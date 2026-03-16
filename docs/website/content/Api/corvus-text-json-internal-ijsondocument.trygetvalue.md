@@ -667,5 +667,4 @@ Tries to get the value of the element at the specified index as a [`TimeOnly`](h
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
-| .NET Standard | 2.0 |
 

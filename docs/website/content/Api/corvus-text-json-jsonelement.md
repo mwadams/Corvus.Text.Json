@@ -46,7 +46,9 @@ Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json
 | [GetDecimal()](/api/corvus-text-json-jsonelement.getdecimal.html#getdecimal) | Gets the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
 | [GetDouble()](/api/corvus-text-json-jsonelement.getdouble.html#getdouble) | Gets the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). |
 | [GetGuid()](/api/corvus-text-json-jsonelement.getguid.html#getguid) | Gets the value of the element as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid). |
+| [GetHalf()](/api/corvus-text-json-jsonelement.gethalf.html#gethalf) | Gets the current JSON number as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half). |
 | [GetHashCode()](/api/corvus-text-json-jsonelement.gethashcode.html#gethashcode) |  |
+| [GetInt128()](/api/corvus-text-json-jsonelement.getint128.html#getint128) | Gets the current JSON number as a [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128). |
 | [GetInt16()](/api/corvus-text-json-jsonelement.getint16.html#getint16) | Gets the current JSON number as an [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16). |
 | [GetInt32()](/api/corvus-text-json-jsonelement.getint32.html#getint32) | Gets the current JSON number as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). |
 | [GetInt64()](/api/corvus-text-json-jsonelement.getint64.html#getint64) | Gets the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). |
@@ -61,6 +63,7 @@ Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json
 | [GetSByte()](/api/corvus-text-json-jsonelement.getsbyte.html#getsbyte) | Gets the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte). |
 | [GetSingle()](/api/corvus-text-json-jsonelement.getsingle.html#getsingle) | Gets the current JSON number as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). |
 | [GetString()](/api/corvus-text-json-jsonelement.getstring.html#getstring) | Gets the value of the element as a [`String`](https://learn.microsoft.com/dotnet/api/system.string). |
+| [GetUInt128()](/api/corvus-text-json-jsonelement.getuint128.html#getuint128) | Gets the current JSON number as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128). |
 | [GetUInt16()](/api/corvus-text-json-jsonelement.getuint16.html#getuint16) | Gets the current JSON number as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16). |
 | [GetUInt32()](/api/corvus-text-json-jsonelement.getuint32.html#getuint32) | Gets the current JSON number as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32). |
 | [GetUInt64()](/api/corvus-text-json-jsonelement.getuint64.html#getuint64) | Gets the current JSON number as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). |
@@ -79,6 +82,8 @@ Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json
 | [TryGetDecimal(ref decimal)](/api/corvus-text-json-jsonelement.trygetdecimal.html#trygetdecimal-ref-decimal) | Attempts to represent the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal). |
 | [TryGetDouble(ref double)](/api/corvus-text-json-jsonelement.trygetdouble.html#trygetdouble-ref-double) | Attempts to represent the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). |
 | [TryGetGuid(ref Guid)](/api/corvus-text-json-jsonelement.trygetguid.html#trygetguid-ref-guid) | Attempts to represent the current JSON string as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid). |
+| [TryGetHalf(ref Half)](/api/corvus-text-json-jsonelement.trygethalf.html#trygethalf-ref-half) | Attempts to represent the current JSON number as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half). |
+| [TryGetInt128(ref Int128)](/api/corvus-text-json-jsonelement.trygetint128.html#trygetint128-ref-int128) | Attempts to represent the current JSON number as a [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128). |
 | [TryGetInt16(ref short)](/api/corvus-text-json-jsonelement.trygetint16.html#trygetint16-ref-short) | Attempts to represent the current JSON number as an [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16). |
 | [TryGetInt32(ref int)](/api/corvus-text-json-jsonelement.trygetint32.html#trygetint32-ref-int) | Attempts to represent the current JSON number as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32). |
 | [TryGetInt64(ref long)](/api/corvus-text-json-jsonelement.trygetint64.html#trygetint64-ref-long) | Attempts to represent the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64). |
@@ -92,6 +97,7 @@ Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json
 | [TryGetProperty](/api/corvus-text-json-jsonelement.trygetproperty.html) | Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property. |
 | [TryGetSByte(ref sbyte)](/api/corvus-text-json-jsonelement.trygetsbyte.html#trygetsbyte-ref-sbyte) | Attempts to represent the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte). |
 | [TryGetSingle(ref float)](/api/corvus-text-json-jsonelement.trygetsingle.html#trygetsingle-ref-float) | Attempts to represent the current JSON number as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). |
+| [TryGetUInt128(ref UInt128)](/api/corvus-text-json-jsonelement.trygetuint128.html#trygetuint128-ref-uint128) | Attempts to represent the current JSON number as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128). |
 | [TryGetUInt16(ref ushort)](/api/corvus-text-json-jsonelement.trygetuint16.html#trygetuint16-ref-ushort) | Attempts to represent the current JSON number as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16). |
 | [TryGetUInt32(ref uint)](/api/corvus-text-json-jsonelement.trygetuint32.html#trygetuint32-ref-uint) | Attempts to represent the current JSON number as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32). |
 | [TryGetUInt64(ref ulong)](/api/corvus-text-json-jsonelement.trygetuint64.html#trygetuint64-ref-ulong) | Attempts to represent the current JSON number as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64). |

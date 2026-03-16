@@ -9,6 +9,7 @@
     <NoWarn>$(NoWarn);nullable;IDE0007;NU5128;RS2008;SA0001;NU1504</NoWarn>
     <CorvusTextJsonPath>..\Corvus.Text.Json\</CorvusTextJsonPath>
     <CorvusTextJsonCodeGenerationPath>..\Corvus.Text.Json.CodeGeneration\</CorvusTextJsonCodeGenerationPath>
+    <CorvusV4Path>..\..\src-v4\</CorvusV4Path>
   </PropertyGroup>
 
   <PropertyGroup Label="SourceGenerator">
@@ -46,11 +47,17 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
+
   <ItemGroup>
     <Using Include="System" />
+    <Using Include="System.IO" />
+    <Using Include="System.Linq" />
     <Using Include="System.Text" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Collections.Generic" />
   </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0" PrivateAssets="all" />
@@ -58,9 +65,98 @@
     <PackageReference Include="Endjin.RecommendedPractices.GitHub" Version="2.1.18" PrivateAssets="All" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.556" PrivateAssets="All" />
     <PackageReference Include="Roslynator.Analyzers" Version="4.13.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="8.0.11" PrivateAssets="All" />
+    <PackageReference Include="NodaTime" Version="3.2.1" PrivateAssets="All" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.7.0" PrivateAssets="All" />
   </ItemGroup>
 
-    <ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.ExtendedTypes\Corvus.Json\**\*.cs">
+      <Link>Corvus.Json.ExtendedTypes\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonReference\Corvus.Json\**\*.cs">
+      <Link>Corvus.Json.JsonReference\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration\Corvus.Json.CodeGeneration\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.201909\Corvus.Json.CodeGeneration\Draft201909\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.201909\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.202012\Corvus.Json.CodeGeneration\Draft202012\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.202012\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.4\Corvus.Json.CodeGeneration\Draft4\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.4\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.6\Corvus.Json.CodeGeneration\Draft6\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.6\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.7\Corvus.Json.CodeGeneration\Draft7\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.7\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.CorvusVocabulary\Corvus.Json.CodeGeneration\CorvusVocabulary\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.CorvusVocabulary\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.CodeGeneration.OpenApi30\Corvus.Json.CodeGeneration\OpenApi30\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.OpenApi30\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.Draft201909\Draft201909\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.Draft201909\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.Draft202012\Draft202012\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.Draft202012\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.Draft4\Draft4\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.Draft4\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.Draft6\Draft6\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.Draft6\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.Draft7\Draft7\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.Draft7\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.OpenApi30\OpenApi30\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.OpenApi30\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+    <Compile Include="$(CorvusV4Path)Corvus.Json.JsonSchema.OpenApi31\OpenApi31\**\*.cs">
+      <Link>Corvus.Json.CodeGeneration.OpenApi31\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
+
+    <Compile Remove="$(CorvusV4Path)Corvus.Json.CodeGeneration\Corvus.Json.CodeGeneration\**\FileSystemDocumentResolver.cs" />
+    <Compile Remove="$(CorvusV4Path)Corvus.Json.CodeGeneration.CSharp\Corvus.Json.CodeGeneration\CSharp\**\NullableAttributes.cs" />
+    <Compile Remove="$(CorvusV4Path)Corvus.Json.JsonReference\Corvus.Json\**\NullableAttributes.cs" />
+    <Compile Remove="$(CorvusV4Path)Corvus.Json.ExtendedTypes\Corvus.Json\**\NullableAttributes.cs" />
+    <Compile Remove="$(CorvusV4Path)Corvus.Json.CodeGeneration\Corvus.Json.CodeGeneration\NullableAttributes.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="metaschema\corvus\meta\corvus-extensions.json" />
+    <EmbeddedResource Include="metaschema\corvus\schema.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\applicator.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\content.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\core.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\format.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\hyper-schema.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\meta-data.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\meta\validation.json" />
+    <EmbeddedResource Include="metaschema\draft2019-09\schema.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\applicator.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\content.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\core.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\format-annotation.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\format-assertion.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\hyper-schema.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\meta-data.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\unevaluated.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\meta\validation.json" />
+    <EmbeddedResource Include="metaschema\draft2020-12\schema.json" />
+    <EmbeddedResource Include="metaschema\draft4\schema.json" />
+    <EmbeddedResource Include="metaschema\draft6\schema.json" />
+    <EmbeddedResource Include="metaschema\draft7\schema.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)CodeFileBuilders\JsonSchemaPartial.cs" LinkBase="Corvus.Text.Json.CodeGeneration/CodeFileBuilders" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)CodeFileBuilders\MutableCorePartial.cs" LinkBase="Corvus.Text.Json.CodeGeneration/CodeFileBuilders" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)CodeFileBuilders\CorePartial.cs" LinkBase="Corvus.Text.Json.CodeGeneration/CodeFileBuilders" />
@@ -103,6 +199,7 @@
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\SingleTypeArrayNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\SubschemaNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NameHeuristics\WellKnownTypeNameHeuristic.cs" LinkBase="Corvus.Text.Json.CodeGeneration\NameHeuristics" />
+    <Compile Remove="..\Corvus.Text.Json.CodeGeneration\NullableAttributes.cs" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)NullableAttributes.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)PropertyDeclarationExtensions.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
     <Compile Include="$(CorvusTextJsonCodeGenerationPath)SimpleTypeAndFormatterAndKind.cs" LinkBase="Corvus.Text.Json.CodeGeneration" />
@@ -153,10 +250,64 @@
     <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.DateTime.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.DateTime.Core.cs" />
     <!-- NumberParsing -->
     <Compile Include="$(CorvusTextJsonPath)Corvus\Text\Json\Internal\JsonElementHelpers.Numeric.Core.cs" Link="Corvus.Text.Json\JsonElementHelpers.Numeric.Core.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\ArrayPoolBufferWriter.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\Enums\AllocationMode.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\Interfaces\IBuffer{T}.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\MemoryBufferWriter{T}.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\MemoryDebugView{T}.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\MemoryOwner{T}.cs" />
+    <Compile Include="Community.HighPerformance\Buffers\SpanOwner{T}.cs" />
+    <Compile Include="Community.HighPerformance\Enumerables\SpanEnumerable{T}.cs" />
+    <Compile Include="Community.HighPerformance\Enumerables\SpanTokenizer{T}.cs" />
+    <Compile Include="Community.HighPerformance\Extensions\ArrayExtensions.1D.cs" />
+    <Compile Include="Community.HighPerformance\Extensions\ArrayPoolExtensions.cs" />
+    <Compile Include="Community.HighPerformance\Extensions\BoolExtensions.cs" />
+    <Compile Include="Community.HighPerformance\Helpers\Internals\BitOperations.cs" />
+    <Compile Include="Community.HighPerformance\Helpers\Internals\RuntimeHelpers.cs" />
+    <Compile Include="Community.HighPerformance\Helpers\Internals\SpanHelper.Count.cs" />
+    <Compile Include="Community.HighPerformance\Helpers\ObjectMarshal.cs" />
+    <Compile Include="Corvus.HighPerformance\ValueStringBuilder.AppendSpanFormattable.cs" />
+    <Compile Include="Corvus.HighPerformance\ValueStringBuilder.cs" />
+    <Compile Include="Corvus.HighPerformance\ValueStringBuilder.Replace.cs" />
+    <Compile Include="Corvus.UriTemplates\Internal\StringBuilderPool.cs" />
+    <Compile Include="Corvus.UriTemplates\IUriTemplateParser.cs" />
+    <Compile Include="Corvus.UriTemplates\MatchWithVerb.cs" />
+    <Compile Include="Corvus.UriTemplates\MatchWithVerb{TMatch}.cs" />
+    <Compile Include="Corvus.UriTemplates\ParameterByNameAndRangeCache.cs" />
+    <Compile Include="Corvus.UriTemplates\ParameterCache.cs" />
+    <Compile Include="Corvus.UriTemplates\ParameterValue.cs" />
+    <Compile Include="Corvus.UriTemplates\ReadOnlySpanCallback.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\DictionaryTemplateParameterProvider.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\DictionaryUriTemplateResolver.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\QueryStringParameterOrder.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\TemplateMatch.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\UriExtensions.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\UriTemplate.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\UriTemplateExtensions.cs" />
+    <Compile Include="Corvus.UriTemplates\TavisApi\UriTemplateTable.cs" />
+    <Compile Include="Corvus.UriTemplates\TemplateMatchResult.cs" />
+    <Compile Include="Corvus.UriTemplates\TemplateParameterProviders\ITemplateParameterProvider.cs" />
+    <Compile Include="Corvus.UriTemplates\TemplateParameterProviders\OperatorInfo.cs" />
+    <Compile Include="Corvus.UriTemplates\TemplateParameterProviders\TemplateParameterProvider.cs" />
+    <Compile Include="Corvus.UriTemplates\TemplateParameterProviders\VariableProcessingState.cs" />
+    <Compile Include="Corvus.UriTemplates\TemplateParameterProviders\VariableSpecification.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateAndVerbTable.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateAndVerbTable{TMatch}.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateParameters.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateParserExtensions.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateParserFactory.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateRegexBuilder.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateResolver{TParameterProvider,TParameterPayload}.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateTable.cs" />
+    <Compile Include="Corvus.UriTemplates\UriTemplateTable{TMatch}.cs" />
+    <Compile Include="GeneratedTypeAccessibility.cs" />
+    <Compile Include="IGlobalOptions.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="IncrementalSourceGenerator.cs" />
+    <Compile Include="Metaschema.cs" />
+    <Compile Include="SourceGeneratorHelpers.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -166,8 +317,7 @@
     <!-- So, stick with 8.x of STJ. -->
     <PackageReference Include="System.Text.Json" Version="8.0.6" PrivateAssets="all" GeneratePathProperty="true" />
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" PrivateAssets="all" GeneratePathProperty="true" />
-    <PackageReference Include="Microsoft.Bcl.Memory" Version="9.0.14" PrivateAssets="all" GeneratePathProperty="true"/>
-    <PackageReference Include="Corvus.Json.SourceGeneratorTools.ForLanguageProvider" Version="4.6.6" PrivateAssets="all" GeneratePathProperty="true" />
+    <PackageReference Include="Microsoft.Bcl.Memory" Version="9.0.14" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -176,7 +326,6 @@
 
   <Target Name="GetDependencyTargetPaths">
     <ItemGroup>
-      <TargetPathWithTargetPlatformMoniker Include="$(PKGCorvus_Json_SourceGeneratorTools_ForLanguageProvider)\lib\netstandard2.0\Corvus.Json.SourceGeneratorTools.ForLanguageProvider.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" IncludeRuntimeDependency="false" />
       <TargetPathWithTargetPlatformMoniker Include="$(PKGMicrosoft_Bcl_HashCode)\lib\netstandard2.0\Microsoft.Bcl.HashCode.dll" IncludeRuntimeDependency="false" />
     </ItemGroup>
@@ -190,7 +339,7 @@
   <ItemGroup>
     <!-- Package the generator in the analyzer directory of the nuget package -->
     <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-    <None Include="$(PKGCorvus_Json_SourceGeneratorTools_ForLanguageProvider)\lib\netstandard2.0\Corvus.Json.SourceGeneratorTools.ForLanguageProvider.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+    <None Include="$(OutputPath)Corvus.Json.SourceGeneratorTools.ForLanguageProvider.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PKGSystem_Text_Json)\lib\netstandard2.0\System.Text.Json.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PKGMicrosoft_Bcl_HashCode)\lib\netstandard2.0\Microsoft.Bcl.HashCode.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
     <None Include="$(PKGMicrosoft_Bcl_Memory)\lib\netstandard2.0\Microsoft.Bcl.Memory.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />

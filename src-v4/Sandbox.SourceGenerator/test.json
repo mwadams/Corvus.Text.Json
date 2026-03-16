@@ -1,0 +1,28 @@
+{
+    "$defs": {
+        "FlimFlam": {
+            "type": "object",
+            "properties": {
+              "theArray": { "$ref": "#/%24defs/someArray" },
+              "someInt32":  {"type": "number", "format": "int32"}
+            }
+        },
+        "someArray": {
+            "type": "array",
+            "prefixItems": [
+                {
+                    "$corvusTypeName": "PositiveInt32",
+                    "type": "integer",
+                    "format": "int32",
+                    "minimum": 0
+                },
+                { "type": "string", "minLength": 0 },
+                {
+                    "type": "number",
+                    "minimum": 3.5
+                }
+            ],
+            "unevaluatedItems": false
+        }
+    }
+}

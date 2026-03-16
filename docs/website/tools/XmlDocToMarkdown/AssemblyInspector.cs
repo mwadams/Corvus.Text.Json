@@ -37,6 +37,7 @@ public sealed class TypeInfo
     public bool IsStatic { get; set; }
     public bool IsAbstract { get; set; }
     public bool IsSealed { get; set; }
+    public bool AvailableOnNetStandard20 { get; set; } = true;
 }
 
 /// <summary>
@@ -79,6 +80,7 @@ public sealed class MemberInfo
     /// For properties/fields/events: same as <see cref="Name"/>.
     /// </summary>
     public string GroupKey { get; set; } = string.Empty;
+    public bool AvailableOnNetStandard20 { get; set; } = true;
 }
 
 public sealed class ParameterInfo
@@ -150,6 +152,81 @@ public sealed class AssemblyInspector(string assemblyPath)
         }
 
         return map;
+    }
+
+    /// <summary>
+    /// Scans an assembly and returns the set of type FullNames and member XmlDocKeys
+    /// present in it. Used to determine TFM-specific availability.
+    /// </summary>
+    public static HashSet<string> ScanMemberKeys(string scanAssemblyPath)
+    {
+        HashSet<string> keys = new(StringComparer.Ordinal);
+
+        string runtimeDir = Path.GetDirectoryName(typeof(object).Assembly.Location)!;
+        string scanDir = Path.GetDirectoryName(Path.GetFullPath(scanAssemblyPath))!;
+
+        PathAssemblyResolver resolver = new(GetAssemblyPaths(runtimeDir, scanDir));
+        using MetadataLoadContext mlc = new(resolver, coreAssemblyName: "System.Runtime");
+        Assembly assembly = mlc.LoadFromAssemblyPath(Path.GetFullPath(scanAssemblyPath));
+
+        foreach (Type type in assembly.GetExportedTypes())
+        {
+            if (type.Name.StartsWith('<') || type.Name.Contains('$') || type.FullName is null)
+            {
+                continue;
+            }
+
+            // Add type key
+            keys.Add($"T:{type.FullName}");
+
+            // Add member keys
+            foreach (System.Reflection.ConstructorInfo ctor in type.GetConstructors(BindingFlags.Public | BindingFlags.Instance))
+            {
+                keys.Add(BuildConstructorXmlKey(type, ctor));
+            }
+
+            foreach (System.Reflection.PropertyInfo prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
+            {
+                string fullName = type.FullName;
+                System.Reflection.ParameterInfo[] indexParams = prop.GetIndexParameters();
+                if (indexParams.Length > 0)
+                {
+                    string paramTypes = string.Join(",", indexParams.Select(p => GetXmlDocTypeName(p.ParameterType)));
+                    keys.Add($"P:{fullName}.{prop.Name}({paramTypes})");
+                }
+                else
+                {
+                    keys.Add($"P:{fullName}.{prop.Name}");
+                }
+            }
+
+            foreach (System.Reflection.MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
+            {
+                if (method.IsSpecialName && method.Name.StartsWith("op_", StringComparison.Ordinal))
+                {
+                    keys.Add(BuildOperatorXmlKey(type, method));
+                }
+                else if (!method.IsSpecialName)
+                {
+                    keys.Add(BuildMethodXmlKey(type, method));
+                }
+            }
+
+            foreach (System.Reflection.FieldInfo field in type.GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
+            {
+                if (!field.IsSpecialName)
+                {
+                    keys.Add($"F:{type.FullName}.{field.Name}");
+                }
+            }
+
+            foreach (System.Reflection.EventInfo evt in type.GetEvents(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly))
+            {
+                keys.Add($"E:{type.FullName}.{evt.Name}");
+            }
+        }
+
+        return keys;
     }
 
     public Dictionary<string, NamespaceInfo> Inspect(Dictionary<string, DocMember> xmlDocs)

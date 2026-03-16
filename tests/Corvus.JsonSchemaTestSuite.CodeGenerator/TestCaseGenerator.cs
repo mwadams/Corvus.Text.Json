@@ -217,7 +217,7 @@ internal static class TestCaseGenerator
 
                 var model = ParsedValue<TestFileModel>.Parse(File.ReadAllText(file));
 
-                foreach (TestFileModel.ItemsEntity testSuite in model.Instance.EnumerateArray())
+                foreach (TestFileModel.RequiredDescriptionAndSchemaAndTests testSuite in model.Instance.EnumerateArray())
                 {
 
                     List<TestSpecification> testList = [];

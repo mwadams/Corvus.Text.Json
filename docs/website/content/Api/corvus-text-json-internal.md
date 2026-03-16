@@ -4,6 +4,10 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Corvus.Text.Json.Internal Namespace"
 ---
+Internal implementation types that power the Corvus.Text.Json runtime. These include the document storage layer ([`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html), [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html), [`IJsonDocument`](/api/corvus-text-json-internal-ijsondocument.html)), element interfaces ([`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html), [`IMutableJsonDocument`](/api/corvus-text-json-internal-imutablejsondocument.html)), enumerators, JSON Schema evaluation machinery, and code-generation support types.
+
+These types are public for use by generated code but are not intended to be used directly by application developers. Breaking changes may occur between minor versions.
+
 | Type | Kind | Description |
 |------|------|-------------|
 | [ArrayEnumerator](/api/corvus-text-json-internal-arrayenumerator.html) | struct | Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document. |

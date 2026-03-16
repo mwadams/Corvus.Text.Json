@@ -150,7 +150,7 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
             {
                 alwaysAssertFormat = false;
             }
-            else if (alwaysAssertFormatName == "true" || alwaysAssertFormatName == "True" || alwaysAssertFormatName == string.Empty)
+            else if (alwaysAssertFormatName == "true" || alwaysAssertFormatName == "True" || alwaysAssertFormatName?.Length == 0)
             {
                 alwaysAssertFormat = true;
             }

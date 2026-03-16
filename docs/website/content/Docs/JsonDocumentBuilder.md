@@ -1189,4 +1189,4 @@ System.Text.Json.JsonElement element = doc.RootElement.FromSTJsonElement();
 - The shape of your JSON is fixed and well-known at compile time
 - You are already using `JsonSerializer` throughout your codebase and want consistency
 
-> **Tip**: POCO serialization is the fastest way to produce JSON when you already have .NET objects in hand. The `System.Text.Json` source generator (`JsonSerializerContext`) can outperform any DOM-based approach for simple serialize/deserialize cycles. Use `JsonDocumentBuilder` or `JsonNode` when you need to *construct* or *transform* JSON dynamically, or when you need schema validation.
+> **Tip**: POCO serialization is the fastest way to produce JSON when you already have .NET objects in hand. The `System.Text.Json` source generator (`JsonSerializerContext`) can outperform any DOM-based approach for simple serialize/deserialize cycles. Reach for `JsonDocumentBuilder` or `JsonNode` when you need to *construct* or *transform* JSON dynamically, or when you need schema validation.

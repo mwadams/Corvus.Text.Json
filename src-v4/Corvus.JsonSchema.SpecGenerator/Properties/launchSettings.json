@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Corvus.JsonSchema.SpecGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "D:\\source\\corvus-dotnet\\Corvus.JsonSchema\\JSON-Schema-Test-Suite D:\\source\\corvus-dotnet\\Corvus.JsonSchema\\Solutions\\Corvus.Json.Specs\\Features\\JsonSchema\\ JsonSchemaOrgTestSuiteSelector.jsonc"
+    }
+  }
+}

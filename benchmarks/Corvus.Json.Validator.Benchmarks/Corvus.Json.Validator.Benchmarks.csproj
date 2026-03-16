@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-    <PackageReference Include="Corvus.Json.Validator" Version="4.6.6" />
+    <ProjectReference Include="..\..\src-v4\Corvus.Json.Validator\Corvus.Json.Validator.csproj" />
   </ItemGroup>
 
   <ItemGroup>
