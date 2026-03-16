@@ -4,12 +4,6 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Corvus.Text.Json Namespace"
 ---
-The primary public API for Corvus.Text.Json. This namespace contains the core types for parsing, reading, building, and validating JSON documents using strongly-typed, pooled-memory models generated from JSON Schema.
-
-Key types include [`ParsedJsonDocument<T>`](/api/corvus-text-json-parsedjsondocument-t.html) (read-only, pooled-memory parsing), [`JsonDocumentBuilder<T>`](/api/corvus-text-json-jsondocumentbuilder-t.html) (mutable document construction), [`JsonElement`](/api/corvus-text-json-jsonelement.html) (the immutable value type), [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html) (the mutable builder variant), [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html) (for implicit conversions from .NET primitives), [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html) (pooled memory management), and [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html)/[`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) (high-performance streaming I/O).
-
-URI types ([`Utf8Uri`](/api/corvus-text-json-utf8uri.html), [`Utf8IriReference`](/api/corvus-text-json-utf8irireference.html), etc.) provide zero-allocation URI parsing and validation for JSON Schema format keywords.
-
 | Type | Kind | Description |
 |------|------|-------------|
 | [ArrayEnumerator<TItem>](/api/corvus-text-json-arrayenumerator-titem.html) | struct | Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document. |
