@@ -19,9 +19,9 @@ If you're building APIs, data pipelines, or any system that processes JSON at vo
 
 | Feature | System.Text.Json | Corvus.Text.Json |
 |---------|-----------------|-----------------|
-| Memory Model | Per-document allocations | ArrayPool-backed pooled memory |
-| Schema Validation | None built-in | Draft 4 through 2020-12 with diagnostics |
-| Code Generation | None | Source generator + CLI tool |
+| Read-only Memory Model | ArrayPool-backed pooled memory | ArrayPool-backed pooled memory |
+| Mutable Documents | JsonNode (allocates per node) | Builder pattern on the same pooled memory model — no data copying in JSON pipelines |
+| Schema Validation | None built-in | Draft 4, 6, 7, 2019-09, and 2020-12 with full diagnostics. 10x+ faster than other .NET validators |
+| Code Generation | Source generation for serialization to/from fixed .NET POCOs | Source generator + CLI tool producing strongly-typed entities with composition, pattern matching, and resilience to invalid schema |
 | Date/Time Types | System.DateTime | NodaTime (LocalDate, OffsetDateTime) |
-| Mutation | JsonNode (allocates per node) | Builder pattern (pooled workspace) |
 | Numeric Precision | decimal (28 digits) | BigNumber (arbitrary precision) |

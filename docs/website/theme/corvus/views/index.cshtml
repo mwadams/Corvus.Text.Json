@@ -9,7 +9,7 @@
         <h1 class="hero__title">High-performance <span class="brand">JSON</span> for .NET</h1>
         <p class="hero__subtitle">
             Source-generated strongly-typed C# from JSON Schema. Zero-allocation parsing,
-            full draft&nbsp;2020&#x2011;12 validation, mutable documents, and more.
+            full validation for all drafts, mutable documents, and more.
         </p>
         <div class="hero__actions">
             <a href="/getting-started/index.html" class="btn btn--primary btn--lg">Get Started</a>
@@ -27,7 +27,7 @@
             <div class="home-stats__label">Fewer allocations</div>
         </div>
         <div class="home-stats__item">
-            <div class="home-stats__value">Draft 4&#x2013;2020&#x2011;12</div>
+            <div class="home-stats__value">All Drafts</div>
             <div class="home-stats__label">JSON Schema support</div>
         </div>
         <div class="home-stats__item">
@@ -57,7 +57,7 @@
             <div class="card">
                 <div class="card__icon">📋</div>
                 <h3 class="card__title">Schema Validation</h3>
-                <p class="card__body">Full draft 2019-09 and 2020-12 validation with <code>EvaluateSchema()</code>. Detailed diagnostics: schema location, evaluation path, and error messages for every failure.</p>
+                <p class="card__body">Full draft 4, 6, 7, 2019-09, and 2020-12 validation with <code>EvaluateSchema()</code>. Over 10x faster than other .NET validators. Detailed diagnostics for every failure.</p>
             </div>
             <div class="card">
                 <div class="card__icon">⚡</div>
@@ -134,11 +134,11 @@ root.SetAge(31);
                         <tr><th>Feature</th><th>System.Text.Json</th><th>Corvus.Text.Json</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td>Memory Model</td><td>Per-document allocations</td><td>ArrayPool-backed pooled memory</td></tr>
-                        <tr><td>Schema Validation</td><td>None built-in</td><td>Full draft 2020-12 with diagnostics</td></tr>
-                        <tr><td>Code Generation</td><td>None</td><td>Source generator + CLI tool</td></tr>
+                        <tr><td>Read-only Memory Model</td><td>ArrayPool-backed pooled memory</td><td>ArrayPool-backed pooled memory</td></tr>
+                        <tr><td>Mutable Documents</td><td>JsonNode (allocates per node)</td><td>Builder pattern on the same pooled memory model — no data copying in JSON pipelines</td></tr>
+                        <tr><td>Schema Validation</td><td>None built-in</td><td>Draft 4, 6, 7, 2019-09, and 2020-12 with full diagnostics. 10x+ faster than other .NET validators</td></tr>
+                        <tr><td>Code Generation</td><td>Source generation for serialization to/from fixed .NET POCOs</td><td>Source generator + CLI tool producing strongly-typed entities with composition, pattern matching, and resilience to invalid schema</td></tr>
                         <tr><td>Date/Time Types</td><td>System.DateTime</td><td>NodaTime (LocalDate, OffsetDateTime)</td></tr>
-                        <tr><td>Mutation</td><td>JsonNode (allocates per node)</td><td>Builder pattern (pooled workspace)</td></tr>
                         <tr><td>Numeric Precision</td><td>decimal (28 digits)</td><td>BigNumber (arbitrary precision)</td></tr>
                     </tbody>
                 </table>
