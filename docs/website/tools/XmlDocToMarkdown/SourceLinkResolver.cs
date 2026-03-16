@@ -375,7 +375,7 @@ public sealed class SourceLinkResolver : IDisposable
 
         string fullKey = rawKey.Replace('+', '.');
 
-        // Try full key with parameters first (exact overload match)
+        // Try full key with parameters first (exact overload match for methods)
         if (_sourceUrls.TryGetValue(fullKey, out string? url))
         {
             return url;
@@ -389,10 +389,18 @@ public sealed class SourceLinkResolver : IDisposable
         }
 
         // Try arity variants on the full key (with parameters preserved)
-        string? arityUrl = TryArityVariantsFullKey(fullKeyNoArity);
-        if (arityUrl is not null)
+        url = TryArityVariantsFullKey(fullKeyNoArity);
+        if (url is not null)
         {
-            return arityUrl;
+            return url;
+        }
+
+        // For properties/indexers with parameters (e.g. "Type.Item(System.Int32)"),
+        // try get_/set_ accessor with the parameters preserved
+        url = TryPropertyAccessorWithParams(fullKeyNoArity);
+        if (url is not null)
+        {
+            return url;
         }
 
         // Strip parameters for unqualified lookup
@@ -436,7 +444,7 @@ public sealed class SourceLinkResolver : IDisposable
             }
         }
 
-        // Try property accessor names (get_/set_)
+        // Try property accessor names without params (get_/set_)
         foreach (string prefix in new[] { "get_", "set_" })
         {
             if (_sourceUrls.TryGetValue($"{parentKey}.{prefix}{memberName}", out url))
@@ -457,6 +465,53 @@ public sealed class SourceLinkResolver : IDisposable
         int origLastDot = key.LastIndexOf('.');
         string parentFromOrig = origLastDot >= 0 ? key[..origLastDot] : parentKey;
         return GetTypeSourceUrl(parentFromOrig);
+    }
+
+    /// <summary>
+    /// For indexer properties like "Type.Item(System.Int32)", tries looking up
+    /// "Type.get_Item(System.Int32)" and "Type.set_Item(System.Int32)" in the PDB map,
+    /// including generic arity variants on the parent type.
+    /// </summary>
+    private string? TryPropertyAccessorWithParams(string fullKeyNoArity)
+    {
+        int parenIdx = fullKeyNoArity.IndexOf('(');
+        if (parenIdx < 0)
+        {
+            return null;
+        }
+
+        string withoutParams = fullKeyNoArity[..parenIdx];
+        string paramSuffix = fullKeyNoArity[parenIdx..];
+
+        int lastDot = withoutParams.LastIndexOf('.');
+        if (lastDot < 0)
+        {
+            return null;
+        }
+
+        string parentType = withoutParams[..lastDot];
+        string memberName = withoutParams[(lastDot + 1)..];
+
+        foreach (string prefix in new[] { "get_", "set_" })
+        {
+            string accessorKey = $"{parentType}.{prefix}{memberName}{paramSuffix}";
+            if (_sourceUrls.TryGetValue(accessorKey, out string? url))
+            {
+                return url;
+            }
+
+            // Try arity variants
+            for (int arity = 1; arity <= 4; arity++)
+            {
+                accessorKey = $"{parentType}`{arity}.{prefix}{memberName}{paramSuffix}";
+                if (_sourceUrls.TryGetValue(accessorKey, out url))
+                {
+                    return url;
+                }
+            }
+        }
+
+        return null;
     }
 
     // ─── SourceLink JSON parsing ──────────────────────────────────────
