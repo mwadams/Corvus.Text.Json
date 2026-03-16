@@ -30,7 +30,8 @@
 @use 'components/button';
 @use 'components/cards';
 @use 'components/code';
-@use 'components/search';
+// _search.scss removed — global overlay search was never wired up.
+// API browser search styles live in pages/_api.scss.
 @use 'components/sidebar';
 
 // ---------------------------------------------------------------------------

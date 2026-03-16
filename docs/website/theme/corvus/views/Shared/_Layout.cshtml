@@ -64,7 +64,6 @@
     @RenderSection("head", required: false)
 </head>
 <body>
-    @await Html.PartialAsync("SearchResults").ConfigureAwait(false)
     @await Html.PartialAsync("Header").ConfigureAwait(false)
     <div class="page-content">
     @RenderBody()
@@ -78,8 +77,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js" defer></script>
     <script>document.addEventListener('DOMContentLoaded',()=>hljs.highlightAll())</script>
     <script src="/assets/js/main.js" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/2.3.9/lunr.min.js" defer></script>
-    <script src="/assets/js/search.js" defer></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
