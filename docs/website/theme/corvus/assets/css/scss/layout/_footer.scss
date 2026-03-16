@@ -8,25 +8,15 @@
   position: relative;
   z-index: 10;
   background: var(--color-bg);
-  margin-top: var(--space-xxl);
-  padding: var(--space-xl) 0;
+  margin-top: var(--space-lg);
+  padding: var(--space-md) 0;
   border-top: 1px solid var(--color-border);
-
-  // On docs pages (desktop), pull footer up into the padding zone
-  // so it slides over the sidebar instead of pushing it away.
-  @media (min-width: 60rem) {
-    .page-content:has(.layout-docs) + & {
-      margin-top: -15rem;
-      min-height: 15rem;
-      box-shadow: 0 -6px 20px rgb(0 0 0 / 0.35);
-    }
-  }
 
   &__inner {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-sm);
     max-width: var(--max-width);
     margin: 0 auto;
     padding: 0 var(--space-md);
