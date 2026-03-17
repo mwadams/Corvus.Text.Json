@@ -193,8 +193,6 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
         IVocabulary fallbackVocabulary = CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
         if (source.GlobalOptions.TryGetValue("build_property.CorvusJsonSchemaFallbackVocabulary", out string? fallbackVocabularyName))
         {
-            Console.WriteLine($"Fallback vocabulary: {fallbackVocabularyName}");
-
             fallbackVocabulary = fallbackVocabularyName switch
             {
                 "Draft202012" => CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary,
