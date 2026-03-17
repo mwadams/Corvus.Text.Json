@@ -72,13 +72,36 @@ public sealed class WithMutationCodeFix : CodeFixProvider
                 continue;
             }
 
-            context.RegisterCodeFix(
-                CodeAction.Create(
-                    title: "Rename With*() to Set*() and unchain",
-                    createChangedDocument: ct => UnchainAndRenameAsync(
-                        context.Document, outermost, ct),
-                    equivalenceKey: DiagnosticDescriptors.WithMutationMigration.Id),
-                diagnostic);
+            if (IsInsideArgument(outermost))
+            {
+                // This With*() is nested inside an argument expression.
+                // Only rename the identifier — don't restructure the containing statement.
+                string setName = ToSetName(identifierName.Identifier.Text);
+
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        title: $"Rename '{identifierName.Identifier.Text}' to '{setName}'",
+                        createChangedDocument: ct => RenameOnlyAsync(
+                            context.Document, identifierName, setName, ct),
+                        equivalenceKey: DiagnosticDescriptors.WithMutationMigration.Id),
+                    diagnostic);
+            }
+            else if (IsResultFeedingAnotherWith(outermost))
+            {
+                // This With*() result is used as an argument to another With*().
+                // Skip — the outer With*() code fix will collapse the whole pattern.
+                continue;
+            }
+            else
+            {
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        title: "Rename With*() to Set*() and unchain",
+                        createChangedDocument: ct => UnchainAndRenameAsync(
+                            context.Document, outermost, ct),
+                        equivalenceKey: DiagnosticDescriptors.WithMutationMigration.Id),
+                    diagnostic);
+            }
         }
     }
 
@@ -87,6 +110,73 @@ public sealed class WithMutationCodeFix : CodeFixProvider
 
     private static string ToSetName(string withName)
         => "Set" + withName.Substring(4);
+
+    /// <summary>
+    /// Checks whether this invocation is inside an <see cref="ArgumentSyntax"/>.
+    /// If so, a full statement replacement would be wrong — only rename.
+    /// </summary>
+    private static bool IsInsideArgument(InvocationExpressionSyntax invocation)
+    {
+        SyntaxNode? current = invocation.Parent;
+
+        while (current is not null && current is not StatementSyntax)
+        {
+            if (current is ArgumentSyntax)
+            {
+                return true;
+            }
+
+            current = current.Parent;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Checks whether this invocation's result variable is used as an argument
+    /// to another <c>With*()</c> call in the same block. If so, the outer
+    /// <c>With*()</c> fix should handle the collapse instead.
+    /// </summary>
+    private static bool IsResultFeedingAnotherWith(InvocationExpressionSyntax invocation)
+    {
+        StatementSyntax? stmt = invocation.FirstAncestorOrSelf<StatementSyntax>();
+
+        if (stmt is not LocalDeclarationStatementSyntax localDecl ||
+            stmt.Parent is not BlockSyntax block)
+        {
+            return false;
+        }
+
+        foreach (VariableDeclaratorSyntax declarator in localDecl.Declaration.Variables)
+        {
+            if (!ReferenceEquals(declarator.Initializer?.Value, invocation))
+            {
+                continue;
+            }
+
+            string varName = declarator.Identifier.Text;
+
+            foreach (SyntaxNode node in block.DescendantNodes())
+            {
+                if (node is InvocationExpressionSyntax otherInv &&
+                    !ReferenceEquals(otherInv, invocation) &&
+                    otherInv.Expression is MemberAccessExpressionSyntax ma &&
+                    IsWithMethod(ma.Name.Identifier.Text))
+                {
+                    foreach (ArgumentSyntax arg in otherInv.ArgumentList.Arguments)
+                    {
+                        if (arg.Expression is IdentifierNameSyntax id &&
+                            id.Identifier.Text == varName)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
     private static InvocationExpressionSyntax GetOutermostChainedInvocation(
         InvocationExpressionSyntax invocation)
@@ -101,6 +191,25 @@ public sealed class WithMutationCodeFix : CodeFixProvider
         }
 
         return (InvocationExpressionSyntax)current;
+    }
+
+    private static async Task<Document> RenameOnlyAsync(
+        Document document,
+        IdentifierNameSyntax identifier,
+        string newName,
+        CancellationToken cancellationToken)
+    {
+        SyntaxNode? root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+        if (root is null)
+        {
+            return document;
+        }
+
+        IdentifierNameSyntax newIdentifier = identifier.WithIdentifier(
+            SyntaxFactory.Identifier(newName)
+                .WithTriviaFrom(identifier.Identifier));
+
+        return document.WithSyntaxRoot(root.ReplaceNode(identifier, newIdentifier));
     }
 
     private static async Task<Document> UnchainAndRenameAsync(
