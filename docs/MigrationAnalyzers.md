@@ -242,7 +242,7 @@ array.InsertItem(0, item);
 Detects V4's static `Create(...)` factory method for constructing objects. The code fix chooses between two V5 patterns based on how the result is used:
 
 - **Top-level (used as an instance):** `CreateBuilder(workspace, ...)` — the result is a mutable builder that you can call methods on.
-- **Nested (used as a source value):** `Build(...)` — the result is passed into another construction or argument.
+- **Nested (used as a source value):** `Build(...)` — the result is passed into another construction or argument. When the result is assigned to an explicitly typed variable, the type is rewritten to `Type.Source` (since `Build()` returns a Source, not the entity type).
 
 ```csharp
 // Before (V4) — top-level, used as an instance
@@ -263,13 +263,23 @@ parent.SetChild(Person.Create(name: "Alice", age: 30));
 parent.SetChild(Person.Build(name: "Alice", age: 30));
 ```
 
+```csharp
+// Before (V4) — assigned to variable, then passed as argument
+Person child = Person.Create(name: "Alice", age: 30);
+parent.SetChild(child);
+
+// After (V5) — type becomes Person.Source
+Person.Source child = Person.Build(name: "Alice", age: 30);
+parent.SetChild(child);
+```
+
 ---
 
 ### CVJ014 — V4 `FromItems()` replaced by `Build()` pattern
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested.
+Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested. Explicitly typed variables are rewritten to `Type.Source`.
 
 ```csharp
 // Before (V4) — top-level
@@ -294,7 +304,7 @@ parent.SetItems(MyArray.Build(item1, item2));
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested.
+Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested. Explicitly typed variables are rewritten to `Type.Source`.
 
 ```csharp
 // Before (V4)
