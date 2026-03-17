@@ -2,9 +2,11 @@
 
 This document provides structured transformation rules for migrating C# code from Corvus.Json (V4) to Corvus.Text.Json (V5). Use these patterns to systematically transform code.
 
+> **Note:** The `Corvus.Text.Json.Migration.Analyzers` NuGet package detects these patterns automatically and provides code fixes for many of them. Each transformation below includes the corresponding diagnostic ID (e.g., CVJ001). See the [Migration Analyzers Reference](../MigrationAnalyzers.md) for the complete list.
+
 ---
 
-## NAMESPACE TRANSFORMATIONS
+## NAMESPACE TRANSFORMATIONS (CVJ001)
 
 Replace all occurrences:
 
@@ -13,7 +15,7 @@ using Corvus.Json;                    →  using Corvus.Text.Json;
 using Corvus.Json.Patch;              →  using Corvus.Text.Json.Patch;
 ```
 
-## TYPE NAME TRANSFORMATIONS
+## TYPE NAME TRANSFORMATIONS (CVJ007, CVJ009)
 
 | V4 Type | V5 Type |
 |---------|---------|
@@ -31,7 +33,7 @@ using Corvus.Json.Patch;              →  using Corvus.Text.Json.Patch;
 
 ---
 
-## PARSING TRANSFORMATIONS
+## PARSING TRANSFORMATIONS (CVJ002, CVJ008)
 
 ### Pattern 1: Direct Parse
 ```csharp
@@ -76,7 +78,7 @@ MyType v5 = MyType.ParseValue(jsonString);
 
 ---
 
-## PROPERTY ACCESS TRANSFORMATIONS
+## PROPERTY ACCESS TRANSFORMATIONS (CVJ005)
 
 ### Basic property access (UNCHANGED)
 ```csharp
@@ -114,7 +116,7 @@ JsonElement value = v5["propertyName"u8];
 
 ---
 
-## CORE TYPE ACCESSOR TRANSFORMATIONS
+## CORE TYPE ACCESSOR TRANSFORMATIONS (CVJ010)
 
 In V4, when a type composed multiple core types (e.g. a union of string and boolean), V4 would not emit value accessors (casts, `GetString()`, indexers, etc.) directly on that type. You had to use `AsString`, `AsNumber`, etc. to reach a single-core-type that did have those accessors. V5 emits value accessors for all composed core types directly on the type, so the `As*` indirection is no longer needed.
 
@@ -177,7 +179,7 @@ JsonElement element = v5;  // implicit
 
 ---
 
-## TYPE COERCION TRANSFORMATIONS
+## TYPE COERCION TRANSFORMATIONS (CVJ004, CVJ006)
 
 ```csharp
 // V4
@@ -189,7 +191,7 @@ TargetType target = TargetType.From(source);
 
 ---
 
-## VALIDATION TRANSFORMATIONS
+## VALIDATION TRANSFORMATIONS (CVJ003)
 
 ### Basic validation (bool only)
 ```csharp
@@ -240,7 +242,7 @@ if (!isValid)
 
 ---
 
-## OBJECT CREATION TRANSFORMATIONS
+## OBJECT CREATION TRANSFORMATIONS (CVJ013)
 
 ### Static Create
 ```csharp
@@ -350,7 +352,7 @@ using var builder3 = MyVector.CreateBuilder(
 
 ---
 
-## MUTATION TRANSFORMATIONS
+## MUTATION TRANSFORMATIONS (CVJ011, CVJ021)
 
 ### V4 functional (With*) to V5 imperative (Set*)
 
@@ -425,7 +427,7 @@ root.RemoveProperty("email"u8);
 
 ---
 
-## ARRAY OPERATION TRANSFORMATIONS
+## ARRAY OPERATION TRANSFORMATIONS (CVJ012, CVJ014, CVJ015)
 
 ### Add item
 ```csharp
@@ -484,7 +486,7 @@ int removedCount = root.RemoveWhere(
 
 ---
 
-## STRING ACCESS TRANSFORMATIONS
+## STRING ACCESS TRANSFORMATIONS (CVJ018)
 
 ### Delegate-based span access
 ```csharp
@@ -624,7 +626,7 @@ string label = v5.Match(
 
 ---
 
-## SERIALIZATION TRANSFORMATIONS
+## SERIALIZATION TRANSFORMATIONS (CVJ016)
 
 ### ToString (UNCHANGED)
 ```csharp
@@ -643,7 +645,7 @@ v5.WriteTo(corvusWriter);
 
 ---
 
-## CSPROJ / PACKAGE REFERENCE TRANSFORMATIONS
+## CSPROJ / PACKAGE REFERENCE TRANSFORMATIONS (CVJ025)
 
 ### V4 packages
 ```xml

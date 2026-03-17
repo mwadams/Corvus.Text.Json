@@ -1,0 +1,456 @@
+# Migration Analyzers
+
+The `Corvus.Text.Json.Migration.Analyzers` NuGet package provides Roslyn analyzers that detect V4 (`Corvus.Json`) API patterns in your code and guide you toward the equivalent V5 (`Corvus.Text.Json`) patterns. Many of the diagnostics include automatic code fixes that can be applied with a single click in your IDE.
+
+## Installation
+
+Add the analyzer package to any project that references V4 `Corvus.Json` types:
+
+```xml
+<PackageReference Include="Corvus.Text.Json.Migration.Analyzers" Version="1.0.0" PrivateAssets="all" />
+```
+
+The analyzers run at build time and produce warnings. They do **not** change any runtime behavior — they only guide your migration.
+
+## Tiers
+
+The analyzers are organized into two tiers:
+
+| Tier | Description |
+|------|-------------|
+| **Tier 1: Automatable** | These diagnostics have code fixes that can be applied automatically. Apply them in bulk with "Fix all in document/project/solution" in your IDE. |
+| **Tier 2: Guidance** | These diagnostics flag patterns that require manual migration because the V5 equivalent involves structural changes (e.g., introducing a `JsonWorkspace`, converting functional mutation to imperative). The diagnostic message describes the required change. |
+
+---
+
+## Tier 1: Automatable Diagnostics
+
+### CVJ001 — Migrate namespace
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects `using Corvus.Json` directives and replaces them with the corresponding `Corvus.Text.Json` namespace.
+
+```csharp
+// Before (V4)
+using Corvus.Json;
+using Corvus.Json.Internal;
+
+// After (V5)
+using Corvus.Text.Json;
+using Corvus.Text.Json.Internal;
+```
+
+---
+
+### CVJ002 — Migrate `ParsedValue<T>` to `ParsedJsonDocument<T>`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects usage of `ParsedValue<T>` (the V4 parsed document wrapper) and replaces it with `ParsedJsonDocument<T>`. Also flags `.Instance` property access, which becomes `.RootElement` in V5.
+
+```csharp
+// Before (V4)
+using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);
+Person person = parsed.Instance;
+
+// After (V5)
+using ParsedJsonDocument<Person> parsed = ParsedJsonDocument<Person>.Parse(json);
+Person person = parsed.RootElement;
+```
+
+---
+
+### CVJ003 — Migrate validation to `EvaluateSchema()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects calls to V4's `.IsValid()` and `.Validate(context, level)` methods and replaces them with V5's `.EvaluateSchema()`.
+
+```csharp
+// Before (V4)
+bool valid = person.IsValid();
+ValidationContext result = person.Validate(ValidationContext.ValidContext, ValidationLevel.Detailed);
+
+// After (V5)
+bool valid = person.EvaluateSchema();
+// For detailed results, use the collector overload:
+JsonSchemaResultsCollector collector = new();
+bool valid = person.EvaluateSchema(collector);
+```
+
+---
+
+### CVJ004 — Migrate `As<T>()` to `T.From()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects the V4 generic coercion method `value.As<T>()` and replaces it with the V5 static factory `T.From(value)`.
+
+```csharp
+// Before (V4)
+Person person = element.As<Person>();
+
+// After (V5)
+Person person = Person.From(element);
+```
+
+---
+
+### CVJ005 — Migrate `.Count` to `.GetPropertyCount()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects access to the V4 `.Count` property on JSON objects and replaces it with the V5 `.GetPropertyCount()` method.
+
+```csharp
+// Before (V4)
+int count = jsonObject.Count;
+
+// After (V5)
+int count = jsonObject.GetPropertyCount();
+```
+
+---
+
+### CVJ006 — Migrate `FromJson()` to `From()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects calls to the V4 `T.FromJson(element)` factory method and renames it to V5's `T.From(element)`.
+
+```csharp
+// Before (V4)
+Person person = Person.FromJson(jsonElement);
+
+// After (V5)
+Person person = Person.From(jsonElement);
+```
+
+---
+
+### CVJ007 — Migrate V4 core type to `JsonElement`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects usage of V4 untyped core types (`JsonAny`, `JsonNull`) that map directly to `JsonElement` in V5.
+
+```csharp
+// Before (V4)
+JsonAny any = JsonAny.Parse(json);
+
+// After (V5)
+JsonElement any = JsonElement.Parse(json);
+```
+
+> **Note:** `JsonAny` always maps to `JsonElement`. For other V4 core types like `JsonString`, `JsonObject`, etc., see [CVJ009](#cvj009--v4-typed-core-type-may-need-replacement).
+
+---
+
+### CVJ008 — Migrate `JsonDocument.Parse()` to `ParsedJsonDocument<T>.Parse()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects usage of `System.Text.Json.JsonDocument.Parse()` and replaces it with `ParsedJsonDocument<T>.Parse()`. When followed by a `T.FromJson(doc.RootElement)` call, the code fix collapses both statements into a single `ParsedJsonDocument<T>.Parse()`.
+
+```csharp
+// Before (V4)
+using var doc = JsonDocument.Parse(json);
+Person person = Person.FromJson(doc.RootElement);
+
+// After (V5) — collapsed to a single statement
+using var doc = ParsedJsonDocument<Person>.Parse(json);
+Person person = doc.RootElement;
+```
+
+When `JsonDocument.Parse()` appears without a `FromJson` follow-up, it is replaced with `ParsedJsonDocument<JsonElement>`:
+
+```csharp
+// Before (V4)
+using var doc = JsonDocument.Parse(json);
+
+// After (V5)
+using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+```
+
+---
+
+### CVJ018 — Migrate `TryGetString()` to `TryGetValue()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects calls to V4's `.TryGetString(out string)` and renames it to V5's `.TryGetValue(out string)`.
+
+```csharp
+// Before (V4)
+if (element.TryGetString(out string value)) { ... }
+
+// After (V5)
+if (element.TryGetValue(out string value)) { ... }
+```
+
+---
+
+## Tier 2: Guidance Diagnostics
+
+These diagnostics flag patterns that require manual migration. The V5 equivalents involve structural changes that cannot be automated reliably.
+
+### CVJ009 — V4 typed core type may need replacement
+
+**Severity:** Warning · **Code fix:** ❌ No (requires project-specific knowledge)
+
+Detects usage of V4 typed core types like `JsonString`, `JsonNumber`, `JsonObject`, `JsonArray`, `JsonBoolean`, `JsonInteger`. In V5, these may map to:
+- `JsonElement` (if no schema-backed type is needed), or
+- A project-local generated global type (e.g., `JsonString`, `JsonInt32`)
+
+The correct replacement depends on your project's generated types.
+
+```csharp
+// Before (V4)
+JsonObject obj = JsonObject.Parse(json);
+JsonString name = person.Name;
+
+// After (V5) — depends on your schema
+// Option A: Use JsonElement if no schema type exists
+JsonElement obj = JsonElement.Parse(json);
+// Option B: Use generated global type
+JsonString name = person.Name;  // project-local JsonString
+```
+
+---
+
+### CVJ010 — V4 `As*` accessors removed
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects access to V4's `.AsString`, `.AsNumber`, `.AsObject`, `.AsArray`, `.AsBoolean`, and `.AsAny` properties. These do not exist in V5. In V5, multi-core-type types emit all value accessors directly — use explicit casts or `TryGetValue()` instead.
+
+```csharp
+// Before (V4)
+string name = element.AsString;
+double value = element.AsNumber;
+
+// After (V5)
+string name = (string)element;
+// or
+element.TryGetValue(out string name);
+```
+
+---
+
+### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
+
+**Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
+
+Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
+
+The code fix handles several patterns:
+
+**Simple rename:**
+```csharp
+// Before (V4)
+Person updated = person.WithName("Bob");
+
+// After (V5) — inside a mutable builder context
+person.SetName("Bob");
+```
+
+**Unchaining fluent calls:**
+```csharp
+// Before (V4)
+Person updated = person.WithName("Bob").WithAge(25);
+
+// After (V5)
+person.SetName("Bob");
+person.SetAge(25);
+```
+
+**Nested extract-mutate-reassign collapse:**
+```csharp
+// Before (V4)
+Address address = person.AddressValue;
+Address updated = address.WithCity("Manchester");
+Person result = person.WithAddressValue(updated);
+
+// After (V5)
+person.AddressValue.SetCity("Manchester");
+```
+
+---
+
+### CVJ012 — V4 functional array operations
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`). In V5, these operations are performed via the mutable builder.
+
+```csharp
+// Before (V4)
+JsonArray updated = array.Add(newItem);
+JsonArray replaced = array.SetItem(0, replacement);
+
+// After (V5)
+// Get mutable builder, then:
+mutableArray.Add(newItem);
+mutableArray.SetItem(0, replacement);
+```
+
+---
+
+### CVJ013 — V4 `Create()` replaced by `CreateBuilder()`
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects V4's static `Create(...)` factory method for constructing objects. In V5, use `CreateBuilder(workspace, ...)` with a `JsonWorkspace`.
+
+```csharp
+// Before (V4)
+Person person = Person.Create(name: "Alice", age: 30);
+
+// After (V5)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+Person person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
+```
+
+---
+
+### CVJ014 — V4 `FromItems()` replaced by Build pattern
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects V4's `FromItems(...)` array factory. In V5, use `CreateBuilder()` with a build delegate or `Build()`.
+
+```csharp
+// Before (V4)
+MyArray arr = MyArray.FromItems(item1, item2, item3);
+
+// After (V5)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MyArray arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
+```
+
+---
+
+### CVJ015 — V4 `FromValues()` replaced by `CreateBuilder()`
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)`.
+
+```csharp
+// Before (V4)
+MyVector vec = MyVector.FromValues(stackalloc double[] { 1.0, 2.0, 3.0 });
+
+// After (V5)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MyVector vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
+```
+
+---
+
+### CVJ016 — V5 uses `Corvus.Text.Json.Utf8JsonWriter`
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects `WriteTo()` calls that pass a `System.Text.Json.Utf8JsonWriter`. V5 uses its own `Corvus.Text.Json.Utf8JsonWriter` type.
+
+```csharp
+// Before (V4)
+person.WriteTo(systemUtf8JsonWriter);
+
+// After (V5)
+person.WriteTo(corvusUtf8JsonWriter);
+// where corvusUtf8JsonWriter is a Corvus.Text.Json.Utf8JsonWriter
+```
+
+---
+
+### CVJ019 — V4 backing model APIs removed
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Detects access to V4's backing model properties (`.HasJsonElementBacking`, `.HasDotnetBacking`). V5 uses a single document-index model — these properties do not exist.
+
+```csharp
+// Before (V4)
+if (person.HasJsonElementBacking) { ... }
+
+// After (V5)
+// Remove — V5 always uses document-index backing.
+// If you need to check whether a value was parsed vs. constructed,
+// use other approaches specific to your use case.
+```
+
+---
+
+### CVJ021 — Nested `With*()` chain can use deep property setter
+
+**Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
+
+Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
+
+```csharp
+// Before (V4)
+Address address = person.AddressValue;
+Address updatedAddress = address.WithCity("Manchester");
+Person updatedPerson = person.WithAddressValue(updatedAddress);
+
+// After (V5)
+person.AddressValue.SetCity("Manchester");
+```
+
+---
+
+### CVJ025 — Replace V4 package reference
+
+**Severity:** Warning · **Code fix:** ❌ No
+
+Fires at compilation end when V4 assembly references are detected. Guides you to replace V4 packages with their V5 equivalents.
+
+| V4 Package | V5 Replacement |
+|---|---|
+| `Corvus.Json.ExtendedTypes` | `Corvus.Text.Json` |
+| `Corvus.Json.SourceGenerator` | `Corvus.Text.Json.SourceGenerator` |
+
+---
+
+## Suppressing Diagnostics
+
+If a diagnostic is not relevant to your project, you can suppress it in your `.editorconfig`:
+
+```ini
+[*.cs]
+dotnet_diagnostic.CVJ010.severity = none
+```
+
+Or suppress individual occurrences with a pragma:
+
+```csharp
+#pragma warning disable CVJ010
+string name = element.AsString;
+#pragma warning restore CVJ010
+```
+
+---
+
+## Migration Workflow
+
+For the most efficient migration, we recommend applying the analyzers in this order:
+
+1. **Install the analyzer package** and build your project to see all diagnostics.
+2. **Apply Tier 1 fixes in bulk** — use "Fix all in document" or "Fix all in project" in your IDE. Start with CVJ001 (namespaces), then CVJ002 (parsing), then the rest.
+3. **Address Tier 2 guidance** — these require manual changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
+4. **Remove the analyzer package** once migration is complete.
+
+For large codebases, consider using [GitHub Copilot to assist with migration](/docs/using-copilot-for-migration.html). The Tier 2 diagnostics serve as a checklist of patterns Copilot can help transform.
+
+## Reserved Diagnostic IDs
+
+The following IDs were previously assigned but have been removed:
+
+| ID | Reason |
+|---|---|
+| CVJ017 | `[JsonConverter(typeof(JsonValueConverter<T>))]` only appears on V4 generated code, which is replaced by V5 code generation. |
+| CVJ020 | V5 has the same null/undefined extension methods as V4 — no migration needed. |
+
+These IDs will not be reused to avoid confusion.

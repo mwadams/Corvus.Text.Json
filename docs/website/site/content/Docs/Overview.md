@@ -29,3 +29,11 @@ Dynamically load, compile, and validate JSON documents against JSON Schema at ru
 ## [Migrating from V4 to V5](/docs/migrating-from-v4-to-v5.html)
 
 A comprehensive guide for migrating code from the V4 code generator (`Corvus.Json`) to V5 (`Corvus.Text.Json`). Covers package and namespace changes, the shift from functional `With*()` mutation to imperative `Set*()` mutation, parsing changes, validation API differences, composition types, and a quick reference table mapping V4 patterns to V5 equivalents.
+
+## [Migration Analyzers](/docs/migration-analyzers.html)
+
+Roslyn analyzers that detect V4 `Corvus.Json` API patterns in your code and guide you to V5 equivalents. Includes automatic code fixes for namespace changes, type renames, parsing patterns, validation calls, and more. Install the `Corvus.Text.Json.Migration.Analyzers` NuGet package and build — the analyzers do the rest.
+
+## [Using Copilot for Migration](/docs/using-copilot-for-migration.html)
+
+Step-by-step workflow for using GitHub Copilot to assist with V4 → V5 migration. Covers attaching context documents, writing effective prompts, and a reliability matrix showing which transformations Copilot handles well and which need human review.

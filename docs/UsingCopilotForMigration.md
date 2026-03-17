@@ -31,14 +31,17 @@ This matters because V5 may rename types. V4 reduced unformatted simple types to
 
 ## Step 2: Understand the Reference Documents
 
-This repository includes two migration documents:
+This repository includes three migration documents:
 
 | Document | Purpose | Audience |
 |---|---|---|
 | [`MigratingFromV4ToV5.md`](MigratingFromV4ToV5.md) | Comprehensive migration guide with explanations and examples | Developers |
+| [`MigrationAnalyzers.md`](MigrationAnalyzers.md) | Reference for all Roslyn diagnostics with before/after code examples | Developers |
 | [`CopilotMigrationInstructions.md`](copilot/CopilotMigrationInstructions.md) | Structured transformation rules optimised for AI consumption | Copilot |
 
-You don't need to memorise either one. `CopilotMigrationInstructions.md` is designed to be attached to Copilot prompts so it has the full context of every V4 → V5 transformation.
+> **Tip:** Install the `Corvus.Text.Json.Migration.Analyzers` NuGet package *before* starting your Copilot-assisted migration. The Tier 2 guidance diagnostics serve as a checklist of patterns that Copilot can help transform — just point Copilot at the warnings.
+
+You don't need to memorise any of these. `CopilotMigrationInstructions.md` is designed to be attached to Copilot prompts so it has the full context of every V4 → V5 transformation.
 
 ---
 
