@@ -5,9 +5,8 @@
 using System;
 using System.IO;
 using System.Text.Json;                 // OK — not a V4 namespace
-using System.Text.Json.Serialization;   // For JsonConverter attribute
 using Corvus.Json;                      // CVJ001: should become Corvus.Text.Json
-using Corvus.Json.Internal;             // CVJ001: for JsonValueConverter<T>
+using Corvus.Json.Internal;             // CVJ001: internal namespace migration
 
 namespace V4MigrationExample;
 
@@ -105,18 +104,36 @@ public static class V4Patterns
     }
 
     // -----------------------------------------------------------------------
-    // 6. FromJson static factory  (CVJ006)
+    // 6. FromJson static factory  (CVJ006) + JsonDocument.Parse  (CVJ008)
     // -----------------------------------------------------------------------
     public static void FromJsonExample()
     {
         const string json = """{"message":"hello"}""";
-        using JsonDocument doc = JsonDocument.Parse(json);
 
-        // CVJ006: .FromJson() → .From()
+        // CVJ008 + CVJ006: JsonDocument.Parse followed by FromJson
+        // Code fix collapses into: using var doc = ParsedJsonDocument<JsonObject>.Parse(json);
+        //                          JsonObject obj = doc.RootElement;
+        using JsonDocument doc = JsonDocument.Parse(json);
         JsonObject obj = JsonObject.FromJson(doc.RootElement);
+
+        // CVJ006 standalone: .FromJson() → .From()
         JsonString str = JsonString.FromJson(doc.RootElement.GetProperty("message"));
 
         Console.WriteLine($"Obj: {obj}, Str: {str}");
+    }
+
+    // -----------------------------------------------------------------------
+    // 6b. JsonDocument.Parse without FromJson  (CVJ008)
+    // -----------------------------------------------------------------------
+    public static void JsonDocumentParseExample()
+    {
+        const string json = """{"x":1}""";
+
+        // CVJ008: standalone JsonDocument.Parse → ParsedJsonDocument<JsonElement>.Parse
+        using JsonDocument doc = JsonDocument.Parse(json);
+        JsonAny value = JsonAny.FromJson(doc.RootElement);
+
+        Console.WriteLine($"Value: {value}");
     }
 
     // -----------------------------------------------------------------------
@@ -171,20 +188,39 @@ public static class V4Patterns
 
     // -----------------------------------------------------------------------
     // 9. FromItems / Create / FromValues static factories  (CVJ013-015)
+    //    Top-level: CreateBuilder(workspace, ...) — used as an instance
+    //    Nested:    Build(...) — passed as an argument
     // -----------------------------------------------------------------------
     public static void ArrayFactoryExample()
     {
-        // CVJ014: FromItems → CreateBuilder pattern
+        // CVJ014: FromItems → top-level CreateBuilder with Build wrapper
         JsonArray fromItems = JsonArray.FromItems(
             (JsonNumber)1,
             (JsonNumber)2,
             (JsonNumber)3);
 
-        // CVJ013: Create → CreateBuilder
+        // CVJ013: Create → top-level CreateBuilder
         ReadOnlySpan<JsonAny> items = [(JsonNumber)10, (JsonNumber)20];
         JsonArray created = JsonArray.Create(items);
 
         Console.WriteLine($"FromItems: {fromItems}, Created: {created}");
+    }
+
+    // -----------------------------------------------------------------------
+    // 9b. Nested factory — Build() instead of CreateBuilder()  (CVJ013-014)
+    //     When the result is passed as an argument, it becomes Build()
+    // -----------------------------------------------------------------------
+    public static void NestedFactoryExample()
+    {
+        const string json = """{"name":"Alice","age":30}""";
+        using ParsedValue<JsonObject> parsed = ParsedValue<JsonObject>.Parse(json);
+        JsonObject person = parsed.Instance;
+
+        // CVJ014: FromItems assigned to variable then used as argument → Build()
+        JsonArray tags = JsonArray.FromItems((JsonString)"admin", (JsonString)"user");
+        person.SetProperty("tags", tags.AsAny);
+
+        Console.WriteLine(person);
     }
 
     // -----------------------------------------------------------------------
@@ -239,36 +275,7 @@ public static class V4Patterns
     }
 
     // -----------------------------------------------------------------------
-    // 13. Null/Undefined checks  (CVJ020)
-    // -----------------------------------------------------------------------
-    public static void NullUndefinedExample()
-    {
-        JsonAny nullValue = JsonAny.Null;
-        JsonAny undefinedValue = JsonAny.Undefined;
-
-        // CVJ020: extension methods changed in V5
-        bool isNull = nullValue.IsNull();
-        bool isUndefined = undefinedValue.IsUndefined();
-        bool isNullOrUndefined = nullValue.IsNullOrUndefined();
-        bool isNotNull = undefinedValue.IsNotNull();
-
-        Console.WriteLine($"Null: {isNull}, Undefined: {isUndefined}");
-        Console.WriteLine($"NullOrUndefined: {isNullOrUndefined}, NotNull: {isNotNull}");
-    }
-
-    // -----------------------------------------------------------------------
-    // 13b. JsonValueConverter attribute  (CVJ017)
-    // -----------------------------------------------------------------------
-
-    // CVJ017: JsonValueConverter<T> attribute is a V4 pattern not needed in V5
-    [JsonConverter(typeof(JsonValueConverter<JsonString>))]
-    public struct MyCustomString
-    {
-        public string Value { get; set; }
-    }
-
-    // -----------------------------------------------------------------------
-    // 14. Pattern matching over value kinds
+    // 13. Pattern matching over value kinds
     // -----------------------------------------------------------------------
     public static void PatternMatchingExample()
     {
@@ -311,7 +318,7 @@ public static class V4Patterns
     }
 
     // -----------------------------------------------------------------------
-    // 15. Complex nested mutation scenario
+    // 14. Complex nested mutation scenario
     // -----------------------------------------------------------------------
     public static void ComplexNestedMutationExample()
     {

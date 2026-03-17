@@ -93,14 +93,16 @@ public static class V4GeneratedTypePatterns
     }
 
     // -----------------------------------------------------------------------
-    // 6. FromJson on generated type  (CVJ006)
+    // 6. FromJson on generated type  (CVJ006) + JsonDocument.Parse  (CVJ008)
     // -----------------------------------------------------------------------
     public static void FromJsonGeneratedType()
     {
         const string json = """{"name":"Alice","age":30}""";
-        using System.Text.Json.JsonDocument doc = System.Text.Json.JsonDocument.Parse(json);
 
-        // CVJ006: Person.FromJson() → Person.From()
+        // CVJ008 + CVJ006: JsonDocument.Parse followed by FromJson
+        // Code fix collapses into: using var doc = ParsedJsonDocument<Person>.Parse(json);
+        //                          Person person = doc.RootElement;
+        using System.Text.Json.JsonDocument doc = System.Text.Json.JsonDocument.Parse(json);
         Person person = Person.FromJson(doc.RootElement);
 
         Console.WriteLine(person);
@@ -179,20 +181,4 @@ public static class V4GeneratedTypePatterns
         Console.WriteLine($"JsonElement: {hasJsonBacking}, DotNet: {hasDotnetBacking}");
     }
 
-    // -----------------------------------------------------------------------
-    // 10. Null/undefined checks on generated type  (CVJ020)
-    // -----------------------------------------------------------------------
-    public static void NullCheckOnGeneratedType()
-    {
-        const string json = """{"name":"Alice","age":30}""";
-        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);
-        Person person = parsed.Instance;
-
-        // CVJ020: null/undefined extension methods
-        bool isNull = person.IsNull();
-        bool isUndefined = person.IsUndefined();
-        bool notNull = person.IsNotNull();
-
-        Console.WriteLine($"Null: {isNull}, Undefined: {isUndefined}, NotNull: {notNull}");
-    }
 }
