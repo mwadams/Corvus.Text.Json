@@ -440,8 +440,7 @@ $assetsDest = Join-Path $outputDir "assets"
 Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
 
 $vellumArgs = @("content", "generate", "-t", (Join-Path $here "site.yml"), "-o", $outputDir)
-if ($Preview) { $vellumArgs += "--preview" }
-if ($Watch)   { $vellumArgs += "--watch" }
+if ($Watch) { $vellumArgs += "--watch" }
 & $vellumCmd $vellumArgs
 if ($LASTEXITCODE -ne 0) { throw "Vellum generation failed" }
 
@@ -494,3 +493,9 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green
+
+if ($Preview) {
+    Write-Host "`nStarting preview server..." -ForegroundColor Cyan
+    $previewArgs = @("content", "generate", "-t", (Join-Path $here "site.yml"), "-o", $outputDir, "--preview")
+    & $vellumCmd $previewArgs
+}
