@@ -46,36 +46,65 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
 
             if (methodName == "IsValid")
             {
-                // .IsValid() with no arguments
+                // .IsValid() with no arguments — equivalent to Validate(ValidContext, Flag)
                 if (invocation.ArgumentList.Arguments.Count == 0 &&
                     IsJsonValueReceiverOrExtension(context, memberAccess, invocation))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         DiagnosticDescriptors.ValidateMigration,
                         invocation.GetLocation(),
-                        "IsValid()",
-                        string.Empty));
+                        "Replace '.IsValid()' with '.EvaluateSchema()'"));
                 }
             }
             else if (methodName == "Validate")
             {
                 ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                 {
                     return;
                 }
 
-                string additionalContext = invocation.ArgumentList.Arguments.Count > 1
-                    ? " and use a JsonSchemaResultsCollector for detailed results"
-                    : string.Empty;
+                string message = GetValidateReplacementMessage(invocation);
 
                 context.ReportDiagnostic(Diagnostic.Create(
                     DiagnosticDescriptors.ValidateMigration,
                     invocation.GetLocation(),
-                    "Validate(...)",
-                    additionalContext));
+                    message));
             }
         }
+    }
+
+    private static string GetValidateReplacementMessage(InvocationExpressionSyntax invocation)
+    {
+        int argCount = invocation.ArgumentList.Arguments.Count;
+
+        // Validate(context) or Validate(context, ValidationLevel.Flag) → simple EvaluateSchema()
+        if (argCount <= 1)
+        {
+            return "Replace '.Validate(ValidationContext.ValidContext)' with '.EvaluateSchema()'";
+        }
+
+        // Validate(context, level) — check the level argument
+        ExpressionSyntax levelArg = invocation.ArgumentList.Arguments[1].Expression;
+        string levelText = levelArg.ToString();
+
+        if (levelText.EndsWith("Flag", System.StringComparison.Ordinal))
+        {
+            return "Replace '.Validate(ValidationContext.ValidContext, ValidationLevel.Flag)' with '.EvaluateSchema()'";
+        }
+
+        // For Basic/Detailed/Verbose, guide toward JsonSchemaResultsCollector
+        string v5Level = "Basic";
+        if (levelText.EndsWith("Detailed", System.StringComparison.Ordinal))
+        {
+            v5Level = "Detailed";
+        }
+        else if (levelText.EndsWith("Verbose", System.StringComparison.Ordinal))
+        {
+            v5Level = "Verbose";
+        }
+
+        return $"Replace '.Validate(...)' with 'using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.{v5Level}); value.EvaluateSchema(collector);'";
     }
 
     private static bool IsJsonValueReceiverOrExtension(
@@ -85,7 +114,7 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
     {
         // Check if the receiver type implements IJsonValue
         ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
-        if (V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+        if (V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
         {
             return true;
         }

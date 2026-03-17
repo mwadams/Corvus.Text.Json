@@ -51,7 +51,7 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor ValidateMigration = new(
         id: "CVJ003",
         title: "Migrate validation to EvaluateSchema",
-        messageFormat: "Replace '{0}' with 'EvaluateSchema()'{1}",
+        messageFormat: "{0}",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
@@ -93,6 +93,42 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         helpLinkUri: HelpLinkBase + "#type-coercion");
 
+    /// <summary>
+    /// CVJ007: V4 core types to JsonElement.
+    /// </summary>
+    public static readonly DiagnosticDescriptor CoreTypeMigration = new(
+        id: "CVJ007",
+        title: "Migrate V4 core type to JsonElement",
+        messageFormat: "Replace V4 type '{0}' with 'JsonElement'",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        helpLinkUri: HelpLinkBase + "#core-types");
+
+    /// <summary>
+    /// CVJ008: JsonDocument.Parse to ParsedJsonDocument.
+    /// </summary>
+    public static readonly DiagnosticDescriptor JsonDocumentParseMigration = new(
+        id: "CVJ008",
+        title: "Migrate JsonDocument.Parse to ParsedJsonDocument<T>.Parse",
+        messageFormat: "Replace 'JsonDocument.Parse(...)' with 'ParsedJsonDocument<JsonElement>.Parse(...)'",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        helpLinkUri: HelpLinkBase + "#parsing");
+
+    /// <summary>
+    /// CVJ009: V4 typed core types may have generated V5 equivalents.
+    /// </summary>
+    public static readonly DiagnosticDescriptor TypedCoreMigration = new(
+        id: "CVJ009",
+        title: "V4 typed core type may need replacement",
+        messageFormat: "V4 type '{0}' should be replaced with the project-local generated equivalent or 'JsonElement' in V5",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        helpLinkUri: HelpLinkBase + "#core-types");
+
     // Tier 2: Guidance-only
 
     /// <summary>
@@ -108,12 +144,12 @@ internal static class DiagnosticDescriptors
         helpLinkUri: HelpLinkBase + "#core-type-accessors");
 
     /// <summary>
-    /// CVJ011: With mutation to Set mutation.
+    /// CVJ011: V4 With*() mutation should use V5 mutable builder.
     /// </summary>
     public static readonly DiagnosticDescriptor WithMutationMigration = new(
         id: "CVJ011",
-        title: "V4 With*() replaced by Set*() in V5",
-        messageFormat: "V4 mutator '.{0}(...)' should be replaced with imperative '.Set{1}(...)' via a JsonWorkspace builder",
+        title: "V4 With*() replaced by Set*() via mutable builder in V5",
+        messageFormat: "V4 immutable '.{0}(...)' returns a new value. In V5, use 'element.BuildDocument(workspace)' to get a mutable builder, then call '.Set{1}(...)' on the Mutable element.",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,

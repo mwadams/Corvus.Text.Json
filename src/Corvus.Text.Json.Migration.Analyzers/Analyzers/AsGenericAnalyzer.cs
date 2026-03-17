@@ -46,7 +46,7 @@ public sealed class AsGenericAnalyzer : DiagnosticAnalyzer
             genericName.TypeArgumentList.Arguments.Count == 1)
         {
             ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
-            if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+            if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
             {
                 return;
             }

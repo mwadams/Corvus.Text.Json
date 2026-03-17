@@ -8,6 +8,7 @@
 // </licensing>
 
 using System.Collections.Immutable;
+using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -51,29 +52,33 @@ public sealed class ParsedValueAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Verify via the semantic model that this is Corvus.Json.ParsedValue<T>.
+        // Try to verify via the semantic model that this is Corvus.Json.ParsedValue<T>.
         SymbolInfo symbolInfo = context.SemanticModel.GetSymbolInfo(genericName, context.CancellationToken);
         ISymbol? symbol = symbolInfo.Symbol
             ?? (symbolInfo.CandidateSymbols.Length > 0 ? symbolInfo.CandidateSymbols[0] : null);
 
-        if (symbol is null)
+        if (symbol is not null)
         {
-            return;
+            INamedTypeSymbol? namedType = symbol as INamedTypeSymbol
+                ?? (symbol as IMethodSymbol)?.ContainingType;
+
+            if (namedType is not null)
+            {
+                string fullName = namedType.OriginalDefinition.ToDisplayString();
+                if (!fullName.StartsWith(FullTypeName, System.StringComparison.Ordinal))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                // Symbol resolved but isn't a type we recognize — skip.
+                return;
+            }
         }
 
-        INamedTypeSymbol? namedType = symbol as INamedTypeSymbol
-            ?? (symbol as IMethodSymbol)?.ContainingType;
-
-        if (namedType is null)
-        {
-            return;
-        }
-
-        string fullName = namedType.OriginalDefinition.ToDisplayString();
-        if (!fullName.StartsWith(FullTypeName, System.StringComparison.Ordinal))
-        {
-            return;
-        }
+        // If symbol is null (unresolved type — e.g. namespace already changed),
+        // fall through and report based on the syntax name match alone.
 
         context.ReportDiagnostic(
             Diagnostic.Create(
@@ -90,17 +95,28 @@ public sealed class ParsedValueAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check that the expression type is ParsedValue<T>.
+        // Try to check that the expression type is ParsedValue<T>.
         TypeInfo typeInfo = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken);
         ITypeSymbol? type = typeInfo.Type;
 
-        if (type is not INamedTypeSymbol namedType)
+        if (type is INamedTypeSymbol namedType)
         {
-            return;
+            string fullName = namedType.OriginalDefinition.ToDisplayString();
+            if (!fullName.StartsWith(FullTypeName, System.StringComparison.Ordinal))
+            {
+                return;
+            }
         }
-
-        string fullName = namedType.OriginalDefinition.ToDisplayString();
-        if (!fullName.StartsWith(FullTypeName, System.StringComparison.Ordinal))
+        else if (type is IErrorTypeSymbol || type is null)
+        {
+            // Type is unresolved (e.g. namespace already changed). Fall back to
+            // checking if the receiver expression's syntax looks like ParsedValue<T>.
+            if (!IsParsedValueSyntax(memberAccess.Expression))
+            {
+                return;
+            }
+        }
+        else
         {
             return;
         }
@@ -109,5 +125,14 @@ public sealed class ParsedValueAnalyzer : DiagnosticAnalyzer
             Diagnostic.Create(
                 DiagnosticDescriptors.ParsedValueMigration,
                 memberAccess.Name.GetLocation()));
+    }
+
+    private static bool IsParsedValueSyntax(ExpressionSyntax expression)
+    {
+        // Walk through the expression to find a GenericNameSyntax with identifier "ParsedValue".
+        return expression is IdentifierNameSyntax { Identifier.Text: ParsedValueTypeName }
+            || expression.DescendantNodesAndSelf()
+                .OfType<GenericNameSyntax>()
+                .Any(g => g.Identifier.Text == ParsedValueTypeName);
     }
 }

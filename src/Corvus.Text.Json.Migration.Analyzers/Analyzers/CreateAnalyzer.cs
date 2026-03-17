@@ -60,7 +60,7 @@ public sealed class CreateAnalyzer : DiagnosticAnalyzer
                 ISymbol? symbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
                 if (symbol is IMethodSymbol methodSymbol)
                 {
-                    if (!V4TypeHelper.ImplementsIJsonValue(methodSymbol.ContainingType, context.SemanticModel.Compilation))
+                    if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(methodSymbol.ContainingType, context.SemanticModel.Compilation))
                     {
                         return;
                     }

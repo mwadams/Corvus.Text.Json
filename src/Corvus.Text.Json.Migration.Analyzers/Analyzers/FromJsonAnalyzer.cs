@@ -47,7 +47,7 @@ public sealed class FromJsonAnalyzer : DiagnosticAnalyzer
             ISymbol? methodSymbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
             if (methodSymbol is IMethodSymbol method)
             {
-                if (!V4TypeHelper.ImplementsIJsonValue(method.ContainingType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(method.ContainingType, context.SemanticModel.Compilation))
                 {
                     return;
                 }
@@ -56,7 +56,7 @@ public sealed class FromJsonAnalyzer : DiagnosticAnalyzer
             {
                 // Fall back to checking the receiver expression type
                 ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                 {
                     return;
                 }

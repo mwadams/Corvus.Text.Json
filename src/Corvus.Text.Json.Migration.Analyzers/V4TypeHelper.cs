@@ -89,6 +89,30 @@ internal static class V4TypeHelper
     }
 
     /// <summary>
+    /// Determines whether the given type symbol implements <c>Corvus.Json.IJsonValue</c>,
+    /// or is an unresolved (error) type that could not be bound — which happens when the
+    /// user has already changed the <c>using Corvus.Json;</c> directive to <c>Corvus.Text.Json</c>
+    /// but hasn't yet renamed the types.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <param name="compilation">The compilation containing type information.</param>
+    /// <returns><see langword="true"/> if the type implements <c>IJsonValue</c> or is unresolved.</returns>
+    public static bool ImplementsIJsonValueOrUnresolved(ITypeSymbol? type, Compilation compilation)
+    {
+        if (type is null)
+        {
+            return false;
+        }
+
+        if (type is IErrorTypeSymbol)
+        {
+            return true;
+        }
+
+        return ImplementsIJsonValue(type, compilation);
+    }
+
+    /// <summary>
     /// Determines whether the given type symbol is <c>System.Text.Json.Utf8JsonWriter</c>.
     /// </summary>
     /// <param name="type">The type to check.</param>

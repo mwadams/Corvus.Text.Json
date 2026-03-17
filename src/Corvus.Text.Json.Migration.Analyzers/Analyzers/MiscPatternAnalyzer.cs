@@ -75,7 +75,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
             if (memberAccess.Expression is { } tryGetReceiver)
             {
                 ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(tryGetReceiver, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                 {
                     return;
                 }
@@ -94,7 +94,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
             if (memberAccess.Expression is { } backingReceiver)
             {
                 ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(backingReceiver, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                 {
                     return;
                 }
@@ -114,7 +114,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
             if (memberAccess.Expression is { } nullUndefinedReceiver)
             {
                 ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(nullUndefinedReceiver, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                 {
                     return;
                 }
@@ -147,7 +147,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
             if (memberAccess.Expression is { } receiverExpression)
             {
                 ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                 {
                     return;
                 }

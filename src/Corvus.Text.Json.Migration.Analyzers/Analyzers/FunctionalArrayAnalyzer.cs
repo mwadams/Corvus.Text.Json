@@ -59,7 +59,7 @@ public sealed class FunctionalArrayAnalyzer : DiagnosticAnalyzer
                 if (memberAccess.Expression is { } receiverExpression)
                 {
                     ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
-                    if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                    if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
                     {
                         return;
                     }
