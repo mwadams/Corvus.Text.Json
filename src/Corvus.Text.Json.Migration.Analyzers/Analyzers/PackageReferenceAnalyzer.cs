@@ -70,5 +70,21 @@ public sealed class PackageReferenceAnalyzer : DiagnosticAnalyzer
                     v5Package));
             }
         }
+
+        // The V4 source generator is a Roslyn analyzer, so it doesn't appear in
+        // Compilation.References. Instead, detect it by looking for the attribute
+        // it emits into the compilation: Corvus.Json.JsonSchemaTypeGeneratorAttribute.
+        INamedTypeSymbol? v4GeneratorAttribute = context.Compilation
+            .GetTypeByMetadataName("Corvus.Json.JsonSchemaTypeGeneratorAttribute");
+
+        if (v4GeneratorAttribute is not null &&
+            v4GeneratorAttribute.ContainingAssembly.Name == context.Compilation.AssemblyName)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(
+                DiagnosticDescriptors.PackageReferenceMigration,
+                Location.None,
+                "Corvus.Json.SourceGenerator",
+                "Corvus.Text.Json.SourceGenerator"));
+        }
     }
 }
