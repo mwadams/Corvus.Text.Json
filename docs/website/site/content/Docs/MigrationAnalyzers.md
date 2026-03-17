@@ -4,7 +4,9 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Migration Analyzers"
 ---
-The `Corvus.Text.Json.Migration.Analyzers` NuGet package provides Roslyn analyzers that detect V4 (`Corvus.Json`) API patterns in your code and guide you toward the equivalent V5 (`Corvus.Text.Json`) patterns. Many of the diagnostics include automatic code fixes that can be applied with a single click in your IDE.
+The `Corvus.Text.Json.Migration.Analyzers` NuGet package provides Roslyn analyzers that detect V4 (`Corvus.Json`) API patterns in your code and guide you toward the equivalent V5 (`Corvus.Text.Json`) patterns. Many of the diagnostics include code fixes that transform your code toward the V5 pattern.
+
+> **Important:** Applying a code fix does not guarantee compilable code. The fixes get you closer to the correct V5 solution, but you will often need to make additional changes (e.g., introducing a `JsonWorkspace`, adjusting variable lifetimes, or updating surrounding code). Work through diagnostics steadily rather than applying them in bulk.
 
 ## Installation
 
@@ -22,12 +24,12 @@ The analyzers are organized into two tiers:
 
 | Tier | Description |
 |------|-------------|
-| **Tier 1: Automatable** | These diagnostics have code fixes that can be applied automatically. Apply them in bulk with "Fix all in document/project/solution" in your IDE. |
+| **Tier 1: Code Fix Available** | These diagnostics include code fixes that transform your code toward the V5 pattern. The result may not compile immediately — review and adjust surrounding code after applying each fix. |
 | **Tier 2: Guidance** | These diagnostics flag patterns that require manual migration because the V5 equivalent involves structural changes (e.g., introducing a `JsonWorkspace`, converting functional mutation to imperative). The diagnostic message describes the required change. |
 
 ---
 
-## Tier 1: Automatable Diagnostics
+## Tier 1: Code Fix Available
 
 ### CVJ001 — Migrate namespace
 
@@ -195,6 +197,64 @@ if (element.TryGetValue(out string value)) { ... }
 
 ---
 
+### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
+
+**Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
+
+Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
+
+The code fix handles several patterns:
+
+**Simple rename:**
+```csharp
+// Before (V4)
+Person updated = person.WithName("Bob");
+
+// After (V5) — inside a mutable builder context
+person.SetName("Bob");
+```
+
+**Unchaining fluent calls:**
+```csharp
+// Before (V4)
+Person updated = person.WithName("Bob").WithAge(25);
+
+// After (V5)
+person.SetName("Bob");
+person.SetAge(25);
+```
+
+**Nested extract-mutate-reassign collapse:**
+```csharp
+// Before (V4)
+Address address = person.AddressValue;
+Address updated = address.WithCity("Manchester");
+Person result = person.WithAddressValue(updated);
+
+// After (V5)
+person.AddressValue.SetCity("Manchester");
+```
+
+---
+
+### CVJ021 — Nested `With*()` chain can use deep property setter
+
+**Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
+
+Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
+
+```csharp
+// Before (V4)
+Address address = person.AddressValue;
+Address updatedAddress = address.WithCity("Manchester");
+Person updatedPerson = person.WithAddressValue(updatedAddress);
+
+// After (V5)
+person.AddressValue.SetCity("Manchester");
+```
+
+---
+
 ## Tier 2: Guidance Diagnostics
 
 These diagnostics flag patterns that require manual migration. The V5 equivalents involve structural changes that cannot be automated reliably.
@@ -238,46 +298,6 @@ double value = element.AsNumber;
 string name = (string)element;
 // or
 element.TryGetValue(out string name);
-```
-
----
-
-### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
-
-**Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
-
-Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
-
-The code fix handles several patterns:
-
-**Simple rename:**
-```csharp
-// Before (V4)
-Person updated = person.WithName("Bob");
-
-// After (V5) — inside a mutable builder context
-person.SetName("Bob");
-```
-
-**Unchaining fluent calls:**
-```csharp
-// Before (V4)
-Person updated = person.WithName("Bob").WithAge(25);
-
-// After (V5)
-person.SetName("Bob");
-person.SetAge(25);
-```
-
-**Nested extract-mutate-reassign collapse:**
-```csharp
-// Before (V4)
-Address address = person.AddressValue;
-Address updated = address.WithCity("Manchester");
-Person result = person.WithAddressValue(updated);
-
-// After (V5)
-person.AddressValue.SetCity("Manchester");
 ```
 
 ---
@@ -387,24 +407,6 @@ if (person.HasJsonElementBacking) { ... }
 
 ---
 
-### CVJ021 — Nested `With*()` chain can use deep property setter
-
-**Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
-
-Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
-
-```csharp
-// Before (V4)
-Address address = person.AddressValue;
-Address updatedAddress = address.WithCity("Manchester");
-Person updatedPerson = person.WithAddressValue(updatedAddress);
-
-// After (V5)
-person.AddressValue.SetCity("Manchester");
-```
-
----
-
 ### CVJ025 — Replace V4 package reference
 
 **Severity:** Warning · **Code fix:** ❌ No
@@ -439,22 +441,19 @@ string name = element.AsString;
 
 ## Migration Workflow
 
-For the most efficient migration, we recommend applying the analyzers in this order:
+We recommend working through diagnostics steadily, one file or one area at a time, rather than bulk-applying fixes across an entire project. Code fixes move your code toward V5 patterns, but they do not guarantee compilable output — you will typically need to adjust surrounding code after each fix (e.g., introducing a `JsonWorkspace`, updating variable types, or adapting control flow).
 
 1. **Install the analyzer package** and build your project to see all diagnostics.
-2. **Apply Tier 1 fixes in bulk** — use "Fix all in document" or "Fix all in project" in your IDE. Start with CVJ001 (namespaces), then CVJ002 (parsing), then the rest.
-3. **Address Tier 2 guidance** — these require manual changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
-4. **Remove the analyzer package** once migration is complete.
-
-For large codebases, consider using [GitHub Copilot to assist with migration](/docs/using-copilot-for-migration.html). The Tier 2 diagnostics serve as a checklist of patterns Copilot can help transform.
+2. **Work through one file at a time.** Review each diagnostic, apply the code fix if available, then compile and address any remaining errors before moving on.
+3. **Address Tier 2 guidance manually** — these require structural changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
+4. **Use [GitHub Copilot](/docs/using-copilot-for-migration.html) as a migration partner.** Point Copilot at the diagnostic warnings in a file and ask it to complete the migration. The diagnostics serve as a checklist of patterns Copilot can help transform.
+5. **Remove the analyzer package** once migration is complete.
 
 ## Reserved Diagnostic IDs
 
-The following IDs were previously assigned but have been removed:
+The following IDs were previously assigned and will not be reused:
 
-| ID | Reason |
-|---|---|
-| CVJ017 | `[JsonConverter(typeof(JsonValueConverter<T>))]` only appears on V4 generated code, which is replaced by V5 code generation. |
-| CVJ020 | V5 has the same null/undefined extension methods as V4 — no migration needed. |
-
-These IDs will not be reused to avoid confusion.
+| ID |
+|---|
+| CVJ017 |
+| CVJ020 |

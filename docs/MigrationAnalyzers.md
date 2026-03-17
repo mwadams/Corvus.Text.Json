@@ -251,6 +251,24 @@ person.AddressValue.SetCity("Manchester");
 
 ---
 
+### CVJ012 — V4 functional array operations
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`) and renames them to the V5 mutable builder equivalents (`.AddItem()`, `.InsertItem()`, `.SetItem()`, `.RemoveAt()`). The code fix also drops the assignment since V5 mutates in-place.
+
+```csharp
+// Before (V4)
+JsonArray updated = array.Add(newItem);
+JsonArray replaced = array.Insert(0, item);
+
+// After (V5)
+array.AddItem(newItem);
+array.InsertItem(0, item);
+```
+
+---
+
 ## Tier 2: Guidance Diagnostics
 
 These diagnostics flag patterns that require manual migration. The V5 equivalents involve structural changes that cannot be automated reliably.
@@ -294,25 +312,6 @@ double value = element.AsNumber;
 string name = (string)element;
 // or
 element.TryGetValue(out string name);
-```
-
----
-
-### CVJ012 — V4 functional array operations
-
-**Severity:** Warning · **Code fix:** ❌ No
-
-Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`). In V5, these operations are performed via the mutable builder.
-
-```csharp
-// Before (V4)
-JsonArray updated = array.Add(newItem);
-JsonArray replaced = array.SetItem(0, replacement);
-
-// After (V5)
-// Get mutable builder, then:
-mutableArray.Add(newItem);
-mutableArray.SetItem(0, replacement);
 ```
 
 ---

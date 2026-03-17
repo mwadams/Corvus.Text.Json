@@ -361,8 +361,11 @@ if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
 # ── Step 6: Run Vellum ──────────────────────────────────────────────────────
 Write-Host "`n[6/8] Running Vellum..." -ForegroundColor Cyan
 
-# Prepare output directory
-if (Test-Path $outputDir) { Remove-Item $outputDir -Recurse -Force }
+# Prepare output directory (clean contents but keep dir if locked by another process)
+if (Test-Path $outputDir) {
+    try { Remove-Item $outputDir -Recurse -Force }
+    catch { Get-ChildItem $outputDir -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue }
+}
 $assetsSource = Join-Path $siteDir "theme\corvus\assets"
 $assetsDest = Join-Path $outputDir "assets"
 Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
