@@ -441,8 +441,8 @@ We recommend working through diagnostics steadily, one file or one area at a tim
 
 1. **Install the analyzer package** and build your project to see all diagnostics.
 2. **Work through one file at a time.** Review each diagnostic, apply the code fix if available, then compile and address any remaining errors before moving on.
-3. **Use [GitHub Copilot](/docs/using-copilot-for-migration.html) as a migration partner.** Point Copilot at the diagnostic warnings in a file and ask it to complete the migration. The diagnostics serve as a checklist of patterns Copilot can help transform.
-4. **Address Tier 2 guidance manually** — these require structural changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
+3. **Address Tier 2 guidance manually** — these require structural changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
+4. **Use [GitHub Copilot](/docs/using-copilot-for-migration.html) as a migration partner.** Point Copilot at the diagnostic warnings in a file and ask it to complete the migration. The diagnostics serve as a checklist of patterns Copilot can help transform.
 5. **Remove the analyzer package** once migration is complete.
 
 ## Reserved Diagnostic IDs
