@@ -1,6 +1,8 @@
 # Migration Analyzers
 
-The `Corvus.Text.Json.Migration.Analyzers` NuGet package provides Roslyn analyzers that detect V4 (`Corvus.Json`) API patterns in your code and guide you toward the equivalent V5 (`Corvus.Text.Json`) patterns. Many of the diagnostics include automatic code fixes that can be applied with a single click in your IDE.
+The `Corvus.Text.Json.Migration.Analyzers` NuGet package provides Roslyn analyzers that detect V4 (`Corvus.Json`) API patterns in your code and guide you toward the equivalent V5 (`Corvus.Text.Json`) patterns. Many of the diagnostics include code fixes that transform your code toward the V5 pattern.
+
+> **Important:** Applying a code fix does not guarantee compilable code. The fixes get you closer to the correct V5 solution, but you will often need to make additional changes (e.g., introducing a `JsonWorkspace`, adjusting variable lifetimes, or updating surrounding code). Work through diagnostics steadily rather than applying them in bulk.
 
 ## Installation
 
@@ -18,12 +20,12 @@ The analyzers are organized into two tiers:
 
 | Tier | Description |
 |------|-------------|
-| **Tier 1: Automatable** | These diagnostics have code fixes that can be applied automatically. Apply them in bulk with "Fix all in document/project/solution" in your IDE. |
+| **Tier 1: Code Fix Available** | These diagnostics include code fixes that transform your code toward the V5 pattern. The result may not compile immediately — review and adjust surrounding code after applying each fix. |
 | **Tier 2: Guidance** | These diagnostics flag patterns that require manual migration because the V5 equivalent involves structural changes (e.g., introducing a `JsonWorkspace`, converting functional mutation to imperative). The diagnostic message describes the required change. |
 
 ---
 
-## Tier 1: Automatable Diagnostics
+## Tier 1: Code Fix Available
 
 ### CVJ001 — Migrate namespace
 
@@ -435,14 +437,13 @@ string name = element.AsString;
 
 ## Migration Workflow
 
-For the most efficient migration, we recommend applying the analyzers in this order:
+We recommend working through diagnostics steadily, one file or one area at a time, rather than bulk-applying fixes across an entire project. Code fixes move your code toward V5 patterns, but they do not guarantee compilable output — you will typically need to adjust surrounding code after each fix (e.g., introducing a `JsonWorkspace`, updating variable types, or adapting control flow).
 
 1. **Install the analyzer package** and build your project to see all diagnostics.
-2. **Apply Tier 1 fixes in bulk** — use "Fix all in document" or "Fix all in project" in your IDE. Start with CVJ001 (namespaces), then CVJ002 (parsing), then the rest.
-3. **Address Tier 2 guidance** — these require manual changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
-4. **Remove the analyzer package** once migration is complete.
-
-For large codebases, consider using [GitHub Copilot to assist with migration](/docs/using-copilot-for-migration.html). The Tier 2 diagnostics serve as a checklist of patterns Copilot can help transform.
+2. **Work through one file at a time.** Review each diagnostic, apply the code fix if available, then compile and address any remaining errors before moving on.
+3. **Use [GitHub Copilot](/docs/using-copilot-for-migration.html) as a migration partner.** Point Copilot at the diagnostic warnings in a file and ask it to complete the migration. The diagnostics serve as a checklist of patterns Copilot can help transform.
+4. **Address Tier 2 guidance manually** — these require structural changes. The diagnostic messages link to the relevant section of the [migration guide](/docs/migrating-from-v4-to-v5.html).
+5. **Remove the analyzer package** once migration is complete.
 
 ## Reserved Diagnostic IDs
 
