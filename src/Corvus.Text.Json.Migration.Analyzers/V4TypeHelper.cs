@@ -133,22 +133,4 @@ internal static class V4TypeHelper
 
         return SymbolEqualityComparer.Default.Equals(type.OriginalDefinition, utf8JsonWriter.OriginalDefinition);
     }
-
-    /// <summary>
-    /// Determines whether the given type symbol is <c>Corvus.Json.JsonValueConverter`1</c>.
-    /// </summary>
-    /// <param name="type">The type to check.</param>
-    /// <returns><see langword="true"/> if the type is <c>JsonValueConverter&lt;T&gt;</c>.</returns>
-    public static bool IsJsonValueConverterType(ITypeSymbol? type)
-    {
-        if (type is not INamedTypeSymbol namedType)
-        {
-            return false;
-        }
-
-        string displayString = namedType.OriginalDefinition.ToDisplayString();
-        return namedType.IsGenericType &&
-               (displayString == "Corvus.Json.JsonValueConverter<T>" ||
-                displayString == "Corvus.Json.Internal.JsonValueConverter<T>");
-    }
 }

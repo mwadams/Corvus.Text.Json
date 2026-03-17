@@ -17,8 +17,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
-/// CVJ018/CVJ019/CVJ020: Detects miscellaneous V4 patterns including TryGetString,
-/// backing model APIs, and null/undefined extension methods.
+/// CVJ018/CVJ019: Detects miscellaneous V4 patterns including TryGetString
+/// and backing model APIs.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
@@ -29,21 +29,11 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         "AsDotnetBackedValue",
         "AsJsonElementBackedValue");
 
-    private static readonly ImmutableHashSet<string> s_nullUndefinedMethods = ImmutableHashSet.Create(
-        "IsNull",
-        "IsUndefined",
-        "IsNullOrUndefined",
-        "IsNotNull",
-        "IsNotUndefined",
-        "IsNotNullOrUndefined",
-        "AsOptional");
-
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
         ImmutableArray.Create(
             DiagnosticDescriptors.TryGetStringMigration,
-            DiagnosticDescriptors.BackingModelMigration,
-            DiagnosticDescriptors.NullUndefinedExtensionsMigration);
+            DiagnosticDescriptors.BackingModelMigration);
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
@@ -103,26 +93,6 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
             context.ReportDiagnostic(
                 Diagnostic.Create(
                     DiagnosticDescriptors.BackingModelMigration,
-                    memberAccess.Name.GetLocation(),
-                    methodName));
-            return;
-        }
-
-        // CVJ020: Null/undefined extension method calls
-        if (s_nullUndefinedMethods.Contains(methodName))
-        {
-            if (memberAccess.Expression is { } nullUndefinedReceiver)
-            {
-                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(nullUndefinedReceiver, context.CancellationToken).Type;
-                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
-                {
-                    return;
-                }
-            }
-
-            context.ReportDiagnostic(
-                Diagnostic.Create(
-                    DiagnosticDescriptors.NullUndefinedExtensionsMigration,
                     memberAccess.Name.GetLocation(),
                     methodName));
         }

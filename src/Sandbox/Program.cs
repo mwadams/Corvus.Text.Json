@@ -498,3 +498,7 @@ long yearAsLong = year;
 byte yearAsByte = (byte)year;
 
 string? firstName = testPersonDocBuilder.RootElement.Name.FirstName.GetString();
+
+Person.Mutable mp = testPersonDocBuilder.RootElement;
+mp.CompetedInYears.AddItem(2028);
+mp.SetAge(33);

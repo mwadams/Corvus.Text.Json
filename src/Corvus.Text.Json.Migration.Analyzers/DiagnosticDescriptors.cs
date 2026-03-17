@@ -215,17 +215,8 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         helpLinkUri: HelpLinkBase + "#serialization");
 
-    /// <summary>
-    /// CVJ017: JsonValueConverter attribute not needed in V5.
-    /// </summary>
-    public static readonly DiagnosticDescriptor JsonValueConverterMigration = new(
-        id: "CVJ017",
-        title: "V4 JsonValueConverter attribute not needed in V5",
-        messageFormat: "The JsonValueConverter<{0}> attribute is a V4 pattern not used in V5",
-        category: Category,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase);
+    // CVJ017: Removed — [JsonConverter(typeof(JsonValueConverter<T>))] is on V4 generated code,
+    // which is replaced when the V5 generator takes over.
 
     /// <summary>
     /// CVJ018: TryGetString to TryGetValue.
@@ -251,17 +242,7 @@ internal static class DiagnosticDescriptors
         isEnabledByDefault: true,
         helpLinkUri: HelpLinkBase);
 
-    /// <summary>
-    /// CVJ020: V4 null and undefined extension methods changed in V5.
-    /// </summary>
-    public static readonly DiagnosticDescriptor NullUndefinedExtensionsMigration = new(
-        id: "CVJ020",
-        title: "V4 null/undefined extensions changed in V5",
-        messageFormat: "V4 extension '.{0}()' should be replaced with the equivalent V5 instance method",
-        category: Category,
-        defaultSeverity: DiagnosticSeverity.Warning,
-        isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase);
+    // CVJ020: Removed — V5 has the same null/undefined extensions as V4, no migration needed.
 
     /// <summary>
     /// CVJ021: Nested With*() reconstruction can use V5 deep property setter.
