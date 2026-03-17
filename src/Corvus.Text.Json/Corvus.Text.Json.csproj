@@ -24,7 +24,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <EmbedAllSources>true</EmbedAllSources>
     <IsPackable>true</IsPackable>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <CommonPath>..\..\Common\src\</CommonPath>
     <LibrariesProjectRoot>..\..\</LibrariesProjectRoot>
     <CoreLibSharedDir>..\..\System.Private.CoreLib\src\</CoreLibSharedDir>

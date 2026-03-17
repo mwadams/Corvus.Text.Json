@@ -332,7 +332,7 @@
   </Target>
 
   <PropertyGroup>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Description>A source generator that will emit dotnet types based on JSON Schema.</Description>
   </PropertyGroup>
 

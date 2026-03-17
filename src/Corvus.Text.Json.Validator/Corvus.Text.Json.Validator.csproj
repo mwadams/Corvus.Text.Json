@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <Description>Dynamically load JSON Schema and validate JSON documents against them using Corvus.Text.Json.</Description>
   </PropertyGroup>
 

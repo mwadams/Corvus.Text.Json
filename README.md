@@ -1,6 +1,6 @@
 # Corvus.Text.Json
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 High-performance, source-generated, strongly-typed C# models from JSON Schema — with pooled-memory parsing, full draft 4 through 2020-12 validation, and 120B per-document allocation.
 
@@ -133,7 +133,7 @@ dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloo
 
 ## License
 
-Licensed under the MIT License. See [LICENSE.txt](LICENSE.txt).
+Licensed under the Apache License, Version 2.0. See [LICENSE](LICENSE) for details.
 
 ## About
 

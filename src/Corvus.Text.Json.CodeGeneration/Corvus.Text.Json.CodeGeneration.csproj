@@ -15,7 +15,7 @@
     <!-- Warnings to always disable -->
     <NoWarn>$(NoWarn);CS8500;CS8969;IDE0065;IDE0290;IDE0079;IDE0130;NU1504;CS1591;CS1573;CS1572;CS1570;CS1584;CS1658;CS1574;CS1734</NoWarn>
     <IsPackable>true</IsPackable>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <LangVersion>preview</LangVersion>
     <CorvusTextJsonPath>..\Corvus.Text.Json\</CorvusTextJsonPath>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
