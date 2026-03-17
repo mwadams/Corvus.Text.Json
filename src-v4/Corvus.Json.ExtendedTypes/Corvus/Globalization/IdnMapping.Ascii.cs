@@ -6,6 +6,9 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
 // This file contains the IDN functions and implementation.
 // This allows encoding of non-ASCII domain names in a "punycode" form,
 // for example:
@@ -115,7 +118,7 @@ public sealed partial class IdnMapping
     // Invariant implementation
     private const char c_delimiter = '-';
 
-    private static ReadOnlySpan<char> c_strAcePrefix => "xn--";
+    private static ReadOnlySpan<char> c_strAcePrefix => "xn--".AsSpan();
 
     private const int c_labelLimit = 63;          // Not including dots
     private const int c_defaultNameLimit = 255;   // Including dots
@@ -299,7 +302,7 @@ public sealed partial class IdnMapping
             const string DotSeparators = ".\u3002\uFF0E\uFF61";
 
             // Find end of this segment
-            iNextDot = unicode.Slice(iAfterLastDot).IndexOfAny(DotSeparators);
+            iNextDot = unicode.Slice(iAfterLastDot).IndexOfAny(DotSeparators.AsSpan());
             iNextDot = iNextDot < 0 ? unicode.Length : iNextDot + iAfterLastDot;
 
             // Only allowed to have empty . section at end (www.microsoft.com.)

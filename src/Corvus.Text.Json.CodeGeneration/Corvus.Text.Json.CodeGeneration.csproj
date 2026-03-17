@@ -16,6 +16,8 @@
     <NoWarn>$(NoWarn);CS8500;CS8969;IDE0065;IDE0290;IDE0079;IDE0130;NU1504;CS1591;CS1573;CS1572;CS1570;CS1584;CS1658;CS1574;CS1734</NoWarn>
     <IsPackable>true</IsPackable>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>Shared code generation engine for producing strongly-typed C# from JSON Schema. Used by Corvus.Text.Json.SourceGenerator and Corvus.Text.Json.CodeGenerator. Supports JSON Schema draft 4, 6, 7, 2019-09, and 2020-12.</Description>
     <LangVersion>preview</LangVersion>
     <CorvusTextJsonPath>..\Corvus.Text.Json\</CorvusTextJsonPath>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
@@ -24,6 +26,10 @@
     <DefineConstants>$(DefineConstants);CORVUS_TEXT_JSON_CODEGENERATION</DefineConstants>
     <EndjinDisableCreateEditorConfig>true</EndjinDisableCreateEditorConfig>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="CodeFileBuilders\JsonSchemaPartial.cs" />

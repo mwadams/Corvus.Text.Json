@@ -29,6 +29,9 @@
     <Compile Include="..\Corvus.Json.ExtendedTypes\Corvus.Json\**\*.cs">
       <Link>Corvus.Json.ExtendedTypes\%(RecursiveDir)\%(Filename)%(Extension)</Link>
     </Compile>
+    <Compile Include="..\Corvus.Json.ExtendedTypes\Corvus\Globalization\**\*.cs">
+      <Link>Corvus.Globalization\%(RecursiveDir)\%(Filename)%(Extension)</Link>
+    </Compile>
     <Compile Include="..\Corvus.Json.JsonReference\Corvus.Json\**\*.cs">
       <Link>Corvus.Json.JsonReference\%(RecursiveDir)\%(Filename)%(Extension)</Link>
     </Compile>

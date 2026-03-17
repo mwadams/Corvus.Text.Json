@@ -25,6 +25,8 @@
     <EmbedAllSources>true</EmbedAllSources>
     <IsPackable>true</IsPackable>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Description>High-performance JSON library for .NET that builds on the patterns of System.Text.Json with pooled-memory parsing, JSON Schema source generation (draft 4–2020-12), mutable document building, schema validation, extended numeric types, and NodaTime integration.</Description>
     <CommonPath>..\..\Common\src\</CommonPath>
     <LibrariesProjectRoot>..\..\</LibrariesProjectRoot>
     <CoreLibSharedDir>..\..\System.Private.CoreLib\src\</CoreLibSharedDir>
@@ -34,6 +36,10 @@
     <Nullable>enable</Nullable>
     <RootNamespace></RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Corvus.Text.Json.Tests" />

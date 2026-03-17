@@ -6,6 +6,8 @@
 // The .NET Foundation licensed this code under the MIT license.
 // https:// github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 // This file contains the IDN functions and implementation.
 // This allows encoding of non-ASCII domain names in a "punycode" form,
 // for example:

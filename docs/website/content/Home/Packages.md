@@ -23,12 +23,12 @@ Roslyn incremental source generator. Generates C# from JSON Schema at build time
 </PackageReference>
 ```
 
-### Corvus.Text.Json.CodeGenerator
+### Corvus.Json.CodeGenerator
 
 CLI tool for ahead-of-time code generation. Produces the same output as the source generator, for CI pipelines and pre-generation workflows. See the [CLI Code Generation](/docs/code-generator.html) guide.
 
 ```bash
-dotnet tool install --global Corvus.Text.Json.CodeGenerator
+dotnet tool install --global Corvus.Json.CodeGenerator
 ```
 
 ### Corvus.Text.Json.Validator

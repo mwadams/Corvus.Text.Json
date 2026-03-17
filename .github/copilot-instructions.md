@@ -50,7 +50,7 @@ Follow this pattern when adding functionality: keep the core struct untouched an
 
 Two code-gen mechanisms are used together:
 1. **Roslyn `IIncrementalGenerator`** (`src/Corvus.Text.Json.SourceGenerator/`) — triggered at build time via `JsonSchemaTypeGeneratorAttribute`. `EmitCompilerGeneratedFiles=true` writes output to `obj/` for inspection.
-2. **CLI tool** (`src/Corvus.Text.Json.CodeGenerator/`) — `generatejsonschematypes` generates C# from JSON Schema for use outside the build pipeline (e.g., the `tests/Corvus.Text.Json.Tests.GeneratedModels/` project).
+2. **CLI tool** (`src/Corvus.Json.CodeGenerator/`) — `generatejsonschematypes` generates C# from JSON Schema for use outside the build pipeline (e.g., the `tests/Corvus.Text.Json.Tests.GeneratedModels/` project).
 
 ### netstandard2.0 compatibility
 

@@ -9,14 +9,14 @@ The tool supports all major JSON Schema drafts (Draft 4, 6, 7, 2019-09, and 2020
 ## Installation
 
 ```bash
-dotnet tool install --global Corvus.Text.Json.CodeGenerator
+dotnet tool install --global Corvus.Json.CodeGenerator
 ```
 
 Or as a local tool:
 
 ```bash
 dotnet new tool-manifest
-dotnet tool install Corvus.Text.Json.CodeGenerator
+dotnet tool install Corvus.Json.CodeGenerator
 ```
 
 ## Quick Start

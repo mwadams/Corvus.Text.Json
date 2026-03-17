@@ -44,7 +44,7 @@ Build the project. The generator produces the full implementation, deriving the 
 If you prefer ahead-of-time code generation, install the `generatejsonschematypes` .NET tool globally:
 
 ```bash
-dotnet tool install --global Corvus.Text.Json.CodeGenerator
+dotnet tool install --global Corvus.Json.CodeGenerator
 ```
 
 Generate code from a schema:
