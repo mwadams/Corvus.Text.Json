@@ -41,17 +41,17 @@
       },
       "System.Collections.Immutable": {
         "type": "Direct",
-        "requested": "[10.0.1, )",
-        "resolved": "10.0.1",
-        "contentHash": "kdTe61B8P7i2M1pODC3MLbZ/CfFGjpC6c6jzxjQoB5DHZNewayCRqgFUmx3JKB6vLQtozpMQEiw+R5fO32Jv4g=="
+        "requested": "[10.0.4, )",
+        "resolved": "10.0.4",
+        "contentHash": "+QGMqUTxKSK/FVYJW7tgiHnA37OjfTk/2GYMZf1AZsJ2AWITNt2DED4GMP1Kv46G1y5jzfUp6LM/q5QtqnLQGw=="
       },
       "System.Reflection.Metadata": {
         "type": "Direct",
-        "requested": "[10.0.1, )",
-        "resolved": "10.0.1",
-        "contentHash": "zpcfT/wacPPhE17zcudozlxQtWN/84qyiMyZNGLnK4cj2IMBtLsZYwYjVnALUhPliwyUVj/P7kaZvBWYBCnf2Q==",
+        "requested": "[10.0.4, )",
+        "resolved": "10.0.4",
+        "contentHash": "E+7AAim8jcvpJhiPNQwsmmW0Zfc6QdcAlT3fLCZb/n7EQ8imRY3NMqLeLMnu90obSj51Hzw5M80b7QPmek9QQw==",
         "dependencies": {
-          "System.Collections.Immutable": "10.0.1"
+          "System.Collections.Immutable": "10.0.4"
         }
       },
       "CommunityToolkit.HighPerformance": {
@@ -246,8 +246,8 @@
       },
       "NodaTime": {
         "type": "Transitive",
-        "resolved": "3.3.0",
-        "contentHash": "zmUEQPp9yXyGAqWSBhxfwdDhRh4EV04lvYn4P5bUb6dTz1m5AXTYaeSLQ447YLPI2Ge5VGFj20G2DWg5gtiXZg=="
+        "resolved": "3.3.1",
+        "contentHash": "7zkTEqmakybTTuDuifpnzl5s8MkmpAdyvoqIPIO2+M2ThF8ixavPcPt1afPfFyCI+A6t3ySujgpGq/5iWc4/RQ=="
       },
       "System.CodeDom": {
         "type": "Transitive",
@@ -288,8 +288,8 @@
         "dependencies": {
           "Corvus.Json.JsonReference": "[1.0.0, )",
           "Corvus.UriTemplates": "[2.3.2, )",
-          "NodaTime": "[3.3.0, )",
-          "System.Collections.Immutable": "[10.0.1, )",
+          "NodaTime": "[3.3.1, )",
+          "System.Collections.Immutable": "[10.0.4, )",
           "System.Text.Json": "[10.0.4, )"
         }
       },
@@ -306,8 +306,8 @@
           "Corvus.Json.ExtendedTypes": "[1.0.0, )",
           "Microsoft.Extensions.Http": "[10.0.1, )",
           "Microsoft.Extensions.ObjectPool": "[10.0.1, )",
-          "NodaTime": "[3.3.0, )",
-          "System.Collections.Immutable": "[10.0.1, )"
+          "NodaTime": "[3.3.1, )",
+          "System.Collections.Immutable": "[10.0.4, )"
         }
       }
     }
