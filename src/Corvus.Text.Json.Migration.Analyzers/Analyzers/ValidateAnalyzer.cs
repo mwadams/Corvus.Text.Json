@@ -53,6 +53,7 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
                     context.ReportDiagnostic(Diagnostic.Create(
                         DiagnosticDescriptors.ValidateMigration,
                         invocation.GetLocation(),
+                        ImmutableDictionary<string, string?>.Empty,
                         "Replace '.IsValid()' with '.EvaluateSchema()'"));
                 }
             }
@@ -64,18 +65,24 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
                     return;
                 }
 
-                string message = GetValidateReplacementMessage(invocation);
+                string message = GetValidateReplacementMessage(invocation, out string? resultsLevel);
+
+                ImmutableDictionary<string, string?> properties = resultsLevel is not null
+                    ? ImmutableDictionary<string, string?>.Empty.Add("ResultsLevel", resultsLevel)
+                    : ImmutableDictionary<string, string?>.Empty;
 
                 context.ReportDiagnostic(Diagnostic.Create(
                     DiagnosticDescriptors.ValidateMigration,
                     invocation.GetLocation(),
+                    properties,
                     message));
             }
         }
     }
 
-    private static string GetValidateReplacementMessage(InvocationExpressionSyntax invocation)
+    private static string GetValidateReplacementMessage(InvocationExpressionSyntax invocation, out string? resultsLevel)
     {
+        resultsLevel = null;
         int argCount = invocation.ArgumentList.Arguments.Count;
 
         // Validate(context) or Validate(context, ValidationLevel.Flag) → simple EvaluateSchema()
@@ -94,17 +101,17 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
         }
 
         // For Basic/Detailed/Verbose, guide toward JsonSchemaResultsCollector
-        string v5Level = "Basic";
+        resultsLevel = "Basic";
         if (levelText.EndsWith("Detailed", System.StringComparison.Ordinal))
         {
-            v5Level = "Detailed";
+            resultsLevel = "Detailed";
         }
         else if (levelText.EndsWith("Verbose", System.StringComparison.Ordinal))
         {
-            v5Level = "Verbose";
+            resultsLevel = "Verbose";
         }
 
-        return $"Replace '.Validate(...)' with 'using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.{v5Level}); value.EvaluateSchema(collector);'";
+        return $"Replace '.Validate(...)' with 'using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.{resultsLevel}); value.EvaluateSchema(collector);'";
     }
 
     private static bool IsJsonValueReceiverOrExtension(
