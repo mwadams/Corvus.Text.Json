@@ -90,7 +90,7 @@ namespace TestApp
         void M()
         {
             using var workspace = JsonWorkspace.Create();
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny), default(Corvus.Json.JsonAny));
+            var arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny), default(Corvus.Json.JsonAny));
         }
     }
 }",
@@ -127,7 +127,7 @@ namespace TestApp
         void M()
         {
             using var ws = JsonWorkspace.Create();
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(ws, default(Corvus.Json.JsonAny));
+            var arr = Corvus.Json.JsonArray.CreateBuilder(ws, default(Corvus.Json.JsonAny));
         }
     }
 }",
@@ -165,8 +165,8 @@ namespace TestApp
         void M()
         {
             using var workspace = JsonWorkspace.Create();
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
-            arr.WriteTo(null);
+            var arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
+            arr.RootElement.WriteTo(null);
         }
     }
 }",
@@ -283,7 +283,7 @@ namespace TestApp
         void M()
         {
             using var workspace = JsonWorkspace.Create();
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(workspace, Build(
+            var arr = Corvus.Json.JsonArray.CreateBuilder(workspace, Build(
                 default(Corvus.Json.JsonAny),
                 default(Corvus.Json.JsonAny)));
         }
@@ -360,7 +360,7 @@ namespace TestApp
         {
             var values = new int[] { 1, 2, 3 };
             using var workspace = JsonWorkspace.Create();
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(workspace, values);
+            var arr = Corvus.Json.JsonArray.CreateBuilder(workspace, values);
         }
     }
 }",
@@ -398,7 +398,7 @@ namespace TestApp
         {
             using var myWorkspace = JsonWorkspace.Create();
             var values = new int[] { 1, 2, 3 };
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(myWorkspace, values);
+            var arr = Corvus.Json.JsonArray.CreateBuilder(myWorkspace, values);
         }
     }
 }",
@@ -485,8 +485,8 @@ namespace TestApp
 
             using var workspace = JsonWorkspace.Create();
 
-            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
-            arr.WriteTo(null);
+            var arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
+            arr.RootElement.WriteTo(null);
         }
     }
 }",
@@ -623,7 +623,7 @@ namespace TestApp
         {
             bool flag = true;
             using var workspace = JsonWorkspace.Create();
-            Corvus.Json.JsonArray arr = flag
+            var arr = flag
                 ? Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny)) : default;
         }
     }

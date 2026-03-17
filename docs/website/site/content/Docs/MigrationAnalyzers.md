@@ -245,7 +245,7 @@ array.InsertItem(0, item);
 
 Detects V4's static `Create(...)` factory method for constructing objects. The code fix chooses between two V5 patterns based on how the result is used:
 
-- **Top-level (used as an instance):** `CreateBuilder(workspace, ...)` — the result is a mutable builder that you can call methods on.
+- **Top-level (used as an instance):** `CreateBuilder(workspace, ...)` — returns a `JsonDocumentBuilder<T>` whose `.RootElement` is the mutable value. The builder does not need `using`; it is disposed with the workspace. Subsequent references are rewritten with `.RootElement`.
 - **Nested (used as a source value):** `Build(...)` — the result is passed into another construction or argument. When the result is assigned to an explicitly typed variable, the type is rewritten to `Type.Source` (since `Build()` returns a Source, not the entity type).
 
 ```csharp
@@ -254,9 +254,9 @@ Person person = Person.Create(name: "Alice", age: 30);
 person.IsValid(); // member access → builder
 
 // After (V5)
-using JsonWorkspace workspace = JsonWorkspace.Create();
-Person person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
-person.EvaluateSchema();
+using var workspace = JsonWorkspace.Create();
+var person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
+person.RootElement.EvaluateSchema();
 ```
 
 ```csharp
@@ -283,15 +283,15 @@ parent.SetChild(child);
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested. Explicitly typed variables are rewritten to `Type.Source`.
+Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested. Top-level declarations use `var` (since `CreateBuilder` returns `JsonDocumentBuilder<T>`). Explicitly typed variables on the `Build()` path are rewritten to `Type.Source`.
 
 ```csharp
 // Before (V4) — top-level
 MyArray arr = MyArray.FromItems(item1, item2, item3);
 
 // After (V5) — builder wrapping Build()
-using JsonWorkspace workspace = JsonWorkspace.Create();
-MyArray arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
+using var workspace = JsonWorkspace.Create();
+var arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
 ```
 
 ```csharp
@@ -308,15 +308,15 @@ parent.SetItems(MyArray.Build(item1, item2));
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested. Explicitly typed variables are rewritten to `Type.Source`.
+Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested. Top-level declarations use `var`. Explicitly typed variables on the `Build()` path are rewritten to `Type.Source`.
 
 ```csharp
 // Before (V4)
 MyVector vec = MyVector.FromValues(stackalloc double[] { 1.0, 2.0, 3.0 });
 
 // After (V5) — top-level
-using JsonWorkspace workspace = JsonWorkspace.Create();
-MyVector vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
+using var workspace = JsonWorkspace.Create();
+var vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
 ```
 
 ```csharp

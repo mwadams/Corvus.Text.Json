@@ -288,6 +288,19 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
     /// <summary>
     /// Top-level case: rewrites to <c>Type.CreateBuilder(workspace, ...)</c>,
     /// inserting a workspace declaration if needed.
+    /// <para>
+    /// Because <c>CreateBuilder</c> returns
+    /// <c>JsonDocumentBuilder&lt;TType&gt;</c> (not <c>TType</c>),
+    /// the code fix also:
+    /// <list type="bullet">
+    /// <item>Changes an explicit variable type to <c>var</c> so the
+    /// inferred type is correct.</item>
+    /// <item>Rewrites subsequent references to the variable with
+    /// <c>.RootElement</c> (which yields the mutable element).</item>
+    /// </list>
+    /// The builder does not need <c>using</c> — it is disposed with the
+    /// workspace.
+    /// </para>
     /// </summary>
     private static async Task<Document> RewriteTopLevelAsync(
         Document document,
@@ -336,19 +349,46 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
         StatementSyntax newStatement = containingStatement
             .ReplaceNode(invocation, newInvocation);
 
-        if (needsWorkspaceDeclaration && block is not null)
+        // CreateBuilder returns JsonDocumentBuilder<T>, not T.
+        // If the result is assigned to a local variable, change the
+        // type to var (so the inferred type is correct) and rewrite
+        // subsequent references to variable.RootElement.
+        string? variableName = null;
+        if (newStatement is LocalDeclarationStatementSyntax newLocalDecl)
         {
-            // Insert a workspace declaration before the containing statement.
-            StatementSyntax workspaceDecl = CreateWorkspaceDeclaration(
-                workspaceName, containingStatement.GetLeadingTrivia());
+            TypeSyntax varType = SyntaxFactory.IdentifierName("var")
+                .WithTriviaFrom(newLocalDecl.Declaration.Type);
+            newStatement = newLocalDecl.WithDeclaration(
+                newLocalDecl.Declaration.WithType(varType));
 
+            if (newLocalDecl.Declaration.Variables.Count > 0)
+            {
+                variableName = newLocalDecl.Declaration.Variables[0].Identifier.Text;
+            }
+        }
+
+        if (block is not null)
+        {
             var newStatements = new List<StatementSyntax>();
+            bool pastTarget = false;
+
             foreach (StatementSyntax stmt in block.Statements)
             {
                 if (ReferenceEquals(stmt, containingStatement))
                 {
-                    newStatements.Add(workspaceDecl);
+                    if (needsWorkspaceDeclaration)
+                    {
+                        newStatements.Add(CreateWorkspaceDeclaration(
+                            workspaceName, containingStatement.GetLeadingTrivia()));
+                    }
+
                     newStatements.Add(newStatement);
+                    pastTarget = true;
+                }
+                else if (pastTarget && variableName is not null)
+                {
+                    newStatements.Add(
+                        RewriteVariableReferences(stmt, variableName));
                 }
                 else
                 {
@@ -365,6 +405,34 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
         }
 
         return document.WithSyntaxRoot(root.ReplaceNode(containingStatement, newStatement));
+    }
+
+    /// <summary>
+    /// Replaces every reference to <paramref name="variableName"/> in the
+    /// given statement with <c>variableName.RootElement</c>.
+    /// </summary>
+    private static StatementSyntax RewriteVariableReferences(
+        StatementSyntax statement,
+        string variableName)
+    {
+        List<IdentifierNameSyntax> identifiers = statement
+            .DescendantNodes()
+            .OfType<IdentifierNameSyntax>()
+            .Where(id => id.Identifier.Text == variableName)
+            .ToList();
+
+        if (identifiers.Count == 0)
+        {
+            return statement;
+        }
+
+        return statement.ReplaceNodes(
+            identifiers,
+            (original, rewritten) =>
+                SyntaxFactory.MemberAccessExpression(
+                    SyntaxKind.SimpleMemberAccessExpression,
+                    rewritten,
+                    SyntaxFactory.IdentifierName("RootElement")));
     }
 
     private static ArgumentListSyntax BuildCreateBuilderArguments(
