@@ -7,15 +7,16 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers.Tests;
-
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis.Testing;
 using Xunit;
+
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<
     Corvus.Text.Json.Migration.Analyzers.AsAccessorAnalyzer,
     Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+
+namespace Corvus.Text.Json.Migration.Analyzers.Tests;
 
 /// <summary>
 /// Tests for CVJ010: V4 As* accessors removed in V5.

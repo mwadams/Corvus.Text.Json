@@ -7,14 +7,14 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
 /// CVJ003: Detects V4 <c>.IsValid()</c> and <c>.Validate(ValidationContext.ValidContext, ...)</c>

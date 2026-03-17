@@ -7,8 +7,6 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
@@ -17,6 +15,8 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
+namespace Corvus.Text.Json.Migration.Analyzers;
+
 /// <summary>
 /// CVJ012: Detects V4 functional array operations (Add, Insert, SetItem, RemoveAt)
 /// that should use the mutable builder equivalents in V5.
@@ -24,7 +24,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class FunctionalArrayAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly Dictionary<string, string> MethodMapping = new()
+    private static readonly Dictionary<string, string> s_methodMapping = new()
     {
         ["Add"] = "AddItem",
         ["Insert"] = "InsertItem",
@@ -54,7 +54,7 @@ public sealed class FunctionalArrayAnalyzer : DiagnosticAnalyzer
         {
             string methodName = memberAccess.Name.Identifier.Text;
 
-            if (MethodMapping.TryGetValue(methodName, out string? v5Name))
+            if (s_methodMapping.TryGetValue(methodName, out string? v5Name))
             {
                 context.ReportDiagnostic(
                     Diagnostic.Create(

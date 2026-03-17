@@ -7,14 +7,14 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
 /// CVJ018/CVJ019/CVJ020: Detects miscellaneous V4 patterns including TryGetString,
@@ -23,13 +23,13 @@ using Microsoft.CodeAnalysis.Diagnostics;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly ImmutableHashSet<string> BackingModelMembers = ImmutableHashSet.Create(
+    private static readonly ImmutableHashSet<string> s_backingModelMembers = ImmutableHashSet.Create(
         "HasJsonElementBacking",
         "HasDotnetBacking",
         "AsDotnetBackedValue",
         "AsJsonElementBackedValue");
 
-    private static readonly ImmutableHashSet<string> NullUndefinedMethods = ImmutableHashSet.Create(
+    private static readonly ImmutableHashSet<string> s_nullUndefinedMethods = ImmutableHashSet.Create(
         "IsNull",
         "IsUndefined",
         "IsNullOrUndefined",
@@ -80,7 +80,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         }
 
         // CVJ019: Backing model method calls (AsDotnetBackedValue, AsJsonElementBackedValue)
-        if (BackingModelMembers.Contains(methodName))
+        if (s_backingModelMembers.Contains(methodName))
         {
             context.ReportDiagnostic(
                 Diagnostic.Create(
@@ -91,7 +91,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         }
 
         // CVJ020: Null/undefined extension method calls
-        if (NullUndefinedMethods.Contains(methodName))
+        if (s_nullUndefinedMethods.Contains(methodName))
         {
             context.ReportDiagnostic(
                 Diagnostic.Create(
@@ -115,7 +115,7 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         string name = memberAccess.Name.Identifier.Text;
 
         // CVJ019: Backing model property access (HasJsonElementBacking, HasDotnetBacking)
-        if (BackingModelMembers.Contains(name))
+        if (s_backingModelMembers.Contains(name))
         {
             context.ReportDiagnostic(
                 Diagnostic.Create(

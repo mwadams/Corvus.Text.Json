@@ -7,8 +7,6 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
@@ -16,13 +14,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
+namespace Corvus.Text.Json.Migration.Analyzers;
+
 /// <summary>
 /// CVJ010: Detects V4 As* accessor patterns (AsString, AsNumber, etc.) that do not exist in V5.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class AsAccessorAnalyzer : DiagnosticAnalyzer
 {
-    private static readonly ImmutableHashSet<string> AsAccessors = ImmutableHashSet.Create(
+    private static readonly ImmutableHashSet<string> s_asAccessors = ImmutableHashSet.Create(
         "AsString",
         "AsNumber",
         "AsObject",
@@ -50,7 +50,7 @@ public sealed class AsAccessorAnalyzer : DiagnosticAnalyzer
         var memberAccess = (MemberAccessExpressionSyntax)context.Node;
         string name = memberAccess.Name.Identifier.Text;
 
-        if (AsAccessors.Contains(name))
+        if (s_asAccessors.Contains(name))
         {
             context.ReportDiagnostic(
                 Diagnostic.Create(

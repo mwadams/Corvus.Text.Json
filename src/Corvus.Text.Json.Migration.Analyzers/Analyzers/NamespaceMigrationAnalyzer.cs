@@ -7,14 +7,14 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
 /// Detects <c>using Corvus.Json;</c> and <c>using Corvus.Json.*;</c> directives
@@ -26,7 +26,7 @@ public sealed class NamespaceMigrationAnalyzer : DiagnosticAnalyzer
     private const string CorvusJsonPrefix = "Corvus.Json";
 
     // V4-only namespaces that have no V5 equivalent and should not be flagged.
-    private static readonly ImmutableHashSet<string> ExcludedPrefixes = ImmutableHashSet.Create(
+    private static readonly ImmutableHashSet<string> s_excludedPrefixes = ImmutableHashSet.Create(
         "Corvus.Json.CodeGeneration");
 
     /// <inheritdoc/>
@@ -68,7 +68,7 @@ public sealed class NamespaceMigrationAnalyzer : DiagnosticAnalyzer
         }
 
         // Skip V4-only namespaces that won't exist in V5.
-        foreach (string excluded in ExcludedPrefixes)
+        foreach (string excluded in s_excludedPrefixes)
         {
             if (nameText.Equals(excluded, System.StringComparison.Ordinal) ||
                 nameText.StartsWith(excluded + ".", System.StringComparison.Ordinal))

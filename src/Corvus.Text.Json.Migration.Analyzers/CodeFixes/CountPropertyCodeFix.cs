@@ -7,8 +7,6 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
@@ -19,6 +17,8 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
 /// Code fix for CVJ005: replaces <c>.Count</c> property access

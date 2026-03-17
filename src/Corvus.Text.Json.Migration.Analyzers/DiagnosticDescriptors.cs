@@ -7,9 +7,9 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers;
-
 using Microsoft.CodeAnalysis;
+
+namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
 /// Diagnostic descriptors for the V4 to V5 migration analyzers.

@@ -7,8 +7,6 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
-namespace Corvus.Text.Json.Migration.Analyzers.Tests;
-
 using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis.CSharp.Testing;
@@ -22,6 +20,8 @@ using CodeFixTest = Microsoft.CodeAnalysis.CSharp.Testing.CSharpCodeFixTest<
 using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<
     Corvus.Text.Json.Migration.Analyzers.ValidateAnalyzer,
     Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+
+namespace Corvus.Text.Json.Migration.Analyzers.Tests;
 
 /// <summary>
 /// Tests for CVJ003: IsValid/Validate migration to EvaluateSchema.
