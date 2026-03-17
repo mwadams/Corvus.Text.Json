@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.ArrayBuilder.BuildValue Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.ArrayBuilder.BuildValue Method"
+  Description: "JsonElement.ArrayBuilder.BuildValue Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-arraybuilder.buildvalue.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.ArrayBuilder.BuildValue Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.ArrayBuilder.BuildValue Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement.ArrayBuilder", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.ArrayBuilder.BuildValue Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.ArrayBuilder.BuildValue Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-arraybuilder.buildvalue.md

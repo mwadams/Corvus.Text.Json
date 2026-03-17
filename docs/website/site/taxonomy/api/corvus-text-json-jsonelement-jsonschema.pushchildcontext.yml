@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.JsonSchema.PushChildContext Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.JsonSchema.PushChildContext Method"
+  Description: "JsonElement.JsonSchema.PushChildContext Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.JsonSchema.PushChildContext Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema.PushChildContext Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement.JsonSchema", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.JsonSchema.PushChildContext Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema.PushChildContext Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-jsonschema.pushchildcontext.md

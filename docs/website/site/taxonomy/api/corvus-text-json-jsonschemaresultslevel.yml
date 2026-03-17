@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaResultsLevel"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaResultsLevel"
+  Description: "The level of result to collect for an [`IJsonSchemaResultsCollector`](/api/corvus-text-json-ijsonschemaresultscollector.html)."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemaresultslevel.html
+  Rank: 135
+MetaData:
+  Title: "JsonSchemaResultsLevel — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsLevel in Corvus.Text.Json"
+  Keywords: [API, enum, "JsonSchemaResultsLevel", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaResultsLevel — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsLevel"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemaresultslevel.md

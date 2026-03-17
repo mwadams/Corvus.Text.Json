@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "UnescapedUtf8JsonString"
+Template: api/api-page
+Navigation:
+  Title: "UnescapedUtf8JsonString"
+  Description: "Represents an Unescaped UTF-8 JSON string."
+  Parent: /api
+  Url: /api/corvus-text-json-unescapedutf8jsonstring.html
+  Rank: 147
+MetaData:
+  Title: "UnescapedUtf8JsonString — Corvus.Text.Json"
+  Description: "API documentation for UnescapedUtf8JsonString in Corvus.Text.Json"
+  Keywords: [API, struct, "UnescapedUtf8JsonString", Corvus.Text.Json]
+OpenGraph:
+  Title: "UnescapedUtf8JsonString — Corvus.Text.Json"
+  Description: "API documentation for UnescapedUtf8JsonString"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-unescapedutf8jsonstring.md

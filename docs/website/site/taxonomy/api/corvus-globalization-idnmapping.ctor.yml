@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IdnMapping Constructors"
+Template: api/api-page
+Navigation:
+  Title: "IdnMapping Constructors"
+  Description: "IdnMapping Constructors — Corvus.Globalization"
+  Parent: /api
+  Url: /api/corvus-globalization-idnmapping.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "IdnMapping Constructors — Corvus.Globalization"
+  Description: "API documentation for IdnMapping Constructors in Corvus.Globalization"
+  Keywords: [API, Constructor, "IdnMapping", Corvus.Globalization]
+OpenGraph:
+  Title: "IdnMapping Constructors — Corvus.Globalization"
+  Description: "API documentation for IdnMapping Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-globalization-idnmapping.ctor.md

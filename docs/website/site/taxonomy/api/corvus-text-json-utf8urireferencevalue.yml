@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Utf8UriReferenceValue"
+Template: api/api-page
+Navigation:
+  Title: "Utf8UriReferenceValue"
+  Description: "A UTF-8 URI reference value that has been parsed from a JSON document."
+  Parent: /api
+  Url: /api/corvus-text-json-utf8urireferencevalue.html
+  Rank: 157
+MetaData:
+  Title: "Utf8UriReferenceValue — Corvus.Text.Json"
+  Description: "API documentation for Utf8UriReferenceValue in Corvus.Text.Json"
+  Keywords: [API, struct, "Utf8UriReferenceValue", Corvus.Text.Json]
+OpenGraph:
+  Title: "Utf8UriReferenceValue — Corvus.Text.Json"
+  Description: "API documentation for Utf8UriReferenceValue"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-utf8urireferencevalue.md

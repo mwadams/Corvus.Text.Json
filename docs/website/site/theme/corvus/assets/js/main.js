@@ -66,14 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Scroll active sidebar item into view after page load
-  requestAnimationFrame(() => {
-    const activeItem = document.querySelector('.sidebar__link.is-active, .sidebar__link--member.is-active');
-    if (activeItem) {
-      activeItem.scrollIntoView({ block: 'center', behavior: 'instant' });
-    }
-  });
-
   // ── Footer-aware sidebar height ─────────────────────────────────────────
   // When the footer scrolls into view, shrink the sidebar so it doesn't
   // overlap. Measures actual distance from sidebar top to footer top.
@@ -138,11 +130,35 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.appendChild(button);
   });
 
-  // Mark active sidebar link
+  // Mark active sidebar link and expand its parent section
   const currentPath = window.location.pathname;
   document.querySelectorAll('.sidebar__link').forEach((link) => {
     if (link.getAttribute('href') === currentPath) {
       link.classList.add('is-active');
+
+      // Expand the parent namespace section
+      const section = link.closest('.sidebar__section');
+      if (section) {
+        const heading = section.querySelector('.sidebar__heading');
+        const body = section.querySelector('.sidebar__body');
+        if (heading) heading.classList.remove('is-collapsed');
+        if (body) body.classList.remove('is-collapsed');
+      }
+
+      // If this is a type link with a member sub-tree, expand member categories
+      const memberTree = link.closest('.sidebar__item')?.querySelector('.sidebar__members');
+      if (memberTree) {
+        memberTree.querySelectorAll('.sidebar__cat-toggle.is-collapsed').forEach((toggle) => {
+          toggle.classList.remove('is-collapsed');
+          const catBody = toggle.nextElementSibling;
+          if (catBody) catBody.classList.remove('is-collapsed');
+        });
+      }
+
+      // Scroll into view
+      requestAnimationFrame(() => {
+        link.scrollIntoView({ block: 'center', behavior: 'instant' });
+      });
     }
   });
 

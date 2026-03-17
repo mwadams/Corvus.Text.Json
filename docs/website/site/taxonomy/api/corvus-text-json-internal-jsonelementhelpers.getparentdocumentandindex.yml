@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.GetParentDocumentAndIndex Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.GetParentDocumentAndIndex Method"
+  Description: "JsonElementHelpers.GetParentDocumentAndIndex Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.getparentdocumentandindex.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.GetParentDocumentAndIndex Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.GetParentDocumentAndIndex Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.GetParentDocumentAndIndex Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.GetParentDocumentAndIndex Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.getparentdocumentandindex.md

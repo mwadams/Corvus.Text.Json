@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IdnMapping"
+Template: api/api-page
+Navigation:
+  Title: "IdnMapping"
+  Description: "IdnMapping class"
+  Parent: /api
+  Url: /api/corvus-globalization-idnmapping.html
+  Rank: 102
+MetaData:
+  Title: "IdnMapping — Corvus.Globalization"
+  Description: "API documentation for IdnMapping in Corvus.Globalization"
+  Keywords: [API, class, "IdnMapping", Corvus.Globalization]
+OpenGraph:
+  Title: "IdnMapping — Corvus.Globalization"
+  Description: "API documentation for IdnMapping"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-globalization-idnmapping.md

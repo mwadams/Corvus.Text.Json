@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMessageProvider"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMessageProvider"
+  Description: "Provides a message for a JSON Schema validation result."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemamessageprovider.html
+  Rank: 128
+MetaData:
+  Title: "JsonSchemaMessageProvider — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider in Corvus.Text.Json"
+  Keywords: [API, delegate, "JsonSchemaMessageProvider", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaMessageProvider — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemamessageprovider.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ComplexValueBuilder.EndItem Method"
+Template: api/api-page
+Navigation:
+  Title: "ComplexValueBuilder.EndItem Method"
+  Description: "ComplexValueBuilder.EndItem Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-complexvaluebuilder.enditem.html
+  Rank: 1000
+MetaData:
+  Title: "ComplexValueBuilder.EndItem Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.EndItem Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "ComplexValueBuilder", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "ComplexValueBuilder.EndItem Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.EndItem Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-complexvaluebuilder.enditem.md

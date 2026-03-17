@@ -21,6 +21,7 @@ internal static class SidebarBuilder
         Dictionary<string, NamespaceInfo> namespaces,
         string? currentNsSlug,
         string? currentTypeFileBase,
+        string baseUrl,
         string? currentMemberFileBase = null)
     {
         // Mobile toggle button and backdrop — matches the docs page structure
@@ -50,7 +51,7 @@ internal static class SidebarBuilder
 
             // Namespace overview link
             string nsActive = (isCurrentNs && currentTypeFileBase is null) ? " is-active" : "";
-            sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link{nsActive}\" href=\"/api/{nsSlug}.html\"><strong>Overview</strong></a></li>");
+            sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link{nsActive}\" href=\"{baseUrl}/{nsSlug}.html\"><strong>Overview</strong></a></li>");
 
             // Type links — active type expands to show members
             foreach (TypeInfo type in kvp.Value.Types.OrderBy(t => t.Name))
@@ -65,12 +66,12 @@ internal static class SidebarBuilder
                     ? (currentMemberFileBase is null ? " is-active" : " is-current")
                     : "";
                 sb.AppendLine($"                        <li class=\"sidebar__item\">");
-                sb.AppendLine($"                            <a class=\"sidebar__link sidebar__link--type{typeClass}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(type.Name)}</a>");
+                sb.AppendLine($"                            <a class=\"sidebar__link sidebar__link--type{typeClass}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(type.Name)}</a>");
 
                 // Expand member tree for the active type
                 if (isActiveType)
                 {
-                    AppendMemberTree(sb, type, nsSlug, typeSlug, currentMemberFileBase);
+                    AppendMemberTree(sb, type, nsSlug, typeSlug, baseUrl, currentMemberFileBase);
                 }
 
                 sb.AppendLine($"                        </li>");
@@ -96,6 +97,7 @@ internal static class SidebarBuilder
         TypeInfo type,
         string nsSlug,
         string typeSlug,
+        string baseUrl,
         string? currentMemberFileBase)
     {
         sb.AppendLine("                            <ul class=\"sidebar__members\">");
@@ -107,7 +109,7 @@ internal static class SidebarBuilder
             bool categoryActive = ctorFileBase == currentMemberFileBase;
             AppendCategoryStart(sb, "Constructors", categoryActive);
             string ctorActive = categoryActive ? " is-active" : "";
-            sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"/api/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}</a></li>");
+            sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{ctorActive}\" href=\"{baseUrl}/{ctorFileBase}.html\">{HtmlEncodeWithBreaks(type.Constructors[0].Name)}</a></li>");
             AppendCategoryEnd(sb);
         }
 
@@ -122,7 +124,7 @@ internal static class SidebarBuilder
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
                 string displayName = group.Count() > 1 && group.Key == "Item" ? "Item[]" : group.First().Name;
-                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
             }
             AppendCategoryEnd(sb);
         }
@@ -137,7 +139,7 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(group.Key);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(group.Key)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(group.Key)}</a></li>");
             }
             AppendCategoryEnd(sb);
         }
@@ -153,7 +155,7 @@ internal static class SidebarBuilder
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
                 string displayName = GetOperatorGroupDisplayName(group.Key);
-                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(displayName)}</a></li>");
             }
             AppendCategoryEnd(sb);
         }
@@ -168,7 +170,7 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(field.GroupKey);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(field.Name)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(field.Name)}</a></li>");
             }
             AppendCategoryEnd(sb);
         }
@@ -183,7 +185,7 @@ internal static class SidebarBuilder
                 string memberSlug = MarkdownGenerator.MemberToSlug(evt.GroupKey);
                 string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
                 string active = fileBase == currentMemberFileBase ? " is-active" : "";
-                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"/api/{fileBase}.html\">{HtmlEncodeWithBreaks(evt.Name)}</a></li>");
+                sb.AppendLine($"                                        <li class=\"sidebar__member\"><a class=\"sidebar__link sidebar__link--member{active}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(evt.Name)}</a></li>");
             }
             AppendCategoryEnd(sb);
         }
@@ -230,12 +232,13 @@ internal static class SidebarBuilder
     /// </summary>
     public static string Build(
         Dictionary<string, NamespaceInfo> namespaces,
+        string baseUrl,
         string? currentNsSlug = null,
         string? currentTypeFileBase = null,
         string? currentMemberFileBase = null)
     {
         StringBuilder sb = new();
-        AppendSidebar(sb, namespaces, currentNsSlug, currentTypeFileBase, currentMemberFileBase);
+        AppendSidebar(sb, namespaces, currentNsSlug, currentTypeFileBase, baseUrl, currentMemberFileBase);
         return sb.ToString();
     }
 

@@ -1,5 +1,6 @@
 ContentType: application/vnd.endjin.ssg.page+yaml
 Title: "Corvus.Text.Json.Compatibility Namespace"
+Template: api/api-page
 Navigation:
   Title: Corvus.Text.Json.Compatibility
   Description: "API reference for the Corvus.Text.Json.Compatibility namespace"

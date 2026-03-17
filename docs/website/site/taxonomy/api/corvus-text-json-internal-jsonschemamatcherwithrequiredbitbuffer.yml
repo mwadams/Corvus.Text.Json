@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMatcherWithRequiredBitBuffer"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMatcherWithRequiredBitBuffer"
+  Description: "A matcher for a JSON schema that requires a bit buffer for tracking required properties."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.html
+  Rank: 128
+MetaData:
+  Title: "JsonSchemaMatcherWithRequiredBitBuffer — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaMatcherWithRequiredBitBuffer in Corvus.Text.Json.Internal"
+  Keywords: [API, delegate, "JsonSchemaMatcherWithRequiredBitBuffer", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaMatcherWithRequiredBitBuffer — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaMatcherWithRequiredBitBuffer"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.md

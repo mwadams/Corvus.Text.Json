@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Polyfills.IsValid Method"
+Template: api/api-page
+Navigation:
+  Title: "Polyfills.IsValid Method"
+  Description: "Polyfills.IsValid Method — Corvus.Text.Json.Compatibility"
+  Parent: /api
+  Url: /api/corvus-text-json-compatibility-polyfills.isvalid.html
+  Rank: 1000
+MetaData:
+  Title: "Polyfills.IsValid Method — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for Polyfills.IsValid Method in Corvus.Text.Json.Compatibility"
+  Keywords: [API, Method, "Polyfills", Corvus.Text.Json.Compatibility]
+OpenGraph:
+  Title: "Polyfills.IsValid Method — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for Polyfills.IsValid Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-compatibility-polyfills.isvalid.md

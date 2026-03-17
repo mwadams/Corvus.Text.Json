@@ -12,7 +12,7 @@ internal static class ApiViewGenerator
     /// Writes <c>api/index.cshtml</c> — the API landing page with a hierarchical
     /// namespace sidebar and namespace cards in the main content area.
     /// </summary>
-    public static void GenerateIndexView(string viewsDir, Dictionary<string, NamespaceInfo> namespaces)
+    public static void GenerateIndexView(string viewsDir, Dictionary<string, NamespaceInfo> namespaces, string baseUrl, string? nsDescriptionsDir = null)
     {
         StringBuilder sb = new();
 
@@ -23,7 +23,7 @@ internal static class ApiViewGenerator
         sb.AppendLine("<div class=\"layout-docs container\">");
 
         // Hierarchical sidebar — no type highlighted, no namespace highlighted (landing page)
-        SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: null, currentTypeFileBase: null);
+        SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: null, currentTypeFileBase: null, baseUrl);
 
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
@@ -45,9 +45,9 @@ internal static class ApiViewGenerator
             string ns = kvp.Key;
             string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
             int typeCount = kvp.Value.Types.Count;
-            string description = GetNamespaceDescription(ns);
+            string description = GetNamespaceDescription(ns, nsDescriptionsDir);
 
-            sb.AppendLine($"                <a class=\"card card--link\" href=\"/api/{nsSlug}.html\">");
+            sb.AppendLine($"                <a class=\"card card--link\" href=\"{baseUrl}/{nsSlug}.html\">");
             sb.AppendLine($"                    <h3 class=\"card__title\">{HttpUtility.HtmlEncode(ns)}</h3>");
             sb.AppendLine($"                    <p class=\"card__body\">{HttpUtility.HtmlEncode(description)}</p>");
             sb.AppendLine($"                    <div class=\"card__meta\"><span class=\"card__tag\">{typeCount} type{(typeCount == 1 ? "" : "s")}</span></div>");
@@ -68,51 +68,64 @@ internal static class ApiViewGenerator
     }
 
     /// <summary>
-    /// Writes one <c>{ns-slug}.cshtml</c> per namespace — the namespace overview pages
-    /// with the hierarchical sidebar (current namespace expanded, "Overview" highlighted).
+    /// Writes a single shared <c>api-page.cshtml</c> view — used by ALL namespace,
+    /// per-type, and per-member API pages via the Vellum <c>Template:</c> property.
+    /// The sidebar is generated with no active state; JavaScript handles expanding
+    /// the correct section based on the current URL.
     /// </summary>
-    public static void GenerateNamespaceViews(string viewsDir, Dictionary<string, NamespaceInfo> namespaces)
+    public static void GenerateSharedApiView(string viewsDir, Dictionary<string, NamespaceInfo> namespaces, string baseUrl)
     {
-        foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
-        {
-            string ns = kvp.Key;
-            string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
+        StringBuilder sb = new();
+        sb.AppendLine("@model SiteViewModel");
+        sb.AppendLine("@{");
+        sb.AppendLine("    Layout = \"../Shared/_Layout.cshtml\";");
+        sb.AppendLine("}");
+        sb.AppendLine("<div class=\"layout-docs container\">");
 
-            StringBuilder sb = new();
-            sb.AppendLine("@model SiteViewModel");
-            sb.AppendLine("@{");
-            sb.AppendLine("    Layout = \"../Shared/_Layout.cshtml\";");
-            sb.AppendLine("}");
-            sb.AppendLine("<div class=\"layout-docs container\">");
+        // Sidebar with no active state — JS will set active link based on URL
+        SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: null, currentTypeFileBase: null, baseUrl);
 
-            // Hierarchical sidebar — current namespace expanded, "Overview" link active
-            SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: nsSlug, currentTypeFileBase: null);
+        sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
+        sb.AppendLine("        <div class=\"doc__content\">");
+        sb.AppendLine("            <h1>@Model.PageContext.Title</h1>");
+        sb.AppendLine("            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())");
+        sb.AppendLine("            {");
+        sb.AppendLine("                @Html.Raw(contentFragment.Body)");
+        sb.AppendLine("            }");
+        sb.AppendLine("        </div>");
+        sb.AppendLine("    </main>");
+        sb.AppendLine("</div>");
 
-            sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
-            sb.AppendLine("        <div class=\"doc__content\">");
-            sb.AppendLine("            <h1>@Model.PageContext.Title</h1>");
-            sb.AppendLine("            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())");
-            sb.AppendLine("            {");
-            sb.AppendLine("                @Html.Raw(contentFragment.Body)");
-            sb.AppendLine("            }");
-            sb.AppendLine("        </div>");
-            sb.AppendLine("    </main>");
-            sb.AppendLine("</div>");
-
-            string outputPath = Path.Combine(viewsDir, nsSlug + ".cshtml");
-            File.WriteAllText(outputPath, sb.ToString());
-            Console.WriteLine($"  Written: {outputPath}");
-        }
+        string outputPath = Path.Combine(viewsDir, "api-page.cshtml");
+        File.WriteAllText(outputPath, sb.ToString());
+        Console.WriteLine($"  Written: {outputPath}");
     }
 
-    private static string GetNamespaceDescription(string ns) => ns switch
+    internal static string GetNamespaceDescription(string ns, string? nsDescriptionsDir)
     {
-        "Corvus.Text.Json" => "Core public API \u2014 JsonElement, ParsedJsonDocument, JsonDocumentBuilder, JsonWorkspace, and more",
-        "Corvus.Text.Json.Internal" => "Internal helpers, enumerators, and metadata types",
-        "Corvus.Numerics" => "BigNumber and BigInteger arbitrary-precision numeric types",
-        "Corvus.Text.Json.Compatibility" => "System.Text.Json interop and compatibility types",
-        "Corvus.Globalization" => "Globalization helpers and culture-sensitive formatting",
-        "Corvus.Runtime.InteropServices" => "Low-level memory and interop utilities",
-        _ => $"Types in the {ns} namespace",
-    };
+        if (nsDescriptionsDir is not null)
+        {
+            string descPath = Path.Combine(nsDescriptionsDir, ns + ".md");
+            if (File.Exists(descPath))
+            {
+                string content = File.ReadAllText(descPath).Trim();
+                // Extract first sentence as short description
+                int dotIdx = content.IndexOf(". ", StringComparison.Ordinal);
+                if (dotIdx >= 0 && dotIdx < 200)
+                {
+                    return content[..(dotIdx + 1)];
+                }
+                // If no period found, use first line truncated
+                int newlineIdx = content.IndexOfAny(['\r', '\n']);
+                if (newlineIdx >= 0)
+                {
+                    content = content[..newlineIdx];
+                }
+                return content.Length > 200 ? content[..197] + "..." : content;
+            }
+        }
+
+        // Fallback for unknown namespaces
+        return $"Types in the {ns} namespace";
+    }
 }

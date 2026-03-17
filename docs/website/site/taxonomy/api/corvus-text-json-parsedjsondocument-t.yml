@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ParsedJsonDocument<T>"
+Template: api/api-page
+Navigation:
+  Title: "ParsedJsonDocument<T>"
+  Description: "Represents the structure of a JSON value in a lightweight, read-only form."
+  Parent: /api
+  Url: /api/corvus-text-json-parsedjsondocument-t.html
+  Rank: 142
+MetaData:
+  Title: "ParsedJsonDocument<T> — Corvus.Text.Json"
+  Description: "API documentation for ParsedJsonDocument<T> in Corvus.Text.Json"
+  Keywords: [API, class, "ParsedJsonDocument<T>", Corvus.Text.Json]
+OpenGraph:
+  Title: "ParsedJsonDocument<T> — Corvus.Text.Json"
+  Description: "API documentation for ParsedJsonDocument<T>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-parsedjsondocument-t.md

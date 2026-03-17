@@ -5,7 +5,7 @@ namespace XmlDocToMarkdown;
 /// <summary>
 /// Generates one Vellum markdown file per namespace containing all public types.
 /// </summary>
-public sealed class MarkdownGenerator(string outputDir, string? namespaceDescriptionsDir = null)
+public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? namespaceDescriptionsDir = null)
 {
     private const string FrontmatterDate = "2026-03-15T00:00:00.0+00:00";
 
@@ -56,7 +56,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
 
                 StringBuilder sb = new();
                 WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
-                WriteTypeBody(sb, type, nsSlug, typeSlug);
+                WriteTypeBody(sb, type, baseUrl, nsSlug, typeSlug);
 
                 File.WriteAllText(filePath, sb.ToString());
                 Console.WriteLine($"  Written: {filePath}");
@@ -166,7 +166,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
         {
             string summary = TruncateSummary(type.Documentation?.Summary ?? string.Empty);
             string typeSlug = TypeToSlug(type.Name);
-            string typeUrl = $"/api/{nsSlug}-{typeSlug}.html";
+            string typeUrl = $"{baseUrl}/{nsSlug}-{typeSlug}.html";
             sb.AppendLine($"| [{type.Name}]({typeUrl}) | {type.Kind} | {summary} |");
         }
 
@@ -177,7 +177,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
     /// Writes the body of a type summary page — declaration, summary, inheritance,
     /// and summary tables for each member category linking to dedicated member pages.
     /// </summary>
-    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string? nsSlug = null, string? typeSlug = null)
+    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string baseUrl, string? nsSlug = null, string? typeSlug = null)
     {
         sb.AppendLine("```csharp");
         sb.AppendLine(BuildTypeDeclaration(type));
@@ -261,7 +261,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
         // Constructors
         if (type.Constructors.Count > 0)
         {
-            string? ctorUrl = hasLinks ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, "ctor")}.html" : null;
+            string? ctorUrl = hasLinks ? $"{baseUrl}/{GetMemberPageFileBase(nsSlug!, typeSlug!, "ctor")}.html" : null;
             sb.AppendLine("## Constructors");
             sb.AppendLine();
             sb.AppendLine("| Constructor | Description |");
@@ -299,7 +299,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey).OrderBy(g => g.Key))
             {
                 string? propUrl = hasLinks
-                    ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
+                    ? $"{baseUrl}/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
                     : null;
                 List<MemberInfo> members = group.ToList();
                 if (members.Count > 1)
@@ -338,7 +338,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey).OrderBy(g => g.Key))
             {
                 string? methodUrl = hasLinks
-                    ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
+                    ? $"{baseUrl}/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
                     : null;
                 List<MemberInfo> members = group.ToList();
                 if (members.Count > 1)
@@ -376,7 +376,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
             foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey).OrderBy(g => g.Key))
             {
                 string? opUrl = hasLinks
-                    ? $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
+                    ? $"{baseUrl}/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(group.Key))}.html"
                     : null;
                 List<MemberInfo> members = group.ToList();
                 if (members.Count > 1)
@@ -416,7 +416,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
                 string staticBadge = field.IsStatic ? " `static`" : "";
                 if (hasLinks)
                 {
-                    string fieldUrl = $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(field.GroupKey))}.html";
+                    string fieldUrl = $"{baseUrl}/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(field.GroupKey))}.html";
                     sb.AppendLine($"| [{field.Name}]({fieldUrl}){staticBadge} | {ResolveTypeLink(field.ReturnType, field.ReturnTypeFullName)} | {summary} |");
                 }
                 else
@@ -439,7 +439,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
                 string summary = TruncateSummary(evt.Documentation?.Summary ?? string.Empty);
                 if (hasLinks)
                 {
-                    string evtUrl = $"/api/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(evt.GroupKey))}.html";
+                    string evtUrl = $"{baseUrl}/{GetMemberPageFileBase(nsSlug!, typeSlug!, MemberToSlug(evt.GroupKey))}.html";
                     sb.AppendLine($"| [{evt.Name}]({evtUrl}) | {ResolveTypeLink(evt.ReturnType, evt.ReturnTypeFullName)} | {summary} |");
                 }
                 else
@@ -868,7 +868,7 @@ public sealed class MarkdownGenerator(string outputDir, string? namespaceDescrip
     /// <summary>
     /// Gets a human-readable group display name for an operator CLR method name.
     /// </summary>
-    private static string GetOperatorGroupDisplayName(string clrName)
+    internal static string GetOperatorGroupDisplayName(string clrName)
     {
         return clrName switch
         {

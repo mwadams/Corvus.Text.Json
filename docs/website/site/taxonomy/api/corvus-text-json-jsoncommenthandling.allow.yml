@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonCommentHandling.Allow Field"
+Template: api/api-page
+Navigation:
+  Title: "JsonCommentHandling.Allow Field"
+  Description: "JsonCommentHandling.Allow Field — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsoncommenthandling.allow.html
+  Rank: 1000
+MetaData:
+  Title: "JsonCommentHandling.Allow Field — Corvus.Text.Json"
+  Description: "API documentation for JsonCommentHandling.Allow Field in Corvus.Text.Json"
+  Keywords: [API, Field, "JsonCommentHandling", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonCommentHandling.Allow Field — Corvus.Text.Json"
+  Description: "API documentation for JsonCommentHandling.Allow Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsoncommenthandling.allow.md

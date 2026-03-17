@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.JsonSchema"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.JsonSchema"
+  Description: "JsonElement.JsonSchema class"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-jsonschema.html
+  Rank: 111
+MetaData:
+  Title: "JsonElement.JsonSchema — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema in Corvus.Text.Json"
+  Keywords: [API, class, "JsonElement.JsonSchema", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.JsonSchema — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-jsonschema.md

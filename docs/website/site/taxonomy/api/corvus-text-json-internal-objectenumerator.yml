@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ObjectEnumerator"
+Template: api/api-page
+Navigation:
+  Title: "ObjectEnumerator"
+  Description: "An enumerable and enumerator for the properties of a JSON object."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-objectenumerator.html
+  Rank: 132
+MetaData:
+  Title: "ObjectEnumerator — Corvus.Text.Json.Internal"
+  Description: "API documentation for ObjectEnumerator in Corvus.Text.Json.Internal"
+  Keywords: [API, struct, "ObjectEnumerator", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "ObjectEnumerator — Corvus.Text.Json.Internal"
+  Description: "API documentation for ObjectEnumerator"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-objectenumerator.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IJsonDocument"
+Template: api/api-page
+Navigation:
+  Title: "IJsonDocument"
+  Description: "The interface explicitly implemented by JSON Document providers for internal use only."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-ijsondocument.html
+  Rank: 115
+MetaData:
+  Title: "IJsonDocument — Corvus.Text.Json.Internal"
+  Description: "API documentation for IJsonDocument in Corvus.Text.Json.Internal"
+  Keywords: [API, interface, "IJsonDocument", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "IJsonDocument — Corvus.Text.Json.Internal"
+  Description: "API documentation for IJsonDocument"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-ijsondocument.md

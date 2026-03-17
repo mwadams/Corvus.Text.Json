@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonTokenType"
+Template: api/api-page
+Navigation:
+  Title: "JsonTokenType"
+  Description: "This enum defines the various JSON tokens that make up a JSON text and is used by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) when moving from one token to the next. The [`Utf..."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsontokentype.html
+  Rank: 129
+MetaData:
+  Title: "JsonTokenType — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonTokenType in Corvus.Text.Json.Internal"
+  Keywords: [API, enum, "JsonTokenType", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonTokenType — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonTokenType"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsontokentype.md

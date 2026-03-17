@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ValidationLevel.Basic Field"
+Template: api/api-page
+Navigation:
+  Title: "ValidationLevel.Basic Field"
+  Description: "ValidationLevel.Basic Field — Corvus.Text.Json.Compatibility"
+  Parent: /api
+  Url: /api/corvus-text-json-compatibility-validationlevel.basic.html
+  Rank: 1000
+MetaData:
+  Title: "ValidationLevel.Basic Field — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for ValidationLevel.Basic Field in Corvus.Text.Json.Compatibility"
+  Keywords: [API, Field, "ValidationLevel", Corvus.Text.Json.Compatibility]
+OpenGraph:
+  Title: "ValidationLevel.Basic Field — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for ValidationLevel.Basic Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-compatibility-validationlevel.basic.md

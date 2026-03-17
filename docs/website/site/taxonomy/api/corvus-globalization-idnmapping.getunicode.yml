@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IdnMapping.GetUnicode Method"
+Template: api/api-page
+Navigation:
+  Title: "IdnMapping.GetUnicode Method"
+  Description: "IdnMapping.GetUnicode Method — Corvus.Globalization"
+  Parent: /api
+  Url: /api/corvus-globalization-idnmapping.getunicode.html
+  Rank: 1000
+MetaData:
+  Title: "IdnMapping.GetUnicode Method — Corvus.Globalization"
+  Description: "API documentation for IdnMapping.GetUnicode Method in Corvus.Globalization"
+  Keywords: [API, Method, "IdnMapping", Corvus.Globalization]
+OpenGraph:
+  Title: "IdnMapping.GetUnicode Method — Corvus.Globalization"
+  Description: "API documentation for IdnMapping.GetUnicode Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-globalization-idnmapping.getunicode.md

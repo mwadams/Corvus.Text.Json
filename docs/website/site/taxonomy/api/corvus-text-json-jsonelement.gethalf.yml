@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.GetHalf Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.GetHalf Method"
+  Description: "JsonElement.GetHalf Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.gethalf.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.GetHalf Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetHalf Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.GetHalf Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetHalf Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.gethalf.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Mutable.GetOffsetDate Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Mutable.GetOffsetDate Method"
+  Description: "JsonElement.Mutable.GetOffsetDate Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-mutable.getoffsetdate.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.Mutable.GetOffsetDate Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Mutable.GetOffsetDate Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement.Mutable", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Mutable.GetOffsetDate Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Mutable.GetOffsetDate Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-mutable.getoffsetdate.md

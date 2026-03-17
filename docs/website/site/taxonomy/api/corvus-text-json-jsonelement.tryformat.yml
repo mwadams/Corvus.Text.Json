@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.TryFormat Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.TryFormat Method"
+  Description: "JsonElement.TryFormat Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.tryformat.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.TryFormat Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.TryFormat Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.TryFormat Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.TryFormat Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.tryformat.md

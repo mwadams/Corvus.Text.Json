@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "PeriodBuilder"
+Template: api/api-page
+Navigation:
+  Title: "PeriodBuilder"
+  Description: "A mutable builder class for [`Period`](/api/corvus-text-json-period.html) values. Each property can be set independently, and then a Period can be created from the result using the [`BuildPeriod`](..."
+  Parent: /api
+  Url: /api/corvus-text-json-periodbuilder.html
+  Rank: 144
+MetaData:
+  Title: "PeriodBuilder — Corvus.Text.Json"
+  Description: "API documentation for PeriodBuilder in Corvus.Text.Json"
+  Keywords: [API, struct, "PeriodBuilder", Corvus.Text.Json]
+OpenGraph:
+  Title: "PeriodBuilder — Corvus.Text.Json"
+  Description: "API documentation for PeriodBuilder"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-periodbuilder.md

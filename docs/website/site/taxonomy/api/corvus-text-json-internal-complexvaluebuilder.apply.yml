@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ComplexValueBuilder.Apply Method"
+Template: api/api-page
+Navigation:
+  Title: "ComplexValueBuilder.Apply Method"
+  Description: "ComplexValueBuilder.Apply Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-complexvaluebuilder.apply.html
+  Rank: 1000
+MetaData:
+  Title: "ComplexValueBuilder.Apply Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.Apply Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "ComplexValueBuilder", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "ComplexValueBuilder.Apply Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.Apply Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-complexvaluebuilder.apply.md

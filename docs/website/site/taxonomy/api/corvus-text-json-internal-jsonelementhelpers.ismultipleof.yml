@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.IsMultipleOf Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.IsMultipleOf Method"
+  Description: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.ismultipleof.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.IsMultipleOf Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.IsMultipleOf Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.ismultipleof.md

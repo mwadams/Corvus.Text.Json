@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Period"
+Template: api/api-page
+Navigation:
+  Title: "Period"
+  Description: "Represents a period of time expressed in human chronological terms: hours, days, weeks, months and so on."
+  Parent: /api
+  Url: /api/corvus-text-json-period.html
+  Rank: 143
+MetaData:
+  Title: "Period — Corvus.Text.Json"
+  Description: "API documentation for Period in Corvus.Text.Json"
+  Keywords: [API, struct, "Period", Corvus.Text.Json]
+OpenGraph:
+  Title: "Period — Corvus.Text.Json"
+  Description: "API documentation for Period"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-period.md

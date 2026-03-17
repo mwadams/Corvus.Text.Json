@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "RawUtf8JsonString Constructors"
+Template: api/api-page
+Navigation:
+  Title: "RawUtf8JsonString Constructors"
+  Description: "RawUtf8JsonString Constructors — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-rawutf8jsonstring.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "RawUtf8JsonString Constructors — Corvus.Text.Json"
+  Description: "API documentation for RawUtf8JsonString Constructors in Corvus.Text.Json"
+  Keywords: [API, Constructor, "RawUtf8JsonString", Corvus.Text.Json]
+OpenGraph:
+  Title: "RawUtf8JsonString Constructors — Corvus.Text.Json"
+  Description: "API documentation for RawUtf8JsonString Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-rawutf8jsonstring.ctor.md

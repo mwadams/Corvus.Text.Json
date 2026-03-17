@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonException Constructors"
+Template: api/api-page
+Navigation:
+  Title: "JsonException Constructors"
+  Description: "JsonException Constructors — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonexception.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "JsonException Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonException Constructors in Corvus.Text.Json"
+  Keywords: [API, Constructor, "JsonException", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonException Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonException Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonexception.ctor.md

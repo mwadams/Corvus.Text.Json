@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers"
+  Description: "Core helper methods for parsing and processing JSON numeric values into their component parts."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.html
+  Rank: 121
+MetaData:
+  Title: "JsonElementHelpers — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers in Corvus.Text.Json.Internal"
+  Keywords: [API, class, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.md

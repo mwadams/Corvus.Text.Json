@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMatcherWithRequiredBitBuffer Constructors"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMatcherWithRequiredBitBuffer Constructors"
+  Description: "JsonSchemaMatcherWithRequiredBitBuffer Constructors — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaMatcherWithRequiredBitBuffer Constructors — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaMatcherWithRequiredBitBuffer Constructors in Corvus.Text.Json.Internal"
+  Keywords: [API, Constructor, "JsonSchemaMatcherWithRequiredBitBuffer", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaMatcherWithRequiredBitBuffer Constructors — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaMatcherWithRequiredBitBuffer Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemamatcherwithrequiredbitbuffer.ctor.md

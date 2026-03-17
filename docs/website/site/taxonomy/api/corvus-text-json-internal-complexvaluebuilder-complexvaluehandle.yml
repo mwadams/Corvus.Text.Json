@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ComplexValueBuilder.ComplexValueHandle"
+Template: api/api-page
+Navigation:
+  Title: "ComplexValueBuilder.ComplexValueHandle"
+  Description: "ComplexValueBuilder.ComplexValueHandle struct"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-complexvaluebuilder-complexvaluehandle.html
+  Rank: 110
+MetaData:
+  Title: "ComplexValueBuilder.ComplexValueHandle — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.ComplexValueHandle in Corvus.Text.Json.Internal"
+  Keywords: [API, struct, "ComplexValueBuilder.ComplexValueHandle", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "ComplexValueBuilder.ComplexValueHandle — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.ComplexValueHandle"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-complexvaluebuilder-complexvaluehandle.md

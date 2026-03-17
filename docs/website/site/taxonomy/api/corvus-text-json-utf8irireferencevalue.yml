@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Utf8IriReferenceValue"
+Template: api/api-page
+Navigation:
+  Title: "Utf8IriReferenceValue"
+  Description: "A UTF-8 IRI reference value that has been parsed from a JSON document."
+  Parent: /api
+  Url: /api/corvus-text-json-utf8irireferencevalue.html
+  Rank: 150
+MetaData:
+  Title: "Utf8IriReferenceValue — Corvus.Text.Json"
+  Description: "API documentation for Utf8IriReferenceValue in Corvus.Text.Json"
+  Keywords: [API, struct, "Utf8IriReferenceValue", Corvus.Text.Json]
+OpenGraph:
+  Title: "Utf8IriReferenceValue — Corvus.Text.Json"
+  Description: "API documentation for Utf8IriReferenceValue"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-utf8irireferencevalue.md

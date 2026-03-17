@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Source"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Source"
+  Description: "JsonElement.Source struct"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-source.html
+  Rank: 116
+MetaData:
+  Title: "JsonElement.Source — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Source in Corvus.Text.Json"
+  Keywords: [API, struct, "JsonElement.Source", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Source — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Source"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-source.md

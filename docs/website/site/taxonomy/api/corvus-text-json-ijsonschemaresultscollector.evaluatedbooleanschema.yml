@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method"
+Template: api/api-page
+Navigation:
+  Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method"
+  Description: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-ijsonschemaresultscollector.evaluatedbooleanschema.html
+  Rank: 1000
+MetaData:
+  Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Text.Json"
+  Description: "API documentation for IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method in Corvus.Text.Json"
+  Keywords: [API, Method, "IJsonSchemaResultsCollector", Corvus.Text.Json]
+OpenGraph:
+  Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Text.Json"
+  Description: "API documentation for IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-ijsonschemaresultscollector.evaluatedbooleanschema.md

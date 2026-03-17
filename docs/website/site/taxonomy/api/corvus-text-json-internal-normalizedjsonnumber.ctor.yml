@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "NormalizedJsonNumber Constructors"
+Template: api/api-page
+Navigation:
+  Title: "NormalizedJsonNumber Constructors"
+  Description: "NormalizedJsonNumber Constructors — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-normalizedjsonnumber.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "NormalizedJsonNumber Constructors — Corvus.Text.Json.Internal"
+  Description: "API documentation for NormalizedJsonNumber Constructors in Corvus.Text.Json.Internal"
+  Keywords: [API, Constructor, "NormalizedJsonNumber", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "NormalizedJsonNumber Constructors — Corvus.Text.Json.Internal"
+  Description: "API documentation for NormalizedJsonNumber Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-normalizedjsonnumber.ctor.md

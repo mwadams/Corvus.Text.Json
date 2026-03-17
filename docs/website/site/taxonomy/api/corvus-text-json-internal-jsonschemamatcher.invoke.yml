@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMatcher.Invoke Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMatcher.Invoke Method"
+  Description: "JsonSchemaMatcher.Invoke Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemamatcher.invoke.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaMatcher.Invoke Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaMatcher.Invoke Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaMatcher", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaMatcher.Invoke Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaMatcher.Invoke Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemamatcher.invoke.md

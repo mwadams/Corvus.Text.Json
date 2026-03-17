@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaResultsCollector.CreateUnrented Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaResultsCollector.CreateUnrented Method"
+  Description: "JsonSchemaResultsCollector.CreateUnrented Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemaresultscollector.createunrented.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaResultsCollector.CreateUnrented Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsCollector.CreateUnrented Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonSchemaResultsCollector", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaResultsCollector.CreateUnrented Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsCollector.CreateUnrented Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemaresultscollector.createunrented.md

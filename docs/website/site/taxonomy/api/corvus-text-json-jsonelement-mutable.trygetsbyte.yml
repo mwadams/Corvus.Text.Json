@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Mutable.TryGetSByte Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Mutable.TryGetSByte Method"
+  Description: "JsonElement.Mutable.TryGetSByte Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-mutable.trygetsbyte.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.Mutable.TryGetSByte Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Mutable.TryGetSByte Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement.Mutable", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Mutable.TryGetSByte Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Mutable.TryGetSByte Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-mutable.trygetsbyte.md

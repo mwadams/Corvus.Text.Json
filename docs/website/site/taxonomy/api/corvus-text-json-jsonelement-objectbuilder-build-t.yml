@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.ObjectBuilder.Build<T>"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.ObjectBuilder.Build<T>"
+  Description: "JsonElement.ObjectBuilder.Build<T> delegate"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-objectbuilder-build-t.html
+  Rank: 115
+MetaData:
+  Title: "JsonElement.ObjectBuilder.Build<T> — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.ObjectBuilder.Build<T> in Corvus.Text.Json"
+  Keywords: [API, delegate, "JsonElement.ObjectBuilder.Build<T>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.ObjectBuilder.Build<T> — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.ObjectBuilder.Build<T>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-objectbuilder-build-t.md

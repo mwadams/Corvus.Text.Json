@@ -7,7 +7,7 @@ namespace XmlDocToMarkdown;
 /// <summary>
 /// Generates a search-index.json file for Lunr-based search integration.
 /// </summary>
-public sealed class SearchIndexGenerator(string outputPath)
+public sealed class SearchIndexGenerator(string outputPath, string baseUrl)
 {
     public void Generate(Dictionary<string, NamespaceInfo> namespaces)
     {
@@ -17,7 +17,7 @@ public sealed class SearchIndexGenerator(string outputPath)
         {
             string ns = kvp.Key;
             string pageFileName = MarkdownGenerator.NamespaceToFileName(ns);
-            string pageUrl = $"/api/{pageFileName}.html";
+            string pageUrl = $"{baseUrl}/{pageFileName}.html";
 
             foreach (TypeInfo type in kvp.Value.Types)
             {
@@ -36,11 +36,11 @@ public sealed class SearchIndexGenerator(string outputPath)
         Console.WriteLine($"  Written: {outputPath} ({entries.Count} entries)");
     }
 
-    private static void AddTypeEntries(List<SearchEntry> entries, TypeInfo type, string ns, string pageUrl)
+    private void AddTypeEntries(List<SearchEntry> entries, TypeInfo type, string ns, string pageUrl)
     {
         string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
         string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
-        string typeUrl = $"/api/{nsSlug}-{typeSlug}.html";
+        string typeUrl = $"{baseUrl}/{nsSlug}-{typeSlug}.html";
 
         // Build keywords from the type
         List<string> keywords = [type.Name, type.Kind, ns];
@@ -93,12 +93,12 @@ public sealed class SearchIndexGenerator(string outputPath)
         }
     }
 
-    private static void AddMemberEntries(List<SearchEntry> entries, TypeInfo type, string ns, string nsSlug, string typeSlug)
+    private void AddMemberEntries(List<SearchEntry> entries, TypeInfo type, string ns, string nsSlug, string typeSlug)
     {
         // Constructors
         if (type.Constructors.Count > 0)
         {
-            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, "ctor")}.html";
+            string memberUrl = $"{baseUrl}/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, "ctor")}.html";
             entries.Add(new SearchEntry
             {
                 Url = memberUrl,
@@ -112,7 +112,7 @@ public sealed class SearchIndexGenerator(string outputPath)
         // Properties
         foreach (MemberInfo prop in type.Properties)
         {
-            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(prop.GroupKey))}.html";
+            string memberUrl = $"{baseUrl}/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(prop.GroupKey))}.html";
             entries.Add(new SearchEntry
             {
                 Url = memberUrl,
@@ -126,7 +126,7 @@ public sealed class SearchIndexGenerator(string outputPath)
         // Methods (grouped by name)
         foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey))
         {
-            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(group.Key))}.html";
+            string memberUrl = $"{baseUrl}/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(group.Key))}.html";
             entries.Add(new SearchEntry
             {
                 Url = memberUrl,
@@ -140,7 +140,7 @@ public sealed class SearchIndexGenerator(string outputPath)
         // Operators (grouped by CLR name)
         foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey))
         {
-            string memberUrl = $"/api/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(group.Key))}.html";
+            string memberUrl = $"{baseUrl}/{MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, MarkdownGenerator.MemberToSlug(group.Key))}.html";
             string displayName = group.Key.Replace("op_", "");
             entries.Add(new SearchEntry
             {

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method"
+Template: api/api-page
+Navigation:
+  Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method"
+  Description: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-propertyschemamatchers-t.trygetnamedmatcher.html
+  Rank: 1000
+MetaData:
+  Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for PropertySchemaMatchers<T>.TryGetNamedMatcher Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "PropertySchemaMatchers<T>", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for PropertySchemaMatchers<T>.TryGetNamedMatcher Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-propertyschemamatchers-t.trygetnamedmatcher.md

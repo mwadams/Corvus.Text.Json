@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method"
+  Description: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.expectedmatchesdependentschemavalue.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.expectedmatchesdependentschemavalue.md

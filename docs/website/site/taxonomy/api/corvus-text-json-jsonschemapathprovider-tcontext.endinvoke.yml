@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaPathProvider<TContext>.EndInvoke Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaPathProvider<TContext>.EndInvoke Method"
+  Description: "JsonSchemaPathProvider<TContext>.EndInvoke Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemapathprovider-tcontext.endinvoke.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaPathProvider<TContext>.EndInvoke Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaPathProvider<TContext>.EndInvoke Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonSchemaPathProvider<TContext>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaPathProvider<TContext>.EndInvoke Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaPathProvider<TContext>.EndInvoke Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemapathprovider-tcontext.endinvoke.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.MatchLengthEquals Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.MatchLengthEquals Method"
+  Description: "JsonSchemaEvaluation.MatchLengthEquals Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.matchlengthequals.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.MatchLengthEquals Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchLengthEquals Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.MatchLengthEquals Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchLengthEquals Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.matchlengthequals.md

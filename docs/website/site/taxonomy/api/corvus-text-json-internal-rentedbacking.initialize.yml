@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "RentedBacking.Initialize Method"
+Template: api/api-page
+Navigation:
+  Title: "RentedBacking.Initialize Method"
+  Description: "RentedBacking.Initialize Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-rentedbacking.initialize.html
+  Rank: 1000
+MetaData:
+  Title: "RentedBacking.Initialize Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for RentedBacking.Initialize Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "RentedBacking", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "RentedBacking.Initialize Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for RentedBacking.Initialize Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-rentedbacking.initialize.md

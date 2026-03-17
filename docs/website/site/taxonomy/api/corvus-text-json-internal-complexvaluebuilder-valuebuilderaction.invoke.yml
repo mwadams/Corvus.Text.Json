@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ComplexValueBuilder.ValueBuilderAction.Invoke Method"
+Template: api/api-page
+Navigation:
+  Title: "ComplexValueBuilder.ValueBuilderAction.Invoke Method"
+  Description: "ComplexValueBuilder.ValueBuilderAction.Invoke Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.invoke.html
+  Rank: 1000
+MetaData:
+  Title: "ComplexValueBuilder.ValueBuilderAction.Invoke Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.ValueBuilderAction.Invoke Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "ComplexValueBuilder.ValueBuilderAction", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "ComplexValueBuilder.ValueBuilderAction.Invoke Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for ComplexValueBuilder.ValueBuilderAction.Invoke Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-complexvaluebuilder-valuebuilderaction.invoke.md

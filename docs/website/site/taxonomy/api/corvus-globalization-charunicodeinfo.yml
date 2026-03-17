@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "CharUnicodeInfo"
+Template: api/api-page
+Navigation:
+  Title: "CharUnicodeInfo"
+  Description: "This class implements a set of methods for retrieving character type information. Character type information is independent of culture and region."
+  Parent: /api
+  Url: /api/corvus-globalization-charunicodeinfo.html
+  Rank: 101
+MetaData:
+  Title: "CharUnicodeInfo — Corvus.Globalization"
+  Description: "API documentation for CharUnicodeInfo in Corvus.Globalization"
+  Keywords: [API, class, "CharUnicodeInfo", Corvus.Globalization]
+OpenGraph:
+  Title: "CharUnicodeInfo — Corvus.Globalization"
+  Description: "API documentation for CharUnicodeInfo"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-globalization-charunicodeinfo.md

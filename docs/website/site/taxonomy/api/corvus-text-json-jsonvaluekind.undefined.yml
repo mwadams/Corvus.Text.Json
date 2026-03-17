@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonValueKind.Undefined Field"
+Template: api/api-page
+Navigation:
+  Title: "JsonValueKind.Undefined Field"
+  Description: "JsonValueKind.Undefined Field — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonvaluekind.undefined.html
+  Rank: 1000
+MetaData:
+  Title: "JsonValueKind.Undefined Field — Corvus.Text.Json"
+  Description: "API documentation for JsonValueKind.Undefined Field in Corvus.Text.Json"
+  Keywords: [API, Field, "JsonValueKind", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonValueKind.Undefined Field — Corvus.Text.Json"
+  Description: "API documentation for JsonValueKind.Undefined Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonvaluekind.undefined.md

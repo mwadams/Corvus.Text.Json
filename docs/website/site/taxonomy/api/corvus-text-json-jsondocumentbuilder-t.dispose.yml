@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonDocumentBuilder<T>.Dispose Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonDocumentBuilder<T>.Dispose Method"
+  Description: "JsonDocumentBuilder<T>.Dispose Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsondocumentbuilder-t.dispose.html
+  Rank: 1000
+MetaData:
+  Title: "JsonDocumentBuilder<T>.Dispose Method — Corvus.Text.Json"
+  Description: "API documentation for JsonDocumentBuilder<T>.Dispose Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonDocumentBuilder<T>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonDocumentBuilder<T>.Dispose Method — Corvus.Text.Json"
+  Description: "API documentation for JsonDocumentBuilder<T>.Dispose Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsondocumentbuilder-t.dispose.md

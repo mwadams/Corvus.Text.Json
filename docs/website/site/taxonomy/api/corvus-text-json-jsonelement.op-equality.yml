@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Equality Operator"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Equality Operator"
+  Description: "JsonElement.Equality Operator — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.op-equality.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.Equality Operator — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Equality Operator in Corvus.Text.Json"
+  Keywords: [API, Operator, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Equality Operator — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Equality Operator"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.op-equality.md

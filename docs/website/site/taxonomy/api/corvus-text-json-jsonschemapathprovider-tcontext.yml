@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaPathProvider<TContext>"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaPathProvider<TContext>"
+  Description: "Provides a path segment for a JSON Schema location or instance path, using a context value."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemapathprovider-tcontext.html
+  Rank: 131
+MetaData:
+  Title: "JsonSchemaPathProvider<TContext> — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaPathProvider<TContext> in Corvus.Text.Json"
+  Keywords: [API, delegate, "JsonSchemaPathProvider<TContext>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaPathProvider<TContext> — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaPathProvider<TContext>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemapathprovider-tcontext.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonTokenType.False Field"
+Template: api/api-page
+Navigation:
+  Title: "JsonTokenType.False Field"
+  Description: "JsonTokenType.False Field — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsontokentype.false.html
+  Rank: 1000
+MetaData:
+  Title: "JsonTokenType.False Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonTokenType.False Field in Corvus.Text.Json.Internal"
+  Keywords: [API, Field, "JsonTokenType", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonTokenType.False Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonTokenType.False Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsontokentype.false.md

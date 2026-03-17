@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "RawUtf8JsonString.TakeOwnership Method"
+Template: api/api-page
+Navigation:
+  Title: "RawUtf8JsonString.TakeOwnership Method"
+  Description: "RawUtf8JsonString.TakeOwnership Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-rawutf8jsonstring.takeownership.html
+  Rank: 1000
+MetaData:
+  Title: "RawUtf8JsonString.TakeOwnership Method — Corvus.Text.Json"
+  Description: "API documentation for RawUtf8JsonString.TakeOwnership Method in Corvus.Text.Json"
+  Keywords: [API, Method, "RawUtf8JsonString", Corvus.Text.Json]
+OpenGraph:
+  Title: "RawUtf8JsonString.TakeOwnership Method — Corvus.Text.Json"
+  Description: "API documentation for RawUtf8JsonString.TakeOwnership Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-rawutf8jsonstring.takeownership.md

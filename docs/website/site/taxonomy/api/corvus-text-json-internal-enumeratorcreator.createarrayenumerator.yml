@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "EnumeratorCreator.CreateArrayEnumerator Method"
+Template: api/api-page
+Navigation:
+  Title: "EnumeratorCreator.CreateArrayEnumerator Method"
+  Description: "EnumeratorCreator.CreateArrayEnumerator Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-enumeratorcreator.createarrayenumerator.html
+  Rank: 1000
+MetaData:
+  Title: "EnumeratorCreator.CreateArrayEnumerator Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for EnumeratorCreator.CreateArrayEnumerator Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "EnumeratorCreator", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "EnumeratorCreator.CreateArrayEnumerator Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for EnumeratorCreator.CreateArrayEnumerator Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-enumeratorcreator.createarrayenumerator.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.TryParsePeriod Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.TryParsePeriod Method"
+  Description: "JsonElementHelpers.TryParsePeriod Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.tryparseperiod.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.TryParsePeriod Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.TryParsePeriod Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.TryParsePeriod Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.TryParsePeriod Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.tryparseperiod.md

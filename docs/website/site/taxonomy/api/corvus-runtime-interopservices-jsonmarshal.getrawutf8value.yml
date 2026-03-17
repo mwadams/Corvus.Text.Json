@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonMarshal.GetRawUtf8Value Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonMarshal.GetRawUtf8Value Method"
+  Description: "JsonMarshal.GetRawUtf8Value Method — Corvus.Runtime.InteropServices"
+  Parent: /api
+  Url: /api/corvus-runtime-interopservices-jsonmarshal.getrawutf8value.html
+  Rank: 1000
+MetaData:
+  Title: "JsonMarshal.GetRawUtf8Value Method — Corvus.Runtime.InteropServices"
+  Description: "API documentation for JsonMarshal.GetRawUtf8Value Method in Corvus.Runtime.InteropServices"
+  Keywords: [API, Method, "JsonMarshal", Corvus.Runtime.InteropServices]
+OpenGraph:
+  Title: "JsonMarshal.GetRawUtf8Value Method — Corvus.Runtime.InteropServices"
+  Description: "API documentation for JsonMarshal.GetRawUtf8Value Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-runtime-interopservices-jsonmarshal.getrawutf8value.md

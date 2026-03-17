@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonMarshal"
+Template: api/api-page
+Navigation:
+  Title: "JsonMarshal"
+  Description: "An unsafe class that provides a set of methods to access the underlying data representations of JSON types."
+  Parent: /api
+  Url: /api/corvus-runtime-interopservices-jsonmarshal.html
+  Rank: 101
+MetaData:
+  Title: "JsonMarshal — Corvus.Runtime.InteropServices"
+  Description: "API documentation for JsonMarshal in Corvus.Runtime.InteropServices"
+  Keywords: [API, class, "JsonMarshal", Corvus.Runtime.InteropServices]
+OpenGraph:
+  Title: "JsonMarshal — Corvus.Runtime.InteropServices"
+  Description: "API documentation for JsonMarshal"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-runtime-interopservices-jsonmarshal.md

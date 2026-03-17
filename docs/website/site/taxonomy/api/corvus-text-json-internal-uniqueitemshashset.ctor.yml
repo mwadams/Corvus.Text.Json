@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "UniqueItemsHashSet Constructors"
+Template: api/api-page
+Navigation:
+  Title: "UniqueItemsHashSet Constructors"
+  Description: "UniqueItemsHashSet Constructors — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-uniqueitemshashset.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "UniqueItemsHashSet Constructors — Corvus.Text.Json.Internal"
+  Description: "API documentation for UniqueItemsHashSet Constructors in Corvus.Text.Json.Internal"
+  Keywords: [API, Constructor, "UniqueItemsHashSet", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "UniqueItemsHashSet Constructors — Corvus.Text.Json.Internal"
+  Description: "API documentation for UniqueItemsHashSet Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-uniqueitemshashset.ctor.md

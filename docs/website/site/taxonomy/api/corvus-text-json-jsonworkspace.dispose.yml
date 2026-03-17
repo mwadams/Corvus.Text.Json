@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonWorkspace.Dispose Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonWorkspace.Dispose Method"
+  Description: "JsonWorkspace.Dispose Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonworkspace.dispose.html
+  Rank: 1000
+MetaData:
+  Title: "JsonWorkspace.Dispose Method — Corvus.Text.Json"
+  Description: "API documentation for JsonWorkspace.Dispose Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonWorkspace", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonWorkspace.Dispose Method — Corvus.Text.Json"
+  Description: "API documentation for JsonWorkspace.Dispose Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonworkspace.dispose.md

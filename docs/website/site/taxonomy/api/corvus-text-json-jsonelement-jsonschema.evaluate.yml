@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.JsonSchema.Evaluate Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.JsonSchema.Evaluate Method"
+  Description: "JsonElement.JsonSchema.Evaluate Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-jsonschema.evaluate.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.JsonSchema.Evaluate Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema.Evaluate Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement.JsonSchema", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.JsonSchema.Evaluate Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema.Evaluate Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-jsonschema.evaluate.md

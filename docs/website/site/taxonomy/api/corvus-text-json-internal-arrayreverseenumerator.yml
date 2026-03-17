@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ArrayReverseEnumerator"
+Template: api/api-page
+Navigation:
+  Title: "ArrayReverseEnumerator"
+  Description: "Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-arrayreverseenumerator.html
+  Rank: 102
+MetaData:
+  Title: "ArrayReverseEnumerator — Corvus.Text.Json.Internal"
+  Description: "API documentation for ArrayReverseEnumerator in Corvus.Text.Json.Internal"
+  Keywords: [API, struct, "ArrayReverseEnumerator", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "ArrayReverseEnumerator — Corvus.Text.Json.Internal"
+  Description: "API documentation for ArrayReverseEnumerator"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-arrayreverseenumerator.md

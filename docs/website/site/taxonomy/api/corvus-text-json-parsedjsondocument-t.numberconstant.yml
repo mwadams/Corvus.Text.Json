@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ParsedJsonDocument<T>.NumberConstant Method"
+Template: api/api-page
+Navigation:
+  Title: "ParsedJsonDocument<T>.NumberConstant Method"
+  Description: "ParsedJsonDocument<T>.NumberConstant Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-parsedjsondocument-t.numberconstant.html
+  Rank: 1000
+MetaData:
+  Title: "ParsedJsonDocument<T>.NumberConstant Method — Corvus.Text.Json"
+  Description: "API documentation for ParsedJsonDocument<T>.NumberConstant Method in Corvus.Text.Json"
+  Keywords: [API, Method, "ParsedJsonDocument<T>", Corvus.Text.Json]
+OpenGraph:
+  Title: "ParsedJsonDocument<T>.NumberConstant Method — Corvus.Text.Json"
+  Description: "API documentation for ParsedJsonDocument<T>.NumberConstant Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-parsedjsondocument-t.numberconstant.md

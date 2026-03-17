@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "CodeGenNumericType.UInt16 Field"
+Template: api/api-page
+Navigation:
+  Title: "CodeGenNumericType.UInt16 Field"
+  Description: "CodeGenNumericType.UInt16 Field — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-codegennumerictype.uint16.html
+  Rank: 1000
+MetaData:
+  Title: "CodeGenNumericType.UInt16 Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenNumericType.UInt16 Field in Corvus.Text.Json.Internal"
+  Keywords: [API, Field, "CodeGenNumericType", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "CodeGenNumericType.UInt16 Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenNumericType.UInt16 Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-codegennumerictype.uint16.md

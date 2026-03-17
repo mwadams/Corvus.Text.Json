@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Utf8UriKind"
+Template: api/api-page
+Navigation:
+  Title: "Utf8UriKind"
+  Description: "Defines the kind of URI, controlling whether absolute or relative URIs are used."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-utf8urikind.html
+  Rank: 143
+MetaData:
+  Title: "Utf8UriKind — Corvus.Text.Json.Internal"
+  Description: "API documentation for Utf8UriKind in Corvus.Text.Json.Internal"
+  Keywords: [API, enum, "Utf8UriKind", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "Utf8UriKind — Corvus.Text.Json.Internal"
+  Description: "API documentation for Utf8UriKind"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-utf8urikind.md

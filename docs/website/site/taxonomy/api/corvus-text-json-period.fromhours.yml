@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Period.FromHours Method"
+Template: api/api-page
+Navigation:
+  Title: "Period.FromHours Method"
+  Description: "Period.FromHours Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-period.fromhours.html
+  Rank: 1000
+MetaData:
+  Title: "Period.FromHours Method — Corvus.Text.Json"
+  Description: "API documentation for Period.FromHours Method in Corvus.Text.Json"
+  Keywords: [API, Method, "Period", Corvus.Text.Json]
+OpenGraph:
+  Title: "Period.FromHours Method — Corvus.Text.Json"
+  Description: "API documentation for Period.FromHours Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-period.fromhours.md

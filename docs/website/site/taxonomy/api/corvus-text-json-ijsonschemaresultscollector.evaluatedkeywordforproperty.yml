@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method"
+Template: api/api-page
+Navigation:
+  Title: "IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method"
+  Description: "IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-ijsonschemaresultscollector.evaluatedkeywordforproperty.html
+  Rank: 1000
+MetaData:
+  Title: "IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method — Corvus.Text.Json"
+  Description: "API documentation for IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method in Corvus.Text.Json"
+  Keywords: [API, Method, "IJsonSchemaResultsCollector", Corvus.Text.Json]
+OpenGraph:
+  Title: "IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method — Corvus.Text.Json"
+  Description: "API documentation for IJsonSchemaResultsCollector.EvaluatedKeywordForProperty Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-ijsonschemaresultscollector.evaluatedkeywordforproperty.md

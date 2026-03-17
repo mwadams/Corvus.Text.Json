@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonEncodedText"
+Template: api/api-page
+Navigation:
+  Title: "JsonEncodedText"
+  Description: "Provides a way to transform UTF-8 or UTF-16 encoded text into a form that is suitable for JSON."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonencodedtext.html
+  Rank: 122
+MetaData:
+  Title: "JsonEncodedText — Corvus.Text.Json"
+  Description: "API documentation for JsonEncodedText in Corvus.Text.Json"
+  Keywords: [API, struct, "JsonEncodedText", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonEncodedText — Corvus.Text.Json"
+  Description: "API documentation for JsonEncodedText"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonencodedtext.md

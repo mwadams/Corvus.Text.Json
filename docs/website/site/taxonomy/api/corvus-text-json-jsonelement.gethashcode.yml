@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.GetHashCode Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.GetHashCode Method"
+  Description: "JsonElement.GetHashCode Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.gethashcode.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.GetHashCode Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetHashCode Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.GetHashCode Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetHashCode Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.gethashcode.md

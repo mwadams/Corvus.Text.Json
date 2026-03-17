@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaContext.EvaluatedKeywordForProperty Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaContext.EvaluatedKeywordForProperty Method"
+  Description: "JsonSchemaContext.EvaluatedKeywordForProperty Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemacontext.evaluatedkeywordforproperty.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaContext.EvaluatedKeywordForProperty Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaContext.EvaluatedKeywordForProperty Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaContext", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaContext.EvaluatedKeywordForProperty Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaContext.EvaluatedKeywordForProperty Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemacontext.evaluatedkeywordforproperty.md

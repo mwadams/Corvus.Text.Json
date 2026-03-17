@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "BigIntegerPolyfills"
+Template: api/api-page
+Navigation:
+  Title: "BigIntegerPolyfills"
+  Description: "Polyfills for [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) methods that are not available in all target frameworks."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-bigintegerpolyfills.html
+  Rank: 103
+MetaData:
+  Title: "BigIntegerPolyfills — Corvus.Text.Json.Internal"
+  Description: "API documentation for BigIntegerPolyfills in Corvus.Text.Json.Internal"
+  Keywords: [API, class, "BigIntegerPolyfills", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "BigIntegerPolyfills — Corvus.Text.Json.Internal"
+  Description: "API documentation for BigIntegerPolyfills"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-bigintegerpolyfills.md

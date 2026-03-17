@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ObjectEnumerator<TValue>"
+Template: api/api-page
+Navigation:
+  Title: "ObjectEnumerator<TValue>"
+  Description: "An enumerable and enumerator for the properties of a JSON object."
+  Parent: /api
+  Url: /api/corvus-text-json-objectenumerator-tvalue.html
+  Rank: 141
+MetaData:
+  Title: "ObjectEnumerator<TValue> — Corvus.Text.Json"
+  Description: "API documentation for ObjectEnumerator<TValue> in Corvus.Text.Json"
+  Keywords: [API, struct, "ObjectEnumerator<TValue>", Corvus.Text.Json]
+OpenGraph:
+  Title: "ObjectEnumerator<TValue> — Corvus.Text.Json"
+  Description: "API documentation for ObjectEnumerator<TValue>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-objectenumerator-tvalue.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method"
+  Description: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.matchpropertycountgreaterthan.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchPropertyCountGreaterThan Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.matchpropertycountgreaterthan.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ObjectEnumerator<TValue>.Reset Method"
+Template: api/api-page
+Navigation:
+  Title: "ObjectEnumerator<TValue>.Reset Method"
+  Description: "ObjectEnumerator<TValue>.Reset Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-objectenumerator-tvalue.reset.html
+  Rank: 1000
+MetaData:
+  Title: "ObjectEnumerator<TValue>.Reset Method — Corvus.Text.Json"
+  Description: "API documentation for ObjectEnumerator<TValue>.Reset Method in Corvus.Text.Json"
+  Keywords: [API, Method, "ObjectEnumerator<TValue>", Corvus.Text.Json]
+OpenGraph:
+  Title: "ObjectEnumerator<TValue>.Reset Method — Corvus.Text.Json"
+  Description: "API documentation for ObjectEnumerator<TValue>.Reset Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-objectenumerator-tvalue.reset.md

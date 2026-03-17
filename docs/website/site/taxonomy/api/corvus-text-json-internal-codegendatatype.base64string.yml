@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "CodeGenDataType.Base64String Field"
+Template: api/api-page
+Navigation:
+  Title: "CodeGenDataType.Base64String Field"
+  Description: "CodeGenDataType.Base64String Field — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-codegendatatype.base64string.html
+  Rank: 1000
+MetaData:
+  Title: "CodeGenDataType.Base64String Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenDataType.Base64String Field in Corvus.Text.Json.Internal"
+  Keywords: [API, Field, "CodeGenDataType", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "CodeGenDataType.Base64String Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenDataType.Base64String Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-codegendatatype.base64string.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.GetPeriod Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.GetPeriod Method"
+  Description: "JsonElement.GetPeriod Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.getperiod.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.GetPeriod Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetPeriod Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.GetPeriod Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetPeriod Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.getperiod.md

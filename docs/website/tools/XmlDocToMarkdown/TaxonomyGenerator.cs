@@ -5,7 +5,7 @@ namespace XmlDocToMarkdown;
 /// <summary>
 /// Generates Vellum taxonomy YAML files for each namespace page.
 /// </summary>
-public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOutputDir)
+public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOutputDir, string baseUrl, string templateName)
 {
     public void Generate(Dictionary<string, NamespaceInfo> namespaces)
     {
@@ -25,11 +25,12 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
             StringBuilder sb = new();
             sb.AppendLine($"ContentType: application/vnd.endjin.ssg.page+yaml");
             sb.AppendLine($"Title: \"{EscapeYaml(ns)} Namespace\"");
+            sb.AppendLine($"Template: {templateName}");
             sb.AppendLine($"Navigation:");
             sb.AppendLine($"  Title: {ns}");
             sb.AppendLine($"  Description: \"API reference for the {ns} namespace\"");
-            sb.AppendLine($"  Parent: /api");
-            sb.AppendLine($"  Url: /api/{fileName}.html");
+            sb.AppendLine($"  Parent: {baseUrl}");
+            sb.AppendLine($"  Url: {baseUrl}/{fileName}.html");
             sb.AppendLine($"  Rank: {rank}");
             sb.AppendLine($"MetaData:");
             sb.AppendLine($"  Title: \"{EscapeYaml(ns)} Namespace — API Reference\"");
@@ -76,11 +77,12 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 StringBuilder sb = new();
                 sb.AppendLine($"ContentType: application/vnd.endjin.ssg.page+yaml");
                 sb.AppendLine($"Title: \"{EscapeYaml(type.Name)}\"");
+                sb.AppendLine($"Template: {templateName}");
                 sb.AppendLine($"Navigation:");
                 sb.AppendLine($"  Title: \"{EscapeYaml(type.Name)}\"");
                 sb.AppendLine($"  Description: \"{EscapeYaml(summary)}\"");
-                sb.AppendLine($"  Parent: /api");
-                sb.AppendLine($"  Url: /api/{fileBase}.html");
+                sb.AppendLine($"  Parent: {baseUrl}");
+                sb.AppendLine($"  Url: {baseUrl}/{fileBase}.html");
                 sb.AppendLine($"  Rank: {100 + rank}");
                 sb.AppendLine($"MetaData:");
                 sb.AppendLine($"  Title: \"{EscapeYaml(type.Name)} \u2014 {ns}\"");
@@ -100,6 +102,109 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 rank++;
             }
         }
+    }
+
+    public void GeneratePerMember(Dictionary<string, NamespaceInfo> namespaces)
+    {
+        string taxonomyDir = Path.GetFullPath(taxonomyOutputDir);
+        string contentDir = Path.GetFullPath(contentOutputDir);
+        string relativePath = Path.GetRelativePath(taxonomyDir, contentDir).Replace('\\', '/');
+
+        foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
+        {
+            string ns = kvp.Key;
+            string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
+
+            foreach (TypeInfo type in kvp.Value.Types)
+            {
+                string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
+
+                // Constructors (all on one page)
+                if (type.Constructors.Count > 0)
+                {
+                    WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
+                        "ctor", $"{type.Name} Constructors", "Constructor");
+                }
+
+                // Properties (grouped by name)
+                foreach (IGrouping<string, MemberInfo> group in type.Properties.GroupBy(p => p.GroupKey))
+                {
+                    WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
+                        MarkdownGenerator.MemberToSlug(group.Key), $"{type.Name}.{group.Key} Property", "Property");
+                }
+
+                // Methods (grouped by name)
+                foreach (IGrouping<string, MemberInfo> group in type.Methods.GroupBy(m => m.GroupKey))
+                {
+                    WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
+                        MarkdownGenerator.MemberToSlug(group.Key), $"{type.Name}.{group.Key} Method", "Method");
+                }
+
+                // Operators (grouped by CLR name)
+                foreach (IGrouping<string, MemberInfo> group in type.Operators.GroupBy(m => m.GroupKey))
+                {
+                    string displayGroupName = MarkdownGenerator.GetOperatorGroupDisplayName(group.Key);
+                    WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
+                        MarkdownGenerator.MemberToSlug(group.Key), $"{type.Name}.{displayGroupName} Operator", "Operator");
+                }
+
+                // Fields (each on its own page)
+                foreach (MemberInfo field in type.Fields)
+                {
+                    WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
+                        MarkdownGenerator.MemberToSlug(field.GroupKey), $"{type.Name}.{field.Name} Field", "Field");
+                }
+
+                // Events (each on its own page)
+                foreach (MemberInfo evt in type.Events)
+                {
+                    WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
+                        MarkdownGenerator.MemberToSlug(evt.GroupKey), $"{type.Name}.{evt.Name} Event", "Event");
+                }
+            }
+        }
+    }
+
+    private void WriteMemberTaxonomy(
+        string taxonomyDir, string relativePath,
+        string ns, string nsSlug, TypeInfo type, string typeSlug,
+        string memberSlug, string pageTitle, string memberCategory)
+    {
+        string fileBase = MarkdownGenerator.GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
+        string yamlPath = Path.Combine(taxonomyDir, fileBase + ".yml");
+        string contentRelativePath = $"{relativePath}/{fileBase}.md";
+
+        string summary = $"{pageTitle} — {ns}";
+        if (summary.Length > 200)
+        {
+            summary = summary[..197] + "...";
+        }
+
+        StringBuilder sb = new();
+        sb.AppendLine($"ContentType: application/vnd.endjin.ssg.page+yaml");
+        sb.AppendLine($"Title: \"{EscapeYaml(pageTitle)}\"");
+        sb.AppendLine($"Template: {templateName}");
+        sb.AppendLine($"Navigation:");
+        sb.AppendLine($"  Title: \"{EscapeYaml(pageTitle)}\"");
+        sb.AppendLine($"  Description: \"{EscapeYaml(summary)}\"");
+        sb.AppendLine($"  Parent: {baseUrl}");
+        sb.AppendLine($"  Url: {baseUrl}/{fileBase}.html");
+        sb.AppendLine($"  Rank: 1000");
+        sb.AppendLine($"MetaData:");
+        sb.AppendLine($"  Title: \"{EscapeYaml(pageTitle)} — {ns}\"");
+        sb.AppendLine($"  Description: \"API documentation for {EscapeYaml(pageTitle)} in {ns}\"");
+        sb.AppendLine($"  Keywords: [API, {memberCategory}, \"{EscapeYaml(type.Name)}\", {ns}]");
+        sb.AppendLine($"OpenGraph:");
+        sb.AppendLine($"  Title: \"{EscapeYaml(pageTitle)} — {ns}\"");
+        sb.AppendLine($"  Description: \"API documentation for {EscapeYaml(pageTitle)}\"");
+        sb.AppendLine($"  Image:");
+        sb.AppendLine($"ContentBlocks:");
+        sb.AppendLine($"  - ContentType: application/vnd.endjin.ssg.content+md");
+        sb.AppendLine($"    Spec:");
+        sb.AppendLine($"      Path: {contentRelativePath}");
+
+        File.WriteAllText(yamlPath, sb.ToString());
+        Console.WriteLine($"  Written: {yamlPath}");
     }
 
     private static string EscapeYaml(string value)

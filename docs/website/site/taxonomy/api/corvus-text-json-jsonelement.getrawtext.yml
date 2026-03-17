@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.GetRawText Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.GetRawText Method"
+  Description: "JsonElement.GetRawText Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.getrawtext.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.GetRawText Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetRawText Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.GetRawText Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.GetRawText Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.getrawtext.md

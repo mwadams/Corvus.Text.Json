@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Mutable"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Mutable"
+  Description: "JsonElement.Mutable struct"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-mutable.html
+  Rank: 112
+MetaData:
+  Title: "JsonElement.Mutable — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Mutable in Corvus.Text.Json"
+  Keywords: [API, struct, "JsonElement.Mutable", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Mutable — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Mutable"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-mutable.md

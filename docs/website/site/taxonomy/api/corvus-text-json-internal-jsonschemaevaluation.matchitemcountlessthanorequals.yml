@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method"
+  Description: "JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.matchitemcountlessthanorequals.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchItemCountLessThanOrEquals Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.matchitemcountlessthanorequals.md

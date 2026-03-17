@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method"
+  Description: "JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.expecteditemcountnotequalsvalue.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.expecteditemcountnotequalsvalue.md

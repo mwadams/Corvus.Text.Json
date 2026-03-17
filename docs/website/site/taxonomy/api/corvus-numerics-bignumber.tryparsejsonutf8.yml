@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "BigNumber.TryParseJsonUtf8 Method"
+Template: api/api-page
+Navigation:
+  Title: "BigNumber.TryParseJsonUtf8 Method"
+  Description: "BigNumber.TryParseJsonUtf8 Method — Corvus.Numerics"
+  Parent: /api
+  Url: /api/corvus-numerics-bignumber.tryparsejsonutf8.html
+  Rank: 1000
+MetaData:
+  Title: "BigNumber.TryParseJsonUtf8 Method — Corvus.Numerics"
+  Description: "API documentation for BigNumber.TryParseJsonUtf8 Method in Corvus.Numerics"
+  Keywords: [API, Method, "BigNumber", Corvus.Numerics]
+OpenGraph:
+  Title: "BigNumber.TryParseJsonUtf8 Method — Corvus.Numerics"
+  Description: "API documentation for BigNumber.TryParseJsonUtf8 Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-numerics-bignumber.tryparsejsonutf8.md

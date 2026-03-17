@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "ValidationLevel"
+Template: api/api-page
+Navigation:
+  Title: "ValidationLevel"
+  Description: "The validation level."
+  Parent: /api
+  Url: /api/corvus-text-json-compatibility-validationlevel.html
+  Rank: 103
+MetaData:
+  Title: "ValidationLevel — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for ValidationLevel in Corvus.Text.Json.Compatibility"
+  Keywords: [API, enum, "ValidationLevel", Corvus.Text.Json.Compatibility]
+OpenGraph:
+  Title: "ValidationLevel — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for ValidationLevel"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-compatibility-validationlevel.md

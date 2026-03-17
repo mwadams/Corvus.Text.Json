@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Utf8UriValue.TryGetValue Method"
+Template: api/api-page
+Navigation:
+  Title: "Utf8UriValue.TryGetValue Method"
+  Description: "Utf8UriValue.TryGetValue Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-utf8urivalue.trygetvalue.html
+  Rank: 1000
+MetaData:
+  Title: "Utf8UriValue.TryGetValue Method — Corvus.Text.Json"
+  Description: "API documentation for Utf8UriValue.TryGetValue Method in Corvus.Text.Json"
+  Keywords: [API, Method, "Utf8UriValue", Corvus.Text.Json]
+OpenGraph:
+  Title: "Utf8UriValue.TryGetValue Method — Corvus.Text.Json"
+  Description: "API documentation for Utf8UriValue.TryGetValue Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-utf8urivalue.trygetvalue.md

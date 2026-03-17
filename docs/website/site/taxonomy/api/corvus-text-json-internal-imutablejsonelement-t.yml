@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IMutableJsonElement<T>"
+Template: api/api-page
+Navigation:
+  Title: "IMutableJsonElement<T>"
+  Description: "Represents a mutable JSON element of type `T`."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-imutablejsonelement-t.html
+  Rank: 119
+MetaData:
+  Title: "IMutableJsonElement<T> — Corvus.Text.Json.Internal"
+  Description: "API documentation for IMutableJsonElement<T> in Corvus.Text.Json.Internal"
+  Keywords: [API, interface, "IMutableJsonElement<T>", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "IMutableJsonElement<T> — Corvus.Text.Json.Internal"
+  Description: "API documentation for IMutableJsonElement<T>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-imutablejsonelement-t.md

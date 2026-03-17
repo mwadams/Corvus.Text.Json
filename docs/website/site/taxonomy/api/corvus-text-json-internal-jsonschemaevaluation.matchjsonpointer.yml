@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.MatchJsonPointer Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.MatchJsonPointer Method"
+  Description: "JsonSchemaEvaluation.MatchJsonPointer Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.matchjsonpointer.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.MatchJsonPointer Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchJsonPointer Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.MatchJsonPointer Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.MatchJsonPointer Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.matchjsonpointer.md

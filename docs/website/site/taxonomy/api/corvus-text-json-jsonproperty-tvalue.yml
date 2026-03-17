@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonProperty<TValue>"
+Template: api/api-page
+Navigation:
+  Title: "JsonProperty<TValue>"
+  Description: "Represents a single property for a JSON object."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonproperty-tvalue.html
+  Rank: 125
+MetaData:
+  Title: "JsonProperty<TValue> — Corvus.Text.Json"
+  Description: "API documentation for JsonProperty<TValue> in Corvus.Text.Json"
+  Keywords: [API, struct, "JsonProperty<TValue>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonProperty<TValue> — Corvus.Text.Json"
+  Description: "API documentation for JsonProperty<TValue>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonproperty-tvalue.md

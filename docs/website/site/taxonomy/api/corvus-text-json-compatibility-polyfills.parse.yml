@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Polyfills.Parse Method"
+Template: api/api-page
+Navigation:
+  Title: "Polyfills.Parse Method"
+  Description: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
+  Parent: /api
+  Url: /api/corvus-text-json-compatibility-polyfills.parse.html
+  Rank: 1000
+MetaData:
+  Title: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for Polyfills.Parse Method in Corvus.Text.Json.Compatibility"
+  Keywords: [API, Method, "Polyfills", Corvus.Text.Json.Compatibility]
+OpenGraph:
+  Title: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for Polyfills.Parse Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-compatibility-polyfills.parse.md

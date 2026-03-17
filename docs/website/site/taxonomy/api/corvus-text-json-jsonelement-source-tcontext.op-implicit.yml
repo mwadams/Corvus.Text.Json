@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Source<TContext>.Implicit Operator"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Source<TContext>.Implicit Operator"
+  Description: "JsonElement.Source<TContext>.Implicit Operator — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-source-tcontext.op-implicit.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.Source<TContext>.Implicit Operator — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Source<TContext>.Implicit Operator in Corvus.Text.Json"
+  Keywords: [API, Operator, "JsonElement.Source<TContext>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Source<TContext>.Implicit Operator — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Source<TContext>.Implicit Operator"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-source-tcontext.op-implicit.md

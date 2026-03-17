@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaPathProvider.BeginInvoke Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaPathProvider.BeginInvoke Method"
+  Description: "JsonSchemaPathProvider.BeginInvoke Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemapathprovider.begininvoke.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaPathProvider.BeginInvoke Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaPathProvider.BeginInvoke Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonSchemaPathProvider", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaPathProvider.BeginInvoke Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaPathProvider.BeginInvoke Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemapathprovider.begininvoke.md

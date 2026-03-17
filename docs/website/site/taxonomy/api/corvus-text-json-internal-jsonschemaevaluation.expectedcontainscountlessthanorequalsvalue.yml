@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method"
+  Description: "JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonschemaevaluation.expectedcontainscountlessthanorequalsvalue.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonSchemaEvaluation", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonSchemaEvaluation.ExpectedContainsCountLessThanOrEqualsValue Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonschemaevaluation.expectedcontainscountlessthanorequalsvalue.md

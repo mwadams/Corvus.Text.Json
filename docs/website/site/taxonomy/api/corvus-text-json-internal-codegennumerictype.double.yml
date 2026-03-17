@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "CodeGenNumericType.Double Field"
+Template: api/api-page
+Navigation:
+  Title: "CodeGenNumericType.Double Field"
+  Description: "CodeGenNumericType.Double Field — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-codegennumerictype.double.html
+  Rank: 1000
+MetaData:
+  Title: "CodeGenNumericType.Double Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenNumericType.Double Field in Corvus.Text.Json.Internal"
+  Keywords: [API, Field, "CodeGenNumericType", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "CodeGenNumericType.Double Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenNumericType.Double Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-codegennumerictype.double.md

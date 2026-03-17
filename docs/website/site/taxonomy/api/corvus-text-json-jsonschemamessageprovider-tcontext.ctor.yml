@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMessageProvider<TContext> Constructors"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMessageProvider<TContext> Constructors"
+  Description: "JsonSchemaMessageProvider<TContext> Constructors — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemamessageprovider-tcontext.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaMessageProvider<TContext> Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider<TContext> Constructors in Corvus.Text.Json"
+  Keywords: [API, Constructor, "JsonSchemaMessageProvider<TContext>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaMessageProvider<TContext> Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider<TContext> Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemamessageprovider-tcontext.ctor.md

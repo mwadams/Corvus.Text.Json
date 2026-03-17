@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonDocumentOptions"
+Template: api/api-page
+Navigation:
+  Title: "JsonDocumentOptions"
+  Description: "Provides the ability for the user to define custom behavior when parsing JSON to create a `JsonDocument`."
+  Parent: /api
+  Url: /api/corvus-text-json-jsondocumentoptions.html
+  Rank: 106
+MetaData:
+  Title: "JsonDocumentOptions — Corvus.Text.Json"
+  Description: "API documentation for JsonDocumentOptions in Corvus.Text.Json"
+  Keywords: [API, struct, "JsonDocumentOptions", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonDocumentOptions — Corvus.Text.Json"
+  Description: "API documentation for JsonDocumentOptions"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsondocumentoptions.md

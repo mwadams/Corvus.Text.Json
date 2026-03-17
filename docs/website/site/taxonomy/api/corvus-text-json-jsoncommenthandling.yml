@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonCommentHandling"
+Template: api/api-page
+Navigation:
+  Title: "JsonCommentHandling"
+  Description: "This enum defines the various ways the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) can deal with comments."
+  Parent: /api
+  Url: /api/corvus-text-json-jsoncommenthandling.html
+  Rank: 104
+MetaData:
+  Title: "JsonCommentHandling — Corvus.Text.Json"
+  Description: "API documentation for JsonCommentHandling in Corvus.Text.Json"
+  Keywords: [API, enum, "JsonCommentHandling", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonCommentHandling — Corvus.Text.Json"
+  Description: "API documentation for JsonCommentHandling"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsoncommenthandling.md

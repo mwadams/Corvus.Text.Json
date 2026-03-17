@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Item Property"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Item Property"
+  Description: "JsonElement.Item Property — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement.item.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.Item Property — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Item Property in Corvus.Text.Json"
+  Keywords: [API, Property, "JsonElement", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Item Property — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Item Property"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement.item.md

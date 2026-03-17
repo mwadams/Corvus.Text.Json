@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMessageProvider Constructors"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMessageProvider Constructors"
+  Description: "JsonSchemaMessageProvider Constructors — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemamessageprovider.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaMessageProvider Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider Constructors in Corvus.Text.Json"
+  Keywords: [API, Constructor, "JsonSchemaMessageProvider", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaMessageProvider Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemamessageprovider.ctor.md

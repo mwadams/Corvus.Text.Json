@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "CodeGenDataType.DateTime Field"
+Template: api/api-page
+Navigation:
+  Title: "CodeGenDataType.DateTime Field"
+  Description: "CodeGenDataType.DateTime Field — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-codegendatatype.datetime.html
+  Rank: 1000
+MetaData:
+  Title: "CodeGenDataType.DateTime Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenDataType.DateTime Field in Corvus.Text.Json.Internal"
+  Keywords: [API, Field, "CodeGenDataType", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "CodeGenDataType.DateTime Field — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenDataType.DateTime Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-codegendatatype.datetime.md

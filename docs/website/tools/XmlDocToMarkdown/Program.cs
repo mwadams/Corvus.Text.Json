@@ -4,12 +4,11 @@ string? xmlPath = null;
 string? assemblyPath = null;
 string? outputPath = null;
 string? taxonomyOutputPath = null;
-string? htmlOutputPath = null;
-string? siteTitleArg = null;
 string? apiViewsDir = null;
 string? repoUrl = null;
 string? nsDescriptionsDir = null;
 string? ns20AssemblyPath = null;
+string? apiBaseUrl = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -27,12 +26,6 @@ for (int i = 0; i < args.Length - 1; i++)
         case "--taxonomy-output":
             taxonomyOutputPath = args[++i];
             break;
-        case "--html-output":
-            htmlOutputPath = args[++i];
-            break;
-        case "--site-title":
-            siteTitleArg = args[++i];
-            break;
         case "--api-views-dir":
             apiViewsDir = args[++i];
             break;
@@ -45,21 +38,25 @@ for (int i = 0; i < args.Length - 1; i++)
         case "--ns20-assembly":
             ns20AssemblyPath = args[++i];
             break;
+        case "--api-base-url":
+            apiBaseUrl = args[++i];
+            break;
     }
 }
 
+string resolvedBaseUrl = (apiBaseUrl ?? "/api").TrimEnd('/');
+
 if (xmlPath is null || assemblyPath is null)
 {
-    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> [--output <path>] [--taxonomy-output <path>] [--html-output <path>] [--site-title <title>] [--repo-url <url>]");
+    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> [--output <path>] [--taxonomy-output <path>] [--repo-url <url>]");
     Console.Error.WriteLine();
     Console.Error.WriteLine("  --xml              Path to the XML documentation file (e.g., Corvus.Text.Json.xml)");
     Console.Error.WriteLine("  --assembly         Path to the compiled DLL");
     Console.Error.WriteLine("  --output           Output directory for generated markdown files");
     Console.Error.WriteLine("  --taxonomy-output  Output directory for generated taxonomy YAML files");
-    Console.Error.WriteLine("  --html-output      (Optional) Output directory for standalone per-type HTML pages");
-    Console.Error.WriteLine("  --site-title       (Optional) Site title for standalone HTML pages");
     Console.Error.WriteLine("  --repo-url         (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
     Console.Error.WriteLine("  --ns-descriptions  (Optional) Directory containing {Namespace}.md files with namespace descriptions");
+    Console.Error.WriteLine("  --api-base-url     (Optional) Base URL path for API pages (default: /api)");
     return 1;
 }
 
@@ -78,7 +75,7 @@ if (!File.Exists(assemblyPath))
 // Pre-scan assembly for type names to build the URL map before parsing XML
 Console.WriteLine($"Pre-scanning assembly: {assemblyPath}");
 AssemblyInspector inspector = new(assemblyPath);
-XmlDocParser.TypeUrlMap = inspector.PreScanTypeUrls();
+XmlDocParser.TypeUrlMap = inspector.PreScanTypeUrls(resolvedBaseUrl);
 Console.WriteLine($"  Built type URL map with {XmlDocParser.TypeUrlMap.Count} entries.");
 
 Console.WriteLine($"Parsing XML documentation from: {xmlPath}");
@@ -208,7 +205,7 @@ if (outputPath is not null)
     Directory.CreateDirectory(outputPath);
 
     Console.WriteLine($"Generating namespace markdown to: {outputPath}");
-    MarkdownGenerator markdownGen = new(outputPath, nsDescriptionsDir);
+    MarkdownGenerator markdownGen = new(outputPath, resolvedBaseUrl, nsDescriptionsDir);
     markdownGen.Generate(namespaces);
     markdownGen.GeneratePerType(namespaces);
     markdownGen.GenerateMemberPages(namespaces);
@@ -218,46 +215,29 @@ if (taxonomyOutputPath is not null)
 {
     Directory.CreateDirectory(taxonomyOutputPath);
 
-    Console.WriteLine($"Generating namespace taxonomy to: {taxonomyOutputPath}");
-    TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath!);
+    // Derive template name from base URL (e.g., "/api" → "api/api-page")
+    string templateName = resolvedBaseUrl.TrimStart('/') + "/api-page";
+
+    Console.WriteLine($"Generating API taxonomy to: {taxonomyOutputPath}");
+    TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath!, resolvedBaseUrl, templateName);
     taxonomyGen.Generate(namespaces);
+    taxonomyGen.GeneratePerType(namespaces);
+    taxonomyGen.GeneratePerMember(namespaces);
 }
 
 if (apiViewsDir is not null)
 {
     Console.WriteLine($"Generating API views to: {apiViewsDir}");
     Directory.CreateDirectory(apiViewsDir);
-    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces);
-    ApiViewGenerator.GenerateNamespaceViews(apiViewsDir, namespaces);
-}
-
-if (htmlOutputPath is not null)
-{
-    string title = siteTitleArg ?? "Corvus.Text.Json";
-    Console.WriteLine($"Generating standalone HTML type pages to: {htmlOutputPath}");
-    HtmlPageGenerator htmlGen = new(htmlOutputPath, title, sourceResolver);
-
-    // Try to load template from a Vellum-rendered namespace page
-    string referencePagePath = Path.Combine(htmlOutputPath, "corvus-text-json.html");
-    if (File.Exists(referencePagePath))
-    {
-        Console.WriteLine($"  Loading page template from: {referencePagePath}");
-        htmlGen.LoadTemplate(referencePagePath);
-    }
-    else
-    {
-        Console.WriteLine("  Warning: No reference page found — using fallback template.");
-    }
-
-    htmlGen.Generate(namespaces);
-    htmlGen.GenerateMemberPages(namespaces);
+    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces, resolvedBaseUrl, nsDescriptionsDir);
+    ApiViewGenerator.GenerateSharedApiView(apiViewsDir, namespaces, resolvedBaseUrl);
 }
 
 if (outputPath is not null)
 {
     string searchIndexPath = Path.Combine(outputPath, "search-index.json");
     Console.WriteLine($"Generating search index: {searchIndexPath}");
-    SearchIndexGenerator searchGen = new(searchIndexPath);
+    SearchIndexGenerator searchGen = new(searchIndexPath, resolvedBaseUrl);
     searchGen.Generate(namespaces);
 }
 

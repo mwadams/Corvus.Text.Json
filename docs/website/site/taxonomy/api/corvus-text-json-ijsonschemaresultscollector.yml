@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IJsonSchemaResultsCollector"
+Template: api/api-page
+Navigation:
+  Title: "IJsonSchemaResultsCollector"
+  Description: "Implemented by types that accumulate the results of a JSON Schema evaluation."
+  Parent: /api
+  Url: /api/corvus-text-json-ijsonschemaresultscollector.html
+  Rank: 103
+MetaData:
+  Title: "IJsonSchemaResultsCollector — Corvus.Text.Json"
+  Description: "API documentation for IJsonSchemaResultsCollector in Corvus.Text.Json"
+  Keywords: [API, interface, "IJsonSchemaResultsCollector", Corvus.Text.Json]
+OpenGraph:
+  Title: "IJsonSchemaResultsCollector — Corvus.Text.Json"
+  Description: "API documentation for IJsonSchemaResultsCollector"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-ijsonschemaresultscollector.md

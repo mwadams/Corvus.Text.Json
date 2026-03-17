@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.ObjectBuilder Constructors"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.ObjectBuilder Constructors"
+  Description: "JsonElement.ObjectBuilder Constructors — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-objectbuilder.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.ObjectBuilder Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.ObjectBuilder Constructors in Corvus.Text.Json"
+  Keywords: [API, Constructor, "JsonElement.ObjectBuilder", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.ObjectBuilder Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.ObjectBuilder Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-objectbuilder.ctor.md

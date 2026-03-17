@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Polyfills.get_Undefined Method"
+Template: api/api-page
+Navigation:
+  Title: "Polyfills.get_Undefined Method"
+  Description: "Polyfills.get_Undefined Method — Corvus.Text.Json.Compatibility"
+  Parent: /api
+  Url: /api/corvus-text-json-compatibility-polyfills.get-undefined.html
+  Rank: 1000
+MetaData:
+  Title: "Polyfills.get_Undefined Method — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for Polyfills.get_Undefined Method in Corvus.Text.Json.Compatibility"
+  Keywords: [API, Method, "Polyfills", Corvus.Text.Json.Compatibility]
+OpenGraph:
+  Title: "Polyfills.get_Undefined Method — Corvus.Text.Json.Compatibility"
+  Description: "API documentation for Polyfills.get_Undefined Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-compatibility-polyfills.get-undefined.md

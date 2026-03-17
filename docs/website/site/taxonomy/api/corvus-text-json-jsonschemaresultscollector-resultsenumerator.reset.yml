@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method"
+  Description: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.reset.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsCollector.ResultsEnumerator.Reset Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonSchemaResultsCollector.ResultsEnumerator", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaResultsCollector.ResultsEnumerator.Reset Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsCollector.ResultsEnumerator.Reset Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemaresultscollector-resultsenumerator.reset.md

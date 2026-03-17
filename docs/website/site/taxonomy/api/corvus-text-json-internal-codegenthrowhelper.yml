@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "CodeGenThrowHelper"
+Template: api/api-page
+Navigation:
+  Title: "CodeGenThrowHelper"
+  Description: "Provides helper methods for throwing exceptions in code generation and runtime scenarios for Corvus.Text.Json. This class centralizes exception creation and throwing logic to ensure consistent erro..."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-codegenthrowhelper.html
+  Rank: 108
+MetaData:
+  Title: "CodeGenThrowHelper — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenThrowHelper in Corvus.Text.Json.Internal"
+  Keywords: [API, class, "CodeGenThrowHelper", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "CodeGenThrowHelper — Corvus.Text.Json.Internal"
+  Description: "API documentation for CodeGenThrowHelper"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-codegenthrowhelper.md

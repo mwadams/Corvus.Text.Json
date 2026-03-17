@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "BigNumber.LessThan Operator"
+Template: api/api-page
+Navigation:
+  Title: "BigNumber.LessThan Operator"
+  Description: "BigNumber.LessThan Operator — Corvus.Numerics"
+  Parent: /api
+  Url: /api/corvus-numerics-bignumber.op-lessthan.html
+  Rank: 1000
+MetaData:
+  Title: "BigNumber.LessThan Operator — Corvus.Numerics"
+  Description: "API documentation for BigNumber.LessThan Operator in Corvus.Numerics"
+  Keywords: [API, Operator, "BigNumber", Corvus.Numerics]
+OpenGraph:
+  Title: "BigNumber.LessThan Operator — Corvus.Numerics"
+  Description: "API documentation for BigNumber.LessThan Operator"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-numerics-bignumber.op-lessthan.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method"
+  Description: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.isintegernormalizedjsonnumber.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.IsIntegerNormalizedJsonNumber Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.IsIntegerNormalizedJsonNumber Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.isintegernormalizedjsonnumber.md

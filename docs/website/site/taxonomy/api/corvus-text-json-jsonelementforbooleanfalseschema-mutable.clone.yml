@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementForBooleanFalseSchema.Mutable.Clone Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementForBooleanFalseSchema.Mutable.Clone Method"
+  Description: "JsonElementForBooleanFalseSchema.Mutable.Clone Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.clone.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementForBooleanFalseSchema.Mutable.Clone Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElementForBooleanFalseSchema.Mutable.Clone Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonElementForBooleanFalseSchema.Mutable", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElementForBooleanFalseSchema.Mutable.Clone Method — Corvus.Text.Json"
+  Description: "API documentation for JsonElementForBooleanFalseSchema.Mutable.Clone Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelementforbooleanfalseschema-mutable.clone.md

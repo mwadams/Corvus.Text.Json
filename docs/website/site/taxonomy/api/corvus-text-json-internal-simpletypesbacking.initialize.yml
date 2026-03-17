@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "SimpleTypesBacking.Initialize Method"
+Template: api/api-page
+Navigation:
+  Title: "SimpleTypesBacking.Initialize Method"
+  Description: "SimpleTypesBacking.Initialize Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-simpletypesbacking.initialize.html
+  Rank: 1000
+MetaData:
+  Title: "SimpleTypesBacking.Initialize Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for SimpleTypesBacking.Initialize Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "SimpleTypesBacking", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "SimpleTypesBacking.Initialize Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for SimpleTypesBacking.Initialize Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-simpletypesbacking.initialize.md

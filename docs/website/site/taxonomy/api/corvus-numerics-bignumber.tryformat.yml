@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "BigNumber.TryFormat Method"
+Template: api/api-page
+Navigation:
+  Title: "BigNumber.TryFormat Method"
+  Description: "BigNumber.TryFormat Method — Corvus.Numerics"
+  Parent: /api
+  Url: /api/corvus-numerics-bignumber.tryformat.html
+  Rank: 1000
+MetaData:
+  Title: "BigNumber.TryFormat Method — Corvus.Numerics"
+  Description: "API documentation for BigNumber.TryFormat Method in Corvus.Numerics"
+  Keywords: [API, Method, "BigNumber", Corvus.Numerics]
+OpenGraph:
+  Title: "BigNumber.TryFormat Method — Corvus.Numerics"
+  Description: "API documentation for BigNumber.TryFormat Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-numerics-bignumber.tryformat.md

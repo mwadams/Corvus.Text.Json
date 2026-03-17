@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.Source Constructors"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.Source Constructors"
+  Description: "JsonElement.Source Constructors — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-source.ctor.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.Source Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Source Constructors in Corvus.Text.Json"
+  Keywords: [API, Constructor, "JsonElement.Source", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.Source Constructors — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.Source Constructors"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-source.ctor.md

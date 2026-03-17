@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.TryFormatOffsetDateTime Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.TryFormatOffsetDateTime Method"
+  Description: "JsonElementHelpers.TryFormatOffsetDateTime Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.tryformatoffsetdatetime.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.TryFormatOffsetDateTime Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.TryFormatOffsetDateTime Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.TryFormatOffsetDateTime Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.TryFormatOffsetDateTime Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.tryformatoffsetdatetime.md

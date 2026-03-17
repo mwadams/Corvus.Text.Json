@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaMessageProvider<TContext>"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaMessageProvider<TContext>"
+  Description: "Provides a message for a JSON Schema validation result, using a context value."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemamessageprovider-tcontext.html
+  Rank: 129
+MetaData:
+  Title: "JsonSchemaMessageProvider<TContext> — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider<TContext> in Corvus.Text.Json"
+  Keywords: [API, delegate, "JsonSchemaMessageProvider<TContext>", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaMessageProvider<TContext> — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaMessageProvider<TContext>"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemamessageprovider-tcontext.md

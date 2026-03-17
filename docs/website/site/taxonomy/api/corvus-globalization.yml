@@ -1,5 +1,6 @@
 ContentType: application/vnd.endjin.ssg.page+yaml
 Title: "Corvus.Globalization Namespace"
+Template: api/api-page
 Navigation:
   Title: Corvus.Globalization
   Description: "API reference for the Corvus.Globalization namespace"

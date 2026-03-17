@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonCommentHandling.Skip Field"
+Template: api/api-page
+Navigation:
+  Title: "JsonCommentHandling.Skip Field"
+  Description: "JsonCommentHandling.Skip Field — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsoncommenthandling.skip.html
+  Rank: 1000
+MetaData:
+  Title: "JsonCommentHandling.Skip Field — Corvus.Text.Json"
+  Description: "API documentation for JsonCommentHandling.Skip Field in Corvus.Text.Json"
+  Keywords: [API, Field, "JsonCommentHandling", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonCommentHandling.Skip Field — Corvus.Text.Json"
+  Description: "API documentation for JsonCommentHandling.Skip Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsoncommenthandling.skip.md

@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IJsonElement"
+Template: api/api-page
+Navigation:
+  Title: "IJsonElement"
+  Description: "Implemented by JsonElement-derived types."
+  Parent: /api
+  Url: /api/corvus-text-json-internal-ijsonelement.html
+  Rank: 116
+MetaData:
+  Title: "IJsonElement — Corvus.Text.Json.Internal"
+  Description: "API documentation for IJsonElement in Corvus.Text.Json.Internal"
+  Keywords: [API, interface, "IJsonElement", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "IJsonElement — Corvus.Text.Json.Internal"
+  Description: "API documentation for IJsonElement"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-ijsonelement.md

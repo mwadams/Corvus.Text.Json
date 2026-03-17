@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonSchemaResultsCollector.Dispose Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonSchemaResultsCollector.Dispose Method"
+  Description: "JsonSchemaResultsCollector.Dispose Method — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonschemaresultscollector.dispose.html
+  Rank: 1000
+MetaData:
+  Title: "JsonSchemaResultsCollector.Dispose Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsCollector.Dispose Method in Corvus.Text.Json"
+  Keywords: [API, Method, "JsonSchemaResultsCollector", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonSchemaResultsCollector.Dispose Method — Corvus.Text.Json"
+  Description: "API documentation for JsonSchemaResultsCollector.Dispose Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonschemaresultscollector.dispose.md

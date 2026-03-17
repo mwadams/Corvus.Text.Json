@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonWorkspace"
+Template: api/api-page
+Navigation:
+  Title: "JsonWorkspace"
+  Description: "A workspace for manipulating JSON documents."
+  Parent: /api
+  Url: /api/corvus-text-json-jsonworkspace.html
+  Rank: 137
+MetaData:
+  Title: "JsonWorkspace — Corvus.Text.Json"
+  Description: "API documentation for JsonWorkspace in Corvus.Text.Json"
+  Keywords: [API, class, "JsonWorkspace", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonWorkspace — Corvus.Text.Json"
+  Description: "API documentation for JsonWorkspace"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonworkspace.md

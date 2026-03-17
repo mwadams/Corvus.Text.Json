@@ -117,7 +117,7 @@ public sealed class AssemblyInspector(string assemblyPath)
     /// Quick pre-scan: returns a map of type FullName → per-type page URL slug.
     /// Used to populate <see cref="XmlDocParser.TypeUrlMap"/> before XML parsing.
     /// </summary>
-    public Dictionary<string, string> PreScanTypeUrls()
+    public Dictionary<string, string> PreScanTypeUrls(string baseUrl)
     {
         Dictionary<string, string> map = new(StringComparer.Ordinal);
 
@@ -139,7 +139,7 @@ public sealed class AssemblyInspector(string assemblyPath)
             string nsSlug = MarkdownGenerator.NamespaceToFileName(ns);
             string typeName = FormatTypeName(type);
             string typeSlug = MarkdownGenerator.TypeToSlug(typeName);
-            string url = $"/api/{nsSlug}-{typeSlug}.html";
+            string url = $"{baseUrl}/{nsSlug}-{typeSlug}.html";
 
             // Map by FullName (uses '+' for nested types, e.g. "Corvus.Text.Json.JsonElement+Source")
             map[type.FullName] = url;

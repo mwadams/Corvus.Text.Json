@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.ToValueKind Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.ToValueKind Method"
+  Description: "JsonElementHelpers.ToValueKind Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.tovaluekind.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.ToValueKind Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.ToValueKind Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.ToValueKind Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.ToValueKind Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.tovaluekind.md

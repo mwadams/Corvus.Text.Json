@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElement.JsonSchema.SchemaLocation Field"
+Template: api/api-page
+Navigation:
+  Title: "JsonElement.JsonSchema.SchemaLocation Field"
+  Description: "JsonElement.JsonSchema.SchemaLocation Field — Corvus.Text.Json"
+  Parent: /api
+  Url: /api/corvus-text-json-jsonelement-jsonschema.schemalocation.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElement.JsonSchema.SchemaLocation Field — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema.SchemaLocation Field in Corvus.Text.Json"
+  Keywords: [API, Field, "JsonElement.JsonSchema", Corvus.Text.Json]
+OpenGraph:
+  Title: "JsonElement.JsonSchema.SchemaLocation Field — Corvus.Text.Json"
+  Description: "API documentation for JsonElement.JsonSchema.SchemaLocation Field"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-jsonelement-jsonschema.schemalocation.md

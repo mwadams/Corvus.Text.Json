@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "IMutableJsonDocument.InsertAndDispose Method"
+Template: api/api-page
+Navigation:
+  Title: "IMutableJsonDocument.InsertAndDispose Method"
+  Description: "IMutableJsonDocument.InsertAndDispose Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-imutablejsondocument.insertanddispose.html
+  Rank: 1000
+MetaData:
+  Title: "IMutableJsonDocument.InsertAndDispose Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for IMutableJsonDocument.InsertAndDispose Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "IMutableJsonDocument", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "IMutableJsonDocument.InsertAndDispose Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for IMutableJsonDocument.InsertAndDispose Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-imutablejsondocument.insertanddispose.md

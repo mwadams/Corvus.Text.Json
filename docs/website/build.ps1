@@ -4,14 +4,13 @@
 .DESCRIPTION
     End-to-end build pipeline:
       1. Build Corvus.Text.Json (generates XML doc + assembly)
-      2. Generate API namespace markdown & taxonomy from XML docs
+      2. Generate API markdown, taxonomy & views
       3. Generate recipe content from ExampleRecipes source docs
       4. Generate docs content from source documentation
       5. Install Vellum SSG (if not present)
       6. Run Vellum to render the core site
       7. Compile SCSS to CSS
-      8. Generate standalone per-type API HTML pages
-      9. Build Lunr search index
+      8. Build Lunr search index
 .PARAMETER Preview
     Launches a local preview server after building.
 .PARAMETER Watch
@@ -50,7 +49,7 @@ function ConvertTo-KebabCase([string]$text) {
 }
 
 # ── Step 1: Build Corvus.Text.Json ──────────────────────────────────────────
-Write-Host "`n[1/9] Building Corvus.Text.Json..." -ForegroundColor Cyan
+Write-Host "`n[1/8] Building Corvus.Text.Json..." -ForegroundColor Cyan
 $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
 & dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
@@ -59,7 +58,7 @@ if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2
 Write-Host "  XML documentation generated." -ForegroundColor Green
 
 # ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
-Write-Host "`n[2/9] Generating API namespace pages & taxonomy..." -ForegroundColor Cyan
+Write-Host "`n[2/8] Generating API markdown, taxonomy & views..." -ForegroundColor Cyan
 $apiViewsDir = Join-Path $siteDir "theme\corvus\views\api"
 $nsDescriptionsDir = Join-Path $siteDir "content\Api\namespaces"
 & dotnet run --project $toolProject -c Release -- `
@@ -71,10 +70,10 @@ $nsDescriptionsDir = Join-Path $siteDir "content\Api\namespaces"
     --api-views-dir $apiViewsDir `
     --ns-descriptions $nsDescriptionsDir
 if ($LASTEXITCODE -ne 0) { throw "API namespace generation failed" }
-Write-Host "  Namespace markdown, taxonomy & API views generated." -ForegroundColor Green
+Write-Host "  API markdown, taxonomy & views generated." -ForegroundColor Green
 
 # ── Step 3: Generate recipe content from ExampleRecipes ─────────────────────
-Write-Host "`n[3/9] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
+Write-Host "`n[3/8] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
 
 $recipesSourceDir = Join-Path $repoRoot "docs\ExampleRecipes"
 $recipesContentDir = Join-Path $siteDir "content\Examples"
@@ -222,7 +221,7 @@ ContentBlocks:
 Write-Host "  $recipeCount recipe(s) generated." -ForegroundColor Green
 
 # ── Step 4: Generate docs content from source documentation ─────────────────
-Write-Host "`n[4/9] Generating docs content from source documentation..." -ForegroundColor Cyan
+Write-Host "`n[4/8] Generating docs content from source documentation..." -ForegroundColor Cyan
 
 $docsSourceDir = Join-Path $repoRoot "docs"
 $docsContentDir = Join-Path $siteDir "content\Docs"
@@ -345,7 +344,7 @@ $vellumDir = Join-Path $here ".endjin"
 $vellumCmd = Join-Path $vellumDir "vellum"
 
 if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
-    Write-Host "`n[5/9] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
+    Write-Host "`n[5/8] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
     if (!(Test-Path $vellumDir)) {
         New-Item -ItemType Directory -Path $vellumDir | Out-Null
     }
@@ -354,11 +353,11 @@ if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
     if ($LASTEXITCODE -ne 0) { throw "Failed to install Vellum" }
     Write-Host "  Vellum installed." -ForegroundColor Green
 } else {
-    Write-Host "`n[5/9] Vellum already installed." -ForegroundColor DarkGray
+    Write-Host "`n[5/8] Vellum already installed." -ForegroundColor DarkGray
 }
 
 # ── Step 6: Run Vellum ──────────────────────────────────────────────────────
-Write-Host "`n[6/9] Running Vellum..." -ForegroundColor Cyan
+Write-Host "`n[6/8] Running Vellum..." -ForegroundColor Cyan
 
 # Prepare output directory
 if (Test-Path $outputDir) { Remove-Item $outputDir -Recurse -Force }
@@ -390,32 +389,15 @@ foreach ($file in @("site.yml")) {
 Write-Host "  Site rendered." -ForegroundColor Green
 
 # ── Step 7: Compile SCSS ────────────────────────────────────────────────────
-Write-Host "`n[7/9] Compiling SCSS..." -ForegroundColor Cyan
+Write-Host "`n[7/8] Compiling SCSS..." -ForegroundColor Cyan
 $scssPath = Join-Path $assetsSource "css\scss\main.scss"
 $cssOutputPath = Join-Path $outputDir "main.css"
 & npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
 if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
 Write-Host "  CSS written to $cssOutputPath" -ForegroundColor Green
 
-# ── Step 8: Generate per-type API HTML pages ────────────────────────────────
-Write-Host "`n[8/9] Generating per-type API pages..." -ForegroundColor Cyan
-$apiHtmlDir = Join-Path $outputDir "api"
-& dotnet run --project $toolProject -c Release --no-build -- `
-    --xml $xmlPath `
-    --assembly $assemblyPath `
-    --ns20-assembly $ns20AssemblyPath `
-    --html-output $apiHtmlDir `
-    --site-title "Corvus.Text.Json" `
-    --ns-descriptions $nsDescriptionsDir
-if ($LASTEXITCODE -ne 0) {
-    Write-Warning "Per-type HTML generation failed — namespace summary pages still available."
-} else {
-    $count = (Get-ChildItem $apiHtmlDir -Filter "*.html" | Where-Object { $_.Name -match '-.*-' }).Count
-    Write-Host "  $count per-type API pages generated." -ForegroundColor Green
-}
-
-# ── Step 9: Build search index ──────────────────────────────────────────────
-Write-Host "`n[9/9] Building search index..." -ForegroundColor Cyan
+# ── Step 8: Build search index ──────────────────────────────────────────────
+Write-Host "`n[8/8] Building search index..." -ForegroundColor Cyan
 $searchIndexOutput = Join-Path $outputDir "search-index.json"
 & node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
 if ($LASTEXITCODE -ne 0) {

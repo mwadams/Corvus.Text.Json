@@ -1,0 +1,21 @@
+ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "JsonElementHelpers.CountRunes Method"
+Template: api/api-page
+Navigation:
+  Title: "JsonElementHelpers.CountRunes Method"
+  Description: "JsonElementHelpers.CountRunes Method — Corvus.Text.Json.Internal"
+  Parent: /api
+  Url: /api/corvus-text-json-internal-jsonelementhelpers.countrunes.html
+  Rank: 1000
+MetaData:
+  Title: "JsonElementHelpers.CountRunes Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.CountRunes Method in Corvus.Text.Json.Internal"
+  Keywords: [API, Method, "JsonElementHelpers", Corvus.Text.Json.Internal]
+OpenGraph:
+  Title: "JsonElementHelpers.CountRunes Method — Corvus.Text.Json.Internal"
+  Description: "API documentation for JsonElementHelpers.CountRunes Method"
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Spec:
+      Path: ../../content/Api/corvus-text-json-internal-jsonelementhelpers.countrunes.md
