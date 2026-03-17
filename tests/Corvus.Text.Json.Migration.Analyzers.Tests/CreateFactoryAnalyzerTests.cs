@@ -409,28 +409,229 @@ namespace TestApp
         await test.RunAsync();
     }
 
-    // ── Negative test ────────────────────────────────────────────────
+    // ── Edge case tests ─────────────────────────────────────────────
 
     [Fact]
-    public async Task NonJsonValueType_NoDiagnostic()
+    public async Task Create_VarType_BuildPath_DoesNotAppendSource()
     {
-        string testCode = @"
+        // var should NOT be rewritten to var.Source
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
 namespace TestApp
 {
-    class MyBuilder
-    {
-        public static MyBuilder Create(int x) => new();
-    }
-
     class Test
     {
         void M()
         {
-            var b = MyBuilder.Create(42);
+            Corvus.Json.Person person = default;
+            var tags = Corvus.Json.JsonArray.{|#0:Create|}(default(Corvus.Json.JsonAny));
+            person.SetTags(tags);
         }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.Person person = default;
+            var tags = Corvus.Json.JsonArray.Build(default(Corvus.Json.JsonAny));
+            person.SetTags(tags);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic("CVJ013").WithLocation(0));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Create_WorkspaceOutOfScope_InsertsNew()
+    {
+        // Workspace declared in a different block should NOT be reused.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            {
+                using var ws = JsonWorkspace.Create();
+            }
+
+            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.{|#0:Create|}(default(Corvus.Json.JsonAny));
+            arr.WriteTo(null);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            {
+                using var ws = JsonWorkspace.Create();
+            }
+
+            using var workspace = JsonWorkspace.Create();
+
+            Corvus.Json.JsonArray arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
+            arr.WriteTo(null);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic("CVJ013").WithLocation(0));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Create_ExpressionBodied_DiagnosticOnly()
+    {
+        // Expression-bodied member — no BlockSyntax to insert workspace into.
+        // The diagnostic fires but the code fix cannot apply (no statement
+        // context). We verify only the diagnostic, not a code fix.
+        string testCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Corvus.Json.JsonArray M() => Corvus.Json.JsonArray.{|#0:Create|}(default(Corvus.Json.JsonAny));
     }
 }";
 
-        await Verify.VerifyAnalyzerAsync(testCode);
+        await Verify.VerifyAnalyzerAsync(testCode,
+            Verify.Diagnostic("CVJ013").WithLocation(0));
+    }
+
+    [Fact]
+    public async Task Create_FieldAssignment_TopLevel()
+    {
+        // Assigned to a field — no local declaration, not inside argument.
+        // Should be top-level CreateBuilder.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Corvus.Json.JsonArray _arr;
+
+        void M()
+        {
+            _arr = Corvus.Json.JsonArray.{|#0:Create|}(default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Corvus.Json.JsonArray _arr;
+
+        void M()
+        {
+            using var workspace = JsonWorkspace.Create();
+            _arr = Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic("CVJ013").WithLocation(0));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Create_StandaloneStatement_TopLevel()
+    {
+        // Create() as standalone expression statement — no assignment at all.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray.{|#0:Create|}(default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            using var workspace = JsonWorkspace.Create();
+            Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic("CVJ013").WithLocation(0));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Create_InTernary_TopLevel()
+    {
+        // Create() in ternary — not inside an argument list,
+        // so should be top-level path.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            bool flag = true;
+            Corvus.Json.JsonArray arr = flag
+                ? Corvus.Json.JsonArray.{|#0:Create|}(default(Corvus.Json.JsonAny))
+                : default;
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            bool flag = true;
+            using var workspace = JsonWorkspace.Create();
+            Corvus.Json.JsonArray arr = flag
+                ? Corvus.Json.JsonArray.CreateBuilder(workspace, default(Corvus.Json.JsonAny)) : default;
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic("CVJ013").WithLocation(0));
+        await test.RunAsync();
     }
 }

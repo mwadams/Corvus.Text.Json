@@ -149,7 +149,7 @@ JsonAny any = JsonAny.Parse(json);
 JsonElement any = JsonElement.Parse(json);
 ```
 
-> **Note:** `JsonAny` always maps to `JsonElement`. For other V4 core types like `JsonString`, `JsonObject`, etc., see [CVJ009](#cvj009--v4-typed-core-type-may-need-replacement).
+> **Note:** `JsonAny` always maps to `JsonElement`. For other V4 core types like `JsonString`, `JsonObject`, etc., see [CVJ009](#cvj009-v4-typed-core-type-may-need-replacement).
 
 ---
 
@@ -177,22 +177,6 @@ using var doc = JsonDocument.Parse(json);
 
 // After (V5)
 using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
-```
-
----
-
-### CVJ018 — Migrate `TryGetString()` to `TryGetValue()`
-
-**Severity:** Warning · **Code fix:** ✅ Yes
-
-Detects calls to V4's `.TryGetString(out string)` and renames it to V5's `.TryGetValue(out string)`.
-
-```csharp
-// Before (V4)
-if (element.TryGetString(out string value)) { ... }
-
-// After (V5)
-if (element.TryGetValue(out string value)) { ... }
 ```
 
 ---
@@ -233,6 +217,130 @@ Person result = person.WithAddressValue(updated);
 
 // After (V5)
 person.AddressValue.SetCity("Manchester");
+```
+
+---
+
+### CVJ012 — V4 functional array operations
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`) and renames them to the V5 mutable builder equivalents (`.AddItem()`, `.InsertItem()`, `.SetItem()`, `.RemoveAt()`). The code fix also drops the assignment since V5 mutates in-place.
+
+```csharp
+// Before (V4)
+JsonArray updated = array.Add(newItem);
+JsonArray replaced = array.Insert(0, item);
+
+// After (V5)
+array.AddItem(newItem);
+array.InsertItem(0, item);
+```
+
+---
+
+### CVJ013 — V4 `Create()` replaced by `CreateBuilder()` or `Build()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects V4's static `Create(...)` factory method for constructing objects. The code fix chooses between two V5 patterns based on how the result is used:
+
+- **Top-level (used as an instance):** `CreateBuilder(workspace, ...)` — the result is a mutable builder that you can call methods on.
+- **Nested (used as a source value):** `Build(...)` — the result is passed into another construction or argument. When the result is assigned to an explicitly typed variable, the type is rewritten to `Type.Source` (since `Build()` returns a Source, not the entity type).
+
+```csharp
+// Before (V4) — top-level, used as an instance
+Person person = Person.Create(name: "Alice", age: 30);
+person.IsValid(); // member access → builder
+
+// After (V5)
+using JsonWorkspace workspace = JsonWorkspace.Create();
+Person person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
+person.EvaluateSchema();
+```
+
+```csharp
+// Before (V4) — nested, passed as argument
+parent.SetChild(Person.Create(name: "Alice", age: 30));
+
+// After (V5) — no workspace needed
+parent.SetChild(Person.Build(name: "Alice", age: 30));
+```
+
+```csharp
+// Before (V4) — assigned to variable, then passed as argument
+Person child = Person.Create(name: "Alice", age: 30);
+parent.SetChild(child);
+
+// After (V5) — type becomes Person.Source
+Person.Source child = Person.Build(name: "Alice", age: 30);
+parent.SetChild(child);
+```
+
+---
+
+### CVJ014 — V4 `FromItems()` replaced by `Build()` pattern
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested. Explicitly typed variables are rewritten to `Type.Source`.
+
+```csharp
+// Before (V4) — top-level
+MyArray arr = MyArray.FromItems(item1, item2, item3);
+
+// After (V5) — builder wrapping Build()
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MyArray arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
+```
+
+```csharp
+// Before (V4) — nested, passed as argument
+parent.SetItems(MyArray.FromItems(item1, item2));
+
+// After (V5)
+parent.SetItems(MyArray.Build(item1, item2));
+```
+
+---
+
+### CVJ015 — V4 `FromValues()` replaced by `CreateBuilder()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested. Explicitly typed variables are rewritten to `Type.Source`.
+
+```csharp
+// Before (V4)
+MyVector vec = MyVector.FromValues(stackalloc double[] { 1.0, 2.0, 3.0 });
+
+// After (V5) — top-level
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MyVector vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
+```
+
+```csharp
+// Before (V4) — nested
+parent.SetVector(MyVector.FromValues(stackalloc double[] { 1.0, 2.0 }));
+
+// After (V5)
+parent.SetVector(MyVector.Build(stackalloc double[] { 1.0, 2.0 }));
+```
+
+---
+
+### CVJ018 — Migrate `TryGetString()` to `TryGetValue()`
+
+**Severity:** Warning · **Code fix:** ✅ Yes
+
+Detects calls to V4's `.TryGetString(out string)` and renames it to V5's `.TryGetValue(out string)`.
+
+```csharp
+// Before (V4)
+if (element.TryGetString(out string value)) { ... }
+
+// After (V5)
+if (element.TryGetValue(out string value)) { ... }
 ```
 
 ---
@@ -298,76 +406,6 @@ double value = element.AsNumber;
 string name = (string)element;
 // or
 element.TryGetValue(out string name);
-```
-
----
-
-### CVJ012 — V4 functional array operations
-
-**Severity:** Warning · **Code fix:** ❌ No
-
-Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`). In V5, these operations are performed via the mutable builder.
-
-```csharp
-// Before (V4)
-JsonArray updated = array.Add(newItem);
-JsonArray replaced = array.SetItem(0, replacement);
-
-// After (V5)
-// Get mutable builder, then:
-mutableArray.Add(newItem);
-mutableArray.SetItem(0, replacement);
-```
-
----
-
-### CVJ013 — V4 `Create()` replaced by `CreateBuilder()`
-
-**Severity:** Warning · **Code fix:** ❌ No
-
-Detects V4's static `Create(...)` factory method for constructing objects. In V5, use `CreateBuilder(workspace, ...)` with a `JsonWorkspace`.
-
-```csharp
-// Before (V4)
-Person person = Person.Create(name: "Alice", age: 30);
-
-// After (V5)
-using JsonWorkspace workspace = JsonWorkspace.Create();
-Person person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
-```
-
----
-
-### CVJ014 — V4 `FromItems()` replaced by Build pattern
-
-**Severity:** Warning · **Code fix:** ❌ No
-
-Detects V4's `FromItems(...)` array factory. In V5, use `CreateBuilder()` with a build delegate or `Build()`.
-
-```csharp
-// Before (V4)
-MyArray arr = MyArray.FromItems(item1, item2, item3);
-
-// After (V5)
-using JsonWorkspace workspace = JsonWorkspace.Create();
-MyArray arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
-```
-
----
-
-### CVJ015 — V4 `FromValues()` replaced by `CreateBuilder()`
-
-**Severity:** Warning · **Code fix:** ❌ No
-
-Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)`.
-
-```csharp
-// Before (V4)
-MyVector vec = MyVector.FromValues(stackalloc double[] { 1.0, 2.0, 3.0 });
-
-// After (V5)
-using JsonWorkspace workspace = JsonWorkspace.Create();
-MyVector vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
 ```
 
 ---

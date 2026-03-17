@@ -268,4 +268,109 @@ namespace TestApp
 
         await Verify.VerifyAnalyzerAsync(testCode);
     }
+
+    // ── Edge case tests ─────────────────────────────────────────────
+
+    [Fact]
+    public async Task Add_VarType_DropsAssignment()
+    {
+        // var instead of explicit type
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny item = default;
+            var result = arr.{|#0:Add|}(item);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny item = default;
+            arr.AddItem(item);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Add_AssignToDifferentVariable_DropsAssignment()
+    {
+        // Result assigned to a different variable than the receiver
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny item = default;
+            Corvus.Json.JsonArray other = arr.{|#0:Add|}(item);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny item = default;
+            arr.AddItem(item);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Add_InExpressionContext_StillRenames()
+    {
+        // Add() used as argument — cannot drop the outer call, but
+        // should still rename Add to AddItem (or at least fire diagnostic).
+        string testCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void Consume(Corvus.Json.JsonArray arr) { }
+
+        void M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny item = default;
+            Consume(arr.{|#0:Add|}(item));
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode,
+            Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+    }
 }
