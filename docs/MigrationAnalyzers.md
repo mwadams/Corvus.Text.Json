@@ -145,7 +145,7 @@ JsonAny any = JsonAny.Parse(json);
 JsonElement any = JsonElement.Parse(json);
 ```
 
-> **Note:** `JsonAny` always maps to `JsonElement`. For other V4 core types like `JsonString`, `JsonObject`, etc., see [CVJ009](#cvj009--v4-typed-core-type-may-need-replacement).
+> **Note:** `JsonAny` always maps to `JsonElement`. For other V4 core types like `JsonString`, `JsonObject`, etc., see [CVJ009](#cvj009-v4-typed-core-type-may-need-replacement).
 
 ---
 
