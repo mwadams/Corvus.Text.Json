@@ -46,10 +46,13 @@ public static class V4GeneratedTypePatterns
 
     // -----------------------------------------------------------------------
     // 3. Create() factory  (CVJ013)
+    //    CreateBuilder returns JsonDocumentBuilder<T>, not T.
+    //    Use var for the declaration and .RootElement to access the value.
     // -----------------------------------------------------------------------
     public static void CreateGeneratedType()
     {
-        // CVJ013: Person.Create() → V5 builder pattern
+        // CVJ013: Person.Create() → var builder = Person.CreateBuilder(workspace, ...)
+        //         then use builder.RootElement for operations
         Person person = Person.Create(
             name: "Charlie",
             age: 42);

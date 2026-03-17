@@ -188,18 +188,19 @@ public static class V4Patterns
 
     // -----------------------------------------------------------------------
     // 9. FromItems / Create / FromValues static factories  (CVJ013-015)
-    //    Top-level: CreateBuilder(workspace, ...) — used as an instance
-    //    Nested:    Build(...) — passed as an argument
+    //    Top-level: CreateBuilder(workspace, ...) returns JsonDocumentBuilder<T>
+    //              use var + .RootElement to access the mutable value
+    //    Nested:    Build(...) — passed as an argument (returns Source)
     // -----------------------------------------------------------------------
     public static void ArrayFactoryExample()
     {
-        // CVJ014: FromItems → top-level CreateBuilder with Build wrapper
+        // CVJ014: FromItems → top-level CreateBuilder (returns builder, use .RootElement)
         JsonArray fromItems = JsonArray.FromItems(
             (JsonNumber)1,
             (JsonNumber)2,
             (JsonNumber)3);
 
-        // CVJ013: Create → top-level CreateBuilder
+        // CVJ013: Create → top-level CreateBuilder (var + .RootElement)
         ReadOnlySpan<JsonAny> items = [(JsonNumber)10, (JsonNumber)20];
         JsonArray created = JsonArray.Create(items);
 
