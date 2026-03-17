@@ -262,4 +262,16 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         helpLinkUri: HelpLinkBase);
+
+    /// <summary>
+    /// CVJ021: Nested With*() reconstruction can use V5 deep property setter.
+    /// </summary>
+    public static readonly DiagnosticDescriptor DeepMutationMigration = new(
+        id: "CVJ021",
+        title: "V4 nested With*() chain can use V5 deep property setter via builder",
+        messageFormat: "V4 nested reconstruction '{0}' can be simplified in V5 to '{1}' on a mutable builder",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        helpLinkUri: HelpLinkBase + "#mutation");
 }

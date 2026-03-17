@@ -49,40 +49,45 @@ public sealed class JsonDocumentParseAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check the receiver is JsonDocument (either via semantic model or syntax fallback).
-        if (memberAccess.Expression is IdentifierNameSyntax receiverIdentifier)
-        {
-            if (receiverIdentifier.Identifier.Text != "JsonDocument")
-            {
-                return;
-            }
-
-            // Verify via semantic model that this is System.Text.Json.JsonDocument.
-            ISymbol? symbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
-            if (symbol is IMethodSymbol methodSymbol)
-            {
-                string containingType = methodSymbol.ContainingType.ToDisplayString();
-                if (containingType != "System.Text.Json.JsonDocument")
-                {
-                    return;
-                }
-            }
-            else if (symbol is not null)
-            {
-                // Resolved to something unexpected — skip.
-                return;
-            }
-
-            // symbol is null means unresolved — still report based on syntax match.
-        }
-        else
+        // Extract the rightmost identifier from the receiver expression.
+        // Handles both `JsonDocument.Parse(...)` and `System.Text.Json.JsonDocument.Parse(...)`.
+        string? receiverName = GetRightmostIdentifier(memberAccess.Expression);
+        if (receiverName != "JsonDocument")
         {
             return;
         }
 
+        // Verify via semantic model that this is System.Text.Json.JsonDocument.
+        ISymbol? symbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
+        if (symbol is IMethodSymbol methodSymbol)
+        {
+            string containingType = methodSymbol.ContainingType.ToDisplayString();
+            if (containingType != "System.Text.Json.JsonDocument")
+            {
+                return;
+            }
+        }
+        else if (symbol is not null)
+        {
+            // Resolved to something unexpected — skip.
+            return;
+        }
+
+        // symbol is null means unresolved — still report based on syntax match.
         context.ReportDiagnostic(
             Diagnostic.Create(
                 DiagnosticDescriptors.JsonDocumentParseMigration,
                 invocation.GetLocation()));
+    }
+
+    private static string? GetRightmostIdentifier(ExpressionSyntax expression)
+    {
+        return expression switch
+        {
+            IdentifierNameSyntax id => id.Identifier.Text,
+            MemberAccessExpressionSyntax ma => ma.Name.Identifier.Text,
+            AliasQualifiedNameSyntax aq => aq.Name.Identifier.Text,
+            _ => null,
+        };
     }
 }

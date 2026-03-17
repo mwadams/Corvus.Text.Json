@@ -80,7 +80,7 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("IsValid()", string.Empty));
+                .WithArguments("Replace '.IsValid()' with '.EvaluateSchema()'"));
 
         await test.RunAsync();
     }
@@ -113,7 +113,7 @@ namespace TestApp
 
         DiagnosticResult expected = Verify.Diagnostic()
             .WithLocation(0)
-            .WithArguments("Validate(...)", string.Empty);
+            .WithArguments("Replace '.Validate(ValidationContext.ValidContext)' with '.EvaluateSchema()'");
 
         await Verify.VerifyAnalyzerAsync(testCode, expected);
     }

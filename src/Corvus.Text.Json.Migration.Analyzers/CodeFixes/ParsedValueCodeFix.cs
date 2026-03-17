@@ -9,6 +9,7 @@
 
 using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,7 +54,7 @@ public sealed class ParsedValueCodeFix : CodeFixProvider
                 context.RegisterCodeFix(
                     CodeAction.Create(
                         title: "Replace 'ParsedValue<T>' with 'ParsedJsonDocument<T>'",
-                        createChangedDocument: ct => ReplaceTypeNameAsync(context.Document, genericName, ct),
+                        createChangedDocument: ct => ReplaceAllParsedValueInStatementAsync(context.Document, genericName, ct),
                         equivalenceKey: DiagnosticDescriptors.ParsedValueMigration.Id),
                     diagnostic);
             }
@@ -69,9 +70,9 @@ public sealed class ParsedValueCodeFix : CodeFixProvider
         }
     }
 
-    private static async Task<Document> ReplaceTypeNameAsync(
+    private static async Task<Document> ReplaceAllParsedValueInStatementAsync(
         Document document,
-        GenericNameSyntax genericName,
+        GenericNameSyntax triggeringNode,
         CancellationToken cancellationToken)
     {
         SyntaxNode? root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
@@ -80,12 +81,35 @@ public sealed class ParsedValueCodeFix : CodeFixProvider
             return document;
         }
 
-        GenericNameSyntax newName = genericName.WithIdentifier(
+        // Walk up to the containing statement — covers using declarations,
+        // using blocks, and plain local declarations.
+        SyntaxNode? statement = triggeringNode.FirstAncestorOrSelf<StatementSyntax>();
+        if (statement is null)
+        {
+            // Fallback: just replace the single node.
+            return document.WithSyntaxRoot(
+                root.ReplaceNode(triggeringNode, RenameParsedValue(triggeringNode)));
+        }
+
+        // Find every ParsedValue<T> generic name within the statement.
+        var parsedValueNodes = statement
+            .DescendantNodesAndSelf()
+            .OfType<GenericNameSyntax>()
+            .Where(g => g.Identifier.Text == "ParsedValue")
+            .ToArray();
+
+        SyntaxNode newRoot = root.ReplaceNodes(
+            parsedValueNodes,
+            (original, _) => RenameParsedValue(original));
+
+        return document.WithSyntaxRoot(newRoot);
+    }
+
+    private static GenericNameSyntax RenameParsedValue(GenericNameSyntax genericName)
+    {
+        return genericName.WithIdentifier(
             SyntaxFactory.Identifier("ParsedJsonDocument")
                 .WithTriviaFrom(genericName.Identifier));
-
-        SyntaxNode newRoot = root.ReplaceNode(genericName, newName);
-        return document.WithSyntaxRoot(newRoot);
     }
 
     private static async Task<Document> ReplacePropertyNameAsync(
