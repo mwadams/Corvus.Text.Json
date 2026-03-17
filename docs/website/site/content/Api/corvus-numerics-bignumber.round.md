@@ -7,15 +7,16 @@ Title: "BigNumber.Round Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2159)
 
 ## Round {#round}
+
+Rounds a value to a specified number of decimal places.
 
 ```csharp
 public static BigNumber Round(BigNumber value, int decimals, MidpointRounding mode)
 ```
-
-Rounds a value to a specified number of decimal places.
 
 ### Parameters
 

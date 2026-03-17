@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.CreateOffsetTimeCore Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementHelpers.CreateOffsetTimeCore Method — Corvus.Text.Json.Inte
 
 ## CreateOffsetTimeCore(int, int, int, int, int, int, int) {#createoffsettimecore-int-int-int-int-int-int-int}
 
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L216)
+
+Creates an offset time from its individual components including nanosecond precision.
+
 ```csharp
 public static OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
 ```
-
-Creates an offset time from its individual components including nanosecond precision.
 
 ### Parameters
 
@@ -42,15 +44,24 @@ Creates an offset time from its individual components including nanosecond preci
 
 The constructed offset time.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateOffsetTimeCore(int, int, int, int, int) {#createoffsettimecore-int-int-int-int-int}
 
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L242)
+
+Creates an offset time from its individual components with millisecond precision.
+
 ```csharp
 public static OffsetTime CreateOffsetTimeCore(int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
 ```
-
-Creates an offset time from its individual components with millisecond precision.
 
 ### Parameters
 
@@ -68,12 +79,12 @@ Creates an offset time from its individual components with millisecond precision
 
 The constructed offset time.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

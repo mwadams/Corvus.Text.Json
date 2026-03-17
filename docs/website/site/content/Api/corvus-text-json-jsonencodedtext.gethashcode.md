@@ -7,15 +7,16 @@ Title: "JsonEncodedText.GetHashCode Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L142)
 
 ## GetHashCode {#gethashcode}
+
+Returns the hash code for this [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html).
 
 ```csharp
 public override int GetHashCode()
 ```
-
-Returns the hash code for this [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html).
 
 ### Returns
 

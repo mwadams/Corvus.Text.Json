@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetPropertyName Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L459)
 
 ## GetPropertyName {#getpropertyname}
+
+Gets the property name as a JSON element.
 
 ```csharp
 public abstract JsonElement GetPropertyName(int index)
 ```
-
-Gets the property name as a JSON element.
 
 ### Parameters
 

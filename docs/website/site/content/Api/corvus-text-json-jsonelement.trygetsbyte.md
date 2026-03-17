@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetSByte Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L703)
 
 ## TryGetSByte {#trygetsbyte}
+
+Attempts to represent the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
 
 ```csharp
 public bool TryGetSByte(ref sbyte value)
 ```
-
-Attempts to represent the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
 
 ### Parameters
 

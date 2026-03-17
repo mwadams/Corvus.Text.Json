@@ -7,7 +7,7 @@ Title: "JsonProperty<TValue>.NameEquals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "JsonProperty<TValue>.NameEquals Method — Corvus.Text.Json"
 
 ## NameEquals(string) {#nameequals-string}
 
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L95)
+
+Compares `text` to the name of this property.
+
 ```csharp
 public bool NameEquals(string text)
 ```
-
-Compares `text` to the name of this property.
 
 ### Parameters
 
@@ -47,15 +49,24 @@ Compares `text` to the name of this property.
 
 This method is functionally equal to doing an ordinal comparison of `text` and [`JsonProperty`](/api/corvus-text-json-jsonproperty-tvalue.html#jsonproperty), but can avoid creating the string instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## NameEquals(ReadOnlySpan&lt;byte&gt;) {#nameequals-readonlyspan-byte}
 
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L115)
+
+Compares the text represented by `utf8Text` to the name of this property.
+
 ```csharp
 public bool NameEquals(ReadOnlySpan<byte> utf8Text)
 ```
-
-Compares the text represented by `utf8Text` to the name of this property.
 
 ### Parameters
 
@@ -79,15 +90,24 @@ Compares the text represented by `utf8Text` to the name of this property.
 
 This method is functionally equal to doing an ordinal comparison of `utf8Text` and [`JsonProperty`](/api/corvus-text-json-jsonproperty-tvalue.html#jsonproperty), but can avoid creating the UTF8 string instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## NameEquals(ReadOnlySpan&lt;char&gt;) {#nameequals-readonlyspan-char}
 
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L136)
+
+Compares `text` to the name of this property.
+
 ```csharp
 public bool NameEquals(ReadOnlySpan<char> text)
 ```
-
-Compares `text` to the name of this property.
 
 ### Parameters
 
@@ -111,12 +131,12 @@ Compares `text` to the name of this property.
 
 This method is functionally equal to doing an ordinal comparison of `utf8Text` and [`JsonProperty`](/api/corvus-text-json-jsonproperty-tvalue.html#jsonproperty), but can avoid creating the UTF-8 string instance.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

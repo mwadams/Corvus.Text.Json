@@ -7,15 +7,16 @@ Title: "Period.TryParse Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L372)
 
 ## TryParse {#tryparse}
+
+Parses a string into a Period.
 
 ```csharp
 public static bool TryParse(ReadOnlySpan<byte> value, ref Period result)
 ```
-
-Parses a string into a Period.
 
 ### Parameters
 

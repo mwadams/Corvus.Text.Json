@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteStringValueSegment Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "Utf8JsonWriter.WriteStringValueSegment Method — Corvus.Text.Json"
 
 ## WriteStringValueSegment(ReadOnlySpan&lt;char&gt;, bool) {#writestringvaluesegment-readonlyspan-char-bool}
 
+**Source:** [Utf8JsonWriter.WriteValues.StringSegment.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.StringSegment.cs#L87)
+
+Writes the text value segment as a partial JSON string.
+
 ```csharp
 public void WriteStringValueSegment(ReadOnlySpan<char> value, bool isFinalSegment)
 ```
-
-Writes the text value segment as a partial JSON string.
 
 ### Parameters
 
@@ -42,15 +44,24 @@ Writes the text value segment as a partial JSON string.
 
 The value is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValueSegment(ReadOnlySpan&lt;byte&gt;, bool) {#writestringvaluesegment-readonlyspan-byte-bool}
 
+**Source:** [Utf8JsonWriter.WriteValues.StringSegment.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.StringSegment.cs#L139)
+
+Writes the UTF-8 text value segment as a partial JSON string.
+
 ```csharp
 public void WriteStringValueSegment(ReadOnlySpan<byte> value, bool isFinalSegment)
 ```
-
-Writes the UTF-8 text value segment as a partial JSON string.
 
 ### Parameters
 
@@ -70,12 +81,12 @@ Writes the UTF-8 text value segment as a partial JSON string.
 
 The value is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

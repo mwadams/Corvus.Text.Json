@@ -7,15 +7,16 @@ Title: "JsonElementExtensions.IsNull Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementExtensions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElementExtensions.cs#L18)
 
 ## IsNull {#isnull}
+
+Gets a value indicating whether this value is null.
 
 ```csharp
 public static bool IsNull<T>(T value)
 ```
-
-Gets a value indicating whether this value is null.
 
 ### Type Parameters
 

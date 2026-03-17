@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.RemoveFirstUnsafe Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
 
 ## RemoveFirstUnsafe {#removefirstunsafe}
+
+Removes the first array element that equals the specified item.
 
 ```csharp
 public static bool RemoveFirstUnsafe<TArray, T>(TArray arrayElement, ref T item)
 ```
-
-Removes the first array element that equals the specified item.
 
 ### Type Parameters
 

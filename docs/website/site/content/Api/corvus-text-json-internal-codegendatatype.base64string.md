@@ -7,15 +7,16 @@ Title: "CodeGenDataType.Base64String Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L213)
 
 ## Base64String {#base64string}
+
+Represents a base64-encoded string.
 
 ```csharp
 CodeGenDataType Base64String
 ```
-
-Represents a base64-encoded string.
 
 ### Returns
 

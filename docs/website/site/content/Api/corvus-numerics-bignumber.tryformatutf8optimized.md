@@ -7,15 +7,16 @@ Title: "BigNumber.TryFormatUtf8Optimized Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.OptimizedFormatting.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.OptimizedFormatting.cs#L141)
 
 ## TryFormatUtf8Optimized {#tryformatutf8optimized}
+
+Tries to format this instance into the provided UTF-8 span with zero allocations.
 
 ```csharp
 public bool TryFormatUtf8Optimized(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
-
-Tries to format this instance into the provided UTF-8 span with zero allocations.
 
 ### Parameters
 

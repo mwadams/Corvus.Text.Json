@@ -7,15 +7,16 @@ Title: "Utf8Uri.Scheme Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L158)
 
 ## Scheme {#scheme}
+
+Gets the scheme component of the URI.
 
 ```csharp
 public ReadOnlySpan<byte> Scheme { get; }
 ```
-
-Gets the scheme component of the URI.
 
 ### Returns
 

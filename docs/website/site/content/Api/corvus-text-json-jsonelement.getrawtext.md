@@ -7,15 +7,16 @@ Title: "JsonElement.GetRawText Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1970)
 
 ## GetRawText {#getrawtext}
+
+Gets the original input data backing this value, returning it as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ```csharp
 public string GetRawText()
 ```
-
-Gets the original input data backing this value, returning it as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ### Returns
 

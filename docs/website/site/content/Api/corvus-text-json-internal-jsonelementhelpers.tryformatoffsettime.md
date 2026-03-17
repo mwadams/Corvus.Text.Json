@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.TryFormatOffsetTime Method — Corvus.Text.Json.Inter
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L71)
 
 ## TryFormatOffsetTime {#tryformatoffsettime}
+
+Format a time as a UTF-8 string.
 
 ```csharp
 public static bool TryFormatOffsetTime(ref OffsetTime value, Span<byte> output, ref int bytesWritten)
 ```
-
-Format a time as a UTF-8 string.
 
 ### Parameters
 

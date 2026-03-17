@@ -7,15 +7,16 @@ Title: "Period.CreateComparer Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L473)
 
 ## CreateComparer {#createcomparer}
+
+Creates an [`IComparer`](https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1) for periods, using the given "base" local date/time.
 
 ```csharp
 public static IComparer<Period> CreateComparer(LocalDateTime baseDateTime)
 ```
-
-Creates an [`IComparer`](https://learn.microsoft.com/dotnet/api/system.collections.generic.icomparer-1) for periods, using the given "base" local date/time.
 
 ### Parameters
 

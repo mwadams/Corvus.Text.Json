@@ -7,15 +7,16 @@ Title: "Period.Equality Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L353)
 
 ## operator == {#operator}
+
+Implements the operator == (equality). See the type documentation for a description of equality semantics.
 
 ```csharp
 public static bool operator ==(Period left, Period right)
 ```
-
-Implements the operator == (equality). See the type documentation for a description of equality semantics.
 
 ### Parameters
 

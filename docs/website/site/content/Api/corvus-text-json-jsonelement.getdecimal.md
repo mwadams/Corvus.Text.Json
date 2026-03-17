@@ -7,15 +7,16 @@ Title: "JsonElement.GetDecimal Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1422)
 
 ## GetDecimal {#getdecimal}
+
+Gets the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
 
 ```csharp
 public decimal GetDecimal()
 ```
-
-Gets the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
 
 ### Returns
 

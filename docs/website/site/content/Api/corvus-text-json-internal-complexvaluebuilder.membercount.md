@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.MemberCount Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L85)
 
 ## MemberCount {#membercount}
+
+Gets the number of members (properties or items) added to the current object or array.
 
 ```csharp
 public int MemberCount { get; }
 ```
-
-Gets the number of members (properties or items) added to the current object or array.
 
 ### Returns
 

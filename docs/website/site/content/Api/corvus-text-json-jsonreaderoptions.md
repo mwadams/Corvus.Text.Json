@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonReaderOptions — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonReaderOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/JsonReaderOptions.cs#L16)
+
+Provides the ability for the user to define custom behavior when reading JSON.
+
 ```csharp
 public readonly struct JsonReaderOptions
 ```
-
-Provides the ability for the user to define custom behavior when reading JSON.
 
 ## Properties
 

@@ -7,7 +7,7 @@ Title: "JsonElementTensorHelpers.TryCopyTo Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -30,11 +30,13 @@ Title: "JsonElementTensorHelpers.TryCopyTo Method — Corvus.Text.Json.Internal"
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;long&gt;, ref int) {#trycopyto-ijsondocument-int-span-long-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L32)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<long> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -58,15 +60,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;ulong&gt;, ref int) {#trycopyto-ijsondocument-int-span-ulong-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L75)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<ulong> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -90,15 +101,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;int&gt;, ref int) {#trycopyto-ijsondocument-int-span-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L118)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<int> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -122,15 +142,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;uint&gt;, ref int) {#trycopyto-ijsondocument-int-span-uint-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L161)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<uint> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -154,15 +183,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;short&gt;, ref int) {#trycopyto-ijsondocument-int-span-short-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L204)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<short> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -186,15 +224,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;ushort&gt;, ref int) {#trycopyto-ijsondocument-int-span-ushort-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L247)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<ushort> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -218,15 +265,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;sbyte&gt;, ref int) {#trycopyto-ijsondocument-int-span-sbyte-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L290)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<sbyte> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -250,15 +306,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;byte&gt;, ref int) {#trycopyto-ijsondocument-int-span-byte-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L333)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<byte> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -282,15 +347,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;double&gt;, ref int) {#trycopyto-ijsondocument-int-span-double-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L376)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<double> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -314,15 +388,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;float&gt;, ref int) {#trycopyto-ijsondocument-int-span-float-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L419)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<float> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -346,15 +429,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;decimal&gt;, ref int) {#trycopyto-ijsondocument-int-span-decimal-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L462)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<decimal> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -378,15 +470,24 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;Int128&gt;, ref int) {#trycopyto-ijsondocument-int-span-int128-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L507)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<Int128> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -410,15 +511,23 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;UInt128&gt;, ref int) {#trycopyto-ijsondocument-int-span-uint128-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L550)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<UInt128> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -442,15 +551,23 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryCopyTo(IJsonDocument, int, Span&lt;Half&gt;, ref int) {#trycopyto-ijsondocument-int-span-half-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L593)
+
+Tries to copy the array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<Half> array, ref int written)
 ```
-
-Tries to copy the array data from the instance to the given array.
 
 ### Parameters
 
@@ -474,11 +591,11 @@ Tries to copy the array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+
+---
 

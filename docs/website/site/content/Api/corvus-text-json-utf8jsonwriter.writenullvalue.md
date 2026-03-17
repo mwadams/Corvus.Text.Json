@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.WriteNullValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.WriteValues.Literal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.Literal.cs#L47)
 
 ## WriteNullValue {#writenullvalue}
+
+Writes the JSON literal "null" as an element of a JSON array.
 
 ```csharp
 public void WriteNullValue()
 ```
-
-Writes the JSON literal "null" as an element of a JSON array.
 
 ### Exceptions
 

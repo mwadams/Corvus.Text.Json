@@ -7,15 +7,16 @@ Title: "NormalizedJsonNumber.Fractional Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [NormalizedJsonNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/NormalizedJsonNumber.cs#L41)
 
 ## Fractional {#fractional}
+
+The normalized fractional part of the original JSON representation of the number.
 
 ```csharp
 public ReadOnlySpan<byte> Fractional { get; }
 ```
-
-The normalized fractional part of the original JSON representation of the number.
 
 ### Returns
 

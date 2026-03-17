@@ -7,15 +7,16 @@ Title: "Utf8UriComponents.SerializationInfoString Field — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriComponents.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriComponents.cs#L15)
 
 ## SerializationInfoString {#serializationinfostring}
+
+This is used by GetObjectData and can also be used directly. Works for both absolute and relative URIs.
 
 ```csharp
 Utf8UriComponents SerializationInfoString
 ```
-
-This is used by GetObjectData and can also be used directly. Works for both absolute and relative URIs.
 
 ### Returns
 

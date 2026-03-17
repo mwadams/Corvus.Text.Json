@@ -7,7 +7,8 @@ Title: "Matcher<TMatch, TContext, TResult>.BeginInvoke Method — Corvus.Text.Js
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Matcher.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Matcher.cs#L23)
 
 ## BeginInvoke {#begininvoke}
 

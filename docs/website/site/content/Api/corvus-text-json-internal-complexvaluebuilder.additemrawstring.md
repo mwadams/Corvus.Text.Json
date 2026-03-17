@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.AddItemRawString Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L2381)
 
 ## AddItemRawString {#additemrawstring}
+
+Adds an item to the current array as a raw string.
 
 ```csharp
 public void AddItemRawString(ReadOnlySpan<byte> value, bool requiresUnescaping)
 ```
-
-Adds an item to the current array as a raw string.
 
 ### Parameters
 

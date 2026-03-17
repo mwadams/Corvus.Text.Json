@@ -7,15 +7,16 @@ Title: "JsonElement.GetInt128 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1101)
 
 ## GetInt128 {#getint128}
+
+Gets the current JSON number as a [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
 
 ```csharp
 public Int128 GetInt128()
 ```
-
-Gets the current JSON number as a [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
 
 ### Returns
 

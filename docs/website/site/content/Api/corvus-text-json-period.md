@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Period — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L58)
+
+Represents a period of time expressed in human chronological terms: hours, days, weeks, months and so on.
+
 ```csharp
 public readonly struct Period : IEquatable<Period>
 ```
-
-Represents a period of time expressed in human chronological terms: hours, days, weeks, months and so on.
 
 ## Remarks
 

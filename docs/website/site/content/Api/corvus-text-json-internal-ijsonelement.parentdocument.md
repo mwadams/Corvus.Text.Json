@@ -7,15 +7,16 @@ Title: "IJsonElement.ParentDocument Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonElement.cs#L20)
 
 ## ParentDocument {#parentdocument}
+
+Gets the parent document.
 
 ```csharp
 public abstract IJsonDocument ParentDocument { get; }
 ```
-
-Gets the parent document.
 
 ### Returns
 

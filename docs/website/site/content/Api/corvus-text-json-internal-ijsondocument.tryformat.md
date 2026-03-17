@@ -7,7 +7,7 @@ Title: "IJsonDocument.TryFormat Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.TryFormat Method — Corvus.Text.Json.Internal"
 
 ## TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L622)
+
+Formats the value to the provided destination span according to the specified format and format provider.
+
 ```csharp
 public abstract bool TryFormat(int index, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
 ```
-
-Formats the value to the provided destination span according to the specified format and format provider.
 
 ### Parameters
 
@@ -40,15 +42,24 @@ Formats the value to the provided destination span according to the specified fo
 
 `true` if the formatting was successful; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L622)
+
+Formats the value to the provided destination UTF-8 span according to the specified format and format provider.
+
 ```csharp
 public abstract bool TryFormat(int index, Span<byte> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
 ```
-
-Formats the value to the provided destination UTF-8 span according to the specified format and format provider.
 
 ### Parameters
 
@@ -66,12 +77,12 @@ Formats the value to the provided destination UTF-8 span according to the specif
 
 `true` if the formatting was successful; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

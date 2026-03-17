@@ -7,15 +7,16 @@ Title: "CodeGenNumericType.UInt32 Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L17)
 
 ## UInt32 {#uint32}
+
+Represents a 32-bit unsigned integer.
 
 ```csharp
 CodeGenNumericType UInt32
 ```
-
-Represents a 32-bit unsigned integer.
 
 ### Returns
 

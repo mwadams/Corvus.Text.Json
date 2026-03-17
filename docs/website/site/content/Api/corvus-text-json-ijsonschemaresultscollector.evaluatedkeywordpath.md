@@ -7,7 +7,7 @@ Title: "IJsonSchemaResultsCollector.EvaluatedKeywordPath Method — Corvus.Text.
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonSchemaResultsCollector.EvaluatedKeywordPath Method — Corvus.Text.
 
 ## EvaluatedKeywordPath(bool, JsonSchemaMessageProvider, JsonSchemaPathProvider) {#evaluatedkeywordpath-bool-jsonschemamessageprovider-jsonschemapathprovider}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L304)
+
+Updates the match state for the given evaluated keyword.
+
 ```csharp
 public abstract void EvaluatedKeywordPath(bool isMatch, JsonSchemaMessageProvider messageProvider, JsonSchemaPathProvider encodedKeywordPath)
 ```
-
-Updates the match state for the given evaluated keyword.
 
 ### Parameters
 
@@ -36,15 +38,24 @@ Updates the match state for the given evaluated keyword.
 
 This is used when the entity evaluated was a sub-element of the keyword (e.g. the index of the first name in the array for the `required` keyword, would produce `required/0` as the `encodedKeywordPath`).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## EvaluatedKeywordPath(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#evaluatedkeywordpath-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L74)
+
+Updates the match state for the given evaluated keyword.
+
 ```csharp
 public abstract void EvaluatedKeywordPath<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider, JsonSchemaPathProvider<TProviderContext> encodedKeywordPath)
 ```
-
-Updates the match state for the given evaluated keyword.
 
 ### Parameters
 
@@ -59,12 +70,12 @@ Updates the match state for the given evaluated keyword.
 
 This is used when the entity evaluated was a sub-element of the keyword (e.g. the index of the first name in the array for the `required` keyword, would produce `required/0` as the `encodedKeywordPath`).
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

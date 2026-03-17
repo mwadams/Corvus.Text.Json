@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetDateTime Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1810)
 
 ## TryGetDateTime {#trygetdatetime}
+
+Attempts to represent the current JSON string as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
 
 ```csharp
 public bool TryGetDateTime(ref DateTime value)
 ```
-
-Attempts to represent the current JSON string as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
 
 ### Parameters
 

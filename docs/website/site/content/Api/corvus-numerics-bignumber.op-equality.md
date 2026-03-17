@@ -7,15 +7,16 @@ Title: "BigNumber.Equality Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1590)
 
 ## operator == {#operator}
+
+Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are equal.
 
 ```csharp
 public static bool operator ==(BigNumber left, BigNumber right)
 ```
-
-Determines whether two [`BigNumber`](/api/corvus-numerics-bignumber.html) values are equal.
 
 ### Parameters
 

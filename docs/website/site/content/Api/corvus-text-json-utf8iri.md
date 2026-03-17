@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Utf8Iri — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L31)
+
+A UTF-8 IRI.
+
 ```csharp
 public readonly struct Utf8Iri
 ```
-
-A UTF-8 IRI.
 
 ## Remarks
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyNameMatchesRegularExpressionValue M
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L323)
 
 ## ExpectedPropertyNameMatchesRegularExpressionValue {#expectedpropertynamematchesregularexpressionvalue}
+
+Tries to write a message indicating that a property name was intended to match a regular expression.
 
 ```csharp
 public static bool ExpectedPropertyNameMatchesRegularExpressionValue(string expression, Span<byte> buffer, ref int written)
 ```
-
-Tries to write a message indicating that a property name was intended to match a regular expression.
 
 ### Parameters
 

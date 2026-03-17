@@ -7,7 +7,8 @@ Title: "FixedStringJsonDocument<T>.RootElement Property — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [FixedStringJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/FixedStringJsonDocument.cs#L59)
 
 ## RootElement {#rootelement}
 

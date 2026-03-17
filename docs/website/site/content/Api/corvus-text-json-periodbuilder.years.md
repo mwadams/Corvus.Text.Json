@@ -7,15 +7,16 @@ Title: "PeriodBuilder.Years Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L82)
 
 ## Years {#years}
+
+Gets or sets the number of years within the period.
 
 ```csharp
 public int Years { get; set; }
 ```
-
-Gets or sets the number of years within the period.
 
 ### Returns
 

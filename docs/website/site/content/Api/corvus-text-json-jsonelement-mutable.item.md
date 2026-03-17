@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.Item Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,6 +19,8 @@ Title: "JsonElement.Mutable.Item Property — Corvus.Text.Json"
 | [this\[string\]](#this-string) |  |
 
 ## this[int] {#this-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1921)
 
 ```csharp
 public JsonElement.Mutable this[int index] { get; }
@@ -34,9 +36,18 @@ public JsonElement.Mutable this[int index] { get; }
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## this[ReadOnlySpan&lt;byte&gt;] {#this-readonlyspan-byte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1948)
 
 ```csharp
 public JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
@@ -52,9 +63,18 @@ public JsonElement.Mutable this[ReadOnlySpan<byte> propertyName] { get; }
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## this[ReadOnlySpan&lt;char&gt;] {#this-readonlyspan-char}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1978)
 
 ```csharp
 public JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
@@ -70,9 +90,18 @@ public JsonElement.Mutable this[ReadOnlySpan<char> propertyName] { get; }
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## this[string] {#this-string}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L2011)
 
 ```csharp
 public JsonElement.Mutable this[string propertyName] { get; }
@@ -88,12 +117,12 @@ public JsonElement.Mutable this[string propertyName] { get; }
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

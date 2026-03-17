@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchIdnEmail Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L465)
 
 ## MatchIdnEmail {#matchidnemail}
+
+Validates that a string value is a valid internationalized domain name (IDN) email address format.
 
 ```csharp
 public static bool MatchIdnEmail(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value is a valid internationalized domain name (IDN) email address format.
 
 ### Parameters
 

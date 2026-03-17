@@ -7,15 +7,16 @@ Title: "PeriodBuilder.Ticks Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L70)
 
 ## Ticks {#ticks}
+
+Gets or sets the number of ticks within the period.
 
 ```csharp
 public long Ticks { get; set; }
 ```
-
-Gets or sets the number of ticks within the period.
 
 ### Returns
 

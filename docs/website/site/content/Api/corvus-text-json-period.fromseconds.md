@@ -7,15 +7,16 @@ Title: "Period.FromSeconds Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L429)
 
 ## FromSeconds {#fromseconds}
+
+Creates a period representing the specified number of seconds.
 
 ```csharp
 public static Period FromSeconds(long seconds)
 ```
-
-Creates a period representing the specified number of seconds.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "JsonElement.ObjectBuilder.RemoveProperty Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,6 +18,8 @@ Title: "JsonElement.ObjectBuilder.RemoveProperty Method — Corvus.Text.Json"
 | [RemoveProperty(string)](#removeproperty-string) |  |
 
 ## RemoveProperty(ReadOnlySpan&lt;byte&gt;, bool, bool) {#removeproperty-readonlyspan-byte-bool-bool}
+
+**Source:** [JsonElement.ObjectBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ObjectBuilder.cs#L1626)
 
 ```csharp
 public void RemoveProperty(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
@@ -31,9 +33,18 @@ public void RemoveProperty(ReadOnlySpan<byte> propertyName, bool escapeName, boo
 | `escapeName` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  *(optional)* |
 | `nameRequiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## RemoveProperty(ReadOnlySpan&lt;char&gt;) {#removeproperty-readonlyspan-char}
+
+**Source:** [JsonElement.ObjectBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ObjectBuilder.cs#L1635)
 
 ```csharp
 public void RemoveProperty(ReadOnlySpan<char> propertyName)
@@ -45,9 +56,18 @@ public void RemoveProperty(ReadOnlySpan<char> propertyName)
 |------|------|-------------|
 | `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## RemoveProperty(string) {#removeproperty-string}
+
+**Source:** [JsonElement.ObjectBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ObjectBuilder.cs#L1644)
 
 ```csharp
 public void RemoveProperty(string propertyName)
@@ -59,12 +79,12 @@ public void RemoveProperty(string propertyName)
 |------|------|-------------|
 | `propertyName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

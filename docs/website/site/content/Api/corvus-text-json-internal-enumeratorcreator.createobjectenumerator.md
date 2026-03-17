@@ -7,15 +7,16 @@ Title: "EnumeratorCreator.CreateObjectEnumerator Method — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [EnumeratorCreator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/EnumeratorCreator.cs#L13)
 
 ## CreateObjectEnumerator {#createobjectenumerator}
+
+Creates an enumerator for the properties of a JSON object.
 
 ```csharp
 public static ObjectEnumerator<T> CreateObjectEnumerator<T>(IJsonDocument parent, int index)
 ```
-
-Creates an enumerator for the properties of a JSON object.
 
 ### Type Parameters
 

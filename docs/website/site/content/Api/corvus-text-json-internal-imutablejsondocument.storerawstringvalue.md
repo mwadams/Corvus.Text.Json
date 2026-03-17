@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.StoreRawStringValue Method — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L141)
 
 ## StoreRawStringValue {#storerawstringvalue}
+
+Stores a raw string value in the document.
 
 ```csharp
 public abstract int StoreRawStringValue(ReadOnlySpan<byte> value)
 ```
-
-Stores a raw string value in the document.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetUtf8JsonString Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L198)
 
 ## GetUtf8JsonString {#getutf8jsonstring}
+
+Gets the UTF-8 JSON string value of the element at the specified index.
 
 ```csharp
 public abstract UnescapedUtf8JsonString GetUtf8JsonString(int index, JsonTokenType expectedType)
 ```
-
-Gets the UTF-8 JSON string value of the element at the specified index.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonElement.ValueKind Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L64)
 
 ## ValueKind {#valuekind}
+
+The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value is.
 
 ```csharp
 public JsonValueKind ValueKind { get; }
 ```
-
-The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value is.
 
 ### Returns
 

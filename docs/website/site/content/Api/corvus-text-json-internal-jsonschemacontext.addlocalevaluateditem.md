@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.AddLocalEvaluatedItem Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L913)
 
 ## AddLocalEvaluatedItem {#addlocalevaluateditem}
+
+Adds an item at the specified index to the local evaluated items collection.
 
 ```csharp
 public void AddLocalEvaluatedItem(int index)
 ```
-
-Adds an item at the specified index to the local evaluated items collection.
 
 ### Parameters
 

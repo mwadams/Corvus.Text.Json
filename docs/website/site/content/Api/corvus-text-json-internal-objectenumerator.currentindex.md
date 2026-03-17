@@ -7,15 +7,16 @@ Title: "ObjectEnumerator.CurrentIndex Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ObjectEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ObjectEnumerator.cs#L49)
 
 ## CurrentIndex {#currentindex}
+
+Gets the current index in the document.
 
 ```csharp
 public int CurrentIndex { get; }
 ```
-
-Gets the current index in the document.
 
 ### Returns
 

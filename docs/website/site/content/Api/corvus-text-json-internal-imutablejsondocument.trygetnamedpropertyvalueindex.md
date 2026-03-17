@@ -7,7 +7,7 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValueIndex Method — Corvus.Tex
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValueIndex Method — Corvus.Tex
 
 ## TryGetNamedPropertyValueIndex(ref MetadataDb, int, int, ReadOnlySpan&lt;byte&gt;, ref int) {#trygetnamedpropertyvalueindex-ref-metadatadb-int-int-readonlyspan-byte-ref-int}
 
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L52)
+
+Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
+
 ```csharp
 public abstract bool TryGetNamedPropertyValueIndex(ref MetadataDb parsedData, int startIndex, int endIndex, ReadOnlySpan<byte> propertyName, ref int valueIndex)
 ```
-
-Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
 
 ### Parameters
 
@@ -41,15 +43,24 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 
 `true` if the property with the given name is found.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;char&gt;, ref int) {#trygetnamedpropertyvalueindex-int-readonlyspan-char-ref-int}
 
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L52)
+
+Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
+
 ```csharp
 public abstract bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<char> propertyName, ref int valueIndex)
 ```
-
-Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
 
 ### Parameters
 
@@ -65,15 +76,24 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 
 `true` if the property with the given name is found.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetNamedPropertyValueIndex(int, ReadOnlySpan&lt;byte&gt;, ref int) {#trygetnamedpropertyvalueindex-int-readonlyspan-byte-ref-int}
 
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L52)
+
+Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
+
 ```csharp
 public abstract bool TryGetNamedPropertyValueIndex(int index, ReadOnlySpan<byte> propertyName, ref int valueIndex)
 ```
-
-Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html).
 
 ### Parameters
 
@@ -89,12 +109,12 @@ Gets the named property value from a specific [`MetadataDb`](/api/corvus-text-js
 
 `true` if the property with the given name is found.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

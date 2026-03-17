@@ -145,14 +145,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (body) body.classList.remove('is-collapsed');
       }
 
-      // If this is a type link with a member sub-tree, expand member categories
-      const memberTree = link.closest('.sidebar__item')?.querySelector('.sidebar__members');
+      // If this is a type link, expand its member sub-tree
+      const typeItem = link.closest('.sidebar__item');
+      const memberTree = typeItem?.querySelector('.sidebar__members');
       if (memberTree) {
+        memberTree.removeAttribute('hidden');
         memberTree.querySelectorAll('.sidebar__cat-toggle.is-collapsed').forEach((toggle) => {
           toggle.classList.remove('is-collapsed');
           const catBody = toggle.nextElementSibling;
           if (catBody) catBody.classList.remove('is-collapsed');
         });
+      }
+
+      // If this is a member link, also expand the parent type's member tree
+      if (link.classList.contains('sidebar__link--member')) {
+        const parentTypeItem = link.closest('.sidebar__item')?.parentElement?.closest('.sidebar__item');
+        if (parentTypeItem) {
+          const parentTypeLink = parentTypeItem.querySelector(':scope > .sidebar__link--type');
+          if (parentTypeLink) parentTypeLink.classList.add('is-current');
+          const parentMemberTree = parentTypeItem.querySelector(':scope > .sidebar__members');
+          if (parentMemberTree) {
+            parentMemberTree.removeAttribute('hidden');
+            // Expand the category containing the active member
+            const activeCat = link.closest('.sidebar__cat-section');
+            if (activeCat) {
+              const catToggle = activeCat.querySelector('.sidebar__cat-toggle');
+              const catBody = activeCat.querySelector('.sidebar__cat-body');
+              if (catToggle) catToggle.classList.remove('is-collapsed');
+              if (catBody) catBody.classList.remove('is-collapsed');
+            }
+          }
+        }
       }
 
       // Scroll into view

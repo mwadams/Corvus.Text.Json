@@ -7,7 +7,7 @@ Title: "JsonEncodedText.Equals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonEncodedText.Equals Method — Corvus.Text.Json"
 
 ## Equals(JsonEncodedText) {#equals-jsonencodedtext}
 
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L109)
+
+Determines whether this instance and another specified [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance have the same value.
+
 ```csharp
 public bool Equals(JsonEncodedText other)
 ```
-
-Determines whether this instance and another specified [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance have the same value.
 
 ### Parameters
 
@@ -42,15 +44,24 @@ Determines whether this instance and another specified [`JsonEncodedText`](/api/
 
 Default instances of [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) are treated as equal.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Equals(object) {#equals-object}
 
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L127)
+
+Determines whether this instance and a specified object, which must also be a [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance, have the same value.
+
 ```csharp
 public override bool Equals(object obj)
 ```
-
-Determines whether this instance and a specified object, which must also be a [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) instance, have the same value.
 
 ### Parameters
 
@@ -66,12 +77,12 @@ Determines whether this instance and a specified object, which must also be a [`
 
 If `obj` is null, the method returns false.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "Utf8UriReferenceValue.UriReference Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReferenceValue.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Utf8UriReferenceValue.cs#L42)
 
 ## UriReference {#urireference}
+
+Gets the UTF-8 URI reference value.
 
 ```csharp
 public Utf8UriReference UriReference { get; }
 ```
-
-Gets the UTF-8 URI reference value.
 
 ### Returns
 

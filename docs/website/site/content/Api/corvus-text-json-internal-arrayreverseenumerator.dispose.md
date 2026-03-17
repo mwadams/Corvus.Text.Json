@@ -7,15 +7,16 @@ Title: "ArrayReverseEnumerator.Dispose Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayReverseEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ArrayReverseEnumerator.cs#L59)
 
 ## Dispose {#dispose}
+
+Releases resources used by the enumerator.
 
 ```csharp
 public void Dispose()
 ```
-
-Releases resources used by the enumerator.
 
 ## Applies To
 

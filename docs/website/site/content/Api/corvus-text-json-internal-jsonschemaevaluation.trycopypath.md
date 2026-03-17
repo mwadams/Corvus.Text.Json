@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.TryCopyPath Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L155)
 
 ## TryCopyPath {#trycopypath}
+
+Tries to copy the path to the output buffer.
 
 ```csharp
 public static bool TryCopyPath(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, ref int written)
 ```
-
-Tries to copy the path to the output buffer.
 
 ### Parameters
 

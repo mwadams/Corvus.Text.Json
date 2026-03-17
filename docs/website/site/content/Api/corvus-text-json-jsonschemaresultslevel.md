@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonSchemaResultsLevel — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaResultsLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/JsonSchemaResultsLevel.cs#L14)
+
+The level of result to collect for an [`IJsonSchemaResultsCollector`](/api/corvus-text-json-ijsonschemaresultscollector.html).
+
 ```csharp
 public enum JsonSchemaResultsLevel : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-The level of result to collect for an [`IJsonSchemaResultsCollector`](/api/corvus-text-json-ijsonschemaresultscollector.html).
 
 ## Implements
 

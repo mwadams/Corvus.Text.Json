@@ -7,7 +7,7 @@ Title: "Utf8Iri.TryMakeRelative Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "Utf8Iri.TryMakeRelative Method — Corvus.Text.Json"
 
 ## TryMakeRelative(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8IriReference) {#trymakerelative-ref-utf8iri-span-byte-ref-utf8irireference}
 
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L335)
+
+Makes a relative IRI reference from the current (base) IRI to the target IRI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target IRI is returned.
+
 ```csharp
 public bool TryMakeRelative(ref Utf8Iri targetIri, Span<byte> buffer, ref Utf8IriReference result)
 ```
-
-Makes a relative IRI reference from the current (base) IRI to the target IRI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target IRI is returned.
 
 ### Parameters
 
@@ -38,15 +40,24 @@ Makes a relative IRI reference from the current (base) IRI to the target IRI. If
 
 `true` if the result was successfully written; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryMakeRelative(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8IriReference) {#trymakerelative-ref-utf8uri-span-byte-ref-utf8irireference}
 
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L356)
+
+Makes a relative IRI reference from the current (base) IRI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.
+
 ```csharp
 public bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8IriReference result)
 ```
-
-Makes a relative IRI reference from the current (base) IRI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.
 
 ### Parameters
 
@@ -62,12 +73,12 @@ Makes a relative IRI reference from the current (base) IRI to the target URI. If
 
 `true` if the result was successfully written; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

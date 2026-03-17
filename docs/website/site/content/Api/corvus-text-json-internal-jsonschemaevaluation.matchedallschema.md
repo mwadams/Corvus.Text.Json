@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchedAllSchema Field — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## MatchedAllSchema {#matchedallschema}
+
+Message provider for validation errors when all schemas match in a composition constraint.
 
 ```csharp
 JsonSchemaMessageProvider MatchedAllSchema
 ```
-
-Message provider for validation errors when all schemas match in a composition constraint.
 
 ### Returns
 

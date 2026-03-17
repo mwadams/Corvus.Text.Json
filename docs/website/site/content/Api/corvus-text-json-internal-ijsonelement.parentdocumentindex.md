@@ -7,15 +7,16 @@ Title: "IJsonElement.ParentDocumentIndex Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonElement.cs#L25)
 
 ## ParentDocumentIndex {#parentdocumentindex}
+
+Gets the handle identifying the [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) in its parent document.
 
 ```csharp
 public abstract int ParentDocumentIndex { get; }
 ```
-
-Gets the handle identifying the [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) in its parent document.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "ObjectEnumerator<TValue>.Current Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ObjectEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ObjectEnumerator{T}.cs#L48)
 
 ## Current {#current}
+
+Gets the current element in the enumeration.
 
 ```csharp
 public JsonProperty<TValue> Current { get; }
 ```
-
-Gets the current element in the enumeration.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonElement.GetDouble Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1303)
 
 ## GetDouble {#getdouble}
+
+Gets the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
 
 ```csharp
 public double GetDouble()
 ```
-
-Gets the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
 
 ### Returns
 

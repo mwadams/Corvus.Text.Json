@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchItemCountGreaterThanOrEquals Method — Corvus
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L301)
 
 ## MatchItemCountGreaterThanOrEquals {#matchitemcountgreaterthanorequals}
+
+Validates that a item count is greater than or equal to the given value.
 
 ```csharp
 public static bool MatchItemCountGreaterThanOrEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a item count is greater than or equal to the given value.
 
 ### Parameters
 

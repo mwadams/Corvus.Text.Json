@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchedIfForThen Field — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## MatchedIfForThen {#matchedifforthen}
+
+Message provider for validation errors when a value matches a binary or ternary if to go on to match a then clause.
 
 ```csharp
 JsonSchemaMessageProvider MatchedIfForThen
 ```
-
-Message provider for validation errors when a value matches a binary or ternary if to go on to match a then clause.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "ValidationResult.Valid Property — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationResult.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationResult.cs#L66)
 
 ## Valid {#valid}
+
+Gets a value indicating whether the validation result is valid.
 
 ```csharp
 public bool Valid { get; }
 ```
-
-Gets a value indicating whether the validation result is valid.
 
 ### Returns
 

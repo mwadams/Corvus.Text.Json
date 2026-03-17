@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.RequiredPropertyPresent Method — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L377)
 
 ## RequiredPropertyPresent {#requiredpropertypresent}
+
+Creates a message indicating that a required property is present.
 
 ```csharp
 public static bool RequiredPropertyPresent(ReadOnlySpan<byte> propertyName, Span<byte> buffer, ref int written)
 ```
-
-Creates a message indicating that a required property is present.
 
 ### Parameters
 

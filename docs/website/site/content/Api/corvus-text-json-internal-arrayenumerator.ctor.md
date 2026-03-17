@@ -7,15 +7,16 @@ Title: "ArrayEnumerator Constructors — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ArrayEnumerator.cs#L35)
 
 ## ArrayEnumerator {#arrayenumerator}
+
+Initializes a new instance of the [`ArrayEnumerator`](/api/corvus-text-json-internal-arrayenumerator.html) struct.
 
 ```csharp
 public ArrayEnumerator(IJsonDocument targetDocument, int initialIndex)
 ```
-
-Initializes a new instance of the [`ArrayEnumerator`](/api/corvus-text-json-internal-arrayenumerator.html) struct.
 
 ### Parameters
 

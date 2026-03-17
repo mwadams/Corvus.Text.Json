@@ -7,15 +7,16 @@ Title: "JsonCommentHandling.Disallow Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonCommentHandling.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Common/JsonCommentHandling.cs#L8)
 
 ## Disallow {#disallow}
+
+By default, do no allow comments within the JSON input. Comments are treated as invalid JSON if found and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown.
 
 ```csharp
 JsonCommentHandling Disallow
 ```
-
-By default, do no allow comments within the JSON input. Comments are treated as invalid JSON if found and a [`JsonException`](/api/corvus-text-json-jsonexception.html) is thrown.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "BigNumber.Normalize Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L214)
 
 ## Normalize {#normalize}
+
+Returns a normalized copy of this number with trailing zeros removed from the significand.
 
 ```csharp
 public BigNumber Normalize()
 ```
-
-Returns a normalized copy of this number with trailing zeros removed from the significand.
 
 ### Returns
 

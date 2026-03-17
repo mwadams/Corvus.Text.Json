@@ -7,15 +7,16 @@ Title: "Utf8UriReference.IsValid Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L124)
 
 ## IsValid {#isvalid}
+
+Gets a value indicating whether this is a valid reference.
 
 ```csharp
 public bool IsValid { get; }
 ```
-
-Gets a value indicating whether this is a valid reference.
 
 ### Returns
 

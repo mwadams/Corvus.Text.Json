@@ -7,15 +7,16 @@ Title: "JsonWorkspace.ReturnWriterAndBuffer Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L98)
 
 ## ReturnWriterAndBuffer {#returnwriterandbuffer}
+
+Returns a rented UTF-8 JSON writer and buffer writer to the pool.
 
 ```csharp
 public void ReturnWriterAndBuffer(Utf8JsonWriter writer, IByteBufferWriter bufferWriter)
 ```
-
-Returns a rented UTF-8 JSON writer and buffer writer to the pool.
 
 ### Parameters
 

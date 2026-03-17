@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Utf8UriComponents — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriComponents.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriComponents.cs#L15)
+
+Specifies the parts of a URI that should be included when retrieving URI components.
+
 ```csharp
 public enum Utf8UriComponents : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-Specifies the parts of a URI that should be included when retrieving URI components.
 
 ## Implements
 

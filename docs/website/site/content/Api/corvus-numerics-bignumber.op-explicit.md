@@ -7,7 +7,7 @@ Title: "BigNumber.Explicit Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -21,11 +21,13 @@ Title: "BigNumber.Explicit Operator — Corvus.Numerics"
 
 ## explicit operator decimal(BigNumber) {#explicit-operator-decimal-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1927)
+
+Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
+
 ```csharp
 public static explicit operator decimal(BigNumber value)
 ```
-
-Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 
 [`decimal`](https://learn.microsoft.com/dotnet/api/system.decimal)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## explicit operator double(BigNumber) {#explicit-operator-double-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1927)
+
+Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
+
 ```csharp
 public static explicit operator double(BigNumber value)
 ```
-
-Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
 
 ### Parameters
 
@@ -57,15 +68,24 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 
 [`double`](https://learn.microsoft.com/dotnet/api/system.double)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## explicit operator float(BigNumber) {#explicit-operator-float-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1927)
+
+Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
+
 ```csharp
 public static explicit operator float(BigNumber value)
 ```
-
-Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
 
 ### Parameters
 
@@ -77,15 +97,24 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 
 [`float`](https://learn.microsoft.com/dotnet/api/system.single)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## explicit operator long(BigNumber) {#explicit-operator-long-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1927)
+
+Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
+
 ```csharp
 public static explicit operator long(BigNumber value)
 ```
-
-Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
 
 ### Parameters
 
@@ -97,15 +126,24 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 
 [`long`](https://learn.microsoft.com/dotnet/api/system.int64)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## explicit operator ulong(BigNumber) {#explicit-operator-ulong-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1927)
+
+Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
+
 ```csharp
 public static explicit operator ulong(BigNumber value)
 ```
-
-Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
 
 ### Parameters
 
@@ -117,12 +155,12 @@ Explicitly converts a [`BigNumber`](/api/corvus-numerics-bignumber.html) to a [`
 
 [`ulong`](https://learn.microsoft.com/dotnet/api/system.uint64)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

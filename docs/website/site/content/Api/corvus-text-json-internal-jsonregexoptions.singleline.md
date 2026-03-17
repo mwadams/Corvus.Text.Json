@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.Singleline Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## Singleline {#singleline}
+
+Use single-line mode, where the period (.) matches every character (instead of every character except \n).
 
 ```csharp
 JsonRegexOptions Singleline
 ```
-
-Use single-line mode, where the period (.) matches every character (instead of every character except \n).
 
 ### Returns
 

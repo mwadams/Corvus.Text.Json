@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.TryFormatIriReference Method — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElementHelpers.TryFormatIriReference Method — Corvus.Text.Json.Int
 | [TryFormatIriReference(Utf8IriReference, bool, Span&lt;char&gt;, ref int)](#tryformatirireference-utf8irireference-bool-span-char-ref-int) |  |
 
 ## TryFormatIriReference(Utf8IriReference, bool, ref string) {#tryformatirireference-utf8irireference-bool-ref-string}
+
+**Source:** [JsonElementHelpers.Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Uri.cs#L300)
 
 ```csharp
 public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isDisplay, ref string result)
@@ -34,9 +36,18 @@ public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isD
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryFormatIriReference(Utf8IriReference, bool, Span&lt;char&gt;, ref int) {#tryformatirireference-utf8irireference-bool-span-char-ref-int}
+
+**Source:** [JsonElementHelpers.Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Uri.cs#L349)
 
 ```csharp
 public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isDisplay, Span<char> destination, ref int charsWritten)
@@ -55,12 +66,12 @@ public static bool TryFormatIriReference(Utf8IriReference iriReference, bool isD
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.TryParseOffsetTime Method — Corvus.Text.Json.Intern
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L184)
 
 ## TryParseOffsetTime {#tryparseoffsettime}
+
+Parse a time from a string for the `time` format.
 
 ```csharp
 public static bool TryParseOffsetTime(ReadOnlySpan<byte> text, ref OffsetTime value)
 ```
-
-Parse a time from a string for the `time` format.
 
 ### Parameters
 

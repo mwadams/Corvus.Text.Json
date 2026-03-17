@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchInt128 Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L774)
 
 ## MatchInt128 {#matchint128}
+
+Matches a JSON number against the Int128 type constraint, validating it as a 128-bit signed integer.
 
 ```csharp
 public static bool MatchInt128(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number against the Int128 type constraint, validating it as a 128-bit signed integer.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "IMutableJsonDocument.EscapeAndStoreRawStringValue Method — Corvus.Text
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IMutableJsonDocument.EscapeAndStoreRawStringValue Method — Corvus.Text
 
 ## EscapeAndStoreRawStringValue(ReadOnlySpan&lt;char&gt;, ref bool) {#escapeandstorerawstringvalue-readonlyspan-char-ref-bool}
 
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L126)
+
+Escapes and stores a raw string value in the document.
+
 ```csharp
 public abstract int EscapeAndStoreRawStringValue(ReadOnlySpan<char> value, ref bool requiredEscaping)
 ```
-
-Escapes and stores a raw string value in the document.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Escapes and stores a raw string value in the document.
 
 The index of the stored value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## EscapeAndStoreRawStringValue(ReadOnlySpan&lt;byte&gt;, ref bool) {#escapeandstorerawstringvalue-readonlyspan-byte-ref-bool}
 
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L126)
+
+Escapes and stores a raw string value in the document.
+
 ```csharp
 public abstract int EscapeAndStoreRawStringValue(ReadOnlySpan<byte> value, ref bool requiredEscaping)
 ```
-
-Escapes and stores a raw string value in the document.
 
 ### Parameters
 
@@ -60,12 +71,12 @@ Escapes and stores a raw string value in the document.
 
 The index of the stored value.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

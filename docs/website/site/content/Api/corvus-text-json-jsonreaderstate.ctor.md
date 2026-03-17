@@ -7,15 +7,16 @@ Title: "JsonReaderState Constructors — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonReaderState.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/JsonReaderState.cs#L57)
 
 ## JsonReaderState {#jsonreaderstate}
+
+Constructs a new [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) instance.
 
 ```csharp
 public JsonReaderState(JsonReaderOptions options)
 ```
-
-Constructs a new [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) instance.
 
 ### Parameters
 

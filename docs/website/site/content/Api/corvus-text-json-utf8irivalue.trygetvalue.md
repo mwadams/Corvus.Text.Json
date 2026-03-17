@@ -7,15 +7,16 @@ Title: "Utf8IriValue.TryGetValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriValue.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Utf8IriValue.cs#L20)
 
 ## TryGetValue {#trygetvalue}
+
+Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html).
 
 ```csharp
 public static bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8IriValue value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Utf8IriValue`](/api/corvus-text-json-utf8irivalue.html).
 
 ### Type Parameters
 

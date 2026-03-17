@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.GetDateTimeOffset Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L206)
 
 ## GetDateTimeOffset {#getdatetimeoffset}
+
+Parses the current JSON token value from the source as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value. Throws exceptions otherwise.
 
 ```csharp
 public DateTimeOffset GetDateTimeOffset()
 ```
-
-Parses the current JSON token value from the source as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value. Throws exceptions otherwise.
 
 ### Returns
 

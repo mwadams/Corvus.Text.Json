@@ -7,15 +7,16 @@ Title: "JsonEncodedText.EncodedUtf8Bytes Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L39)
 
 ## EncodedUtf8Bytes {#encodedutf8bytes}
+
+Returns the UTF-8 encoded representation of the pre-encoded JSON text.
 
 ```csharp
 public ReadOnlySpan<byte> EncodedUtf8Bytes { get; }
 ```
-
-Returns the UTF-8 encoded representation of the pre-encoded JSON text.
 
 ### Returns
 

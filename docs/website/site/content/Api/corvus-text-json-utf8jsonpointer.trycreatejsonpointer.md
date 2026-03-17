@@ -7,15 +7,16 @@ Title: "Utf8JsonPointer.TryCreateJsonPointer Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonPointer.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8JsonPointer.cs#L36)
 
 ## TryCreateJsonPointer {#trycreatejsonpointer}
+
+Tries to create a new UTF-8 JSON Pointer from the specified UTF-8 bytes.
 
 ```csharp
 public static bool TryCreateJsonPointer(ReadOnlySpan<byte> jsonPointer, ref Utf8JsonPointer utf8JsonPointer)
 ```
-
-Tries to create a new UTF-8 JSON Pointer from the specified UTF-8 bytes.
 
 ### Parameters
 

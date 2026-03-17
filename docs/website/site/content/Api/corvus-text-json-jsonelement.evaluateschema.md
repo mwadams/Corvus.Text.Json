@@ -7,15 +7,16 @@ Title: "JsonElement.EvaluateSchema Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.JsonSchema.cs#L28)
 
 ## EvaluateSchema {#evaluateschema}
+
+Evaluates the JSON Schema for this element.
 
 ```csharp
 public bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 ```
-
-Evaluates the JSON Schema for this element.
 
 ### Parameters
 

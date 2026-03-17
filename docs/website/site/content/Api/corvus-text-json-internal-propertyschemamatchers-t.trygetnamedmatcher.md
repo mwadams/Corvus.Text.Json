@@ -7,15 +7,16 @@ Title: "PropertySchemaMatchers<T>.TryGetNamedMatcher Method — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PropertySchemaMatchers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/PropertySchemaMatchers.cs#L337)
 
 ## TryGetNamedMatcher {#trygetnamedmatcher}
+
+Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup.
 
 ```csharp
 public bool TryGetNamedMatcher(ReadOnlySpan<byte> unescapedUtf8Name, ref T matcher)
 ```
-
-Attempts to find the matcher for the named property value in the property map using efficient hash-based lookup.
 
 ### Parameters
 

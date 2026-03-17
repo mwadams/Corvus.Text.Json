@@ -7,7 +7,8 @@ Title: "SimpleTypesBacking.Writer<T>.BeginInvoke Method — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [SimpleTypesBacking.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/SimpleTypesBacking.cs#L33)
 
 ## BeginInvoke {#begininvoke}
 

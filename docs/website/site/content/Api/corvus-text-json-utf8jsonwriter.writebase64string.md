@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteBase64String Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "Utf8JsonWriter.WriteBase64String Method — Corvus.Text.Json"
 
 ## WriteBase64String(JsonEncodedText, ReadOnlySpan&lt;byte&gt;) {#writebase64string-jsonencodedtext-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Bytes.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Bytes.cs#L28)
+
+Writes the pre-encoded property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteBase64String(JsonEncodedText propertyName, ReadOnlySpan<byte> bytes)
 ```
-
-Writes the pre-encoded property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -39,15 +41,24 @@ Writes the pre-encoded property name and raw bytes value (as a Base64 encoded JS
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteBase64String(string, ReadOnlySpan&lt;byte&gt;) {#writebase64string-string-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Bytes.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Bytes.cs#L56)
+
+Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteBase64String(string propertyName, ReadOnlySpan<byte> bytes)
 ```
-
-Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -68,15 +79,24 @@ Writes the property name and raw bytes value (as a Base64 encoded JSON string) a
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteBase64String(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#writebase64string-readonlyspan-char-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Bytes.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Bytes.cs#L76)
+
+Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteBase64String(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> bytes)
 ```
-
-Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -96,15 +116,24 @@ Writes the property name and raw bytes value (as a Base64 encoded JSON string) a
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteBase64String(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#writebase64string-readonlyspan-byte-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Bytes.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Bytes.cs#L100)
+
+Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteBase64String(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> bytes)
 ```
-
-Writes the property name and raw bytes value (as a Base64 encoded JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -124,12 +153,12 @@ Writes the property name and raw bytes value (as a Base64 encoded JSON string) a
 
 The property name is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

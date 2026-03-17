@@ -7,7 +7,7 @@ Title: "IJsonDocument.ToString Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.ToString Method — Corvus.Text.Json.Internal"
 
 ## ToString(int) {#tostring-int}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L51)
+
+Converts the element at the specified index to a string.
+
 ```csharp
 public abstract string ToString(int index)
 ```
-
-Converts the element at the specified index to a string.
 
 ### Parameters
 
@@ -36,15 +38,24 @@ Converts the element at the specified index to a string.
 
 The string representation of the element.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ToString(int, string, IFormatProvider) {#tostring-int-string-iformatprovider}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L51)
+
+Gets the display string representation of the element at the specified index according to the specified format and format provider.
+
 ```csharp
 public abstract string ToString(int index, string format, IFormatProvider formatProvider)
 ```
-
-Gets the display string representation of the element at the specified index according to the specified format and format provider.
 
 ### Parameters
 
@@ -60,12 +71,12 @@ Gets the display string representation of the element at the specified index acc
 
 The display string representation of the element.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

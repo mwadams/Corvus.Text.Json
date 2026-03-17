@@ -7,15 +7,16 @@ Title: "Utf8Iri.CreateIri Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L188)
 
 ## CreateIri {#createiri}
+
+Creates a new UTF-8 IRI from the specified IRI bytes.
 
 ```csharp
 public static Utf8Iri CreateIri(ReadOnlySpan<byte> iri)
 ```
-
-Creates a new UTF-8 IRI from the specified IRI bytes.
 
 ### Parameters
 

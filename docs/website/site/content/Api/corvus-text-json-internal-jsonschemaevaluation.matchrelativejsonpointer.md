@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchRelativeJsonPointer Method — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L625)
 
 ## MatchRelativeJsonPointer {#matchrelativejsonpointer}
+
+Validates that a string value is a valid relative JSON Pointer format.
 
 ```csharp
 public static bool MatchRelativeJsonPointer(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value is a valid relative JSON Pointer format.
 
 ### Parameters
 

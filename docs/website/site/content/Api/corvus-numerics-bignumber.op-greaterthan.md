@@ -7,15 +7,16 @@ Title: "BigNumber.GreaterThan Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1610)
 
 ## operator &gt; {#operator}
+
+Determines whether one value is greater than another.
 
 ```csharp
 public static bool operator >(BigNumber left, BigNumber right)
 ```
-
-Determines whether one value is greater than another.
 
 ### Parameters
 

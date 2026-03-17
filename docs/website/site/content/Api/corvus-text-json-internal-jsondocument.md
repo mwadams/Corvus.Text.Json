@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonDocument — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/JsonDocument.cs#L34)
+
+Base class for JSON document implementations providing common functionality for parsing and accessing JSON data.
+
 ```csharp
 public abstract class JsonDocument
 ```
-
-Base class for JSON document implementations providing common functionality for parsing and accessing JSON data.
 
 ## Inheritance
 

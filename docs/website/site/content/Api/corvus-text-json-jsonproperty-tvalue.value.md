@@ -7,15 +7,16 @@ Title: "JsonProperty<TValue>.Value Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L61)
 
 ## Value {#value}
+
+The value of this property.
 
 ```csharp
 public TValue Value { get; }
 ```
-
-The value of this property.
 
 ### Returns
 

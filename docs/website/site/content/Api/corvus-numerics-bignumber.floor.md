@@ -7,15 +7,16 @@ Title: "BigNumber.Floor Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2174)
 
 ## Floor {#floor}
+
+Returns the largest integer less than or equal to the specified number.
 
 ```csharp
 public static BigNumber Floor(BigNumber value)
 ```
-
-Returns the largest integer less than or equal to the specified number.
 
 ### Parameters
 

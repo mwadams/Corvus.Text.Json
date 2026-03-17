@@ -7,15 +7,16 @@ Title: "Utf8Iri.Query Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L151)
 
 ## Query {#query}
+
+Gets the query component of the IRI.
 
 ```csharp
 public ReadOnlySpan<byte> Query { get; }
 ```
-
-Gets the query component of the IRI.
 
 ### Returns
 

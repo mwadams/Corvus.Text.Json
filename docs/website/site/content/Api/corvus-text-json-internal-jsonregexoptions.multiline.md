@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.Multiline Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## Multiline {#multiline}
+
+Use multiline mode, where ^ and $ match the beginning and end of each line (instead of the beginning and end of the input string).
 
 ```csharp
 JsonRegexOptions Multiline
 ```
-
-Use multiline mode, where ^ and $ match the beginning and end of each line (instead of the beginning and end of the input string).
 
 ### Returns
 

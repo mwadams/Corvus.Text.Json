@@ -7,15 +7,16 @@ Title: "JsonMarshal.GetRawUtf8Value Method — Corvus.Runtime.InteropServices"
 ## Definition
 
 **Namespace:** Corvus.Runtime.InteropServices  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonMarshal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Runtime/InteropServices/JsonMarshal.cs#L17)
 
 ## GetRawUtf8Value {#getrawutf8value}
+
+Gets a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) view over the raw JSON data of the given JSON element.
 
 ```csharp
 public static RawUtf8JsonString GetRawUtf8Value<T>(T element)
 ```
-
-Gets a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) view over the raw JSON data of the given JSON element.
 
 ### Type Parameters
 

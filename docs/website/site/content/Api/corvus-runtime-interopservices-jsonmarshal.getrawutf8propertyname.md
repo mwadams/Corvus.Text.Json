@@ -7,15 +7,16 @@ Title: "JsonMarshal.GetRawUtf8PropertyName Method — Corvus.Runtime.InteropServ
 ## Definition
 
 **Namespace:** Corvus.Runtime.InteropServices  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonMarshal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Runtime/InteropServices/JsonMarshal.cs#L17)
 
 ## GetRawUtf8PropertyName {#getrawutf8propertyname}
+
+Gets a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) view over the raw JSON data of the given `JsonProperty` name.
 
 ```csharp
 public static ReadOnlySpan<byte> GetRawUtf8PropertyName<T>(JsonProperty<T> property)
 ```
-
-Gets a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) view over the raw JSON data of the given `JsonProperty` name.
 
 ### Parameters
 

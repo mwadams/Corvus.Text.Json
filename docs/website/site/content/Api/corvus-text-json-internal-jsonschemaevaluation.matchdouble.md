@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchDouble Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L684)
 
 ## MatchDouble {#matchdouble}
+
+Matches a JSON number against the Double type constraint, validating it as a double-precision floating-point number.
 
 ```csharp
 public static bool MatchDouble(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number against the Double type constraint, validating it as a double-precision floating-point number.
 
 ### Parameters
 

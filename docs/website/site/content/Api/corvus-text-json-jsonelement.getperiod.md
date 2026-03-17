@@ -7,15 +7,16 @@ Title: "JsonElement.GetPeriod Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1783)
 
 ## GetPeriod {#getperiod}
+
+Gets the value of the element as a [`Period`](/api/corvus-text-json-period.html).
 
 ```csharp
 public Period GetPeriod()
 ```
-
-Gets the value of the element as a [`Period`](/api/corvus-text-json-period.html).
 
 ### Returns
 

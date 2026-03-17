@@ -7,7 +7,7 @@ Title: "IJsonDocument.CloneElement Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.CloneElement Method — Corvus.Text.Json.Internal"
 
 ## CloneElement(int) {#cloneelement-int}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L559)
+
+Clones the element at the specified index.
+
 ```csharp
 public abstract JsonElement CloneElement(int index)
 ```
-
-Clones the element at the specified index.
 
 ### Parameters
 
@@ -36,15 +38,24 @@ Clones the element at the specified index.
 
 The cloned JSON element.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CloneElement(int) {#cloneelement-int}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L21)
+
+Clones the element at the specified index.
+
 ```csharp
 public abstract TElement CloneElement<TElement>(int index)
 ```
-
-Clones the element at the specified index.
 
 ### Type Parameters
 
@@ -64,12 +75,12 @@ Clones the element at the specified index.
 
 The cloned JSON element.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

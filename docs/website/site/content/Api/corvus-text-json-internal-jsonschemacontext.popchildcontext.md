@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.PopChildContext Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L765)
 
 ## PopChildContext {#popchildcontext}
+
+Pops the most recently pushed child context without committing changes.
 
 ```csharp
 public void PopChildContext(ref JsonSchemaContext childContext)
 ```
-
-Pops the most recently pushed child context without committing changes.
 
 ### Parameters
 

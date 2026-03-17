@@ -7,15 +7,16 @@ Title: "IJsonDocument.AppendElementToMetadataDb Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L600)
 
 ## AppendElementToMetadataDb {#appendelementtometadatadb}
+
+Appends the element at the specified index to the metadata database.
 
 ```csharp
 public abstract void AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db)
 ```
-
-Appends the element at the specified index to the metadata database.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchPropertyCountLessThan Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L157)
 
 ## MatchPropertyCountLessThan {#matchpropertycountlessthan}
+
+Validates that a property count is less than the given value.
 
 ```csharp
 public static bool MatchPropertyCountLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a property count is less than the given value.
 
 ### Parameters
 

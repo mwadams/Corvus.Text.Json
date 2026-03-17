@@ -7,15 +7,16 @@ Title: "IJsonDocument.TryResolveJsonPointer Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L21)
 
 ## TryResolveJsonPointer {#tryresolvejsonpointer}
+
+Try to resolve the given JSON pointer.
 
 ```csharp
 public abstract bool TryResolveJsonPointer<TValue>(ReadOnlySpan<byte> jsonPointer, int index, ref TValue value)
 ```
-
-Try to resolve the given JSON pointer.
 
 ### Type Parameters
 

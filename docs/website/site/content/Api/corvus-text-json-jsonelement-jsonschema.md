@@ -4,6 +4,12 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonElement.JsonSchema — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.JsonSchema.cs#L34)
+
 ```csharp
 public static class JsonElement.JsonSchema
 ```

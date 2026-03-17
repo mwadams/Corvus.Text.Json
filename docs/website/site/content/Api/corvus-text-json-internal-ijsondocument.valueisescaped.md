@@ -7,15 +7,16 @@ Title: "IJsonDocument.ValueIsEscaped Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L519)
 
 ## ValueIsEscaped {#valueisescaped}
+
+Determines whether the value at the specified index is escaped.
 
 ```csharp
 public abstract bool ValueIsEscaped(int index, bool isPropertyName)
 ```
-
-Determines whether the value at the specified index is escaped.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "BigNumber.Modulus Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1826)
 
 ## operator % {#operator}
+
+Computes the remainder of division.
 
 ```csharp
 public static BigNumber operator %(BigNumber left, BigNumber right)
 ```
-
-Computes the remainder of division.
 
 ### Parameters
 

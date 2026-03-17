@@ -7,7 +7,8 @@ Title: "PropertySchemaMatchers<T>.UnescapedNameProvider<T>.BeginInvoke Method â€
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PropertySchemaMatchers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/PropertySchemaMatchers.cs#L216)
 
 ## BeginInvoke {#begininvoke}
 

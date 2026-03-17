@@ -7,7 +7,7 @@ Title: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,6 +19,8 @@ Title: "Polyfills.Parse Method — Corvus.Text.Json.Compatibility"
 | [Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions)](#parse-readonlymemory-char-jsondocumentoptions) |  |
 
 ## Parse(string, JsonDocumentOptions) {#parse-string-jsondocumentoptions}
+
+**Source:** [Polyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/Polyfills.cs#L18)
 
 ```csharp
 public static T Parse<T>(string value, JsonDocumentOptions options)
@@ -35,9 +37,18 @@ public static T Parse<T>(string value, JsonDocumentOptions options)
 
 `T`
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(Stream, JsonDocumentOptions) {#parse-stream-jsondocumentoptions}
+
+**Source:** [Polyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/Polyfills.cs#L18)
 
 ```csharp
 public static T Parse<T>(Stream value, JsonDocumentOptions options)
@@ -54,9 +65,18 @@ public static T Parse<T>(Stream value, JsonDocumentOptions options)
 
 `T`
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlymemory-byte-jsondocumentoptions}
+
+**Source:** [Polyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/Polyfills.cs#L18)
 
 ```csharp
 public static T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options)
@@ -73,9 +93,18 @@ public static T Parse<T>(ReadOnlyMemory<byte> value, JsonDocumentOptions options
 
 `T`
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions) {#parse-readonlymemory-char-jsondocumentoptions}
+
+**Source:** [Polyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/Polyfills.cs#L18)
 
 ```csharp
 public static T Parse<T>(ReadOnlyMemory<char> value, JsonDocumentOptions options)
@@ -92,12 +121,12 @@ public static T Parse<T>(ReadOnlyMemory<char> value, JsonDocumentOptions options
 
 `T`
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

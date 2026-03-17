@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.None Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## None {#none}
+
+Use default behavior.
 
 ```csharp
 JsonRegexOptions None
 ```
-
-Use default behavior.
 
 ### Returns
 

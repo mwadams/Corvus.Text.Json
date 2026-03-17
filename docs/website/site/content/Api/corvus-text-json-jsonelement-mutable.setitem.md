@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.SetItem Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -21,6 +21,8 @@ Title: "JsonElement.Mutable.SetItem Method — Corvus.Text.Json"
 
 ## SetItem(int, ref JsonElement.Source, int) {#setitem-int-ref-jsonelement-source-int}
 
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5151)
+
 ```csharp
 public void SetItem(int itemIndex, ref JsonElement.Source source, int estimatedMemberCount)
 ```
@@ -33,9 +35,18 @@ public void SetItem(int itemIndex, ref JsonElement.Source source, int estimatedM
 | `source` | [`ref JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html) |  |
 | `estimatedMemberCount` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## SetItem(int, JsonElement.ObjectBuilder.Build, int) {#setitem-int-jsonelement-objectbuilder-build-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5202)
 
 ```csharp
 public void SetItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, int estimatedMemberCount)
@@ -49,9 +60,18 @@ public void SetItem(int itemIndex, JsonElement.ObjectBuilder.Build objectValue, 
 | `objectValue` | [`JsonElement.ObjectBuilder.Build`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 | `estimatedMemberCount` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## SetItem(int, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#setitem-int-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1738)
 
 ```csharp
 public void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> objectValue, int estimatedMemberCount)
@@ -66,9 +86,18 @@ public void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.O
 | `objectValue` | [`JsonElement.ObjectBuilder.Build<TContext>`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 | `estimatedMemberCount` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## SetItem(int, JsonElement.ArrayBuilder.Build, int) {#setitem-int-jsonelement-arraybuilder-build-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5295)
 
 ```csharp
 public void SetItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, int estimatedMemberCount)
@@ -82,9 +111,18 @@ public void SetItem(int itemIndex, JsonElement.ArrayBuilder.Build arrayValue, in
 | `arrayValue` | [`JsonElement.ArrayBuilder.Build`](/api/corvus-text-json-jsonelement-arraybuilder-build.html) |  |
 | `estimatedMemberCount` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## SetItem(int, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#setitem-int-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1738)
 
 ```csharp
 public void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> arrayValue, int estimatedMemberCount)
@@ -99,12 +137,12 @@ public void SetItem<TContext>(int itemIndex, ref TContext context, JsonElement.A
 | `arrayValue` | [`JsonElement.ArrayBuilder.Build<TContext>`](/api/corvus-text-json-jsonelement-arraybuilder-build.html) |  |
 | `estimatedMemberCount` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  *(optional)* |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.GetParentDocumentAndIndex Method — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
 
 ## GetParentDocumentAndIndex {#getparentdocumentandindex}
+
+Gets the parent document and document index for a JSON element.
 
 ```csharp
 public static ValueTuple<IJsonDocument, int> GetParentDocumentAndIndex<TElement>(TElement value)
 ```
-
-Gets the parent document and document index for a JSON element.
 
 ### Type Parameters
 

@@ -7,15 +7,16 @@ Title: "Utf8UriFormat.UriEscaped Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriFormat.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Internal/Utf8UriFormat.cs#L14)
 
 ## UriEscaped {#uriescaped}
+
+The URI is represented with URI escaping applied.
 
 ```csharp
 Utf8UriFormat UriEscaped
 ```
-
-The URI is represented with URI escaping applied.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchNotEquals Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L389)
 
 ## MatchNotEquals {#matchnotequals}
+
+Matches a JSON number not equals.
 
 ```csharp
 public static bool MatchNotEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number not equals.
 
 ### Parameters
 

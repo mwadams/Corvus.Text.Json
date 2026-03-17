@@ -7,15 +7,16 @@ Title: "JsonDocumentBuilder<T>.RootElement Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocumentBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonDocumentBuilder.cs#L65)
 
 ## RootElement {#rootelement}
+
+Gets the root element of the JSON document.
 
 ```csharp
 public T RootElement { get; }
 ```
-
-Gets the root element of the JSON document.
 
 ### Returns
 

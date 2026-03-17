@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchLessThanOrEquals Method — Corvus.Text.Json.I
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L457)
 
 ## MatchLessThanOrEquals {#matchlessthanorequals}
+
+Matches a JSON number less than or equals.
 
 ```csharp
 public static bool MatchLessThanOrEquals(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent, string rightValue, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number less than or equals.
 
 ### Parameters
 

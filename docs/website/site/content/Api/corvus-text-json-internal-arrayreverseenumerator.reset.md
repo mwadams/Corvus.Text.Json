@@ -7,15 +7,16 @@ Title: "ArrayReverseEnumerator.Reset Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayReverseEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ArrayReverseEnumerator.cs#L97)
 
 ## Reset {#reset}
+
+Sets the enumerator to its initial position, which is before the first element in the collection.
 
 ```csharp
 public void Reset()
 ```
-
-Sets the enumerator to its initial position, which is before the first element in the collection.
 
 ## Applies To
 

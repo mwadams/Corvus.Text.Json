@@ -7,15 +7,16 @@ Title: "ValidationResult.Location Property — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationResult.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationResult.cs#L42)
 
 ## Location {#location}
+
+Gets the location information for this validation result.
 
 ```csharp
 public ValidationResult.LocationTuple Location { get; }
 ```
-
-Gets the location information for this validation result.
 
 ### Returns
 

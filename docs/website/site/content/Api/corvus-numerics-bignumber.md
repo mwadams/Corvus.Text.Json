@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "BigNumber — Corvus.Numerics"
 ---
+## Definition
+
+**Namespace:** Corvus.Numerics  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L30)
+
+Represents an arbitrary-precision decimal number using a significand and exponent.
+
 ```csharp
 public readonly struct BigNumber : IEquatable<BigNumber>, IComparable<BigNumber>, IComparable, IFormattable, ISpanFormattable, IUtf8SpanFormattable, INumber<BigNumber>, IParsable<BigNumber>, ISpanParsable<BigNumber>, IAdditionOperators<BigNumber, BigNumber, BigNumber>, IAdditiveIdentity<BigNumber, BigNumber>, IComparisonOperators<BigNumber, BigNumber, bool>, IEqualityOperators<BigNumber, BigNumber, bool>, IDecrementOperators<BigNumber>, IDivisionOperators<BigNumber, BigNumber, BigNumber>, IIncrementOperators<BigNumber>, IModulusOperators<BigNumber, BigNumber, BigNumber>, IMultiplicativeIdentity<BigNumber, BigNumber>, IMultiplyOperators<BigNumber, BigNumber, BigNumber>, INumberBase<BigNumber>, IUtf8SpanParsable<BigNumber>, ISubtractionOperators<BigNumber, BigNumber, BigNumber>, IUnaryNegationOperators<BigNumber, BigNumber>, IUnaryPlusOperators<BigNumber, BigNumber>, ISignedNumber<BigNumber>
 ```
-
-Represents an arbitrary-precision decimal number using a significand and exponent.
 
 ## Remarks
 

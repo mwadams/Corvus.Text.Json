@@ -7,7 +7,7 @@ Title: "Utf8IriReference.TryApply Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "Utf8IriReference.TryApply Method — Corvus.Text.Json"
 
 ## TryApply(ref Utf8Iri, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8iri-span-byte-ref-utf8iri}
 
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L249)
+
+Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+
 ```csharp
 public bool TryApply(ref Utf8Iri iri, Span<byte> buffer, ref Utf8Iri result)
 ```
-
-Applies the given IRI to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
 
 ### Parameters
 
@@ -40,15 +42,24 @@ Applies the given IRI to the current (base) IRI and writes the result to the pro
 
 `true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryApply(ref Utf8IriReference, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8irireference-span-byte-ref-utf8iri}
 
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L270)
+
+Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+
 ```csharp
 public bool TryApply(ref Utf8IriReference iriReference, Span<byte> buffer, ref Utf8Iri result)
 ```
-
-Applies the given IRI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
 
 ### Parameters
 
@@ -64,15 +75,24 @@ Applies the given IRI reference to the current (base) IRI and writes the result 
 
 `true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryApply(ref Utf8UriReference, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8urireference-span-byte-ref-utf8iri}
 
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L291)
+
+Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+
 ```csharp
 public bool TryApply(ref Utf8UriReference uriReference, Span<byte> buffer, ref Utf8Iri result)
 ```
-
-Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
 
 ### Parameters
 
@@ -88,15 +108,24 @@ Applies the given URI reference to the current (base) IRI and writes the result 
 
 `true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryApply(ref Utf8Uri, Span&lt;byte&gt;, ref Utf8Iri) {#tryapply-ref-utf8uri-span-byte-ref-utf8iri}
 
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L312)
+
+Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
+
 ```csharp
 public bool TryApply(ref Utf8Uri uri, Span<byte> buffer, ref Utf8Iri result)
 ```
-
-Applies the given URI reference to the current (base) IRI and writes the result to the provided buffer. It uses the rules of RFC 3986 Section 5.2 to resolve the reference against the base IRI, including handling of relative references and merging of paths as needed. This will fail if the IRI reference is a relative reference.
 
 ### Parameters
 
@@ -112,12 +141,12 @@ Applies the given URI reference to the current (base) IRI and writes the result 
 
 `true` if the result was successfully written and produced a valid IRI; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.RemoveRange Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L327)
 
 ## RemoveRange {#removerange}
+
+Removes a range of values from the document.
 
 ```csharp
 public abstract void RemoveRange(int complexObjectStartIndex, int startIndex, int endIndex, int membersToRemove)
 ```
-
-Removes a range of values from the document.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchItemCountEquals Method — Corvus.Text.Json.In
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L241)
 
 ## MatchItemCountEquals {#matchitemcountequals}
+
+Validates that a item count equals the given value.
 
 ```csharp
 public static bool MatchItemCountEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a item count equals the given value.
 
 ### Parameters
 

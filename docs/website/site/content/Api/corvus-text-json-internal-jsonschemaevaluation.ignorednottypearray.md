@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.IgnoredNotTypeArray Field — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## IgnoredNotTypeArray {#ignorednottypearray}
+
+Message provider for ignored "not array type" validation messages.
 
 ```csharp
 JsonSchemaMessageProvider IgnoredNotTypeArray
 ```
-
-Message provider for ignored "not array type" validation messages.
 
 ### Returns
 

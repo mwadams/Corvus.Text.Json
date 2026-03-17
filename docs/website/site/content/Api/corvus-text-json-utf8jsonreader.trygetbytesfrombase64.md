@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.TryGetBytesFromBase64 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L557)
 
 ## TryGetBytesFromBase64 {#trygetbytesfrombase64}
+
+Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes. Returns `true` if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes. Returns `false` otherwise.
 
 ```csharp
 public bool TryGetBytesFromBase64(ref byte[] value)
 ```
-
-Parses the current JSON token value from the source and decodes the Base64 encoded JSON string as bytes. Returns `true` if the entire token value is encoded as valid Base64 text and can be successfully decoded to bytes. Returns `false` otherwise.
 
 ### Parameters
 

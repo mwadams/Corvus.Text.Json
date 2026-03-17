@@ -7,15 +7,16 @@ Title: "BigNumber.UnaryPlus Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1866)
 
 ## operator + {#operator}
+
+Returns the value unchanged (unary plus).
 
 ```csharp
 public static BigNumber operator +(BigNumber value)
 ```
-
-Returns the value unchanged (unary plus).
 
 ### Parameters
 

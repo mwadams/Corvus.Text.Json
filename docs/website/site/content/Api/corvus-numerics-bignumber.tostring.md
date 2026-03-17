@@ -7,7 +7,7 @@ Title: "BigNumber.ToString Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "BigNumber.ToString Method — Corvus.Numerics"
 
 ## ToString() {#tostring}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L381)
+
+Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
+
 ```csharp
 public override string ToString()
 ```
-
-Returns the string representation of this [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
 
 ### Returns
 
@@ -30,15 +32,24 @@ Returns the string representation of this [`BigNumber`](/api/corvus-numerics-big
 
 The string representation of this instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ToString(string, IFormatProvider) {#tostring-string-iformatprovider}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L391)
+
+Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the specified format string and format provider.
+
 ```csharp
 public string ToString(string format, IFormatProvider formatProvider)
 ```
-
-Formats this [`BigNumber`](/api/corvus-numerics-bignumber.html) value using the specified format string and format provider.
 
 ### Parameters
 
@@ -57,12 +68,12 @@ The formatted string representation of this instance.
 
 [`IFormattable.ToString`](https://learn.microsoft.com/dotnet/api/system.iformattable.tostring)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

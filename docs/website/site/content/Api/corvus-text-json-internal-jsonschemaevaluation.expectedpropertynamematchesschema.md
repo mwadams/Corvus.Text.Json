@@ -7,7 +7,8 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyNameMatchesSchema Field — Corvus.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## ExpectedPropertyNameMatchesSchema {#expectedpropertynamematchesschema}
 

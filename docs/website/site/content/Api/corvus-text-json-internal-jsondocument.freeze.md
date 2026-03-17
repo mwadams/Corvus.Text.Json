@@ -7,15 +7,16 @@ Title: "JsonDocument.Freeze Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/JsonDocument.cs#L141)
 
 ## Freeze {#freeze}
+
+Makes the document immutable.
 
 ```csharp
 public void Freeze()
 ```
-
-Makes the document immutable.
 
 ### Remarks
 

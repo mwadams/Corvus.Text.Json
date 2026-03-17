@@ -7,15 +7,16 @@ Title: "JsonElement.GetBoolean Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L550)
 
 ## GetBoolean {#getboolean}
+
+Gets the value of the element as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean).
 
 ```csharp
 public bool GetBoolean()
 ```
-
-Gets the value of the element as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean).
 
 ### Returns
 

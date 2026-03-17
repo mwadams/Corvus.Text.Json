@@ -7,15 +7,16 @@ Title: "Utf8Iri.HasFragment Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L76)
 
 ## HasFragment {#hasfragment}
+
+Gets a value indicating whether this reference has a fragment.
 
 ```csharp
 public bool HasFragment { get; }
 ```
-
-Gets a value indicating whether this reference has a fragment.
 
 ### Returns
 

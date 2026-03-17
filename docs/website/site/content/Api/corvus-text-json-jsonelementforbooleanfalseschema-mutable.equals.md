@@ -7,7 +7,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Equals Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Equals Method — Corvus.Text.J
 | [Equals(T)](#equals-t) |  |
 
 ## Equals(object) {#equals-object}
+
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L171)
 
 ```csharp
 public override bool Equals(object obj)
@@ -32,9 +34,18 @@ public override bool Equals(object obj)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Equals(T) {#equals-t}
+
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L21)
 
 ```csharp
 public bool Equals<T>(T other)
@@ -50,12 +61,12 @@ public bool Equals<T>(T other)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

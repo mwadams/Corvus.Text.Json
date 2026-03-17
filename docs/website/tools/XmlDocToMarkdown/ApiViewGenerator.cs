@@ -22,8 +22,8 @@ internal static class ApiViewGenerator
         sb.AppendLine("}");
         sb.AppendLine("<div class=\"layout-docs container\">");
 
-        // Hierarchical sidebar — no type highlighted, no namespace highlighted (landing page)
-        SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: null, currentTypeFileBase: null, baseUrl);
+        // Use the shared sidebar partial (generated separately)
+        sb.AppendLine("    @await Html.PartialAsync(\"_ApiSidebar\").ConfigureAwait(false)");
 
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
@@ -68,35 +68,18 @@ internal static class ApiViewGenerator
     }
 
     /// <summary>
-    /// Writes a single shared <c>api-page.cshtml</c> view — used by ALL namespace,
-    /// per-type, and per-member API pages via the Vellum <c>Template:</c> property.
-    /// The sidebar is generated with no active state; JavaScript handles expanding
-    /// the correct section based on the current URL.
+    /// Generates the <c>_ApiSidebar.cshtml</c> Razor partial containing the
+    /// hierarchical API sidebar tree. This is referenced by the static
+    /// <c>api-page.cshtml</c> view via <c>Html.PartialAsync("_ApiSidebar")</c>.
     /// </summary>
-    public static void GenerateSharedApiView(string viewsDir, Dictionary<string, NamespaceInfo> namespaces, string baseUrl)
+    public static void GenerateApiSidebar(string sharedViewsDir, Dictionary<string, NamespaceInfo> namespaces, string baseUrl)
     {
         StringBuilder sb = new();
-        sb.AppendLine("@model SiteViewModel");
-        sb.AppendLine("@{");
-        sb.AppendLine("    Layout = \"../Shared/_Layout.cshtml\";");
-        sb.AppendLine("}");
-        sb.AppendLine("<div class=\"layout-docs container\">");
 
-        // Sidebar with no active state — JS will set active link based on URL
+        // Sidebar with no active state — JS sets active link based on URL
         SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: null, currentTypeFileBase: null, baseUrl);
 
-        sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
-        sb.AppendLine("        <div class=\"doc__content\">");
-        sb.AppendLine("            <h1>@Model.PageContext.Title</h1>");
-        sb.AppendLine("            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())");
-        sb.AppendLine("            {");
-        sb.AppendLine("                @Html.Raw(contentFragment.Body)");
-        sb.AppendLine("            }");
-        sb.AppendLine("        </div>");
-        sb.AppendLine("    </main>");
-        sb.AppendLine("</div>");
-
-        string outputPath = Path.Combine(viewsDir, "api-page.cshtml");
+        string outputPath = Path.Combine(sharedViewsDir, "_ApiSidebar.cshtml");
         File.WriteAllText(outputPath, sb.ToString());
         Console.WriteLine($"  Written: {outputPath}");
     }

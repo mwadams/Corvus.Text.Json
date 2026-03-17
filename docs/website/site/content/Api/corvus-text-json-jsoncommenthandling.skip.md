@@ -7,15 +7,16 @@ Title: "JsonCommentHandling.Skip Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonCommentHandling.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Common/JsonCommentHandling.cs#L8)
 
 ## Skip {#skip}
+
+Allow comments within the JSON input and ignore them. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) will behave as if no comments were present.
 
 ```csharp
 JsonCommentHandling Skip
 ```
-
-Allow comments within the JSON input and ignore them. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) will behave as if no comments were present.
 
 ### Returns
 

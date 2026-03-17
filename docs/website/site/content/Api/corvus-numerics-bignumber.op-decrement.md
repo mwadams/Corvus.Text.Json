@@ -7,15 +7,16 @@ Title: "BigNumber.Decrement Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1876)
 
 ## operator -- {#operator}
+
+Decrements a value by one.
 
 ```csharp
 public static BigNumber operator --(BigNumber value)
 ```
-
-Decrements a value by one.
 
 ### Parameters
 

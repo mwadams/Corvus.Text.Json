@@ -7,7 +7,8 @@ Title: "IdnMapping Constructors — Corvus.Globalization"
 ## Definition
 
 **Namespace:** Corvus.Globalization  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IdnMapping.Ascii.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Ascii.cs#L38)
 
 ## IdnMapping {#idnmapping}
 

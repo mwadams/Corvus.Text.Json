@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "ParsedJsonDocument<T> — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.cs#L33)
+
+Represents the structure of a JSON value in a lightweight, read-only form.
+
 ```csharp
 public sealed class ParsedJsonDocument<T> : JsonDocument, IJsonDocument, IDisposable
 ```
-
-Represents the structure of a JSON value in a lightweight, read-only form.
 
 ## Remarks
 

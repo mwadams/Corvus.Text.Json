@@ -7,15 +7,16 @@ Title: "JsonWorkspace.Create Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L52)
 
 ## Create {#create}
+
+Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).
 
 ```csharp
 public static JsonWorkspace Create(int initialDocumentCapacity, Nullable<JsonWriterOptions> options)
 ```
-
-Creates an instance of a [`JsonWorkspace`](/api/corvus-text-json-jsonworkspace.html).
 
 ### Parameters
 

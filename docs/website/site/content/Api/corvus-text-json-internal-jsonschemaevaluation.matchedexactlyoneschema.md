@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchedExactlyOneSchema Field — Corvus.Text.Json.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## MatchedExactlyOneSchema {#matchedexactlyoneschema}
+
+Message provider for validation errors when at least one schema matches in a composition constraint.
 
 ```csharp
 JsonSchemaMessageProvider MatchedExactlyOneSchema
 ```
-
-Message provider for validation errors when at least one schema matches in a composition constraint.
 
 ### Returns
 

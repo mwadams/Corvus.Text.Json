@@ -7,15 +7,16 @@ Title: "CodeGenNumericType.SByte Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L17)
 
 ## SByte {#sbyte}
+
+Represents an 8-bit signed integer.
 
 ```csharp
 CodeGenNumericType SByte
 ```
-
-Represents an 8-bit signed integer.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "ObjectEnumerator Constructors — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ObjectEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ObjectEnumerator.cs#L35)
 
 ## ObjectEnumerator {#objectenumerator}
+
+Initializes a new instance of the [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) struct.
 
 ```csharp
 public ObjectEnumerator(IJsonDocument targetDocument, int initialIndex)
 ```
-
-Initializes a new instance of the [`ObjectEnumerator`](/api/corvus-text-json-internal-objectenumerator.html) struct.
 
 ### Parameters
 

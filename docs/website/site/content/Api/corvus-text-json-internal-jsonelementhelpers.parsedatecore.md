@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.ParseDateCore Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.Core.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.Core.cs#L32)
 
 ## ParseDateCore {#parsedatecore}
+
+Parses a date string in ISO 8601 format (YYYY-MM-DD) and extracts the year, month, and day components.
 
 ```csharp
 public static bool ParseDateCore(ReadOnlySpan<byte> text, ref int year, ref int month, ref int day)
 ```
-
-Parses a date string in ISO 8601 format (YYYY-MM-DD) and extracts the year, month, and day components.
 
 ### Parameters
 

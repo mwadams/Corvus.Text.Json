@@ -7,15 +7,16 @@ Title: "ValidationResult.Message Property — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationResult.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationResult.cs#L54)
 
 ## Message {#message}
+
+Gets the validation message for this result, if any.
 
 ```csharp
 public string Message { get; }
 ```
-
-Gets the validation message for this result, if any.
 
 ### Returns
 

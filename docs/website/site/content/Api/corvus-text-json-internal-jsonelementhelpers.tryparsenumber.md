@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.TryParseNumber Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.Numeric.Core.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.Core.cs#L94)
 
 ## TryParseNumber {#tryparsenumber}
+
+Parses a JSON number into its component parts using normal-form decimal representation.
 
 ```csharp
 public static bool TryParseNumber(ReadOnlySpan<byte> span, ref bool isNegative, ref ReadOnlySpan<byte> integral, ref ReadOnlySpan<byte> fractional, ref int exponent)
 ```
-
-Parses a JSON number into its component parts using normal-form decimal representation.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteNumber Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -44,11 +44,13 @@ Title: "Utf8JsonWriter.WriteNumber Method — Corvus.Text.Json"
 
 ## WriteNumber(JsonEncodedText, decimal) {#writenumber-jsonencodedtext-decimal}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Decimal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Decimal.cs#L31)
+
+Writes the pre-encoded property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, decimal value)
 ```
-
-Writes the pre-encoded property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -67,15 +69,24 @@ Writes the pre-encoded property name and [`Decimal`](https://learn.microsoft.com
 
 Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G').
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, decimal) {#writenumber-string-decimal}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Decimal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Decimal.cs#L60)
+
+Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, decimal value)
 ```
-
-Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -96,15 +107,24 @@ Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/
 
 Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, decimal) {#writenumber-readonlyspan-char-decimal}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Decimal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Decimal.cs#L81)
+
+Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, decimal value)
 ```
-
-Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -124,15 +144,24 @@ Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/
 
 Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, decimal) {#writenumber-readonlyspan-byte-decimal}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Decimal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Decimal.cs#L106)
+
+Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, decimal value)
 ```
-
-Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -152,15 +181,24 @@ Writes the property name and [`Decimal`](https://learn.microsoft.com/dotnet/api/
 
 Writes the [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(JsonEncodedText, double) {#writenumber-jsonencodedtext-double}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Double.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Double.cs#L30)
+
+Writes the pre-encoded property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, double value)
 ```
-
-Writes the pre-encoded property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -179,15 +217,24 @@ Writes the pre-encoded property name and [`Double`](https://learn.microsoft.com/
 
 Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G').
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, double) {#writenumber-string-double}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Double.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Double.cs#L61)
+
+Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, double value)
 ```
-
-Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -208,15 +255,24 @@ Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, double) {#writenumber-readonlyspan-char-double}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Double.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Double.cs#L82)
+
+Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, double value)
 ```
-
-Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -236,15 +292,24 @@ Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, double) {#writenumber-readonlyspan-byte-double}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Double.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Double.cs#L108)
+
+Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, double value)
 ```
-
-Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -264,15 +329,24 @@ Writes the property name and [`Double`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`Double`](https://learn.microsoft.com/dotnet/api/system.double) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(JsonEncodedText, float) {#writenumber-jsonencodedtext-float}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Float.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Float.cs#L30)
+
+Writes the pre-encoded property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, float value)
 ```
-
-Writes the pre-encoded property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -291,15 +365,24 @@ Writes the pre-encoded property name and [`Single`](https://learn.microsoft.com/
 
 Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G').
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, float) {#writenumber-string-float}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Float.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Float.cs#L61)
+
+Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, float value)
 ```
-
-Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -320,15 +403,24 @@ Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, float) {#writenumber-readonlyspan-char-float}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Float.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Float.cs#L82)
+
+Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, float value)
 ```
-
-Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -348,15 +440,24 @@ Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, float) {#writenumber-readonlyspan-byte-float}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Float.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Float.cs#L108)
+
+Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, float value)
 ```
-
-Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -376,15 +477,24 @@ Writes the property name and [`Single`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`Single`](https://learn.microsoft.com/dotnet/api/system.single) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'). The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(JsonEncodedText, long) {#writenumber-jsonencodedtext-long}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L31)
+
+Writes the pre-encoded property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, long value)
 ```
-
-Writes the pre-encoded property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -403,15 +513,24 @@ Writes the pre-encoded property name and [`Int64`](https://learn.microsoft.com/d
 
 Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, long) {#writenumber-string-long}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L60)
+
+Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, long value)
 ```
-
-Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -432,15 +551,24 @@ Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/sy
 
 Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, long) {#writenumber-readonlyspan-char-long}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L81)
+
+Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, long value)
 ```
-
-Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -460,15 +588,24 @@ Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/sy
 
 Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, long) {#writenumber-readonlyspan-byte-long}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L106)
+
+Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, long value)
 ```
-
-Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -488,15 +625,24 @@ Writes the property name and [`Int64`](https://learn.microsoft.com/dotnet/api/sy
 
 Writes the [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(JsonEncodedText, int) {#writenumber-jsonencodedtext-int}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L126)
+
+Writes the pre-encoded property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, int value)
 ```
-
-Writes the pre-encoded property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -515,15 +661,24 @@ Writes the pre-encoded property name and [`Int32`](https://learn.microsoft.com/d
 
 Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, int) {#writenumber-string-int}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L148)
+
+Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, int value)
 ```
-
-Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -544,15 +699,24 @@ Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/sy
 
 Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, int) {#writenumber-readonlyspan-char-int}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L167)
+
+Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, int value)
 ```
-
-Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -572,15 +736,24 @@ Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/sy
 
 Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, int) {#writenumber-readonlyspan-byte-int}
 
+**Source:** [Utf8JsonWriter.WriteProperties.SignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.SignedNumber.cs#L185)
+
+Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, int value)
 ```
-
-Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -600,15 +773,24 @@ Writes the property name and [`Int32`](https://learn.microsoft.com/dotnet/api/sy
 
 Writes the [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(JsonEncodedText, ulong) {#writenumber-jsonencodedtext-ulong}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L32)
+
+Writes the pre-encoded property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, ulong value)
 ```
-
-Writes the pre-encoded property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -627,15 +809,24 @@ Writes the pre-encoded property name and [`UInt64`](https://learn.microsoft.com/
 
 Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, ulong) {#writenumber-string-ulong}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L62)
+
+Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, ulong value)
 ```
-
-Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -656,15 +847,24 @@ Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, ulong) {#writenumber-readonlyspan-char-ulong}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L84)
+
+Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, ulong value)
 ```
-
-Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -684,15 +884,24 @@ Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, ulong) {#writenumber-readonlyspan-byte-ulong}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L110)
+
+Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, ulong value)
 ```
-
-Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -712,15 +921,24 @@ Writes the property name and [`UInt64`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(JsonEncodedText, uint) {#writenumber-jsonencodedtext-uint}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L131)
+
+Writes the pre-encoded property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(JsonEncodedText propertyName, uint value)
 ```
-
-Writes the pre-encoded property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -739,15 +957,24 @@ Writes the pre-encoded property name and [`UInt32`](https://learn.microsoft.com/
 
 Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(string, uint) {#writenumber-string-uint}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L154)
+
+Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(string propertyName, uint value)
 ```
-
-Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -768,15 +995,24 @@ Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;char&gt;, uint) {#writenumber-readonlyspan-char-uint}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L175)
+
+Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<char> propertyName, uint value)
 ```
-
-Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -796,15 +1032,24 @@ Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteNumber(ReadOnlySpan&lt;byte&gt;, uint) {#writenumber-readonlyspan-byte-uint}
 
+**Source:** [Utf8JsonWriter.WriteProperties.UnsignedNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.UnsignedNumber.cs#L194)
+
+Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteNumber(ReadOnlySpan<byte> utf8PropertyName, uint value)
 ```
-
-Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) value (as a JSON number) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -824,12 +1069,12 @@ Writes the property name and [`UInt32`](https://learn.microsoft.com/dotnet/api/s
 
 Writes the [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'G'), for example: 32767. The property name is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

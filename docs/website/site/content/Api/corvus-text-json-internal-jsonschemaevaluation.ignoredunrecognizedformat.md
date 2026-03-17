@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.IgnoredUnrecognizedFormat Method — Corvus.Text.Js
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L409)
 
 ## IgnoredUnrecognizedFormat {#ignoredunrecognizedformat}
+
+Tries to write a message indicating that the format was not recognized.
 
 ```csharp
 public static bool IgnoredUnrecognizedFormat(Span<byte> buffer, ref int written)
 ```
-
-Tries to write a message indicating that the format was not recognized.
 
 ### Parameters
 

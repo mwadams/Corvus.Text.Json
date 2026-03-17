@@ -7,15 +7,16 @@ Title: "JsonProperty<TValue>.NameSpan Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L54)
 
 ## NameSpan {#namespan}
+
+Gets the name as an unescaped UTF-8 JSON string.
 
 ```csharp
 public UnescapedUtf8JsonString NameSpan { get; }
 ```
-
-Gets the name as an unescaped UTF-8 JSON string.
 
 ### Returns
 

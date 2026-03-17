@@ -7,15 +7,16 @@ Title: "IJsonElement.CheckValidInstance Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonElement.cs#L40)
 
 ## CheckValidInstance {#checkvalidinstance}
+
+Checks that this instance is valid.
 
 ```csharp
 public abstract void CheckValidInstance()
 ```
-
-Checks that this instance is valid.
 
 ## Applies To
 

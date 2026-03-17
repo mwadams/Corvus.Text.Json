@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.RightToLeft Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## RightToLeft {#righttoleft}
+
+Change the search direction. Search moves from right to left instead of from left to right.
 
 ```csharp
 JsonRegexOptions RightToLeft
 ```
-
-Change the search direction. Search moves from right to left instead of from left to right.
 
 ### Returns
 

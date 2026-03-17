@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.Read Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L302)
 
 ## Read {#read}
+
+Read the next JSON token from input source.
 
 ```csharp
 public bool Read()
 ```
-
-Read the next JSON token from input source.
 
 ### Returns
 

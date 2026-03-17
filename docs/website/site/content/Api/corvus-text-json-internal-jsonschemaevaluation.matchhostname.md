@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchHostname Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L445)
 
 ## MatchHostname {#matchhostname}
+
+Validates that a string value is a valid hostname format.
 
 ```csharp
 public static bool MatchHostname(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value is a valid hostname format.
 
 ### Parameters
 

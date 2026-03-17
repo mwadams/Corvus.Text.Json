@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.StringConstant Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L53)
 
 ## StringConstant {#stringconstant}
+
+Creates a constant string instance that does not require disposal.
 
 ```csharp
 public static T StringConstant(byte[] quotedUtf8String)
 ```
-
-Creates a constant string instance that does not require disposal.
 
 ### Parameters
 

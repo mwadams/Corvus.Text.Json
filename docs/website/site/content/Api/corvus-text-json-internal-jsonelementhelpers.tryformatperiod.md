@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.TryFormatPeriod Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L84)
 
 ## TryFormatPeriod {#tryformatperiod}
+
+Format a period as a UTF-8 string for the `duration` format.
 
 ```csharp
 public static bool TryFormatPeriod(ref Period value, Span<byte> output, ref int bytesWritten)
 ```
-
-Format a period as a UTF-8 string for the `duration` format.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "RawUtf8JsonString.Dispose Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [RawUtf8JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/RawUtf8JsonString.cs#L66)
 
 ## Dispose {#dispose}
+
+Releases any rented array pool bytes and clears sensitive data.
 
 ```csharp
 public void Dispose()
 ```
-
-Releases any rented array pool bytes and clears sensitive data.
 
 ### Implements
 

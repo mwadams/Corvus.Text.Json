@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.Apply Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L43)
 
 ## Apply {#apply}
+
+Apply an object instance value to the document.
 
 ```csharp
 public void Apply<T>(ref T value)
 ```
-
-Apply an object instance value to the document.
 
 ### Type Parameters
 

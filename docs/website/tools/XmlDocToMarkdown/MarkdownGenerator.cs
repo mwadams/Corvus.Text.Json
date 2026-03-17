@@ -5,7 +5,7 @@ namespace XmlDocToMarkdown;
 /// <summary>
 /// Generates one Vellum markdown file per namespace containing all public types.
 /// </summary>
-public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? namespaceDescriptionsDir = null)
+public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? namespaceDescriptionsDir = null, SourceLinkResolver? sourceResolver = null)
 {
     private const string FrontmatterDate = "2026-03-15T00:00:00.0+00:00";
 
@@ -56,7 +56,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
 
                 StringBuilder sb = new();
                 WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
-                WriteTypeBody(sb, type, baseUrl, nsSlug, typeSlug);
+                WriteTypeBody(sb, type, ns, baseUrl, nsSlug, typeSlug, sourceResolver?.GetTypeSourceUrl(type.FullName));
 
                 File.WriteAllText(filePath, sb.ToString());
                 Console.WriteLine($"  Written: {filePath}");
@@ -140,7 +140,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
 
         StringBuilder sb = new();
         WriteFrontmatter(sb, $"{pageTitle} \u2014 {ns}");
-        WriteMemberPageBody(sb, ns, nsSlug, type, typeSlug, memberDisplayName, memberCategory, members);
+        WriteMemberPageBody(sb, ns, nsSlug, type, typeSlug, memberDisplayName, memberCategory, members, sourceResolver);
 
         File.WriteAllText(filePath, sb.ToString());
     }
@@ -177,11 +177,19 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
     /// Writes the body of a type summary page — declaration, summary, inheritance,
     /// and summary tables for each member category linking to dedicated member pages.
     /// </summary>
-    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string baseUrl, string? nsSlug = null, string? typeSlug = null)
+    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string ns, string baseUrl, string? nsSlug = null, string? typeSlug = null, string? sourceUrl = null)
     {
-        sb.AppendLine("```csharp");
-        sb.AppendLine(BuildTypeDeclaration(type));
-        sb.AppendLine("```");
+        // Definition metadata — Namespace, Assembly, Source grouped together
+        sb.AppendLine("## Definition");
+        sb.AppendLine();
+        sb.AppendLine($"**Namespace:** {ns}  ");
+        sb.AppendLine($"**Assembly:** Corvus.Text.Json.dll  ");
+        if (sourceUrl is not null)
+        {
+            string displayPath = GetSourceDisplayPath(sourceUrl);
+            sb.AppendLine($"**Source:** [{displayPath}]({sourceUrl})");
+        }
+
         sb.AppendLine();
 
         if (!string.IsNullOrEmpty(type.Documentation?.Summary))
@@ -189,6 +197,11 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             sb.AppendLine(type.Documentation!.Summary);
             sb.AppendLine();
         }
+
+        sb.AppendLine("```csharp");
+        sb.AppendLine(BuildTypeDeclaration(type));
+        sb.AppendLine("```");
+        sb.AppendLine();
 
         if (type.GenericParameters.Count > 0 && type.Documentation?.TypeParams.Count > 0)
         {
@@ -489,19 +502,33 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         string typeSlug,
         string memberDisplayName,
         string memberCategory,
-        List<MemberInfo> members)
+        List<MemberInfo> members,
+        SourceLinkResolver? sourceResolver = null)
     {
-        // Definition metadata
+        // Definition metadata — Namespace, Assembly, Source grouped together
         sb.AppendLine("## Definition");
         sb.AppendLine();
         sb.AppendLine($"**Namespace:** {ns}  ");
-        sb.AppendLine($"**Assembly:** Corvus.Text.Json.dll");
+        sb.AppendLine($"**Assembly:** Corvus.Text.Json.dll  ");
+
+        // For single members, include source in the Definition section
+        if (members.Count == 1 && sourceResolver is not null)
+        {
+            string? srcUrl = sourceResolver.GetMemberSourceUrl(members[0].XmlDocKey);
+            if (srcUrl is not null)
+            {
+                string displayPath = GetSourceDisplayPath(srcUrl);
+                sb.AppendLine($"**Source:** [{displayPath}]({srcUrl})");
+            }
+        }
+
         sb.AppendLine();
 
         // For single members, show the detail directly
         if (members.Count == 1)
         {
             WriteMemberDetail(sb, members[0], 2);
+
             WriteAppliesTo(sb, members[0].AvailableOnNetStandard20);
             return;
         }
@@ -522,12 +549,14 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         // Then show each overload in detail
         foreach (MemberInfo member in members)
         {
-            WriteMemberDetail(sb, member, 2, useSignatureHeading: true);
+            string? srcUrl = sourceResolver?.GetMemberSourceUrl(member.XmlDocKey);
+            WriteMemberDetail(sb, member, 2, useSignatureHeading: true, sourceUrl: srcUrl);
+
+            WriteAppliesTo(sb, member.AvailableOnNetStandard20);
+
             sb.AppendLine("---");
             sb.AppendLine();
         }
-
-        WriteAppliesTo(sb, members.All(m => m.AvailableOnNetStandard20));
     }
 
     /// <summary>
@@ -550,7 +579,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
     /// <summary>
     /// Writes the detail for a single member (one overload of a method, a property, etc.).
     /// </summary>
-    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel, bool useSignatureHeading = false)
+    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel, bool useSignatureHeading = false, string? sourceUrl = null)
     {
         string heading = new('#', headingLevel);
 
@@ -559,16 +588,24 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         string escapedHeading = headingText.Replace("<", "&lt;").Replace(">", "&gt;");
         sb.AppendLine($"{heading} {escapedHeading} {{#{anchorId}}}");
         sb.AppendLine();
-        sb.AppendLine("```csharp");
-        sb.AppendLine(member.Signature);
-        sb.AppendLine("```");
-        sb.AppendLine();
+
+        if (sourceUrl is not null)
+        {
+            string displayPath = GetSourceDisplayPath(sourceUrl);
+            sb.AppendLine($"**Source:** [{displayPath}]({sourceUrl})");
+            sb.AppendLine();
+        }
 
         if (!string.IsNullOrEmpty(member.Documentation?.Summary))
         {
             sb.AppendLine(member.Documentation!.Summary);
             sb.AppendLine();
         }
+
+        sb.AppendLine("```csharp");
+        sb.AppendLine(member.Signature);
+        sb.AppendLine("```");
+        sb.AppendLine();
 
         // Type parameters
         if (member.Documentation?.TypeParams.Count > 0)
@@ -928,6 +965,17 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
     private static string EscapeYamlString(string value)
     {
         return value.Replace("\"", "\\\"");
+    }
+
+    /// <summary>
+    /// Extracts the file name from a GitHub source URL for display.
+    /// </summary>
+    private static string GetSourceDisplayPath(string url)
+    {
+        int hashIdx = url.IndexOf('#');
+        string urlWithoutFragment = hashIdx >= 0 ? url[..hashIdx] : url;
+        int lastSlash = urlWithoutFragment.LastIndexOf('/');
+        return lastSlash >= 0 ? urlWithoutFragment[(lastSlash + 1)..] : urlWithoutFragment;
     }
 
     /// <summary>

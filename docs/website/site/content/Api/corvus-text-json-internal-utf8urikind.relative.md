@@ -7,15 +7,16 @@ Title: "Utf8UriKind.Relative Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriKind.cs#L14)
 
 ## Relative {#relative}
+
+The URI is a relative URI.
 
 ```csharp
 Utf8UriKind Relative
 ```
-
-The URI is a relative URI.
 
 ### Returns
 

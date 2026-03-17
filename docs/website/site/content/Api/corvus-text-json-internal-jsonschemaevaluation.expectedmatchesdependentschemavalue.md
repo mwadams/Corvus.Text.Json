@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.ExpectedMatchesDependentSchemaValue Method — Corv
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L341)
 
 ## ExpectedMatchesDependentSchemaValue {#expectedmatchesdependentschemavalue}
+
+Tries to write a message indicating that a value was expected to match a schema becaused it contained a specific named property.
 
 ```csharp
 public static bool ExpectedMatchesDependentSchemaValue(string propertyName, Span<byte> buffer, ref int written)
 ```
-
-Tries to write a message indicating that a value was expected to match a schema becaused it contained a specific named property.
 
 ### Parameters
 

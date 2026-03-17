@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.SetPropertyUnsafe Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
 
 ## SetPropertyUnsafe {#setpropertyunsafe}
+
+Sets a property value on a target element.
 
 ```csharp
 public static void SetPropertyUnsafe<TTarget, TValue>(TTarget targetElement, JsonProperty<TValue> property)
 ```
-
-Sets a property value on a target element.
 
 ### Type Parameters
 

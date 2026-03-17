@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonElement — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L24)
+
+Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html).
+
 ```csharp
 public readonly struct JsonElement : IJsonElement<JsonElement>, IJsonElement, IFormattable, ISpanFormattable, IUtf8SpanFormattable
 ```
-
-Represents a specific JSON value within a [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html).
 
 ## Implements
 

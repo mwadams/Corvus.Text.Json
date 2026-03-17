@@ -7,7 +7,8 @@ Title: "Polyfills.get_Undefined Method — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Polyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/Polyfills.cs#L18)
 
 ## get_Undefined {#get-undefined}
 

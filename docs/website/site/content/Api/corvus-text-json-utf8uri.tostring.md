@@ -7,15 +7,16 @@ Title: "Utf8Uri.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L306)
 
 ## ToString {#tostring}
+
+Returns a string representation of the URI in display format.
 
 ```csharp
 public override string ToString()
 ```
-
-Returns a string representation of the URI in display format.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetBigNumber Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1451)
 
 ## TryGetBigNumber {#trygetbignumber}
+
+Attempts to represent the current JSON number as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ```csharp
 public bool TryGetBigNumber(ref BigNumber value)
 ```
-
-Attempts to represent the current JSON number as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "BigNumber.TryGetMinimumFormatBufferLength Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L939)
 
 ## TryGetMinimumFormatBufferLength {#trygetminimumformatbufferlength}
+
+Gets the minimum format buffer length.
 
 ```csharp
 public bool TryGetMinimumFormatBufferLength(ref int minimumLength)
 ```
-
-Gets the minimum format buffer length.
 
 ### Parameters
 

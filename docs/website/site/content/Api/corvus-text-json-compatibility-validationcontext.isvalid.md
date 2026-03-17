@@ -7,15 +7,16 @@ Title: "ValidationContext.IsValid Property — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationContext.cs#L54)
 
 ## IsValid {#isvalid}
+
+Gets a value indicating whether this context represents a valid result.
 
 ```csharp
 public bool IsValid { get; }
 ```
-
-Gets a value indicating whether this context represents a valid result.
 
 ### Returns
 

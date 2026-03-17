@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetGuid Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1912)
 
 ## TryGetGuid {#trygetguid}
+
+Attempts to represent the current JSON string as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
 
 ```csharp
 public bool TryGetGuid(ref Guid value)
 ```
-
-Attempts to represent the current JSON string as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
 
 ### Parameters
 

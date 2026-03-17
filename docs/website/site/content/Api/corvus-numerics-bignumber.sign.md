@@ -7,15 +7,16 @@ Title: "BigNumber.Sign Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2056)
 
 ## Sign {#sign}
+
+Returns the sign of the number.
 
 ```csharp
 public static int Sign(BigNumber value)
 ```
-
-Returns the sign of the number.
 
 ### Parameters
 

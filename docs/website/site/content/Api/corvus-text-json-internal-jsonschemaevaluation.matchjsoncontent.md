@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchJsonContent Method — Corvus.Text.Json.Intern
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L789)
 
 ## MatchJsonContent {#matchjsoncontent}
+
+Validates that a string value contains valid JSON content.
 
 ```csharp
 public static bool MatchJsonContent(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value contains valid JSON content.
 
 ### Parameters
 

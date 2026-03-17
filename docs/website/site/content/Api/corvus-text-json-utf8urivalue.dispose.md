@@ -7,15 +7,16 @@ Title: "Utf8UriValue.Dispose Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriValue.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Utf8UriValue.cs#L78)
 
 ## Dispose {#dispose}
+
+Disposes the underlying resources used to store the UTF-8 string backing the URI value.
 
 ```csharp
 public void Dispose()
 ```
-
-Disposes the underlying resources used to store the UTF-8 string backing the URI value.
 
 ### Implements
 

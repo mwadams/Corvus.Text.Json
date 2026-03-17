@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchStringConstantValue Method — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L225)
 
 ## MatchStringConstantValue {#matchstringconstantvalue}
+
+Validates that a string equals the given value.
 
 ```csharp
 public static bool MatchStringConstantValue(ReadOnlySpan<byte> actual, ReadOnlySpan<byte> expected, string expectedString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string equals the given value.
 
 ### Parameters
 

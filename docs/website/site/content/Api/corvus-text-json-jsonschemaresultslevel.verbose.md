@@ -7,15 +7,16 @@ Title: "JsonSchemaResultsLevel.Verbose Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaResultsLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/JsonSchemaResultsLevel.cs#L14)
 
 ## Verbose {#verbose}
+
+Includes full location and message information for schema matching.
 
 ```csharp
 JsonSchemaResultsLevel Verbose
 ```
-
-Includes full location and message information for schema matching.
 
 ### Returns
 

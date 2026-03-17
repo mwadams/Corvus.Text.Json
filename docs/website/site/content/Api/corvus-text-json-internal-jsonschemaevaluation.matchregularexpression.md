@@ -7,7 +7,7 @@ Title: "JsonSchemaEvaluation.MatchRegularExpression Method — Corvus.Text.Json.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonSchemaEvaluation.MatchRegularExpression Method — Corvus.Text.Json.
 
 ## MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex, string, ReadOnlySpan&lt;byte&gt;, ref JsonSchemaContext) {#matchregularexpression-readonlyspan-byte-regex-string-readonlyspan-byte-ref-jsonschemacontext}
 
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L139)
+
+Validates that a string length equals the given value.
+
 ```csharp
 public static bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string length equals the given value.
 
 ### Parameters
 
@@ -40,15 +42,24 @@ Validates that a string length equals the given value.
 
 `true` if the value is equal to the given value; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## MatchRegularExpression(ReadOnlySpan&lt;byte&gt;, Regex) {#matchregularexpression-readonlyspan-byte-regex}
 
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L188)
+
+Validates that a string length equals the given value.
+
 ```csharp
 public static bool MatchRegularExpression(ReadOnlySpan<byte> value, Regex regularExpression)
 ```
-
-Validates that a string length equals the given value.
 
 ### Parameters
 
@@ -63,12 +74,12 @@ Validates that a string length equals the given value.
 
 `true` if the value is equal to the given value; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

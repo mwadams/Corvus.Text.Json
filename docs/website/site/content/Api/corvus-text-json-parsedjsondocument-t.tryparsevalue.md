@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.TryParseValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L384)
 
 ## TryParseValue {#tryparsevalue}
+
+Attempts to parse one JSON value (including objects or arrays) from the provided reader.
 
 ```csharp
 public static bool TryParseValue(ref Utf8JsonReader reader, ref ParsedJsonDocument<T> document)
 ```
-
-Attempts to parse one JSON value (including objects or arrays) from the provided reader.
 
 ### Parameters
 

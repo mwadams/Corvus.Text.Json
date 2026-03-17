@@ -7,7 +7,7 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Equality Operator — Corvus.Te
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Equality Operator — Corvus.Te
 | [operator ==(JsonElementForBooleanFalseSchema.Mutable, JsonElement)](#operator-jsonelementforbooleanfalseschema-mutable-jsonelement) |  |
 
 ## operator ==(JsonElementForBooleanFalseSchema.Mutable, JsonElementForBooleanFalseSchema.Mutable) {#operator-jsonelementforbooleanfalseschema-mutable-jsonelementforbooleanfalseschema-mutable}
+
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L127)
 
 ```csharp
 public static bool operator ==(JsonElementForBooleanFalseSchema.Mutable left, JsonElementForBooleanFalseSchema.Mutable right)
@@ -33,9 +35,18 @@ public static bool operator ==(JsonElementForBooleanFalseSchema.Mutable left, Js
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## operator ==(JsonElementForBooleanFalseSchema.Mutable, JsonElement) {#operator-jsonelementforbooleanfalseschema-mutable-jsonelement}
+
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L149)
 
 ```csharp
 public static bool operator ==(JsonElementForBooleanFalseSchema.Mutable left, JsonElement right)
@@ -52,12 +63,12 @@ public static bool operator ==(JsonElementForBooleanFalseSchema.Mutable left, Js
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

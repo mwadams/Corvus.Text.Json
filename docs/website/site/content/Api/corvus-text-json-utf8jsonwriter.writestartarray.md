@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteStartArray Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -21,11 +21,13 @@ Title: "Utf8JsonWriter.WriteStartArray Method — Corvus.Text.Json"
 
 ## WriteStartArray() {#writestartarray}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L573)
+
+Writes the beginning of a JSON array.
+
 ```csharp
 public void WriteStartArray()
 ```
-
-Writes the beginning of a JSON array.
 
 ### Exceptions
 
@@ -33,15 +35,24 @@ Writes the beginning of a JSON array.
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown when the depth of the JSON has exceeded the maximum depth of 1000 OR if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartArray(JsonEncodedText) {#writestartarray-jsonencodedtext}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L725)
+
+Writes the beginning of a JSON array with a pre-encoded property name as the key.
+
 ```csharp
 public void WriteStartArray(JsonEncodedText propertyName)
 ```
-
-Writes the beginning of a JSON array with a pre-encoded property name as the key.
 
 ### Parameters
 
@@ -55,15 +66,24 @@ Writes the beginning of a JSON array with a pre-encoded property name as the key
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown when the depth of the JSON has exceeded the maximum depth of 1000 OR if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartArray(ReadOnlySpan&lt;byte&gt;) {#writestartarray-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L771)
+
+Writes the beginning of a JSON array with a property name as the key.
+
 ```csharp
 public void WriteStartArray(ReadOnlySpan<byte> utf8PropertyName)
 ```
-
-Writes the beginning of a JSON array with a property name as the key.
 
 ### Parameters
 
@@ -82,15 +102,24 @@ Writes the beginning of a JSON array with a property name as the key.
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartArray(string) {#writestartarray-string}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L877)
+
+Writes the beginning of a JSON array with a property name as the key.
+
 ```csharp
 public void WriteStartArray(string propertyName)
 ```
-
-Writes the beginning of a JSON array with a property name as the key.
 
 ### Parameters
 
@@ -110,15 +139,24 @@ Writes the beginning of a JSON array with a property name as the key.
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartArray(ReadOnlySpan&lt;char&gt;) {#writestartarray-readonlyspan-char}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L920)
+
+Writes the beginning of a JSON array with a property name as the key.
+
 ```csharp
 public void WriteStartArray(ReadOnlySpan<char> propertyName)
 ```
-
-Writes the beginning of a JSON array with a property name as the key.
 
 ### Parameters
 
@@ -137,12 +175,12 @@ Writes the beginning of a JSON array with a property name as the key.
 
 The property name is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

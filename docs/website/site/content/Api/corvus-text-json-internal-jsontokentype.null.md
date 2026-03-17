@@ -7,15 +7,16 @@ Title: "JsonTokenType.Null Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
 
 ## Null {#null}
+
+Indicates that the token type is the JSON literal `null`.
 
 ```csharp
 JsonTokenType Null
 ```
-
-Indicates that the token type is the JSON literal `null`.
 
 ### Returns
 

@@ -7,7 +7,7 @@ Title: "IdnMapping.GetUnicode Method — Corvus.Globalization"
 ## Definition
 
 **Namespace:** Corvus.Globalization  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -21,6 +21,8 @@ Title: "IdnMapping.GetUnicode Method — Corvus.Globalization"
 | [GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](#getunicode-readonlyspan-char-span-char-int-int-ref-int) |  |
 
 ## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int) {#getunicode-readonlyspan-byte-span-byte-ref-int}
+
+**Source:** [IdnMapping.Unicode.UTF8.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.UTF8.cs#L36)
 
 ```csharp
 public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref int written)
@@ -38,9 +40,18 @@ public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, ref in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, ref int) {#getunicode-readonlyspan-byte-span-byte-int-ref-int}
+
+**Source:** [IdnMapping.Unicode.UTF8.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.UTF8.cs#L41)
 
 ```csharp
 public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, ref int written)
@@ -59,9 +70,18 @@ public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetUnicode(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, int, int, ref int) {#getunicode-readonlyspan-byte-span-byte-int-int-ref-int}
+
+**Source:** [IdnMapping.Unicode.UTF8.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.UTF8.cs#L49)
 
 ```csharp
 public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int index, int count, ref int written)
@@ -81,9 +101,18 @@ public bool GetUnicode(ReadOnlySpan<byte> ascii, Span<byte> outputBuffer, int in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int) {#getunicode-readonlyspan-char-span-char-ref-int}
+
+**Source:** [IdnMapping.Unicode.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.cs#L33)
 
 ```csharp
 public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref int written)
@@ -101,9 +130,18 @@ public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, ref in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int) {#getunicode-readonlyspan-char-span-char-int-ref-int}
+
+**Source:** [IdnMapping.Unicode.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.cs#L38)
 
 ```csharp
 public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, ref int written)
@@ -122,9 +160,18 @@ public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetUnicode(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int) {#getunicode-readonlyspan-char-span-char-int-int-ref-int}
+
+**Source:** [IdnMapping.Unicode.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.cs#L46)
 
 ```csharp
 public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int index, int count, ref int written)
@@ -144,12 +191,12 @@ public bool GetUnicode(ReadOnlySpan<char> ascii, Span<char> outputBuffer, int in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

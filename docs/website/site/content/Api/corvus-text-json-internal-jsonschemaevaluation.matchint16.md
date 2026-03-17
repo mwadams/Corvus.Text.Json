@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchInt16 Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L825)
 
 ## MatchInt16 {#matchint16}
+
+Matches a JSON number against the Int16 type constraint, validating it as a 16-bit signed integer.
 
 ```csharp
 public static bool MatchInt16(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number against the Int16 type constraint, validating it as a 16-bit signed integer.
 
 ### Parameters
 

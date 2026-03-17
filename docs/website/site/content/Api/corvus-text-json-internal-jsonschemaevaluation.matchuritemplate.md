@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchUriTemplate Method — Corvus.Text.Json.Intern
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L729)
 
 ## MatchUriTemplate {#matchuritemplate}
+
+Validates that a string value is a valid URI template format.
 
 ```csharp
 public static bool MatchUriTemplate(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value is a valid URI template format.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonElement.GetGuid Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1936)
 
 ## GetGuid {#getguid}
+
+Gets the value of the element as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
 
 ```csharp
 public Guid GetGuid()
 ```
-
-Gets the value of the element as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "Utf8IriReference.Fragment Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L64)
 
 ## Fragment {#fragment}
+
+Gets the fragment component of the reference.
 
 ```csharp
 public ReadOnlySpan<byte> Fragment { get; }
 ```
-
-Gets the fragment component of the reference.
 
 ### Returns
 

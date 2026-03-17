@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WritePropertyName Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "Utf8JsonWriter.WritePropertyName Method — Corvus.Text.Json"
 
 ## WritePropertyName(JsonEncodedText) {#writepropertyname-jsonencodedtext}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L26)
+
+Writes the pre-encoded property name (as a JSON string) as the first part of a name/value pair of a JSON object.
+
 ```csharp
 public void WritePropertyName(JsonEncodedText propertyName)
 ```
-
-Writes the pre-encoded property name (as a JSON string) as the first part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -38,15 +40,24 @@ Writes the pre-encoded property name (as a JSON string) as the first part of a n
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WritePropertyName(string) {#writepropertyname-string}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L46)
+
+Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object.
+
 ```csharp
 public void WritePropertyName(string propertyName)
 ```
-
-Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -66,15 +77,24 @@ Writes the property name (as a JSON string) as the first part of a name/value pa
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WritePropertyName(ReadOnlySpan&lt;char&gt;) {#writepropertyname-readonlyspan-char}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L65)
+
+Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object.
+
 ```csharp
 public void WritePropertyName(ReadOnlySpan<char> propertyName)
 ```
-
-Writes the property name (as a JSON string) as the first part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -93,15 +113,24 @@ Writes the property name (as a JSON string) as the first part of a name/value pa
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WritePropertyName(ReadOnlySpan&lt;byte&gt;) {#writepropertyname-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L100)
+
+Writes the UTF-8 property name (as a JSON string) as the first part of a name/value pair of a JSON object.
+
 ```csharp
 public void WritePropertyName(ReadOnlySpan<byte> utf8PropertyName)
 ```
-
-Writes the UTF-8 property name (as a JSON string) as the first part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -120,12 +149,12 @@ Writes the UTF-8 property name (as a JSON string) as the first part of a name/va
 
 The property name is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

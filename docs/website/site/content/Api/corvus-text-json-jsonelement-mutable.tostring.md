@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,6 +18,8 @@ Title: "JsonElement.Mutable.ToString Method — Corvus.Text.Json"
 
 ## ToString() {#tostring}
 
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L4259)
+
 ```csharp
 public override string ToString()
 ```
@@ -26,9 +28,18 @@ public override string ToString()
 
 [`string`](https://learn.microsoft.com/dotnet/api/system.string)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ToString(string, IFormatProvider) {#tostring-string-iformatprovider}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L4281)
 
 ```csharp
 public string ToString(string format, IFormatProvider formatProvider)
@@ -49,12 +60,12 @@ public string ToString(string format, IFormatProvider formatProvider)
 
 [`IFormattable.ToString`](https://learn.microsoft.com/dotnet/api/system.iformattable.tostring)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

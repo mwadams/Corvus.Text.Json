@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter Constructors — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "Utf8JsonWriter Constructors — Corvus.Text.Json"
 
 ## Utf8JsonWriter(IBufferWriter&lt;byte&gt;, JsonWriterOptions) {#utf8jsonwriter-ibufferwriter-byte-jsonwriteroptions}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L235)
+
+Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `bufferWriter`.
+
 ```csharp
 public Utf8JsonWriter(IBufferWriter<byte> bufferWriter, JsonWriterOptions options)
 ```
-
-Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `bufferWriter`.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) i
 |-----------|-------------|
 | [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | Thrown when the instance of [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1) that is passed in is null. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Utf8JsonWriter(Stream, JsonWriterOptions) {#utf8jsonwriter-stream-jsonwriteroptions}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L253)
+
+Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `utf8Json`.
+
 ```csharp
 public Utf8JsonWriter(Stream utf8Json, JsonWriterOptions options)
 ```
-
-Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) instance with a specified `utf8Json`.
 
 ### Parameters
 
@@ -60,12 +71,12 @@ Constructs a new [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) i
 |-----------|-------------|
 | [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | Thrown when the instance of [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) that is passed in is null. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

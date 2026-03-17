@@ -7,15 +7,16 @@ Title: "JsonElement.GetOffsetDateTime Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1732)
 
 ## GetOffsetDateTime {#getoffsetdatetime}
+
+Gets the value of the element as a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html).
 
 ```csharp
 public OffsetDateTime GetOffsetDateTime()
 ```
-
-Gets the value of the element as a [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html).
 
 ### Returns
 

@@ -7,7 +7,8 @@ Title: "Matcher<TMatch, TContext, TResult> Constructors — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Matcher.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Matcher.cs#L23)
 
 ## Matcher {#matcher}
 

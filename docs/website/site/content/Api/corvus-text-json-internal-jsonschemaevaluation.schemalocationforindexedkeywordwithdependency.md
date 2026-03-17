@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.SchemaLocationForIndexedKeywordWithDependency Metho
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L75)
 
 ## SchemaLocationForIndexedKeywordWithDependency {#schemalocationforindexedkeywordwithdependency}
+
+Creates a schema location for an indexed keyword by appending the index to the base location and dependency.
 
 ```csharp
 public static bool SchemaLocationForIndexedKeywordWithDependency(ReadOnlySpan<byte> keywordSchemaLocation, ReadOnlySpan<byte> dependencyName, int index, Span<byte> buffer, ref int written)
 ```
-
-Creates a schema location for an indexed keyword by appending the index to the base location and dependency.
 
 ### Parameters
 

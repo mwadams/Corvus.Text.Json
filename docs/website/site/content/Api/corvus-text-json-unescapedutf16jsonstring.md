@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "UnescapedUtf16JsonString — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UnescapedUtf16JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/UnescapedUtf16JsonString.cs#L20)
+
+Represents an Unescaped UTF-16 JSON string.
+
 ```csharp
 public readonly struct UnescapedUtf16JsonString : IDisposable
 ```
-
-Represents an Unescaped UTF-16 JSON string.
 
 ## Remarks
 

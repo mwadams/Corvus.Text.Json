@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.GetBoolean Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L88)
 
 ## GetBoolean {#getboolean}
+
+Parses the current JSON token value from the source as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean). Returns `true` if the TokenType is JsonTokenType.True and `false` if the TokenType is JsonTokenType.False.
 
 ```csharp
 public bool GetBoolean()
 ```
-
-Parses the current JSON token value from the source as a [`Boolean`](https://learn.microsoft.com/dotnet/api/system.boolean). Returns `true` if the TokenType is JsonTokenType.True and `false` if the TokenType is JsonTokenType.False.
 
 ### Returns
 

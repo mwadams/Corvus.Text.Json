@@ -7,7 +7,7 @@ Title: "BigNumber.TryFormat Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "BigNumber.TryFormat Method — Corvus.Numerics"
 
 ## TryFormat(Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-char-ref-int-readonlyspan-char-iformatprovider}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L974)
+
+Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span.
+
 ```csharp
 public bool TryFormat(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
-
-Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span.
 
 ### Parameters
 
@@ -45,15 +47,23 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 
 [`ISpanFormattable.TryFormat`](https://learn.microsoft.com/dotnet/api/system.ispanformattable.tryformat)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryFormat(Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-span-byte-ref-int-readonlyspan-char-iformatprovider}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L988)
+
+Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span.
+
 ```csharp
 public bool TryFormat(Span<byte> utf8Destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
-
-Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span.
 
 ### Parameters
 
@@ -74,15 +84,23 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 
 [`IUtf8SpanFormattable.TryFormat`](https://learn.microsoft.com/dotnet/api/system.iutf8spanformattable.tryformat)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryFormat(Span&lt;char&gt;, ref int) {#tryformat-span-char-ref-int}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1001)
+
+Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span using default formatting.
+
 ```csharp
 public bool TryFormat(Span<char> destination, ref int charsWritten)
 ```
-
-Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided character span using default formatting.
 
 ### Parameters
 
@@ -97,15 +115,24 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 
 `true` if formatting succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryFormat(Span&lt;byte&gt;, ref int) {#tryformat-span-byte-ref-int}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1013)
+
+Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span using default formatting.
+
 ```csharp
 public bool TryFormat(Span<byte> destination, ref int bytesWritten)
 ```
-
-Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value into the provided UTF-8 byte span using default formatting.
 
 ### Parameters
 
@@ -120,11 +147,12 @@ Tries to format this [`BigNumber`](/api/corvus-numerics-bignumber.html) value in
 
 `true` if formatting succeeded; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
 

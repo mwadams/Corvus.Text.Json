@@ -7,15 +7,16 @@ Title: "JsonElement.EnsurePropertyMap Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L2007)
 
 ## EnsurePropertyMap {#ensurepropertymap}
+
+Ensures that a fast-lookup property map is created for this element.
 
 ```csharp
 public void EnsurePropertyMap()
 ```
-
-Ensures that a fast-lookup property map is created for this element.
 
 ### Remarks
 

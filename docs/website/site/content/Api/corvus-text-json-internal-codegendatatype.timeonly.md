@@ -7,15 +7,16 @@ Title: "CodeGenDataType.TimeOnly Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L213)
 
 ## TimeOnly {#timeonly}
+
+Represents a time-only value.
 
 ```csharp
 CodeGenDataType TimeOnly
 ```
-
-Represents a time-only value.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.TryGetDouble Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L646)
 
 ## TryGetDouble {#trygetdouble}
+
+Parses the current JSON token value from the source as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value. Returns `false` otherwise.
 
 ```csharp
 public bool TryGetDouble(ref double value)
 ```
-
-Parses the current JSON token value from the source as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`Double`](https://learn.microsoft.com/dotnet/api/system.double) value. Returns `false` otherwise.
 
 ### Parameters
 

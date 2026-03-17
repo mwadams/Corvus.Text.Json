@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.ECMAScript Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## ECMAScript {#ecmascript}
+
+Enable ECMAScript-compliant behavior for the expression.
 
 ```csharp
 JsonRegexOptions ECMAScript
 ```
-
-Enable ECMAScript-compliant behavior for the expression.
 
 ### Returns
 

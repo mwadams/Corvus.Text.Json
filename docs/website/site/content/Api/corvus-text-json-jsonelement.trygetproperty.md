@@ -7,7 +7,7 @@ Title: "JsonElement.TryGetProperty Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "JsonElement.TryGetProperty Method — Corvus.Text.Json"
 
 ## TryGetProperty(string, ref JsonElement) {#trygetproperty-string-ref-jsonelement}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L434)
+
+Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property.
+
 ```csharp
 public bool TryGetProperty(string propertyName, ref JsonElement value)
 ```
-
-Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property.
 
 ### Parameters
 
@@ -50,15 +52,24 @@ Looks for a property named `propertyName` in the current object, returning wheth
 
 Property name matching is performed as an ordinal, case-sensitive, comparison. If a property is defined multiple times for the same object, the last such definition is what is matched.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetProperty(ReadOnlySpan&lt;char&gt;, ref JsonElement) {#trygetproperty-readonlyspan-char-ref-jsonelement}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L468)
+
+Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property.
+
 ```csharp
 public bool TryGetProperty(ReadOnlySpan<char> propertyName, ref JsonElement value)
 ```
-
-Looks for a property named `propertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property.
 
 ### Parameters
 
@@ -84,15 +95,24 @@ Looks for a property named `propertyName` in the current object, returning wheth
 
 Property name matching is performed as an ordinal, case-sensitive, comparison. If a property is defined multiple times for the same object, the last such definition is what is matched.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetProperty(ReadOnlySpan&lt;byte&gt;, ref JsonElement) {#trygetproperty-readonlyspan-byte-ref-jsonelement}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L504)
+
+Looks for a property named `utf8PropertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property.
+
 ```csharp
 public bool TryGetProperty(ReadOnlySpan<byte> utf8PropertyName, ref JsonElement value)
 ```
-
-Looks for a property named `utf8PropertyName` in the current object, returning whether or not such a property existed. When the property exists `value` is assigned to the value of that property.
 
 ### Parameters
 
@@ -118,12 +138,12 @@ Looks for a property named `utf8PropertyName` in the current object, returning w
 
 Property name matching is performed as an ordinal, case-sensitive, comparison. If a property is defined multiple times for the same object, the last such definition is what is matched.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

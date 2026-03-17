@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.RemoveWhereUnsafe Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
 
 ## RemoveWhereUnsafe {#removewhereunsafe}
+
+Removes a items from an array element which match a predicate.
 
 ```csharp
 public static void RemoveWhereUnsafe<TArray, T>(TArray arrayElement, JsonPredicate<T> predicate)
 ```
-
-Removes a items from an array element which match a predicate.
 
 ### Type Parameters
 

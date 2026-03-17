@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.ParseOffsetCore Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.Core.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.Core.cs#L116)
 
 ## ParseOffsetCore {#parseoffsetcore}
+
+Parses a timezone offset string in ISO 8601 format (±HH:MM or Z) and extracts the offset in seconds.
 
 ```csharp
 public static bool ParseOffsetCore(ReadOnlySpan<byte> text, ref int offsetSeconds)
 ```
-
-Parses a timezone offset string in ISO 8601 format (±HH:MM or Z) and extracts the offset in seconds.
 
 ### Parameters
 

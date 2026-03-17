@@ -7,15 +7,16 @@ Title: "JsonException.Message Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonException.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonException.cs#L106)
 
 ## Message {#message}
+
+Gets a message that describes the current exception.
 
 ```csharp
 public virtual string Message { get; }
 ```
-
-Gets a message that describes the current exception.
 
 ### Returns
 

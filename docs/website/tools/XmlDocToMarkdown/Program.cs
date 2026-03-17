@@ -5,6 +5,7 @@ string? assemblyPath = null;
 string? outputPath = null;
 string? taxonomyOutputPath = null;
 string? apiViewsDir = null;
+string? sharedViewsDir = null;
 string? repoUrl = null;
 string? nsDescriptionsDir = null;
 string? ns20AssemblyPath = null;
@@ -28,6 +29,9 @@ for (int i = 0; i < args.Length - 1; i++)
             break;
         case "--api-views-dir":
             apiViewsDir = args[++i];
+            break;
+        case "--shared-views-dir":
+            sharedViewsDir = args[++i];
             break;
         case "--repo-url":
             repoUrl = args[++i];
@@ -54,6 +58,8 @@ if (xmlPath is null || assemblyPath is null)
     Console.Error.WriteLine("  --assembly         Path to the compiled DLL");
     Console.Error.WriteLine("  --output           Output directory for generated markdown files");
     Console.Error.WriteLine("  --taxonomy-output  Output directory for generated taxonomy YAML files");
+    Console.Error.WriteLine("  --api-views-dir    (Optional) Directory for the generated API index view");
+    Console.Error.WriteLine("  --shared-views-dir (Optional) Directory for generated shared Razor partials (e.g. _ApiSidebar.cshtml)");
     Console.Error.WriteLine("  --repo-url         (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
     Console.Error.WriteLine("  --ns-descriptions  (Optional) Directory containing {Namespace}.md files with namespace descriptions");
     Console.Error.WriteLine("  --api-base-url     (Optional) Base URL path for API pages (default: /api)");
@@ -205,7 +211,7 @@ if (outputPath is not null)
     Directory.CreateDirectory(outputPath);
 
     Console.WriteLine($"Generating namespace markdown to: {outputPath}");
-    MarkdownGenerator markdownGen = new(outputPath, resolvedBaseUrl, nsDescriptionsDir);
+    MarkdownGenerator markdownGen = new(outputPath, resolvedBaseUrl, nsDescriptionsDir, sourceResolver);
     markdownGen.Generate(namespaces);
     markdownGen.GeneratePerType(namespaces);
     markdownGen.GenerateMemberPages(namespaces);
@@ -230,7 +236,13 @@ if (apiViewsDir is not null)
     Console.WriteLine($"Generating API views to: {apiViewsDir}");
     Directory.CreateDirectory(apiViewsDir);
     ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces, resolvedBaseUrl, nsDescriptionsDir);
-    ApiViewGenerator.GenerateSharedApiView(apiViewsDir, namespaces, resolvedBaseUrl);
+}
+
+if (sharedViewsDir is not null)
+{
+    Console.WriteLine($"Generating API sidebar partial to: {sharedViewsDir}");
+    Directory.CreateDirectory(sharedViewsDir);
+    ApiViewGenerator.GenerateApiSidebar(sharedViewsDir, namespaces, resolvedBaseUrl);
 }
 
 if (outputPath is not null)

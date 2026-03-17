@@ -7,15 +7,16 @@ Title: "UnescapedUtf16JsonString.TakeOwnership Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UnescapedUtf16JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/UnescapedUtf16JsonString.cs#L57)
 
 ## TakeOwnership {#takeownership}
+
+Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) characters, if any.
 
 ```csharp
 public ReadOnlyMemory<char> TakeOwnership(ref char[] extraRentedArrayPoolChars)
 ```
-
-Take ownership of the [`ArrayPool`](https://learn.microsoft.com/dotnet/api/system.buffers.arraypool-1.shared#arraypool) characters, if any.
 
 ### Parameters
 

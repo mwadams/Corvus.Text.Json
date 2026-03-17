@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.TryParsePeriod Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L113)
 
 ## TryParsePeriod {#tryparseperiod}
+
+Parse a period from a string for the `duration` format.
 
 ```csharp
 public static bool TryParsePeriod(ReadOnlySpan<byte> text, ref Period value)
 ```
-
-Parse a period from a string for the `duration` format.
 
 ### Parameters
 

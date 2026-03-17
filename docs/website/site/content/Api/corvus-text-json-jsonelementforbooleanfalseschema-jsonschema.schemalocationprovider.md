@@ -7,7 +7,8 @@ Title: "JsonElementForBooleanFalseSchema.JsonSchema.SchemaLocationProvider Field
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.JsonSchema.cs#L34)
 
 ## SchemaLocationProvider {#schemalocationprovider}
 

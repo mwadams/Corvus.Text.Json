@@ -7,15 +7,16 @@ Title: "JsonElement.EnumerateArray Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L2147)
 
 ## EnumerateArray {#enumeratearray}
+
+Get an enumerator to enumerate the values in the JSON array represented by this JsonElement.
 
 ```csharp
 public ArrayEnumerator<JsonElement> EnumerateArray()
 ```
-
-Get an enumerator to enumerate the values in the JSON array represented by this JsonElement.
 
 ### Returns
 

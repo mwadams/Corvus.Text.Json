@@ -7,15 +7,16 @@ Title: "UniqueItemsHashSet.StackAllocEntrySize Field — Corvus.Text.Json.Intern
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UniqueItemsHashSet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/UniqueItemsHashSet.cs#L25)
 
 ## StackAllocEntrySize {#stackallocentrysize}
+
+The recommended size for a stack allocated entries buffer.
 
 ```csharp
 int StackAllocEntrySize
 ```
-
-The recommended size for a stack allocated entries buffer.
 
 ### Returns
 

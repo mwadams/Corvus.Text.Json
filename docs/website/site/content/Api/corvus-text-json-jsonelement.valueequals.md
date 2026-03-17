@@ -7,7 +7,7 @@ Title: "JsonElement.ValueEquals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "JsonElement.ValueEquals Method — Corvus.Text.Json"
 
 ## ValueEquals(string) {#valueequals-string}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L2029)
+
+Compares `text` to the string value of this element.
+
 ```csharp
 public bool ValueEquals(string text)
 ```
-
-Compares `text` to the string value of this element.
 
 ### Parameters
 
@@ -47,15 +49,24 @@ Compares `text` to the string value of this element.
 
 This method is functionally equal to doing an ordinal comparison of `text` and the result of calling [`GetString`](/api/corvus-text-json-jsonelement.html#getstring), but avoids creating the string instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ValueEquals(ReadOnlySpan&lt;byte&gt;) {#valueequals-readonlyspan-byte}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L2056)
+
+Compares the text represented by `utf8Text` to the string value of this element.
+
 ```csharp
 public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
 ```
-
-Compares the text represented by `utf8Text` to the string value of this element.
 
 ### Parameters
 
@@ -79,15 +90,24 @@ Compares the text represented by `utf8Text` to the string value of this element.
 
 This method is functionally equal to doing an ordinal comparison of the string produced by UTF-8 decoding `utf8Text` with the result of calling [`GetString`](/api/corvus-text-json-jsonelement.html#getstring), but avoids creating the string instances.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ValueEquals(ReadOnlySpan&lt;char&gt;) {#valueequals-readonlyspan-char}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L2085)
+
+Compares `text` to the string value of this element.
+
 ```csharp
 public bool ValueEquals(ReadOnlySpan<char> text)
 ```
-
-Compares `text` to the string value of this element.
 
 ### Parameters
 
@@ -111,12 +131,12 @@ Compares `text` to the string value of this element.
 
 This method is functionally equal to doing an ordinal comparison of `text` and the result of calling [`GetString`](/api/corvus-text-json-jsonelement.html#getstring), but avoids creating the string instance.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

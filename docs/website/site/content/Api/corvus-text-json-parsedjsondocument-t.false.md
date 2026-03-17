@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.False Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L45)
 
 ## False {#false}
+
+Gets the False instance.
 
 ```csharp
 public static T False { get; }
 ```
-
-Gets the False instance.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "BigNumber.Ceiling Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2210)
 
 ## Ceiling {#ceiling}
+
+Returns the smallest integer greater than or equal to the specified number.
 
 ```csharp
 public static BigNumber Ceiling(BigNumber value)
 ```
-
-Returns the smallest integer greater than or equal to the specified number.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "BigNumber.Increment Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1871)
 
 ## operator ++ {#operator}
+
+Increments a value by one.
 
 ```csharp
 public static BigNumber operator ++(BigNumber value)
 ```
-
-Increments a value by one.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.GetProperty Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,6 +18,8 @@ Title: "JsonElement.Mutable.GetProperty Method — Corvus.Text.Json"
 | [GetProperty(ReadOnlySpan&lt;byte&gt;)](#getproperty-readonlyspan-byte) |  |
 
 ## GetProperty(string) {#getproperty-string}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L2412)
 
 ```csharp
 public JsonElement.Mutable GetProperty(string propertyName)
@@ -33,9 +35,18 @@ public JsonElement.Mutable GetProperty(string propertyName)
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetProperty(ReadOnlySpan&lt;char&gt;) {#getproperty-readonlyspan-char}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L2452)
 
 ```csharp
 public JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
@@ -51,9 +62,18 @@ public JsonElement.Mutable GetProperty(ReadOnlySpan<char> propertyName)
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetProperty(ReadOnlySpan&lt;byte&gt;) {#getproperty-readonlyspan-byte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L2492)
 
 ```csharp
 public JsonElement.Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
@@ -69,12 +89,12 @@ public JsonElement.Mutable GetProperty(ReadOnlySpan<byte> utf8PropertyName)
 
 [`JsonElement.Mutable`](/api/corvus-text-json-jsonelement-mutable.html)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

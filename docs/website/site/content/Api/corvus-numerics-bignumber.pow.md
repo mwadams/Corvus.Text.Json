@@ -7,15 +7,16 @@ Title: "BigNumber.Pow Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2067)
 
 ## Pow {#pow}
+
+Raises a BigNumber to an integer power.
 
 ```csharp
 public static BigNumber Pow(BigNumber value, int exponent)
 ```
-
-Raises a BigNumber to an integer power.
 
 ### Parameters
 

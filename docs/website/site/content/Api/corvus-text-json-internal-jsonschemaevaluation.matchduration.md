@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchDuration Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L405)
 
 ## MatchDuration {#matchduration}
+
+Validates that a string value conforms to the ISO 8601 duration format.
 
 ```csharp
 public static bool MatchDuration(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value conforms to the ISO 8601 duration format.
 
 ### Parameters
 

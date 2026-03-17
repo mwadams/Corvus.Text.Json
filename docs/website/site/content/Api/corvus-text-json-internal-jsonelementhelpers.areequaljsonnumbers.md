@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.AreEqualJsonNumbers Method — Corvus.Text.Json.Inter
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L64)
 
 ## AreEqualJsonNumbers {#areequaljsonnumbers}
+
+Compares two valid UTF-8 encoded JSON numbers for decimal equality.
 
 ```csharp
 public static bool AreEqualJsonNumbers(ReadOnlySpan<byte> left, ReadOnlySpan<byte> right)
 ```
-
-Compares two valid UTF-8 encoded JSON numbers for decimal equality.
 
 ### Parameters
 

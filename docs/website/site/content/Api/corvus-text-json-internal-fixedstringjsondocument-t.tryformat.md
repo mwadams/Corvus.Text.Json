@@ -7,7 +7,7 @@ Title: "FixedStringJsonDocument<T>.TryFormat Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "FixedStringJsonDocument<T>.TryFormat Method — Corvus.Text.Json.Interna
 | [TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
 
 ## TryFormat(int, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-char-ref-int-readonlyspan-char-iformatprovider}
+
+**Source:** [FixedStringJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/FixedStringJsonDocument.cs#L728)
 
 ```csharp
 public bool TryFormat(int index, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
@@ -40,9 +42,18 @@ public bool TryFormat(int index, Span<char> destination, ref int charsWritten, R
 
 [`IJsonDocument.TryFormat`](/api/corvus-text-json-internal-ijsondocument.tryformat.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryFormat(int, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformat-int-span-byte-ref-int-readonlyspan-char-iformatprovider}
+
+**Source:** [FixedStringJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/FixedStringJsonDocument.cs#L736)
 
 ```csharp
 public bool TryFormat(int index, Span<byte> destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider formatProvider)
@@ -66,12 +77,12 @@ public bool TryFormat(int index, Span<byte> destination, ref int bytesWritten, R
 
 [`IJsonDocument.TryFormat`](/api/corvus-text-json-internal-ijsondocument.tryformat.html)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

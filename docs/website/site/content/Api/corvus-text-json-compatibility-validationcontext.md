@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "ValidationContext — Corvus.Text.Json.Compatibility"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Compatibility  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationContext.cs#L17)
+
+Represents the context for a JSON schema validation operation, including validity and results.
+
 ```csharp
 public readonly struct ValidationContext
 ```
-
-Represents the context for a JSON schema validation operation, including validity and results.
 
 ## Properties
 

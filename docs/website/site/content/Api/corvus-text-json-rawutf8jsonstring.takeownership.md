@@ -7,15 +7,16 @@ Title: "RawUtf8JsonString.TakeOwnership Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [RawUtf8JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/RawUtf8JsonString.cs#L57)
 
 ## TakeOwnership {#takeownership}
+
+Takes ownership of the underlying memory and any extra rented array pool bytes.
 
 ```csharp
 public ReadOnlyMemory<byte> TakeOwnership(ref byte[] extraRentedArrayPoolBytes)
 ```
-
-Takes ownership of the underlying memory and any extra rented array pool bytes.
 
 ### Parameters
 

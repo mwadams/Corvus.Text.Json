@@ -7,7 +7,7 @@ Title: "JsonElementForBooleanFalseSchema.Inequality Operator — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementForBooleanFalseSchema.Inequality Operator — Corvus.Text.Jso
 
 ## operator !=(JsonElementForBooleanFalseSchema, JsonElementForBooleanFalseSchema) {#operator-jsonelementforbooleanfalseschema-jsonelementforbooleanfalseschema}
 
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L96)
+
+Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instances are not equal.
+
 ```csharp
 public static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElementForBooleanFalseSchema right)
 ```
-
-Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) instances are not equal.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Determines whether two [`JsonElementForBooleanFalseSchema`](/api/corvus-text-jso
 
 `true` if the instances are not equal; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## operator !=(JsonElementForBooleanFalseSchema, JsonElement) {#operator-jsonelementforbooleanfalseschema-jsonelement}
 
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L118)
+
+Determines whether a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) and a [`JsonElement`](/api/corvus-text-json-jsonelement.html) are not equal.
+
 ```csharp
 public static bool operator !=(JsonElementForBooleanFalseSchema left, JsonElement right)
 ```
-
-Determines whether a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-jsonelementforbooleanfalseschema.html) and a [`JsonElement`](/api/corvus-text-json-jsonelement.html) are not equal.
 
 ### Parameters
 
@@ -60,12 +71,12 @@ Determines whether a [`JsonElementForBooleanFalseSchema`](/api/corvus-text-json-
 
 `true` if the instances are not equal; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

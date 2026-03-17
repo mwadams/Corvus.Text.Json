@@ -7,15 +7,16 @@ Title: "MetadataDb.Dispose Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [MetadataDb.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/MetadataDb.cs#L216)
 
 ## Dispose {#dispose}
+
+Releases resources used by the metadata database, returning rented arrays to the pool.
 
 ```csharp
 public void Dispose()
 ```
-
-Releases resources used by the metadata database, returning rented arrays to the pool.
 
 ### Implements
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.PushChildContextUnescaped Method — Corvus.Text.Json.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L393)
 
 ## PushChildContextUnescaped {#pushchildcontextunescaped}
+
+Creates a new child context for schema evaluation with unescaped property name tracking.
 
 ```csharp
 public JsonSchemaContext PushChildContextUnescaped(IJsonDocument parentDocument, int parentDocumentIndex, bool useEvaluatedItems, bool useEvaluatedProperties, ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider evaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
 ```
-
-Creates a new child context for schema evaluation with unescaped property name tracking.
 
 ### Parameters
 

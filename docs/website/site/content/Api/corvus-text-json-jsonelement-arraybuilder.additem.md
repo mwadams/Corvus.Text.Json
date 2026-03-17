@@ -7,7 +7,7 @@ Title: "JsonElement.ArrayBuilder.AddItem Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -49,6 +49,8 @@ Title: "JsonElement.ArrayBuilder.AddItem Method — Corvus.Text.Json"
 
 ## AddItem(JsonElement.ObjectBuilder.Build) {#additem-jsonelement-objectbuilder-build}
 
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L102)
+
 ```csharp
 public void AddItem(JsonElement.ObjectBuilder.Build value)
 ```
@@ -59,9 +61,18 @@ public void AddItem(JsonElement.ObjectBuilder.Build value)
 |------|------|-------------|
 | `value` | [`JsonElement.ObjectBuilder.Build`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;) {#additem-ref-tcontext-jsonelement-objectbuilder-build-tcontext}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L41)
 
 ```csharp
 public void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value)
@@ -74,9 +85,18 @@ public void AddItem<TContext>(ref TContext context, JsonElement.ObjectBuilder.Bu
 | `context` | `ref TContext` |  |
 | `value` | [`JsonElement.ObjectBuilder.Build<TContext>`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(JsonElement.ArrayBuilder.Build) {#additem-jsonelement-arraybuilder-build}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L123)
 
 ```csharp
 public void AddItem(JsonElement.ArrayBuilder.Build value)
@@ -88,9 +108,18 @@ public void AddItem(JsonElement.ArrayBuilder.Build value)
 |------|------|-------------|
 | `value` | [`JsonElement.ArrayBuilder.Build`](/api/corvus-text-json-jsonelement-arraybuilder-build.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;) {#additem-ref-tcontext-jsonelement-arraybuilder-build-tcontext}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L41)
 
 ```csharp
 public void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Build<TContext> value)
@@ -103,9 +132,18 @@ public void AddItem<TContext>(ref TContext context, JsonElement.ArrayBuilder.Bui
 | `context` | `ref TContext` |  |
 | `value` | [`JsonElement.ArrayBuilder.Build<TContext>`](/api/corvus-text-json-jsonelement-arraybuilder-build.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(string) {#additem-string}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L144)
 
 ```csharp
 public void AddItem(string value)
@@ -117,9 +155,18 @@ public void AddItem(string value)
 |------|------|-------------|
 | `value` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ReadOnlySpan&lt;char&gt;) {#additem-readonlyspan-char}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L153)
 
 ```csharp
 public void AddItem(ReadOnlySpan<char> value)
@@ -131,9 +178,18 @@ public void AddItem(ReadOnlySpan<char> value)
 |------|------|-------------|
 | `value` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ReadOnlySpan&lt;byte&gt;) {#additem-readonlyspan-byte}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L162)
 
 ```csharp
 public void AddItem(ReadOnlySpan<byte> utf8String)
@@ -145,9 +201,18 @@ public void AddItem(ReadOnlySpan<byte> utf8String)
 |------|------|-------------|
 | `utf8String` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(bool) {#additem-bool}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L201)
 
 ```csharp
 public void AddItem(bool value)
@@ -159,9 +224,18 @@ public void AddItem(bool value)
 |------|------|-------------|
 | `value` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(T) {#additem-t}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L41)
 
 ```csharp
 public void AddItem<T>(T value)
@@ -173,9 +247,18 @@ public void AddItem<T>(T value)
 |------|------|-------------|
 | `value` | `T` |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(Guid) {#additem-guid}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L222)
 
 ```csharp
 public void AddItem(Guid value)
@@ -187,9 +270,18 @@ public void AddItem(Guid value)
 |------|------|-------------|
 | `value` | [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref DateTime) {#additem-ref-datetime}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L231)
 
 ```csharp
 public void AddItem(ref DateTime value)
@@ -201,9 +293,18 @@ public void AddItem(ref DateTime value)
 |------|------|-------------|
 | `value` | [`ref DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref DateTimeOffset) {#additem-ref-datetimeoffset}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L240)
 
 ```csharp
 public void AddItem(ref DateTimeOffset value)
@@ -215,9 +316,18 @@ public void AddItem(ref DateTimeOffset value)
 |------|------|-------------|
 | `value` | [`ref DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref OffsetDateTime) {#additem-ref-offsetdatetime}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L249)
 
 ```csharp
 public void AddItem(ref OffsetDateTime value)
@@ -229,9 +339,18 @@ public void AddItem(ref OffsetDateTime value)
 |------|------|-------------|
 | `value` | [`ref OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref OffsetDate) {#additem-ref-offsetdate}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L258)
 
 ```csharp
 public void AddItem(ref OffsetDate value)
@@ -243,9 +362,18 @@ public void AddItem(ref OffsetDate value)
 |------|------|-------------|
 | `value` | [`ref OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref OffsetTime) {#additem-ref-offsettime}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L267)
 
 ```csharp
 public void AddItem(ref OffsetTime value)
@@ -257,9 +385,18 @@ public void AddItem(ref OffsetTime value)
 |------|------|-------------|
 | `value` | [`ref OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref LocalDate) {#additem-ref-localdate}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L276)
 
 ```csharp
 public void AddItem(ref LocalDate value)
@@ -271,9 +408,18 @@ public void AddItem(ref LocalDate value)
 |------|------|-------------|
 | `value` | [`ref LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref Period) {#additem-ref-period}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L285)
 
 ```csharp
 public void AddItem(ref Period value)
@@ -285,9 +431,18 @@ public void AddItem(ref Period value)
 |------|------|-------------|
 | `value` | [`ref Period`](/api/corvus-text-json-period.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(sbyte) {#additem-sbyte}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L295)
 
 ```csharp
 public void AddItem(sbyte value)
@@ -299,9 +454,18 @@ public void AddItem(sbyte value)
 |------|------|-------------|
 | `value` | [`sbyte`](https://learn.microsoft.com/dotnet/api/system.sbyte) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(byte) {#additem-byte}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L304)
 
 ```csharp
 public void AddItem(byte value)
@@ -313,9 +477,18 @@ public void AddItem(byte value)
 |------|------|-------------|
 | `value` | [`byte`](https://learn.microsoft.com/dotnet/api/system.byte) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(int) {#additem-int}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L313)
 
 ```csharp
 public void AddItem(int value)
@@ -327,9 +500,18 @@ public void AddItem(int value)
 |------|------|-------------|
 | `value` | [`int`](https://learn.microsoft.com/dotnet/api/system.int32) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(uint) {#additem-uint}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L323)
 
 ```csharp
 public void AddItem(uint value)
@@ -341,9 +523,18 @@ public void AddItem(uint value)
 |------|------|-------------|
 | `value` | [`uint`](https://learn.microsoft.com/dotnet/api/system.uint32) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(long) {#additem-long}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L332)
 
 ```csharp
 public void AddItem(long value)
@@ -355,9 +546,18 @@ public void AddItem(long value)
 |------|------|-------------|
 | `value` | [`long`](https://learn.microsoft.com/dotnet/api/system.int64) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ulong) {#additem-ulong}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L342)
 
 ```csharp
 public void AddItem(ulong value)
@@ -369,9 +569,18 @@ public void AddItem(ulong value)
 |------|------|-------------|
 | `value` | [`ulong`](https://learn.microsoft.com/dotnet/api/system.uint64) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(short) {#additem-short}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L351)
 
 ```csharp
 public void AddItem(short value)
@@ -383,9 +592,18 @@ public void AddItem(short value)
 |------|------|-------------|
 | `value` | [`short`](https://learn.microsoft.com/dotnet/api/system.int16) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ushort) {#additem-ushort}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L361)
 
 ```csharp
 public void AddItem(ushort value)
@@ -397,9 +615,18 @@ public void AddItem(ushort value)
 |------|------|-------------|
 | `value` | [`ushort`](https://learn.microsoft.com/dotnet/api/system.uint16) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(float) {#additem-float}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L370)
 
 ```csharp
 public void AddItem(float value)
@@ -411,9 +638,18 @@ public void AddItem(float value)
 |------|------|-------------|
 | `value` | [`float`](https://learn.microsoft.com/dotnet/api/system.single) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(double) {#additem-double}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L379)
 
 ```csharp
 public void AddItem(double value)
@@ -425,9 +661,18 @@ public void AddItem(double value)
 |------|------|-------------|
 | `value` | [`double`](https://learn.microsoft.com/dotnet/api/system.double) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(decimal) {#additem-decimal}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L388)
 
 ```csharp
 public void AddItem(decimal value)
@@ -439,9 +684,18 @@ public void AddItem(decimal value)
 |------|------|-------------|
 | `value` | [`decimal`](https://learn.microsoft.com/dotnet/api/system.decimal) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref BigInteger) {#additem-ref-biginteger}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L397)
 
 ```csharp
 public void AddItem(ref BigInteger value)
@@ -453,9 +707,18 @@ public void AddItem(ref BigInteger value)
 |------|------|-------------|
 | `value` | [`ref BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(ref BigNumber) {#additem-ref-bignumber}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L407)
 
 ```csharp
 public void AddItem(ref BigNumber value)
@@ -467,9 +730,18 @@ public void AddItem(ref BigNumber value)
 |------|------|-------------|
 | `value` | [`ref BigNumber`](/api/corvus-numerics-bignumber.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddItem(Int128) {#additem-int128}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L418)
 
 ```csharp
 public void AddItem(Int128 value)
@@ -481,9 +753,17 @@ public void AddItem(Int128 value)
 |------|------|-------------|
 | `value` | [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## AddItem(UInt128) {#additem-uint128}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L428)
 
 ```csharp
 public void AddItem(UInt128 value)
@@ -495,9 +775,17 @@ public void AddItem(UInt128 value)
 |------|------|-------------|
 | `value` | [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## AddItem(Half) {#additem-half}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L437)
 
 ```csharp
 public void AddItem(Half value)
@@ -509,11 +797,11 @@ public void AddItem(Half value)
 |------|------|-------------|
 | `value` | [`Half`](https://learn.microsoft.com/dotnet/api/system.half) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+
+---
 

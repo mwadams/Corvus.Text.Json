@@ -7,7 +7,7 @@ Title: "JsonElement.CreateBuilder Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,6 +19,8 @@ Title: "JsonElement.CreateBuilder Method — Corvus.Text.Json"
 | [CreateBuilder(JsonWorkspace)](#createbuilder-jsonworkspace) | Creates a mutable document builder from this JsonElement using the specified workspace. |
 
 ## CreateBuilder(JsonWorkspace, ref JsonElement.Source, int) {#createbuilder-jsonworkspace-ref-jsonelement-source-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1518)
 
 ```csharp
 public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace, ref JsonElement.Source source, int estimatedMemberCount)
@@ -36,9 +38,18 @@ public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspa
 
 [`JsonDocumentBuilder<JsonElement.Mutable>`](/api/corvus-text-json-jsondocumentbuilder-t.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateBuilder(JsonWorkspace, ref TContext, JsonElement.ArrayBuilder.Build&lt;TContext&gt;, int) {#createbuilder-jsonworkspace-ref-tcontext-jsonelement-arraybuilder-build-tcontext-int}
+
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L24)
 
 ```csharp
 public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, ref TContext context, JsonElement.ArrayBuilder.Build<TContext> builder, int estimatedMemberCount)
@@ -57,9 +68,18 @@ public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(J
 
 [`JsonDocumentBuilder<JsonElement.Mutable>`](/api/corvus-text-json-jsondocumentbuilder-t.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateBuilder(JsonWorkspace, ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, int) {#createbuilder-jsonworkspace-ref-tcontext-jsonelement-objectbuilder-build-tcontext-int}
+
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L24)
 
 ```csharp
 public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, ref TContext context, JsonElement.ObjectBuilder.Build<TContext> builder, int estimatedMemberCount)
@@ -78,15 +98,24 @@ public static JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder<TContext>(J
 
 [`JsonDocumentBuilder<JsonElement.Mutable>`](/api/corvus-text-json-jsondocumentbuilder-t.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateBuilder(JsonWorkspace) {#createbuilder-jsonworkspace}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L235)
+
+Creates a mutable document builder from this JsonElement using the specified workspace.
+
 ```csharp
 public JsonDocumentBuilder<JsonElement.Mutable> CreateBuilder(JsonWorkspace workspace)
 ```
-
-Creates a mutable document builder from this JsonElement using the specified workspace.
 
 ### Parameters
 
@@ -100,12 +129,12 @@ Creates a mutable document builder from this JsonElement using the specified wor
 
 A JsonDocumentBuilder configured for mutable operations on this JsonElement.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

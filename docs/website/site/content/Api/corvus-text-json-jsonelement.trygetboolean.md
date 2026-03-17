@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetBoolean Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L516)
 
 ## TryGetBoolean {#trygetboolean}
+
+Tries to get the value as a boolean
 
 ```csharp
 public bool TryGetBoolean(ref bool value)
 ```
-
-Tries to get the value as a boolean
 
 ### Parameters
 

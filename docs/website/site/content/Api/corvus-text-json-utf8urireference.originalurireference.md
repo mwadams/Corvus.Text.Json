@@ -7,15 +7,16 @@ Title: "Utf8UriReference.OriginalUriReference Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L129)
 
 ## OriginalUriReference {#originalurireference}
+
+Gets the original string.
 
 ```csharp
 public ReadOnlySpan<byte> OriginalUriReference { get; }
 ```
-
-Gets the original string.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonWriterOptions.Indented Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWriterOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/JsonWriterOptions.cs#L73)
 
 ## Indented {#indented}
+
+Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should pretty print the JSON which includes: indenting nested JSON tokens, adding new lines, and adding white space between property names and values. By default, the JSON is written without any extra white space.
 
 ```csharp
 public bool Indented { get; set; }
 ```
-
-Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should pretty print the JSON which includes: indenting nested JSON tokens, adding new lines, and adding white space between property names and values. By default, the JSON is written without any extra white space.
 
 ### Returns
 

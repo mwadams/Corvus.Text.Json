@@ -7,15 +7,16 @@ Title: "Utf8UriReference.User Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L176)
 
 ## User {#user}
+
+Gets the user component of the reference.
 
 ```csharp
 public ReadOnlySpan<byte> User { get; }
 ```
-
-Gets the user component of the reference.
 
 ### Returns
 

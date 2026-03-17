@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.IgnoredFormatNotAsserted Method — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L421)
 
 ## IgnoredFormatNotAsserted {#ignoredformatnotasserted}
+
+Tries to write a message indicating that the format was not asserted.
 
 ```csharp
 public static bool IgnoredFormatNotAsserted(Span<byte> buffer, ref int written)
 ```
-
-Tries to write a message indicating that the format was not asserted.
 
 ### Parameters
 

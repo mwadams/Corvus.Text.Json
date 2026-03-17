@@ -7,15 +7,16 @@ Title: "IJsonSchemaResultsCollector.BeginChildContextUnescaped Method — Corvus
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L181)
 
 ## BeginChildContextUnescaped {#beginchildcontextunescaped}
+
+Begin a child context for a property evaluation.
 
 ```csharp
 public abstract int BeginChildContextUnescaped(int parentSequenceNumber, ReadOnlySpan<byte> unescapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
 ```
-
-Begin a child context for a property evaluation.
 
 ### Parameters
 

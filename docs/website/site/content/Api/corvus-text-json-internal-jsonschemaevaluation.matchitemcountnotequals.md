@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchItemCountNotEquals Method — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L261)
 
 ## MatchItemCountNotEquals {#matchitemcountnotequals}
+
+Validates that a item count does not equal the given value.
 
 ```csharp
 public static bool MatchItemCountNotEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a item count does not equal the given value.
 
 ### Parameters
 

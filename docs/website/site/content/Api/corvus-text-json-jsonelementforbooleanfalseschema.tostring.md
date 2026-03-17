@@ -7,15 +7,16 @@ Title: "JsonElementForBooleanFalseSchema.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L373)
 
 ## ToString {#tostring}
+
+Gets a string representation for the current value appropriate to the value type.
 
 ```csharp
 public override string ToString()
 ```
-
-Gets a string representation for the current value appropriate to the value type.
 
 ### Returns
 

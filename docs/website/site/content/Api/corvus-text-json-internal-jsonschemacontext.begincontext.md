@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.BeginContext Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L34)
 
 ## BeginContext {#begincontext}
+
+Begins a new JSON schema evaluation context for the specified document.
 
 ```csharp
 public static JsonSchemaContext BeginContext<T>(T parentDocument, int parentDocumentIndex, bool usingEvaluatedItems, bool usingEvaluatedProperties, IJsonSchemaResultsCollector resultsCollector)
 ```
-
-Begins a new JSON schema evaluation context for the specified document.
 
 ### Type Parameters
 

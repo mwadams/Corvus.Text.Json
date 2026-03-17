@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetSingle Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1339)
 
 ## TryGetSingle {#trygetsingle}
+
+Attempts to represent the current JSON number as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
 
 ```csharp
 public bool TryGetSingle(ref float value)
 ```
-
-Attempts to represent the current JSON number as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
 
 ### Parameters
 

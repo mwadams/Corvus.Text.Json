@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.StoreNullValue Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L111)
 
 ## StoreNullValue {#storenullvalue}
+
+Stores a null value in the document.
 
 ```csharp
 public abstract int StoreNullValue()
 ```
-
-Stores a null value in the document.
 
 ### Returns
 

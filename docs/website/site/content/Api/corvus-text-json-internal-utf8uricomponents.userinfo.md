@@ -7,15 +7,16 @@ Title: "Utf8UriComponents.UserInfo Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriComponents.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriComponents.cs#L15)
 
 ## UserInfo {#userinfo}
+
+The user information part of the URI.
 
 ```csharp
 Utf8UriComponents UserInfo
 ```
-
-The user information part of the URI.
 
 ### Returns
 

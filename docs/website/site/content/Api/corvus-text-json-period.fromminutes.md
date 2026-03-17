@@ -7,15 +7,16 @@ Title: "Period.FromMinutes Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L422)
 
 ## FromMinutes {#fromminutes}
+
+Creates a period representing the specified number of minutes.
 
 ```csharp
 public static Period FromMinutes(long minutes)
 ```
-
-Creates a period representing the specified number of minutes.
 
 ### Parameters
 

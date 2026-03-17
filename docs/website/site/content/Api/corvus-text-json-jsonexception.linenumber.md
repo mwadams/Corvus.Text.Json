@@ -7,15 +7,16 @@ Title: "JsonException.LineNumber Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonException.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonException.cs#L97)
 
 ## LineNumber {#linenumber}
+
+Gets the number of lines read so far before the exception (starting at 0).
 
 ```csharp
 public Nullable<long> LineNumber { get; set; }
 ```
-
-Gets the number of lines read so far before the exception (starting at 0).
 
 ### Returns
 

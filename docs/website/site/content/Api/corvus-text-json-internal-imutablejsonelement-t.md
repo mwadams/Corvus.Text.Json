@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "IMutableJsonElement<T> — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonElement{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonElement{T}.cs#L19)
+
+Represents a mutable JSON element of type `T`.
+
 ```csharp
 public interface IMutableJsonElement<T> : IJsonElement<T>, IJsonElement
 ```
-
-Represents a mutable JSON element of type `T`.
 
 ## Type Parameters
 

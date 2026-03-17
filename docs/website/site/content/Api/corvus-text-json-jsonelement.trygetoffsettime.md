@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetOffsetTime Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1606)
 
 ## TryGetOffsetTime {#trygetoffsettime}
+
+Attempts to represent the current JSON string as a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html).
 
 ```csharp
 public bool TryGetOffsetTime(ref OffsetTime value)
 ```
-
-Attempts to represent the current JSON string as a [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html).
 
 ### Parameters
 

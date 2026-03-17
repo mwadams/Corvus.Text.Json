@@ -7,15 +7,16 @@ Title: "JsonWorkspace.Options Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L42)
 
 ## Options {#options}
+
+Gets the JsonWriterOptions
 
 ```csharp
 public JsonWriterOptions Options { get; set; }
 ```
-
-Gets the JsonWriterOptions
 
 ### Returns
 

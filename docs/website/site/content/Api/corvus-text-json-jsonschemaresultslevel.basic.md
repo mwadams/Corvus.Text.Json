@@ -7,15 +7,16 @@ Title: "JsonSchemaResultsLevel.Basic Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaResultsLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/JsonSchemaResultsLevel.cs#L14)
 
 ## Basic {#basic}
+
+Includes basic location and message information about schema matching failures.
 
 ```csharp
 JsonSchemaResultsLevel Basic
 ```
-
-Includes basic location and message information about schema matching failures.
 
 ### Returns
 

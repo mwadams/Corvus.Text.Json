@@ -7,7 +7,8 @@ Title: "BuildWithContext<TContext, TBuilder>.Build Property — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BuildWithContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/BuildWithContext.cs#L26)
 
 ## Build {#build}
 

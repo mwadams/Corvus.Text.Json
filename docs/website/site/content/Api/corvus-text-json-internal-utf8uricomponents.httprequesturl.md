@@ -7,15 +7,16 @@ Title: "Utf8UriComponents.HttpRequestUrl Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriComponents.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriComponents.cs#L15)
 
 ## HttpRequestUrl {#httprequesturl}
+
+The components typically used in HTTP request URLs.
 
 ```csharp
 Utf8UriComponents HttpRequestUrl
 ```
-
-The components typically used in HTTP request URLs.
 
 ### Returns
 

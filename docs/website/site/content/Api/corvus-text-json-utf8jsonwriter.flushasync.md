@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.FlushAsync Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L512)
 
 ## FlushAsync {#flushasync}
+
+Asynchronously commits the JSON text written so far which makes it visible to the output destination.
 
 ```csharp
 public Task FlushAsync(CancellationToken cancellationToken)
 ```
-
-Asynchronously commits the JSON text written so far which makes it visible to the output destination.
 
 ### Parameters
 

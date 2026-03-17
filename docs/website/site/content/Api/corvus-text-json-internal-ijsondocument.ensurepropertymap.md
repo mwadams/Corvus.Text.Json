@@ -7,15 +7,16 @@ Title: "IJsonDocument.EnsurePropertyMap Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L27)
 
 ## EnsurePropertyMap {#ensurepropertymap}
+
+Ensures the property map is available for the specified index.
 
 ```csharp
 public abstract void EnsurePropertyMap(int index)
 ```
-
-Ensures the property map is available for the specified index.
 
 ### Parameters
 

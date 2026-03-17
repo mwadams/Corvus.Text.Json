@@ -7,7 +7,8 @@ Title: "JsonSchemaPathProvider<TContext>.BeginInvoke Method — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L53)
 
 ## BeginInvoke {#begininvoke}
 

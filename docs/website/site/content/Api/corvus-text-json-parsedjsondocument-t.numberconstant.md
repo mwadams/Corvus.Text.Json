@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.NumberConstant Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L61)
 
 ## NumberConstant {#numberconstant}
+
+Creates a constant number instance that does not require disposal.
 
 ```csharp
 public static T NumberConstant(byte[] utf8Number)
 ```
-
-Creates a constant number instance that does not require disposal.
 
 ### Parameters
 

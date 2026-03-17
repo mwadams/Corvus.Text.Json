@@ -7,15 +7,16 @@ Title: "JsonElement.GetHalf Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1207)
 
 ## GetHalf {#gethalf}
+
+Gets the current JSON number as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half).
 
 ```csharp
 public Half GetHalf()
 ```
-
-Gets the current JSON number as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half).
 
 ### Returns
 

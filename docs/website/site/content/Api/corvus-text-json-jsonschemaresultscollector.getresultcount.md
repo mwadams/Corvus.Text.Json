@@ -7,7 +7,8 @@ Title: "JsonSchemaResultsCollector.GetResultCount Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/JsonSchemaResultsCollector.cs#L828)
 
 ## GetResultCount {#getresultcount}
 

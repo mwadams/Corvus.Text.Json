@@ -7,15 +7,16 @@ Title: "JsonEncodedText.Value Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L44)
 
 ## Value {#value}
+
+Returns the UTF-16 encoded representation of the pre-encoded JSON text as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ```csharp
 public string Value { get; }
 ```
-
-Returns the UTF-16 encoded representation of the pre-encoded JSON text as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ### Returns
 

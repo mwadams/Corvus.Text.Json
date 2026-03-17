@@ -7,15 +7,16 @@ Title: "RawUtf8JsonString.Span Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [RawUtf8JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/RawUtf8JsonString.cs#L37)
 
 ## Span {#span}
+
+Gets the underlying UTF-8 bytes as a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1).
 
 ```csharp
 public ReadOnlySpan<byte> Span { get; }
 ```
-
-Gets the underlying UTF-8 bytes as a [`ReadOnlySpan`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1).
 
 ### Returns
 

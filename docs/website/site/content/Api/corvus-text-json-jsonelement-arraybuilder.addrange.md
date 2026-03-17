@@ -7,7 +7,7 @@ Title: "JsonElement.ArrayBuilder.AddRange Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -29,6 +29,8 @@ Title: "JsonElement.ArrayBuilder.AddRange Method — Corvus.Text.Json"
 
 ## AddRange(ReadOnlySpan&lt;long&gt;) {#addrange-readonlyspan-long}
 
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L448)
+
 ```csharp
 public void AddRange(ReadOnlySpan<long> array)
 ```
@@ -39,9 +41,18 @@ public void AddRange(ReadOnlySpan<long> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<long>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;int&gt;) {#addrange-readonlyspan-int}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L457)
 
 ```csharp
 public void AddRange(ReadOnlySpan<int> array)
@@ -53,9 +64,18 @@ public void AddRange(ReadOnlySpan<int> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<int>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;short&gt;) {#addrange-readonlyspan-short}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L466)
 
 ```csharp
 public void AddRange(ReadOnlySpan<short> array)
@@ -67,9 +87,18 @@ public void AddRange(ReadOnlySpan<short> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<short>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;sbyte&gt;) {#addrange-readonlyspan-sbyte}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L476)
 
 ```csharp
 public void AddRange(ReadOnlySpan<sbyte> array)
@@ -81,9 +110,18 @@ public void AddRange(ReadOnlySpan<sbyte> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<sbyte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;uint&gt;) {#addrange-readonlyspan-uint}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L496)
 
 ```csharp
 public void AddRange(ReadOnlySpan<uint> array)
@@ -95,9 +133,18 @@ public void AddRange(ReadOnlySpan<uint> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<uint>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;ushort&gt;) {#addrange-readonlyspan-ushort}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L506)
 
 ```csharp
 public void AddRange(ReadOnlySpan<ushort> array)
@@ -109,9 +156,18 @@ public void AddRange(ReadOnlySpan<ushort> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<ushort>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;byte&gt;) {#addrange-readonlyspan-byte}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L515)
 
 ```csharp
 public void AddRange(ReadOnlySpan<byte> array)
@@ -123,9 +179,18 @@ public void AddRange(ReadOnlySpan<byte> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;decimal&gt;) {#addrange-readonlyspan-decimal}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L524)
 
 ```csharp
 public void AddRange(ReadOnlySpan<decimal> array)
@@ -137,9 +202,18 @@ public void AddRange(ReadOnlySpan<decimal> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<decimal>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;double&gt;) {#addrange-readonlyspan-double}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L533)
 
 ```csharp
 public void AddRange(ReadOnlySpan<double> array)
@@ -151,9 +225,18 @@ public void AddRange(ReadOnlySpan<double> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<double>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;float&gt;) {#addrange-readonlyspan-float}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L542)
 
 ```csharp
 public void AddRange(ReadOnlySpan<float> array)
@@ -165,9 +248,18 @@ public void AddRange(ReadOnlySpan<float> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<float>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;Int128&gt;) {#addrange-readonlyspan-int128}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L554)
 
 ```csharp
 public void AddRange(ReadOnlySpan<Int128> array)
@@ -179,9 +271,17 @@ public void AddRange(ReadOnlySpan<Int128> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<Int128>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;UInt128&gt;) {#addrange-readonlyspan-uint128}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L564)
 
 ```csharp
 public void AddRange(ReadOnlySpan<UInt128> array)
@@ -193,9 +293,17 @@ public void AddRange(ReadOnlySpan<UInt128> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<UInt128>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## AddRange(ReadOnlySpan&lt;Half&gt;) {#addrange-readonlyspan-half}
+
+**Source:** [JsonElement.ArrayBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ArrayBuilder.cs#L574)
 
 ```csharp
 public void AddRange(ReadOnlySpan<Half> array)
@@ -207,11 +315,11 @@ public void AddRange(ReadOnlySpan<Half> array)
 |------|------|-------------|
 | `array` | [`ReadOnlySpan<Half>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+
+---
 

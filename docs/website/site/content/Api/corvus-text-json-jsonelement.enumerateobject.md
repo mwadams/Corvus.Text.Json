@@ -7,15 +7,16 @@ Title: "JsonElement.EnumerateObject Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L2174)
 
 ## EnumerateObject {#enumerateobject}
+
+Get an enumerator to enumerate the properties in the JSON object represented by this JsonElement.
 
 ```csharp
 public ObjectEnumerator<JsonElement> EnumerateObject()
 ```
-
-Get an enumerator to enumerate the properties in the JSON object represented by this JsonElement.
 
 ### Returns
 

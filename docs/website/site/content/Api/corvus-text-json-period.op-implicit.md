@@ -7,7 +7,7 @@ Title: "Period.Implicit Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "Period.Implicit Operator — Corvus.Text.Json"
 
 ## implicit operator Period(ref Period) {#implicit-operator-period-ref-period}
 
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L268)
+
+Convert to a NodaTime.Period.
+
 ```csharp
 public static implicit operator Period(ref Period value)
 ```
-
-Convert to a NodaTime.Period.
 
 ### Parameters
 
@@ -34,15 +36,24 @@ Convert to a NodaTime.Period.
 
 [`Period`](https://www.nodatime.org/3.3.x/api/NodaTime.Period.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator Period(Period) {#implicit-operator-period-period}
 
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L268)
+
+Convert to a NodaTime.Period.
+
 ```csharp
 public static implicit operator Period(Period value)
 ```
-
-Convert to a NodaTime.Period.
 
 ### Parameters
 
@@ -54,12 +65,12 @@ Convert to a NodaTime.Period.
 
 [`Period`](/api/corvus-text-json-period.html)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

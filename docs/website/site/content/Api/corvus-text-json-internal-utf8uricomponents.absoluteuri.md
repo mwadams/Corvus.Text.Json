@@ -7,15 +7,16 @@ Title: "Utf8UriComponents.AbsoluteUri Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriComponents.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriComponents.cs#L15)
 
 ## AbsoluteUri {#absoluteuri}
+
+All components of an absolute URI.
 
 ```csharp
 Utf8UriComponents AbsoluteUri
 ```
-
-All components of an absolute URI.
 
 ### Returns
 

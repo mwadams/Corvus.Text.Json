@@ -7,15 +7,16 @@ Title: "BigNumber.Abs Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2049)
 
 ## Abs {#abs}
+
+Returns the absolute value.
 
 ```csharp
 public static BigNumber Abs(BigNumber value)
 ```
-
-Returns the absolute value.
 
 ### Parameters
 

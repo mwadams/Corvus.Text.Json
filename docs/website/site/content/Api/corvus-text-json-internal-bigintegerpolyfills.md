@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "BigIntegerPolyfills — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigIntegerPolyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/BigIntegerPolyfills.cs#L18)
+
+Polyfills for [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) methods that are not available in all target frameworks.
+
 ```csharp
 public static class BigIntegerPolyfills
 ```
-
-Polyfills for [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) methods that are not available in all target frameworks.
 
 ## Inheritance
 

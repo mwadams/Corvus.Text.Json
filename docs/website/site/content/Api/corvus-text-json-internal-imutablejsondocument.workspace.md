@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.Workspace Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L19)
 
 ## Workspace {#workspace}
+
+Gets the JSON workspace associated with this document.
 
 ```csharp
 public abstract JsonWorkspace Workspace { get; }
 ```
-
-Gets the JSON workspace associated with this document.
 
 ### Returns
 

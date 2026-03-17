@@ -7,15 +7,16 @@ Title: "Utf8Uri.HasQuery Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L94)
 
 ## HasQuery {#hasquery}
+
+Gets a value indicating whether this reference has a query.
 
 ```csharp
 public bool HasQuery { get; }
 ```
-
-Gets a value indicating whether this reference has a query.
 
 ### Returns
 

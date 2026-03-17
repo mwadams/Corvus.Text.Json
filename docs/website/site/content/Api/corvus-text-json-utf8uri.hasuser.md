@@ -7,15 +7,16 @@ Title: "Utf8Uri.HasUser Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L104)
 
 ## HasUser {#hasuser}
+
+Gets a value indicating whether this reference has a user.
 
 ```csharp
 public bool HasUser { get; }
 ```
-
-Gets a value indicating whether this reference has a user.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchLengthGreaterThan Method — Corvus.Text.Json.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L285)
 
 ## MatchLengthGreaterThan {#matchlengthgreaterthan}
+
+Validates that a string length is greater than the given value.
 
 ```csharp
 public static bool MatchLengthGreaterThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string length is greater than the given value.
 
 ### Parameters
 

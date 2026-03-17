@@ -7,15 +7,16 @@ Title: "PeriodBuilder.Minutes Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L46)
 
 ## Minutes {#minutes}
+
+Gets or sets the number of minutes within the period.
 
 ```csharp
 public long Minutes { get; set; }
 ```
-
-Gets or sets the number of minutes within the period.
 
 ### Returns
 

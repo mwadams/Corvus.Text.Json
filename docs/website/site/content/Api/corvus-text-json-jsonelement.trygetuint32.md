@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetUInt32 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L948)
 
 ## TryGetUInt32 {#trygetuint32}
+
+Attempts to represent the current JSON number as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32).
 
 ```csharp
 public bool TryGetUInt32(ref uint value)
 ```
-
-Attempts to represent the current JSON number as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32).
 
 ### Parameters
 

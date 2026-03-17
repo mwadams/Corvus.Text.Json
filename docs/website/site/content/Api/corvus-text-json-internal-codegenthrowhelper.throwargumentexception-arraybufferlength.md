@@ -7,15 +7,16 @@ Title: "CodeGenThrowHelper.ThrowArgumentException_ArrayBufferLength Method — C
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L79)
 
 ## ThrowArgumentException_ArrayBufferLength {#throwargumentexception-arraybufferlength}
+
+Throws an [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) when an array buffer has an incorrect length.
 
 ```csharp
 public static void ThrowArgumentException_ArrayBufferLength(string paramName, int expectedLength)
 ```
-
-Throws an [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) when an array buffer has an incorrect length.
 
 ### Parameters
 

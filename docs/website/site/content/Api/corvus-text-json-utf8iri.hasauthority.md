@@ -7,15 +7,16 @@ Title: "Utf8Iri.HasAuthority Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L71)
 
 ## HasAuthority {#hasauthority}
+
+Gets a value indicating whether this reference has an authority.
 
 ```csharp
 public bool HasAuthority { get; }
 ```
-
-Gets a value indicating whether this reference has an authority.
 
 ### Returns
 

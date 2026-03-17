@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.Create Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L97)
 
 ## Create {#create}
+
+Creates a new [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) for the specified parent document, pre-allocating space for the given number of elements.
 
 ```csharp
 public static ComplexValueBuilder Create(IMutableJsonDocument parentDocument, int initialElementCount)
 ```
-
-Creates a new [`ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) for the specified parent document, pre-allocating space for the given number of elements.
 
 ### Parameters
 

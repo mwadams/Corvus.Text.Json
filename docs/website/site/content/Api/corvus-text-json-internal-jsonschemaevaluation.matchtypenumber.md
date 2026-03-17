@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchTypeNumber Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L1071)
 
 ## MatchTypeNumber {#matchtypenumber}
+
+Matches a JSON token type against the "number" type constraint.
 
 ```csharp
 public static bool MatchTypeNumber(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON token type against the "number" type constraint.
 
 ### Parameters
 

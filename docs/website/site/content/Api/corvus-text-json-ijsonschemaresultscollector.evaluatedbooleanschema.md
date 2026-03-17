@@ -7,7 +7,7 @@ Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Tex
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonSchemaResultsCollector.EvaluatedBooleanSchema Method — Corvus.Tex
 
 ## EvaluatedBooleanSchema(bool, JsonSchemaMessageProvider) {#evaluatedbooleanschema-bool-jsonschemamessageprovider}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L229)
+
+Indicates that a boolean schema was evaluated.
+
 ```csharp
 public abstract void EvaluatedBooleanSchema(bool isMatch, JsonSchemaMessageProvider messageProvider)
 ```
-
-Indicates that a boolean schema was evaluated.
 
 ### Parameters
 
@@ -35,15 +37,24 @@ Indicates that a boolean schema was evaluated.
 
 This is used when evaluating a schema of the form `true` or `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## EvaluatedBooleanSchema(bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#evaluatedbooleanschema-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L74)
+
+Indicates that a boolean schema was evaluated.
+
 ```csharp
 public abstract void EvaluatedBooleanSchema<TProviderContext>(bool isMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
 ```
-
-Indicates that a boolean schema was evaluated.
 
 ### Parameters
 
@@ -57,12 +68,12 @@ Indicates that a boolean schema was evaluated.
 
 This is used when evaluating a schema of the form `true` or `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "IJsonDocument.TryGetString Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L185)
 
 ## TryGetString {#trygetstring}
+
+Tries to get the string value of the element at the specified index.
 
 ```csharp
 public abstract bool TryGetString(int index, JsonTokenType expectedType, ref string result)
 ```
-
-Tries to get the string value of the element at the specified index.
 
 ### Parameters
 

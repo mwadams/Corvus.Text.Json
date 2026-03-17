@@ -7,15 +7,16 @@ Title: "Utf8Iri.Port Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L141)
 
 ## Port {#port}
+
+Gets the port component of the IRI as a byte span.
 
 ```csharp
 public ReadOnlySpan<byte> Port { get; }
 ```
-
-Gets the port component of the IRI as a byte span.
 
 ### Returns
 

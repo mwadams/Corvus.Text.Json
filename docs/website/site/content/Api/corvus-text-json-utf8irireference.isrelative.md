@@ -7,15 +7,16 @@ Title: "Utf8IriReference.IsRelative Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L119)
 
 ## IsRelative {#isrelative}
+
+Gets a value indicating whether this is a relative reference.
 
 ```csharp
 public bool IsRelative { get; }
 ```
-
-Gets a value indicating whether this is a relative reference.
 
 ### Returns
 

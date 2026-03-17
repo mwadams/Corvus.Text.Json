@@ -7,15 +7,16 @@ Title: "CodeGenThrowHelper.ThrowInvalidOperationException_SetRequiredPropertyToU
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L195)
 
 ## ThrowInvalidOperationException_SetRequiredPropertyToUndefined {#throwinvalidoperationexception-setrequiredpropertytoundefined}
+
+Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) when attempting to set a required property to an undefined value.
 
 ```csharp
 public static void ThrowInvalidOperationException_SetRequiredPropertyToUndefined(string propertyName)
 ```
-
-Throws an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) when attempting to set a required property to an undefined value.
 
 ### Parameters
 

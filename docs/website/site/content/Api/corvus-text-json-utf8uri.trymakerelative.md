@@ -7,15 +7,16 @@ Title: "Utf8Uri.TryMakeRelative Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L291)
 
 ## TryMakeRelative {#trymakerelative}
+
+Makes a relative URI reference from the current (base) URI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.
 
 ```csharp
 public bool TryMakeRelative(ref Utf8Uri targetUri, Span<byte> buffer, ref Utf8UriReference result)
 ```
-
-Makes a relative URI reference from the current (base) URI to the target URI. If the scheme, host, and port match, a relative reference is created; otherwise, the full target URI is returned.
 
 ### Parameters
 

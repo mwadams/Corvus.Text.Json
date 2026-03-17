@@ -7,15 +7,16 @@ Title: "BigNumber.Subtraction Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1651)
 
 ## operator - {#operator}
+
+Subtracts one [`BigNumber`](/api/corvus-numerics-bignumber.html) from another.
 
 ```csharp
 public static BigNumber operator -(BigNumber left, BigNumber right)
 ```
-
-Subtracts one [`BigNumber`](/api/corvus-numerics-bignumber.html) from another.
 
 ### Parameters
 

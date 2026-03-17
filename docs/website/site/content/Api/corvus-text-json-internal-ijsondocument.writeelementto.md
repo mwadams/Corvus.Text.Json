@@ -7,15 +7,16 @@ Title: "IJsonDocument.WriteElementTo Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L545)
 
 ## WriteElementTo {#writeelementto}
+
+Writes the element at the specified index to the provided JSON writer.
 
 ```csharp
 public abstract void WriteElementTo(int index, Utf8JsonWriter writer)
 ```
-
-Writes the element at the specified index to the provided JSON writer.
 
 ### Parameters
 

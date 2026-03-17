@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetArrayInsertionIndex Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L94)
 
 ## GetArrayInsertionIndex {#getarrayinsertionindex}
+
+Gets DB index of the item at the array index within the array that starts at `currentIndex`.
 
 ```csharp
 public abstract int GetArrayInsertionIndex(int currentIndex, int arrayIndex)
 ```
-
-Gets DB index of the item at the array index within the array that starts at `currentIndex`.
 
 ### Parameters
 

@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonDocumentBuilder<T> — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocumentBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonDocumentBuilder.cs#L26)
+
+A mutable JSON document builder that provides functionality to construct and modify JSON documents.
+
 ```csharp
 public sealed class JsonDocumentBuilder<T> : JsonDocument, IMutableJsonDocument, IJsonDocument, IDisposable
 ```
-
-A mutable JSON document builder that provides functionality to construct and modify JSON documents.
 
 ## Type Parameters
 

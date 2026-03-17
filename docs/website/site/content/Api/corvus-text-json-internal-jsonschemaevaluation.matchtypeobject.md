@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchTypeObject Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L54)
 
 ## MatchTypeObject {#matchtypeobject}
+
+Matches a JSON token type against the "object" type constraint.
 
 ```csharp
 public static bool MatchTypeObject(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON token type against the "object" type constraint.
 
 ### Parameters
 

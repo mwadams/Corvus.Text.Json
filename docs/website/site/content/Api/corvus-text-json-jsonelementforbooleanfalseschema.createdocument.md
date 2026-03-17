@@ -7,7 +7,7 @@ Title: "JsonElementForBooleanFalseSchema.CreateDocument Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementForBooleanFalseSchema.CreateDocument Method — Corvus.Text.J
 
 ## CreateDocument(JsonWorkspace, int, int) {#createdocument-jsonworkspace-int-int}
 
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L298)
+
+Creates a JSON document containing the specified integer value.
+
 ```csharp
 public static JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateDocument(JsonWorkspace workspace, int year, int initialCapacity)
 ```
-
-Creates a JSON document containing the specified integer value.
 
 ### Parameters
 
@@ -38,15 +40,24 @@ Creates a JSON document containing the specified integer value.
 
 A JSON document builder containing the specified value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateDocument(JsonWorkspace) {#createdocument-jsonworkspace}
 
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L314)
+
+Creates a JSON document from the current instance.
+
 ```csharp
 public JsonDocumentBuilder<JsonElementForBooleanFalseSchema.Mutable> CreateDocument(JsonWorkspace workspace)
 ```
-
-Creates a JSON document from the current instance.
 
 ### Parameters
 
@@ -60,12 +71,12 @@ Creates a JSON document from the current instance.
 
 A JSON document builder containing the current instance.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

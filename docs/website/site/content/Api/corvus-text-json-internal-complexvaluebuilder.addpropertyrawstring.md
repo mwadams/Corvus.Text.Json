@@ -7,7 +7,7 @@ Title: "ComplexValueBuilder.AddPropertyRawString Method — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "ComplexValueBuilder.AddPropertyRawString Method — Corvus.Text.Json.Int
 
 ## AddPropertyRawString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, bool, bool, bool) {#addpropertyrawstring-readonlyspan-byte-readonlyspan-byte-bool-bool-bool}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L336)
+
+Adds a property with a raw string value to the current object, with control over escaping and unescaping.
+
 ```csharp
 public void AddPropertyRawString(ReadOnlySpan<byte> propertyName, ReadOnlySpan<byte> value, bool escapeName, bool nameRequiresUnescaping, bool valueRequiresUnescaping)
 ```
-
-Adds a property with a raw string value to the current object, with control over escaping and unescaping.
 
 ### Parameters
 
@@ -35,15 +37,24 @@ Adds a property with a raw string value to the current object, with control over
 | `nameRequiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Whether the property name requires unescaping. |
 | `valueRequiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Whether the value requires unescaping. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddPropertyRawString(string, ReadOnlySpan&lt;byte&gt;, bool) {#addpropertyrawstring-string-readonlyspan-byte-bool}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L349)
+
+Adds a property with a raw string value.
+
 ```csharp
 public void AddPropertyRawString(string propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
 ```
-
-Adds a property with a raw string value.
 
 ### Parameters
 
@@ -53,15 +64,24 @@ Adds a property with a raw string value.
 | `value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The value as a UTF-8 byte span. |
 | `valueRequiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddPropertyRawString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;, bool) {#addpropertyrawstring-readonlyspan-char-readonlyspan-byte-bool}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L359)
+
+Adds a property with a raw string value.
+
 ```csharp
 public void AddPropertyRawString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> value, bool valueRequiresUnescaping)
 ```
-
-Adds a property with a raw string value.
 
 ### Parameters
 
@@ -71,12 +91,12 @@ Adds a property with a raw string value.
 | `value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The value as a UTF-8 byte span. |
 | `valueRequiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.RequiresEvaluationTracking Property — Corvus.Text.Js
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L145)
 
 ## RequiresEvaluationTracking {#requiresevaluationtracking}
+
+Gets a value indicating whether this context requires evaluation tracking.
 
 ```csharp
 public bool RequiresEvaluationTracking { get; }
 ```
-
-Gets a value indicating whether this context requires evaluation tracking.
 
 ### Returns
 

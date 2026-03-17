@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.ExpectedTypeArray Field — Corvus.Text.Json.Intern
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## ExpectedTypeArray {#expectedtypearray}
+
+Message provider for expected "array type" validation messages.
 
 ```csharp
 JsonSchemaMessageProvider ExpectedTypeArray
 ```
-
-Message provider for expected "array type" validation messages.
 
 ### Returns
 

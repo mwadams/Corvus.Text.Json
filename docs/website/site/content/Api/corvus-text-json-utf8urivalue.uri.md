@@ -7,15 +7,16 @@ Title: "Utf8UriValue.Uri Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriValue.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Utf8UriValue.cs#L42)
 
 ## Uri {#uri}
+
+Gets the UTF-8 URI value.
 
 ```csharp
 public Utf8Uri Uri { get; }
 ```
-
-Gets the UTF-8 URI value.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "ObjectEnumerator<TValue>.GetEnumerator Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ObjectEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ObjectEnumerator{T}.cs#L76)
 
 ## GetEnumerator {#getenumerator}
+
+Returns an enumerator that iterates the properties of an object.
 
 ```csharp
 public ObjectEnumerator<TValue> GetEnumerator()
 ```
-
-Returns an enumerator that iterates the properties of an object.
 
 ### Returns
 

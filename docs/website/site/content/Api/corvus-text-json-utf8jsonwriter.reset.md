@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.Reset Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "Utf8JsonWriter.Reset Method — Corvus.Text.Json"
 
 ## Reset() {#reset}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L293)
+
+Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used.
+
 ```csharp
 public void Reset()
 ```
-
-Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used.
 
 ### Exceptions
 
@@ -35,15 +37,24 @@ Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) interna
 
 The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will continue to use the original writer options and the original output as the destination (either [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1) or [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream)).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Reset(Stream) {#reset-stream}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L315)
+
+Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used with the new instance of [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream).
+
 ```csharp
 public void Reset(Stream utf8Json)
 ```
-
-Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used with the new instance of [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream).
 
 ### Parameters
 
@@ -62,15 +73,24 @@ Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) interna
 
 The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will continue to use the original writer options but now write to the passed in [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) as the new destination.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Reset(IBufferWriter&lt;byte&gt;) {#reset-ibufferwriter-byte}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L353)
+
+Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used with the new instance of [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1).
+
 ```csharp
 public void Reset(IBufferWriter<byte> bufferWriter)
 ```
-
-Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) internal state so that it can be re-used with the new instance of [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1).
 
 ### Parameters
 
@@ -89,12 +109,12 @@ Resets the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) interna
 
 The [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will continue to use the original writer options but now write to the passed in [`IBufferWriter`](https://learn.microsoft.com/dotnet/api/system.buffers.ibufferwriter-1) as the new destination.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,7 +7,7 @@ Title: "BigNumber.Equals Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "BigNumber.Equals Method — Corvus.Numerics"
 
 ## Equals(BigNumber) {#equals-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L259)
+
+Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance.
+
 ```csharp
 public bool Equals(BigNumber other)
 ```
-
-Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.html) is equal to this instance.
 
 ### Parameters
 
@@ -40,15 +42,24 @@ Determines whether the specified [`BigNumber`](/api/corvus-numerics-bignumber.ht
 
 [`IEquatable&lt;BigNumber&gt;.Equals`](https://learn.microsoft.com/dotnet/api/system.iequatable.equals)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Equals(object) {#equals-object}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L275)
+
+Determines whether the specified object is equal to this instance.
+
 ```csharp
 public override bool Equals(object obj)
 ```
-
-Determines whether the specified object is equal to this instance.
 
 ### Parameters
 
@@ -62,12 +73,12 @@ Determines whether the specified object is equal to this instance.
 
 `true` if the specified object is a [`BigNumber`](/api/corvus-numerics-bignumber.html) equal to this instance; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

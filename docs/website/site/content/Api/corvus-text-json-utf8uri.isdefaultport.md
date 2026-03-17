@@ -7,15 +7,16 @@ Title: "Utf8Uri.IsDefaultPort Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L114)
 
 ## IsDefaultPort {#isdefaultport}
+
+Gets a value indicating whether this is the default port for the scheme.
 
 ```csharp
 public bool IsDefaultPort { get; }
 ```
-
-Gets a value indicating whether this is the default port for the scheme.
 
 ### Returns
 

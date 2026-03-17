@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.SetAndDispose Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3333)
 
 ## SetAndDispose {#setanddispose}
+
+Transfers the built data to the specified [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) and disposes this builder.
 
 ```csharp
 public void SetAndDispose(ref MetadataDb targetData)
 ```
-
-Transfers the built data to the specified [`MetadataDb`](/api/corvus-text-json-internal-metadatadb.html) and disposes this builder.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.CreateOffsetDateTimeCore Method — Corvus.Text.Json.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementHelpers.CreateOffsetDateTimeCore Method — Corvus.Text.Json.
 
 ## CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int, int, int) {#createoffsetdatetimecore-int-int-int-int-int-int-int-int-int-int}
 
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L332)
+
+Creates an offset date time from its individual components including nanosecond precision.
+
 ```csharp
 public static OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int microseconds, int nanoseconds, int offsetSeconds)
 ```
-
-Creates an offset date time from its individual components including nanosecond precision.
 
 ### Parameters
 
@@ -45,15 +47,24 @@ Creates an offset date time from its individual components including nanosecond 
 
 The constructed offset date time.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateOffsetDateTimeCore(int, int, int, int, int, int, int, int) {#createoffsetdatetimecore-int-int-int-int-int-int-int-int}
 
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L357)
+
+Creates an offset date time from its individual components with millisecond precision.
+
 ```csharp
 public static OffsetDateTime CreateOffsetDateTimeCore(int year, int month, int day, int hours, int minutes, int seconds, int milliseconds, int offsetSeconds)
 ```
-
-Creates an offset date time from its individual components with millisecond precision.
 
 ### Parameters
 
@@ -74,12 +85,12 @@ Creates an offset date time from its individual components with millisecond prec
 
 The constructed offset date time.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

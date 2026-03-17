@@ -7,15 +7,16 @@ Title: "Utf8IriReference.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L327)
 
 ## ToString {#tostring}
+
+Returns a string representation of the IRI reference in display format.
 
 ```csharp
 public override string ToString()
 ```
-
-Returns a string representation of the IRI reference in display format.
 
 ### Returns
 

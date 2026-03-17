@@ -7,15 +7,16 @@ Title: "JsonElement.GetLocalDate Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1579)
 
 ## GetLocalDate {#getlocaldate}
+
+Gets the value of the element as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
 
 ```csharp
 public LocalDate GetLocalDate()
 ```
-
-Gets the value of the element as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
 
 ### Returns
 

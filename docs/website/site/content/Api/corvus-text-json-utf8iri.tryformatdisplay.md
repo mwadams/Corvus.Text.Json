@@ -7,15 +7,16 @@ Title: "Utf8Iri.TryFormatDisplay Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L225)
 
 ## TryFormatDisplay {#tryformatdisplay}
+
+Gets the IRI in canonical form for display.
 
 ```csharp
 public bool TryFormatDisplay(Span<byte> buffer, ref int writtenBytes)
 ```
-
-Gets the IRI in canonical form for display.
 
 ### Parameters
 

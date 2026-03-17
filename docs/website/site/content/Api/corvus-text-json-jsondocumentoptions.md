@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonDocumentOptions — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocumentOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonDocumentOptions.cs#L16)
+
+Provides the ability for the user to define custom behavior when parsing JSON to create a `JsonDocument`.
+
 ```csharp
 public readonly struct JsonDocumentOptions
 ```
-
-Provides the ability for the user to define custom behavior when parsing JSON to create a `JsonDocument`.
 
 ## Properties
 

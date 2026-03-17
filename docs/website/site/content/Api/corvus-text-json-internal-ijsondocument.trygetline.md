@@ -7,7 +7,7 @@ Title: "IJsonDocument.TryGetLine Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.TryGetLine Method — Corvus.Text.Json.Internal"
 
 ## TryGetLine(int, ref ReadOnlyMemory&lt;byte&gt;) {#trygetline-int-ref-readonlymemory-byte}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L673)
+
+Tries to get the specified line from the original source document as UTF-8 bytes.
+
 ```csharp
 public abstract bool TryGetLine(int lineNumber, ref ReadOnlyMemory<byte> line)
 ```
-
-Tries to get the specified line from the original source document as UTF-8 bytes.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Tries to get the specified line from the original source document as UTF-8 bytes
 
 `true` if the line was successfully retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetLine(int, ref string) {#trygetline-int-ref-string}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L673)
+
+Tries to get the specified line from the original source document as a string.
+
 ```csharp
 public abstract bool TryGetLine(int lineNumber, ref string line)
 ```
-
-Tries to get the specified line from the original source document as a string.
 
 ### Parameters
 
@@ -60,12 +71,12 @@ Tries to get the specified line from the original source document as a string.
 
 `true` if the line was successfully retrieved; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

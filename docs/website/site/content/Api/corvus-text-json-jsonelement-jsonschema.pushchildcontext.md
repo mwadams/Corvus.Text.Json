@@ -7,7 +7,7 @@ Title: "JsonElement.JsonSchema.PushChildContext Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,6 +19,8 @@ Title: "JsonElement.JsonSchema.PushChildContext Method — Corvus.Text.Json"
 | [PushChildContext(IJsonDocument, int, ref JsonSchemaContext, int, JsonSchemaPathProvider)](#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-int-jsonschemapathprovider) |  |
 
 ## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, JsonSchemaPathProvider, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-jsonschemapathprovider-jsonschemapathprovider}
+
+**Source:** [JsonElement.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.JsonSchema.cs#L68)
 
 ```csharp
 public static JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, JsonSchemaPathProvider schemaEvaluationPath, JsonSchemaPathProvider documentEvaluationPath)
@@ -38,9 +40,18 @@ public static JsonSchemaContext PushChildContext(IJsonDocument parentDocument, i
 
 [`JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, TContext, JsonSchemaPathProvider&lt;TContext&gt;, JsonSchemaPathProvider&lt;TContext&gt;) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-tcontext-jsonschemapathprovider-tcontext-jsonschemapathprovider-tcontext}
+
+**Source:** [JsonElement.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.JsonSchema.cs#L34)
 
 ```csharp
 public static JsonSchemaContext PushChildContext<TContext>(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, TContext providerContext, JsonSchemaPathProvider<TContext> schemaEvaluationPath, JsonSchemaPathProvider<TContext> documentEvaluationPath)
@@ -61,9 +72,18 @@ public static JsonSchemaContext PushChildContext<TContext>(IJsonDocument parentD
 
 [`JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-readonlyspan-byte-jsonschemapathprovider}
+
+**Source:** [JsonElement.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.JsonSchema.cs#L126)
 
 ```csharp
 public static JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, ReadOnlySpan<byte> propertyName, JsonSchemaPathProvider evaluationPath)
@@ -83,9 +103,18 @@ public static JsonSchemaContext PushChildContext(IJsonDocument parentDocument, i
 
 [`JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## PushChildContext(IJsonDocument, int, ref JsonSchemaContext, int, JsonSchemaPathProvider) {#pushchildcontext-ijsondocument-int-ref-jsonschemacontext-int-jsonschemapathprovider}
+
+**Source:** [JsonElement.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.JsonSchema.cs#L154)
 
 ```csharp
 public static JsonSchemaContext PushChildContext(IJsonDocument parentDocument, int parentDocumentIndex, ref JsonSchemaContext context, int itemIndex, JsonSchemaPathProvider evaluationPath)
@@ -105,12 +134,12 @@ public static JsonSchemaContext PushChildContext(IJsonDocument parentDocument, i
 
 [`JsonSchemaContext`](/api/corvus-text-json-internal-jsonschemacontext.html)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "Utf8UriReference.Port Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L139)
 
 ## Port {#port}
+
+Gets the port component of the reference as a byte span.
 
 ```csharp
 public ReadOnlySpan<byte> Port { get; }
 ```
-
-Gets the port component of the reference as a byte span.
 
 ### Returns
 

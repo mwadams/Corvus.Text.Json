@@ -7,7 +7,7 @@ Title: "IJsonDocument.TextEquals Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.TextEquals Method — Corvus.Text.Json.Internal"
 
 ## TextEquals(int, ReadOnlySpan&lt;char&gt;, bool) {#textequals-int-readonlyspan-char-bool}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L528)
+
+Determines whether the text at the specified index equals the specified text.
+
 ```csharp
 public abstract bool TextEquals(int index, ReadOnlySpan<char> otherText, bool isPropertyName)
 ```
-
-Determines whether the text at the specified index equals the specified text.
 
 ### Parameters
 
@@ -38,15 +40,24 @@ Determines whether the text at the specified index equals the specified text.
 
 `true` if the text equals the specified text; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TextEquals(int, ReadOnlySpan&lt;byte&gt;, bool, bool) {#textequals-int-readonlyspan-byte-bool-bool}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L528)
+
+Determines whether the UTF-8 text at the specified index equals the specified text.
+
 ```csharp
 public abstract bool TextEquals(int index, ReadOnlySpan<byte> otherUtf8Text, bool isPropertyName, bool shouldUnescape)
 ```
-
-Determines whether the UTF-8 text at the specified index equals the specified text.
 
 ### Parameters
 
@@ -63,12 +74,12 @@ Determines whether the UTF-8 text at the specified index equals the specified te
 
 `true` if the text equals the specified text; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

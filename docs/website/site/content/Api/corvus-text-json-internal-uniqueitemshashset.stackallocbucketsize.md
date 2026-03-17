@@ -7,15 +7,16 @@ Title: "UniqueItemsHashSet.StackAllocBucketSize Field — Corvus.Text.Json.Inter
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UniqueItemsHashSet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/UniqueItemsHashSet.cs#L25)
 
 ## StackAllocBucketSize {#stackallocbucketsize}
+
+The recommended size for a stack allocated bucket buffer.
 
 ```csharp
 int StackAllocBucketSize
 ```
-
-The recommended size for a stack allocated bucket buffer.
 
 ### Returns
 

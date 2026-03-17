@@ -7,15 +7,16 @@ Title: "Utf8Iri.TryCreateIri Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L204)
 
 ## TryCreateIri {#trycreateiri}
+
+Tries to create a new UTF-8 IRI from the specified IRI bytes.
 
 ```csharp
 public static bool TryCreateIri(ReadOnlySpan<byte> iri, ref Utf8Iri utf8Iri)
 ```
-
-Tries to create a new UTF-8 IRI from the specified IRI bytes.
 
 ### Parameters
 

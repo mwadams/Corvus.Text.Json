@@ -7,15 +7,16 @@ Title: "UnescapedUtf8JsonString.Memory Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UnescapedUtf8JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/UnescapedUtf8JsonString.cs#L32)
 
 ## Memory {#memory}
+
+Gets the UTF-8 bytes as a read-only memory.
 
 ```csharp
 public ReadOnlyMemory<byte> Memory { get; }
 ```
-
-Gets the UTF-8 bytes as a read-only memory.
 
 ### Returns
 

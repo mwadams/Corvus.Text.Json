@@ -7,15 +7,16 @@ Title: "CodeGenDataType.Guid Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L213)
 
 ## Guid {#guid}
+
+Represents a GUID value.
 
 ```csharp
 CodeGenDataType Guid
 ```
-
-Represents a GUID value.
 
 ### Returns
 

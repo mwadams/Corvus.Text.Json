@@ -7,15 +7,16 @@ Title: "JsonElement.GetArrayLength Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L263)
 
 ## GetArrayLength {#getarraylength}
+
+Get the number of values contained within the current array value.
 
 ```csharp
 public int GetArrayLength()
 ```
-
-Get the number of values contained within the current array value.
 
 ### Returns
 

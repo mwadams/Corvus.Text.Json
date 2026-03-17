@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchContainsCountLessThan Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L549)
 
 ## MatchContainsCountLessThan {#matchcontainscountlessthan}
+
+Validates that a contains count is less than the given value.
 
 ```csharp
 public static bool MatchContainsCountLessThan(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a contains count is less than the given value.
 
 ### Parameters
 

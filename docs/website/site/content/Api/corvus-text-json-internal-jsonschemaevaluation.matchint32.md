@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchInt32 Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L876)
 
 ## MatchInt32 {#matchint32}
+
+Matches a JSON number against the Int32 type constraint, validating it as a 32-bit signed integer.
 
 ```csharp
 public static bool MatchInt32(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number against the Int32 type constraint, validating it as a 32-bit signed integer.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "UnescapedUtf8JsonString.Span Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UnescapedUtf8JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/UnescapedUtf8JsonString.cs#L37)
 
 ## Span {#span}
+
+Gets the UTF-8 bytes as a read-only span.
 
 ```csharp
 public ReadOnlySpan<byte> Span { get; }
 ```
-
-Gets the UTF-8 bytes as a read-only span.
 
 ### Returns
 

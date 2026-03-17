@@ -7,15 +7,16 @@ Title: "Period.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L714)
 
 ## ToString {#tostring}
+
+Returns this string formatted according to the ISO8601 duration specification used by JSON schema.
 
 ```csharp
 public override string ToString()
 ```
-
-Returns this string formatted according to the ISO8601 duration specification used by JSON schema.
 
 ### Returns
 

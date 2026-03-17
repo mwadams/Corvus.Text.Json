@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.CompareNormalizedJsonNumbers Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.Numeric.Core.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.Core.cs#L304)
 
 ## CompareNormalizedJsonNumbers {#comparenormalizedjsonnumbers}
+
+Compares two normalized JSON numbers for equality.
 
 ```csharp
 public static int CompareNormalizedJsonNumbers(bool leftIsNegative, ReadOnlySpan<byte> leftIntegral, ReadOnlySpan<byte> leftFractional, int leftExponent, bool rightIsNegative, ReadOnlySpan<byte> rightIntegral, ReadOnlySpan<byte> rightFractional, int rightExponent)
 ```
-
-Compares two normalized JSON numbers for equality.
 
 ### Parameters
 

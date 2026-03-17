@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.WriteEndArray Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L1015)
 
 ## WriteEndArray {#writeendarray}
+
+Writes the end of a JSON array.
 
 ```csharp
 public void WriteEndArray()
 ```
-
-Writes the end of a JSON array.
 
 ### Exceptions
 

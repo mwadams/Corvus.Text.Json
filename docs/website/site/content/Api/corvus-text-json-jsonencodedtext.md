@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonEncodedText — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L22)
+
+Provides a way to transform UTF-8 or UTF-16 encoded text into a form that is suitable for JSON.
+
 ```csharp
 public readonly struct JsonEncodedText : IEquatable<JsonEncodedText>
 ```
-
-Provides a way to transform UTF-8 or UTF-16 encoded text into a form that is suitable for JSON.
 
 ## Remarks
 

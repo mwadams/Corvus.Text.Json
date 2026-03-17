@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.GetInt16 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L302)
 
 ## GetInt16 {#getint16}
+
+Parses the current JSON token value from the source as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value. Throws exceptions otherwise.
 
 ```csharp
 public short GetInt16()
 ```
-
-Parses the current JSON token value from the source as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16). Returns the value if the entire UTF-8 encoded token value can be successfully parsed to a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16) value. Throws exceptions otherwise.
 
 ### Returns
 

@@ -7,7 +7,8 @@ Title: "JsonElement.Source<TContext>.Implicit Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1302)
 
 ## implicit operator JsonElement.Source&lt;TContext&gt; {#implicit-operator-jsonelement-source-tcontext}
 

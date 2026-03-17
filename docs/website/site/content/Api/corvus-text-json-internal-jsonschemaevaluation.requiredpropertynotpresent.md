@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.RequiredPropertyNotPresent Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L359)
 
 ## RequiredPropertyNotPresent {#requiredpropertynotpresent}
+
+Creates a message indicating that a required property is not present.
 
 ```csharp
 public static bool RequiredPropertyNotPresent(ReadOnlySpan<byte> propertyName, Span<byte> buffer, ref int written)
 ```
-
-Creates a message indicating that a required property is not present.
 
 ### Parameters
 

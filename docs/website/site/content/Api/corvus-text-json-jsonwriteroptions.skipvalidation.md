@@ -7,15 +7,16 @@ Title: "JsonWriterOptions.SkipValidation Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWriterOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/JsonWriterOptions.cs#L162)
 
 ## SkipValidation {#skipvalidation}
+
+Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) to be thrown.
 
 ```csharp
 public bool SkipValidation { get; set; }
 ```
-
-Defines whether the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) should skip structural validation and allow the user to write invalid JSON, when set to true. If set to false, any attempts to write invalid JSON will result in an [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) to be thrown.
 
 ### Returns
 

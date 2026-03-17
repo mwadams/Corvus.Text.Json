@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.TryFormatNumber Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElementHelpers.TryFormatNumber Method — Corvus.Text.Json.Internal"
 | [TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider)](#tryformatnumber-readonlyspan-byte-span-byte-ref-int-readonlyspan-char-iformatprovider) |  |
 
 ## TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;char&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformatnumber-readonlyspan-byte-span-char-ref-int-readonlyspan-char-iformatprovider}
+
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L372)
 
 ```csharp
 public static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
@@ -36,9 +38,18 @@ public static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<char> destinati
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryFormatNumber(ReadOnlySpan&lt;byte&gt;, Span&lt;byte&gt;, ref int, ReadOnlySpan&lt;char&gt;, IFormatProvider) {#tryformatnumber-readonlyspan-byte-span-byte-ref-int-readonlyspan-char-iformatprovider}
+
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L3649)
 
 ```csharp
 public static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<byte> destination, ref int bytesWritten, ReadOnlySpan<char> format, IFormatProvider provider)
@@ -58,12 +69,12 @@ public static bool TryFormatNumber(ReadOnlySpan<byte> span, Span<byte> destinati
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

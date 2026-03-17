@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.WriteBase64StringValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.WriteValues.Bytes.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.Bytes.cs#L32)
 
 ## WriteBase64StringValue {#writebase64stringvalue}
+
+Writes the raw bytes value as a Base64 encoded JSON string as an element of a JSON array.
 
 ```csharp
 public void WriteBase64StringValue(ReadOnlySpan<byte> bytes)
 ```
-
-Writes the raw bytes value as a Base64 encoded JSON string as an element of a JSON array.
 
 ### Parameters
 

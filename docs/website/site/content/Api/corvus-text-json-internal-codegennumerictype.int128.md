@@ -7,15 +7,16 @@ Title: "CodeGenNumericType.Int128 Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L17)
 
 ## Int128 {#int128}
+
+Represents a 128-bit signed integer.
 
 ```csharp
 CodeGenNumericType Int128
 ```
-
-Represents a 128-bit signed integer.
 
 ### Returns
 

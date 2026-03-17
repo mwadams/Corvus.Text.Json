@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetArrayLength Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L101)
 
 ## GetArrayLength {#getarraylength}
+
+Gets the length of the array at the specified index.
 
 ```csharp
 public abstract int GetArrayLength(int index)
 ```
-
-Gets the length of the array at the specified index.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "Utf8UriKind.RelativeOrAbsolute Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriKind.cs#L14)
 
 ## RelativeOrAbsolute {#relativeorabsolute}
+
+The kind of URI is indeterminate. The URI can be either relative or absolute.
 
 ```csharp
 Utf8UriKind RelativeOrAbsolute
 ```
-
-The kind of URI is indeterminate. The URI can be either relative or absolute.
 
 ### Returns
 

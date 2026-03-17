@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "RentedBacking — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [RentedBacking.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/RentedBacking.cs#L20)
+
+Provides a fixed-size, rented backing structure for storing longer string values that will not fit in a [`SimpleTypesBacking`](/api/corvus-text-json-internal-simpletypesbacking.html).
+
 ```csharp
 public readonly struct RentedBacking : IDisposable
 ```
-
-Provides a fixed-size, rented backing structure for storing longer string values that will not fit in a [`SimpleTypesBacking`](/api/corvus-text-json-internal-simpletypesbacking.html).
 
 ## Remarks
 

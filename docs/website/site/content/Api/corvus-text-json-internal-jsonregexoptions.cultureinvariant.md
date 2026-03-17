@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.CultureInvariant Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## CultureInvariant {#cultureinvariant}
+
+Ignore cultural differences in language.
 
 ```csharp
 JsonRegexOptions CultureInvariant
 ```
-
-Ignore cultural differences in language.
 
 ### Returns
 

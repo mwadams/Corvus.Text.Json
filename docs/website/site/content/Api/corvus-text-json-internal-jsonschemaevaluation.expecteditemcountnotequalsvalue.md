@@ -7,7 +7,8 @@ Title: "JsonSchemaEvaluation.ExpectedItemCountNotEqualsValue Method — Corvus.T
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L151)
 
 ## ExpectedItemCountNotEqualsValue {#expecteditemcountnotequalsvalue}
 

@@ -7,15 +7,16 @@ Title: "JsonElement.GetDateTime Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1834)
 
 ## GetDateTime {#getdatetime}
+
+Gets the value of the element as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
 
 ```csharp
 public DateTime GetDateTime()
 ```
-
-Gets the value of the element as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
 
 ### Returns
 

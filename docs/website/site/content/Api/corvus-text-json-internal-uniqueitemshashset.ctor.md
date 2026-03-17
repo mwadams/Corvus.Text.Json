@@ -7,15 +7,16 @@ Title: "UniqueItemsHashSet Constructors — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UniqueItemsHashSet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/UniqueItemsHashSet.cs#L163)
 
 ## UniqueItemsHashSet {#uniqueitemshashset}
+
+Creates a validator map for efficient property lookup based on the provided matchers.
 
 ```csharp
 public UniqueItemsHashSet(IJsonDocument parentDocument, int itemsCount, Span<int> buckets, Span<byte> entries)
 ```
-
-Creates a validator map for efficient property lookup based on the provided matchers.
 
 ### Parameters
 

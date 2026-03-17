@@ -7,15 +7,16 @@ Title: "Period.FromMilliseconds Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L436)
 
 ## FromMilliseconds {#frommilliseconds}
+
+Creates a period representing the specified number of milliseconds.
 
 ```csharp
 public static Period FromMilliseconds(long milliseconds)
 ```
-
-Creates a period representing the specified number of milliseconds.
 
 ### Parameters
 

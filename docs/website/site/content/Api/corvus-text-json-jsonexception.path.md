@@ -7,15 +7,16 @@ Title: "JsonException.Path Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonException.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonException.cs#L113)
 
 ## Path {#path}
+
+Gets the path within the JSON where the exception was encountered.
 
 ```csharp
 public string Path { get; set; }
 ```
-
-Gets the path within the JSON where the exception was encountered.
 
 ### Returns
 

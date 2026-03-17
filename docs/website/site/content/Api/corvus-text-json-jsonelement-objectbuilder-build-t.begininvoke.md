@@ -7,7 +7,8 @@ Title: "JsonElement.ObjectBuilder.Build<T>.BeginInvoke Method — Corvus.Text.Js
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.ObjectBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ObjectBuilder.cs#L49)
 
 ## BeginInvoke {#begininvoke}
 

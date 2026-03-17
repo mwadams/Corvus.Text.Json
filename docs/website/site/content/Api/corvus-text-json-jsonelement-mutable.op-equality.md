@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.Equality Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElement.Mutable.Equality Operator — Corvus.Text.Json"
 | [operator ==(JsonElement.Mutable, JsonElement)](#operator-jsonelement-mutable-jsonelement) |  |
 
 ## operator ==(JsonElement.Mutable, JsonElement.Mutable) {#operator-jsonelement-mutable-jsonelement-mutable}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L2178)
 
 ```csharp
 public static bool operator ==(JsonElement.Mutable left, JsonElement.Mutable right)
@@ -33,9 +35,18 @@ public static bool operator ==(JsonElement.Mutable left, JsonElement.Mutable rig
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## operator ==(JsonElement.Mutable, JsonElement) {#operator-jsonelement-mutable-jsonelement}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L2220)
 
 ```csharp
 public static bool operator ==(JsonElement.Mutable left, JsonElement right)
@@ -52,12 +63,12 @@ public static bool operator ==(JsonElement.Mutable left, JsonElement right)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "Utf8UriReferenceValue.TryGetValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReferenceValue.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Utf8UriReferenceValue.cs#L20)
 
 ## TryGetValue {#trygetvalue}
+
+Tries to get the value of the element at the specified index as a [`Utf8UriReferenceValue`](/api/corvus-text-json-utf8urireferencevalue.html).
 
 ```csharp
 public static bool TryGetValue<T>(ref T jsonDocument, int index, ref Utf8UriReferenceValue value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Utf8UriReferenceValue`](/api/corvus-text-json-utf8urireferencevalue.html).
 
 ### Type Parameters
 

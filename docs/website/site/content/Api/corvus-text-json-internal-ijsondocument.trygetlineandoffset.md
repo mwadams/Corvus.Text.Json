@@ -7,15 +7,16 @@ Title: "IJsonDocument.TryGetLineAndOffset Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L653)
 
 ## TryGetLineAndOffset {#trygetlineandoffset}
+
+Tries to get the line number and character offset in the original source document for the element at the specified index.
 
 ```csharp
 public abstract bool TryGetLineAndOffset(int index, ref int line, ref int charOffset, ref long lineByteOffset)
 ```
-
-Tries to get the line number and character offset in the original source document for the element at the specified index.
 
 ### Parameters
 

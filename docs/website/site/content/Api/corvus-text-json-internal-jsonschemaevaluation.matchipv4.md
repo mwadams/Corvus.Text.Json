@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchIPV4 Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L505)
 
 ## MatchIPV4 {#matchipv4}
+
+Validates that a string value is a valid IPv4 address format.
 
 ```csharp
 public static bool MatchIPV4(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value is a valid IPv4 address format.
 
 ### Parameters
 

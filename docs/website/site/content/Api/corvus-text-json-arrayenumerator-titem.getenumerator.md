@@ -7,15 +7,16 @@ Title: "ArrayEnumerator<TItem>.GetEnumerator Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ArrayEnumerator{T}.cs#L68)
 
 ## GetEnumerator {#getenumerator}
+
+Returns an enumerator that iterates through the JSON array.
 
 ```csharp
 public ArrayEnumerator<TItem> GetEnumerator()
 ```
-
-Returns an enumerator that iterates through the JSON array.
 
 ### Returns
 

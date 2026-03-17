@@ -7,15 +7,16 @@ Title: "JsonElement.GetUInt16 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L873)
 
 ## GetUInt16 {#getuint16}
+
+Gets the current JSON number as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16).
 
 ```csharp
 public ushort GetUInt16()
 ```
-
-Gets the current JSON number as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16).
 
 ### Returns
 

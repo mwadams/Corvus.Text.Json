@@ -7,7 +7,8 @@ Title: "BigIntegerPolyfills.TryParse Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigIntegerPolyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/BigIntegerPolyfills.cs#L147)
 
 ## TryParse {#tryparse}
 

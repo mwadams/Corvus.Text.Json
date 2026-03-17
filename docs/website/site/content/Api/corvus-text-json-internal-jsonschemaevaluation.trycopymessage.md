@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.TryCopyMessage Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L133)
 
 ## TryCopyMessage {#trycopymessage}
+
+Tries to copy a message to the specified buffer.
 
 ```csharp
 public static bool TryCopyMessage(ReadOnlySpan<byte> readOnlySpan, Span<byte> buffer, ref int written)
 ```
-
-Tries to copy a message to the specified buffer.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "Period.Add Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L459)
 
 ## Add {#add}
+
+Adds two periods together, by simply adding the values for each property.
 
 ```csharp
 public static Period Add(Period left, Period right)
 ```
-
-Adds two periods together, by simply adding the values for each property.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "Utf8JsonReader.ValueTextEquals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "Utf8JsonReader.ValueTextEquals Method — Corvus.Text.Json"
 
 ## ValueTextEquals(ReadOnlySpan&lt;byte&gt;) {#valuetextequals-readonlyspan-byte}
 
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L480)
+
+Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match.
+
 ```csharp
 public bool ValueTextEquals(ReadOnlySpan<byte> utf8Text)
 ```
-
-Compares the UTF-8 encoded text to the unescaped JSON token value in the source and returns true if they match.
 
 ### Parameters
 
@@ -47,15 +49,24 @@ True if the JSON token value in the source matches the UTF-8 encoded look up tex
 
 If the look up text is invalid UTF-8 text, the method will return false since you cannot have invalid UTF-8 within the JSON payload. The comparison of the JSON token value in the source and the look up text is done by first unescaping the JSON value in source, if required. The look up text is matched as is, without any modifications to it.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ValueTextEquals(string) {#valuetextequals-string}
 
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L510)
+
+Compares the string text to the unescaped JSON token value in the source and returns true if they match.
+
 ```csharp
 public bool ValueTextEquals(string text)
 ```
-
-Compares the string text to the unescaped JSON token value in the source and returns true if they match.
 
 ### Parameters
 
@@ -79,15 +90,24 @@ True if the JSON token value in the source matches the look up text.
 
 If the look up text is invalid UTF-8 text, the method will return false since you cannot have invalid UTF-8 within the JSON payload. The comparison of the JSON token value in the source and the look up text is done by first unescaping the JSON value in source, if required. The look up text is matched as is, without any modifications to it.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ValueTextEquals(ReadOnlySpan&lt;char&gt;) {#valuetextequals-readonlyspan-char}
 
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L551)
+
+Compares the text to the unescaped JSON token value in the source and returns true if they match.
+
 ```csharp
 public bool ValueTextEquals(ReadOnlySpan<char> text)
 ```
-
-Compares the text to the unescaped JSON token value in the source and returns true if they match.
 
 ### Parameters
 
@@ -111,12 +131,12 @@ True if the JSON token value in the source matches the look up text.
 
 If the look up text is invalid or incomplete UTF-16 text (i.e. unpaired surrogates), the method will return false since you cannot have invalid UTF-16 within the JSON payload. The comparison of the JSON token value in the source and the look up text is done by first unescaping the JSON value in source, if required. The look up text is matched as is, without any modifications to it.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

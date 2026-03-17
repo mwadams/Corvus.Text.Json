@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchLengthEquals Method — Corvus.Text.Json.Inter
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L245)
 
 ## MatchLengthEquals {#matchlengthequals}
+
+Validates that a string length equals the given value.
 
 ```csharp
 public static bool MatchLengthEquals(int expected, int actual, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string length equals the given value.
 
 ### Parameters
 

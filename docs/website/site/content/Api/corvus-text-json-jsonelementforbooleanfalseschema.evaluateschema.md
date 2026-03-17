@@ -7,15 +7,16 @@ Title: "JsonElementForBooleanFalseSchema.EvaluateSchema Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.JsonSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.JsonSchema.cs#L28)
 
 ## EvaluateSchema {#evaluateschema}
+
+Evaluates this element against the boolean false schema.
 
 ```csharp
 public bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 ```
-
-Evaluates this element against the boolean false schema.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.ApplyUnsafe Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
 
 ## ApplyUnsafe {#applyunsafe}
+
+Applies all properties from a source JSON object element to a target JSON object element.
 
 ```csharp
 public static void ApplyUnsafe<TTarget, TSource>(TTarget targetElement, ref TSource sourceElement)
 ```
-
-Applies all properties from a source JSON object element to a target JSON object element.
 
 ### Type Parameters
 

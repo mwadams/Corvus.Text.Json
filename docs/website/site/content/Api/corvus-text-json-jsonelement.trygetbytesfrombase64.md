@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetBytesFromBase64 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L651)
 
 ## TryGetBytesFromBase64 {#trygetbytesfrombase64}
+
+Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
 
 ```csharp
 public bool TryGetBytesFromBase64(ref byte[] value)
 ```
-
-Attempts to represent the current JSON string as bytes assuming it is Base64 encoded.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "JsonSchemaContext.CommitChildContext Method — Corvus.Text.Json.Interna
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonSchemaContext.CommitChildContext Method — Corvus.Text.Json.Interna
 | [CommitChildContext(bool, ref JsonSchemaContext, JsonSchemaMessageProvider)](#commitchildcontext-bool-ref-jsonschemacontext-jsonschemamessageprovider) | Commits a child context back to its parent, merging validation results and cleaning up resources. |
 
 ## CommitChildContext(bool, ref JsonSchemaContext, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#commitchildcontext-bool-ref-jsonschemacontext-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
+
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L34)
 
 ```csharp
 public void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaContext childContext, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
@@ -31,15 +33,24 @@ public void CommitChildContext<TProviderContext>(bool isMatch, ref JsonSchemaCon
 | `providerContext` | `TProviderContext` |  |
 | `messageProvider` | [`JsonSchemaMessageProvider<TProviderContext>`](/api/corvus-text-json-jsonschemamessageprovider.html) |  *(optional)* |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CommitChildContext(bool, ref JsonSchemaContext, JsonSchemaMessageProvider) {#commitchildcontext-bool-ref-jsonschemacontext-jsonschemamessageprovider}
 
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L563)
+
+Commits a child context back to its parent, merging validation results and cleaning up resources.
+
 ```csharp
 public void CommitChildContext(bool isMatch, ref JsonSchemaContext childContext, JsonSchemaMessageProvider messageProvider)
 ```
-
-Commits a child context back to its parent, merging validation results and cleaning up resources.
 
 ### Parameters
 
@@ -53,12 +64,12 @@ Commits a child context back to its parent, merging validation results and clean
 
 This is the non-generic overload of [`CommitChildContext`](/api/corvus-text-json-internal-jsonschemacontext.html#commitchildcontext). Use this method when you don't need typed provider context for message generation. The lifecycle management behavior is identical to the generic overload: - Validation results are merged into the results collector - Buffer ownership is transferred from child to parent - Parent match status is updated based on the provided `isMatch` value Typical Usage: Use this overload for simple validation scenarios where error messages don't require additional context beyond the standard validation paths.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

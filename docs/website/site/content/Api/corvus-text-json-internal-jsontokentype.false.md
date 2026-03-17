@@ -7,15 +7,16 @@ Title: "JsonTokenType.False Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
 
 ## False {#false}
+
+Indicates that the token type is the JSON literal `false`.
 
 ```csharp
 JsonTokenType False
 ```
-
-Indicates that the token type is the JSON literal `false`.
 
 ### Returns
 

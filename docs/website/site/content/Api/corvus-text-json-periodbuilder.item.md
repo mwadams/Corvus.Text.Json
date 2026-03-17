@@ -7,15 +7,16 @@ Title: "PeriodBuilder.Item Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L103)
 
 ## this[PeriodUnits] {#this-periodunits}
+
+Gets or sets the value of a single unit.
 
 ```csharp
 public long this[PeriodUnits unit] { get; set; }
 ```
-
-Gets or sets the value of a single unit.
 
 ### Parameters
 

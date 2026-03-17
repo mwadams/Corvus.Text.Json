@@ -7,15 +7,16 @@ Title: "BigNumber.IsInteger Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L242)
 
 ## IsInteger {#isinteger}
+
+Determines whether this instance represents an integer value.
 
 ```csharp
 public bool IsInteger()
 ```
-
-Determines whether this instance represents an integer value.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetJsonTokenType Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L58)
 
 ## GetJsonTokenType {#getjsontokentype}
+
+Gets the JSON token type for the specified index.
 
 ```csharp
 public abstract JsonTokenType GetJsonTokenType(int index)
 ```
-
-Gets the JSON token type for the specified index.
 
 ### Parameters
 

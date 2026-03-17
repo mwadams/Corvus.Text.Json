@@ -7,7 +7,7 @@ Title: "JsonElementForBooleanFalseSchema.Equals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementForBooleanFalseSchema.Equals Method — Corvus.Text.Json"
 
 ## Equals(object) {#equals-object}
 
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L129)
+
+Determines whether the specified object is equal to the current instance.
+
 ```csharp
 public override bool Equals(object obj)
 ```
-
-Determines whether the specified object is equal to the current instance.
 
 ### Parameters
 
@@ -36,15 +38,24 @@ Determines whether the specified object is equal to the current instance.
 
 `true` if the specified object is equal to the current instance; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Equals(T) {#equals-t}
 
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L20)
+
+Determines whether the specified JSON element is equal to the current instance.
+
 ```csharp
 public bool Equals<T>(T other)
 ```
-
-Determines whether the specified JSON element is equal to the current instance.
 
 ### Type Parameters
 
@@ -64,12 +75,12 @@ Determines whether the specified JSON element is equal to the current instance.
 
 `true` if the specified JSON element is equal to the current instance; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

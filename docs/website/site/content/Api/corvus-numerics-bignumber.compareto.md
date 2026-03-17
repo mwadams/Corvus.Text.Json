@@ -7,7 +7,7 @@ Title: "BigNumber.CompareTo Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "BigNumber.CompareTo Method — Corvus.Numerics"
 
 ## CompareTo(BigNumber) {#compareto-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L305)
+
+Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
+
 ```csharp
 public int CompareTo(BigNumber other)
 ```
-
-Compares this instance with another [`BigNumber`](/api/corvus-numerics-bignumber.html) value.
 
 ### Parameters
 
@@ -40,15 +42,24 @@ A value that indicates the relative order of the values being compared.
 
 [`IComparable&lt;BigNumber&gt;.CompareTo`](https://learn.microsoft.com/dotnet/api/system.icomparable.compareto)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CompareTo(object) {#compareto-object}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L364)
+
+Compares this instance with a specified object.
+
 ```csharp
 public int CompareTo(object obj)
 ```
-
-Compares this instance with a specified object.
 
 ### Parameters
 
@@ -66,12 +77,12 @@ A value that indicates the relative order of the values being compared.
 
 [`IComparable.CompareTo`](https://learn.microsoft.com/dotnet/api/system.icomparable.compareto)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

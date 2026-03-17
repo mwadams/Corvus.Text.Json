@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Utf8JsonReader — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L27)
+
+Provides a high-performance API for forward-only, read-only access to the UTF-8 encoded JSON text. It processes the text sequentially with no caching and adheres strictly to the JSON RFC by default (https:// tools.ietf.org/html/rfc8259). When it encounters invalid JSON, it throws a JsonException with basic error information like line number and byte position on the line. Since this type is a ref struct, it does not directly support async. However, it does provide support for reentrancy to read incomplete data, and continue reading once more data is presented. To be able to set max depth while reading OR allow skipping comments, create an instance of [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) and pass that in to the reader.
+
 ```csharp
 public readonly struct Utf8JsonReader
 ```
-
-Provides a high-performance API for forward-only, read-only access to the UTF-8 encoded JSON text. It processes the text sequentially with no caching and adheres strictly to the JSON RFC by default (https:// tools.ietf.org/html/rfc8259). When it encounters invalid JSON, it throws a JsonException with basic error information like line number and byte position on the line. Since this type is a ref struct, it does not directly support async. However, it does provide support for reentrancy to read incomplete data, and continue reading once more data is presented. To be able to set max depth while reading OR allow skipping comments, create an instance of [`JsonReaderState`](/api/corvus-text-json-jsonreaderstate.html) and pass that in to the reader.
 
 ## Constructors
 

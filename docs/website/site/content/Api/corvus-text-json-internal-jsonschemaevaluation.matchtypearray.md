@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchTypeArray Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L70)
 
 ## MatchTypeArray {#matchtypearray}
+
+Matches a JSON token type against the "array" type constraint.
 
 ```csharp
 public static bool MatchTypeArray(JsonTokenType tokenType, ReadOnlySpan<byte> typeKeyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON token type against the "array" type constraint.
 
 ### Parameters
 

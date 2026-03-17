@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.Skip Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L336)
 
 ## Skip {#skip}
+
+Skips the children of the current JSON token.
 
 ```csharp
 public void Skip()
 ```
-
-Skips the children of the current JSON token.
 
 ### Exceptions
 

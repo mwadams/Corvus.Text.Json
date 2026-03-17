@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonTokenType — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
+
+This enum defines the various JSON tokens that make up a JSON text and is used by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) when moving from one token to the next. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) starts at 'None' by default. The 'Comment' enum value is only ever reached in a specific [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) mode and is not reachable by default.
+
 ```csharp
 public enum JsonTokenType : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-This enum defines the various JSON tokens that make up a JSON text and is used by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) when moving from one token to the next. The [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) starts at 'None' by default. The 'Comment' enum value is only ever reached in a specific [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) mode and is not reachable by default.
 
 ## Implements
 

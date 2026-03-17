@@ -124,13 +124,33 @@ function parseTaxonomyEntry(filePath) {
 function main() {
   const entries = [];
 
-  // 1. Content pages from taxonomy
+  // 1. Content pages from taxonomy (skip API per-type/member pages — they get
+  //    richer entries from the dedicated API search index in step 2)
   const taxonomyDir = path.join(ROOT, 'site', 'taxonomy');
   const ymlFiles = walk(taxonomyDir, (name) => name.endsWith('.yml'));
 
   console.log(`Found ${ymlFiles.length} taxonomy file(s).`);
 
+  // Collect API taxonomy URLs to deduplicate against API search index
+  const apiTaxonomyDir = path.join(taxonomyDir, 'api');
+
   for (const ymlFile of ymlFiles) {
+    // Skip per-type and per-member API taxonomy files — the API search index
+    // provides richer entries with XML doc summaries and keyword metadata.
+    // Only keep the namespace overview and index pages from the API section.
+    if (ymlFile.startsWith(apiTaxonomyDir)) {
+      const baseName = path.basename(ymlFile, '.yml');
+      // Keep index and namespace overviews (no dots or double-hyphens in slug after prefix)
+      // Skip per-type (e.g., corvus-text-json-jsonelement) and per-member (e.g., corvus-text-json-jsonelement.clone)
+      const parts = baseName.split('-');
+      if (baseName !== 'index' && parts.length > 2 && baseName.indexOf('.') < 0) {
+        continue; // per-type page — skip, covered by API search index
+      }
+      if (baseName.indexOf('.') >= 0) {
+        continue; // per-member page — skip, covered by API search index
+      }
+    }
+
     const entry = parseTaxonomyEntry(ymlFile);
     if (entry) {
       entries.push(entry);

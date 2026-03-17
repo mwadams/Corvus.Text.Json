@@ -7,15 +7,16 @@ Title: "Period.Weeks Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L214)
 
 ## Weeks {#weeks}
+
+Gets the number of weeks within this period.
 
 ```csharp
 public int Weeks { get; }
 ```
-
-Gets the number of weeks within this period.
 
 ### Returns
 

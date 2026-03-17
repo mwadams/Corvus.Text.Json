@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Utf8JsonWriter — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L39)
+
+Provides a high-performance API for forward-only, non-cached writing of UTF-8 encoded JSON text.
+
 ```csharp
 public sealed class Utf8JsonWriter : IDisposable, IAsyncDisposable
 ```
-
-Provides a high-performance API for forward-only, non-cached writing of UTF-8 encoded JSON text.
 
 ## Remarks
 

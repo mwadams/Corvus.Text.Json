@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.StoreBooleanValue Method — Corvus.Text.Json.Inter
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L118)
 
 ## StoreBooleanValue {#storebooleanvalue}
+
+Stores a boolean value in the document.
 
 ```csharp
 public abstract int StoreBooleanValue(bool value)
 ```
-
-Stores a boolean value in the document.
 
 ### Parameters
 

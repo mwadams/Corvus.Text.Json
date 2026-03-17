@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonMarshal — Corvus.Runtime.InteropServices"
 ---
+## Definition
+
+**Namespace:** Corvus.Runtime.InteropServices  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonMarshal.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Runtime/InteropServices/JsonMarshal.cs#L17)
+
+An unsafe class that provides a set of methods to access the underlying data representations of JSON types.
+
 ```csharp
 public static class JsonMarshal
 ```
-
-An unsafe class that provides a set of methods to access the underlying data representations of JSON types.
 
 ## Inheritance
 

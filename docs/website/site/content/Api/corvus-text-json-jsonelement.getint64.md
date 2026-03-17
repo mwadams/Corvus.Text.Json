@@ -7,15 +7,16 @@ Title: "JsonElement.GetInt64 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1022)
 
 ## GetInt64 {#getint64}
+
+Gets the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
 
 ```csharp
 public long GetInt64()
 ```
-
-Gets the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
 
 ### Returns
 

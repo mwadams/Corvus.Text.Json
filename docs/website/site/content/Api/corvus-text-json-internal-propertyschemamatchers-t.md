@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "PropertySchemaMatchers<T> — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PropertySchemaMatchers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/PropertySchemaMatchers.cs#L28)
+
+A dictionary lookup of matchers for properties in a JSON object, optimized for low allocations and high performance.
+
 ```csharp
 public class PropertySchemaMatchers<T>
 ```
-
-A dictionary lookup of matchers for properties in a JSON object, optimized for low allocations and high performance.
 
 ## Remarks
 

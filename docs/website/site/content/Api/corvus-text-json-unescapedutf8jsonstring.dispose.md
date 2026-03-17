@@ -7,15 +7,16 @@ Title: "UnescapedUtf8JsonString.Dispose Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UnescapedUtf8JsonString.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/UnescapedUtf8JsonString.cs#L66)
 
 ## Dispose {#dispose}
+
+Disposes the unescaped UTF-8 JSON string, returning any rented array pool bytes.
 
 ```csharp
 public void Dispose()
 ```
-
-Disposes the unescaped UTF-8 JSON string, returning any rented array pool bytes.
 
 ### Implements
 

@@ -7,7 +7,7 @@ Title: "ParsedJsonDocument<T>.Parse Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -21,11 +21,13 @@ Title: "ParsedJsonDocument<T>.Parse Method — Corvus.Text.Json"
 
 ## Parse(ReadOnlyMemory&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlymemory-byte-jsondocumentoptions}
 
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L90)
+
+Parse memory as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
+
 ```csharp
 public static ParsedJsonDocument<T> Parse(ReadOnlyMemory<byte> utf8Json, JsonDocumentOptions options)
 ```
-
-Parse memory as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
 
 ### Parameters
 
@@ -51,15 +53,24 @@ A ParsedJsonDocument{T} representation of the JSON value.
 
 The [`ReadOnlyMemory`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1) value will be used for the entire lifetime of the ParsedJsonDocument{T} object, and the caller must ensure that the data therein does not change during the object lifetime. Because the input is considered to be text, a UTF-8 Byte-Order-Mark (BOM) must not be present.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(ReadOnlySequence&lt;byte&gt;, JsonDocumentOptions) {#parse-readonlysequence-byte-jsondocumentoptions}
 
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L120)
+
+Parse a sequence as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
+
 ```csharp
 public static ParsedJsonDocument<T> Parse(ReadOnlySequence<byte> utf8Json, JsonDocumentOptions options)
 ```
-
-Parse a sequence as UTF-8 encoded text representing a single JSON value into a ParsedJsonDocument.
 
 ### Parameters
 
@@ -85,15 +96,24 @@ A ParsedJsonDocument{T} representation of the JSON value.
 
 The [`ReadOnlySequence`](https://learn.microsoft.com/dotnet/api/system.buffers.readonlysequence-1) may be used for the entire lifetime of the ParsedJsonDocument{T} object, and the caller must ensure that the data therein does not change during the object lifetime. Because the input is considered to be text, a UTF-8 Byte-Order-Mark (BOM) must not be present.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(Stream, JsonDocumentOptions) {#parse-stream-jsondocumentoptions}
 
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L161)
+
+Parse a [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) as UTF-8 encoded data representing a single JSON value into a ParsedJsonDocument. The Stream will be read to completion.
+
 ```csharp
 public static ParsedJsonDocument<T> Parse(Stream utf8Json, JsonDocumentOptions options)
 ```
-
-Parse a [`Stream`](https://learn.microsoft.com/dotnet/api/system.io.stream) as UTF-8 encoded data representing a single JSON value into a ParsedJsonDocument. The Stream will be read to completion.
 
 ### Parameters
 
@@ -115,15 +135,24 @@ A ParsedJsonDocument{T} representation of the JSON value.
 | [`JsonException`](/api/corvus-text-json-jsonexception.html) | `utf8Json` does not represent a valid single JSON value. |
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | `options` contains unsupported options. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(ReadOnlyMemory&lt;char&gt;, JsonDocumentOptions) {#parse-readonlymemory-char-jsondocumentoptions}
 
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L276)
+
+Parses text representing a single JSON value into a ParsedJsonDocument.
+
 ```csharp
 public static ParsedJsonDocument<T> Parse(ReadOnlyMemory<char> json, JsonDocumentOptions options)
 ```
-
-Parses text representing a single JSON value into a ParsedJsonDocument.
 
 ### Parameters
 
@@ -149,15 +178,24 @@ A ParsedJsonDocument{T} representation of the JSON value.
 
 The [`ReadOnlyMemory`](https://learn.microsoft.com/dotnet/api/system.readonlymemory-1) value may be used for the entire lifetime of the ParsedJsonDocument{T} object, and the caller must ensure that the data therein does not change during the object lifetime.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(string, JsonDocumentOptions) {#parse-string-jsondocumentoptions}
 
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L339)
+
+Parses text representing a single JSON value into a ParsedJsonDocument.
+
 ```csharp
 public static ParsedJsonDocument<T> Parse(string json, JsonDocumentOptions options)
 ```
-
-Parses text representing a single JSON value into a ParsedJsonDocument.
 
 ### Parameters
 
@@ -179,12 +217,12 @@ A ParsedJsonDocument{T} representation of the JSON value.
 | [`JsonException`](/api/corvus-text-json-jsonexception.html) | `json` does not represent a valid single JSON value. |
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | `options` contains unsupported options. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

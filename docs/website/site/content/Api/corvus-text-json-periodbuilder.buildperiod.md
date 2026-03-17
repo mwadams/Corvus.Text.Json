@@ -7,15 +7,16 @@ Title: "PeriodBuilder.BuildPeriod Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L143)
 
 ## BuildPeriod {#buildperiod}
+
+Builds a period from the properties in this builder.
 
 ```csharp
 public Period BuildPeriod()
 ```
-
-Builds a period from the properties in this builder.
 
 ### Returns
 

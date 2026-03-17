@@ -7,15 +7,16 @@ Title: "Period.HasTimeComponent Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L240)
 
 ## HasTimeComponent {#hastimecomponent}
+
+Gets a value indicating whether or not this period contains any non-zero-valued time-based properties (hours or lower).
 
 ```csharp
 public bool HasTimeComponent { get; }
 ```
-
-Gets a value indicating whether or not this period contains any non-zero-valued time-based properties (hours or lower).
 
 ### Returns
 

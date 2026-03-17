@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonElementHelpers — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
+
+Core helper methods for parsing and processing JSON numeric values into their component parts.
+
 ```csharp
 public static class JsonElementHelpers
 ```
-
-Core helper methods for parsing and processing JSON numeric values into their component parts.
 
 ## Inheritance
 

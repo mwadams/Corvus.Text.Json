@@ -7,7 +7,7 @@ Title: "IdnMapping.GetAscii Method — Corvus.Globalization"
 ## Definition
 
 **Namespace:** Corvus.Globalization  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,6 +18,8 @@ Title: "IdnMapping.GetAscii Method — Corvus.Globalization"
 | [GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int)](#getascii-readonlyspan-char-span-char-int-int-ref-int) |  |
 
 ## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, ref int) {#getascii-readonlyspan-char-span-char-ref-int}
+
+**Source:** [IdnMapping.Ascii.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Ascii.cs#L57)
 
 ```csharp
 public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref int written)
@@ -35,9 +37,18 @@ public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, ref in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, ref int) {#getascii-readonlyspan-char-span-char-int-ref-int}
+
+**Source:** [IdnMapping.Ascii.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Ascii.cs#L62)
 
 ```csharp
 public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, ref int written)
@@ -56,9 +67,18 @@ public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetAscii(ReadOnlySpan&lt;char&gt;, Span&lt;char&gt;, int, int, ref int) {#getascii-readonlyspan-char-span-char-int-int-ref-int}
+
+**Source:** [IdnMapping.Ascii.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Ascii.cs#L68)
 
 ```csharp
 public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int index, int count, ref int written)
@@ -78,12 +98,12 @@ public bool GetAscii(ReadOnlySpan<char> unicode, Span<char> outputBuffer, int in
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

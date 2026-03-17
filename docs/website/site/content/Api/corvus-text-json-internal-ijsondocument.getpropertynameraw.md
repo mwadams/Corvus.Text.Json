@@ -7,7 +7,7 @@ Title: "IJsonDocument.GetPropertyNameRaw Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.GetPropertyNameRaw Method — Corvus.Text.Json.Internal"
 
 ## GetPropertyNameRaw(int) {#getpropertynameraw-int}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L444)
+
+Gets the raw property name as a byte span for the specified index.
+
 ```csharp
 public abstract ReadOnlySpan<byte> GetPropertyNameRaw(int index)
 ```
-
-Gets the raw property name as a byte span for the specified index.
 
 ### Parameters
 
@@ -36,15 +38,24 @@ Gets the raw property name as a byte span for the specified index.
 
 The raw property name as a byte span.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetPropertyNameRaw(int, bool) {#getpropertynameraw-int-bool}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L444)
+
+Gets the raw property name as a byte span for the specified index.
+
 ```csharp
 public abstract ReadOnlyMemory<byte> GetPropertyNameRaw(int index, bool includeQuotes)
 ```
-
-Gets the raw property name as a byte span for the specified index.
 
 ### Parameters
 
@@ -59,12 +70,12 @@ Gets the raw property name as a byte span for the specified index.
 
 The raw property name as a byte span.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

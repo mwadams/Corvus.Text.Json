@@ -7,15 +7,16 @@ Title: "Utf8IriReference.TryFormatCanonical Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L234)
 
 ## TryFormatCanonical {#tryformatcanonical}
+
+Gets the IRI reference in canonical form.
 
 ```csharp
 public bool TryFormatCanonical(Span<byte> buffer, ref int writtenBytes)
 ```
-
-Gets the IRI reference in canonical form.
 
 ### Parameters
 

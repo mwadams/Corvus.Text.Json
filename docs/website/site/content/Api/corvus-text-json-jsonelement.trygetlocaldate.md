@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetLocalDate Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1555)
 
 ## TryGetLocalDate {#trygetlocaldate}
+
+Attempts to represent the current JSON string as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
 
 ```csharp
 public bool TryGetLocalDate(ref LocalDate value)
 ```
-
-Attempts to represent the current JSON string as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
 
 ### Parameters
 

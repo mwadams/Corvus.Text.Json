@@ -7,15 +7,16 @@ Title: "Utf8Iri.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L371)
 
 ## ToString {#tostring}
+
+Returns a string representation of the IRI in display format.
 
 ```csharp
 public override string ToString()
 ```
-
-Returns a string representation of the IRI in display format.
 
 ### Returns
 

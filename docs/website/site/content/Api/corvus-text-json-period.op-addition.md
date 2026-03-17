@@ -7,15 +7,16 @@ Title: "Period.Addition Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L310)
 
 ## operator + {#operator}
+
+Adds two periods together, by simply adding the values for each property.
 
 ```csharp
 public static Period operator +(Period left, Period right)
 ```
-
-Adds two periods together, by simply adding the values for each property.
 
 ### Parameters
 

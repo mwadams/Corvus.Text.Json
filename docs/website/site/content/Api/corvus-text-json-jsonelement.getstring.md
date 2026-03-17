@@ -7,15 +7,16 @@ Title: "JsonElement.GetString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L581)
 
 ## GetString {#getstring}
+
+Gets the value of the element as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ```csharp
 public string GetString()
 ```
-
-Gets the value of the element as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ### Returns
 

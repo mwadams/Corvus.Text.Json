@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.TryFormatIri Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElementHelpers.TryFormatIri Method — Corvus.Text.Json.Internal"
 | [TryFormatIri(Utf8Iri, bool, Span&lt;char&gt;, ref int)](#tryformatiri-utf8iri-bool-span-char-ref-int) |  |
 
 ## TryFormatIri(Utf8Iri, bool, ref string) {#tryformatiri-utf8iri-bool-ref-string}
+
+**Source:** [JsonElementHelpers.Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Uri.cs#L211)
 
 ```csharp
 public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, ref string result)
@@ -34,9 +36,18 @@ public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, ref string result)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryFormatIri(Utf8Iri, bool, Span&lt;char&gt;, ref int) {#tryformatiri-utf8iri-bool-span-char-ref-int}
+
+**Source:** [JsonElementHelpers.Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Uri.cs#L260)
 
 ```csharp
 public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, Span<char> destination, ref int charsWritten)
@@ -55,12 +66,12 @@ public static bool TryFormatIri(Utf8Iri iri, bool isDisplay, Span<char> destinat
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

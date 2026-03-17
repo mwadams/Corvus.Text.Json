@@ -7,15 +7,16 @@ Title: "Period.NormalizingEqualityComparer Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L132)
 
 ## NormalizingEqualityComparer {#normalizingequalitycomparer}
+
+Gets an equality comparer which compares periods by first normalizing them - so 24 hours is deemed equal to 1 day, and so on. Note that as per the [`Normalize`](/api/corvus-text-json-period.html#normalize) method, years and months are unchanged by normalization - so 12 months does not equal 1 year.
 
 ```csharp
 public static IEqualityComparer<Period> NormalizingEqualityComparer { get; }
 ```
-
-Gets an equality comparer which compares periods by first normalizing them - so 24 hours is deemed equal to 1 day, and so on. Note that as per the [`Normalize`](/api/corvus-text-json-period.html#normalize) method, years and months are unchanged by normalization - so 12 months does not equal 1 year.
 
 ### Returns
 

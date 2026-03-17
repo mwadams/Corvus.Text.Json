@@ -7,15 +7,16 @@ Title: "JsonElement.GetSByte Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L724)
 
 ## GetSByte {#getsbyte}
+
+Gets the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
 
 ```csharp
 public sbyte GetSByte()
 ```
-
-Gets the current JSON number as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
 
 ### Returns
 

@@ -7,7 +7,8 @@ Title: "ValidationResult.LocationTuple.DocumentLocation Property — Corvus.Text
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationResult.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationResult.cs#L98)
 
 ## DocumentLocation {#documentlocation}
 

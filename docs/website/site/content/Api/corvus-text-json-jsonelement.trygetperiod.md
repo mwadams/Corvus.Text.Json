@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetPeriod Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1759)
 
 ## TryGetPeriod {#trygetperiod}
+
+Attempts to represent the current JSON string as a [`Period`](/api/corvus-text-json-period.html).
 
 ```csharp
 public bool TryGetPeriod(ref Period value)
 ```
-
-Attempts to represent the current JSON string as a [`Period`](/api/corvus-text-json-period.html).
 
 ### Parameters
 

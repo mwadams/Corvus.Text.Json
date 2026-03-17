@@ -7,15 +7,16 @@ Title: "JsonTokenType.Comment Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
 
 ## Comment {#comment}
+
+Indicates that the token type is the comment string.
 
 ```csharp
 JsonTokenType Comment
 ```
-
-Indicates that the token type is the comment string.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "Utf8Iri.GetUri Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L214)
 
 ## GetUri {#geturi}
+
+Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri).
 
 ```csharp
 public Uri GetUri()
 ```
-
-Gets the value as a [`Uri`](https://learn.microsoft.com/dotnet/api/system.uri).
 
 ### Returns
 

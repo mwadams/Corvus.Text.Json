@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.RemoveWhere Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElement.Mutable.RemoveWhere Method — Corvus.Text.Json"
 | [RemoveWhere(JsonPredicate&lt;JsonElement&gt;)](#removewhere-jsonpredicate-jsonelement) |  |
 
 ## RemoveWhere(JsonPredicate&lt;T&gt;) {#removewhere-jsonpredicate-t}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1738)
 
 ```csharp
 public void RemoveWhere<T>(JsonPredicate<T> predicate)
@@ -28,9 +30,18 @@ public void RemoveWhere<T>(JsonPredicate<T> predicate)
 |------|------|-------------|
 | `predicate` | [`JsonPredicate<T>`](/api/corvus-text-json-jsonpredicate-t.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## RemoveWhere(JsonPredicate&lt;JsonElement&gt;) {#removewhere-jsonpredicate-jsonelement}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5909)
 
 ```csharp
 public void RemoveWhere(JsonPredicate<JsonElement> predicate)
@@ -42,12 +53,12 @@ public void RemoveWhere(JsonPredicate<JsonElement> predicate)
 |------|------|-------------|
 | `predicate` | [`JsonPredicate<JsonElement>`](/api/corvus-text-json-jsonpredicate-t.html) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

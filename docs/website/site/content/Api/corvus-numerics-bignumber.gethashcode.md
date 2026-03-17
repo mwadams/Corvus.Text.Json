@@ -7,15 +7,16 @@ Title: "BigNumber.GetHashCode Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L283)
 
 ## GetHashCode {#gethashcode}
+
+Returns a hash code for this instance.
 
 ```csharp
 public override int GetHashCode()
 ```
-
-Returns a hash code for this instance.
 
 ### Returns
 

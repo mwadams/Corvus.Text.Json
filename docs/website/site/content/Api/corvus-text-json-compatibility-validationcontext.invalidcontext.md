@@ -7,15 +7,16 @@ Title: "ValidationContext.InvalidContext Field — Corvus.Text.Json.Compatibilit
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationContext.cs#L17)
 
 ## InvalidContext {#invalidcontext}
+
+Gets an invalid context.
 
 ```csharp
 ValidationContext InvalidContext
 ```
-
-Gets an invalid context.
 
 ### Returns
 

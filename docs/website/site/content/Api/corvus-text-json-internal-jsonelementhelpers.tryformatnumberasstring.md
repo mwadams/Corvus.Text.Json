@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.TryFormatNumberAsString Method — Corvus.Text.Json.I
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L358)
 
 ## TryFormatNumberAsString {#tryformatnumberasstring}
+
+Format the number as a string.
 
 ```csharp
 public static bool TryFormatNumberAsString(ReadOnlySpan<byte> span, ReadOnlySpan<char> format, IFormatProvider provider, ref string value)
 ```
-
-Format the number as a string.
 
 ### Parameters
 

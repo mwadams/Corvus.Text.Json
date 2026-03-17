@@ -7,15 +7,16 @@ Title: "JsonElement.CreateArrayBuilder Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L1585)
 
 ## CreateArrayBuilder {#createarraybuilder}
+
+Creates an empty mutable array document builder.
 
 ```csharp
 public static JsonDocumentBuilder<JsonElement.Mutable> CreateArrayBuilder(JsonWorkspace workspace, int estimatedMemberCount)
 ```
-
-Creates an empty mutable array document builder.
 
 ### Parameters
 

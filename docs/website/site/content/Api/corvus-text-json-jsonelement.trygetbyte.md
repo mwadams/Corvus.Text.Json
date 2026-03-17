@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetByte Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L751)
 
 ## TryGetByte {#trygetbyte}
+
+Attempts to represent the current JSON number as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte).
 
 ```csharp
 public bool TryGetByte(ref byte value)
 ```
-
-Attempts to represent the current JSON number as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte).
 
 ### Parameters
 

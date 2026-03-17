@@ -7,7 +7,7 @@ Title: "JsonElementTensorHelpers.TryCopyArrayOfRankTo Method — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -30,11 +30,13 @@ Title: "JsonElementTensorHelpers.TryCopyArrayOfRankTo Method — Corvus.Text.Jso
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;long&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-long-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L51)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<long> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -59,15 +61,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;ulong&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-ulong-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L94)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<ulong> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -92,15 +103,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;int&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-int-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L137)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<int> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -125,15 +145,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;uint&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-uint-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L180)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<uint> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -158,15 +187,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;short&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-short-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L223)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<short> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -191,15 +229,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;ushort&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-ushort-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L266)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<ushort> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -224,15 +271,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;sbyte&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-sbyte-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L309)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<sbyte> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -257,15 +313,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;byte&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-byte-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L352)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<byte> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -290,15 +355,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;double&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-double-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L395)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<double> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -323,15 +397,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;float&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-float-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L438)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<float> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -356,15 +439,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;decimal&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-decimal-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L481)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<decimal> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -389,15 +481,24 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;Int128&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-int128-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L526)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<Int128> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -422,15 +523,23 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;UInt128&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-uint128-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L569)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<UInt128> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -455,15 +564,23 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryCopyArrayOfRankTo(IJsonDocument, int, Span&lt;Half&gt;, int, ref int) {#trycopyarrayofrankto-ijsondocument-int-span-half-int-ref-int}
 
+**Source:** [JsonElementTensorHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementTensorHelpers.cs#L612)
+
+Tries to copy the higher-rank array data from the instance to the given array.
+
 ```csharp
 public static bool TryCopyArrayOfRankTo(IJsonDocument parentDocument, int parentDocumentIndex, Span<Half> array, int rank, ref int written)
 ```
-
-Tries to copy the higher-rank array data from the instance to the given array.
 
 ### Parameters
 
@@ -488,11 +605,11 @@ Tries to copy the higher-rank array data from the instance to the given array.
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | The element was not a JSON array of the target type and rank. |
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | An item in the array was not of the target numeric format. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+
+---
 

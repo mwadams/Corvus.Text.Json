@@ -7,15 +7,16 @@ Title: "ValidationLevel.Verbose Field — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationLevel.cs#L14)
 
 ## Verbose {#verbose}
+
+10.4.4. Verbose.
 
 ```csharp
 ValidationLevel Verbose
 ```
-
-10.4.4. Verbose.
 
 ### Returns
 

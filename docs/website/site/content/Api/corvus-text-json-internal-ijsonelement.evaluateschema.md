@@ -7,15 +7,16 @@ Title: "IJsonElement.EvaluateSchema Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonElement.cs#L47)
 
 ## EvaluateSchema {#evaluateschema}
+
+Evaluates the schema for this element.
 
 ```csharp
 public abstract bool EvaluateSchema(IJsonSchemaResultsCollector resultsCollector)
 ```
-
-Evaluates the schema for this element.
 
 ### Parameters
 

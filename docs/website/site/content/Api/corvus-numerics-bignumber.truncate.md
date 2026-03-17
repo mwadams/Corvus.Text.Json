@@ -7,15 +7,16 @@ Title: "BigNumber.Truncate Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2246)
 
 ## Truncate {#truncate}
+
+Truncates a value to an integer by removing the fractional part.
 
 ```csharp
 public static BigNumber Truncate(BigNumber value)
 ```
-
-Truncates a value to an integer by removing the fractional part.
 
 ### Parameters
 

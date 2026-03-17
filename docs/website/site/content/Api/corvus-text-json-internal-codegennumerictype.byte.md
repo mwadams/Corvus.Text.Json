@@ -7,15 +7,16 @@ Title: "CodeGenNumericType.Byte Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L17)
 
 ## Byte {#byte}
+
+Represents an 8-bit unsigned integer.
 
 ```csharp
 CodeGenNumericType Byte
 ```
-
-Represents an 8-bit unsigned integer.
 
 ### Returns
 

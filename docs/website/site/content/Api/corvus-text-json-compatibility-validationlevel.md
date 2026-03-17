@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "ValidationLevel — Corvus.Text.Json.Compatibility"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Compatibility  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationLevel.cs#L14)
+
+The validation level.
+
 ```csharp
 public enum ValidationLevel : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-The validation level.
 
 ## Implements
 

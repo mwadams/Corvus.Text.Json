@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.ValueEquals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,6 +18,8 @@ Title: "JsonElement.Mutable.ValueEquals Method — Corvus.Text.Json"
 | [ValueEquals(ReadOnlySpan&lt;char&gt;)](#valueequals-readonlyspan-char) |  |
 
 ## ValueEquals(string) {#valueequals-string}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L4066)
 
 ```csharp
 public bool ValueEquals(string text)
@@ -33,9 +35,18 @@ public bool ValueEquals(string text)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ValueEquals(ReadOnlySpan&lt;byte&gt;) {#valueequals-readonlyspan-byte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L4093)
 
 ```csharp
 public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
@@ -51,9 +62,18 @@ public bool ValueEquals(ReadOnlySpan<byte> utf8Text)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ValueEquals(ReadOnlySpan&lt;char&gt;) {#valueequals-readonlyspan-char}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L4122)
 
 ```csharp
 public bool ValueEquals(ReadOnlySpan<char> text)
@@ -69,12 +89,12 @@ public bool ValueEquals(ReadOnlySpan<char> text)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

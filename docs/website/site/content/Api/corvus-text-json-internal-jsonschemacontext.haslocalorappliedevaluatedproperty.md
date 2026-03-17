@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.HasLocalOrAppliedEvaluatedProperty Method — Corvus.T
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L833)
 
 ## HasLocalOrAppliedEvaluatedProperty {#haslocalorappliedevaluatedproperty}
+
+Determines whether a specific property at the given index has been either locally or applied evaluated.
 
 ```csharp
 public bool HasLocalOrAppliedEvaluatedProperty(int index)
 ```
-
-Determines whether a specific property at the given index has been either locally or applied evaluated.
 
 ### Parameters
 

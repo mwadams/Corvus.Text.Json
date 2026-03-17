@@ -7,7 +7,7 @@ Title: "IJsonDocument.TryGetValue Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -43,11 +43,13 @@ Title: "IJsonDocument.TryGetValue Method — Corvus.Text.Json.Internal"
 
 ## TryGetValue(int, ref byte[]) {#trygetvalue-int-ref-byte}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a byte array.
+
 ```csharp
 public abstract bool TryGetValue(int index, ref byte[] value)
 ```
-
-Tries to get the value of the element at the specified index as a byte array.
 
 ### Parameters
 
@@ -62,15 +64,24 @@ Tries to get the value of the element at the specified index as a byte array.
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref sbyte) {#trygetvalue-int-ref-sbyte}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref sbyte value)
 ```
-
-Tries to get the value of the element at the specified index as an [`SByte`](https://learn.microsoft.com/dotnet/api/system.sbyte).
 
 ### Parameters
 
@@ -85,15 +96,24 @@ Tries to get the value of the element at the specified index as an [`SByte`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref byte) {#trygetvalue-int-ref-byte}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref byte value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Byte`](https://learn.microsoft.com/dotnet/api/system.byte).
 
 ### Parameters
 
@@ -108,15 +128,24 @@ Tries to get the value of the element at the specified index as a [`Byte`](https
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref short) {#trygetvalue-int-ref-short}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref short value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Int16`](https://learn.microsoft.com/dotnet/api/system.int16).
 
 ### Parameters
 
@@ -131,15 +160,24 @@ Tries to get the value of the element at the specified index as a [`Int16`](http
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref ushort) {#trygetvalue-int-ref-ushort}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref ushort value)
 ```
-
-Tries to get the value of the element at the specified index as a [`UInt16`](https://learn.microsoft.com/dotnet/api/system.uint16).
 
 ### Parameters
 
@@ -154,15 +192,24 @@ Tries to get the value of the element at the specified index as a [`UInt16`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref int) {#trygetvalue-int-ref-int}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref int value)
 ```
-
-Tries to get the value of the element at the specified index as an [`Int32`](https://learn.microsoft.com/dotnet/api/system.int32).
 
 ### Parameters
 
@@ -177,15 +224,24 @@ Tries to get the value of the element at the specified index as an [`Int32`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref uint) {#trygetvalue-int-ref-uint}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref uint value)
 ```
-
-Tries to get the value of the element at the specified index as a [`UInt32`](https://learn.microsoft.com/dotnet/api/system.uint32).
 
 ### Parameters
 
@@ -200,15 +256,24 @@ Tries to get the value of the element at the specified index as a [`UInt32`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref long) {#trygetvalue-int-ref-long}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref long value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
 
 ### Parameters
 
@@ -223,15 +288,24 @@ Tries to get the value of the element at the specified index as a [`Int64`](http
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref ulong) {#trygetvalue-int-ref-ulong}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref ulong value)
 ```
-
-Tries to get the value of the element at the specified index as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
 
 ### Parameters
 
@@ -246,15 +320,24 @@ Tries to get the value of the element at the specified index as a [`UInt64`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref double) {#trygetvalue-int-ref-double}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref double value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
 
 ### Parameters
 
@@ -269,15 +352,24 @@ Tries to get the value of the element at the specified index as a [`Double`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref float) {#trygetvalue-int-ref-float}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref float value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single).
 
 ### Parameters
 
@@ -292,15 +384,24 @@ Tries to get the value of the element at the specified index as a [`Single`](htt
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref decimal) {#trygetvalue-int-ref-decimal}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref decimal value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
 
 ### Parameters
 
@@ -315,15 +416,24 @@ Tries to get the value of the element at the specified index as a [`Decimal`](ht
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref BigInteger) {#trygetvalue-int-ref-biginteger}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref BigInteger value)
 ```
-
-Tries to get the value of the element at the specified index as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
 
 ### Parameters
 
@@ -338,15 +448,24 @@ Tries to get the value of the element at the specified index as a [`BigInteger`]
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref BigNumber) {#trygetvalue-int-ref-bignumber}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref BigNumber value)
 ```
-
-Tries to get the value of the element at the specified index as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -361,15 +480,24 @@ Tries to get the value of the element at the specified index as a [`BigNumber`](
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref DateTime) {#trygetvalue-int-ref-datetime}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref DateTime value)
 ```
-
-Tries to get the value of the element at the specified index as a [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime).
 
 ### Parameters
 
@@ -384,15 +512,24 @@ Tries to get the value of the element at the specified index as a [`DateTime`](h
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref DateTimeOffset) {#trygetvalue-int-ref-datetimeoffset}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref DateTimeOffset value)
 ```
-
-Tries to get the value of the element at the specified index as a [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset).
 
 ### Parameters
 
@@ -407,15 +544,24 @@ Tries to get the value of the element at the specified index as a [`DateTimeOffs
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref OffsetDateTime) {#trygetvalue-int-ref-offsetdatetime}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref OffsetDateTime value)
 ```
-
-Tries to get the value of the element at the specified index as an [`OffsetDateTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDateTime.html).
 
 ### Parameters
 
@@ -430,15 +576,24 @@ Tries to get the value of the element at the specified index as an [`OffsetDateT
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref OffsetDate) {#trygetvalue-int-ref-offsetdate}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref OffsetDate value)
 ```
-
-Tries to get the value of the element at the specified index as an [`OffsetDate`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetDate.html).
 
 ### Parameters
 
@@ -453,15 +608,24 @@ Tries to get the value of the element at the specified index as an [`OffsetDate`
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref OffsetTime) {#trygetvalue-int-ref-offsettime}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref OffsetTime value)
 ```
-
-Tries to get the value of the element at the specified index as an [`OffsetTime`](https://www.nodatime.org/3.3.x/api/NodaTime.OffsetTime.html).
 
 ### Parameters
 
@@ -476,15 +640,24 @@ Tries to get the value of the element at the specified index as an [`OffsetTime`
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref LocalDate) {#trygetvalue-int-ref-localdate}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref LocalDate value)
 ```
-
-Tries to get the value of the element at the specified index as a [`LocalDate`](https://www.nodatime.org/3.3.x/api/NodaTime.LocalDate.html).
 
 ### Parameters
 
@@ -499,15 +672,24 @@ Tries to get the value of the element at the specified index as a [`LocalDate`](
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref Period) {#trygetvalue-int-ref-period}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Period`](/api/corvus-text-json-period.html).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref Period value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Period`](/api/corvus-text-json-period.html).
 
 ### Parameters
 
@@ -522,15 +704,24 @@ Tries to get the value of the element at the specified index as a [`Period`](/ap
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref Guid) {#trygetvalue-int-ref-guid}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref Guid value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid).
 
 ### Parameters
 
@@ -545,15 +736,24 @@ Tries to get the value of the element at the specified index as a [`Guid`](https
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetValue(int, ref Int128) {#trygetvalue-int-ref-int128}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref Int128 value)
 ```
-
-Tries to get the value of the element at the specified index as an [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
 
 ### Parameters
 
@@ -568,15 +768,23 @@ Tries to get the value of the element at the specified index as an [`Int128`](ht
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryGetValue(int, ref UInt128) {#trygetvalue-int-ref-uint128}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref UInt128 value)
 ```
-
-Tries to get the value of the element at the specified index as a [`UInt128`](https://learn.microsoft.com/dotnet/api/system.uint128).
 
 ### Parameters
 
@@ -591,15 +799,23 @@ Tries to get the value of the element at the specified index as a [`UInt128`](ht
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryGetValue(int, ref Half) {#trygetvalue-int-ref-half}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref Half value)
 ```
-
-Tries to get the value of the element at the specified index as a [`Half`](https://learn.microsoft.com/dotnet/api/system.half).
 
 ### Parameters
 
@@ -614,15 +830,23 @@ Tries to get the value of the element at the specified index as a [`Half`](https
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryGetValue(int, ref DateOnly) {#trygetvalue-int-ref-dateonly}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`DateOnly`](https://learn.microsoft.com/dotnet/api/system.dateonly).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref DateOnly value)
 ```
-
-Tries to get the value of the element at the specified index as a [`DateOnly`](https://learn.microsoft.com/dotnet/api/system.dateonly).
 
 ### Parameters
 
@@ -637,15 +861,23 @@ Tries to get the value of the element at the specified index as a [`DateOnly`](h
 
 `true` if the value was retrieved; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## TryGetValue(int, ref TimeOnly) {#trygetvalue-int-ref-timeonly}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L219)
+
+Tries to get the value of the element at the specified index as a [`TimeOnly`](https://learn.microsoft.com/dotnet/api/system.timeonly).
+
 ```csharp
 public abstract bool TryGetValue(int index, ref TimeOnly value)
 ```
-
-Tries to get the value of the element at the specified index as a [`TimeOnly`](https://learn.microsoft.com/dotnet/api/system.timeonly).
 
 ### Parameters
 
@@ -660,11 +892,11 @@ Tries to get the value of the element at the specified index as a [`TimeOnly`](h
 
 `true` if the value was retrieved; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+
+---
 

@@ -7,7 +7,7 @@ Title: "JsonElement.Item Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "JsonElement.Item Property — Corvus.Text.Json"
 
 ## this[int] {#this-int}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L83)
+
+Get the value at a specified index when the current value is a [`Array`](/api/corvus-text-json-jsonvaluekind.html#array).
+
 ```csharp
 public JsonElement this[int index] { get; }
 ```
-
-Get the value at a specified index when the current value is a [`Array`](/api/corvus-text-json-jsonvaluekind.html#array).
 
 ### Parameters
 
@@ -44,15 +46,24 @@ Get the value at a specified index when the current value is a [`Array`](/api/co
 | [`IndexOutOfRangeException`](https://learn.microsoft.com/dotnet/api/system.indexoutofrangeexception) | `index` is not in the range \[0, [`GetArrayLength`](/api/corvus-text-json-jsonelement.html#getarraylength)()). |
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## this[ReadOnlySpan&lt;byte&gt;] {#this-readonlyspan-byte}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L110)
+
+Gets the value of the property with the given UTF-8 encoded name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object).
+
 ```csharp
 public JsonElement this[ReadOnlySpan<byte> propertyName] { get; }
 ```
-
-Gets the value of the property with the given UTF-8 encoded name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object).
 
 ### Parameters
 
@@ -73,15 +84,24 @@ The value of the property with the given name, or a default [`JsonElement`](/api
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | This value's [`ValueKind`](/api/corvus-text-json-jsonelement.html#valuekind) is not [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## this[ReadOnlySpan&lt;char&gt;] {#this-readonlyspan-char}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L140)
+
+Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object).
+
 ```csharp
 public JsonElement this[ReadOnlySpan<char> propertyName] { get; }
 ```
-
-Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object).
 
 ### Parameters
 
@@ -102,15 +122,24 @@ The value of the property with the given name, or a default [`JsonElement`](/api
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | This value's [`ValueKind`](/api/corvus-text-json-jsonelement.html#valuekind) is not [`Object`](/api/corvus-text-json-jsonvaluekind.html#object). |
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## this[string] {#this-string}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L173)
+
+Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object).
+
 ```csharp
 public JsonElement this[string propertyName] { get; }
 ```
-
-Gets the value of the property with the given name when the current value is an [`Object`](/api/corvus-text-json-jsonvaluekind.html#object).
 
 ### Parameters
 
@@ -132,12 +161,12 @@ The value of the property with the given name, or a default [`JsonElement`](/api
 | [`ObjectDisposedException`](https://learn.microsoft.com/dotnet/api/system.objectdisposedexception) | The parent [`JsonDocument`](/api/corvus-text-json-internal-jsondocument.html) has been disposed. |
 | [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | `propertyName` is `null`. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

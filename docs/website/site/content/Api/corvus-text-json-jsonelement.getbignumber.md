@@ -7,15 +7,16 @@ Title: "JsonElement.GetBigNumber Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1476)
 
 ## GetBigNumber {#getbignumber}
+
+Gets the current JSON number as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ```csharp
 public BigNumber GetBigNumber()
 ```
-
-Gets the current JSON number as a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Returns
 

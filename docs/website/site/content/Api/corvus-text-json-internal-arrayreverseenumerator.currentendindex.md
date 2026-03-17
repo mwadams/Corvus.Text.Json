@@ -7,15 +7,16 @@ Title: "ArrayReverseEnumerator.CurrentEndIndex Property — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayReverseEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ArrayReverseEnumerator.cs#L52)
 
 ## CurrentEndIndex {#currentendindex}
+
+Gets the current end index of the item within the JSON array.
 
 ```csharp
 public int CurrentEndIndex { get; }
 ```
-
-Gets the current end index of the item within the JSON array.
 
 ### Returns
 

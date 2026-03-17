@@ -7,15 +7,16 @@ Title: "ArrayReverseEnumerator.CurrentIndex Property — Corvus.Text.Json.Intern
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayReverseEnumerator.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/ArrayReverseEnumerator.cs#L47)
 
 ## CurrentIndex {#currentindex}
+
+Gets the current index within the JSON array.
 
 ```csharp
 public int CurrentIndex { get; }
 ```
-
-Gets the current index within the JSON array.
 
 ### Returns
 

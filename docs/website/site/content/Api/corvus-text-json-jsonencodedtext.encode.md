@@ -7,7 +7,7 @@ Title: "JsonEncodedText.Encode Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "JsonEncodedText.Encode Method — Corvus.Text.Json"
 
 ## Encode(string, JavaScriptEncoder) {#encode-string-javascriptencoder}
 
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L59)
+
+Encodes the string text value as a JSON string.
+
 ```csharp
 public static JsonEncodedText Encode(string value, JavaScriptEncoder encoder)
 ```
-
-Encodes the string text value as a JSON string.
 
 ### Parameters
 
@@ -43,15 +45,24 @@ Encodes the string text value as a JSON string.
 | [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | Thrown if value is null. |
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified value is too large or if it contains invalid UTF-16 characters. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Encode(ReadOnlySpan&lt;char&gt;, JavaScriptEncoder) {#encode-readonlyspan-char-javascriptencoder}
 
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L74)
+
+Encodes the text value as a JSON string.
+
 ```csharp
 public static JsonEncodedText Encode(ReadOnlySpan<char> value, JavaScriptEncoder encoder)
 ```
-
-Encodes the text value as a JSON string.
 
 ### Parameters
 
@@ -70,15 +81,24 @@ Encodes the text value as a JSON string.
 |-----------|-------------|
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified value is too large or if it contains invalid UTF-16 characters. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Encode(ReadOnlySpan&lt;byte&gt;, JavaScriptEncoder) {#encode-readonlyspan-byte-javascriptencoder}
 
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L92)
+
+Encodes the UTF-8 text value as a JSON string.
+
 ```csharp
 public static JsonEncodedText Encode(ReadOnlySpan<byte> utf8Value, JavaScriptEncoder encoder)
 ```
-
-Encodes the UTF-8 text value as a JSON string.
 
 ### Parameters
 
@@ -97,12 +117,12 @@ Encodes the UTF-8 text value as a JSON string.
 |-----------|-------------|
 | [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified value is too large or if it contains invalid UTF-8 bytes. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

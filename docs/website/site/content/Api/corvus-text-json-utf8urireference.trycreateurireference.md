@@ -7,15 +7,16 @@ Title: "Utf8UriReference.TryCreateUriReference Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L202)
 
 ## TryCreateUriReference {#trycreateurireference}
+
+Tries to create a new UTF-8 URI Reference from the specified URI bytes.
 
 ```csharp
 public static bool TryCreateUriReference(ReadOnlySpan<byte> uri, ref Utf8UriReference utf8UriReference)
 ```
-
-Tries to create a new UTF-8 URI Reference from the specified URI bytes.
 
 ### Parameters
 

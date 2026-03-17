@@ -7,7 +7,8 @@ Title: "IByteBufferWriter.ClearAndReturnBuffers Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IByteBufferWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/Common/src/System/Text/Json/IByteBufferWriter.cs#L15)
 
 ## ClearAndReturnBuffers {#clearandreturnbuffers}
 

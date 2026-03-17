@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetStartIndex Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L583)
 
 ## GetStartIndex {#getstartindex}
+
+Gets the start index of the element from the end index.
 
 ```csharp
 public abstract int GetStartIndex(int endIndex)
 ```
-
-Gets the start index of the element from the end index.
 
 ### Parameters
 

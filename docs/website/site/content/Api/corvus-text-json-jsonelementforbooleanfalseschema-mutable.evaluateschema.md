@@ -7,7 +7,8 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.EvaluateSchema Method — Corvu
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L342)
 
 ## EvaluateSchema {#evaluateschema}
 

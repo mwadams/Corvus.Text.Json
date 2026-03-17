@@ -7,15 +7,16 @@ Title: "Utf8Uri.TryFormatDisplay Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L223)
 
 ## TryFormatDisplay {#tryformatdisplay}
+
+Gets the URI in canonical form for display.
 
 ```csharp
 public bool TryFormatDisplay(Span<byte> buffer, ref int writtenBytes)
 ```
-
-Gets the URI in canonical form for display.
 
 ### Parameters
 

@@ -7,7 +7,7 @@ Title: "JsonWorkspace.CreateBuilder Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonWorkspace.CreateBuilder Method — Corvus.Text.Json"
 
 ## CreateBuilder(TElement) {#createbuilder-telement}
 
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L18)
+
+Creates a document builder for building mutable JSON documents from an existing element.
+
 ```csharp
 public JsonDocumentBuilder<TMutableElement> CreateBuilder<TElement, TMutableElement>(TElement sourceElement)
 ```
-
-Creates a document builder for building mutable JSON documents from an existing element.
 
 ### Type Parameters
 
@@ -43,15 +45,24 @@ Creates a document builder for building mutable JSON documents from an existing 
 
 A document builder for the mutable element type.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CreateBuilder(int, int) {#createbuilder-int-int}
 
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L18)
+
+Creates a document builder for building mutable JSON documents.
+
 ```csharp
 public JsonDocumentBuilder<TElement> CreateBuilder<TElement>(int initialCapacity, int initialValueBufferSize)
 ```
-
-Creates a document builder for building mutable JSON documents.
 
 ### Type Parameters
 
@@ -72,12 +83,12 @@ Creates a document builder for building mutable JSON documents.
 
 A document builder for the specified element type.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

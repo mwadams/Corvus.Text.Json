@@ -7,15 +7,16 @@ Title: "JsonElement.GetBigInteger Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1528)
 
 ## GetBigInteger {#getbiginteger}
+
+Gets the current JSON number as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
 
 ```csharp
 public BigInteger GetBigInteger()
 ```
-
-Gets the current JSON number as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
 
 ### Returns
 

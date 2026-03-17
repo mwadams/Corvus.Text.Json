@@ -7,15 +7,16 @@ Title: "Utf8Uri.CreateUri Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L186)
 
 ## CreateUri {#createuri}
+
+Creates a new UTF-8 URI from the specified URI bytes.
 
 ```csharp
 public static Utf8Uri CreateUri(ReadOnlySpan<byte> uri)
 ```
-
-Creates a new UTF-8 URI from the specified URI bytes.
 
 ### Parameters
 

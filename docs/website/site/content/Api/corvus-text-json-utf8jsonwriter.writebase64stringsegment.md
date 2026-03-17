@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.WriteBase64StringSegment Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.WriteValues.StringSegment.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.StringSegment.cs#L32)
 
 ## WriteBase64StringSegment {#writebase64stringsegment}
+
+Writes the input bytes as a partial JSON string.
 
 ```csharp
 public void WriteBase64StringSegment(ReadOnlySpan<byte> value, bool isFinalSegment)
 ```
-
-Writes the input bytes as a partial JSON string.
 
 ### Parameters
 

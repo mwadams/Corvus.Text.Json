@@ -7,15 +7,16 @@ Title: "BigNumber.TryFormatOptimized Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.OptimizedFormatting.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.OptimizedFormatting.cs#L33)
 
 ## TryFormatOptimized {#tryformatoptimized}
+
+Tries to format this instance into the provided UTF-16 span with zero allocations.
 
 ```csharp
 public bool TryFormatOptimized(Span<char> destination, ref int charsWritten, ReadOnlySpan<char> format, IFormatProvider provider)
 ```
-
-Tries to format this instance into the provided UTF-16 span with zero allocations.
 
 ### Parameters
 

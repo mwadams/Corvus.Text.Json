@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.GetComment Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L159)
 
 ## GetComment {#getcomment}
+
+Parses the current JSON token value from the source as a comment, transcoded as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ```csharp
 public string GetComment()
 ```
-
-Parses the current JSON token value from the source as a comment, transcoded as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ### Returns
 

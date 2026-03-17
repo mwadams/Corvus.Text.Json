@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.IgnoreCase Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## IgnoreCase {#ignorecase}
+
+Use case-insensitive matching.
 
 ```csharp
 JsonRegexOptions IgnoreCase
 ```
-
-Use case-insensitive matching.
 
 ### Returns
 

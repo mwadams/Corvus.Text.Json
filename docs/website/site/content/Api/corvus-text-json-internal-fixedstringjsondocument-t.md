@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "FixedStringJsonDocument<T> — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [FixedStringJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/FixedStringJsonDocument.cs#L30)
+
+Represents a JSON document based on a fixed string value.
+
 ```csharp
 public sealed class FixedStringJsonDocument<T> : IJsonDocument, IDisposable
 ```
-
-Represents a JSON document based on a fixed string value.
 
 ## Type Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchBase64Content Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L809)
 
 ## MatchBase64Content {#matchbase64content}
+
+Validates that a string value is a valid Base64-encoded JSON document.
 
 ```csharp
 public static bool MatchBase64Content(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value is a valid Base64-encoded JSON document.
 
 ### Parameters
 

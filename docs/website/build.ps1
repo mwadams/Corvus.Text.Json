@@ -60,6 +60,7 @@ Write-Host "  XML documentation generated." -ForegroundColor Green
 # ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
 Write-Host "`n[2/8] Generating API markdown, taxonomy & views..." -ForegroundColor Cyan
 $apiViewsDir = Join-Path $siteDir "theme\corvus\views\api"
+$sharedViewsDir = Join-Path $siteDir "theme\corvus\views\Shared"
 $nsDescriptionsDir = Join-Path $siteDir "content\Api\namespaces"
 & dotnet run --project $toolProject -c Release -- `
     --xml $xmlPath `
@@ -68,6 +69,7 @@ $nsDescriptionsDir = Join-Path $siteDir "content\Api\namespaces"
     --output $apiContentDir `
     --taxonomy-output $apiTaxonomyDir `
     --api-views-dir $apiViewsDir `
+    --shared-views-dir $sharedViewsDir `
     --ns-descriptions $nsDescriptionsDir
 if ($LASTEXITCODE -ne 0) { throw "API namespace generation failed" }
 Write-Host "  API markdown, taxonomy & views generated." -ForegroundColor Green

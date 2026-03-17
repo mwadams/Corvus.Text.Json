@@ -7,15 +7,16 @@ Title: "IJsonDocument.WritePropertyName Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L552)
 
 ## WritePropertyName {#writepropertyname}
+
+Writes the property name at the specified index to the provided JSON writer.
 
 ```csharp
 public abstract void WritePropertyName(int index, Utf8JsonWriter writer)
 ```
-
-Writes the property name at the specified index to the provided JSON writer.
 
 ### Parameters
 

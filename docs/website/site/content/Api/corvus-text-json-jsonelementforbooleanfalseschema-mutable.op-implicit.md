@@ -7,7 +7,8 @@ Title: "JsonElementForBooleanFalseSchema.Mutable.Implicit Operator — Corvus.Te
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L97)
 
 ## implicit operator JsonElementForBooleanFalseSchema {#implicit-operator-jsonelementforbooleanfalseschema}
 

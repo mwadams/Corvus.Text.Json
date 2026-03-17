@@ -7,15 +7,16 @@ Title: "JsonProperty<TValue>.WriteTo Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L177)
 
 ## WriteTo {#writeto}
+
+Write the property into the provided writer as a named JSON object property.
 
 ```csharp
 public void WriteTo(Utf8JsonWriter writer)
 ```
-
-Write the property into the provided writer as a named JSON object property.
 
 ### Parameters
 

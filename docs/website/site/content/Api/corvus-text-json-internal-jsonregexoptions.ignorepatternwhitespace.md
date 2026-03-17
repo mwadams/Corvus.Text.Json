@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.IgnorePatternWhitespace Field — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## IgnorePatternWhitespace {#ignorepatternwhitespace}
+
+Exclude unescaped white space from the pattern, and enable comments after a number sign (#).
 
 ```csharp
 JsonRegexOptions IgnorePatternWhitespace
 ```
-
-Exclude unescaped white space from the pattern, and enable comments after a number sign (#).
 
 ### Returns
 

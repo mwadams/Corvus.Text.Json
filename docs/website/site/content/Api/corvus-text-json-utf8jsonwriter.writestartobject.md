@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteStartObject Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -21,11 +21,13 @@ Title: "Utf8JsonWriter.WriteStartObject Method — Corvus.Text.Json"
 
 ## WriteStartObject() {#writestartobject}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L586)
+
+Writes the beginning of a JSON object.
+
 ```csharp
 public void WriteStartObject()
 ```
-
-Writes the beginning of a JSON object.
 
 ### Exceptions
 
@@ -33,15 +35,24 @@ Writes the beginning of a JSON object.
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown when the depth of the JSON has exceeded the maximum depth of 1000 OR if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartObject(JsonEncodedText) {#writestartobject-jsonencodedtext}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L739)
+
+Writes the beginning of a JSON object with a pre-encoded property name as the key.
+
 ```csharp
 public void WriteStartObject(JsonEncodedText propertyName)
 ```
-
-Writes the beginning of a JSON object with a pre-encoded property name as the key.
 
 ### Parameters
 
@@ -55,15 +66,24 @@ Writes the beginning of a JSON object with a pre-encoded property name as the ke
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown when the depth of the JSON has exceeded the maximum depth of 1000 OR if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartObject(ReadOnlySpan&lt;byte&gt;) {#writestartobject-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L796)
+
+Writes the beginning of a JSON object with a property name as the key.
+
 ```csharp
 public void WriteStartObject(ReadOnlySpan<byte> utf8PropertyName)
 ```
-
-Writes the beginning of a JSON object with a property name as the key.
 
 ### Parameters
 
@@ -82,15 +102,24 @@ Writes the beginning of a JSON object with a property name as the key.
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartObject(string) {#writestartobject-string}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L900)
+
+Writes the beginning of a JSON object with a property name as the key.
+
 ```csharp
 public void WriteStartObject(string propertyName)
 ```
-
-Writes the beginning of a JSON object with a property name as the key.
 
 ### Parameters
 
@@ -110,15 +139,24 @@ Writes the beginning of a JSON object with a property name as the key.
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStartObject(ReadOnlySpan&lt;char&gt;) {#writestartobject-readonlyspan-char}
 
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L945)
+
+Writes the beginning of a JSON object with a property name as the key.
+
 ```csharp
 public void WriteStartObject(ReadOnlySpan<char> propertyName)
 ```
-
-Writes the beginning of a JSON object with a property name as the key.
 
 ### Parameters
 
@@ -137,12 +175,12 @@ Writes the beginning of a JSON object with a property name as the key.
 
 The property name is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

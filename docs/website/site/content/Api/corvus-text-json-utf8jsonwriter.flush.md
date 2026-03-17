@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.Flush Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L422)
 
 ## Flush {#flush}
+
+Commits the JSON text written so far which makes it visible to the output destination.
 
 ```csharp
 public void Flush()
 ```
-
-Commits the JSON text written so far which makes it visible to the output destination.
 
 ### Exceptions
 

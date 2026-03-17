@@ -7,15 +7,16 @@ Title: "Utf8IriReference.HasPath Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L84)
 
 ## HasPath {#haspath}
+
+Gets a value indicating whether this reference has a path.
 
 ```csharp
 public bool HasPath { get; }
 ```
-
-Gets a value indicating whether this reference has a path.
 
 ### Returns
 

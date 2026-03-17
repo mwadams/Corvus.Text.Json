@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.IsFinalBlock Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L167)
 
 ## IsFinalBlock {#isfinalblock}
+
+Returns the mode of this instance of the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html). True when the reader was constructed with the input span containing the entire data to process. False when the reader was constructed knowing that the input span may contain partial data with more data to follow.
 
 ```csharp
 public bool IsFinalBlock { get; }
 ```
-
-Returns the mode of this instance of the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html). True when the reader was constructed with the input span containing the entire data to process. False when the reader was constructed knowing that the input span may contain partial data with more data to follow.
 
 ### Returns
 

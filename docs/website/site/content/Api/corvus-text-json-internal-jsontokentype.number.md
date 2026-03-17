@@ -7,15 +7,16 @@ Title: "JsonTokenType.Number Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
 
 ## Number {#number}
+
+Indicates that the token type is a JSON number.
 
 ```csharp
 JsonTokenType Number
 ```
-
-Indicates that the token type is a JSON number.
 
 ### Returns
 

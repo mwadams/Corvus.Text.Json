@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetString Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L176)
 
 ## GetString {#getstring}
+
+Gets the string value of the element at the specified index.
 
 ```csharp
 public abstract string GetString(int index, JsonTokenType expectedType)
 ```
-
-Gets the string value of the element at the specified index.
 
 ### Parameters
 

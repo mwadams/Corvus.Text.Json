@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.TryApply Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L43)
 
 ## TryApply {#tryapply}
+
+Tries to apply an object instance value to the document.
 
 ```csharp
 public bool TryApply<T>(ref T value)
 ```
-
-Tries to apply an object instance value to the document.
 
 ### Type Parameters
 

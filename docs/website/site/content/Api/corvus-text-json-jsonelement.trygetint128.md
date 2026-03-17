@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetInt128 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1077)
 
 ## TryGetInt128 {#trygetint128}
+
+Attempts to represent the current JSON number as a [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
 
 ```csharp
 public bool TryGetInt128(ref Int128 value)
 ```
-
-Attempts to represent the current JSON number as a [`Int128`](https://learn.microsoft.com/dotnet/api/system.int128).
 
 ### Parameters
 

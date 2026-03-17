@@ -7,7 +7,7 @@ Title: "JsonElement.GetProperty Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "JsonElement.GetProperty Method — Corvus.Text.Json"
 
 ## GetProperty(string) {#getproperty-string}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L314)
+
+Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`.
+
 ```csharp
 public JsonElement GetProperty(string propertyName)
 ```
-
-Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`.
 
 ### Parameters
 
@@ -50,15 +52,24 @@ A [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value
 
 Property name matching is performed as an ordinal, case-sensitive, comparison. If a property is defined multiple times for the same object, the last such definition is what is matched.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetProperty(ReadOnlySpan&lt;char&gt;) {#getproperty-readonlyspan-char}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L354)
+
+Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`.
+
 ```csharp
 public JsonElement GetProperty(ReadOnlySpan<char> propertyName)
 ```
-
-Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `propertyName`.
 
 ### Parameters
 
@@ -84,15 +95,24 @@ A [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value
 
 Property name matching is performed as an ordinal, case-sensitive, comparison. If a property is defined multiple times for the same object, the last such definition is what is matched.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetProperty(ReadOnlySpan&lt;byte&gt;) {#getproperty-readonlyspan-byte}
 
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L394)
+
+Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `utf8PropertyName`.
+
 ```csharp
 public JsonElement GetProperty(ReadOnlySpan<byte> utf8PropertyName)
 ```
-
-Gets a [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value of a required property identified by `utf8PropertyName`.
 
 ### Parameters
 
@@ -118,12 +138,12 @@ A [`JsonElement`](/api/corvus-text-json-jsonelement.html) representing the value
 
 Property name matching is performed as an ordinal, case-sensitive, comparison. If a property is defined multiple times for the same object, the last such definition is what is matched.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonCommentHandling — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonCommentHandling.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Common/JsonCommentHandling.cs#L8)
+
+This enum defines the various ways the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) can deal with comments.
+
 ```csharp
 public enum JsonCommentHandling : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-This enum defines the various ways the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) can deal with comments.
 
 ## Implements
 

@@ -7,7 +7,7 @@ Title: "CodeGenThrowHelper.ThrowFormatException Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "CodeGenThrowHelper.ThrowFormatException Method — Corvus.Text.Json.Inte
 
 ## ThrowFormatException() {#throwformatexception}
 
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L89)
+
+Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for format-related errors.
+
 ```csharp
 public static void ThrowFormatException()
 ```
-
-Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for format-related errors.
 
 ### Exceptions
 
@@ -30,15 +32,24 @@ Throws a generic [`FormatException`](https://learn.microsoft.com/dotnet/api/syst
 |-----------|-------------|
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | Always thrown. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ThrowFormatException(CodeGenNumericType) {#throwformatexception-codegennumerictype}
 
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L100)
+
+Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for numeric type formatting errors.
+
 ```csharp
 public static void ThrowFormatException(CodeGenNumericType numericType)
 ```
-
-Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) for numeric type formatting errors.
 
 ### Parameters
 
@@ -52,12 +63,12 @@ Throws a [`FormatException`](https://learn.microsoft.com/dotnet/api/system.forma
 |-----------|-------------|
 | [`FormatException`](https://learn.microsoft.com/dotnet/api/system.formatexception) | Always thrown. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

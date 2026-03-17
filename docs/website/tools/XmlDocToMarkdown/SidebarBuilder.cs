@@ -53,7 +53,7 @@ internal static class SidebarBuilder
             string nsActive = (isCurrentNs && currentTypeFileBase is null) ? " is-active" : "";
             sb.AppendLine($"                        <li class=\"sidebar__item\"><a class=\"sidebar__link{nsActive}\" href=\"{baseUrl}/{nsSlug}.html\"><strong>Overview</strong></a></li>");
 
-            // Type links — active type expands to show members
+            // Type links — always include member trees (collapsed unless active)
             foreach (TypeInfo type in kvp.Value.Types.OrderBy(t => t.Name))
             {
                 string typeSlug = MarkdownGenerator.TypeToSlug(type.Name);
@@ -68,11 +68,8 @@ internal static class SidebarBuilder
                 sb.AppendLine($"                        <li class=\"sidebar__item\">");
                 sb.AppendLine($"                            <a class=\"sidebar__link sidebar__link--type{typeClass}\" href=\"{baseUrl}/{fileBase}.html\">{HtmlEncodeWithBreaks(type.Name)}</a>");
 
-                // Expand member tree for the active type
-                if (isActiveType)
-                {
-                    AppendMemberTree(sb, type, nsSlug, typeSlug, baseUrl, currentMemberFileBase);
-                }
+                // Always include member tree; collapsed unless this is the active type
+                AppendMemberTree(sb, type, nsSlug, typeSlug, baseUrl, isActiveType ? currentMemberFileBase : null, collapsed: !isActiveType);
 
                 sb.AppendLine($"                        </li>");
             }
@@ -98,9 +95,11 @@ internal static class SidebarBuilder
         string nsSlug,
         string typeSlug,
         string baseUrl,
-        string? currentMemberFileBase)
+        string? currentMemberFileBase,
+        bool collapsed = false)
     {
-        sb.AppendLine("                            <ul class=\"sidebar__members\">");
+        string hiddenAttr = collapsed ? " hidden" : "";
+        sb.AppendLine($"                            <ul class=\"sidebar__members\"{hiddenAttr}>");
 
         // Constructors
         if (type.Constructors.Count > 0)

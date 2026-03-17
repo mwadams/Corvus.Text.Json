@@ -7,15 +7,16 @@ Title: "Utf8UriFormat.SafeUnescaped Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriFormat.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Internal/Utf8UriFormat.cs#L14)
 
 ## SafeUnescaped {#safeunescaped}
+
+The URI is canonically unescaped, allowing the same URI to be reconstructed from the output. If the unescaped sequence results in a new escaped sequence, it will revert to the original sequence.
 
 ```csharp
 Utf8UriFormat SafeUnescaped
 ```
-
-The URI is canonically unescaped, allowing the same URI to be reconstructed from the output. If the unescaped sequence results in a new escaped sequence, it will revert to the original sequence.
 
 ### Returns
 

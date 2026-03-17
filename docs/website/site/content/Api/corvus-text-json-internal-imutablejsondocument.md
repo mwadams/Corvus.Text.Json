@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "IMutableJsonDocument — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L19)
+
+Represents a mutable JSON document that supports editing and value storage operations.
+
 ```csharp
 public interface IMutableJsonDocument : IJsonDocument, IDisposable
 ```
-
-Represents a mutable JSON document that supports editing and value storage operations.
 
 ## Implements
 

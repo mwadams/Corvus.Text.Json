@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetDbSize Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L576)
 
 ## GetDbSize {#getdbsize}
+
+Gets the size of the database for the element at the specified index.
 
 ```csharp
 public abstract int GetDbSize(int index, bool includeEndElement)
 ```
-
-Gets the size of the database for the element at the specified index.
 
 ### Parameters
 

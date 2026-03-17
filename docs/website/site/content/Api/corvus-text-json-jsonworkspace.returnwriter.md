@@ -7,15 +7,16 @@ Title: "JsonWorkspace.ReturnWriter Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L107)
 
 ## ReturnWriter {#returnwriter}
+
+Returns a rented UTF-8 JSON writer to the pool.
 
 ```csharp
 public void ReturnWriter(Utf8JsonWriter writer)
 ```
-
-Returns a rented UTF-8 JSON writer to the pool.
 
 ### Parameters
 

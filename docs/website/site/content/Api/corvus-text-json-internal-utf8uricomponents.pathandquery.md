@@ -7,15 +7,16 @@ Title: "Utf8UriComponents.PathAndQuery Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriComponents.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriComponents.cs#L15)
 
 ## PathAndQuery {#pathandquery}
+
+The path and query components.
 
 ```csharp
 Utf8UriComponents PathAndQuery
 ```
-
-The path and query components.
 
 ### Returns
 

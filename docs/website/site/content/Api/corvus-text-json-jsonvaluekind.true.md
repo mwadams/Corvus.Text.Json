@@ -7,15 +7,16 @@ Title: "JsonValueKind.True Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonValueKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonValueKind.cs#L14)
 
 ## True {#true}
+
+Indicates that a value is the JSON value `true`.
 
 ```csharp
 JsonValueKind True
 ```
-
-Indicates that a value is the JSON value `true`.
 
 ### Returns
 

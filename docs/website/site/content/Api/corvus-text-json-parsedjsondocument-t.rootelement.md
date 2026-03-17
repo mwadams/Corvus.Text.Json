@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.RootElement Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.cs#L53)
 
 ## RootElement {#rootelement}
+
+The [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) representing the value of the document.
 
 ```csharp
 public T RootElement { get; }
 ```
-
-The [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) representing the value of the document.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonElementExtensions.IsNotNullOrUndefined Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementExtensions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElementExtensions.cs#L18)
 
 ## IsNotNullOrUndefined {#isnotnullorundefined}
+
+Gets a value indicating whether this value is neither null nor undefined.
 
 ```csharp
 public static bool IsNotNullOrUndefined<T>(T value)
 ```
-
-Gets a value indicating whether this value is neither null nor undefined.
 
 ### Type Parameters
 

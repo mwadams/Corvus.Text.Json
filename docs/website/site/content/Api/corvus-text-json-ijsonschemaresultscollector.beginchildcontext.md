@@ -7,7 +7,7 @@ Title: "IJsonSchemaResultsCollector.BeginChildContext Method — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "IJsonSchemaResultsCollector.BeginChildContext Method — Corvus.Text.Jso
 
 ## BeginChildContext(int, JsonSchemaPathProvider, JsonSchemaPathProvider, JsonSchemaPathProvider) {#beginchildcontext-int-jsonschemapathprovider-jsonschemapathprovider-jsonschemapathprovider}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L94)
+
+Begin a child context.
+
 ```csharp
 public abstract int BeginChildContext(int parentSequenceNumber, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath, JsonSchemaPathProvider documentEvaluationPath)
 ```
-
-Begin a child context.
 
 ### Parameters
 
@@ -45,15 +47,24 @@ The sequence number of the child context.
 
 Begins evaluation of a schema in a child context. The context may later be committed with [`CommitChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#commitchildcontext) or abandoned with [`PopChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#popchildcontext). In DEBUG builds, the sequence number returned by the call to [`BeginChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#beginchildcontext) is passed to the commit or pop methods and validated to ensure that completion operations are carried out in the expected order.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## BeginChildContext(int, ReadOnlySpan&lt;byte&gt;, JsonSchemaPathProvider, JsonSchemaPathProvider) {#beginchildcontext-int-readonlyspan-byte-jsonschemapathprovider-jsonschemapathprovider}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L94)
+
+Begin a child context for a property evaluation.
+
 ```csharp
 public abstract int BeginChildContext(int parentSequenceNumber, ReadOnlySpan<byte> escapedPropertyName, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
 ```
-
-Begin a child context for a property evaluation.
 
 ### Parameters
 
@@ -74,15 +85,24 @@ The sequence number of the child context.
 
 Begins evaluation of a schema in a child context. The context may later be committed with [`CommitChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#commitchildcontext) or abandoned with [`PopChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#popchildcontext).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## BeginChildContext(int, int, JsonSchemaPathProvider, JsonSchemaPathProvider) {#beginchildcontext-int-int-jsonschemapathprovider-jsonschemapathprovider}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L94)
+
+Begin a child context for an item evaluation.
+
 ```csharp
 public abstract int BeginChildContext(int parentSequenceNumber, int itemIndex, JsonSchemaPathProvider reducedEvaluationPath, JsonSchemaPathProvider schemaEvaluationPath)
 ```
-
-Begin a child context for an item evaluation.
 
 ### Parameters
 
@@ -103,15 +123,24 @@ The sequence number of the child context.
 
 Begins evaluation of a schema in a child context. The context may later be committed with [`CommitChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#commitchildcontext) or abandoned with [`PopChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#popchildcontext).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## BeginChildContext(int, TProviderContext, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;, JsonSchemaPathProvider&lt;TProviderContext&gt;) {#beginchildcontext-int-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext-jsonschemapathprovider-tprovidercontext}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L74)
+
+Begin a child context.
+
 ```csharp
 public abstract int BeginChildContext<TProviderContext>(int parentSequenceNumber, TProviderContext providerContext, JsonSchemaPathProvider<TProviderContext> reducedEvaluationPath, JsonSchemaPathProvider<TProviderContext> schemaEvaluationPath, JsonSchemaPathProvider<TProviderContext> documentEvaluationPath)
 ```
-
-Begin a child context.
 
 ### Parameters
 
@@ -133,12 +162,12 @@ The sequence number of the child context.
 
 Begins evaluation of a schema in a child context. The context may later be committed with [`CommitChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#commitchildcontext) or abandoned with [`PopChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#popchildcontext). A child context operates like a stack. You *must* pop/commit child contexts in *reverse order* of that in which you Begin() a child context. The sequence number returned by [`BeginChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#beginchildcontext) and passed in to [`CommitChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#commitchildcontext) or [`PopChildContext`](/api/corvus-text-json-ijsonschemaresultscollector.html#popchildcontext) is used to enforce this
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

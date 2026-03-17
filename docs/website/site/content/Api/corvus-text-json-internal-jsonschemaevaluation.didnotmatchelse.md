@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.DidNotMatchElse Field — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## DidNotMatchElse {#didnotmatchelse}
+
+Message provider for validation errors when a value does not match a ternary if and then did not match the corresponding else clause.
 
 ```csharp
 JsonSchemaMessageProvider DidNotMatchElse
 ```
-
-Message provider for validation errors when a value does not match a ternary if and then did not match the corresponding else clause.
 
 ### Returns
 

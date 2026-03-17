@@ -7,15 +7,16 @@ Title: "BigNumber.One Property — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L176)
 
 ## One {#one}
+
+Gets a value representing one.
 
 ```csharp
 public static BigNumber One { get; }
 ```
-
-Gets a value representing one.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.Version Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L24)
 
 ## Version {#version}
+
+Gets the version of the document.
 
 ```csharp
 public abstract ulong Version { get; }
 ```
-
-Gets the version of the document.
 
 ### Returns
 

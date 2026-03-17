@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.WriteTo Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.cs#L129)
 
 ## WriteTo {#writeto}
+
+Write the document into the provided writer as a JSON value.
 
 ```csharp
 public void WriteTo(Utf8JsonWriter writer)
 ```
-
-Write the document into the provided writer as a JSON value.
 
 ### Parameters
 

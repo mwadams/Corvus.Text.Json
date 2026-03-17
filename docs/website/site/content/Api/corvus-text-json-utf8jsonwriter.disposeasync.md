@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.DisposeAsync Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L501)
 
 ## DisposeAsync {#disposeasync}
+
+Asynchronously commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.
 
 ```csharp
 public ValueTask DisposeAsync()
 ```
-
-Asynchronously commits any left over JSON text that has not yet been flushed and releases all resources used by the current instance.
 
 ### Returns
 

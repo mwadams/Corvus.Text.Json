@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "PeriodBuilder — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L22)
+
+A mutable builder class for [`Period`](/api/corvus-text-json-period.html) values. Each property can be set independently, and then a Period can be created from the result using the [`BuildPeriod`](/api/corvus-text-json-periodbuilder.html#buildperiod) method.
+
 ```csharp
 public readonly struct PeriodBuilder
 ```
-
-A mutable builder class for [`Period`](/api/corvus-text-json-period.html) values. Each property can be set independently, and then a Period can be created from the result using the [`BuildPeriod`](/api/corvus-text-json-periodbuilder.html#buildperiod) method.
 
 ## Properties
 

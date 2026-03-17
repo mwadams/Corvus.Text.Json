@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.BytesCommitted Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L115)
 
 ## BytesCommitted {#bytescommitted}
+
+Returns the amount of bytes committed to the output by the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) so far.
 
 ```csharp
 public long BytesCommitted { get; set; }
 ```
-
-Returns the amount of bytes committed to the output by the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) so far.
 
 ### Returns
 

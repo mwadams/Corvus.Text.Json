@@ -7,15 +7,16 @@ Title: "Utf8Iri.OriginalIri Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Iri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Iri.cs#L131)
 
 ## OriginalIri {#originaliri}
+
+Gets the original (fully encoded) string.
 
 ```csharp
 public ReadOnlySpan<byte> OriginalIri { get; }
 ```
-
-Gets the original (fully encoded) string.
 
 ### Returns
 

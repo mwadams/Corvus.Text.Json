@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.GetUtf8StringLength Method — Corvus.Text.Json.Inter
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L380)
 
 ## GetUtf8StringLength {#getutf8stringlength}
+
+Gets the length of a UTF-8 encoded string in characters (not bytes).
 
 ```csharp
 public static int GetUtf8StringLength(ReadOnlySpan<byte> span)
 ```
-
-Gets the length of a UTF-8 encoded string in characters (not bytes).
 
 ### Parameters
 

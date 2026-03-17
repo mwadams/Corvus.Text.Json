@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.RemovePropertyUnsafe Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementHelpers.RemovePropertyUnsafe Method — Corvus.Text.Json.Inte
 
 ## RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;char&gt;) {#removepropertyunsafe-imutablejsondocument-int-readonlyspan-char}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L74)
+
+Removes a property value from a target element.
+
 ```csharp
 public static bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<char> propertyName)
 ```
-
-Removes a property value from a target element.
 
 ### Parameters
 
@@ -38,15 +40,24 @@ Removes a property value from a target element.
 
 `true` if the property was found and removed; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## RemovePropertyUnsafe(IMutableJsonDocument, int, ReadOnlySpan&lt;byte&gt;) {#removepropertyunsafe-imutablejsondocument-int-readonlyspan-byte}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L98)
+
+Removes a property value from a target element.
+
 ```csharp
 public static bool RemovePropertyUnsafe(IMutableJsonDocument parentDocument, int parentDocumentIndex, ReadOnlySpan<byte> propertyName)
 ```
-
-Removes a property value from a target element.
 
 ### Parameters
 
@@ -62,12 +73,12 @@ Removes a property value from a target element.
 
 `true` if the property was found and removed; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

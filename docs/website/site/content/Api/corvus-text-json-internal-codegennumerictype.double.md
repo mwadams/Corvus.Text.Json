@@ -7,15 +7,16 @@ Title: "CodeGenNumericType.Double Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [CodeGenThrowHelper.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/CodeGenThrowHelper.cs#L17)
 
 ## Double {#double}
+
+Represents a 64-bit floating point number.
 
 ```csharp
 CodeGenNumericType Double
 ```
-
-Represents a 64-bit floating point number.
 
 ### Returns
 

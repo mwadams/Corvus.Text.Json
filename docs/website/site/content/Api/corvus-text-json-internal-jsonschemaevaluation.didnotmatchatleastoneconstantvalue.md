@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue Field — Corvus
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## DidNotMatchAtLeastOneConstantValue {#didnotmatchatleastoneconstantvalue}
+
+Message provider for validation errors when no constant values matched in a composition constraint.
 
 ```csharp
 JsonSchemaMessageProvider DidNotMatchAtLeastOneConstantValue
 ```
-
-Message provider for validation errors when no constant values matched in a composition constraint.
 
 ### Returns
 

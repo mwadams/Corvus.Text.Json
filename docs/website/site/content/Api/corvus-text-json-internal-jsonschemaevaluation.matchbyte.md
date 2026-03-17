@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchByte Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L588)
 
 ## MatchByte {#matchbyte}
+
+Matches a JSON number against the Byte type constraint, validating it as an 8-bit unsigned integer.
 
 ```csharp
 public static bool MatchByte(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number against the Byte type constraint, validating it as an 8-bit unsigned integer.
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonValueKind.Undefined Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonValueKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonValueKind.cs#L14)
 
 ## Undefined {#undefined}
+
+Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-jsonvaluekind.html#null)).
 
 ```csharp
 JsonValueKind Undefined
 ```
-
-Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-jsonvaluekind.html#null)).
 
 ### Returns
 

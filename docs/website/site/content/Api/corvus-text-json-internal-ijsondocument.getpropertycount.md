@@ -7,15 +7,16 @@ Title: "IJsonDocument.GetPropertyCount Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L108)
 
 ## GetPropertyCount {#getpropertycount}
+
+Gets the number of properties for the element at the specified index.
 
 ```csharp
 public abstract int GetPropertyCount(int index)
 ```
-
-Gets the number of properties for the element at the specified index.
 
 ### Parameters
 

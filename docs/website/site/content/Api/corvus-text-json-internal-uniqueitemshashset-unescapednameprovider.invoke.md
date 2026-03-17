@@ -7,7 +7,8 @@ Title: "UniqueItemsHashSet.UnescapedNameProvider.Invoke Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [UniqueItemsHashSet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/UniqueItemsHashSet.cs#L183)
 
 ## Invoke {#invoke}
 

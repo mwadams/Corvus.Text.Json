@@ -7,15 +7,16 @@ Title: "JsonProperty<TValue>.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L151)
 
 ## ToString {#tostring}
+
+Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes.
 
 ```csharp
 public override string ToString()
 ```
-
-Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes.
 
 ### Returns
 

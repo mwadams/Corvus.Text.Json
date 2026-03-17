@@ -7,7 +7,7 @@ Title: "JsonElement.Mutable.RemoveProperty Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,6 +18,8 @@ Title: "JsonElement.Mutable.RemoveProperty Method — Corvus.Text.Json"
 | [RemoveProperty(ReadOnlySpan&lt;byte&gt;)](#removeproperty-readonlyspan-byte) |  |
 
 ## RemoveProperty(string) {#removeproperty-string}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5095)
 
 ```csharp
 public bool RemoveProperty(string propertyName)
@@ -33,9 +35,18 @@ public bool RemoveProperty(string propertyName)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## RemoveProperty(ReadOnlySpan&lt;char&gt;) {#removeproperty-readonlyspan-char}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5105)
 
 ```csharp
 public bool RemoveProperty(ReadOnlySpan<char> propertyName)
@@ -51,9 +62,18 @@ public bool RemoveProperty(ReadOnlySpan<char> propertyName)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## RemoveProperty(ReadOnlySpan&lt;byte&gt;) {#removeproperty-readonlyspan-byte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L5118)
 
 ```csharp
 public bool RemoveProperty(ReadOnlySpan<byte> propertyName)
@@ -69,12 +89,12 @@ public bool RemoveProperty(ReadOnlySpan<byte> propertyName)
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

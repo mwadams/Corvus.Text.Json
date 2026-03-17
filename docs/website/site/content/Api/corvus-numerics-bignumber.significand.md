@@ -7,15 +7,16 @@ Title: "BigNumber.Significand Property — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L161)
 
 ## Significand {#significand}
+
+Gets the significand of the number.
 
 ```csharp
 public BigInteger Significand { get; }
 ```
-
-Gets the significand of the number.
 
 ### Returns
 

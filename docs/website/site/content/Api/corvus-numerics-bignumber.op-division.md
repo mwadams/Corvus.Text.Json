@@ -7,15 +7,16 @@ Title: "BigNumber.Division Operator — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1727)
 
 ## operator / {#operator}
+
+Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with default precision.
 
 ```csharp
 public static BigNumber operator /(BigNumber dividend, BigNumber divisor)
 ```
-
-Divides one [`BigNumber`](/api/corvus-numerics-bignumber.html) by another with default precision.
 
 ### Parameters
 

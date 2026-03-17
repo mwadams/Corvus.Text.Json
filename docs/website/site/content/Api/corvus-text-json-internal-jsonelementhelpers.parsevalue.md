@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.ParseValue Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -20,11 +20,13 @@ Title: "JsonElementHelpers.ParseValue Method — Corvus.Text.Json.Internal"
 
 ## ParseValue(ReadOnlySpan&lt;byte&gt;, JsonDocumentOptions) {#parsevalue-readonlyspan-byte-jsondocumentoptions}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
+
+Parses one JSON value (including objects or arrays) from the provided span.
+
 ```csharp
 public static T ParseValue<T>(ReadOnlySpan<byte> span, JsonDocumentOptions options)
 ```
-
-Parses one JSON value (including objects or arrays) from the provided span.
 
 ### Parameters
 
@@ -49,15 +51,24 @@ A [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) representin
 
 This method makes a copy of the data the reader acted on, so there is no caller requirement to maintain data integrity beyond the return of this method.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ParseValue(ReadOnlySpan&lt;char&gt;, JsonDocumentOptions) {#parsevalue-readonlyspan-char-jsondocumentoptions}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
+
+Parses one JSON value (including objects or arrays) from the provided span.
+
 ```csharp
 public static T ParseValue<T>(ReadOnlySpan<char> span, JsonDocumentOptions options)
 ```
-
-Parses one JSON value (including objects or arrays) from the provided span.
 
 ### Parameters
 
@@ -82,15 +93,24 @@ A JsonElement representing the value (and nested values) read from the span.
 
 This method makes a copy of the data the reader acted on, so there is no caller requirement to maintain data integrity beyond the return of this method.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ParseValue(string, JsonDocumentOptions) {#parsevalue-string-jsondocumentoptions}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
+
+Parses one JSON value (including objects or arrays) from the provided text.
+
 ```csharp
 public static T ParseValue<T>(string text, JsonDocumentOptions options)
 ```
-
-Parses one JSON value (including objects or arrays) from the provided text.
 
 ### Parameters
 
@@ -115,15 +135,24 @@ A JsonElement representing the value (and nested values) read from the text.
 
 This method makes a copy of the data, so there is no caller requirement to maintain data integrity beyond the return of this method.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## ParseValue(ref Utf8JsonReader) {#parsevalue-ref-utf8jsonreader}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
+
+Parses one JSON value (including objects or arrays) from the provided reader.
+
 ```csharp
 public static T ParseValue<T>(ref Utf8JsonReader reader)
 ```
-
-Parses one JSON value (including objects or arrays) from the provided reader.
 
 ### Parameters
 
@@ -149,12 +178,12 @@ A JsonElement representing the value (and nested values) read from the reader.
 
 If the [`TokenType`](/api/corvus-text-json-utf8jsonreader.html#tokentype) property of `reader` is [`PropertyName`](/api/corvus-text-json-internal-jsontokentype.html#propertyname) or [`None`](/api/corvus-text-json-internal-jsontokentype.html#none), the reader will be advanced by one call to [`Read`](/api/corvus-text-json-utf8jsonreader.html#read) to determine the start of the value. Upon completion of this method, `reader` will be positioned at the final token in the JSON value. If an exception is thrown, the reader is reset to the state it was in when the method was called. This method makes a copy of the data the reader acted on, so there is no caller requirement to maintain data integrity beyond the return of this method.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

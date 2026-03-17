@@ -7,7 +7,8 @@ Title: "JsonSchemaEvaluation.ExpectedPropertyCountGreaterThanValue Method — Co
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Object.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Object.cs#L233)
 
 ## ExpectedPropertyCountGreaterThanValue {#expectedpropertycountgreaterthanvalue}
 

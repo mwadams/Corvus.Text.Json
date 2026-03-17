@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonWriterOptions — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWriterOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/JsonWriterOptions.cs#L19)
+
+Provides the ability for the user to define custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). By default, the JSON is written without any indentation or extra white space. Also, the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will throw an exception if the user attempts to write structurally invalid JSON.
+
 ```csharp
 public readonly struct JsonWriterOptions
 ```
-
-Provides the ability for the user to define custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html). By default, the JSON is written without any indentation or extra white space. Also, the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) will throw an exception if the user attempts to write structurally invalid JSON.
 
 ## Properties
 

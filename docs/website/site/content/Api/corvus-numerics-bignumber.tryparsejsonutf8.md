@@ -7,15 +7,16 @@ Title: "BigNumber.TryParseJsonUtf8 Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.OptimizedFormatting.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.OptimizedFormatting.cs#L321)
 
 ## TryParseJsonUtf8 {#tryparsejsonutf8}
+
+Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations.
 
 ```csharp
 public static bool TryParseJsonUtf8(ReadOnlySpan<byte> utf8Source, ref BigNumber result)
 ```
-
-Tries to parse a BigNumber from UTF-8 bytes in JSON format with zero allocations.
 
 ### Parameters
 

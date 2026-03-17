@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetUInt64 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1050)
 
 ## TryGetUInt64 {#trygetuint64}
+
+Attempts to represent the current JSON number as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
 
 ```csharp
 public bool TryGetUInt64(ref ulong value)
 ```
-
-Attempts to represent the current JSON number as a [`UInt64`](https://learn.microsoft.com/dotnet/api/system.uint64).
 
 ### Parameters
 

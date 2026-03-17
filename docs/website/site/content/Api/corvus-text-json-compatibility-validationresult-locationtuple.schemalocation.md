@@ -7,7 +7,8 @@ Title: "ValidationResult.LocationTuple.SchemaLocation Property — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationResult.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationResult.cs#L103)
 
 ## SchemaLocation {#schemalocation}
 

@@ -7,7 +7,7 @@ Title: "ComplexValueBuilder.AddPropertyNull Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "ComplexValueBuilder.AddPropertyNull Method — Corvus.Text.Json.Internal
 
 ## AddPropertyNull(ReadOnlySpan&lt;byte&gt;) {#addpropertynull-readonlyspan-byte}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L372)
+
+Adds a property with a null value to the current object.
+
 ```csharp
 public void AddPropertyNull(ReadOnlySpan<byte> propertyName)
 ```
-
-Adds a property with a null value to the current object.
 
 ### Parameters
 
@@ -31,15 +33,24 @@ Adds a property with a null value to the current object.
 |------|------|-------------|
 | `propertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The property name as a UTF-8 byte span. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddPropertyNull(ReadOnlySpan&lt;byte&gt;, bool, bool) {#addpropertynull-readonlyspan-byte-bool-bool}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L383)
+
+Adds a property with a null value to the current object, with control over escaping.
+
 ```csharp
 public void AddPropertyNull(ReadOnlySpan<byte> propertyName, bool escapeName, bool nameRequiresUnescaping)
 ```
-
-Adds a property with a null value to the current object, with control over escaping.
 
 ### Parameters
 
@@ -49,15 +60,24 @@ Adds a property with a null value to the current object, with control over escap
 | `escapeName` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Whether to escape the property name. |
 | `nameRequiresUnescaping` | [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean) | Whether the property name requires unescaping. |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## AddPropertyNull(ReadOnlySpan&lt;char&gt;) {#addpropertynull-readonlyspan-char}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L395)
+
+Adds a property with a null value to the current object.
+
 ```csharp
 public void AddPropertyNull(ReadOnlySpan<char> propertyName)
 ```
-
-Adds a property with a null value to the current object.
 
 ### Parameters
 
@@ -65,12 +85,12 @@ Adds a property with a null value to the current object.
 |------|------|-------------|
 | `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The property name as a character span. |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

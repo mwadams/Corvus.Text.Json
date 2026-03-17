@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.EvaluatedBooleanSchema Method — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L596)
 
 ## EvaluatedBooleanSchema {#evaluatedbooleanschema}
+
+Records the evaluation of a boolean schema.
 
 ```csharp
 public void EvaluatedBooleanSchema(bool isMatch)
 ```
-
-Records the evaluation of a boolean schema.
 
 ### Parameters
 

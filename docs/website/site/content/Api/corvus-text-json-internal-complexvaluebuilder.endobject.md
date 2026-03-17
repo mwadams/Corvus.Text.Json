@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.EndObject Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3118)
 
 ## EndObject {#endobject}
+
+Ends the current JSON object, finalizing its structure in the builder.
 
 ```csharp
 public void EndObject()
 ```
-
-Ends the current JSON object, finalizing its structure in the builder.
 
 ## Applies To
 

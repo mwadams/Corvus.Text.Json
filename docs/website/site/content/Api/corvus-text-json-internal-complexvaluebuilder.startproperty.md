@@ -7,7 +7,7 @@ Title: "ComplexValueBuilder.StartProperty Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "ComplexValueBuilder.StartProperty Method — Corvus.Text.Json.Internal"
 
 ## StartProperty(ReadOnlySpan&lt;byte&gt;, bool, bool) {#startproperty-readonlyspan-byte-bool-bool}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3358)
+
+Add a property name to the current object.
+
 ```csharp
 public ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<byte> stringValue, bool escape, bool ifNotEscapeRequiresUenscaping)
 ```
-
-Add a property name to the current object.
 
 ### Parameters
 
@@ -39,15 +41,24 @@ Add a property name to the current object.
 
 The handle for the property.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## StartProperty(ReadOnlySpan&lt;char&gt;) {#startproperty-readonlyspan-char}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3372)
+
+Add a property name to the current object.
+
 ```csharp
 public ComplexValueBuilder.ComplexValueHandle StartProperty(ReadOnlySpan<char> propertyName)
 ```
-
-Add a property name to the current object.
 
 ### Parameters
 
@@ -61,15 +72,24 @@ Add a property name to the current object.
 
 The handle for the property.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## StartProperty(string) {#startproperty-string}
 
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3386)
+
+Add a property name to the current object.
+
 ```csharp
 public ComplexValueBuilder.ComplexValueHandle StartProperty(string propertyName)
 ```
-
-Add a property name to the current object.
 
 ### Parameters
 
@@ -83,12 +103,12 @@ Add a property name to the current object.
 
 The handle for the property.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

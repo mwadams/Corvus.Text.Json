@@ -7,15 +7,16 @@ Title: "JsonValueKind.Array Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonValueKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonValueKind.cs#L14)
 
 ## Array {#array}
+
+Indicates that a value is a JSON array.
 
 ```csharp
 JsonValueKind Array
 ```
-
-Indicates that a value is a JSON array.
 
 ### Returns
 

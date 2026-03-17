@@ -7,15 +7,16 @@ Title: "Utf8UriReference.Query Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L149)
 
 ## Query {#query}
+
+Gets the query component of the reference.
 
 ```csharp
 public ReadOnlySpan<byte> Query { get; }
 ```
-
-Gets the query component of the reference.
 
 ### Returns
 

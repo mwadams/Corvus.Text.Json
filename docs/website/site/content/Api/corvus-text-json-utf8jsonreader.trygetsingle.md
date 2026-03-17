@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.TryGetSingle Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L782)
 
 ## TryGetSingle {#trygetsingle}
+
+Parses the current JSON token value from the source as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value. Returns `false` otherwise.
 
 ```csharp
 public bool TryGetSingle(ref float value)
 ```
-
-Parses the current JSON token value from the source as a [`Single`](https://learn.microsoft.com/dotnet/api/system.single). Returns `true` if the entire UTF-8 encoded token value can be successfully parsed to a [`Single`](https://learn.microsoft.com/dotnet/api/system.single) value. Returns `false` otherwise.
 
 ### Parameters
 

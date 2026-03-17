@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.StartArray Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3108)
 
 ## StartArray {#startarray}
+
+Starts a new JSON array in the builder.
 
 ```csharp
 public void StartArray()
 ```
-
-Starts a new JSON array in the builder.
 
 ## Applies To
 

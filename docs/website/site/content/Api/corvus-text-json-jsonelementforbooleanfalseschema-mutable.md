@@ -4,6 +4,12 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonElementForBooleanFalseSchema.Mutable — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.Mutable.cs#L21)
+
 ```csharp
 public readonly struct JsonElementForBooleanFalseSchema.Mutable : IMutableJsonElement<JsonElementForBooleanFalseSchema.Mutable>, IJsonElement<JsonElementForBooleanFalseSchema.Mutable>, IJsonElement
 ```

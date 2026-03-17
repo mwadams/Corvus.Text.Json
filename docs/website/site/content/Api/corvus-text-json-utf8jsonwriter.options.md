@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.Options Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L122)
 
 ## Options {#options}
+
+Gets the custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) which indicates whether to format the output while writing and whether to skip structural JSON validation or not.
 
 ```csharp
 public JsonWriterOptions Options { get; }
 ```
-
-Gets the custom behavior when writing JSON using the [`Utf8JsonWriter`](/api/corvus-text-json-utf8jsonwriter.html) which indicates whether to format the output while writing and whether to skip structural JSON validation or not.
 
 ### Returns
 

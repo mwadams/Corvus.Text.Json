@@ -7,7 +7,7 @@ Title: "BigNumber.TryParse Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -24,11 +24,13 @@ Title: "BigNumber.TryParse Method — Corvus.Numerics"
 
 ## TryParse(string, ref BigNumber) {#tryparse-string-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1062)
+
+Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(string s, ref BigNumber result)
 ```
-
-Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -42,16 +44,25 @@ Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.h
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
 `true` if parsing succeeded; otherwise, `false`.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
 
 ---
 
 ## TryParse(string, IFormatProvider, ref BigNumber) {#tryparse-string-iformatprovider-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1080)
+
+Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(string s, IFormatProvider provider, ref BigNumber result)
 ```
-
-Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -67,16 +78,25 @@ Attempts to parse a string into a [`BigNumber`](/api/corvus-numerics-bignumber.h
 
 `true` if parsing succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryParse(ReadOnlySpan&lt;char&gt;, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-char-iformatprovider-ref-bignumber}
+
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1098)
+
+Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ```csharp
 public static bool TryParse(ReadOnlySpan<char> s, IFormatProvider provider, ref BigNumber result)
 ```
 
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
-
 ### Parameters
 
 | Name | Type | Description |
@@ -90,16 +110,25 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
 `true` if parsing succeeded; otherwise, `false`.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
 
 ---
 
 ## TryParse(ReadOnlySpan&lt;char&gt;, ref BigNumber) {#tryparse-readonlyspan-char-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1109)
+
+Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(ReadOnlySpan<char> s, ref BigNumber result)
 ```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -114,15 +143,24 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 
 `true` if parsing succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryParse(ReadOnlySpan&lt;byte&gt;, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-byte-iformatprovider-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1121)
+
+Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(ReadOnlySpan<byte> s, IFormatProvider provider, ref BigNumber result)
 ```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -138,15 +176,24 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 
 `true` if parsing succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryParse(ReadOnlySpan&lt;byte&gt;, ref BigNumber) {#tryparse-readonlyspan-byte-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1132)
+
+Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(ReadOnlySpan<byte> s, ref BigNumber result)
 ```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -161,15 +208,24 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 
 `true` if parsing succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryParse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-char-numberstyles-iformatprovider-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1146)
+
+Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider, ref BigNumber result)
 ```
-
-Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -186,15 +242,24 @@ Attempts to parse a span of characters into a [`BigNumber`](/api/corvus-numerics
 
 `true` if parsing succeeded; otherwise, `false`.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryParse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider, ref BigNumber) {#tryparse-readonlyspan-byte-numberstyles-iformatprovider-ref-bignumber}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1497)
+
+Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static bool TryParse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider, ref BigNumber result)
 ```
-
-Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -211,12 +276,12 @@ Attempts to parse UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumbe
 
 `true` if parsing succeeded; otherwise, `false`.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

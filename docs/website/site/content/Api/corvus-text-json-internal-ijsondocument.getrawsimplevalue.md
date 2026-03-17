@@ -7,7 +7,7 @@ Title: "IJsonDocument.GetRawSimpleValue Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonDocument.GetRawSimpleValue Method — Corvus.Text.Json.Internal"
 
 ## GetRawSimpleValue(int, bool) {#getrawsimplevalue-int-bool}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L496)
+
+Gets the raw simple value of the element at the specified index.
+
 ```csharp
 public abstract ReadOnlyMemory<byte> GetRawSimpleValue(int index, bool includeQuotes)
 ```
-
-Gets the raw simple value of the element at the specified index.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Gets the raw simple value of the element at the specified index.
 
 The raw simple value.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## GetRawSimpleValue(int) {#getrawsimplevalue-int}
 
+**Source:** [IJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonDocument.cs#L496)
+
+Gets the raw simple value of the element at the specified index.
+
 ```csharp
 public abstract ReadOnlyMemory<byte> GetRawSimpleValue(int index)
 ```
-
-Gets the raw simple value of the element at the specified index.
 
 ### Parameters
 
@@ -59,12 +70,12 @@ Gets the raw simple value of the element at the specified index.
 
 The raw simple value.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

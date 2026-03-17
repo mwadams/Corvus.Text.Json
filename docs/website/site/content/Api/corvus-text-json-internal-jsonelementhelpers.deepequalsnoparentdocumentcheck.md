@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.DeepEqualsNoParentDocumentCheck Method — Corvus.Tex
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementHelpers.DeepEqualsNoParentDocumentCheck Method — Corvus.Tex
 
 ## DeepEqualsNoParentDocumentCheck(ref TLeft, JsonTokenType, IJsonDocument, int) {#deepequalsnoparentdocumentcheck-ref-tleft-jsontokentype-ijsondocument-int}
 
+**Source:** [JsonElementHelpers.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.cs#L29)
+
+Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) values for equality, including the values of all descendant elements.
+
 ```csharp
 public static bool DeepEqualsNoParentDocumentCheck<TLeft>(ref TLeft element1, JsonTokenType element2TokenType, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
 ```
-
-Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijsonelement.html) values for equality, including the values of all descendant elements.
 
 ### Type Parameters
 
@@ -49,15 +51,24 @@ Compares the values of two [`IJsonElement`](/api/corvus-text-json-internal-ijson
 
 Deep equality of two JSON values is defined as follows: - JSON values of different kinds are not equal. - JSON constants `null`, `false`, and `true` only equal themselves. - JSON numbers are equal if and only if they have they have equivalent decimal representations, with no rounding being used. - JSON strings are equal if and only if they are equal using ordinal string comparison. - JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal. - JSON objects are equal if and only if they have the same number of properties and each property in the first object has a corresponding property in the second object with the same name and equal value. The order of properties is not significant. Repeated properties are not supported, though they will resolve each value in the second instance to the last value in the first instance.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## DeepEqualsNoParentDocumentCheck(IJsonDocument, int, IJsonDocument, int) {#deepequalsnoparentdocumentcheck-ijsondocument-int-ijsondocument-int}
 
+**Source:** [JsonElementHelpers.DeepEquals.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DeepEquals.cs#L132)
+
+Compares the values of two JSON values for equality, including the values of all descendant elements.
+
 ```csharp
 public static bool DeepEqualsNoParentDocumentCheck(IJsonDocument element1ParentDocument, int element1ParentDocumentIndex, IJsonDocument element2ParentDocument, int element2ParentDocumentIndex)
 ```
-
-Compares the values of two JSON values for equality, including the values of all descendant elements.
 
 ### Parameters
 
@@ -78,12 +89,12 @@ Compares the values of two JSON values for equality, including the values of all
 
 Deep equality of two JSON values is defined as follows: - JSON values of different kinds are not equal. - JSON constants `null`, `false`, and `true` only equal themselves. - JSON numbers are equal if and only if they have they have equivalent decimal representations, with no rounding being used. - JSON strings are equal if and only if they are equal using ordinal string comparison. - JSON arrays are equal if and only if they are of equal length and each of their elements are pairwise equal. - JSON objects are equal if and only if they have the same number of properties and each property in the first object has a corresponding property in the second object with the same name and equal value. The order of properties is not significant. Repeated properties are not supported, though they will resolve each value in the second instance to the last value in the first instance.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

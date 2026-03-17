@@ -7,15 +7,16 @@ Title: "BigNumber.Sqrt Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L2104)
 
 ## Sqrt {#sqrt}
+
+Computes the square root of a BigNumber using Newton's method.
 
 ```csharp
 public static BigNumber Sqrt(BigNumber value, int precision)
 ```
-
-Computes the square root of a BigNumber using Newton's method.
 
 ### Parameters
 

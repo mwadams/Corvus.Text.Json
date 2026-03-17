@@ -7,15 +7,16 @@ Title: "JsonElementForBooleanFalseSchema.WriteTo Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L332)
 
 ## WriteTo {#writeto}
+
+Write the element into the provided writer as a JSON value.
 
 ```csharp
 public void WriteTo(Utf8JsonWriter writer)
 ```
-
-Write the element into the provided writer as a JSON value.
 
 ### Parameters
 

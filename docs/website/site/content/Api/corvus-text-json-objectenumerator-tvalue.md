@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "ObjectEnumerator<TValue> — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ObjectEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ObjectEnumerator{T}.cs#L21)
+
+An enumerable and enumerator for the properties of a JSON object.
+
 ```csharp
 public readonly struct ObjectEnumerator<TValue> : IEnumerable<JsonProperty<TValue>>, IEnumerable, IEnumerator<JsonProperty<TValue>>, IEnumerator, IDisposable
 ```
-
-An enumerable and enumerator for the properties of a JSON object.
 
 ## Implements
 

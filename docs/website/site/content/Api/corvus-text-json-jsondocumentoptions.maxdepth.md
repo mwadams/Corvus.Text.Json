@@ -7,15 +7,16 @@ Title: "JsonDocumentOptions.MaxDepth Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocumentOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonDocumentOptions.cs#L66)
 
 ## MaxDepth {#maxdepth}
+
+Gets or sets the maximum depth allowed when reading JSON, with the default (i.e. 0) indicating a max depth of 64.
 
 ```csharp
 public int MaxDepth { get; set; }
 ```
-
-Gets or sets the maximum depth allowed when reading JSON, with the default (i.e. 0) indicating a max depth of 64.
 
 ### Returns
 

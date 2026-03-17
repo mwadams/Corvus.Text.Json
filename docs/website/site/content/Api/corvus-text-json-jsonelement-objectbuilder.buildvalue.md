@@ -7,7 +7,7 @@ Title: "JsonElement.ObjectBuilder.BuildValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElement.ObjectBuilder.BuildValue Method — Corvus.Text.Json"
 | [BuildValue(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, ref ComplexValueBuilder)](#buildvalue-ref-tcontext-jsonelement-objectbuilder-build-tcontext-ref-complexvaluebuilder) |  |
 
 ## BuildValue(JsonElement.ObjectBuilder.Build, ref ComplexValueBuilder) {#buildvalue-jsonelement-objectbuilder-build-ref-complexvaluebuilder}
+
+**Source:** [JsonElement.ObjectBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ObjectBuilder.cs#L74)
 
 ```csharp
 public static void BuildValue(JsonElement.ObjectBuilder.Build value, ref ComplexValueBuilder valueBuilder)
@@ -29,9 +31,18 @@ public static void BuildValue(JsonElement.ObjectBuilder.Build value, ref Complex
 | `value` | [`JsonElement.ObjectBuilder.Build`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 | `valueBuilder` | [`ref ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## BuildValue(ref TContext, JsonElement.ObjectBuilder.Build&lt;TContext&gt;, ref ComplexValueBuilder) {#buildvalue-ref-tcontext-jsonelement-objectbuilder-build-tcontext-ref-complexvaluebuilder}
+
+**Source:** [JsonElement.ObjectBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.ObjectBuilder.cs#L43)
 
 ```csharp
 public static void BuildValue<TContext>(ref TContext context, JsonElement.ObjectBuilder.Build<TContext> value, ref ComplexValueBuilder valueBuilder)
@@ -45,12 +56,12 @@ public static void BuildValue<TContext>(ref TContext context, JsonElement.Object
 | `value` | [`JsonElement.ObjectBuilder.Build<TContext>`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 | `valueBuilder` | [`ref ComplexValueBuilder`](/api/corvus-text-json-internal-complexvaluebuilder.html) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

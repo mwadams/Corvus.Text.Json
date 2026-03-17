@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "MetadataDb — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [MetadataDb.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/MetadataDb.cs#L106)
+
+Database storing metadata for parsed JSON document structure, including token information and structural relationships between JSON elements.
+
 ```csharp
 public readonly struct MetadataDb : IDisposable
 ```
-
-Database storing metadata for parsed JSON document structure, including token information and structural relationships between JSON elements.
 
 ## Implements
 

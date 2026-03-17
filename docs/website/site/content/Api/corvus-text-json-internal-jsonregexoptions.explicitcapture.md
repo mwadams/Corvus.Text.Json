@@ -7,15 +7,16 @@ Title: "JsonRegexOptions.ExplicitCapture Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonRegexOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Regex/JsonRegexOptions.cs#L12)
 
 ## ExplicitCapture {#explicitcapture}
+
+Do not capture unnamed groups. The only valid captures are explicitly named or numbered groups of the form (?<name> subexpression).
 
 ```csharp
 JsonRegexOptions ExplicitCapture
 ```
-
-Do not capture unnamed groups. The only valid captures are explicitly named or numbered groups of the form (?<name> subexpression).
 
 ### Returns
 

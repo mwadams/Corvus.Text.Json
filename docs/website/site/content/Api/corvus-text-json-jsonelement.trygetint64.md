@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetInt64 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L999)
 
 ## TryGetInt64 {#trygetint64}
+
+Attempts to represent the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
 
 ```csharp
 public bool TryGetInt64(ref long value)
 ```
-
-Attempts to represent the current JSON number as a [`Int64`](https://learn.microsoft.com/dotnet/api/system.int64).
 
 ### Parameters
 

@@ -7,15 +7,16 @@ Title: "ValidationLevel.Detailed Field — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationLevel.cs#L14)
 
 ## Detailed {#detailed}
+
+10.4.3. Detailed.
 
 ```csharp
 ValidationLevel Detailed
 ```
-
-10.4.3. Detailed.
 
 ### Returns
 

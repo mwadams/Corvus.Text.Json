@@ -7,7 +7,7 @@ Title: "BigNumber.Parse Method — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "BigNumber.Parse Method — Corvus.Numerics"
 
 ## Parse(string, IFormatProvider) {#parse-string-iformatprovider}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1025)
+
+Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static BigNumber Parse(string s, IFormatProvider provider)
 ```
-
-Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -38,15 +40,24 @@ Parses a string into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 The parsed number.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(ReadOnlySpan&lt;char&gt;, NumberStyles, IFormatProvider) {#parse-readonlyspan-char-numberstyles-iformatprovider}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1046)
+
+Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static BigNumber Parse(ReadOnlySpan<char> s, NumberStyles style, IFormatProvider provider)
 ```
-
-Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -62,15 +73,24 @@ Parses a span of characters into a [`BigNumber`](/api/corvus-numerics-bignumber.
 
 The parsed number.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Parse(ReadOnlySpan&lt;byte&gt;, NumberStyles, IFormatProvider) {#parse-readonlyspan-byte-numberstyles-iformatprovider}
 
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L1479)
+
+Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
+
 ```csharp
 public static BigNumber Parse(ReadOnlySpan<byte> utf8Text, NumberStyles style, IFormatProvider provider)
 ```
-
-Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 ### Parameters
 
@@ -86,12 +106,12 @@ Parses UTF-8 bytes into a [`BigNumber`](/api/corvus-numerics-bignumber.html).
 
 The parsed number.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

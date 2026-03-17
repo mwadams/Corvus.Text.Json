@@ -7,15 +7,16 @@ Title: "IJsonElement.TokenType Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonElement.cs#L15)
 
 ## TokenType {#tokentype}
+
+Gets the JSON Token type of the element.
 
 ```csharp
 public abstract JsonTokenType TokenType { get; }
 ```
-
-Gets the JSON Token type of the element.
 
 ### Returns
 

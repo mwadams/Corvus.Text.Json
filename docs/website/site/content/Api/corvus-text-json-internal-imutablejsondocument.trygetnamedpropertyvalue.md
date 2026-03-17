@@ -7,7 +7,7 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValue Method — Corvus.Text.Jso
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "IMutableJsonDocument.TryGetNamedPropertyValue Method — Corvus.Text.Jso
 | [TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable)](#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-jsonelement-mutable) |  |
 
 ## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;char&gt;, ref JsonElement.Mutable) {#trygetnamedpropertyvalue-int-readonlyspan-char-ref-jsonelement-mutable}
+
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L79)
 
 ```csharp
 public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> propertyName, ref JsonElement.Mutable value)
@@ -34,9 +36,18 @@ public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<char> prop
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetNamedPropertyValue(int, ReadOnlySpan&lt;byte&gt;, ref JsonElement.Mutable) {#trygetnamedpropertyvalue-int-readonlyspan-byte-ref-jsonelement-mutable}
+
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L79)
 
 ```csharp
 public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> propertyName, ref JsonElement.Mutable value)
@@ -54,12 +65,12 @@ public abstract bool TryGetNamedPropertyValue(int index, ReadOnlySpan<byte> prop
 
 [`bool`](https://learn.microsoft.com/dotnet/api/system.boolean)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

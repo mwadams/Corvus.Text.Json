@@ -7,15 +7,16 @@ Title: "Period.Zero Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L124)
 
 ## Zero {#zero}
+
+Gets a period containing only zero-valued properties.
 
 ```csharp
 public static Period Zero { get; }
 ```
-
-Gets a period containing only zero-valued properties.
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.SchemaLocationForItemIndex Method — Corvus.Text.J
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Array.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Array.cs#L93)
 
 ## SchemaLocationForItemIndex {#schemalocationforitemindex}
+
+Writes the schema location for an item at a specific index in an array.
 
 ```csharp
 public static bool SchemaLocationForItemIndex(ReadOnlySpan<byte> arraySchemaLocation, int itemIndex, Span<byte> buffer, ref int written)
 ```
-
-Writes the schema location for an item at a specific index in an array.
 
 ### Parameters
 

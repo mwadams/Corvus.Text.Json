@@ -7,15 +7,16 @@ Title: "SimpleTypesBacking.Span Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [SimpleTypesBacking.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/SimpleTypesBacking.cs#L53)
 
 ## Span {#span}
+
+Gets the written value as a span
 
 ```csharp
 public ReadOnlySpan<byte> Span()
 ```
-
-Gets the written value as a span
 
 ### Returns
 

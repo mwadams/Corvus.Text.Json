@@ -7,15 +7,16 @@ Title: "JsonCommentHandling.Allow Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonCommentHandling.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Common/JsonCommentHandling.cs#L8)
 
 ## Allow {#allow}
+
+Allow comments within the JSON input and treat them as valid tokens. While reading, the caller will be able to access the comment values.
 
 ```csharp
 JsonCommentHandling Allow
 ```
-
-Allow comments within the JSON input and treat them as valid tokens. While reading, the caller will be able to access the comment values.
 
 ### Returns
 

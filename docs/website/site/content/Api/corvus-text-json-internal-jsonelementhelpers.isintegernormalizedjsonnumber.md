@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.IsIntegerNormalizedJsonNumber Method — Corvus.Text.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L166)
 
 ## IsIntegerNormalizedJsonNumber {#isintegernormalizedjsonnumber}
+
+Determines if a JSON number is an integer.
 
 ```csharp
 public static bool IsIntegerNormalizedJsonNumber(int exponent)
 ```
-
-Determines if a JSON number is an integer.
 
 ### Parameters
 

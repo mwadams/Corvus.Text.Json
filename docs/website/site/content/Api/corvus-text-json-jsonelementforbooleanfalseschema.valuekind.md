@@ -7,15 +7,16 @@ Title: "JsonElementForBooleanFalseSchema.ValueKind Property — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementForBooleanFalseSchema.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonElementForBooleanFalseSchema.cs#L48)
 
 ## ValueKind {#valuekind}
+
+The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value is.
 
 ```csharp
 public JsonValueKind ValueKind { get; }
 ```
-
-The [`JsonValueKind`](/api/corvus-text-json-jsonvaluekind.html) that the value is.
 
 ### Returns
 

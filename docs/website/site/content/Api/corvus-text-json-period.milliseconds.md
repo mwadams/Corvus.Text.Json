@@ -7,15 +7,16 @@ Title: "Period.Milliseconds Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L164)
 
 ## Milliseconds {#milliseconds}
+
+Gets the number of milliseconds within this period.
 
 ```csharp
 public long Milliseconds { get; }
 ```
-
-Gets the number of milliseconds within this period.
 
 ### Returns
 

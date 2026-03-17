@@ -7,15 +7,16 @@ Title: "IMutableJsonDocument.ParentWorkspaceIndex Property — Corvus.Text.Json.
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IMutableJsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/IMutableJsonDocument.cs#L93)
 
 ## ParentWorkspaceIndex {#parentworkspaceindex}
+
+Gets the index of the parent workspace.
 
 ```csharp
 public abstract int ParentWorkspaceIndex { get; }
 ```
-
-Gets the index of the parent workspace.
 
 ### Returns
 

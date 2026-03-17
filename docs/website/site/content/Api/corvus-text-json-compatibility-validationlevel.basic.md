@@ -7,15 +7,16 @@ Title: "ValidationLevel.Basic Field — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationLevel.cs#L14)
 
 ## Basic {#basic}
+
+10.4.2. Basic.
 
 ```csharp
 ValidationLevel Basic
 ```
-
-10.4.2. Basic.
 
 ### Returns
 

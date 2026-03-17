@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.GetString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.TryGet.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.TryGet.cs#L425)
 
 ## GetString {#getstring}
+
+Parses the current JSON token value from the source, unescaped, and transcoded as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ```csharp
 public string GetString()
 ```
-
-Parses the current JSON token value from the source, unescaped, and transcoded as a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ### Returns
 

@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetDouble Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1272)
 
 ## TryGetDouble {#trygetdouble}
+
+Attempts to represent the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
 
 ```csharp
 public bool TryGetDouble(ref double value)
 ```
-
-Attempts to represent the current JSON number as a [`Double`](https://learn.microsoft.com/dotnet/api/system.double).
 
 ### Parameters
 

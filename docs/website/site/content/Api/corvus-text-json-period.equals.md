@@ -7,7 +7,7 @@ Title: "Period.Equals Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -19,11 +19,13 @@ Title: "Period.Equals Method — Corvus.Text.Json"
 
 ## Equals(object) {#equals-object}
 
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L723)
+
+Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics.
+
 ```csharp
 public override bool Equals(object other)
 ```
-
-Compares the given object for equality with this one, as per [`Equals`](/api/corvus-text-json-period.html#equals). See the type documentation for a description of equality semantics.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Compares the given object for equality with this one, as per [`Equals`](/api/cor
 
 true if the other object is a period equal to this one, consistent with [`Equals`](/api/corvus-text-json-period.html#equals).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Equals(Period) {#equals-period}
 
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L753)
+
+Compares the given period for equality with this one. See the type documentation for a description of equality semantics.
+
 ```csharp
 public bool Equals(Period other)
 ```
-
-Compares the given period for equality with this one. See the type documentation for a description of equality semantics.
 
 ### Parameters
 
@@ -63,15 +74,24 @@ True if this period has the same values for the same properties as the one speci
 
 [`IEquatable&lt;Period&gt;.Equals`](https://learn.microsoft.com/dotnet/api/system.iequatable.equals)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## Equals(Period) {#equals-period}
 
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L771)
+
+Compares the given period for equality with this one. See the type documentation for a description of equality semantics.
+
 ```csharp
 public bool Equals(Period other)
 ```
-
-Compares the given period for equality with this one. See the type documentation for a description of equality semantics.
 
 ### Parameters
 
@@ -85,12 +105,12 @@ Compares the given period for equality with this one. See the type documentation
 
 True if this period has the same values for the same properties as the one specified.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

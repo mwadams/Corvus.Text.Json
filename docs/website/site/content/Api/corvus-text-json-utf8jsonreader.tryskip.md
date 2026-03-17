@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.TrySkip Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L398)
 
 ## TrySkip {#tryskip}
+
+Tries to skip the children of the current JSON token.
 
 ```csharp
 public bool TrySkip()
 ```
-
-Tries to skip the children of the current JSON token.
 
 ### Returns
 

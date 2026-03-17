@@ -7,15 +7,16 @@ Title: "Period.Subtraction Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L333)
 
 ## operator - {#operator}
+
+Subtracts one period from another, by simply subtracting each property value.
 
 ```csharp
 public static Period operator -(Period minuend, Period subtrahend)
 ```
-
-Subtracts one period from another, by simply subtracting each property value.
 
 ### Parameters
 

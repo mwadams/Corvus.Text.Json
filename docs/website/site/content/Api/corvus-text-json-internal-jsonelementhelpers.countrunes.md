@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.CountRunes Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.String.cs#L23)
 
 ## CountRunes {#countrunes}
+
+Count the runes in a UTF-8 string.
 
 ```csharp
 public static int CountRunes(ReadOnlySpan<byte> utf8String)
 ```
-
-Count the runes in a UTF-8 string.
 
 ### Parameters
 

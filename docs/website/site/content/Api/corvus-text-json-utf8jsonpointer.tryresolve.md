@@ -7,15 +7,16 @@ Title: "Utf8JsonPointer.TryResolve Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonPointer.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8JsonPointer.cs#L13)
 
 ## TryResolve {#tryresolve}
+
+Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the value at that path if it exists.
 
 ```csharp
 public bool TryResolve<T, TResult>(ref T jsonElement, ref TResult value)
 ```
-
-Try to resolve the path specified by this JSON Pointer against the provided JSON element, returning the value at that path if it exists.
 
 ### Type Parameters
 

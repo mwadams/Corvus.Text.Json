@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.ExpectedType Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L372)
 
 ## ExpectedType {#expectedtype}
+
+Tries to write a message indicating the expected type for a value.
 
 ```csharp
 public static bool ExpectedType(ReadOnlySpan<byte> typeName, Span<byte> buffer, ref int written)
 ```
-
-Tries to write a message indicating the expected type for a value.
 
 ### Parameters
 

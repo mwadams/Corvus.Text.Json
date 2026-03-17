@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetDecimal Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1398)
 
 ## TryGetDecimal {#trygetdecimal}
+
+Attempts to represent the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
 
 ```csharp
 public bool TryGetDecimal(ref decimal value)
 ```
-
-Attempts to represent the current JSON number as a [`Decimal`](https://learn.microsoft.com/dotnet/api/system.decimal).
 
 ### Parameters
 

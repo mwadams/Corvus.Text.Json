@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonProperty<TValue> — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L20)
+
+Represents a single property for a JSON object.
+
 ```csharp
 public readonly struct JsonProperty<TValue>
 ```
-
-Represents a single property for a JSON object.
 
 ## Type Parameters
 

@@ -7,15 +7,16 @@ Title: "JsonElement.TryGetBigInteger Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L1504)
 
 ## TryGetBigInteger {#trygetbiginteger}
+
+Attempts to represent the current JSON number as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
 
 ```csharp
 public bool TryGetBigInteger(ref BigInteger value)
 ```
-
-Attempts to represent the current JSON number as a [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger).
 
 ### Parameters
 

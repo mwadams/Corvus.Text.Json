@@ -7,15 +7,16 @@ Title: "JsonTokenType.EndArray Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
 
 ## EndArray {#endarray}
+
+Indicates that the token type is the end of a JSON array.
 
 ```csharp
 JsonTokenType EndArray
 ```
-
-Indicates that the token type is the end of a JSON array.
 
 ### Returns
 

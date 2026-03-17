@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.ItemIndex Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## ItemIndex {#itemindex}
+
+Provides a path provider for array item indices in JSON schema validation.
 
 ```csharp
 JsonSchemaPathProvider<int> ItemIndex
 ```
-
-Provides a path provider for array item indices in JSON schema validation.
 
 ### Returns
 

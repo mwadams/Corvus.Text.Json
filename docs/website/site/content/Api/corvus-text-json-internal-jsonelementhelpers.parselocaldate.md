@@ -7,15 +7,16 @@ Title: "JsonElementHelpers.ParseLocalDate Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElementHelpers.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.DateTime.cs#L125)
 
 ## ParseLocalDate {#parselocaldate}
+
+Parse a local date from a UTF-8 encoded string for the `date` format.
 
 ```csharp
 public static LocalDate ParseLocalDate(ReadOnlySpan<byte> text)
 ```
-
-Parse a local date from a UTF-8 encoded string for the `date` format.
 
 ### Parameters
 

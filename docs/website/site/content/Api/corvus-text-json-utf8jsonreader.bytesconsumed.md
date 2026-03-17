@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.BytesConsumed Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L107)
 
 ## BytesConsumed {#bytesconsumed}
+
+Returns the total amount of bytes consumed by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) so far for the current instance of the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) with the given UTF-8 encoded input text.
 
 ```csharp
 public long BytesConsumed { get; }
 ```
-
-Returns the total amount of bytes consumed by the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) so far for the current instance of the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) with the given UTF-8 encoded input text.
 
 ### Returns
 

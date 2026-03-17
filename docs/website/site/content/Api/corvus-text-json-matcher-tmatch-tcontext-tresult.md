@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Matcher<TMatch, TContext, TResult> — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Matcher.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Matcher.cs#L23)
+
+A callback for a pattern match method.
+
 ```csharp
 public delegate Matcher<TMatch, TContext, TResult> : MulticastDelegate, ICloneable, ISerializable
 ```
-
-A callback for a pattern match method.
 
 ## Type Parameters
 

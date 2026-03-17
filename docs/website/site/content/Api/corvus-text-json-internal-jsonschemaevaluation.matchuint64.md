@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchUInt64 Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.Number.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.Number.cs#L1281)
 
 ## MatchUInt64 {#matchuint64}
+
+Matches a JSON number against the UInt64 type constraint, validating it as a 64-bit unsigned integer.
 
 ```csharp
 public static bool MatchUInt64(bool isNegative, ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Matches a JSON number against the UInt64 type constraint, validating it as a 64-bit unsigned integer.
 
 ### Parameters
 

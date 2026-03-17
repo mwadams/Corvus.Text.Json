@@ -4,6 +4,12 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "IdnMapping — Corvus.Globalization"
 ---
+## Definition
+
+**Namespace:** Corvus.Globalization  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IdnMapping.Unicode.UTF8.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.Unicode.UTF8.cs#L30)
+
 ```csharp
 public sealed class IdnMapping
 ```

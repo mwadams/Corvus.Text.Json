@@ -7,15 +7,16 @@ Title: "PeriodBuilder.Nanoseconds Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [PeriodBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/PeriodBuilder.cs#L58)
 
 ## Nanoseconds {#nanoseconds}
+
+Gets or sets the number of nanoseconds within the period.
 
 ```csharp
 public long Nanoseconds { get; set; }
 ```
-
-Gets or sets the number of nanoseconds within the period.
 
 ### Returns
 

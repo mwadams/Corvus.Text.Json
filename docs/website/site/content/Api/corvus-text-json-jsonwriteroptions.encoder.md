@@ -7,15 +7,16 @@ Title: "JsonWriterOptions.Encoder Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWriterOptions.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/JsonWriterOptions.cs#L44)
 
 ## Encoder {#encoder}
+
+The encoder to use when escaping strings, or `null` to use the default encoder.
 
 ```csharp
 public JavaScriptEncoder Encoder { get; set; }
 ```
-
-The encoder to use when escaping strings, or `null` to use the default encoder.
 
 ### Returns
 

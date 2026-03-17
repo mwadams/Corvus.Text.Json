@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -44,11 +44,13 @@ Title: "Utf8JsonWriter.WriteString Method — Corvus.Text.Json"
 
 ## WriteString(JsonEncodedText, DateTime) {#writestring-jsonencodedtext-datetime}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTime.cs#L31)
+
+Writes the pre-encoded property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(JsonEncodedText propertyName, DateTime value)
 ```
-
-Writes the pre-encoded property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -67,15 +69,24 @@ Writes the pre-encoded property name and [`DateTime`](https://learn.microsoft.co
 
 Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) using the round-trip ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000. The property name should already be escaped when the instance of [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) was created.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(string, DateTime) {#writestring-string-datetime}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTime.cs#L60)
+
+Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(string propertyName, DateTime value)
 ```
-
-Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -96,15 +107,24 @@ Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api
 
 Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) using the round-trip ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;char&gt;, DateTime) {#writestring-readonlyspan-char-datetime}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTime.cs#L81)
+
+Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<char> propertyName, DateTime value)
 ```
-
-Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -124,15 +144,24 @@ Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api
 
 Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) using the round-trip ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;byte&gt;, DateTime) {#writestring-readonlyspan-byte-datetime}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTime.cs#L106)
+
+Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTime value)
 ```
-
-Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -152,15 +181,24 @@ Writes the property name and [`DateTime`](https://learn.microsoft.com/dotnet/api
 
 Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) using the round-trip ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(JsonEncodedText, DateTimeOffset) {#writestring-jsonencodedtext-datetimeoffset}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTimeOffset.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTimeOffset.cs#L30)
+
+Writes the pre-encoded property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(JsonEncodedText propertyName, DateTimeOffset value)
 ```
-
-Writes the pre-encoded property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -179,15 +217,24 @@ Writes the pre-encoded property name and [`DateTimeOffset`](https://learn.micros
 
 Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) using the round-trippable ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000-07:00.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(string, DateTimeOffset) {#writestring-string-datetimeoffset}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTimeOffset.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTimeOffset.cs#L59)
+
+Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(string propertyName, DateTimeOffset value)
 ```
-
-Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -208,15 +255,24 @@ Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotn
 
 Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) using the round-trippable ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000-07:00. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;char&gt;, DateTimeOffset) {#writestring-readonlyspan-char-datetimeoffset}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTimeOffset.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTimeOffset.cs#L80)
+
+Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<char> propertyName, DateTimeOffset value)
 ```
-
-Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -236,15 +292,24 @@ Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotn
 
 Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) using the round-trippable ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000-07:00. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;byte&gt;, DateTimeOffset) {#writestring-readonlyspan-byte-datetimeoffset}
 
+**Source:** [Utf8JsonWriter.WriteProperties.DateTimeOffset.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.DateTimeOffset.cs#L105)
+
+Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<byte> utf8PropertyName, DateTimeOffset value)
 ```
-
-Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -264,15 +329,24 @@ Writes the property name and [`DateTimeOffset`](https://learn.microsoft.com/dotn
 
 Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) using the round-trippable ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000-07:00. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(JsonEncodedText, Guid) {#writestring-jsonencodedtext-guid}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Guid.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Guid.cs#L31)
+
+Writes the pre-encoded property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(JsonEncodedText propertyName, Guid value)
 ```
-
-Writes the pre-encoded property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -291,15 +365,24 @@ Writes the pre-encoded property name and [`Guid`](https://learn.microsoft.com/do
 
 Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'D'), as the form: nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(string, Guid) {#writestring-string-guid}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Guid.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Guid.cs#L60)
+
+Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(string propertyName, Guid value)
 ```
-
-Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -320,15 +403,24 @@ Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/sys
 
 Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'D'), as the form: nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;char&gt;, Guid) {#writestring-readonlyspan-char-guid}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Guid.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Guid.cs#L81)
+
+Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<char> propertyName, Guid value)
 ```
-
-Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -348,15 +440,24 @@ Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/sys
 
 Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'D'), as the form: nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;byte&gt;, Guid) {#writestring-readonlyspan-byte-guid}
 
+**Source:** [Utf8JsonWriter.WriteProperties.Guid.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.Guid.cs#L106)
+
+Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<byte> utf8PropertyName, Guid value)
 ```
-
-Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -376,15 +477,24 @@ Writes the property name and [`Guid`](https://learn.microsoft.com/dotnet/api/sys
 
 Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'D'), as the form: nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn. The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(JsonEncodedText, JsonEncodedText) {#writestring-jsonencodedtext-jsonencodedtext}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L129)
+
+Writes the pre-encoded property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(JsonEncodedText propertyName, JsonEncodedText value)
 ```
-
-Writes the pre-encoded property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -399,15 +509,24 @@ Writes the pre-encoded property name and pre-encoded value (as a JSON string) as
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(string, JsonEncodedText) {#writestring-string-jsonencodedtext}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L150)
+
+Writes the property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(string propertyName, JsonEncodedText value)
 ```
-
-Writes the property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -428,15 +547,24 @@ Writes the property name and pre-encoded value (as a JSON string) as part of a n
 
 The property name is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(string, string) {#writestring-string-string}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L179)
+
+Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(string propertyName, string value)
 ```
-
-Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -457,15 +585,24 @@ Writes the property name and string text value (as a JSON string) as part of a n
 
 The property name and value is escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNull`](/api/corvus-text-json-utf8jsonwriter.html#writenull) were called.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;char&gt;) {#writestring-readonlyspan-char-readonlyspan-char}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L207)
+
+Writes the property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<char> value)
 ```
-
-Writes the property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -485,15 +622,24 @@ Writes the property name and text value (as a JSON string) as part of a name/val
 
 The property name and value is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;) {#writestring-readonlyspan-byte-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L231)
+
+Writes the UTF-8 property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<byte> utf8Value)
 ```
-
-Writes the UTF-8 property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -513,15 +659,24 @@ Writes the UTF-8 property name and UTF-8 text value (as a JSON string) as part o
 
 The property name and value is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(JsonEncodedText, string) {#writestring-jsonencodedtext-string}
 
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L261)
+
+Writes the pre-encoded property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
+
 ```csharp
 public void WriteString(JsonEncodedText propertyName, string value)
 ```
-
-Writes the pre-encoded property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ### Parameters
 
@@ -541,16 +696,25 @@ Writes the pre-encoded property name and string text value (as a JSON string) as
 
 The value is escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNull`](/api/corvus-text-json-utf8jsonwriter.html#writenull) was called.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteString(JsonEncodedText, ReadOnlySpan&lt;char&gt;) {#writestring-jsonencodedtext-readonlyspan-char}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L286)
+
+Writes the pre-encoded property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
 
 ```csharp
 public void WriteString(JsonEncodedText propertyName, ReadOnlySpan<char> value)
 ```
 
-Writes the pre-encoded property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
-
 ### Parameters
 
 | Name | Type | Description |
@@ -568,262 +732,6 @@ Writes the pre-encoded property name and text value (as a JSON string) as part o
 ### Remarks
 
 The value is escaped before writing.
-
----
-
-## WriteString(string, ReadOnlySpan&lt;char&gt;) {#writestring-string-readonlyspan-char}
-
-```csharp
-public void WriteString(string propertyName, ReadOnlySpan<char> value)
-```
-
-Writes the property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The name of the property to write. |
-| `value` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
-| [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | The `propertyName` parameter is `null`. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name and value is escaped before writing.
-
----
-
-## WriteString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;) {#writestring-readonlyspan-byte-readonlyspan-char}
-
-```csharp
-public void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<char> value)
-```
-
-Writes the UTF-8 property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8PropertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded name of the property to write. |
-| `value` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name and value is escaped before writing.
-
----
-
-## WriteString(JsonEncodedText, ReadOnlySpan&lt;byte&gt;) {#writestring-jsonencodedtext-readonlyspan-byte}
-
-```csharp
-public void WriteString(JsonEncodedText propertyName, ReadOnlySpan<byte> utf8Value)
-```
-
-Writes the pre-encoded property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) | The JSON-encoded name of the property to write. |
-| `utf8Value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified value is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The value is escaped before writing.
-
----
-
-## WriteString(string, ReadOnlySpan&lt;byte&gt;) {#writestring-string-readonlyspan-byte}
-
-```csharp
-public void WriteString(string propertyName, ReadOnlySpan<byte> utf8Value)
-```
-
-Writes the property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The name of the property to write. |
-| `utf8Value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
-| [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | The `propertyName` parameter is `null`. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name and value is escaped before writing.
-
----
-
-## WriteString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#writestring-readonlyspan-char-readonlyspan-byte}
-
-```csharp
-public void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8Value)
-```
-
-Writes the property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The name of the property to write. |
-| `utf8Value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name and value is escaped before writing.
-
----
-
-## WriteString(ReadOnlySpan&lt;char&gt;, JsonEncodedText) {#writestring-readonlyspan-char-jsonencodedtext}
-
-```csharp
-public void WriteString(ReadOnlySpan<char> propertyName, JsonEncodedText value)
-```
-
-Writes the property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The name of the property to write. |
-| `value` | [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) | The JSON-encoded value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name is escaped before writing.
-
----
-
-## WriteString(ReadOnlySpan&lt;char&gt;, string) {#writestring-readonlyspan-char-string}
-
-```csharp
-public void WriteString(ReadOnlySpan<char> propertyName, string value)
-```
-
-Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The name of the property to write. |
-| `value` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name and value are escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNull`](/api/corvus-text-json-utf8jsonwriter.html#writenull) was called.
-
----
-
-## WriteString(ReadOnlySpan&lt;byte&gt;, JsonEncodedText) {#writestring-readonlyspan-byte-jsonencodedtext}
-
-```csharp
-public void WriteString(ReadOnlySpan<byte> utf8PropertyName, JsonEncodedText value)
-```
-
-Writes the UTF-8 property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8PropertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded name of the property to write. |
-| `value` | [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) | The JSON-encoded value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name is escaped before writing.
-
----
-
-## WriteString(ReadOnlySpan&lt;byte&gt;, string) {#writestring-readonlyspan-byte-string}
-
-```csharp
-public void WriteString(ReadOnlySpan<byte> utf8PropertyName, string value)
-```
-
-Writes the UTF-8 property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
-
-### Parameters
-
-| Name | Type | Description |
-|------|------|-------------|
-| `utf8PropertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded name of the property to write. |
-| `value` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The value to write. |
-
-### Exceptions
-
-| Exception | Description |
-|-----------|-------------|
-| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
-| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
-
-### Remarks
-
-The property name and value are escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNull`](/api/corvus-text-json-utf8jsonwriter.html#writenull) was called.
-
----
 
 ## Applies To
 
@@ -831,4 +739,341 @@ The property name and value are escaped before writing. If `value` is `null` the
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
+
+## WriteString(string, ReadOnlySpan&lt;char&gt;) {#writestring-string-readonlyspan-char}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L307)
+
+Writes the property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(string propertyName, ReadOnlySpan<char> value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `propertyName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The name of the property to write. |
+| `value` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
+| [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | The `propertyName` parameter is `null`. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name and value is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;char&gt;) {#writestring-readonlyspan-byte-readonlyspan-char}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L327)
+
+Writes the UTF-8 property name and text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, ReadOnlySpan<char> value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `utf8PropertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded name of the property to write. |
+| `value` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name and value is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(JsonEncodedText, ReadOnlySpan&lt;byte&gt;) {#writestring-jsonencodedtext-readonlyspan-byte}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L350)
+
+Writes the pre-encoded property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(JsonEncodedText propertyName, ReadOnlySpan<byte> utf8Value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `propertyName` | [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) | The JSON-encoded name of the property to write. |
+| `utf8Value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified value is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The value is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(string, ReadOnlySpan&lt;byte&gt;) {#writestring-string-readonlyspan-byte}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L371)
+
+Writes the property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(string propertyName, ReadOnlySpan<byte> utf8Value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `propertyName` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The name of the property to write. |
+| `utf8Value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
+| [`ArgumentNullException`](https://learn.microsoft.com/dotnet/api/system.argumentnullexception) | The `propertyName` parameter is `null`. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name and value is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(ReadOnlySpan&lt;char&gt;, ReadOnlySpan&lt;byte&gt;) {#writestring-readonlyspan-char-readonlyspan-byte}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L391)
+
+Writes the property name and UTF-8 text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(ReadOnlySpan<char> propertyName, ReadOnlySpan<byte> utf8Value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The name of the property to write. |
+| `utf8Value` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name and value is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(ReadOnlySpan&lt;char&gt;, JsonEncodedText) {#writestring-readonlyspan-char-jsonencodedtext}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L414)
+
+Writes the property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(ReadOnlySpan<char> propertyName, JsonEncodedText value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The name of the property to write. |
+| `value` | [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) | The JSON-encoded value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(ReadOnlySpan&lt;char&gt;, string) {#writestring-readonlyspan-char-string}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L438)
+
+Writes the property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(ReadOnlySpan<char> propertyName, string value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `propertyName` | [`ReadOnlySpan<char>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The name of the property to write. |
+| `value` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name and value are escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNull`](/api/corvus-text-json-utf8jsonwriter.html#writenull) was called.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(ReadOnlySpan&lt;byte&gt;, JsonEncodedText) {#writestring-readonlyspan-byte-jsonencodedtext}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L463)
+
+Writes the UTF-8 property name and pre-encoded value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, JsonEncodedText value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `utf8PropertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded name of the property to write. |
+| `value` | [`JsonEncodedText`](/api/corvus-text-json-jsonencodedtext.html) | The JSON-encoded value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name is escaped before writing.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
+
+## WriteString(ReadOnlySpan&lt;byte&gt;, string) {#writestring-readonlyspan-byte-string}
+
+**Source:** [Utf8JsonWriter.WriteProperties.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteProperties.String.cs#L487)
+
+Writes the UTF-8 property name and string text value (as a JSON string) as part of a name/value pair of a JSON object.
+
+```csharp
+public void WriteString(ReadOnlySpan<byte> utf8PropertyName, string value)
+```
+
+### Parameters
+
+| Name | Type | Description |
+|------|------|-------------|
+| `utf8PropertyName` | [`ReadOnlySpan<byte>`](https://learn.microsoft.com/dotnet/api/system.readonlyspan-1) | The UTF-8 encoded name of the property to write. |
+| `value` | [`string`](https://learn.microsoft.com/dotnet/api/system.string) | The value to write. |
+
+### Exceptions
+
+| Exception | Description |
+|-----------|-------------|
+| [`ArgumentException`](https://learn.microsoft.com/dotnet/api/system.argumentexception) | Thrown when the specified property name or value is too large. |
+| [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
+
+### Remarks
+
+The property name and value are escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNull`](/api/corvus-text-json-utf8jsonwriter.html#writenull) was called.
+
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
+---
 

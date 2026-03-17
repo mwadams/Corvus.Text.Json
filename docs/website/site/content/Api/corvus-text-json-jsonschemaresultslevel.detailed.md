@@ -7,15 +7,16 @@ Title: "JsonSchemaResultsLevel.Detailed Field — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaResultsLevel.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/JsonSchemaResultsLevel.cs#L14)
 
 ## Detailed {#detailed}
+
+Includes detailed location and message information about schema matching failures.
 
 ```csharp
 JsonSchemaResultsLevel Detailed
 ```
-
-Includes detailed location and message information about schema matching failures.
 
 ### Returns
 

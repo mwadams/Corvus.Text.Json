@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.True Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L40)
 
 ## True {#true}
+
+Gets the True instance.
 
 ```csharp
 public static T True { get; }
 ```
-
-Gets the True instance.
 
 ### Returns
 

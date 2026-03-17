@@ -7,15 +7,16 @@ Title: "BigNumber Constructors — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L154)
 
 ## BigNumber {#bignumber}
+
+Initializes a new instance of the [`BigNumber`](/api/corvus-numerics-bignumber.html) struct.
 
 ```csharp
 public BigNumber(BigInteger significand, int exponent)
 ```
-
-Initializes a new instance of the [`BigNumber`](/api/corvus-numerics-bignumber.html) struct.
 
 ### Parameters
 

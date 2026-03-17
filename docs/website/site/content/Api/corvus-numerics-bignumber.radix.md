@@ -7,15 +7,16 @@ Title: "BigNumber.Radix Property — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L186)
 
 ## Radix {#radix}
+
+Gets the radix (base) of the number system.
 
 ```csharp
 public static int Radix { get; }
 ```
-
-Gets the radix (base) of the number system.
 
 ### Returns
 

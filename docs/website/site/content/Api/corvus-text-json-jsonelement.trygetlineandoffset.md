@@ -7,7 +7,7 @@ Title: "JsonElement.TryGetLineAndOffset Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElement.TryGetLineAndOffset Method — Corvus.Text.Json"
 
 ## TryGetLineAndOffset(ref int, ref int) {#trygetlineandoffset-ref-int-ref-int}
 
+**Source:** [JsonElement.SourceLocation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.SourceLocation.cs#L28)
+
+Tries to get the 1-based line number and character offset of this element in the original source document.
+
 ```csharp
 public bool TryGetLineAndOffset(ref int line, ref int charOffset)
 ```
-
-Tries to get the 1-based line number and character offset of this element in the original source document.
 
 ### Parameters
 
@@ -41,15 +43,24 @@ Tries to get the 1-based line number and character offset of this element in the
 
 This method returns `false` when the backing document does not retain the original source bytes (for example, mutable builder documents or fixed-string documents).
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetLineAndOffset(ref int, ref int, ref long) {#trygetlineandoffset-ref-int-ref-int-ref-long}
 
+**Source:** [JsonElement.SourceLocation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.SourceLocation.cs#L52)
+
+Tries to get the 1-based line number, character offset, and byte offset of this element in the original source document.
+
 ```csharp
 public bool TryGetLineAndOffset(ref int line, ref int charOffset, ref long lineByteOffset)
 ```
-
-Tries to get the 1-based line number, character offset, and byte offset of this element in the original source document.
 
 ### Parameters
 
@@ -69,12 +80,12 @@ Tries to get the 1-based line number, character offset, and byte offset of this 
 
 This method returns `false` when the backing document does not retain the original source bytes (for example, mutable builder documents or fixed-string documents).
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

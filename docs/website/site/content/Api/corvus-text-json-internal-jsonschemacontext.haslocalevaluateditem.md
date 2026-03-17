@@ -7,15 +7,16 @@ Title: "JsonSchemaContext.HasLocalEvaluatedItem Method — Corvus.Text.Json.Inte
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaContext.cs#L776)
 
 ## HasLocalEvaluatedItem {#haslocalevaluateditem}
+
+Determines whether a specific item at the given index has been locally evaluated.
 
 ```csharp
 public bool HasLocalEvaluatedItem(int index)
 ```
-
-Determines whether a specific item at the given index has been locally evaluated.
 
 ### Parameters
 

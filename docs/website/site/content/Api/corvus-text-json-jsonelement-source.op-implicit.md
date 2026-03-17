@@ -7,7 +7,7 @@ Title: "JsonElement.Source.Implicit Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -45,6 +45,8 @@ Title: "JsonElement.Source.Implicit Operator — Corvus.Text.Json"
 
 ## implicit operator JsonElement.Source(ref JsonElement) {#implicit-operator-jsonelement-source-ref-jsonelement}
 
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
+
 ```csharp
 public static implicit operator JsonElement.Source(ref JsonElement value)
 ```
@@ -59,9 +61,18 @@ public static implicit operator JsonElement.Source(ref JsonElement value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(ref JsonElement.Mutable) {#implicit-operator-jsonelement-source-ref-jsonelement-mutable}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(ref JsonElement.Mutable value)
@@ -77,9 +88,18 @@ public static implicit operator JsonElement.Source(ref JsonElement.Mutable value
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(ReadOnlySpan&lt;byte&gt;) {#implicit-operator-jsonelement-source-readonlyspan-byte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(ReadOnlySpan<byte> value)
@@ -95,9 +115,18 @@ public static implicit operator JsonElement.Source(ReadOnlySpan<byte> value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(ReadOnlySpan&lt;char&gt;) {#implicit-operator-jsonelement-source-readonlyspan-char}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(ReadOnlySpan<char> value)
@@ -113,9 +142,18 @@ public static implicit operator JsonElement.Source(ReadOnlySpan<char> value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(string) {#implicit-operator-jsonelement-source-string}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(string value)
@@ -131,9 +169,18 @@ public static implicit operator JsonElement.Source(string value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(DateTimeOffset) {#implicit-operator-jsonelement-source-datetimeoffset}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(DateTimeOffset value)
@@ -149,9 +196,18 @@ public static implicit operator JsonElement.Source(DateTimeOffset value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(DateTime) {#implicit-operator-jsonelement-source-datetime}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(DateTime value)
@@ -167,9 +223,18 @@ public static implicit operator JsonElement.Source(DateTime value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(OffsetDateTime) {#implicit-operator-jsonelement-source-offsetdatetime}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(OffsetDateTime value)
@@ -185,9 +250,18 @@ public static implicit operator JsonElement.Source(OffsetDateTime value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(OffsetDate) {#implicit-operator-jsonelement-source-offsetdate}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(OffsetDate value)
@@ -203,9 +277,18 @@ public static implicit operator JsonElement.Source(OffsetDate value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(OffsetTime) {#implicit-operator-jsonelement-source-offsettime}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(OffsetTime value)
@@ -221,9 +304,18 @@ public static implicit operator JsonElement.Source(OffsetTime value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(LocalDate) {#implicit-operator-jsonelement-source-localdate}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(LocalDate value)
@@ -239,9 +331,18 @@ public static implicit operator JsonElement.Source(LocalDate value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(Period) {#implicit-operator-jsonelement-source-period}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(Period value)
@@ -257,9 +358,18 @@ public static implicit operator JsonElement.Source(Period value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(Guid) {#implicit-operator-jsonelement-source-guid}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(Guid value)
@@ -275,9 +385,18 @@ public static implicit operator JsonElement.Source(Guid value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(Uri) {#implicit-operator-jsonelement-source-uri}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(Uri value)
@@ -293,9 +412,18 @@ public static implicit operator JsonElement.Source(Uri value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(bool) {#implicit-operator-jsonelement-source-bool}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(bool value)
@@ -311,9 +439,18 @@ public static implicit operator JsonElement.Source(bool value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(long) {#implicit-operator-jsonelement-source-long}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(long value)
@@ -329,9 +466,18 @@ public static implicit operator JsonElement.Source(long value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(int) {#implicit-operator-jsonelement-source-int}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(int value)
@@ -347,9 +493,18 @@ public static implicit operator JsonElement.Source(int value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(short) {#implicit-operator-jsonelement-source-short}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(short value)
@@ -365,9 +520,18 @@ public static implicit operator JsonElement.Source(short value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(sbyte) {#implicit-operator-jsonelement-source-sbyte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(sbyte value)
@@ -383,9 +547,18 @@ public static implicit operator JsonElement.Source(sbyte value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(ulong) {#implicit-operator-jsonelement-source-ulong}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(ulong value)
@@ -401,9 +574,18 @@ public static implicit operator JsonElement.Source(ulong value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(uint) {#implicit-operator-jsonelement-source-uint}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(uint value)
@@ -419,9 +601,18 @@ public static implicit operator JsonElement.Source(uint value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(ushort) {#implicit-operator-jsonelement-source-ushort}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(ushort value)
@@ -437,9 +628,18 @@ public static implicit operator JsonElement.Source(ushort value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(byte) {#implicit-operator-jsonelement-source-byte}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(byte value)
@@ -455,9 +655,18 @@ public static implicit operator JsonElement.Source(byte value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(decimal) {#implicit-operator-jsonelement-source-decimal}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(decimal value)
@@ -473,9 +682,18 @@ public static implicit operator JsonElement.Source(decimal value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(double) {#implicit-operator-jsonelement-source-double}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(double value)
@@ -491,9 +709,18 @@ public static implicit operator JsonElement.Source(double value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(float) {#implicit-operator-jsonelement-source-float}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(float value)
@@ -509,9 +736,18 @@ public static implicit operator JsonElement.Source(float value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## implicit operator JsonElement.Source(Int128) {#implicit-operator-jsonelement-source-int128}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(Int128 value)
@@ -527,9 +763,17 @@ public static implicit operator JsonElement.Source(Int128 value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## implicit operator JsonElement.Source(UInt128) {#implicit-operator-jsonelement-source-uint128}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(UInt128 value)
@@ -545,9 +789,17 @@ public static implicit operator JsonElement.Source(UInt128 value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+
 ---
 
 ## implicit operator JsonElement.Source(Half) {#implicit-operator-jsonelement-source-half}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L554)
 
 ```csharp
 public static implicit operator JsonElement.Source(Half value)
@@ -563,11 +815,11 @@ public static implicit operator JsonElement.Source(Half value)
 
 [`JsonElement.Source`](/api/corvus-text-json-jsonelement-source.html)
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
+
+---
 

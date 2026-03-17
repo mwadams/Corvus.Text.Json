@@ -7,7 +7,7 @@ Title: "JsonElement.Source Constructors — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -17,6 +17,8 @@ Title: "JsonElement.Source Constructors — Corvus.Text.Json"
 | [JsonElement.Source(JsonElement.ObjectBuilder.Build)](#jsonelement-source-jsonelement-objectbuilder-build) |  |
 
 ## JsonElement.Source(JsonElement.ArrayBuilder.Build) {#jsonelement-source-jsonelement-arraybuilder-build}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L532)
 
 ```csharp
 public JsonElement.Source(JsonElement.ArrayBuilder.Build value)
@@ -28,9 +30,18 @@ public JsonElement.Source(JsonElement.ArrayBuilder.Build value)
 |------|------|-------------|
 | `value` | [`JsonElement.ArrayBuilder.Build`](/api/corvus-text-json-jsonelement-arraybuilder-build.html) |  |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## JsonElement.Source(JsonElement.ObjectBuilder.Build) {#jsonelement-source-jsonelement-objectbuilder-build}
+
+**Source:** [JsonElement.Mutable.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonElement.Mutable.cs#L542)
 
 ```csharp
 public JsonElement.Source(JsonElement.ObjectBuilder.Build value)
@@ -42,12 +53,12 @@ public JsonElement.Source(JsonElement.ObjectBuilder.Build value)
 |------|------|-------------|
 | `value` | [`JsonElement.ObjectBuilder.Build`](/api/corvus-text-json-jsonelement-objectbuilder-build.html) |  |
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

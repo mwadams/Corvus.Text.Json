@@ -7,7 +7,7 @@ Title: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElementHelpers.IsMultipleOf Method — Corvus.Text.Json.Internal"
 
 ## IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, ulong, int) {#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-ulong-int}
 
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L194)
+
+Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
+
 ```csharp
 public static bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, ulong divisor, int divisorExponent)
 ```
-
-Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
 
 ### Parameters
 
@@ -44,15 +46,24 @@ True if the normalized JSON number is a multiple of the divisor (i.e. `n mod D =
 
 We do not need to pass the sign of the JSON number as it is irrelevant to the calculation.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## IsMultipleOf(ReadOnlySpan&lt;byte&gt;, ReadOnlySpan&lt;byte&gt;, int, BigInteger, int) {#ismultipleof-readonlyspan-byte-readonlyspan-byte-int-biginteger-int}
 
+**Source:** [JsonElementHelpers.Numeric.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonElementHelpers.Numeric.cs#L267)
+
+Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
+
 ```csharp
 public static bool IsMultipleOf(ReadOnlySpan<byte> integral, ReadOnlySpan<byte> fractional, int exponent, BigInteger divisor, int divisorExponent)
 ```
-
-Determines whether the normalized JSON number is an exact multiple of the given integer divisor.
 
 ### Parameters
 
@@ -74,12 +85,12 @@ True if the normalized JSON number is a multiple of the divisor (i.e. `n mod D =
 
 We do not need to pass the sign of the JSON number as it is irrelevant to the calculation.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

@@ -7,15 +7,16 @@ Title: "BigIntegerPolyfills.TryFormat Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigIntegerPolyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/BigIntegerPolyfills.cs#L108)
 
 ## TryFormat {#tryformat}
+
+Tries to format the value of the current [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) instance into the provided span of bytes.
 
 ```csharp
 public static bool TryFormat(ref BigInteger value, Span<byte> destination, ref int bytesWritten)
 ```
-
-Tries to format the value of the current [`BigInteger`](https://learn.microsoft.com/dotnet/api/system.numerics.biginteger) instance into the provided span of bytes.
 
 ### Parameters
 

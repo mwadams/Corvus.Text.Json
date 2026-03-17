@@ -7,7 +7,8 @@ Title: "RentedBacking.Writer<T>.BeginInvoke Method — Corvus.Text.Json.Internal
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [RentedBacking.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/RentedBacking.cs#L32)
 
 ## BeginInvoke {#begininvoke}
 

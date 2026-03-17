@@ -7,7 +7,8 @@ Title: "ComplexValueBuilder.ValueBuilderAction Constructors — Corvus.Text.Json
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L49)
 
 ## ComplexValueBuilder.ValueBuilderAction {#complexvaluebuilder-valuebuilderaction}
 

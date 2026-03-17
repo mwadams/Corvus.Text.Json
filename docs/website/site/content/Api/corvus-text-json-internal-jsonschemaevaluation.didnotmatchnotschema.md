@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.DidNotMatchNotSchema Field — Corvus.Text.Json.Int
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.cs#L19)
 
 ## DidNotMatchNotSchema {#didnotmatchnotschema}
+
+Message provider for validation errors when a value (correctly) did not match a not schema in a composition constraint.
 
 ```csharp
 JsonSchemaMessageProvider DidNotMatchNotSchema
 ```
-
-Message provider for validation errors when a value (correctly) did not match a not schema in a composition constraint.
 
 ### Returns
 

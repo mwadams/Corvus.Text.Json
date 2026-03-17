@@ -7,15 +7,16 @@ Title: "JsonWorkspace.Dispose Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonWorkspace.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonWorkspace.cs#L120)
 
 ## Dispose {#dispose}
+
+Disposes the workspace. If the workspace was rented from the cache, returns it; otherwise disposes all child documents and returns the backing array to the pool.
 
 ```csharp
 public void Dispose()
 ```
-
-Disposes the workspace. If the workspace was rented from the cache, returns it; otherwise disposes all child documents and returns the backing array to the pool.
 
 ### Implements
 

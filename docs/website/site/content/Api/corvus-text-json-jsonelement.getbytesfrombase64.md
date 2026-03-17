@@ -7,15 +7,16 @@ Title: "JsonElement.GetBytesFromBase64 Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L675)
 
 ## GetBytesFromBase64 {#getbytesfrombase64}
+
+Gets the value of the element as bytes.
 
 ```csharp
 public byte[] GetBytesFromBase64()
 ```
-
-Gets the value of the element as bytes.
 
 ### Returns
 

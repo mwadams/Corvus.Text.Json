@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "JsonValueKind — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonValueKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonValueKind.cs#L14)
+
+Specifies the data type of a JSON value.
+
 ```csharp
 public enum JsonValueKind : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-Specifies the data type of a JSON value.
 
 ## Implements
 

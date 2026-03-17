@@ -7,15 +7,16 @@ Title: "JsonDocument.IsImmutable Property — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonDocument.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/JsonDocument.cs#L119)
 
 ## IsImmutable {#isimmutable}
+
+Gets a value indicating whether the document is immutable.
 
 ```csharp
 public bool IsImmutable { get; }
 ```
-
-Gets a value indicating whether the document is immutable.
 
 ### Returns
 

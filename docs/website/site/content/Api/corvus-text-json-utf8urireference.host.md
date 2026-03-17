@@ -7,15 +7,16 @@ Title: "Utf8UriReference.Host Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriReference.cs#L109)
 
 ## Host {#host}
+
+Gets the host component of the reference (includes both host and port).
 
 ```csharp
 public ReadOnlySpan<byte> Host { get; }
 ```
-
-Gets the host component of the reference (includes both host and port).
 
 ### Returns
 

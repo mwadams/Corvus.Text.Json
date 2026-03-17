@@ -7,15 +7,16 @@ Title: "Period.Seconds Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L174)
 
 ## Seconds {#seconds}
+
+Gets the number of seconds within this period.
 
 ```csharp
 public long Seconds { get; }
 ```
-
-Gets the number of seconds within this period.
 
 ### Returns
 

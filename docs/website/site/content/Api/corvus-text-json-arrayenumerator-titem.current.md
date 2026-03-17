@@ -7,15 +7,16 @@ Title: "ArrayEnumerator<TItem>.Current Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ArrayEnumerator{T}.cs#L49)
 
 ## Current {#current}
+
+Gets the current element in the collection.
 
 ```csharp
 public TItem Current { get; }
 ```
-
-Gets the current element in the collection.
 
 ### Returns
 

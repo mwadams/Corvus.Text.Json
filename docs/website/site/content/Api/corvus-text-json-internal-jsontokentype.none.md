@@ -7,15 +7,16 @@ Title: "JsonTokenType.None Field — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonTokenType.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Internal/JsonTokenType.cs#L18)
 
 ## None {#none}
+
+Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-internal-jsontokentype.html#null)).
 
 ```csharp
 JsonTokenType None
 ```
-
-Indicates that there is no value (as distinct from [`Null`](/api/corvus-text-json-internal-jsontokentype.html#null)).
 
 ### Returns
 

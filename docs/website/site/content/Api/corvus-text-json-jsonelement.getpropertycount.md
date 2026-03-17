@@ -7,15 +7,16 @@ Title: "JsonElement.GetPropertyCount Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L280)
 
 ## GetPropertyCount {#getpropertycount}
+
+Get the number of properties contained within the current object value.
 
 ```csharp
 public int GetPropertyCount()
 ```
-
-Get the number of properties contained within the current object value.
 
 ### Returns
 

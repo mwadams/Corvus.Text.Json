@@ -7,15 +7,16 @@ Title: "ArrayEnumerator<TItem>.MoveNext Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ArrayEnumerator{T}.cs#L104)
 
 ## MoveNext {#movenext}
+
+Advances the enumerator to the next element of the collection.
 
 ```csharp
 public bool MoveNext()
 ```
-
-Advances the enumerator to the next element of the collection.
 
 ### Returns
 

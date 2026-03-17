@@ -7,15 +7,16 @@ Title: "ParsedJsonDocument<T>.ParseValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ParsedJsonDocument.Parse.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ParsedJsonDocument.Parse.cs#L424)
 
 ## ParseValue {#parsevalue}
+
+Parses one JSON value (including objects or arrays) from the provided reader.
 
 ```csharp
 public static ParsedJsonDocument<T> ParseValue(ref Utf8JsonReader reader)
 ```
-
-Parses one JSON value (including objects or arrays) from the provided reader.
 
 ### Parameters
 

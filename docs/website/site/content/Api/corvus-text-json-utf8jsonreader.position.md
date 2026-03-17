@@ -7,15 +7,16 @@ Title: "Utf8JsonReader.Position Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonReader.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Reader/Utf8JsonReader.cs#L193)
 
 ## Position {#position}
+
+Returns the current [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition) within the provided UTF-8 encoded input ReadOnlySequence<byte>. If the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) was constructed with a ReadOnlySpan<byte> instead, this will always return a default [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition).
 
 ```csharp
 public SequencePosition Position { get; }
 ```
-
-Returns the current [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition) within the provided UTF-8 encoded input ReadOnlySequence<byte>. If the [`Utf8JsonReader`](/api/corvus-text-json-utf8jsonreader.html) was constructed with a ReadOnlySpan<byte> instead, this will always return a default [`SequencePosition`](https://learn.microsoft.com/dotnet/api/system.sequenceposition).
 
 ### Returns
 

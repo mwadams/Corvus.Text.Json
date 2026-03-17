@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Utf8UriKind — Corvus.Text.Json.Internal"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Internal  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8UriKind.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8UriKind.cs#L14)
+
+Defines the kind of URI, controlling whether absolute or relative URIs are used.
+
 ```csharp
 public enum Utf8UriKind : IComparable, ISpanFormattable, IFormattable, IConvertible
 ```
-
-Defines the kind of URI, controlling whether absolute or relative URIs are used.
 
 ## Implements
 

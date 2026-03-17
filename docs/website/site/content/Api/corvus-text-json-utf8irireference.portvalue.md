@@ -7,15 +7,16 @@ Title: "Utf8IriReference.PortValue Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReference.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8IriReference.cs#L144)
 
 ## PortValue {#portvalue}
+
+Gets the port value as an integer.
 
 ```csharp
 public int PortValue { get; }
 ```
-
-Gets the port value as an integer.
 
 ### Returns
 

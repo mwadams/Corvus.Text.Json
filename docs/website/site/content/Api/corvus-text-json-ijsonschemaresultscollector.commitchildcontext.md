@@ -7,7 +7,7 @@ Title: "IJsonSchemaResultsCollector.CommitChildContext Method — Corvus.Text.Js
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "IJsonSchemaResultsCollector.CommitChildContext Method — Corvus.Text.Js
 
 ## CommitChildContext(int, bool, bool, JsonSchemaMessageProvider) {#commitchildcontext-int-bool-bool-jsonschemamessageprovider}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L197)
+
+Commits the last child context.
+
 ```csharp
 public abstract void CommitChildContext(int sequenceNumber, bool parentIsMatch, bool childIsMatch, JsonSchemaMessageProvider messageProvider)
 ```
-
-Commits the last child context.
 
 ### Parameters
 
@@ -37,15 +39,24 @@ Commits the last child context.
 
 This allows the collector to update the match state, and commit any resources associated with the child context.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## CommitChildContext(int, bool, bool, TProviderContext, JsonSchemaMessageProvider&lt;TProviderContext&gt;) {#commitchildcontext-int-bool-bool-tprovidercontext-jsonschemamessageprovider-tprovidercontext}
 
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L74)
+
+Commits the last child context.
+
 ```csharp
 public abstract void CommitChildContext<TProviderContext>(int sequenceNumber, bool parentIsMatch, bool childIsMatch, TProviderContext providerContext, JsonSchemaMessageProvider<TProviderContext> messageProvider)
 ```
-
-Commits the last child context.
 
 ### Parameters
 
@@ -61,12 +72,12 @@ Commits the last child context.
 
 This allows the collector to update the match state, and commit any resources associated with the child context.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

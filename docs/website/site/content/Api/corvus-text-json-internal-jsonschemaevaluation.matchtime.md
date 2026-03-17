@@ -7,15 +7,16 @@ Title: "JsonSchemaEvaluation.MatchTime Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonSchemaEvaluation.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/Internal/JsonSchemaEvaluation.String.cs#L645)
 
 ## MatchTime {#matchtime}
+
+Validates that a string value conforms to the ISO 8601 offset time format.
 
 ```csharp
 public static bool MatchTime(ReadOnlySpan<byte> value, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
 ```
-
-Validates that a string value conforms to the ISO 8601 offset time format.
 
 ### Parameters
 

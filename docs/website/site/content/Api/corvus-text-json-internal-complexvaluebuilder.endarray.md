@@ -7,15 +7,16 @@ Title: "ComplexValueBuilder.EndArray Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ComplexValueBuilder.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/Internal/ComplexValueBuilder.cs#L3299)
 
 ## EndArray {#endarray}
+
+Ends the current JSON array, finalizing its structure in the builder.
 
 ```csharp
 public void EndArray()
 ```
-
-Ends the current JSON array, finalizing its structure in the builder.
 
 ## Applies To
 

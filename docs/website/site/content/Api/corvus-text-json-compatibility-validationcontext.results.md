@@ -7,15 +7,16 @@ Title: "ValidationContext.Results Property — Corvus.Text.Json.Compatibility"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Compatibility  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ValidationContext.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/ValidationContext.cs#L59)
 
 ## Results {#results}
+
+Gets the validation results.
 
 ```csharp
 public IReadOnlyList<ValidationResult> Results { get; }
 ```
-
-Gets the validation results.
 
 ### Returns
 

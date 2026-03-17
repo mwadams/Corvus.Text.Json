@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "Polyfills — Corvus.Text.Json.Compatibility"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json.Compatibility  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Polyfills.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Compatibility/Polyfills.cs#L18)
+
+Provides polyfills for Corvus.JsonSchema API compatibility.
+
 ```csharp
 public static class Polyfills
 ```
-
-Provides polyfills for Corvus.JsonSchema API compatibility.
 
 ## Inheritance
 

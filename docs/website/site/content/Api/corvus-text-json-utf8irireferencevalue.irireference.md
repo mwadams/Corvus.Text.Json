@@ -7,15 +7,16 @@ Title: "Utf8IriReferenceValue.IriReference Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8IriReferenceValue.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Utf8IriReferenceValue.cs#L42)
 
 ## IriReference {#irireference}
+
+Gets the UTF-8 IRI reference value.
 
 ```csharp
 public Utf8IriReference IriReference { get; }
 ```
-
-Gets the UTF-8 IRI reference value.
 
 ### Returns
 

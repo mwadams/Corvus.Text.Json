@@ -7,15 +7,16 @@ Title: "Utf8Uri.OriginalUri Property — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8Uri.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Uri/Utf8Uri.cs#L129)
 
 ## OriginalUri {#originaluri}
+
+Gets the original (fully encoded) string.
 
 ```csharp
 public ReadOnlySpan<byte> OriginalUri { get; }
 ```
-
-Gets the original (fully encoded) string.
 
 ### Returns
 

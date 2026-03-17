@@ -7,15 +7,16 @@ Title: "IJsonElement<T>.CreateInstance Method — Corvus.Text.Json.Internal"
 ## Definition
 
 **Namespace:** Corvus.Text.Json.Internal  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonElement{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/Internal/IJsonElement{T}.cs#L28)
 
 ## CreateInstance {#createinstance}
+
+Creates an instance of the element from the parent document and the handle of the element in the parent document.
 
 ```csharp
 public static T CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex)
 ```
-
-Creates an instance of the element from the parent document and the handle of the element in the parent document.
 
 ### Parameters
 

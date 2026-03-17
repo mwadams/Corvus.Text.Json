@@ -7,15 +7,16 @@ Title: "BigNumber.MinusOne Property — Corvus.Numerics"
 ## Definition
 
 **Namespace:** Corvus.Numerics  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [BigNumber.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Numerics/BigNumber.cs#L181)
 
 ## MinusOne {#minusone}
+
+Gets a value representing minus one.
 
 ```csharp
 public static BigNumber MinusOne { get; }
 ```
-
-Gets a value representing minus one.
 
 ### Returns
 

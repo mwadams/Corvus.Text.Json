@@ -7,15 +7,16 @@ Title: "IJsonSchemaResultsCollector.PopChildContext Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [IJsonSchemaResultsCollector.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonSchema/IJsonSchemaResultsCollector.cs#L346)
 
 ## PopChildContext {#popchildcontext}
+
+Abandons the last child context.
 
 ```csharp
 public abstract void PopChildContext(int sequenceNumber)
 ```
-
-Abandons the last child context.
 
 ### Parameters
 

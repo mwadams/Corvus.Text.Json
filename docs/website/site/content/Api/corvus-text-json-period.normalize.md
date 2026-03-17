@@ -7,15 +7,16 @@ Title: "Period.Normalize Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Period.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/NodaTimeExtensions/Period.cs#L697)
 
 ## Normalize {#normalize}
+
+Returns a normalized version of this period, such that equivalent (but potentially non-equal) periods are changed to the same representation.
 
 ```csharp
 public Period Normalize()
 ```
-
-Returns a normalized version of this period, such that equivalent (but potentially non-equal) periods are changed to the same representation.
 
 ### Returns
 

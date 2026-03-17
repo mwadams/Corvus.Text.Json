@@ -7,15 +7,16 @@ Title: "JsonElement.Equality Operator — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonElement.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.cs#L187)
 
 ## operator == {#operator}
+
+Compares two JsonElement values for equality.
 
 ```csharp
 public static bool operator ==(JsonElement left, JsonElement right)
 ```
-
-Compares two JsonElement values for equality.
 
 ### Parameters
 

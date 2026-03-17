@@ -7,7 +7,7 @@ Title: "Utf8JsonWriter.WriteStringValue Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -23,11 +23,13 @@ Title: "Utf8JsonWriter.WriteStringValue Method — Corvus.Text.Json"
 
 ## WriteStringValue(DateTime) {#writestringvalue-datetime}
 
+**Source:** [Utf8JsonWriter.WriteValues.DateTime.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.DateTime.cs#L29)
+
+Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(DateTime value)
 ```
-
-Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -45,15 +47,24 @@ Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) 
 
 Writes the [`DateTime`](https://learn.microsoft.com/dotnet/api/system.datetime) using the round-trippable ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValue(DateTimeOffset) {#writestringvalue-datetimeoffset}
 
+**Source:** [Utf8JsonWriter.WriteValues.DateTimeOffset.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.DateTimeOffset.cs#L29)
+
+Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(DateTimeOffset value)
 ```
-
-Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -71,15 +82,24 @@ Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.date
 
 Writes the [`DateTimeOffset`](https://learn.microsoft.com/dotnet/api/system.datetimeoffset) using the round-trippable ('O') [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat), for example: 2017-06-12T05:30:45.7680000-07:00.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValue(Guid) {#writestringvalue-guid}
 
+**Source:** [Utf8JsonWriter.WriteValues.Guid.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.Guid.cs#L30)
+
+Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(Guid value)
 ```
-
-Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -97,15 +117,24 @@ Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) value (a
 
 Writes the [`Guid`](https://learn.microsoft.com/dotnet/api/system.guid) using the default [`StandardFormat`](https://learn.microsoft.com/dotnet/api/system.buffers.standardformat) (that is, 'D'), as the form: nnnnnnnn-nnnn-nnnn-nnnn-nnnnnnnnnnnn.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValue(JsonEncodedText) {#writestringvalue-jsonencodedtext}
 
+**Source:** [Utf8JsonWriter.WriteValues.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.String.cs#L26)
+
+Writes the pre-encoded text value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(JsonEncodedText value)
 ```
-
-Writes the pre-encoded text value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -119,15 +148,24 @@ Writes the pre-encoded text value (as a JSON string) as an element of a JSON arr
 |-----------|-------------|
 | [`InvalidOperationException`](https://learn.microsoft.com/dotnet/api/system.invalidoperationexception) | Thrown if this would result in invalid JSON being written (while validation is enabled). |
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValue(string) {#writestringvalue-string}
 
+**Source:** [Utf8JsonWriter.WriteValues.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.String.cs#L55)
+
+Writes the string text value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(string value)
 ```
-
-Writes the string text value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -146,15 +184,24 @@ Writes the string text value (as a JSON string) as an element of a JSON array.
 
 The value is escaped before writing. If `value` is `null` the JSON null value is written, as if [`WriteNullValue`](/api/corvus-text-json-utf8jsonwriter.html#writenullvalue) was called.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValue(ReadOnlySpan&lt;char&gt;) {#writestringvalue-readonlyspan-char}
 
+**Source:** [Utf8JsonWriter.WriteValues.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.String.cs#L80)
+
+Writes the text value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(ReadOnlySpan<char> value)
 ```
-
-Writes the text value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -173,15 +220,24 @@ Writes the text value (as a JSON string) as an element of a JSON array.
 
 The value is escaped before writing.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## WriteStringValue(ReadOnlySpan&lt;byte&gt;) {#writestringvalue-readonlyspan-byte}
 
+**Source:** [Utf8JsonWriter.WriteValues.String.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.WriteValues.String.cs#L103)
+
+Writes the UTF-8 text value (as a JSON string) as an element of a JSON array.
+
 ```csharp
 public void WriteStringValue(ReadOnlySpan<byte> utf8Value)
 ```
-
-Writes the UTF-8 text value (as a JSON string) as an element of a JSON array.
 
 ### Parameters
 
@@ -200,12 +256,12 @@ Writes the UTF-8 text value (as a JSON string) as an element of a JSON array.
 
 The value is escaped before writing.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

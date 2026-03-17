@@ -7,15 +7,16 @@ Title: "Utf8JsonWriter.WriteEndObject Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [Utf8JsonWriter.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Writer/Utf8JsonWriter.cs#L1027)
 
 ## WriteEndObject {#writeendobject}
+
+Writes the end of a JSON object.
 
 ```csharp
 public void WriteEndObject()
 ```
-
-Writes the end of a JSON object.
 
 ### Exceptions
 

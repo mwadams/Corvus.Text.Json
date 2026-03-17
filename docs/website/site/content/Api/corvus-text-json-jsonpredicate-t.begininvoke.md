@@ -7,7 +7,8 @@ Title: "JsonPredicate<T>.BeginInvoke Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonPredicate.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/DocumentBuilder/JsonPredicate.cs#L20)
 
 ## BeginInvoke {#begininvoke}
 

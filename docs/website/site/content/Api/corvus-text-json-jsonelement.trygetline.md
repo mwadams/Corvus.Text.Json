@@ -7,7 +7,7 @@ Title: "JsonElement.TryGetLine Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
 
 ## Overloads
 
@@ -18,11 +18,13 @@ Title: "JsonElement.TryGetLine Method — Corvus.Text.Json"
 
 ## TryGetLine(int, ref ReadOnlyMemory&lt;byte&gt;) {#trygetline-int-ref-readonlymemory-byte}
 
+**Source:** [JsonElement.SourceLocation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.SourceLocation.cs#L75)
+
+Tries to get the specified line from the original source document as UTF-8 bytes.
+
 ```csharp
 public bool TryGetLine(int lineNumber, ref ReadOnlyMemory<byte> line)
 ```
-
-Tries to get the specified line from the original source document as UTF-8 bytes.
 
 ### Parameters
 
@@ -41,15 +43,24 @@ Tries to get the specified line from the original source document as UTF-8 bytes
 
 This method returns `false` when the backing document does not retain the original source bytes, or when `lineNumber` is out of range.
 
+## Applies To
+
+| Product | Versions |
+|---------|----------|
+| .NET | 8, 9, 10 |
+| .NET Standard | 2.0 |
+
 ---
 
 ## TryGetLine(int, ref string) {#trygetline-int-ref-string}
 
+**Source:** [JsonElement.SourceLocation.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonElement.SourceLocation.cs#L96)
+
+Tries to get the specified line from the original source document as a string.
+
 ```csharp
 public bool TryGetLine(int lineNumber, ref string line)
 ```
-
-Tries to get the specified line from the original source document as a string.
 
 ### Parameters
 
@@ -68,12 +79,12 @@ Tries to get the specified line from the original source document as a string.
 
 This method returns `false` when the backing document does not retain the original source bytes, or when `lineNumber` is out of range.
 
----
-
 ## Applies To
 
 | Product | Versions |
 |---------|----------|
 | .NET | 8, 9, 10 |
 | .NET Standard | 2.0 |
+
+---
 

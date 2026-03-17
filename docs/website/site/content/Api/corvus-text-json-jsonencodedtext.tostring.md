@@ -7,15 +7,16 @@ Title: "JsonEncodedText.ToString Method — Corvus.Text.Json"
 ## Definition
 
 **Namespace:** Corvus.Text.Json  
-**Assembly:** Corvus.Text.Json.dll
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [JsonEncodedText.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/JsonEncodedText.cs#L154)
 
 ## ToString {#tostring}
+
+Converts the value of this instance to a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ```csharp
 public override string ToString()
 ```
-
-Converts the value of this instance to a [`String`](https://learn.microsoft.com/dotnet/api/system.string).
 
 ### Returns
 

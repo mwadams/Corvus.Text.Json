@@ -4,11 +4,17 @@ PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
 Title: "ArrayEnumerator<TItem> — Corvus.Text.Json"
 ---
+## Definition
+
+**Namespace:** Corvus.Text.Json  
+**Assembly:** Corvus.Text.Json.dll  
+**Source:** [ArrayEnumerator{T}.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/ArrayEnumerator{T}.cs#L22)
+
+Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document.
+
 ```csharp
 public readonly struct ArrayEnumerator<TItem> : IEnumerable<TItem>, IEnumerable, IEnumerator<TItem>, IEnumerator, IDisposable
 ```
-
-Provides an enumerator and enumerable for iterating over the elements of a JSON array in a document.
 
 ## Type Parameters
 
