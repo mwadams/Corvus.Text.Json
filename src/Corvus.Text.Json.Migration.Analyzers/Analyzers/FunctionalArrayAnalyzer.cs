@@ -56,6 +56,15 @@ public sealed class FunctionalArrayAnalyzer : DiagnosticAnalyzer
 
             if (s_methodMapping.TryGetValue(methodName, out string? v5Name))
             {
+                if (memberAccess.Expression is { } receiverExpression)
+                {
+                    ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
+                    if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                    {
+                        return;
+                    }
+                }
+
                 context.ReportDiagnostic(
                     Diagnostic.Create(
                         DiagnosticDescriptors.FunctionalArrayMigration,

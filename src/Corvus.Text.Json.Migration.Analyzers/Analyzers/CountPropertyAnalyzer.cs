@@ -47,6 +47,12 @@ public sealed class CountPropertyAnalyzer : DiagnosticAnalyzer
         if (memberAccess.Name.Identifier.ValueText == "Count" &&
             memberAccess.Parent is not InvocationExpressionSyntax)
         {
+            ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
+            if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+            {
+                return;
+            }
+
             // This is a property-style access (.Count), not a method call (.Count(...))
             context.ReportDiagnostic(Diagnostic.Create(
                 DiagnosticDescriptors.CountMigration,

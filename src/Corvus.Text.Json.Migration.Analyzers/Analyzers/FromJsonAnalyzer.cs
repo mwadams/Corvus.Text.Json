@@ -43,6 +43,25 @@ public sealed class FromJsonAnalyzer : DiagnosticAnalyzer
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
             memberAccess.Name.Identifier.ValueText == "FromJson")
         {
+            // Resolve the method symbol to find its containing type
+            ISymbol? methodSymbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
+            if (methodSymbol is IMethodSymbol method)
+            {
+                if (!V4TypeHelper.ImplementsIJsonValue(method.ContainingType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+            else
+            {
+                // Fall back to checking the receiver expression type
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
             context.ReportDiagnostic(Diagnostic.Create(
                 DiagnosticDescriptors.FromJsonMigration,
                 invocation.GetLocation()));

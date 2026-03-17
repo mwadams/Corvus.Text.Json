@@ -72,6 +72,15 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         // CVJ018: TryGetString
         if (methodName == "TryGetString")
         {
+            if (memberAccess.Expression is { } tryGetReceiver)
+            {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(tryGetReceiver, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
             context.ReportDiagnostic(
                 Diagnostic.Create(
                     DiagnosticDescriptors.TryGetStringMigration,
@@ -82,6 +91,15 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         // CVJ019: Backing model method calls (AsDotnetBackedValue, AsJsonElementBackedValue)
         if (s_backingModelMembers.Contains(methodName))
         {
+            if (memberAccess.Expression is { } backingReceiver)
+            {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(backingReceiver, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
             context.ReportDiagnostic(
                 Diagnostic.Create(
                     DiagnosticDescriptors.BackingModelMigration,
@@ -93,6 +111,15 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         // CVJ020: Null/undefined extension method calls
         if (s_nullUndefinedMethods.Contains(methodName))
         {
+            if (memberAccess.Expression is { } nullUndefinedReceiver)
+            {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(nullUndefinedReceiver, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
             context.ReportDiagnostic(
                 Diagnostic.Create(
                     DiagnosticDescriptors.NullUndefinedExtensionsMigration,
@@ -117,6 +144,15 @@ public sealed class MiscPatternAnalyzer : DiagnosticAnalyzer
         // CVJ019: Backing model property access (HasJsonElementBacking, HasDotnetBacking)
         if (s_backingModelMembers.Contains(name))
         {
+            if (memberAccess.Expression is { } receiverExpression)
+            {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
             context.ReportDiagnostic(
                 Diagnostic.Create(
                     DiagnosticDescriptors.BackingModelMigration,

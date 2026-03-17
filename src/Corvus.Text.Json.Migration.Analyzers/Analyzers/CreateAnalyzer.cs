@@ -57,6 +57,15 @@ public sealed class CreateAnalyzer : DiagnosticAnalyzer
 
             if (descriptor is not null)
             {
+                ISymbol? symbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
+                if (symbol is IMethodSymbol methodSymbol)
+                {
+                    if (!V4TypeHelper.ImplementsIJsonValue(methodSymbol.ContainingType, context.SemanticModel.Compilation))
+                    {
+                        return;
+                    }
+                }
+
                 context.ReportDiagnostic(
                     Diagnostic.Create(
                         descriptor,

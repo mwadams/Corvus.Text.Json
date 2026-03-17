@@ -61,6 +61,24 @@ public sealed class JsonValueConverterAnalyzer : DiagnosticAnalyzer
             genericName.Identifier.Text == "JsonValueConverter" &&
             genericName.TypeArgumentList.Arguments.Count == 1)
         {
+            // Verify the attribute is System.Text.Json.Serialization.JsonConverterAttribute
+            SymbolInfo attrSymbolInfo = context.SemanticModel.GetSymbolInfo(attribute, context.CancellationToken);
+            if (attrSymbolInfo.Symbol is IMethodSymbol attrCtor)
+            {
+                string attrFullName = attrCtor.ContainingType.ToDisplayString();
+                if (attrFullName != "System.Text.Json.Serialization.JsonConverterAttribute")
+                {
+                    return;
+                }
+            }
+
+            // Verify the generic type argument is Corvus.Json.JsonValueConverter<T>
+            ITypeSymbol? typeOfType = context.SemanticModel.GetTypeInfo(typeOfExpr.Type, context.CancellationToken).Type;
+            if (!V4TypeHelper.IsJsonValueConverterType(typeOfType))
+            {
+                return;
+            }
+
             string typeArg = genericName.TypeArgumentList.Arguments[0].ToString();
 
             context.ReportDiagnostic(

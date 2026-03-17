@@ -45,6 +45,12 @@ public sealed class AsGenericAnalyzer : DiagnosticAnalyzer
             genericName.Identifier.ValueText == "As" &&
             genericName.TypeArgumentList.Arguments.Count == 1)
         {
+            ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
+            if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+            {
+                return;
+            }
+
             string typeArgument = genericName.TypeArgumentList.Arguments[0].ToString();
 
             context.ReportDiagnostic(Diagnostic.Create(

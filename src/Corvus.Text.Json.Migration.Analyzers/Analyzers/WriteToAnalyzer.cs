@@ -43,6 +43,26 @@ public sealed class WriteToAnalyzer : DiagnosticAnalyzer
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
             memberAccess.Name.Identifier.Text == "WriteTo")
         {
+            if (memberAccess.Expression is { } receiverExpression)
+            {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
+            // Check that the first argument is System.Text.Json.Utf8JsonWriter
+            if (invocation.ArgumentList.Arguments.Count > 0)
+            {
+                ExpressionSyntax firstArgExpr = invocation.ArgumentList.Arguments[0].Expression;
+                ITypeSymbol? argType = context.SemanticModel.GetTypeInfo(firstArgExpr, context.CancellationToken).Type;
+                if (!V4TypeHelper.IsSystemTextJsonUtf8JsonWriter(argType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
             context.ReportDiagnostic(
                 Diagnostic.Create(
                     DiagnosticDescriptors.WriteToMigration,

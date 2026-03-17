@@ -46,6 +46,15 @@ public sealed class WithMutationAnalyzer : DiagnosticAnalyzer
 
             if (methodName.StartsWith("With") && methodName.Length > 4 && char.IsUpper(methodName[4]))
             {
+                if (memberAccess.Expression is { } receiverExpression)
+                {
+                    ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
+                    if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                    {
+                        return;
+                    }
+                }
+
                 string propertyName = methodName.Substring(4);
 
                 context.ReportDiagnostic(

@@ -47,7 +47,8 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
             if (methodName == "IsValid")
             {
                 // .IsValid() with no arguments
-                if (invocation.ArgumentList.Arguments.Count == 0)
+                if (invocation.ArgumentList.Arguments.Count == 0 &&
+                    IsJsonValueReceiverOrExtension(context, memberAccess, invocation))
                 {
                     context.ReportDiagnostic(Diagnostic.Create(
                         DiagnosticDescriptors.ValidateMigration,
@@ -58,6 +59,12 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
             }
             else if (methodName == "Validate")
             {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+
                 string additionalContext = invocation.ArgumentList.Arguments.Count > 1
                     ? " and use a JsonSchemaResultsCollector for detailed results"
                     : string.Empty;
@@ -69,5 +76,29 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
                     additionalContext));
             }
         }
+    }
+
+    private static bool IsJsonValueReceiverOrExtension(
+        SyntaxNodeAnalysisContext context,
+        MemberAccessExpressionSyntax memberAccess,
+        InvocationExpressionSyntax invocation)
+    {
+        // Check if the receiver type implements IJsonValue
+        ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(memberAccess.Expression, context.CancellationToken).Type;
+        if (V4TypeHelper.ImplementsIJsonValue(receiverType, context.SemanticModel.Compilation))
+        {
+            return true;
+        }
+
+        // IsValid() may be an extension method (Corvus.Json.JsonValueExtensions.IsValid<T>)
+        ISymbol? methodSymbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
+        if (methodSymbol is IMethodSymbol method &&
+            method.IsExtensionMethod &&
+            method.ContainingNamespace?.ToDisplayString() == "Corvus.Json")
+        {
+            return true;
+        }
+
+        return false;
     }
 }
