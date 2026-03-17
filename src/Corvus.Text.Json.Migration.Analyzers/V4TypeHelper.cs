@@ -122,7 +122,9 @@ internal static class V4TypeHelper
             return false;
         }
 
+        string displayString = namedType.OriginalDefinition.ToDisplayString();
         return namedType.IsGenericType &&
-               namedType.OriginalDefinition.ToDisplayString() == "Corvus.Json.JsonValueConverter<T>";
+               (displayString == "Corvus.Json.JsonValueConverter<T>" ||
+                displayString == "Corvus.Json.Internal.JsonValueConverter<T>");
     }
 }
