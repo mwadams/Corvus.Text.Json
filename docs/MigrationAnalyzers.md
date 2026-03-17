@@ -446,11 +446,9 @@ For large codebases, consider using [GitHub Copilot to assist with migration](/d
 
 ## Reserved Diagnostic IDs
 
-The following IDs were previously assigned but have been removed:
+The following IDs were previously assigned and will not be reused:
 
-| ID | Reason |
-|---|---|
-| CVJ017 | `[JsonConverter(typeof(JsonValueConverter<T>))]` only appears on V4 generated code, which is replaced by V5 code generation. |
-| CVJ020 | V5 has the same null/undefined extension methods as V4 — no migration needed. |
-
-These IDs will not be reused to avoid confusion.
+| ID |
+|---|
+| CVJ017 |
+| CVJ020 |
