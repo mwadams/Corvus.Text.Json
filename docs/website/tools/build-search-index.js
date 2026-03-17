@@ -125,7 +125,7 @@ function main() {
   const entries = [];
 
   // 1. Content pages from taxonomy
-  const taxonomyDir = path.join(ROOT, 'taxonomy');
+  const taxonomyDir = path.join(ROOT, 'site', 'taxonomy');
   const ymlFiles = walk(taxonomyDir, (name) => name.endsWith('.yml'));
 
   console.log(`Found ${ymlFiles.length} taxonomy file(s).`);
@@ -141,7 +141,7 @@ function main() {
   // 2. API search index produced by XmlDocToMarkdown
   //    API entries use PascalCase keys (Url, Title, …); normalise to lowercase
   //    to match content entries and the Lunr field names used by search.js.
-  const apiIndexPath = path.join(ROOT, 'content', 'Api', 'search-index.json');
+  const apiIndexPath = path.join(ROOT, 'site', 'content', 'Api', 'search-index.json');
   if (fs.existsSync(apiIndexPath)) {
     try {
       const apiEntries = JSON.parse(fs.readFileSync(apiIndexPath, 'utf8'));

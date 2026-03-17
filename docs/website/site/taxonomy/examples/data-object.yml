@@ -1,0 +1,28 @@
+﻿ContentType: application/vnd.endjin.ssg.page+yaml
+Title: "Simple Data Objects"
+Template: examples/recipe-detail
+Navigation:
+  Title: Simple Data Objects
+  Description: "This recipe demonstrates how to define a simple data object composed of primitive values using JSON Schema, and how the Corvus.Text.Json code generator produces strongly-typed .NET types with rich property accessors, zero-allocation comparisons, and NodaTime integration."
+  Parent: /examples/index.html
+  Url: /examples/data-object.html
+  Rank: 1
+  Header:
+    Visible: False
+    Link: False
+  Footer:
+    Visible: False
+    Link: False
+MetaData:
+  Title: "Simple Data Objects — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to define a simple data object composed of primitive values using JSON Schema, and how the Corvus.Text.Json code generator produces strongly-typed .NET types with rich property accessors, zero-allocation comparisons, and NodaTime integration."
+  Keywords: ["recipe", "JSON Schema", "C#", "simple", "data", "objects", "type", "properties", "format", "ValueEquals", "TryGetValue", "IsUndefined", "IsNull", "CreateBuilder", "SetProperty"]
+OpenGraph:
+  Title: "Simple Data Objects — Corvus.Text.Json Examples"
+  Description: "This recipe demonstrates how to define a simple data object composed of primitive values using JSON Schema, and how the Corvus.Text.Json code generator produces strongly-typed .NET types with rich property accessors, zero-allocation comparisons, and NodaTime integration."
+  Image:
+ContentBlocks:
+  - ContentType: application/vnd.endjin.ssg.content+md
+    Id: DataObject
+    Spec:
+      Path: ../../content/Examples/DataObject.md

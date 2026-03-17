@@ -31,14 +31,15 @@ $InformationPreference = 'Continue'
 
 $here = Split-Path -Parent $PSCommandPath
 $repoRoot = Resolve-Path (Join-Path $here "..\..")
+$siteDir = Join-Path $here "site"
 $outputDir = Join-Path $here ".output"
 
 # Paths used by multiple steps
 $xmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
 $assemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.dll"
 $ns20AssemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\netstandard2.0\Corvus.Text.Json.dll"
-$apiContentDir = Join-Path $here "content\Api"
-$apiTaxonomyDir = Join-Path $here "taxonomy\api"
+$apiContentDir = Join-Path $siteDir "content\Api"
+$apiTaxonomyDir = Join-Path $siteDir "taxonomy\api"
 $toolProject = Join-Path $here "tools\XmlDocToMarkdown"
 
 # ── Helper: PascalCase to kebab-case ────────────────────────────────────────
@@ -59,8 +60,8 @@ Write-Host "  XML documentation generated." -ForegroundColor Green
 
 # ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
 Write-Host "`n[2/9] Generating API namespace pages & taxonomy..." -ForegroundColor Cyan
-$apiViewsDir = Join-Path $here "theme\corvus\views\api"
-$nsDescriptionsDir = Join-Path $here "content\Api\namespaces"
+$apiViewsDir = Join-Path $siteDir "theme\corvus\views\api"
+$nsDescriptionsDir = Join-Path $siteDir "content\Api\namespaces"
 & dotnet run --project $toolProject -c Release -- `
     --xml $xmlPath `
     --assembly $assemblyPath `
@@ -76,46 +77,14 @@ Write-Host "  Namespace markdown, taxonomy & API views generated." -ForegroundCo
 Write-Host "`n[3/9] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
 
 $recipesSourceDir = Join-Path $repoRoot "docs\ExampleRecipes"
-$recipesContentDir = Join-Path $here "content\Examples"
-$recipesTaxonomyDir = Join-Path $here "taxonomy\examples"
-$recipesViewDir = Join-Path $here "theme\corvus\views\examples"
+$recipesContentDir = Join-Path $siteDir "content\Examples"
+$recipesTaxonomyDir = Join-Path $siteDir "taxonomy\examples"
 
 # Clean old generated recipe files (preserve Overview.md and index.*)
 Get-ChildItem $recipesContentDir -Filter "*.md" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "Overview.md" } | Remove-Item -Force
 Get-ChildItem $recipesTaxonomyDir -Filter "*.yml" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "index.yml" } | Remove-Item -Force
-Get-ChildItem $recipesViewDir -Filter "*.cshtml" -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -ne "index.cshtml" } | Remove-Item -Force
-
-# Shared Razor view template for all recipe pages (dynamic sidebar from Vellum nav)
-$recipeViewTemplate = @'
-@model SiteViewModel
-@{
-    Layout = "../Shared/_Layout.cshtml";
-}
-<div class="layout-docs container">
-    @await Html.PartialAsync("_Sidebar").ConfigureAwait(false)
-    <main id="main-content" class="layout-docs__main">
-        <div class="doc__content">
-            <h1>@Model.PageContext.Title</h1>
-            @if (Model.PageContext.MetaData.Keywords.Any())
-            {
-                <div class="card__tags" style="margin-bottom:1.5rem">
-                    @foreach (var keyword in Model.PageContext.MetaData.Keywords)
-                    {
-                        <span class="card__tag">@keyword</span>
-                    }
-                </div>
-            }
-            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
-            {
-                @Html.Raw(contentFragment.Body)
-            }
-        </div>
-    </main>
-</div>
-'@
 
 $recipeDirs = Get-ChildItem $recipesSourceDir -Directory | Sort-Object Name
 $recipeCount = 0
@@ -212,11 +181,12 @@ $mainEntity
     $contentMd = $frontmatter + $body + $faqJsonLd
     [System.IO.File]::WriteAllText($contentPath, $contentMd, [System.Text.Encoding]::UTF8)
 
-    # 2) Taxonomy YAML
+    # 2) Taxonomy YAML (with Template property for shared view)
     $rank = $recipeCount + 1
     $taxonomyYml = @"
 ContentType: application/vnd.endjin.ssg.page+yaml
 Title: "$title"
+Template: examples/recipe-detail
 Navigation:
   Title: $title
   Description: "$description"
@@ -246,64 +216,45 @@ ContentBlocks:
     $taxonomyPath = Join-Path $recipesTaxonomyDir "$slug.yml"
     [System.IO.File]::WriteAllText($taxonomyPath, $taxonomyYml, [System.Text.Encoding]::UTF8)
 
-    # 3) View cshtml (shared template)
-    $viewPath = Join-Path $recipesViewDir "$slug.cshtml"
-    [System.IO.File]::WriteAllText($viewPath, $recipeViewTemplate, [System.Text.Encoding]::UTF8)
-
     $recipeCount++
     Write-Host "  $number $title -> $slug" -ForegroundColor Gray
 }
 Write-Host "  $recipeCount recipe(s) generated." -ForegroundColor Green
 
-# ── Step 4: Generate docs content from source docs ──────────────────────────
+# ── Step 4: Generate docs content from source documentation ─────────────────
 Write-Host "`n[4/9] Generating docs content from source documentation..." -ForegroundColor Cyan
 
 $docsSourceDir = Join-Path $repoRoot "docs"
-$docsContentDir = Join-Path $here "content\Docs"
-$docsTaxonomyDir = Join-Path $here "taxonomy\docs"
-$docsViewDir = Join-Path $here "theme\corvus\views\docs"
+$docsContentDir = Join-Path $siteDir "content\Docs"
+$docsTaxonomyDir = Join-Path $siteDir "taxonomy\docs"
+$descriptorsDir = Join-Path $here "doc-descriptors"
 
-# Docs to include (order matters — defines sidebar Rank)
-$docsToInclude = @(
-    'ParsedJsonDocument.md',
-    'JsonDocumentBuilder.md',
-    'SourceGenerator.md',
-    'CodeGenerator.md',
-    'Validator.md',
-    'MigratingFromV4ToV5.md',
-    'UsingCopilotForMigration.md'
-)
-
-# Clean old generated doc files (preserve index.*)
+# Clean old generated doc files (preserve Overview.md and index.*)
 Get-ChildItem $docsContentDir -Filter "*.md" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "Overview.md" } | Remove-Item -Force
 Get-ChildItem $docsTaxonomyDir -Filter "*.yml" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "index.yml" } | Remove-Item -Force
-Get-ChildItem $docsViewDir -Filter "*.cshtml" -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -ne "index.cshtml" } | Remove-Item -Force
-
-# Shared Razor view template for docs (dynamic sidebar with all sections)
-$docViewTemplate = @'
-@model SiteViewModel
-@{
-    Layout = "../Shared/_Layout.cshtml";
-}
-<div class="layout-docs container">
-    @await Html.PartialAsync("_Sidebar").ConfigureAwait(false)
-    <main id="main-content" class="layout-docs__main">
-        <div class="doc__content">
-            <h1>@Model.PageContext.Title</h1>
-            @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
-            {
-                @Html.Raw(contentFragment.Body)
-            }
-        </div>
-    </main>
-</div>
-'@
 
 $docCount = 0
-foreach ($docFile in $docsToInclude) {
+$descriptorFiles = Get-ChildItem $descriptorsDir -Filter "*.yml" | Sort-Object Name
+
+foreach ($descriptorFile in $descriptorFiles) {
+    # Parse simple YAML descriptor (source, navTitle, description)
+    $descriptorContent = Get-Content $descriptorFile.FullName -Raw -Encoding utf8
+    $descriptor = @{}
+    foreach ($line in ($descriptorContent -split "`n")) {
+        $line = $line.Trim()
+        if ($line -match '^(\w+):\s*"?(.+?)"?\s*$') {
+            $descriptor[$Matches[1]] = $Matches[2]
+        }
+    }
+
+    $docFile = $descriptor['source']
+    if (!$docFile) {
+        Write-Warning "  Descriptor $($descriptorFile.Name) missing 'source' — skipping"
+        continue
+    }
+
     $sourcePath = Join-Path $docsSourceDir $docFile
     if (!(Test-Path $sourcePath)) {
         Write-Warning "  Source doc not found: $docFile — skipping"
@@ -327,41 +278,20 @@ foreach ($docFile in $docsToInclude) {
     # Strip markdown "## Table of Contents" section (the TOC through the next --- or ## heading)
     $docBody = $docBody -replace '(?ms)^## Table of Contents\s*\n(- \[.*?\]\(#.*?\)\s*\n)+\s*---\s*\n?', ''
 
-    # Extract first sentence as description
-    if ($docBody -match '^(.+?\.)\s') {
+    # Use descriptor nav title, or fall back to doc title
+    $navTitle = if ($descriptor['navTitle']) { $descriptor['navTitle'] } else {
+        $t = $docTitle
+        if ($t.Length -gt 30) { $t = $t.Substring(0, 27) + '...' }
+        $t
+    }
+
+    # Use descriptor description, or extract first sentence
+    if ($descriptor['description']) {
+        $docDescription = $descriptor['description']
+    } elseif ($docBody -match '^(.+?\.)\s') {
         $docDescription = $Matches[1] -replace '"', '\"'
     } else {
         $docDescription = $docTitle
-    }
-
-    # Friendly nav titles and card descriptions (goal-oriented, referencing STJ counterparts)
-    $navTitle = switch -Wildcard ($baseName) {
-        'ParsedJsonDocument'       { 'Parsing & Reading JSON' }
-        'JsonDocumentBuilder'      { 'Building & Mutating JSON' }
-        'SourceGenerator'          { 'Source Generator' }
-        'CodeGenerator'            { 'CLI Code Generation' }
-        'Validator'                { 'Dynamic Schema Validation' }
-        'MigratingFromV4ToV5'      { 'Migrating from V4' }
-        'UsingCopilotForMigration' { 'Copilot Migration' }
-        default {
-            $t = $docTitle
-            if ($t.Length -gt 30) { $t = $t.Substring(0, 27) + '...' }
-            $t
-        }
-    }
-
-    # Custom card descriptions for key pages (others fall through to first-sentence extraction)
-    $customDescription = switch -Wildcard ($baseName) {
-        'ParsedJsonDocument'  { 'Parse JSON into read-only, strongly-typed models backed by pooled memory. A high-performance alternative to System.Text.Json''s JsonDocument with generic type support and zero-copy element access.' }
-        'JsonDocumentBuilder' { 'Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json''s JsonNode, designed for request/response cycles and data pipelines.' }
-        'SourceGenerator'     { 'Generate strongly-typed C# from JSON Schema at build time with the Roslyn incremental source generator. Annotate a partial struct, register your schema, and get full IntelliSense immediately.' }
-        'CodeGenerator'       { 'Generate strongly-typed C# models from JSON Schema files using the generatejsonschematypes CLI tool. Same output as the source generator, for CI pipelines and pre-generation workflows.' }
-        'Validator'           { 'Dynamically load, compile, and validate JSON documents against JSON Schema at runtime using Roslyn. Ideal for schema registries, configuration validation, and user-supplied schemas.' }
-        default               { $null }
-    }
-
-    if ($customDescription) {
-        $docDescription = $customDescription
     }
 
     # 1) Content markdown
@@ -369,11 +299,12 @@ foreach ($docFile in $docsToInclude) {
     $frontmatter = "---`nContentType: `"application/vnd.endjin.ssg.content+md`"`nPublicationStatus: Published`nDate: 2026-03-15T00:00:00.0+00:00`nTitle: `"$($docTitle -replace '"', '\"')`"`n---`n"
     [System.IO.File]::WriteAllText($contentPath, ($frontmatter + $docBody), [System.Text.Encoding]::UTF8)
 
-    # 2) Taxonomy YAML
+    # 2) Taxonomy YAML (with Template property for shared view)
     $docRank = $docCount + 1
     $docTaxonomyYml = @"
 ContentType: application/vnd.endjin.ssg.page+yaml
 Title: "$($docTitle -replace '"', '\"')"
+Template: docs/doc-page
 Navigation:
   Title: $navTitle
   Description: "$docDescription"
@@ -403,10 +334,6 @@ ContentBlocks:
     $docTaxonomyPath = Join-Path $docsTaxonomyDir "$slug.yml"
     [System.IO.File]::WriteAllText($docTaxonomyPath, $docTaxonomyYml, [System.Text.Encoding]::UTF8)
 
-    # 3) View cshtml
-    $docViewPath = Join-Path $docsViewDir "$slug.cshtml"
-    [System.IO.File]::WriteAllText($docViewPath, $docViewTemplate, [System.Text.Encoding]::UTF8)
-
     $docCount++
     Write-Host "  $docTitle -> $slug" -ForegroundColor Gray
 }
@@ -435,23 +362,28 @@ Write-Host "`n[6/9] Running Vellum..." -ForegroundColor Cyan
 
 # Prepare output directory
 if (Test-Path $outputDir) { Remove-Item $outputDir -Recurse -Force }
-$assetsSource = Join-Path $here "theme\corvus\assets"
+$assetsSource = Join-Path $siteDir "theme\corvus\assets"
 $assetsDest = Join-Path $outputDir "assets"
 Copy-Item -Path $assetsSource -Destination $assetsDest -Recurse -Force
 
-$vellumArgs = @("content", "generate", "-t", (Join-Path $here "site.yml"), "-o", $outputDir)
-if ($Watch) { $vellumArgs += "--watch" }
-& $vellumCmd $vellumArgs
-if ($LASTEXITCODE -ne 0) { throw "Vellum generation failed" }
+# Run Vellum from the site/ directory so it only sees site source files.
+# This eliminates the need to clean up spurious copies of build.ps1, tools/, etc.
+Push-Location $siteDir
+try {
+    $vellumArgs = @("content", "generate", "-t", (Join-Path $siteDir "site.yml"), "-o", $outputDir)
+    if ($Watch) { $vellumArgs += "--watch" }
+    & $vellumCmd $vellumArgs
+    if ($LASTEXITCODE -ne 0) { throw "Vellum generation failed" }
+} finally {
+    Pop-Location
+}
 
-# Vellum copies the entire working directory into .output alongside the rendered
-# pages. Remove the spurious copies so they don't bloat the output or cause
-# recursive nesting on repeat runs.
-foreach ($dir in @(".output", "node_modules", "tools", "taxonomy", "content", "theme", ".endjin")) {
+# Vellum copies the site/ source files into output — remove the lightweight copies
+foreach ($dir in @("taxonomy", "content", "theme")) {
     $spurious = Join-Path $outputDir $dir
     if (Test-Path $spurious) { Remove-Item $spurious -Recurse -Force }
 }
-foreach ($file in @("build.ps1", "preview.ps1", "package.json", "package-lock.json", "site.yml", ".gitignore", "DEVELOPMENT.md")) {
+foreach ($file in @("site.yml")) {
     $spurious = Join-Path $outputDir $file
     if (Test-Path $spurious) { Remove-Item $spurious -Force }
 }
@@ -496,6 +428,6 @@ Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green
 
 if ($Preview) {
     Write-Host "`nStarting preview server..." -ForegroundColor Cyan
-    $previewArgs = @("content", "generate", "-t", (Join-Path $here "site.yml"), "-o", $outputDir, "--preview")
+    $previewArgs = @("content", "generate", "-t", (Join-Path $siteDir "site.yml"), "-o", $outputDir, "--preview")
     & $vellumCmd $previewArgs
 }
