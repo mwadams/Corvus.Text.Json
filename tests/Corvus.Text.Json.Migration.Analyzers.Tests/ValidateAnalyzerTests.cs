@@ -1,0 +1,137 @@
+// <copyright file="ValidateAnalyzerTests.cs" company="Endjin Limited">
+// Copyright (c) Endjin Limited. All rights reserved.
+// </copyright>
+// <licensing>
+// Derived from code licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licensed this code under the MIT license.
+// https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
+// </licensing>
+
+namespace Corvus.Text.Json.Migration.Analyzers.Tests;
+
+using System.Threading.Tasks;
+
+using Microsoft.CodeAnalysis.CSharp.Testing;
+using Microsoft.CodeAnalysis.Testing;
+using Xunit;
+
+using CodeFixTest = Microsoft.CodeAnalysis.CSharp.Testing.CSharpCodeFixTest<
+    Corvus.Text.Json.Migration.Analyzers.ValidateAnalyzer,
+    Corvus.Text.Json.Migration.Analyzers.ValidateCodeFix,
+    Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+using Verify = Microsoft.CodeAnalysis.CSharp.Testing.CSharpAnalyzerVerifier<
+    Corvus.Text.Json.Migration.Analyzers.ValidateAnalyzer,
+    Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
+
+/// <summary>
+/// Tests for CVJ003: IsValid/Validate migration to EvaluateSchema.
+/// </summary>
+public class ValidateAnalyzerTests
+{
+    [Fact]
+    public async Task IsValidCall_TriggersCVJ003_AndCodeFixReplacesWithEvaluateSchema()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = @"
+namespace TestApp
+{
+    class MyJsonType
+    {
+        public bool IsValid() => true;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            var result = {|#0:x.IsValid()|};
+        }
+    }
+}",
+            FixedCode = @"
+namespace TestApp
+{
+    class MyJsonType
+    {
+        public bool IsValid() => true;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            var result = x.EvaluateSchema();
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("IsValid()", string.Empty));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task ValidateCall_TriggersCVJ003()
+    {
+        string testCode = @"
+namespace TestApp
+{
+    class ValidationContext
+    {
+        public static ValidationContext ValidContext => new();
+    }
+
+    class MyJsonType
+    {
+        public void Validate(ValidationContext ctx) { }
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            {|#0:x.Validate(ValidationContext.ValidContext)|};
+        }
+    }
+}";
+
+        DiagnosticResult expected = Verify.Diagnostic()
+            .WithLocation(0)
+            .WithArguments("Validate(...)", string.Empty);
+
+        await Verify.VerifyAnalyzerAsync(testCode, expected);
+    }
+
+    [Fact]
+    public async Task NoIsValidCall_NoDiagnostic()
+    {
+        string testCode = @"
+namespace TestApp
+{
+    class MyJsonType
+    {
+        public string GetValue() => ""hello"";
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            var result = x.GetValue();
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode);
+    }
+}

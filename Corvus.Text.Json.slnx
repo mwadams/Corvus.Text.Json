@@ -85,10 +85,12 @@
     <Project Path="tests/Corvus.Text.Json.Tests.MigrationModels.V5/Corvus.Text.Json.Tests.MigrationModels.V5.csproj" />
     <Project Path="tests/Corvus.Text.Json.Validator.Tests/Corvus.Text.Json.Validator.Tests.csproj" />
     <Project Path="tests/Corvus.Text.Json.CodeGenerator.Tests/Corvus.Text.Json.CodeGenerator.Tests.csproj" />
+    <Project Path="tests/Corvus.Text.Json.Migration.Analyzers.Tests/Corvus.Text.Json.Migration.Analyzers.Tests.csproj" />
   </Folder>
   <Project Path="src/Corvus.Text.Json.CodeGeneration/Corvus.Text.Json.CodeGeneration.csproj" />
   <Project Path="src/Corvus.Json.CodeGenerator/Corvus.Json.CodeGenerator.csproj" />
   <Project Path="src/Corvus.Text.Json.Compatibility/Corvus.Text.Json.Compatibility.csproj" />
+  <Project Path="src/Corvus.Text.Json.Migration.Analyzers/Corvus.Text.Json.Migration.Analyzers.csproj" />
   <Project Path="src/Corvus.Text.Json.SourceGenerator/Corvus.Text.Json.SourceGenerator.csproj" />
   <Project Path="src/Corvus.Text.Json/Corvus.Text.Json.csproj" />
   <Project Path="src/Corvus.Text.Json.Validator/Corvus.Text.Json.Validator.csproj" />
