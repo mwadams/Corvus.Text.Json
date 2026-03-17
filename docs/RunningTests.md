@@ -124,10 +124,70 @@ dotnet test tests\Corvus.Text.Json.Tests -f net481 --filter "Category!=failing&C
 
 ## Regenerating JSON Schema Test Suite tests
 
-If you update the `JSON-Schema-Test-Suite` submodule, regenerate the test classes:
+The `JSON-Schema-Test-Suite/` directory is a git submodule. If you update it, **both** the V4 and V5 test generators must be re-run.
+
+### V5 test generator
+
+The `Corvus.JsonSchemaTestSuite.CodeGenerator` project reads the submodule and writes xUnit test classes into `tests/Corvus.Text.Json.Tests/JsonSchemaTestSuite/`:
 
 ```powershell
 dotnet run --project tests\Corvus.JsonSchemaTestSuite.CodeGenerator
 ```
 
-This writes xUnit test files into `tests/Corvus.Text.Json.Tests/JsonSchemaTestSuite/`.
+**Configuration:** `tests/Corvus.JsonSchemaTestSuite.CodeGenerator/appsettings.json`
+
+| Key | Purpose |
+|-----|---------|
+| `outputPath` | Relative path to the generated test output directory |
+| `jsonSchemaTestSuite.baseDirectory` | Relative path to the `JSON-Schema-Test-Suite/` submodule |
+| `jsonSchemaTestSuite.collections[]` | One entry per draft (draft4, draft6, draft7, draft2019-09, draft2020-12) |
+| `collections[].name` | Draft name — becomes the xUnit `[Trait("JsonSchemaTestSuite", "...")]` value |
+| `collections[].defaultVocabulary` | The `$schema` URI used for validation |
+| `collections[].directory` | Subdirectory within the test suite (e.g. `tests/draft2020-12`) |
+| `collections[].options[]` | Per-path overrides, e.g. `"validateFormat": true` for `optional/format` |
+| `collections[].exclusions[]` | File-level or individual test-level exclusions with a `reason` string |
+
+Each generated test class uses `TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(...)` at runtime to dynamically compile a V5 type from the schema, then validates test instances against it.
+
+### V4 specs generator
+
+The `Corvus.JsonSchema.SpecGenerator` project (in `src-v4/`) generates SpecFlow `.feature` files into `src-v4/Corvus.Json.Specs/Features/JsonSchema/`:
+
+```powershell
+dotnet run --project src-v4\Corvus.JsonSchema.SpecGenerator -- `
+    JSON-Schema-Test-Suite `
+    src-v4\Corvus.Json.Specs\Features\JsonSchema\ `
+    src-v4\Corvus.JsonSchema.SpecGenerator\JsonSchemaOrgTestSuiteSelector.jsonc
+```
+
+The three positional arguments are:
+
+| Argument | Purpose |
+|----------|---------|
+| `inputDir` | Path to the `JSON-Schema-Test-Suite/` submodule |
+| `outputDir` | Path to the generated `.feature` file output directory |
+| `testselector` | Path to a JSONC selector file controlling which drafts, files, and individual tests to include/exclude |
+
+**Configuration:** `src-v4/Corvus.JsonSchema.SpecGenerator/JsonSchemaOrgTestSuiteSelector.jsonc`
+
+The selector file uses a recursive directory-matching structure:
+
+| Key | Purpose |
+|-----|---------|
+| `subdirectories.<name>` | Matches a directory in the test suite (e.g. `draft2020-12`) |
+| `.testSet` | Names the test set — used as the Gherkin scenario tag |
+| `.outputFolder` | Subfolder within the output directory (e.g. `Draft2020212`) |
+| `.assertFormat` | Whether format validation is enforced for this draft |
+| `.excludeFromThisDirectory[]` | Regex patterns for files to skip (e.g. `"bignum\\.json"`) |
+| `.testExclusions.<file>.<scenario>.testsToIgnoreIndices[]` | Individual test indices to skip within a scenario (e.g. leap-second tests) |
+
+There is also an `OpenApiTestSuiteSelector.jsonc` for the OpenAPI test suite specs.
+
+### After regenerating
+
+After running both generators, rebuild and re-run the tests to verify:
+
+```powershell
+dotnet build Corvus.Text.Json.slnx
+dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloop"
+```
