@@ -274,4 +274,17 @@ internal static class DiagnosticDescriptors
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
         helpLinkUri: HelpLinkBase + "#mutation");
+
+    /// <summary>
+    /// CVJ025: V4 package reference should be replaced with V5 equivalent.
+    /// </summary>
+    public static readonly DiagnosticDescriptor PackageReferenceMigration = new(
+        id: "CVJ025",
+        title: "Replace V4 package reference with V5 equivalent",
+        messageFormat: "Replace V4 assembly '{0}' with the '{1}' NuGet package",
+        category: Category,
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true,
+        helpLinkUri: HelpLinkBase + "#packages",
+        customTags: new[] { WellKnownDiagnosticTags.CompilationEnd });
 }
