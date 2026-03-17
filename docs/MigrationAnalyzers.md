@@ -191,6 +191,64 @@ if (element.TryGetValue(out string value)) { ... }
 
 ---
 
+### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
+
+**Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
+
+Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
+
+The code fix handles several patterns:
+
+**Simple rename:**
+```csharp
+// Before (V4)
+Person updated = person.WithName("Bob");
+
+// After (V5) — inside a mutable builder context
+person.SetName("Bob");
+```
+
+**Unchaining fluent calls:**
+```csharp
+// Before (V4)
+Person updated = person.WithName("Bob").WithAge(25);
+
+// After (V5)
+person.SetName("Bob");
+person.SetAge(25);
+```
+
+**Nested extract-mutate-reassign collapse:**
+```csharp
+// Before (V4)
+Address address = person.AddressValue;
+Address updated = address.WithCity("Manchester");
+Person result = person.WithAddressValue(updated);
+
+// After (V5)
+person.AddressValue.SetCity("Manchester");
+```
+
+---
+
+### CVJ021 — Nested `With*()` chain can use deep property setter
+
+**Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
+
+Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
+
+```csharp
+// Before (V4)
+Address address = person.AddressValue;
+Address updatedAddress = address.WithCity("Manchester");
+Person updatedPerson = person.WithAddressValue(updatedAddress);
+
+// After (V5)
+person.AddressValue.SetCity("Manchester");
+```
+
+---
+
 ## Tier 2: Guidance Diagnostics
 
 These diagnostics flag patterns that require manual migration. The V5 equivalents involve structural changes that cannot be automated reliably.
@@ -234,46 +292,6 @@ double value = element.AsNumber;
 string name = (string)element;
 // or
 element.TryGetValue(out string name);
-```
-
----
-
-### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
-
-**Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
-
-Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
-
-The code fix handles several patterns:
-
-**Simple rename:**
-```csharp
-// Before (V4)
-Person updated = person.WithName("Bob");
-
-// After (V5) — inside a mutable builder context
-person.SetName("Bob");
-```
-
-**Unchaining fluent calls:**
-```csharp
-// Before (V4)
-Person updated = person.WithName("Bob").WithAge(25);
-
-// After (V5)
-person.SetName("Bob");
-person.SetAge(25);
-```
-
-**Nested extract-mutate-reassign collapse:**
-```csharp
-// Before (V4)
-Address address = person.AddressValue;
-Address updated = address.WithCity("Manchester");
-Person result = person.WithAddressValue(updated);
-
-// After (V5)
-person.AddressValue.SetCity("Manchester");
 ```
 
 ---
@@ -379,24 +397,6 @@ if (person.HasJsonElementBacking) { ... }
 // Remove — V5 always uses document-index backing.
 // If you need to check whether a value was parsed vs. constructed,
 // use other approaches specific to your use case.
-```
-
----
-
-### CVJ021 — Nested `With*()` chain can use deep property setter
-
-**Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
-
-Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
-
-```csharp
-// Before (V4)
-Address address = person.AddressValue;
-Address updatedAddress = address.WithCity("Manchester");
-Person updatedPerson = person.WithAddressValue(updatedAddress);
-
-// After (V5)
-person.AddressValue.SetCity("Manchester");
 ```
 
 ---
