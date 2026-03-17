@@ -23,13 +23,20 @@ namespace Corvus.Text.Json.Migration.Analyzers.Tests;
 /// </summary>
 public class AsAccessorAnalyzerTests
 {
+    private const string V4InterfaceStubs = @"
+namespace Corvus.Json
+{
+    public interface IJsonValue { }
+}
+";
+
     [Fact]
     public async Task AsString_TriggersCVJ010()
     {
-        string testCode = @"
+        string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public string AsString => ""hello"";
     }
@@ -54,10 +61,10 @@ namespace TestApp
     [Fact]
     public async Task AsNumber_TriggersCVJ010()
     {
-        string testCode = @"
+        string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public double AsNumber => 42.0;
     }
@@ -82,10 +89,10 @@ namespace TestApp
     [Fact]
     public async Task AsObject_TriggersCVJ010()
     {
-        string testCode = @"
+        string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public object AsObject => new();
     }
@@ -110,10 +117,10 @@ namespace TestApp
     [Fact]
     public async Task AsArray_TriggersCVJ010()
     {
-        string testCode = @"
+        string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public object AsArray => new();
     }
@@ -138,10 +145,10 @@ namespace TestApp
     [Fact]
     public async Task AsBoolean_TriggersCVJ010()
     {
-        string testCode = @"
+        string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public bool AsBoolean => true;
     }
@@ -203,6 +210,30 @@ namespace TestApp
         {
             var x = new MyJsonType();
             var result = x.Name;
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode);
+    }
+
+    [Fact]
+    public async Task AsString_OnNonJsonValueType_NoDiagnostic()
+    {
+        string testCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class MyPlainType
+    {
+        public string AsString => ""hello"";
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyPlainType();
+            var result = x.AsString;
         }
     }
 }";

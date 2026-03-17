@@ -28,15 +28,22 @@ namespace Corvus.Text.Json.Migration.Analyzers.Tests;
 /// </summary>
 public class ValidateAnalyzerTests
 {
+    private const string V4InterfaceStubs = @"
+namespace Corvus.Json
+{
+    public interface IJsonValue { }
+}
+";
+
     [Fact]
     public async Task IsValidCall_TriggersCVJ003_AndCodeFixReplacesWithEvaluateSchema()
     {
         var test = new CodeFixTest
         {
-            TestCode = @"
+            TestCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public bool IsValid() => true;
     }
@@ -50,10 +57,10 @@ namespace TestApp
         }
     }
 }",
-            FixedCode = @"
+            FixedCode = V4InterfaceStubs + @"
 namespace TestApp
 {
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public bool IsValid() => true;
     }
@@ -81,7 +88,7 @@ namespace TestApp
     [Fact]
     public async Task ValidateCall_TriggersCVJ003()
     {
-        string testCode = @"
+        string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class ValidationContext
@@ -89,7 +96,7 @@ namespace TestApp
         public static ValidationContext ValidContext => new();
     }
 
-    class MyJsonType
+    class MyJsonType : Corvus.Json.IJsonValue
     {
         public void Validate(ValidationContext ctx) { }
     }
@@ -128,6 +135,59 @@ namespace TestApp
         {
             var x = new MyJsonType();
             var result = x.GetValue();
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode);
+    }
+
+    [Fact]
+    public async Task IsValidCall_OnNonJsonValueType_NoDiagnostic()
+    {
+        string testCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class MyPlainType
+    {
+        public bool IsValid() => true;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyPlainType();
+            var result = x.IsValid();
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode);
+    }
+
+    [Fact]
+    public async Task ValidateCall_OnNonJsonValueType_NoDiagnostic()
+    {
+        string testCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class ValidationContext
+    {
+        public static ValidationContext ValidContext => new();
+    }
+
+    class MyPlainType
+    {
+        public void Validate(ValidationContext ctx) { }
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyPlainType();
+            x.Validate(ValidationContext.ValidContext);
         }
     }
 }";

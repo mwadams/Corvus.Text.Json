@@ -28,19 +28,26 @@ namespace Corvus.Text.Json.Migration.Analyzers.Tests;
 /// </summary>
 public class FromJsonAnalyzerTests
 {
+    private const string V4InterfaceStubs = @"
+namespace Corvus.Json
+{
+    public interface IJsonValue { }
+}
+";
+
     [Fact]
     public async Task FromJsonCall_TriggersCVJ006_AndCodeFixRenamesToFrom()
     {
         var test = new CodeFixTest
         {
-            TestCode = @"
+            TestCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class JsonElement
     {
     }
 
-    class MyType
+    class MyType : Corvus.Json.IJsonValue
     {
         public static MyType FromJson(JsonElement element) => new();
     }
@@ -54,14 +61,14 @@ namespace TestApp
         }
     }
 }",
-            FixedCode = @"
+            FixedCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class JsonElement
     {
     }
 
-    class MyType
+    class MyType : Corvus.Json.IJsonValue
     {
         public static MyType FromJson(JsonElement element) => new();
     }
@@ -88,14 +95,14 @@ namespace TestApp
     {
         var test = new CodeFixTest
         {
-            TestCode = @"
+            TestCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class JsonElement
     {
     }
 
-    class MyType
+    class MyType : Corvus.Json.IJsonValue
     {
         public MyType FromJson(JsonElement element) => new();
     }
@@ -110,14 +117,14 @@ namespace TestApp
         }
     }
 }",
-            FixedCode = @"
+            FixedCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class JsonElement
     {
     }
 
-    class MyType
+    class MyType : Corvus.Json.IJsonValue
     {
         public MyType FromJson(JsonElement element) => new();
     }
@@ -156,6 +163,34 @@ namespace TestApp
         void M()
         {
             var result = MyType.From(""hello"");
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode);
+    }
+
+    [Fact]
+    public async Task FromJsonCall_OnNonJsonValueType_NoDiagnostic()
+    {
+        string testCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class JsonElement
+    {
+    }
+
+    class MyPlainType
+    {
+        public static MyPlainType FromJson(JsonElement element) => new();
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var element = new JsonElement();
+            var result = MyPlainType.FromJson(element);
         }
     }
 }";

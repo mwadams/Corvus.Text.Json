@@ -28,12 +28,19 @@ namespace Corvus.Text.Json.Migration.Analyzers.Tests;
 /// </summary>
 public class AsGenericAnalyzerTests
 {
+    private const string V4InterfaceStubs = @"
+namespace Corvus.Json
+{
+    public interface IJsonValue { }
+}
+";
+
     [Fact]
     public async Task AsGenericCall_TriggersCVJ004_AndCodeFixTransformsToFrom()
     {
         var test = new CodeFixTest
         {
-            TestCode = @"
+            TestCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class SomeType
@@ -41,7 +48,7 @@ namespace TestApp
         public static SomeType From(JsonValue value) => new();
     }
 
-    class JsonValue
+    class JsonValue : Corvus.Json.IJsonValue
     {
         public T As<T>() => default;
     }
@@ -55,7 +62,7 @@ namespace TestApp
         }
     }
 }",
-            FixedCode = @"
+            FixedCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class SomeType
@@ -63,7 +70,7 @@ namespace TestApp
         public static SomeType From(JsonValue value) => new();
     }
 
-    class JsonValue
+    class JsonValue : Corvus.Json.IJsonValue
     {
         public T As<T>() => default;
     }
@@ -105,6 +112,30 @@ namespace TestApp
         {
             var svc = new MyService();
             var result = svc.Get<string>();
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(testCode);
+    }
+
+    [Fact]
+    public async Task AsGenericCall_OnNonJsonValueType_NoDiagnostic()
+    {
+        string testCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class PlainValue
+    {
+        public T As<T>() => default;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var value = new PlainValue();
+            var result = value.As<string>();
         }
     }
 }";
