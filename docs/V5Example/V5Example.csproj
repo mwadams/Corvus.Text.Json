@@ -11,8 +11,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Corvus.Text.Json" Version="5.0.0-analyzers.3" />
-    <PackageReference Include="Corvus.Text.Json.SourceGenerator" Version="5.0.0-analyzers.3" PrivateAssets="all" />
+    <PackageReference Include="Corvus.Text.Json" Version="5.0.0-analyzers.4" />
+    <PackageReference Include="Corvus.Text.Json.SourceGenerator" Version="5.0.0-analyzers.4" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

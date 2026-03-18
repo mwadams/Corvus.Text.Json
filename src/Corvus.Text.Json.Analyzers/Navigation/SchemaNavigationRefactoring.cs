@@ -67,59 +67,76 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             return;
         }
 
-        // We're looking for type name identifiers.
-        IdentifierNameSyntax? identifier = node as IdentifierNameSyntax
-            ?? node.Parent as IdentifierNameSyntax;
-
-        // Also handle GenericNameSyntax (e.g., IJsonElement<Widget>).
-        GenericNameSyntax? genericName = null;
-
-        if (identifier is null)
-        {
-            // Also handle qualified names like V5Example.Model.Person
-            if (node is QualifiedNameSyntax qualifiedName)
-            {
-                identifier = qualifiedName.Right as IdentifierNameSyntax;
-                genericName = qualifiedName.Right as GenericNameSyntax;
-            }
-            else if (node is GenericNameSyntax gns)
-            {
-                genericName = gns;
-            }
-            else if (node.Parent is GenericNameSyntax parentGns)
-            {
-                genericName = parentGns;
-            }
-        }
-
-        if (identifier is null && genericName is null)
-        {
-            return;
-        }
-
-        SyntaxNode nodeForSymbol = (SyntaxNode?)identifier ?? genericName!;
-
         SemanticModel? semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
         if (semanticModel is null)
         {
             return;
         }
 
-        // Resolve the symbol.
-        SymbolInfo symbolInfo = semanticModel.GetSymbolInfo(nodeForSymbol, context.CancellationToken);
-        ISymbol? symbol = symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault();
+        ITypeSymbol? typeSymbol = null;
 
-        // If the symbol is a local/parameter/field of a generated type, get the type.
-        ITypeSymbol? typeSymbol = symbol switch
+        if (node is VariableDeclaratorSyntax variableDeclarator)
         {
-            ITypeSymbol t => t,
-            ILocalSymbol l => l.Type,
-            IParameterSymbol p => p.Type,
-            IFieldSymbol f => f.Type,
-            IPropertySymbol prop => prop.Type,
-            IMethodSymbol m => m.ReturnType,
-            _ => null,
-        };
+            // Handle cursor on variable name in declarations: Order order = ...
+            ISymbol? declared = semanticModel.GetDeclaredSymbol(variableDeclarator, context.CancellationToken);
+            typeSymbol = (declared as ILocalSymbol)?.Type;
+        }
+        else if (node is ParameterSyntax parameterSyntax)
+        {
+            // Handle cursor on parameter name: void Method(Order order)
+            ISymbol? declared = semanticModel.GetDeclaredSymbol(parameterSyntax, context.CancellationToken);
+            typeSymbol = (declared as IParameterSymbol)?.Type;
+        }
+        else
+        {
+            // We're looking for type name identifiers.
+            IdentifierNameSyntax? identifier = node as IdentifierNameSyntax
+                ?? node.Parent as IdentifierNameSyntax;
+
+            // Also handle GenericNameSyntax (e.g., IJsonElement<Widget>).
+            GenericNameSyntax? genericName = null;
+
+            if (identifier is null)
+            {
+                // Also handle qualified names like V5Example.Model.Person
+                if (node is QualifiedNameSyntax qualifiedName)
+                {
+                    identifier = qualifiedName.Right as IdentifierNameSyntax;
+                    genericName = qualifiedName.Right as GenericNameSyntax;
+                }
+                else if (node is GenericNameSyntax gns)
+                {
+                    genericName = gns;
+                }
+                else if (node.Parent is GenericNameSyntax parentGns)
+                {
+                    genericName = parentGns;
+                }
+            }
+
+            if (identifier is null && genericName is null)
+            {
+                return;
+            }
+
+            SyntaxNode nodeForSymbol = (SyntaxNode?)identifier ?? genericName!;
+
+            // Resolve the symbol.
+            SymbolInfo symbolInfo = semanticModel.GetSymbolInfo(nodeForSymbol, context.CancellationToken);
+            ISymbol? symbol = symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault();
+
+            // If the symbol is a local/parameter/field of a generated type, get the type.
+            typeSymbol = symbol switch
+            {
+                ITypeSymbol t => t,
+                ILocalSymbol l => l.Type,
+                IParameterSymbol p => p.Type,
+                IFieldSymbol f => f.Type,
+                IPropertySymbol prop => prop.Type,
+                IMethodSymbol m => m.ReturnType,
+                _ => null,
+            };
+        }
 
         if (typeSymbol is not INamedTypeSymbol namedType)
         {
@@ -433,54 +450,52 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         /// <inheritdoc/>
         public override void Apply(Workspace workspace, CancellationToken cancellationToken)
         {
-            if (this.documentId is null)
+            // Try DTE-based open + navigate first.
+            // This avoids timing issues with workspace.OpenDocument not immediately
+            // making the document active. DTE.ItemOperations.OpenFile is synchronous.
+            if (TryOpenAndNavigateViaDte(workspace))
             {
                 return;
             }
 
-            // Open the document in the editor.
-            try
+            // Fall back to Roslyn workspace API (no line navigation available).
+            if (this.documentId is not null)
             {
-                workspace.OpenDocument(this.documentId);
-            }
-            catch (NotSupportedException)
-            {
-                // Not all workspace implementations support OpenDocument.
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                // Document not found in the solution (e.g. AdditionalDocument).
-                return;
-            }
-
-            // Navigate to the target line using VS DTE automation (reflection-based).
-            if (this.targetLine.HasValue)
-            {
-                TryNavigateToLineViaDte(workspace, this.targetLine.Value);
+                try
+                {
+                    workspace.OpenDocument(this.documentId);
+                }
+                catch (NotSupportedException)
+                {
+                    // Not all workspace implementations support OpenDocument.
+                }
+                catch (InvalidOperationException)
+                {
+                    // Document not found in the solution.
+                }
             }
         }
 
         /// <summary>
-        /// Attempts to navigate to a specific line in the active document using the
+        /// Attempts to open the schema file and navigate to the target line using the
         /// Visual Studio DTE automation model. Uses reflection to avoid hard dependencies
-        /// on VS assemblies. Falls back silently if DTE is not available.
+        /// on VS assemblies. Returns <c>false</c> if DTE is not available.
         /// </summary>
-        private static void TryNavigateToLineViaDte(Workspace workspace, int targetLine)
+        private bool TryOpenAndNavigateViaDte(Workspace workspace)
         {
             try
             {
                 // In VS, the workspace has a ServiceProvider (internal property).
-                System.Reflection.PropertyInfo? spProp = workspace.GetType().GetProperty(
+                object? serviceProvider = workspace.GetType().GetProperty(
                     "ServiceProvider",
                     System.Reflection.BindingFlags.Instance |
                     System.Reflection.BindingFlags.NonPublic |
-                    System.Reflection.BindingFlags.Public);
+                    System.Reflection.BindingFlags.Public)
+                    ?.GetValue(workspace);
 
-                object? serviceProvider = spProp?.GetValue(workspace);
                 if (serviceProvider is null)
                 {
-                    return;
+                    return false;
                 }
 
                 // Find the EnvDTE.DTE type from loaded assemblies.
@@ -496,49 +511,94 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
                 if (dteType is null)
                 {
-                    return;
+                    return false;
                 }
 
                 // Call IServiceProvider.GetService(typeof(EnvDTE.DTE)).
-                System.Reflection.MethodInfo? getServiceMethod = serviceProvider.GetType().GetMethod(
-                    "GetService",
-                    new[] { typeof(Type) });
+                object? dte = serviceProvider.GetType()
+                    .GetMethod("GetService", new[] { typeof(Type) })
+                    ?.Invoke(serviceProvider, new object[] { dteType });
 
-                object? dte = getServiceMethod?.Invoke(serviceProvider, new object[] { dteType });
                 if (dte is null)
                 {
-                    return;
+                    return false;
                 }
 
-                // DTE.ActiveDocument.
-                object? activeDoc = dte.GetType()
-                    .GetProperty("ActiveDocument")?
-                    .GetValue(dte);
+                // Use DTE.ItemOperations.OpenFile(filePath, viewKind) to open the file
+                // synchronously. This ensures the document IS the active document when
+                // we call GotoLine, avoiding the timing issue with workspace.OpenDocument.
+                object? itemOperations = dte.GetType()
+                    .GetProperty("ItemOperations")
+                    ?.GetValue(dte);
 
-                if (activeDoc is null)
+                if (itemOperations is null)
                 {
-                    return;
+                    return false;
                 }
 
-                // ActiveDocument.Selection.
-                object? selection = activeDoc.GetType()
-                    .GetProperty("Selection")?
-                    .GetValue(activeDoc);
+                // EnvDTE.Constants.vsViewKindTextView
+                const string vsViewKindTextView = "{7651A703-06E5-11D1-8EBD-00A0C90F26EA}";
 
-                if (selection is null)
+                bool fileOpened = false;
+                foreach (System.Reflection.MethodInfo method in itemOperations.GetType().GetMethods())
                 {
-                    return;
+                    if (method.Name != "OpenFile")
+                    {
+                        continue;
+                    }
+
+                    System.Reflection.ParameterInfo[] parms = method.GetParameters();
+                    if (parms.Length == 2)
+                    {
+                        method.Invoke(itemOperations, new object[] { this.filePath, vsViewKindTextView });
+                        fileOpened = true;
+                        break;
+                    }
+
+                    if (parms.Length == 1)
+                    {
+                        method.Invoke(itemOperations, new object[] { this.filePath });
+                        fileOpened = true;
+                        break;
+                    }
                 }
 
-                // Selection.GotoLine(line, select: false).
-                // DTE lines are 1-based; our targetLine is 0-based.
-                selection.GetType()
-                    .GetMethod("GotoLine", new[] { typeof(int), typeof(bool) })?
-                    .Invoke(selection, new object[] { targetLine + 1, false });
+                if (!fileOpened)
+                {
+                    return false;
+                }
+
+                // Navigate to the target line in the now-active document.
+                if (this.targetLine.HasValue)
+                {
+                    object? activeDoc = dte.GetType()
+                        .GetProperty("ActiveDocument")
+                        ?.GetValue(dte);
+
+                    object? selection = activeDoc?.GetType()
+                        .GetProperty("Selection")
+                        ?.GetValue(activeDoc);
+
+                    if (selection is not null)
+                    {
+                        // DTE lines are 1-based; our targetLine is 0-based.
+                        foreach (System.Reflection.MethodInfo method in selection.GetType().GetMethods())
+                        {
+                            if (method.Name == "GotoLine" && method.GetParameters().Length == 2)
+                            {
+                                method.Invoke(selection, new object[] { this.targetLine.Value + 1, false });
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return true;
             }
             catch
             {
-                // Not in VS or DTE not available — silent fallback.
+                // DTE not available — fall back to workspace API.
+                return false;
             }
         }
     }

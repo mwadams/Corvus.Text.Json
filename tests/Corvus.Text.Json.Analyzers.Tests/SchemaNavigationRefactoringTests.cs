@@ -7,6 +7,7 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -379,12 +380,103 @@ namespace TestApp
 
     #endregion
 
+    #region Variable and parameter declaration tests
+
+    [Fact]
+    public async Task VariableDeclarator_OffersNavigation()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+    }
+
+    class Test
+    {
+        void M()
+        {
+            Widget myWidget = default;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForNode(
+            code,
+            findNode: root => root.DescendantNodes()
+                .OfType<VariableDeclaratorSyntax>()
+                .First(v => v.Identifier.Text == "myWidget"),
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("Go to schema", actions[0].Title);
+    }
+
+    [Fact]
+    public async Task ParameterSyntax_OffersNavigation()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+    }
+
+    class Test
+    {
+        void M(Widget w)
+        {
+            _ = w;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForNode(
+            code,
+            findNode: root => root.DescendantNodes()
+                .OfType<ParameterSyntax>()
+                .First(p => p.Identifier.Text == "w"),
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("Go to schema", actions[0].Title);
+    }
+
+    #endregion
+
     #region Helpers
 
     private static async Task<List<CodeAction>> GetRefactoringsForIdentifier(
         string code,
         string identifierName,
         bool useLastIdentifier,
+        string? additionalFilePath = null,
+        string? additionalFileContent = null)
+    {
+        return await GetRefactoringsForNode(
+            code,
+            findNode: root =>
+            {
+                var candidates = root.DescendantNodes()
+                    .Where(n =>
+                        (n is IdentifierNameSyntax id && id.Identifier.Text == identifierName) ||
+                        (n is GenericNameSyntax gn && gn.Identifier.Text == identifierName))
+                    .ToList();
+
+                Assert.NotEmpty(candidates);
+                return useLastIdentifier ? candidates.Last() : candidates.First();
+            },
+            additionalFilePath,
+            additionalFileContent);
+    }
+
+    private static async Task<List<CodeAction>> GetRefactoringsForNode(
+        string code,
+        Func<SyntaxNode, SyntaxNode> findNode,
         string? additionalFilePath = null,
         string? additionalFileContent = null)
     {
@@ -412,16 +504,7 @@ namespace TestApp
         var tree = await document.GetSyntaxTreeAsync();
         var root = await tree!.GetRootAsync();
 
-        // Search for both IdentifierNameSyntax and GenericNameSyntax nodes.
-        var candidates = root!.DescendantNodes()
-            .Where(n =>
-                (n is IdentifierNameSyntax id && id.Identifier.Text == identifierName) ||
-                (n is GenericNameSyntax gn && gn.Identifier.Text == identifierName))
-            .ToList();
-
-        Assert.NotEmpty(candidates);
-
-        var target = useLastIdentifier ? candidates.Last() : candidates.First();
+        var target = findNode(root!);
 
         var provider = new SchemaNavigationRefactoring();
         var actions = new List<CodeAction>();
