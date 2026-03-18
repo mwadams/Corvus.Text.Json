@@ -140,6 +140,21 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         string? schemaLocation = GetSchemaLocation(namedType);
         string? jsonPointer = ExtractJsonPointer(schemaLocation);
 
+        // Pre-resolve the pointer to a target line by reading the schema file text.
+        int? targetLine = null;
+        if (jsonPointer is not null && schemaInfo.Value.DocumentId is not null)
+        {
+            TextDocument? schemaDoc = context.Document.Project.GetAdditionalDocument(schemaInfo.Value.DocumentId);
+            if (schemaDoc is not null)
+            {
+                SourceText? schemaText = await schemaDoc.GetTextAsync(context.CancellationToken).ConfigureAwait(false);
+                if (schemaText is not null)
+                {
+                    targetLine = ResolveJsonPointerToLine(schemaText.ToString(), jsonPointer);
+                }
+            }
+        }
+
         string displayName = jsonPointer is not null
             ? $"{Path.GetFileName(schemaInfo.Value.FilePath)}#{jsonPointer}"
             : Path.GetFileName(schemaInfo.Value.FilePath);
@@ -151,7 +166,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                 title,
                 schemaInfo.Value.FilePath,
                 schemaInfo.Value.DocumentId,
-                jsonPointer));
+                targetLine));
     }
 
     /// <summary>
@@ -364,14 +379,14 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         private readonly string title;
         private readonly string filePath;
         private readonly DocumentId? documentId;
-        private readonly string? jsonPointer;
+        private readonly int? targetLine;
 
-        public NavigateToSchemaAction(string title, string filePath, DocumentId? documentId, string? jsonPointer)
+        public NavigateToSchemaAction(string title, string filePath, DocumentId? documentId, int? targetLine)
         {
             this.title = title;
             this.filePath = filePath;
             this.documentId = documentId;
-            this.jsonPointer = jsonPointer;
+            this.targetLine = targetLine;
         }
 
         /// <inheritdoc/>
@@ -386,7 +401,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         {
             var operations = new List<CodeActionOperation>
             {
-                new OpenSchemaFileOperation(this.filePath, this.documentId, this.jsonPointer),
+                new OpenSchemaFileOperation(this.filePath, this.documentId, this.targetLine),
             };
 
             return Task.FromResult<IEnumerable<CodeActionOperation>>(operations);
@@ -403,13 +418,13 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
     {
         private readonly string filePath;
         private readonly DocumentId? documentId;
-        private readonly string? jsonPointer;
+        private readonly int? targetLine;
 
-        public OpenSchemaFileOperation(string filePath, DocumentId? documentId, string? jsonPointer)
+        public OpenSchemaFileOperation(string filePath, DocumentId? documentId, int? targetLine)
         {
             this.filePath = filePath;
             this.documentId = documentId;
-            this.jsonPointer = jsonPointer;
+            this.targetLine = targetLine;
         }
 
         /// <inheritdoc/>
@@ -423,8 +438,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                 return;
             }
 
-            // AdditionalDocuments can be opened in VS via the workspace.
-            // This is a best-effort call — in non-VS environments it may be a no-op.
+            // Open the document in the editor.
             try
             {
                 workspace.OpenDocument(this.documentId);
@@ -432,6 +446,99 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             catch (NotSupportedException)
             {
                 // Not all workspace implementations support OpenDocument.
+                return;
+            }
+            catch (InvalidOperationException)
+            {
+                // Document not found in the solution (e.g. AdditionalDocument).
+                return;
+            }
+
+            // Navigate to the target line using VS DTE automation (reflection-based).
+            if (this.targetLine.HasValue)
+            {
+                TryNavigateToLineViaDte(workspace, this.targetLine.Value);
+            }
+        }
+
+        /// <summary>
+        /// Attempts to navigate to a specific line in the active document using the
+        /// Visual Studio DTE automation model. Uses reflection to avoid hard dependencies
+        /// on VS assemblies. Falls back silently if DTE is not available.
+        /// </summary>
+        private static void TryNavigateToLineViaDte(Workspace workspace, int targetLine)
+        {
+            try
+            {
+                // In VS, the workspace has a ServiceProvider (internal property).
+                System.Reflection.PropertyInfo? spProp = workspace.GetType().GetProperty(
+                    "ServiceProvider",
+                    System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic |
+                    System.Reflection.BindingFlags.Public);
+
+                object? serviceProvider = spProp?.GetValue(workspace);
+                if (serviceProvider is null)
+                {
+                    return;
+                }
+
+                // Find the EnvDTE.DTE type from loaded assemblies.
+                Type? dteType = null;
+                foreach (System.Reflection.Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    dteType = asm.GetType("EnvDTE.DTE");
+                    if (dteType is not null)
+                    {
+                        break;
+                    }
+                }
+
+                if (dteType is null)
+                {
+                    return;
+                }
+
+                // Call IServiceProvider.GetService(typeof(EnvDTE.DTE)).
+                System.Reflection.MethodInfo? getServiceMethod = serviceProvider.GetType().GetMethod(
+                    "GetService",
+                    new[] { typeof(Type) });
+
+                object? dte = getServiceMethod?.Invoke(serviceProvider, new object[] { dteType });
+                if (dte is null)
+                {
+                    return;
+                }
+
+                // DTE.ActiveDocument.
+                object? activeDoc = dte.GetType()
+                    .GetProperty("ActiveDocument")?
+                    .GetValue(dte);
+
+                if (activeDoc is null)
+                {
+                    return;
+                }
+
+                // ActiveDocument.Selection.
+                object? selection = activeDoc.GetType()
+                    .GetProperty("Selection")?
+                    .GetValue(activeDoc);
+
+                if (selection is null)
+                {
+                    return;
+                }
+
+                // Selection.GotoLine(line, select: false).
+                // DTE lines are 1-based; our targetLine is 0-based.
+                selection.GetType()
+                    .GetMethod("GotoLine", new[] { typeof(int), typeof(bool) })?
+                    .Invoke(selection, new object[] { targetLine + 1, false });
+            }
+            catch
+            {
+                // Not in VS or DTE not available — silent fallback.
             }
         }
     }
