@@ -177,34 +177,50 @@ using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
 ---
 
-### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
+### CVJ011 — V4 immutable mutation replaced by mutable builder
 
 **Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
 
-Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
+Detects V4's functional mutation methods that return a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and mutate in-place. This covers:
+
+- **`With*()`** on generated types (renamed to `Set*()` in V5)
+- **`SetProperty()`** on `JsonObject` / `IJsonObject<T>` types (name unchanged in V5, but called on `.Mutable`)
+- **`RemoveProperty()`** on `JsonObject` / `IJsonObject<T>` types (name unchanged in V5, but called on `.Mutable`)
 
 The code fix handles several patterns:
 
-**Simple rename:**
-```csharp
-// Before (V4)
-Person updated = person.WithName("Bob");
-
-// After (V5) — inside a mutable builder context
-person.SetName("Bob");
-```
-
-**Unchaining fluent calls:**
+**`With*()` rename and unchain:**
 ```csharp
 // Before (V4)
 Person updated = person.WithName("Bob").WithAge(25);
 
-// After (V5)
+// After (V5) — inside a mutable builder context
 person.SetName("Bob");
 person.SetAge(25);
 ```
 
-**Nested extract-mutate-reassign collapse:**
+**`SetProperty()` unchain and `.Mutable` rewrite:**
+```csharp
+// Before (V4)
+JsonObject updated = person
+    .SetProperty("age", (JsonNumber)31)
+    .SetProperty("email", (JsonString)"alice@example.com");
+
+// After (V5) — receiver becomes .Mutable, calls are unchained
+person.SetProperty("age", 31);
+person.SetProperty("email", "alice@example.com");
+```
+
+**`RemoveProperty()` on core types:**
+```csharp
+// Before (V4)
+JsonObject updated = person.RemoveProperty("temporaryField");
+
+// After (V5)
+person.RemoveProperty("temporaryField");
+```
+
+**Nested extract-mutate-reassign collapse (with CVJ021):**
 ```csharp
 // Before (V4)
 Address address = person.AddressValue;
@@ -341,12 +357,18 @@ if (element.TryGetValue(out string value)) { ... }
 
 ---
 
-### CVJ021 — Nested `With*()` chain can use deep property setter
+### CVJ021 — Nested mutation chain can use deep property setter
 
 **Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
 
-Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
+Detects the V4 pattern of extracting a nested value, mutating it, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder because mutations are visible through the parent.
 
+This diagnostic detects all mutator types — not just `With*()`:
+
+- **Object mutators:** `With*()`, `SetProperty()`, `RemoveProperty()`
+- **Array mutators:** `Add()`, `Insert()`, `SetItem()`, `RemoveAt()`
+
+**Object property mutation:**
 ```csharp
 // Before (V4)
 Address address = person.AddressValue;
@@ -355,6 +377,28 @@ Person updatedPerson = person.WithAddressValue(updatedAddress);
 
 // After (V5)
 person.AddressValue.SetCity("Manchester");
+```
+
+**Nested SetProperty:**
+```csharp
+// Before (V4)
+JsonObject address = root["address"].As<JsonObject>();
+JsonObject updatedAddress = address.SetProperty("city", (JsonString)"Manchester");
+JsonObject updatedRoot = root.SetProperty("address", updatedAddress.AsAny);
+
+// After (V5)
+root["address"].SetProperty("city", "Manchester");
+```
+
+**Nested array mutation:**
+```csharp
+// Before (V4)
+JsonArray roles = person["roles"].As<JsonArray>();
+JsonArray updatedRoles = roles.Add((JsonString)"admin");
+Person updatedPerson = person.WithRoles(updatedRoles);
+
+// After (V5)
+person.Roles.AddItem("admin");
 ```
 
 ---
