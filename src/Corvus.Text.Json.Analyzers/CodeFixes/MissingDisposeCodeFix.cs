@@ -74,12 +74,23 @@ public sealed class MissingDisposeCodeFix : CodeFixProvider
             return document;
         }
 
-        // Add the 'using' keyword with trailing trivia to preserve formatting.
+        // The leading trivia (indentation/newline) lives on the first token of the declaration
+        // (the type keyword or 'var'). We need to move it to the 'using' keyword so the output
+        // reads "    using var ..." instead of "using\n    var ...".
+        SyntaxToken firstToken = localDecl.Declaration.GetFirstToken();
+        SyntaxTriviaList leadingTrivia = firstToken.LeadingTrivia;
+
         SyntaxToken usingKeyword = SyntaxFactory.Token(SyntaxKind.UsingKeyword)
+            .WithLeadingTrivia(leadingTrivia)
             .WithTrailingTrivia(SyntaxFactory.Space);
 
+        // Strip the leading trivia from the declaration since it's now on the using keyword.
+        VariableDeclarationSyntax newDeclaration = localDecl.Declaration
+            .ReplaceToken(firstToken, firstToken.WithLeadingTrivia(SyntaxTriviaList.Empty));
+
         LocalDeclarationStatementSyntax newLocalDecl = localDecl
-            .WithUsingKeyword(usingKeyword);
+            .WithUsingKeyword(usingKeyword)
+            .WithDeclaration(newDeclaration);
 
         SyntaxNode newRoot = root.ReplaceNode(localDecl, newLocalDecl);
         return document.WithSyntaxRoot(newRoot);
