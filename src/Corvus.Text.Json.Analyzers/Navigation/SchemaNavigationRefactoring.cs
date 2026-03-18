@@ -74,6 +74,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         }
 
         ITypeSymbol? typeSymbol = null;
+        IPropertySymbol? accessedProperty = null;
 
         if (node is VariableDeclaratorSyntax variableDeclarator)
         {
@@ -136,6 +137,12 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                 IMethodSymbol m => m.ReturnType,
                 _ => null,
             };
+
+            // Track property access for fallback to containing type.
+            if (symbol is IPropertySymbol accessedProp)
+            {
+                accessedProperty = accessedProp;
+            }
         }
 
         if (typeSymbol is not INamedTypeSymbol namedType)
@@ -148,14 +155,67 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
         // Find the JsonSchemaTypeGeneratorAttribute on the type.
         SchemaInfo? schemaInfo = FindSchemaInfo(namedType, context.Document.Project, context.CancellationToken);
+
+        // Read the SchemaLocation const to get the JSON pointer fragment.
+        string? schemaLocation = GetSchemaLocation(namedType);
+        string? jsonPointer = ExtractJsonPointer(schemaLocation);
+
+        // If the type's SchemaLocation contains a full URL with $id, resolve the
+        // schema file by matching $id in AdditionalDocuments.
+        if (schemaInfo is null && schemaLocation is not null && schemaLocation.Length > 0)
+        {
+            string? baseUrl = ExtractBaseUrl(schemaLocation);
+            if (baseUrl is not null)
+            {
+                schemaInfo = await FindSchemaByIdAsync(baseUrl, context.Document.Project, context.CancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        // If the property's own type is not schema-generated (e.g. a project-global
+        // type like JsonString), fall back to the containing type's schema and append
+        // /properties/{jsonPropName} to the pointer.
+        string? propertyPointerSuffix = null;
+        if (schemaInfo is null && accessedProperty is not null)
+        {
+            INamedTypeSymbol? containingType = accessedProperty.ContainingType;
+            if (containingType is not null)
+            {
+                containingType = UnwrapJsonElementInterface(containingType);
+                schemaInfo = FindSchemaInfo(containingType, context.Document.Project, context.CancellationToken);
+
+                string? containingSchemaLocation = GetSchemaLocation(containingType);
+
+                // Also try $id-based lookup for the containing type.
+                if (schemaInfo is null && containingSchemaLocation is not null && containingSchemaLocation.Length > 0)
+                {
+                    string? baseUrl = ExtractBaseUrl(containingSchemaLocation);
+                    if (baseUrl is not null)
+                    {
+                        schemaInfo = await FindSchemaByIdAsync(baseUrl, context.Document.Project, context.CancellationToken).ConfigureAwait(false);
+                    }
+                }
+
+                if (schemaInfo is not null)
+                {
+                    // Use the containing type's pointer as a base, and append
+                    // the property path.
+                    jsonPointer = ExtractJsonPointer(containingSchemaLocation);
+                    propertyPointerSuffix = "/properties/" + ToCamelCase(accessedProperty.Name);
+                }
+            }
+        }
+
         if (schemaInfo is null)
         {
             return;
         }
 
-        // Read the SchemaLocation const to get the JSON pointer fragment.
-        string? schemaLocation = GetSchemaLocation(namedType);
-        string? jsonPointer = ExtractJsonPointer(schemaLocation);
+        // If we resolved via a property on a schema-generated containing type,
+        // append the property path to the pointer.
+        if (propertyPointerSuffix is not null)
+        {
+            jsonPointer = (jsonPointer ?? string.Empty) + propertyPointerSuffix;
+        }
 
         // Pre-resolve the pointer to a target line by reading the schema file text.
         int? targetLine = null;
@@ -255,6 +315,87 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Extracts the base URL (everything before <c>#</c>) from a SchemaLocation value.
+    /// Returns <c>null</c> if the value doesn't look like a URL.
+    /// </summary>
+    private static string? ExtractBaseUrl(string schemaLocation)
+    {
+        int hashIndex = schemaLocation.IndexOf('#');
+        string baseUrl = hashIndex >= 0
+            ? schemaLocation.Substring(0, hashIndex)
+            : schemaLocation;
+
+        // Only treat as a URL if it contains "://"
+        if (baseUrl.Contains("://"))
+        {
+            return baseUrl;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Finds an AdditionalDocument whose JSON content contains a <c>$id</c> matching
+    /// the given URL.
+    /// </summary>
+    private static async Task<SchemaInfo?> FindSchemaByIdAsync(
+        string idUrl,
+        Project project,
+        CancellationToken cancellationToken)
+    {
+        string idPattern = "\"$id\"";
+
+        foreach (TextDocument doc in project.AdditionalDocuments)
+        {
+            if (doc.FilePath is null)
+            {
+                continue;
+            }
+
+            // Only check .json files.
+            if (!doc.FilePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            SourceText? text = await doc.GetTextAsync(cancellationToken).ConfigureAwait(false);
+            if (text is null)
+            {
+                continue;
+            }
+
+            string content = text.ToString();
+
+            // Quick check: does the file contain "$id" at all?
+            if (content.IndexOf(idPattern, StringComparison.Ordinal) < 0)
+            {
+                continue;
+            }
+
+            // Look for "$id": "<idUrl>" (with flexible whitespace).
+            if (content.Contains(idUrl))
+            {
+                return new SchemaInfo(doc.FilePath, doc.Id);
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Converts a PascalCase property name to camelCase for JSON property name matching.
+    /// </summary>
+    private static string ToCamelCase(string name)
+    {
+        if (string.IsNullOrEmpty(name) || char.IsLower(name[0]))
+        {
+            return name;
+        }
+
+        return char.ToLowerInvariant(name[0]) + name.Substring(1);
     }
 
     private static SchemaInfo? FindSchemaInfo(
@@ -485,40 +626,15 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         {
             try
             {
-                // In VS, the workspace has a ServiceProvider (internal property).
-                object? serviceProvider = workspace.GetType().GetProperty(
-                    "ServiceProvider",
-                    System.Reflection.BindingFlags.Instance |
-                    System.Reflection.BindingFlags.NonPublic |
-                    System.Reflection.BindingFlags.Public)
-                    ?.GetValue(workspace);
-
-                if (serviceProvider is null)
-                {
-                    return false;
-                }
-
                 // Find the EnvDTE.DTE type from loaded assemblies.
-                Type? dteType = null;
-                foreach (System.Reflection.Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    dteType = asm.GetType("EnvDTE.DTE");
-                    if (dteType is not null)
-                    {
-                        break;
-                    }
-                }
-
+                Type? dteType = FindTypeInLoadedAssemblies("EnvDTE.DTE");
                 if (dteType is null)
                 {
                     return false;
                 }
 
-                // Call IServiceProvider.GetService(typeof(EnvDTE.DTE)).
-                object? dte = serviceProvider.GetType()
-                    .GetMethod("GetService", new[] { typeof(Type) })
-                    ?.Invoke(serviceProvider, new object[] { dteType });
-
+                // Try multiple strategies to get the DTE instance.
+                object? dte = GetDteViaMethods(workspace, dteType);
                 if (dte is null)
                 {
                     return false;
@@ -600,6 +716,86 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                 // DTE not available — fall back to workspace API.
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Tries multiple strategies to obtain the VS DTE automation object.
+        /// </summary>
+        private static object? GetDteViaMethods(Workspace workspace, Type dteType)
+        {
+            // Strategy 1: Package.GetGlobalService(typeof(DTE))
+            // This is the standard VS Shell approach.
+            Type? packageType = FindTypeInLoadedAssemblies("Microsoft.VisualStudio.Shell.Package");
+            if (packageType is not null)
+            {
+                System.Reflection.MethodInfo? getGlobalService = packageType.GetMethod(
+                    "GetGlobalService",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static,
+                    null,
+                    new[] { typeof(Type) },
+                    null);
+
+                object? dte = getGlobalService?.Invoke(null, new object[] { dteType });
+                if (dte is not null)
+                {
+                    return dte;
+                }
+            }
+
+            // Strategy 2: ServiceProvider.GlobalProvider.GetService(typeof(DTE))
+            Type? spType = FindTypeInLoadedAssemblies("Microsoft.VisualStudio.Shell.ServiceProvider");
+            if (spType is not null)
+            {
+                object? globalProvider = spType.GetProperty(
+                    "GlobalProvider",
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)
+                    ?.GetValue(null);
+
+                if (globalProvider is IServiceProvider sp)
+                {
+                    object? dte = sp.GetService(dteType);
+                    if (dte is not null)
+                    {
+                        return dte;
+                    }
+                }
+            }
+
+            // Strategy 3: Workspace's internal service provider (last resort).
+            object? workspaceSp = workspace.GetType().GetProperty(
+                "ServiceProvider",
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Public)
+                ?.GetValue(workspace);
+
+            if (workspaceSp is not null)
+            {
+                object? dte = workspaceSp.GetType()
+                    .GetMethod("GetService", new[] { typeof(Type) })
+                    ?.Invoke(workspaceSp, new object[] { dteType });
+
+                if (dte is not null)
+                {
+                    return dte;
+                }
+            }
+
+            return null;
+        }
+
+        private static Type? FindTypeInLoadedAssemblies(string fullName)
+        {
+            foreach (System.Reflection.Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                Type? t = asm.GetType(fullName);
+                if (t is not null)
+                {
+                    return t;
+                }
+            }
+
+            return null;
         }
     }
 

@@ -380,6 +380,98 @@ namespace TestApp
 
     #endregion
 
+    #region Property declaration fallback tests
+
+    [Fact]
+    public async Task PropertyAccessOnGlobalType_FallsBackToContainingTypeSchema()
+    {
+        // When a property returns a project-global type (like JsonString) that has
+        // no schema attribute, fall back to the containing type's schema and append
+        // /properties/{jsonPropName} to the pointer.
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+        public static partial class JsonSchema
+        {
+            public const string SchemaLocation = ""widget.json"";
+        }
+
+        public JsonString Name => default;
+    }
+
+    public readonly struct JsonString { }
+
+    class Test
+    {
+        void M()
+        {
+            Widget w = default;
+            _ = w.Name;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "Name",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("#/properties/name", actions[0].Title);
+    }
+
+    [Fact]
+    public async Task PropertyAccessOnNestedType_FallsBackWithPointerSuffix()
+    {
+        // When the containing type has a SchemaLocation with a pointer fragment,
+        // the property suffix is appended to it.
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+        public readonly partial struct AddressEntity : Corvus.Text.Json.Internal.IJsonElement<AddressEntity>
+        {
+            public static partial class JsonSchema
+            {
+                public const string SchemaLocation = ""widget.json#/properties/address"";
+            }
+
+            public JsonString City => default;
+        }
+    }
+
+    public readonly struct JsonString { }
+
+    class Test
+    {
+        void M()
+        {
+            Widget.AddressEntity addr = default;
+            _ = addr.City;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "City",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("#/properties/address/properties/city", actions[0].Title);
+    }
+
+    #endregion
+
     #region Variable and parameter declaration tests
 
     [Fact]
