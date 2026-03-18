@@ -62,7 +62,9 @@ public sealed class ValidateCodeFix : CodeFixProvider
             // (Basic/Detailed/Verbose). If so, we need to create a collector.
             diagnostic.Properties.TryGetValue("ResultsLevel", out string? resultsLevel);
 
-            if (resultsLevel is not null)
+            // Inside an expression lambda body, we can't insert a collector
+            // statement — fall back to simple EvaluateSchema() replacement.
+            if (resultsLevel is not null && !IsExpressionLambdaBody(invocation))
             {
                 context.RegisterCodeFix(
                     CodeAction.Create(
@@ -83,6 +85,33 @@ public sealed class ValidateCodeFix : CodeFixProvider
                     diagnostic);
             }
         }
+    }
+
+    /// <summary>
+    /// Checks whether <paramref name="invocation"/> sits inside an expression
+    /// lambda body (not a block lambda). Restructuring the enclosing statement
+    /// would destroy the lambda.
+    /// </summary>
+    private static bool IsExpressionLambdaBody(InvocationExpressionSyntax invocation)
+    {
+        SyntaxNode? current = invocation.Parent;
+
+        while (current is not null)
+        {
+            if (current is BlockSyntax or StatementSyntax)
+            {
+                return false;
+            }
+
+            if (current is LambdaExpressionSyntax)
+            {
+                return true;
+            }
+
+            current = current.Parent;
+        }
+
+        return false;
     }
 
     private static async Task<Document> ReplaceWithEvaluateSchemaAsync(

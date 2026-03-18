@@ -82,6 +82,13 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
 
             bool isSource = IsUsedAsSource(invocation);
 
+            // Inside an expression lambda body — restructuring would destroy
+            // the lambda. Use the nested/rename path which is expression-safe.
+            if (IsExpressionLambdaBody(invocation))
+            {
+                isSource = true;
+            }
+
             string title = isSource
                 ? $"Rewrite {identifierName.Identifier.Text}() to Build(...)"
                 : $"Rewrite {identifierName.Identifier.Text}() to CreateBuilder(workspace, ...)";
@@ -95,6 +102,33 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
                     equivalenceKey: "CreateFactoryCodeFix_" + diagnostic.Id),
                 diagnostic);
         }
+    }
+
+    /// <summary>
+    /// Checks whether <paramref name="invocation"/> sits inside an expression
+    /// lambda body (not a block lambda). Restructuring the enclosing statement
+    /// would destroy the lambda.
+    /// </summary>
+    private static bool IsExpressionLambdaBody(InvocationExpressionSyntax invocation)
+    {
+        SyntaxNode? current = invocation.Parent;
+
+        while (current is not null)
+        {
+            if (current is BlockSyntax or StatementSyntax)
+            {
+                return false;
+            }
+
+            if (current is LambdaExpressionSyntax)
+            {
+                return true;
+            }
+
+            current = current.Parent;
+        }
+
+        return false;
     }
 
     /// <summary>
