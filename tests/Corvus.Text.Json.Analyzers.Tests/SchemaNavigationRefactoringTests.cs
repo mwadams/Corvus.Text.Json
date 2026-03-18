@@ -7,6 +7,7 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,14 +15,11 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 
 using Xunit;
-
-using RefactoringTest = Microsoft.CodeAnalysis.CSharp.Testing.CSharpCodeRefactoringTest<
-    Corvus.Text.Json.Analyzers.SchemaNavigationRefactoring,
-    Microsoft.CodeAnalysis.Testing.DefaultVerifier>;
 
 namespace Corvus.Text.Json.Analyzers.Tests;
 
@@ -30,15 +28,30 @@ namespace Corvus.Text.Json.Analyzers.Tests;
 /// </summary>
 public class SchemaNavigationRefactoringTests
 {
-    private const string SchemaJson = @"{
+    private const string SimpleSchemaJson = @"{
   ""$schema"": ""https://json-schema.org/draft/2020-12/schema"",
   ""type"": ""object"",
   ""properties"": {
-    ""name"": { ""type"": ""string"" }
-  }
+    ""name"": { ""type"": ""string"" },
+    ""address"": {
+      ""type"": ""object"",
+      ""properties"": {
+        ""city"": { ""type"": ""string"" },
+        ""zipCode"": { ""type"": ""string"" }
+      }
+    }
+  },
+  ""allOf"": [
+    {
+      ""type"": ""object"",
+      ""properties"": {
+        ""extra"": { ""type"": ""string"" }
+      }
+    }
+  ]
 }";
 
-    private const string AttributeStub = @"
+    private const string AttributeAndInterfaceStubs = @"
 using System;
 
 namespace Corvus.Text.Json
@@ -49,16 +62,35 @@ namespace Corvus.Text.Json
         public JsonSchemaTypeGeneratorAttribute(string schemaPath) { }
     }
 }
+
+namespace Corvus.Text.Json.Internal
+{
+    public interface IJsonElement { }
+
+    public interface IJsonElement<T> : IJsonElement
+        where T : struct, IJsonElement<T>
+    {
+    }
+
+    public interface IMutableJsonElement<T> : IJsonElement<T>
+        where T : struct, IJsonElement<T>
+    {
+    }
+}
 ";
+
+    #region Basic navigation tests
 
     [Fact]
     public async Task TypeDeclarationWithSchemaAttribute_OffersNavigation()
     {
-        string code = AttributeStub + @"
+        string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
-    public readonly partial struct Widget { }
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+    }
 
     class Test
     {
@@ -69,107 +101,21 @@ namespace TestApp
     }
 }";
 
-        var workspace = new Microsoft.CodeAnalysis.AdhocWorkspace();
-        var project = workspace.AddProject("TestProject", LanguageNames.CSharp);
-        var refs = await Microsoft.CodeAnalysis.Testing.ReferenceAssemblies.Net.Net80.ResolveAsync(
-                LanguageNames.CSharp, default);
-        project = project.AddMetadataReferences(refs);
-        var document = project.AddDocument("Test.cs", SourceText.From(code), filePath: "Test.cs");
-        project = document.Project.AddAdditionalDocument(
-            "widget.json",
-            SourceText.From(SchemaJson),
-            folders: null,
-            filePath: "Schemas/widget.json").Project;
-        document = project.GetDocument(document.Id)!;
-
-        var tree = await document.GetSyntaxTreeAsync();
-        var root = await tree!.GetRootAsync();
-
-        // Find "Widget" in "Widget w = default;" (the last IdentifierNameSyntax named Widget)
-        var identifiers = root!.DescendantNodes()
-            .OfType<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>()
-            .Where(i => i.Identifier.Text == "Widget")
-            .ToList();
-
-        var target = identifiers.Last();
-        var span = target.Span;
-
-        // Invoke the refactoring provider
-        var provider = new SchemaNavigationRefactoring();
-        var actions = new System.Collections.Generic.List<CodeAction>();
-        var context = new CodeRefactoringContext(
-            document,
-            span,
-            a => actions.Add(a),
-            default);
-
-        await provider.ComputeRefactoringsAsync(context);
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "Widget",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
 
         Assert.NotEmpty(actions);
         Assert.Contains("Go to schema", actions[0].Title);
     }
 
     [Fact]
-    public async Task ManualVerify_RefactoringFindsAttribute()
-    {
-        // Manual test: create a workspace, add the code, invoke the provider.
-        string code = AttributeStub + @"
-namespace TestApp
-{
-    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
-    public readonly partial struct Widget { }
-
-    class Test
-    {
-        void M()
-        {
-            Widget w = default;
-        }
-    }
-}";
-
-        var workspace = new Microsoft.CodeAnalysis.AdhocWorkspace();
-        var project = workspace.AddProject("TestProject", LanguageNames.CSharp);
-        var refs = await Microsoft.CodeAnalysis.Testing.ReferenceAssemblies.Net.Net80.ResolveAsync(
-                LanguageNames.CSharp, default);
-        project = project.AddMetadataReferences(refs);
-        var document = project.AddDocument("Test.cs", SourceText.From(code), filePath: "Test.cs");
-        project = document.Project.AddAdditionalDocument(
-            "widget.json",
-            SourceText.From(SchemaJson),
-            folders: null,
-            filePath: "Schemas/widget.json").Project;
-        document = project.GetDocument(document.Id)!;
-
-        var tree = await document.GetSyntaxTreeAsync();
-        var root = await tree!.GetRootAsync();
-        var model = await document.GetSemanticModelAsync();
-
-        // Find "Widget" identifier in "Widget w = default;"
-        var identifiers = root!.DescendantNodes()
-            .OfType<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>()
-            .Where(i => i.Identifier.Text == "Widget")
-            .ToList();
-
-        // Check the last identifier (in the method body, not the struct declaration)
-        var target = identifiers.Last();
-        var symbolInfo = model!.GetSymbolInfo(target);
-
-        Assert.NotNull(symbolInfo.Symbol);
-        Assert.IsAssignableFrom<INamedTypeSymbol>(symbolInfo.Symbol);
-
-        var typeSymbol = (INamedTypeSymbol)symbolInfo.Symbol!;
-        var attrs = typeSymbol.GetAttributes();
-
-        Assert.NotEmpty(attrs);
-        Assert.Equal("JsonSchemaTypeGeneratorAttribute", attrs[0].AttributeClass!.Name);
-        Assert.Equal("Schemas/widget.json", attrs[0].ConstructorArguments[0].Value);
-    }
-
-    [Fact]
     public async Task TypeWithoutSchemaAttribute_DoesNotOfferNavigation()
     {
-        string code = AttributeStub + @"
+        string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     public readonly struct PlainType { }
@@ -183,24 +129,302 @@ namespace TestApp
     }
 }";
 
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "PlainType",
+            useLastIdentifier: true);
+
+        Assert.Empty(actions);
+    }
+
+    #endregion
+
+    #region JSON Pointer resolution tests
+
+    [Fact]
+    public async Task TypeWithSchemaLocation_ShowsPointerInTitle()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+        public readonly partial struct NameEntity : Corvus.Text.Json.Internal.IJsonElement<NameEntity>
+        {
+            public static partial class JsonSchema
+            {
+                public const string SchemaLocation = ""widget.json#/properties/name"";
+            }
+        }
+    }
+
+    class Test
+    {
+        void M()
+        {
+            Widget.NameEntity n = default;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "NameEntity",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("#/properties/name", actions[0].Title);
+    }
+
+    [Fact]
+    public async Task TopLevelType_NoPointerInTitle()
+    {
+        // Top-level types have SchemaLocation like "widget.json" with no pointer fragment.
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+        public static partial class JsonSchema
+        {
+            public const string SchemaLocation = ""widget.json"";
+        }
+    }
+
+    class Test
+    {
+        void M()
+        {
+            Widget w = default;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "Widget",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("widget.json", actions[0].Title);
+        Assert.DoesNotContain("#", actions[0].Title);
+    }
+
+    [Theory]
+    [InlineData("/properties/name", 4)]
+    [InlineData("/properties/address", 5)]
+    [InlineData("/properties/address/properties/city", 8)]
+    [InlineData("/properties/address/properties/zipCode", 9)]
+    public void ResolveJsonPointer_FindsCorrectLine(string pointer, int expectedLine)
+    {
+        int? line = SchemaNavigationRefactoring.ResolveJsonPointerToLine(SimpleSchemaJson, pointer);
+        Assert.NotNull(line);
+        Assert.Equal(expectedLine, line!.Value);
+    }
+
+    [Fact]
+    public void ResolveJsonPointer_NullPointer_ReturnsNull()
+    {
+        int? line = SchemaNavigationRefactoring.ResolveJsonPointerToLine(SimpleSchemaJson, null!);
+        Assert.Null(line);
+    }
+
+    [Fact]
+    public void ResolveJsonPointer_EmptyPointer_ReturnsNull()
+    {
+        int? line = SchemaNavigationRefactoring.ResolveJsonPointerToLine(SimpleSchemaJson, "");
+        Assert.Null(line);
+    }
+
+    [Fact]
+    public void ResolveJsonPointer_RootSlash_ReturnsNull()
+    {
+        int? line = SchemaNavigationRefactoring.ResolveJsonPointerToLine(SimpleSchemaJson, "/");
+        Assert.Null(line);
+    }
+
+    [Fact]
+    public void ResolveJsonPointer_NonExistentProperty_ReturnsNull()
+    {
+        int? line = SchemaNavigationRefactoring.ResolveJsonPointerToLine(SimpleSchemaJson, "/properties/nonExistent");
+        Assert.Null(line);
+    }
+
+    #endregion
+
+    #region IJsonElement<T> / IMutableJsonElement<T> unwrapping tests
+
+    [Fact]
+    public async Task IJsonElementVariable_OffersNavigation()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+    }
+
+    class Test
+    {
+        void M()
+        {
+            Corvus.Text.Json.Internal.IJsonElement<Widget> w = default(Widget);
+        }
+    }
+}";
+
+        // The cursor is on IJsonElement — the type should unwrap to Widget.
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "IJsonElement",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("Go to schema", actions[0].Title);
+    }
+
+    [Fact]
+    public async Task IMutableJsonElementVariable_OffersNavigation()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IMutableJsonElement<Widget>
+    {
+    }
+
+    class Test
+    {
+        void M()
+        {
+            Corvus.Text.Json.Internal.IMutableJsonElement<Widget> w = default(Widget);
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "IMutableJsonElement",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("Go to schema", actions[0].Title);
+    }
+
+    [Fact]
+    public async Task NonGenericIJsonElement_DoesNotOfferNavigation()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M(Corvus.Text.Json.Internal.IJsonElement e)
+        {
+            _ = e;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "IJsonElement",
+            useLastIdentifier: true);
+
+        Assert.Empty(actions);
+    }
+
+    [Fact]
+    public async Task IJsonElementParameter_OffersNavigation()
+    {
+        string code = AttributeAndInterfaceStubs + @"
+namespace TestApp
+{
+    [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
+    public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
+    {
+    }
+
+    class Test
+    {
+        void M(Corvus.Text.Json.Internal.IJsonElement<Widget> param)
+        {
+            _ = param;
+        }
+    }
+}";
+
+        List<CodeAction> actions = await GetRefactoringsForIdentifier(
+            code,
+            "IJsonElement",
+            useLastIdentifier: true,
+            additionalFilePath: "Schemas/widget.json",
+            additionalFileContent: SimpleSchemaJson);
+
+        Assert.NotEmpty(actions);
+        Assert.Contains("Go to schema", actions[0].Title);
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private static async Task<List<CodeAction>> GetRefactoringsForIdentifier(
+        string code,
+        string identifierName,
+        bool useLastIdentifier,
+        string? additionalFilePath = null,
+        string? additionalFileContent = null)
+    {
         var workspace = new Microsoft.CodeAnalysis.AdhocWorkspace();
         var project = workspace.AddProject("TestProject", LanguageNames.CSharp);
-        var refs = await Microsoft.CodeAnalysis.Testing.ReferenceAssemblies.Net.Net80.ResolveAsync(
+        var refs = await ReferenceAssemblies.Net.Net80.ResolveAsync(
                 LanguageNames.CSharp, default);
         project = project.AddMetadataReferences(refs);
         var document = project.AddDocument("Test.cs", SourceText.From(code), filePath: "Test.cs");
-        document = document.Project.GetDocument(document.Id)!;
+
+        if (additionalFilePath is not null && additionalFileContent is not null)
+        {
+            project = document.Project.AddAdditionalDocument(
+                System.IO.Path.GetFileName(additionalFilePath),
+                SourceText.From(additionalFileContent),
+                folders: null,
+                filePath: additionalFilePath).Project;
+            document = project.GetDocument(document.Id)!;
+        }
+        else
+        {
+            document = document.Project.GetDocument(document.Id)!;
+        }
 
         var tree = await document.GetSyntaxTreeAsync();
         var root = await tree!.GetRootAsync();
 
-        var target = root!.DescendantNodes()
-            .OfType<Microsoft.CodeAnalysis.CSharp.Syntax.IdentifierNameSyntax>()
-            .Where(i => i.Identifier.Text == "PlainType")
-            .Last();
+        // Search for both IdentifierNameSyntax and GenericNameSyntax nodes.
+        var candidates = root!.DescendantNodes()
+            .Where(n =>
+                (n is IdentifierNameSyntax id && id.Identifier.Text == identifierName) ||
+                (n is GenericNameSyntax gn && gn.Identifier.Text == identifierName))
+            .ToList();
+
+        Assert.NotEmpty(candidates);
+
+        var target = useLastIdentifier ? candidates.Last() : candidates.First();
 
         var provider = new SchemaNavigationRefactoring();
-        var actions = new System.Collections.Generic.List<CodeAction>();
+        var actions = new List<CodeAction>();
         var context = new CodeRefactoringContext(
             document,
             target.Span,
@@ -209,6 +433,8 @@ namespace TestApp
 
         await provider.ComputeRefactoringsAsync(context);
 
-        Assert.Empty(actions);
+        return actions;
     }
+
+    #endregion
 }

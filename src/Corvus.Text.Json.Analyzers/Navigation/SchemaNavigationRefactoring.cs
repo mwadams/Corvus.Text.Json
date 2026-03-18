@@ -29,12 +29,27 @@ namespace Corvus.Text.Json.Analyzers;
 /// CTJ-NAV: Provides a "Go to Schema Definition" refactoring for types generated
 /// from JSON Schema via <c>JsonSchemaTypeGeneratorAttribute</c>.
 /// </summary>
+/// <remarks>
+/// <para>
+/// When the cursor is on an identifier that resolves to a schema-generated type
+/// (or to a variable/property/parameter of such a type, including those typed as
+/// <c>IJsonElement&lt;T&gt;</c> or <c>IMutableJsonElement&lt;T&gt;</c>), this
+/// refactoring offers a "Go to schema" action that opens the source JSON Schema file.
+/// </para>
+/// <para>
+/// If the generated type has a <c>SchemaLocation</c> const containing a JSON pointer
+/// fragment (e.g., <c>"person.json#/properties/name"</c>), the action navigates to
+/// the corresponding line within the schema file.
+/// </para>
+/// </remarks>
 [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = nameof(SchemaNavigationRefactoring))]
 [Shared]
 public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 {
     private const string GeneratorAttributeName = "JsonSchemaTypeGeneratorAttribute";
     private const string GeneratorAttributeShortName = "JsonSchemaTypeGenerator";
+    private const string JsonSchemaNestedClassName = "JsonSchema";
+    private const string SchemaLocationFieldName = "SchemaLocation";
 
     /// <inheritdoc/>
     public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -56,19 +71,33 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         IdentifierNameSyntax? identifier = node as IdentifierNameSyntax
             ?? node.Parent as IdentifierNameSyntax;
 
+        // Also handle GenericNameSyntax (e.g., IJsonElement<Widget>).
+        GenericNameSyntax? genericName = null;
+
         if (identifier is null)
         {
             // Also handle qualified names like V5Example.Model.Person
             if (node is QualifiedNameSyntax qualifiedName)
             {
                 identifier = qualifiedName.Right as IdentifierNameSyntax;
+                genericName = qualifiedName.Right as GenericNameSyntax;
+            }
+            else if (node is GenericNameSyntax gns)
+            {
+                genericName = gns;
+            }
+            else if (node.Parent is GenericNameSyntax parentGns)
+            {
+                genericName = parentGns;
             }
         }
 
-        if (identifier is null)
+        if (identifier is null && genericName is null)
         {
             return;
         }
+
+        SyntaxNode nodeForSymbol = (SyntaxNode?)identifier ?? genericName!;
 
         SemanticModel? semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
         if (semanticModel is null)
@@ -77,7 +106,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         }
 
         // Resolve the symbol.
-        SymbolInfo symbolInfo = semanticModel.GetSymbolInfo(identifier, context.CancellationToken);
+        SymbolInfo symbolInfo = semanticModel.GetSymbolInfo(nodeForSymbol, context.CancellationToken);
         ISymbol? symbol = symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault();
 
         // If the symbol is a local/parameter/field of a generated type, get the type.
@@ -97,6 +126,9 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             return;
         }
 
+        // Unwrap IJsonElement<T> / IMutableJsonElement<T> to get the concrete type T.
+        namedType = UnwrapJsonElementInterface(namedType);
+
         // Find the JsonSchemaTypeGeneratorAttribute on the type.
         SchemaInfo? schemaInfo = FindSchemaInfo(namedType, context.Document.Project, context.CancellationToken);
         if (schemaInfo is null)
@@ -104,13 +136,93 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             return;
         }
 
-        string title = $"Go to schema: {Path.GetFileName(schemaInfo.Value.FilePath)}";
+        // Read the SchemaLocation const to get the JSON pointer fragment.
+        string? schemaLocation = GetSchemaLocation(namedType);
+        string? jsonPointer = ExtractJsonPointer(schemaLocation);
+
+        string displayName = jsonPointer is not null
+            ? $"{Path.GetFileName(schemaInfo.Value.FilePath)}#{jsonPointer}"
+            : Path.GetFileName(schemaInfo.Value.FilePath);
+
+        string title = $"Go to schema: {displayName}";
 
         context.RegisterRefactoring(
             new NavigateToSchemaAction(
                 title,
                 schemaInfo.Value.FilePath,
-                schemaInfo.Value.DocumentId));
+                schemaInfo.Value.DocumentId,
+                jsonPointer));
+    }
+
+    /// <summary>
+    /// If the type is <c>IJsonElement&lt;T&gt;</c> or <c>IMutableJsonElement&lt;T&gt;</c>,
+    /// returns the <c>T</c> type argument. Otherwise returns the original type.
+    /// </summary>
+    private static INamedTypeSymbol UnwrapJsonElementInterface(INamedTypeSymbol namedType)
+    {
+        if (namedType.IsGenericType && namedType.TypeArguments.Length == 1)
+        {
+            string typeName = namedType.OriginalDefinition.Name;
+            string? ns = namedType.OriginalDefinition.ContainingNamespace?.ToDisplayString();
+
+            if (ns == "Corvus.Text.Json.Internal" &&
+                (typeName == "IJsonElement" || typeName == "IMutableJsonElement"))
+            {
+                if (namedType.TypeArguments[0] is INamedTypeSymbol concreteType)
+                {
+                    return concreteType;
+                }
+            }
+        }
+
+        // Also check if the type implements IJsonElement<T> but doesn't have the attribute itself.
+        // In the CRTP pattern (T : struct, IJsonElement<T>), the type IS T, so this is already
+        // handled by the existing ContainingType walk in FindSchemaInfo.
+        return namedType;
+    }
+
+    /// <summary>
+    /// Reads the <c>SchemaLocation</c> const from the type's nested <c>JsonSchema</c> static class.
+    /// </summary>
+    private static string? GetSchemaLocation(INamedTypeSymbol typeSymbol)
+    {
+        // Look for a nested type called "JsonSchema" containing a const "SchemaLocation".
+        foreach (INamedTypeSymbol nestedType in typeSymbol.GetTypeMembers())
+        {
+            if (nestedType.Name == JsonSchemaNestedClassName)
+            {
+                foreach (ISymbol member in nestedType.GetMembers(SchemaLocationFieldName))
+                {
+                    if (member is IFieldSymbol { IsConst: true, ConstantValue: string location } &&
+                        !string.IsNullOrEmpty(location))
+                    {
+                        return location;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Extracts the JSON pointer fragment from a SchemaLocation value.
+    /// Returns <c>null</c> if no pointer is present.
+    /// </summary>
+    private static string? ExtractJsonPointer(string? schemaLocation)
+    {
+        if (schemaLocation is null)
+        {
+            return null;
+        }
+
+        int hashIndex = schemaLocation.IndexOf('#');
+        if (hashIndex >= 0 && hashIndex < schemaLocation.Length - 1)
+        {
+            return schemaLocation.Substring(hashIndex + 1);
+        }
+
+        return null;
     }
 
     private static SchemaInfo? FindSchemaInfo(
@@ -249,19 +361,21 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
     /// </summary>
     private sealed class NavigateToSchemaAction : CodeAction
     {
-        private readonly string _title;
-        private readonly string _filePath;
-        private readonly DocumentId? _documentId;
+        private readonly string title;
+        private readonly string filePath;
+        private readonly DocumentId? documentId;
+        private readonly string? jsonPointer;
 
-        public NavigateToSchemaAction(string title, string filePath, DocumentId? documentId)
+        public NavigateToSchemaAction(string title, string filePath, DocumentId? documentId, string? jsonPointer)
         {
-            this._title = title;
-            this._filePath = filePath;
-            this._documentId = documentId;
+            this.title = title;
+            this.filePath = filePath;
+            this.documentId = documentId;
+            this.jsonPointer = jsonPointer;
         }
 
         /// <inheritdoc/>
-        public override string Title => this._title;
+        public override string Title => this.title;
 
         /// <inheritdoc/>
         public override string? EquivalenceKey => "CTJ-NAV";
@@ -272,7 +386,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         {
             var operations = new List<CodeActionOperation>
             {
-                new OpenSchemaFileOperation(this._filePath, this._documentId),
+                new OpenSchemaFileOperation(this.filePath, this.documentId, this.jsonPointer),
             };
 
             return Task.FromResult<IEnumerable<CodeActionOperation>>(operations);
@@ -282,38 +396,184 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
     /// <summary>
     /// A <see cref="CodeActionOperation"/> that attempts to open a schema file
     /// in the host workspace. In Visual Studio this opens the document in the editor.
+    /// If a JSON pointer is provided, the operation attempts to navigate to the
+    /// corresponding line within the file.
     /// </summary>
     private sealed class OpenSchemaFileOperation : CodeActionOperation
     {
-        private readonly string _filePath;
-        private readonly DocumentId? _documentId;
+        private readonly string filePath;
+        private readonly DocumentId? documentId;
+        private readonly string? jsonPointer;
 
-        public OpenSchemaFileOperation(string filePath, DocumentId? documentId)
+        public OpenSchemaFileOperation(string filePath, DocumentId? documentId, string? jsonPointer)
         {
-            this._filePath = filePath;
-            this._documentId = documentId;
+            this.filePath = filePath;
+            this.documentId = documentId;
+            this.jsonPointer = jsonPointer;
         }
 
         /// <inheritdoc/>
-        public override string Title => $"Open {Path.GetFileName(this._filePath)}";
+        public override string Title => $"Open {Path.GetFileName(this.filePath)}";
 
         /// <inheritdoc/>
         public override void Apply(Workspace workspace, CancellationToken cancellationToken)
         {
-            // Try to open the file as a regular document if it exists in the solution.
-            if (this._documentId is not null)
+            if (this.documentId is null)
             {
-                // AdditionalDocuments can be opened in VS via the workspace.
-                // This is a best-effort call — in non-VS environments it may be a no-op.
-                try
+                return;
+            }
+
+            // AdditionalDocuments can be opened in VS via the workspace.
+            // This is a best-effort call — in non-VS environments it may be a no-op.
+            try
+            {
+                workspace.OpenDocument(this.documentId);
+            }
+            catch (NotSupportedException)
+            {
+                // Not all workspace implementations support OpenDocument.
+            }
+        }
+    }
+
+    /// <summary>
+    /// Resolves a JSON pointer (e.g., <c>/properties/name</c>) to a line number
+    /// within the given schema text. Returns <c>null</c> if the pointer cannot be resolved.
+    /// </summary>
+    /// <remarks>
+    /// This is a lightweight text-based resolver that walks the JSON text line-by-line,
+    /// matching property keys against pointer segments. It does not perform a full JSON
+    /// parse, which keeps it suitable for use in an analyzer context.
+    /// </remarks>
+    internal static int? ResolveJsonPointerToLine(string schemaText, string jsonPointer)
+    {
+        if (string.IsNullOrEmpty(jsonPointer) || jsonPointer == "/")
+        {
+            return null;
+        }
+
+        // Split the pointer into segments: "/properties/name" → ["properties", "name"]
+        string[] segments = jsonPointer.TrimStart('/').Split('/');
+        if (segments.Length == 0)
+        {
+            return null;
+        }
+
+        // Unescape JSON Pointer encoding (~1 → /, ~0 → ~)
+        for (int i = 0; i < segments.Length; i++)
+        {
+            segments[i] = segments[i].Replace("~1", "/").Replace("~0", "~");
+        }
+
+        string[] lines = schemaText.Split('\n');
+        int currentSegmentIndex = 0;
+        int targetLine = 0;
+        int depth = 0;
+
+        // We want to look for segments at increasing depths.
+        // The root object is depth 1, so the first segment should be at depth 1.
+        int targetDepth = 1;
+
+        for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+        {
+            string line = lines[lineIndex].Trim();
+
+            // Depth at the start of this line (before this line's braces).
+            int startOfLineDepth = depth;
+
+            // Update depth by counting braces on this line.
+            foreach (char c in line)
+            {
+                if (c == '{' || c == '[')
                 {
-                    workspace.OpenDocument(this._documentId);
+                    depth++;
                 }
-                catch (NotSupportedException)
+                else if (c == '}' || c == ']')
                 {
-                    // Not all workspace implementations support OpenDocument.
+                    depth--;
+                }
+            }
+
+            if (currentSegmentIndex >= segments.Length)
+            {
+                break;
+            }
+
+            string segment = segments[currentSegmentIndex];
+
+            // Check if this line contains a JSON property key matching the current segment
+            // at the expected nesting depth.
+            string keyPattern = $"\"{segment}\"";
+            int keyIndex = line.IndexOf(keyPattern, StringComparison.Ordinal);
+
+            if (keyIndex >= 0 && IsPropertyKey(line, keyIndex, keyPattern.Length))
+            {
+                if (startOfLineDepth == targetDepth)
+                {
+                    targetLine = lineIndex;
+                    currentSegmentIndex++;
+
+                    // Next segment should be one level deeper.
+                    targetDepth = startOfLineDepth + 1;
+
+                    if (currentSegmentIndex >= segments.Length)
+                    {
+                        return targetLine;
+                    }
+                }
+            }
+
+            // Handle array indices: if the segment is a number, count array elements
+            // at the target depth.
+            if (int.TryParse(segment, out int arrayIndex) && startOfLineDepth == targetDepth)
+            {
+                if (line.StartsWith("{", StringComparison.Ordinal) ||
+                    line.StartsWith("[", StringComparison.Ordinal) ||
+                    line.StartsWith("\"", StringComparison.Ordinal))
+                {
+                    if (arrayIndex == 0)
+                    {
+                        targetLine = lineIndex;
+                        currentSegmentIndex++;
+                        targetDepth = startOfLineDepth + 1;
+
+                        if (currentSegmentIndex >= segments.Length)
+                        {
+                            return targetLine;
+                        }
+                    }
                 }
             }
         }
+
+        // If we matched all segments, return the last matched line.
+        if (currentSegmentIndex >= segments.Length)
+        {
+            return targetLine;
+        }
+
+        // Could not resolve the full pointer.
+        return null;
+    }
+
+    /// <summary>
+    /// Checks whether the matched key pattern at the given position is actually
+    /// a property key (followed by a colon) rather than a string value.
+    /// </summary>
+    private static bool IsPropertyKey(string line, int keyIndex, int keyLength)
+    {
+        int afterKey = keyIndex + keyLength;
+        for (int i = afterKey; i < line.Length; i++)
+        {
+            char c = line[i];
+            if (c == ' ' || c == '\t')
+            {
+                continue;
+            }
+
+            return c == ':';
+        }
+
+        return false;
     }
 }
