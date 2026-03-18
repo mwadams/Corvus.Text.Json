@@ -223,7 +223,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
             return document;
         }
 
-        var chain = new List<(string SetName, ArgumentListSyntax Args)>();
+        var chain = new List<(string SetName, ArgumentListSyntax Args, SyntaxTriviaList DotTrivia)>();
         ExpressionSyntax? rootReceiver = CollectChain(outermostInvocation, chain);
 
         if (rootReceiver is null || chain.Count == 0)
@@ -246,8 +246,16 @@ public sealed class WithMutationCodeFix : CodeFixProvider
         var statementsToRemove = new HashSet<StatementSyntax> { containingStatement };
         var newStatements = new List<StatementSyntax>();
 
-        foreach ((string setName, ArgumentListSyntax args) in chain)
+        // Track the receiver variable name so we can rewrite its type to .Mutable.
+        string? receiverVariableName = rootReceiver is IdentifierNameSyntax receiverId
+            ? receiverId.Identifier.Text
+            : null;
+
+        foreach ((string setName, ArgumentListSyntax args, SyntaxTriviaList dotTrivia) in chain)
         {
+            // Preserve any comments that appeared before the dot in the chain.
+            SyntaxTriviaList stmtLeading = PrependCommentTrivia(dotTrivia, leadingTrivia);
+
             // Check if the single argument is a local variable from a nested
             // extract-mutate-reassign pattern.
             if (block is not null &&
@@ -266,12 +274,14 @@ public sealed class WithMutationCodeFix : CodeFixProvider
                     statementsToRemove.Add(s);
                 }
 
+                bool first = true;
                 foreach ((string innerSetName, string innerArgsText) in innerMutations)
                 {
                     newStatements.Add(
                         SyntaxFactory.ParseStatement(
                             $"{receiverText}.{propertyPath}.{innerSetName}{innerArgsText};\r\n")
-                            .WithLeadingTrivia(leadingTrivia));
+                            .WithLeadingTrivia(first ? stmtLeading : leadingTrivia));
+                    first = false;
                 }
             }
             else
@@ -280,14 +290,14 @@ public sealed class WithMutationCodeFix : CodeFixProvider
                 newStatements.Add(
                     SyntaxFactory.ParseStatement(
                         $"{receiverText}.{setName}{args.WithoutTrivia().ToFullString()};\r\n")
-                        .WithLeadingTrivia(leadingTrivia));
+                        .WithLeadingTrivia(stmtLeading));
             }
         }
 
-        if (block is not null && statementsToRemove.Count > 1)
+        if (block is not null)
         {
-            // Multiple statements to remove — rebuild the block.
-            // Insert the new statements at the position of the first removed statement.
+            // Rebuild the block: remove old statements, insert new ones,
+            // and rewrite the receiver variable type to .Mutable if needed.
             var newBlockStatements = new List<StatementSyntax>();
             bool inserted = false;
 
@@ -304,7 +314,17 @@ public sealed class WithMutationCodeFix : CodeFixProvider
                     continue;
                 }
 
-                newBlockStatements.Add(stmt);
+                // Rewrite the receiver variable's declaration type to .Mutable.
+                if (receiverVariableName is not null &&
+                    stmt is LocalDeclarationStatementSyntax localDecl &&
+                    TryRewriteToMutable(localDecl, receiverVariableName, out LocalDeclarationStatementSyntax rewritten))
+                {
+                    newBlockStatements.Add(rewritten);
+                }
+                else
+                {
+                    newBlockStatements.Add(stmt);
+                }
             }
 
             if (!inserted)
@@ -318,6 +338,77 @@ public sealed class WithMutationCodeFix : CodeFixProvider
 
         return document.WithSyntaxRoot(
             root.ReplaceNode(containingStatement, newStatements));
+    }
+
+    /// <summary>
+    /// Prepends any single-line or multi-line comment trivia from the dot operator
+    /// (between chain elements) before the statement's own leading trivia so that
+    /// comments originally placed between chained <c>.With*()</c> calls survive unchaining.
+    /// </summary>
+    private static SyntaxTriviaList PrependCommentTrivia(
+        SyntaxTriviaList dotTrivia,
+        SyntaxTriviaList statementLeadingTrivia)
+    {
+        var comments = new List<SyntaxTrivia>();
+
+        foreach (SyntaxTrivia t in dotTrivia)
+        {
+            if (t.IsKind(SyntaxKind.SingleLineCommentTrivia) ||
+                t.IsKind(SyntaxKind.MultiLineCommentTrivia))
+            {
+                comments.AddRange(statementLeadingTrivia);
+                comments.Add(t);
+                comments.Add(SyntaxFactory.EndOfLine("\r\n"));
+            }
+        }
+
+        if (comments.Count == 0)
+        {
+            return statementLeadingTrivia;
+        }
+
+        comments.AddRange(statementLeadingTrivia);
+        return SyntaxFactory.TriviaList(comments);
+    }
+
+    /// <summary>
+    /// If <paramref name="localDecl"/> declares <paramref name="variableName"/>
+    /// with an explicit (non-<c>var</c>) type, rewrites that type to
+    /// <c>Type.Mutable</c> so that mutation methods can be called on the variable.
+    /// </summary>
+    private static bool TryRewriteToMutable(
+        LocalDeclarationStatementSyntax localDecl,
+        string variableName,
+        out LocalDeclarationStatementSyntax rewritten)
+    {
+        rewritten = localDecl;
+
+        foreach (VariableDeclaratorSyntax declarator in localDecl.Declaration.Variables)
+        {
+            if (declarator.Identifier.Text != variableName)
+            {
+                continue;
+            }
+
+            string typeText = localDecl.Declaration.Type.ToString();
+            if (typeText == "var" || typeText == "var?" || typeText.EndsWith(".Mutable") || typeText.EndsWith(".Mutable?"))
+            {
+                return false;
+            }
+
+            // Handle nullable types: "Person?" → "Person.Mutable?" not "Person?.Mutable".
+            bool isNullable = typeText.EndsWith("?");
+            string baseType = isNullable ? typeText.Substring(0, typeText.Length - 1) : typeText;
+            string mutableTypeText = baseType + ".Mutable" + (isNullable ? "?" : "");
+
+            TypeSyntax mutableType = SyntaxFactory.ParseTypeName(mutableTypeText)
+                .WithTriviaFrom(localDecl.Declaration.Type);
+            rewritten = localDecl.WithDeclaration(
+                localDecl.Declaration.WithType(mutableType));
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -348,7 +439,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
         }
 
         // Collect the inner With*() chain.
-        var innerChain = new List<(string SetName, ArgumentListSyntax Args)>();
+        var innerChain = new List<(string SetName, ArgumentListSyntax Args, SyntaxTriviaList DotTrivia)>();
         ExpressionSyntax? innerReceiver = CollectChain(mutateInvocation, innerChain);
 
         if (innerReceiver is null || innerChain.Count == 0)
@@ -459,7 +550,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
     /// </summary>
     private static ExpressionSyntax? CollectChain(
         InvocationExpressionSyntax invocation,
-        List<(string SetName, ArgumentListSyntax Args)> chain)
+        List<(string SetName, ArgumentListSyntax Args, SyntaxTriviaList DotTrivia)> chain)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
         {
@@ -487,7 +578,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
             receiver = memberAccess.Expression;
         }
 
-        chain.Add((setName, invocation.ArgumentList));
+        chain.Add((setName, invocation.ArgumentList, memberAccess.OperatorToken.LeadingTrivia));
         return receiver;
     }
 }

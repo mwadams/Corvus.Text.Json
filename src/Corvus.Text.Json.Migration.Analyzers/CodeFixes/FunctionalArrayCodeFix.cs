@@ -7,6 +7,7 @@
 // https://github.com/dotnet/runtime/blob/388a7c4814cb0d6e344621d017507b357902043a/LICENSE.TXT
 // </licensing>
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Threading;
@@ -91,6 +92,46 @@ public sealed class FunctionalArrayCodeFix : CodeFixProvider
         _ => v4Name,
     };
 
+    private static bool IsFunctionalArrayMethod(string name) =>
+        name is "Add" or "Insert" or "SetItem" or "RemoveAt";
+
+    /// <summary>
+    /// Recursively collects a chain of functional array calls (innermost first).
+    /// Returns the root receiver expression (e.g., <c>arr</c> in <c>arr.Add(a).Add(b)</c>).
+    /// </summary>
+    private static ExpressionSyntax? CollectFunctionalChain(
+        InvocationExpressionSyntax invocation,
+        List<(string V5Name, ArgumentListSyntax Args)> chain)
+    {
+        if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
+        {
+            return null;
+        }
+
+        string methodName = memberAccess.Name.Identifier.Text;
+        if (!IsFunctionalArrayMethod(methodName))
+        {
+            return null;
+        }
+
+        string v5Name = GetV5Name(methodName);
+        ExpressionSyntax? receiver;
+
+        if (memberAccess.Expression is InvocationExpressionSyntax innerInvocation &&
+            innerInvocation.Expression is MemberAccessExpressionSyntax innerAccess &&
+            IsFunctionalArrayMethod(innerAccess.Name.Identifier.Text))
+        {
+            receiver = CollectFunctionalChain(innerInvocation, chain);
+        }
+        else
+        {
+            receiver = memberAccess.Expression;
+        }
+
+        chain.Add((v5Name, invocation.ArgumentList));
+        return receiver;
+    }
+
     private static async Task<Document> RenameAndDropAssignmentAsync(
         Document document,
         InvocationExpressionSyntax invocation,
@@ -104,37 +145,129 @@ public sealed class FunctionalArrayCodeFix : CodeFixProvider
             return document;
         }
 
-        // Rename the method identifier.
-        IdentifierNameSyntax newIdentifier = identifier.WithIdentifier(
-            SyntaxFactory.Identifier(newName)
-                .WithTriviaFrom(identifier.Identifier));
+        // Walk up to find the outermost chained functional array call.
+        InvocationExpressionSyntax outermost = invocation;
+        while (outermost.Parent is MemberAccessExpressionSyntax ma &&
+               ma.Parent is InvocationExpressionSyntax outerInvocation &&
+               outerInvocation.Expression is MemberAccessExpressionSyntax outerAccess &&
+               IsFunctionalArrayMethod(outerAccess.Name.Identifier.Text))
+        {
+            outermost = outerInvocation;
+        }
 
-        // Build the renamed invocation as a standalone expression statement.
-        InvocationExpressionSyntax renamedInvocation = invocation.ReplaceNode(identifier, newIdentifier);
+        // Collect the full chain of functional array calls.
+        var chain = new List<(string V5Name, ArgumentListSyntax Args)>();
+        ExpressionSyntax? rootReceiver = CollectFunctionalChain(outermost, chain);
 
-        StatementSyntax? containingStatement = invocation.FirstAncestorOrSelf<StatementSyntax>();
+        if (rootReceiver is null || chain.Count == 0)
+        {
+            // Fallback: simple rename without restructuring.
+            IdentifierNameSyntax newIdentifier = identifier.WithIdentifier(
+                SyntaxFactory.Identifier(newName).WithTriviaFrom(identifier.Identifier));
+            return document.WithSyntaxRoot(root.ReplaceNode(identifier, newIdentifier));
+        }
+
+        StatementSyntax? containingStatement = outermost.FirstAncestorOrSelf<StatementSyntax>();
         if (containingStatement is null)
         {
-            return document.WithSyntaxRoot(root.ReplaceNode(identifier, newIdentifier));
+            return document;
         }
 
-        // Get the receiver (e.g., "array" from "array.Add(item)").
-        ExpressionSyntax? receiver = null;
-        if (renamedInvocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        string receiverText = rootReceiver.WithoutTrivia().ToFullString();
+        SyntaxTriviaList leadingTrivia = containingStatement.GetLeadingTrivia();
+        bool isReturn = containingStatement is ReturnStatementSyntax;
+
+        string? receiverVariableName = rootReceiver is IdentifierNameSyntax receiverId
+            ? receiverId.Identifier.Text
+            : null;
+
+        // Build replacement statements: one per chain element.
+        var replacementStatements = new List<StatementSyntax>();
+        foreach ((string v5Name, ArgumentListSyntax args) in chain)
         {
-            receiver = memberAccess.Expression;
+            replacementStatements.Add(
+                SyntaxFactory.ParseStatement(
+                    $"{receiverText}.{v5Name}{args.WithoutTrivia().ToFullString()};\r\n")
+                    .WithLeadingTrivia(leadingTrivia));
         }
 
-        if (receiver is null)
+        // For return statements, add 'return receiver;' after the mutations.
+        if (isReturn && receiverVariableName is not null)
         {
-            return document.WithSyntaxRoot(root.ReplaceNode(identifier, newIdentifier));
+            replacementStatements.Add(
+                SyntaxFactory.ParseStatement($"return {receiverVariableName};\r\n")
+                    .WithLeadingTrivia(leadingTrivia));
         }
 
-        // Build: receiver.newName(args);
-        ExpressionStatementSyntax newStatement = SyntaxFactory.ExpressionStatement(renamedInvocation)
-            .WithLeadingTrivia(containingStatement.GetLeadingTrivia())
-            .WithTrailingTrivia(containingStatement.GetTrailingTrivia());
+        // Rebuild the block to replace the statement and rewrite the
+        // receiver variable's type to .Mutable.
+        BlockSyntax? block = containingStatement.Parent as BlockSyntax;
+        if (block is not null)
+        {
+            var newBlockStatements = new List<StatementSyntax>();
+            foreach (StatementSyntax stmt in block.Statements)
+            {
+                if (ReferenceEquals(stmt, containingStatement))
+                {
+                    newBlockStatements.AddRange(replacementStatements);
+                }
+                else if (receiverVariableName is not null &&
+                         stmt is LocalDeclarationStatementSyntax localDecl &&
+                         TryRewriteToMutable(localDecl, receiverVariableName, out LocalDeclarationStatementSyntax rewritten))
+                {
+                    newBlockStatements.Add(rewritten);
+                }
+                else
+                {
+                    newBlockStatements.Add(stmt);
+                }
+            }
 
-        return document.WithSyntaxRoot(root.ReplaceNode(containingStatement, newStatement));
+            BlockSyntax newBlock = block.WithStatements(SyntaxFactory.List(newBlockStatements));
+            return document.WithSyntaxRoot(root.ReplaceNode(block, newBlock));
+        }
+
+        return document.WithSyntaxRoot(
+            root.ReplaceNode(containingStatement, replacementStatements));
+    }
+
+    /// <summary>
+    /// If <paramref name="localDecl"/> declares <paramref name="variableName"/>
+    /// with an explicit (non-<c>var</c>) type, rewrites that type to
+    /// <c>Type.Mutable</c> so that mutation methods can be called on the variable.
+    /// </summary>
+    private static bool TryRewriteToMutable(
+        LocalDeclarationStatementSyntax localDecl,
+        string variableName,
+        out LocalDeclarationStatementSyntax rewritten)
+    {
+        rewritten = localDecl;
+
+        foreach (VariableDeclaratorSyntax declarator in localDecl.Declaration.Variables)
+        {
+            if (declarator.Identifier.Text != variableName)
+            {
+                continue;
+            }
+
+            string typeText = localDecl.Declaration.Type.ToString();
+            if (typeText == "var" || typeText == "var?" || typeText.EndsWith(".Mutable") || typeText.EndsWith(".Mutable?"))
+            {
+                return false;
+            }
+
+            // Handle nullable types: "Person?" → "Person.Mutable?" not "Person?.Mutable".
+            bool isNullable = typeText.EndsWith("?");
+            string baseType = isNullable ? typeText.Substring(0, typeText.Length - 1) : typeText;
+            string mutableTypeText = baseType + ".Mutable" + (isNullable ? "?" : "");
+
+            TypeSyntax mutableType = SyntaxFactory.ParseTypeName(mutableTypeText)
+                .WithTriviaFrom(localDecl.Declaration.Type);
+            rewritten = localDecl.WithDeclaration(
+                localDecl.Declaration.WithType(mutableType));
+            return true;
+        }
+
+        return false;
     }
 }

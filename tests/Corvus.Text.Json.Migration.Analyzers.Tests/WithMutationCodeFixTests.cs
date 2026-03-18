@@ -95,7 +95,7 @@ namespace TestApp
     {
         void M()
         {
-            Person person = default;
+            Person.Mutable person = default;
             person.SetName(""Bob"");
         }
     }
@@ -137,7 +137,7 @@ namespace TestApp
     {
         void M()
         {
-            Person person = default;
+            Person.Mutable person = default;
             person.SetName(""Bob"");
             person.SetAge(25);
         }
@@ -184,7 +184,7 @@ namespace TestApp
     {
         void M()
         {
-            Person person = default;
+            Person.Mutable person = default;
             person.AddressValue.SetCity(""Manchester"");
         }
     }
@@ -230,7 +230,7 @@ namespace TestApp
     {
         void M()
         {
-            Person person = default;
+            Person.Mutable person = default;
             Address address = person.AddressValue;
             person.SetAddressValue(address.SetCity(""Manchester""));
         }
@@ -278,7 +278,7 @@ namespace TestApp
     {
         void M()
         {
-            Person person = default;
+            Person.Mutable person = default;
             Address address = person.AddressValue;
             person.SetAddressValue(address.SetCity(""Manchester""));
             person.SetTags(person.Tags.Add((Corvus.Json.JsonString)""superadmin""));
@@ -303,6 +303,185 @@ namespace TestApp
             Verify.Diagnostic()
                 .WithLocation(2)
                 .WithArguments("WithTags", "Tags"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task WithMutation_CommentsInChain_PreservesComments()
+    {
+        // Comments between chained With calls should be preserved
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Person person = default;
+            person = person
+                // Set the name first
+                .{|#0:WithName|}(""Alice"")
+                // Then the age
+                .{|#1:WithAge|}(30);
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            // Set the name first
+            person.SetName(""Alice"");
+            // Then the age
+            person.SetAge(30);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "Name"));
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(1)
+                .WithArguments("WithAge", "Age"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task WithMutation_VarType_DoesNotRewriteType()
+    {
+        // var should remain var; the code fix should not try to
+        // change it to var.Mutable
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            var person = new Person();
+            person = person.{|#0:WithName|}(""test"");
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            var person = new Person();
+            person.SetName(""test"");
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "Name"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task WithMutation_AlreadyMutable_DoesNotDoubleAppend()
+    {
+        // If the type is already Person.Mutable, don't change it
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            person = person.{|#0:WithName|}(""test"");
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            person.SetName(""test"");
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "Name"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task WithMutation_PropertyReceiver_NoTypeRewrite()
+    {
+        // When the receiver is a property/field access (not a local),
+        // the code fix should still rename but not try to rewrite a type.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Person Person { get; set; }
+
+        void M()
+        {
+            Person = Person.{|#0:WithName|}(""test"");
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Person Person { get; set; }
+
+        void M()
+        {
+            Person.SetName(""test"");
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "Name"));
 
         await test.RunAsync();
     }

@@ -71,7 +71,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             Corvus.Json.JsonAny item = default;
             arr.AddItem(item);
         }
@@ -109,7 +109,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             Corvus.Json.JsonAny item = default;
             arr.InsertItem(0, item);
         }
@@ -149,7 +149,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             Corvus.Json.JsonAny item = default;
             arr.{|#0:SetItem|}(0, item);
         }
@@ -193,7 +193,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             arr.{|#0:RemoveAt|}(0);
         }
     }
@@ -235,7 +235,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             Corvus.Json.JsonAny item = default;
             arr.AddItem(item);
         }
@@ -297,7 +297,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             Corvus.Json.JsonAny item = default;
             arr.AddItem(item);
         }
@@ -336,7 +336,7 @@ namespace TestApp
     {
         void M()
         {
-            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonArray.Mutable arr = default;
             Corvus.Json.JsonAny item = default;
             arr.AddItem(item);
         }
@@ -372,5 +372,128 @@ namespace TestApp
 
         await Verify.VerifyAnalyzerAsync(testCode,
             Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+    }
+
+    [Fact]
+    public async Task Add_InReturnStatement_PreservesReturn()
+    {
+        // return arr.Add(item) → arr.AddItem(item); return arr;
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Corvus.Json.JsonArray M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny item = default;
+            return arr.{|#0:Add|}(item);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        Corvus.Json.JsonArray M()
+        {
+            Corvus.Json.JsonArray.Mutable arr = default;
+            Corvus.Json.JsonAny item = default;
+            arr.AddItem(item);
+            return arr;
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Add_Chained_SplitsIntoSeparateCalls()
+    {
+        // arr = arr.Add(a).Add(b) → arr.AddItem(a); arr.AddItem(b);
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray arr = default;
+            Corvus.Json.JsonAny a = default;
+            Corvus.Json.JsonAny b = default;
+            arr = arr.{|#0:Add|}(a).{|#1:Add|}(b);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray.Mutable arr = default;
+            Corvus.Json.JsonAny a = default;
+            Corvus.Json.JsonAny b = default;
+            arr.AddItem(a);
+            arr.AddItem(b);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+            NumberOfFixAllIterations = 1,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(1).WithArguments("Add", "AddItem"));
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task Add_AlreadyMutable_DoesNotDoubleAppend()
+    {
+        // If the type is already Corvus.Json.JsonArray.Mutable, don't change it
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray.Mutable arr = default;
+            Corvus.Json.JsonAny item = default;
+            arr = arr.{|#0:Add|}(item);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonArray.Mutable arr = default;
+            Corvus.Json.JsonAny item = default;
+            arr.AddItem(item);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+        await test.RunAsync();
     }
 }
