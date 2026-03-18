@@ -16,6 +16,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using System.Text;
+using System.Text.Json;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -174,34 +177,18 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         // If the property's own type is not schema-generated (e.g. a project-global
         // type like JsonString), fall back to the containing type's schema and append
         // /properties/{jsonPropName} to the pointer.
-        string? propertyPointerSuffix = null;
+        bool usedPropertyFallback = false;
         if (schemaInfo is null && accessedProperty is not null)
         {
-            INamedTypeSymbol? containingType = accessedProperty.ContainingType;
-            if (containingType is not null)
+            (SchemaInfo Info, string? Pointer)? parentResult = await ResolveContainingTypeSchemaAsync(
+                accessedProperty, context.Document.Project, context.CancellationToken).ConfigureAwait(false);
+
+            if (parentResult is not null)
             {
-                containingType = UnwrapJsonElementInterface(containingType);
-                schemaInfo = FindSchemaInfo(containingType, context.Document.Project, context.CancellationToken);
-
-                string? containingSchemaLocation = GetSchemaLocation(containingType);
-
-                // Also try $id-based lookup for the containing type.
-                if (schemaInfo is null && containingSchemaLocation is not null && containingSchemaLocation.Length > 0)
-                {
-                    string? baseUrl = ExtractBaseUrl(containingSchemaLocation);
-                    if (baseUrl is not null)
-                    {
-                        schemaInfo = await FindSchemaByIdAsync(baseUrl, context.Document.Project, context.CancellationToken).ConfigureAwait(false);
-                    }
-                }
-
-                if (schemaInfo is not null)
-                {
-                    // Use the containing type's pointer as a base, and append
-                    // the property path.
-                    jsonPointer = ExtractJsonPointer(containingSchemaLocation);
-                    propertyPointerSuffix = "/properties/" + ToCamelCase(accessedProperty.Name);
-                }
+                schemaInfo = parentResult.Value.Info;
+                jsonPointer = (parentResult.Value.Pointer ?? string.Empty) +
+                    "/properties/" + ToCamelCase(accessedProperty.Name);
+                usedPropertyFallback = true;
             }
         }
 
@@ -210,40 +197,126 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             return;
         }
 
-        // If we resolved via a property on a schema-generated containing type,
-        // append the property path to the pointer.
-        if (propertyPointerSuffix is not null)
+        // Register the primary action ("Go to schema type" or "Go to schema").
+        string primaryPrefix = accessedProperty is not null && !usedPropertyFallback
+            ? "Go to schema type"
+            : "Go to schema";
+        NavigateToSchemaAction? primaryAction = await BuildSchemaActionAsync(
+            primaryPrefix, schemaInfo.Value, jsonPointer,
+            context.Document.Project, context.CancellationToken).ConfigureAwait(false);
+
+        if (primaryAction is not null)
         {
-            jsonPointer = (jsonPointer ?? string.Empty) + propertyPointerSuffix;
+            context.RegisterRefactoring(primaryAction);
         }
 
-        // Pre-resolve the pointer to a target line by reading the schema file text.
-        int? targetLine = null;
-        if (jsonPointer is not null && schemaInfo.Value.DocumentId is not null)
+        // If we navigated to a type that has its own schema (not the fallback case),
+        // and this was a property access, also offer to navigate to the property
+        // declaration on the parent type's schema.
+        if (accessedProperty is not null && !usedPropertyFallback)
         {
-            TextDocument? schemaDoc = context.Document.Project.GetAdditionalDocument(schemaInfo.Value.DocumentId);
+            (SchemaInfo Info, string? Pointer)? parentResult = await ResolveContainingTypeSchemaAsync(
+                accessedProperty, context.Document.Project, context.CancellationToken).ConfigureAwait(false);
+
+            if (parentResult is not null)
+            {
+                string propPointer = (parentResult.Value.Pointer ?? string.Empty) +
+                    "/properties/" + ToCamelCase(accessedProperty.Name);
+
+                NavigateToSchemaAction? propAction = await BuildSchemaActionAsync(
+                    "Go to property declaration", parentResult.Value.Info, propPointer,
+                    context.Document.Project, context.CancellationToken).ConfigureAwait(false);
+
+                if (propAction is not null)
+                {
+                    context.RegisterRefactoring(propAction);
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Resolves the schema info for the containing type of the given property, using
+    /// attribute-based lookup and <c>$id</c>-based fallback.
+    /// </summary>
+    private async Task<(SchemaInfo Info, string? Pointer)?> ResolveContainingTypeSchemaAsync(
+        IPropertySymbol accessedProperty,
+        Project project,
+        CancellationToken cancellationToken)
+    {
+        INamedTypeSymbol? containingType = accessedProperty.ContainingType;
+        if (containingType is null)
+        {
+            return null;
+        }
+
+        containingType = UnwrapJsonElementInterface(containingType);
+        SchemaInfo? schemaInfo = FindSchemaInfo(containingType, project, cancellationToken);
+        string? schemaLocation = GetSchemaLocation(containingType);
+
+        if (schemaInfo is null && schemaLocation is not null && schemaLocation.Length > 0)
+        {
+            string? baseUrl = ExtractBaseUrl(schemaLocation);
+            if (baseUrl is not null)
+            {
+                schemaInfo = await FindSchemaByIdAsync(baseUrl, project, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        if (schemaInfo is null)
+        {
+            return null;
+        }
+
+        string? pointer = ExtractJsonPointer(schemaLocation);
+        return (schemaInfo.Value, pointer);
+    }
+
+    /// <summary>
+    /// Builds a <see cref="NavigateToSchemaAction"/> by resolving the pointer to a
+    /// line/column position within the schema file.
+    /// </summary>
+    private static async Task<NavigateToSchemaAction?> BuildSchemaActionAsync(
+        string titlePrefix,
+        SchemaInfo schemaInfo,
+        string? jsonPointer,
+        Project project,
+        CancellationToken cancellationToken)
+    {
+        int? targetLine = null;
+        int? targetColumn = null;
+
+        if (jsonPointer is not null && schemaInfo.DocumentId is not null)
+        {
+            TextDocument? schemaDoc = project.GetAdditionalDocument(schemaInfo.DocumentId);
             if (schemaDoc is not null)
             {
-                SourceText? schemaText = await schemaDoc.GetTextAsync(context.CancellationToken).ConfigureAwait(false);
+                SourceText? schemaText = await schemaDoc.GetTextAsync(cancellationToken).ConfigureAwait(false);
                 if (schemaText is not null)
                 {
-                    targetLine = ResolveJsonPointerToLine(schemaText.ToString(), jsonPointer);
+                    (int Line, int Column)? pos = ResolveJsonPointerToPosition(schemaText.ToString(), jsonPointer);
+                    if (pos.HasValue)
+                    {
+                        targetLine = pos.Value.Line;
+                        targetColumn = pos.Value.Column;
+                    }
                 }
             }
         }
 
         string displayName = jsonPointer is not null
-            ? $"{Path.GetFileName(schemaInfo.Value.FilePath)}#{jsonPointer}"
-            : Path.GetFileName(schemaInfo.Value.FilePath);
+            ? $"{Path.GetFileName(schemaInfo.FilePath)}#{jsonPointer}"
+            : Path.GetFileName(schemaInfo.FilePath);
 
-        string title = $"Go to schema: {displayName}";
+        string lineHint = targetLine.HasValue ? $" (line {targetLine.Value + 1})" : string.Empty;
+        string title = $"{titlePrefix}: {displayName}{lineHint}";
 
-        context.RegisterRefactoring(
-            new NavigateToSchemaAction(
-                title,
-                schemaInfo.Value.FilePath,
-                schemaInfo.Value.DocumentId,
-                targetLine));
+        return new NavigateToSchemaAction(
+            title,
+            schemaInfo.FilePath,
+            schemaInfo.DocumentId,
+            targetLine,
+            targetColumn);
     }
 
     /// <summary>
@@ -538,13 +611,15 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         private readonly string filePath;
         private readonly DocumentId? documentId;
         private readonly int? targetLine;
+        private readonly int? targetColumn;
 
-        public NavigateToSchemaAction(string title, string filePath, DocumentId? documentId, int? targetLine)
+        public NavigateToSchemaAction(string title, string filePath, DocumentId? documentId, int? targetLine, int? targetColumn)
         {
             this.title = title;
             this.filePath = filePath;
             this.documentId = documentId;
             this.targetLine = targetLine;
+            this.targetColumn = targetColumn;
         }
 
         /// <inheritdoc/>
@@ -559,7 +634,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         {
             var operations = new List<CodeActionOperation>
             {
-                new OpenSchemaFileOperation(this.filePath, this.documentId, this.targetLine),
+                new OpenSchemaFileOperation(this.filePath, this.documentId, this.targetLine, this.targetColumn),
             };
 
             return Task.FromResult<IEnumerable<CodeActionOperation>>(operations);
@@ -577,12 +652,14 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         private readonly string filePath;
         private readonly DocumentId? documentId;
         private readonly int? targetLine;
+        private readonly int? targetColumn;
 
-        public OpenSchemaFileOperation(string filePath, DocumentId? documentId, int? targetLine)
+        public OpenSchemaFileOperation(string filePath, DocumentId? documentId, int? targetLine, int? targetColumn)
         {
             this.filePath = filePath;
             this.documentId = documentId;
             this.targetLine = targetLine;
+            this.targetColumn = targetColumn;
         }
 
         /// <inheritdoc/>
@@ -626,94 +703,71 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         {
             try
             {
-                // Find the EnvDTE.DTE type from loaded assemblies.
+                // Try to find DTE types.
                 Type? dteType = FindTypeInLoadedAssemblies("EnvDTE.DTE");
+
+                // The service is registered under EnvDTE.DTE (the base type).
+                // GetGlobalService(typeof(DTE)) returns a DTE2 instance.
                 if (dteType is null)
                 {
                     return false;
                 }
 
-                // Try multiple strategies to get the DTE instance.
                 object? dte = GetDteViaMethods(workspace, dteType);
                 if (dte is null)
                 {
                     return false;
                 }
 
-                // Use DTE.ItemOperations.OpenFile(filePath, viewKind) to open the file
-                // synchronously. This ensures the document IS the active document when
-                // we call GotoLine, avoiding the timing issue with workspace.OpenDocument.
-                object? itemOperations = dte.GetType()
-                    .GetProperty("ItemOperations")
-                    ?.GetValue(dte);
+                // Use DTE.ItemOperations.OpenFile(filePath, viewKind).
+                // COM objects are __ComObject — normal GetProperty/GetValue
+                // doesn't work. Use InvokeMember which dispatches through IDispatch.
+                const System.Reflection.BindingFlags comGet =
+                    System.Reflection.BindingFlags.GetProperty;
+                const System.Reflection.BindingFlags comInvoke =
+                    System.Reflection.BindingFlags.InvokeMethod;
+
+                object? itemOperations = dte.GetType().InvokeMember(
+                    "ItemOperations", comGet, null, dte, null);
 
                 if (itemOperations is null)
                 {
                     return false;
                 }
 
-                // EnvDTE.Constants.vsViewKindTextView
                 const string vsViewKindTextView = "{7651A703-06E5-11D1-8EBD-00A0C90F26EA}";
 
-                bool fileOpened = false;
-                foreach (System.Reflection.MethodInfo method in itemOperations.GetType().GetMethods())
-                {
-                    if (method.Name != "OpenFile")
-                    {
-                        continue;
-                    }
+                itemOperations.GetType().InvokeMember(
+                    "OpenFile", comInvoke, null, itemOperations,
+                    new object[] { this.filePath, vsViewKindTextView });
 
-                    System.Reflection.ParameterInfo[] parms = method.GetParameters();
-                    if (parms.Length == 2)
-                    {
-                        method.Invoke(itemOperations, new object[] { this.filePath, vsViewKindTextView });
-                        fileOpened = true;
-                        break;
-                    }
-
-                    if (parms.Length == 1)
-                    {
-                        method.Invoke(itemOperations, new object[] { this.filePath });
-                        fileOpened = true;
-                        break;
-                    }
-                }
-
-                if (!fileOpened)
-                {
-                    return false;
-                }
-
-                // Navigate to the target line in the now-active document.
+                // Navigate to the target position.
                 if (this.targetLine.HasValue)
                 {
-                    object? activeDoc = dte.GetType()
-                        .GetProperty("ActiveDocument")
-                        ?.GetValue(dte);
+                    object? activeDoc = dte.GetType().InvokeMember(
+                        "ActiveDocument", comGet, null, dte, null);
 
-                    object? selection = activeDoc?.GetType()
-                        .GetProperty("Selection")
-                        ?.GetValue(activeDoc);
-
-                    if (selection is not null)
+                    if (activeDoc is not null)
                     {
-                        // DTE lines are 1-based; our targetLine is 0-based.
-                        foreach (System.Reflection.MethodInfo method in selection.GetType().GetMethods())
+                        object? selection = activeDoc.GetType().InvokeMember(
+                            "Selection", comGet, null, activeDoc, null);
+
+                        if (selection is not null)
                         {
-                            if (method.Name == "GotoLine" && method.GetParameters().Length == 2)
-                            {
-                                method.Invoke(selection, new object[] { this.targetLine.Value + 1, false });
-                                break;
-                            }
+                            // DTE lines and offsets are 1-based; ours are 0-based.
+                            int dteLine = this.targetLine.Value + 1;
+                            int dteOffset = (this.targetColumn ?? 0) + 1;
+                            selection.GetType().InvokeMember(
+                                "MoveToLineAndOffset", comInvoke, null, selection,
+                                new object[] { dteLine, dteOffset, false });
                         }
                     }
                 }
 
                 return true;
             }
-            catch
+            catch (Exception)
             {
-                // DTE not available — fall back to workspace API.
                 return false;
             }
         }
@@ -724,8 +778,8 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         private static object? GetDteViaMethods(Workspace workspace, Type dteType)
         {
             // Strategy 1: Package.GetGlobalService(typeof(DTE))
-            // This is the standard VS Shell approach.
             Type? packageType = FindTypeInLoadedAssemblies("Microsoft.VisualStudio.Shell.Package");
+
             if (packageType is not null)
             {
                 System.Reflection.MethodInfo? getGlobalService = packageType.GetMethod(
@@ -735,15 +789,20 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                     new[] { typeof(Type) },
                     null);
 
-                object? dte = getGlobalService?.Invoke(null, new object[] { dteType });
-                if (dte is not null)
+                if (getGlobalService is not null)
                 {
-                    return dte;
+                    object? dte = getGlobalService.Invoke(null, new object[] { dteType });
+
+                    if (dte is not null)
+                    {
+                        return dte;
+                    }
                 }
             }
 
             // Strategy 2: ServiceProvider.GlobalProvider.GetService(typeof(DTE))
             Type? spType = FindTypeInLoadedAssemblies("Microsoft.VisualStudio.Shell.ServiceProvider");
+
             if (spType is not null)
             {
                 object? globalProvider = spType.GetProperty(
@@ -754,6 +813,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                 if (globalProvider is IServiceProvider sp)
                 {
                     object? dte = sp.GetService(dteType);
+
                     if (dte is not null)
                     {
                         return dte;
@@ -761,7 +821,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                 }
             }
 
-            // Strategy 3: Workspace's internal service provider (last resort).
+            // Strategy 3: Workspace's internal service provider.
             object? workspaceSp = workspace.GetType().GetProperty(
                 "ServiceProvider",
                 System.Reflection.BindingFlags.Instance |
@@ -786,6 +846,25 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
         private static Type? FindTypeInLoadedAssemblies(string fullName)
         {
+            // First try Type.GetType with assembly-qualified names, which can
+            // trigger assembly loading (unlike scanning already-loaded assemblies).
+            string? assemblyQualified = fullName switch
+            {
+                "EnvDTE.DTE" => "EnvDTE.DTE, EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+                "EnvDTE80.DTE2" => "EnvDTE80.DTE2, EnvDTE80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a",
+                _ => null,
+            };
+
+            if (assemblyQualified is not null)
+            {
+                Type? t = Type.GetType(assemblyQualified, throwOnError: false);
+                if (t is not null)
+                {
+                    return t;
+                }
+            }
+
+            // Fall back to scanning loaded assemblies.
             foreach (System.Reflection.Assembly asm in AppDomain.CurrentDomain.GetAssemblies())
             {
                 Type? t = asm.GetType(fullName);
@@ -800,143 +879,154 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
     }
 
     /// <summary>
-    /// Resolves a JSON pointer (e.g., <c>/properties/name</c>) to a line number
-    /// within the given schema text. Returns <c>null</c> if the pointer cannot be resolved.
+    /// Resolves a JSON pointer (e.g., <c>/properties/name</c>) to a line and column
+    /// position within the given schema text. Returns <c>null</c> if the pointer
+    /// cannot be resolved.
     /// </summary>
     /// <remarks>
-    /// This is a lightweight text-based resolver that walks the JSON text line-by-line,
-    /// matching property keys against pointer segments. It does not perform a full JSON
-    /// parse, which keeps it suitable for use in an analyzer context.
+    /// Uses <see cref="Utf8JsonReader"/> to walk the JSON structure, following
+    /// pointer segments through objects and arrays. This approach handles all
+    /// JSON edge cases (string escaping, single-line files, nested structures)
+    /// correctly. The returned position points to the opening quote of the
+    /// matched property key, or the start of the matched array element.
     /// </remarks>
-    internal static int? ResolveJsonPointerToLine(string schemaText, string jsonPointer)
+    internal static (int Line, int Column)? ResolveJsonPointerToPosition(string schemaText, string jsonPointer)
     {
         if (string.IsNullOrEmpty(jsonPointer) || jsonPointer == "/")
         {
             return null;
         }
 
-        // Split the pointer into segments: "/properties/name" → ["properties", "name"]
-        string[] segments = jsonPointer.TrimStart('/').Split('/');
+        // Strip leading # (URI fragment syntax).
+        string pointer = jsonPointer;
+        if (pointer[0] == '#')
+        {
+            pointer = pointer.Substring(1);
+        }
+
+        if (string.IsNullOrEmpty(pointer))
+        {
+            return null;
+        }
+
+        // Split into segments and decode JSON Pointer escapes (~1 → /, ~0 → ~).
+        string[] segments = pointer.TrimStart('/').Split('/');
         if (segments.Length == 0)
         {
             return null;
         }
 
-        // Unescape JSON Pointer encoding (~1 → /, ~0 → ~)
         for (int i = 0; i < segments.Length; i++)
         {
             segments[i] = segments[i].Replace("~1", "/").Replace("~0", "~");
         }
 
-        string[] lines = schemaText.Split('\n');
-        int currentSegmentIndex = 0;
-        int targetLine = 0;
-        int depth = 0;
+        byte[] utf8Bytes = Encoding.UTF8.GetBytes(schemaText);
 
-        // We want to look for segments at increasing depths.
-        // The root object is depth 1, so the first segment should be at depth 1.
-        int targetDepth = 1;
-
-        for (int lineIndex = 0; lineIndex < lines.Length; lineIndex++)
+        try
         {
-            string line = lines[lineIndex].Trim();
+            var reader = new Utf8JsonReader(
+                utf8Bytes,
+                new JsonReaderOptions { CommentHandling = JsonCommentHandling.Skip });
 
-            // Depth at the start of this line (before this line's braces).
-            int startOfLineDepth = depth;
-
-            // Update depth by counting braces on this line.
-            foreach (char c in line)
+            if (!reader.Read())
             {
-                if (c == '{' || c == '[')
-                {
-                    depth++;
-                }
-                else if (c == '}' || c == ']')
-                {
-                    depth--;
-                }
+                return null;
             }
 
-            if (currentSegmentIndex >= segments.Length)
+            long matchedByteOffset = 0;
+
+            for (int s = 0; s < segments.Length; s++)
             {
-                break;
-            }
+                string segment = segments[s];
 
-            string segment = segments[currentSegmentIndex];
-
-            // Check if this line contains a JSON property key matching the current segment
-            // at the expected nesting depth.
-            string keyPattern = $"\"{segment}\"";
-            int keyIndex = line.IndexOf(keyPattern, StringComparison.Ordinal);
-
-            if (keyIndex >= 0 && IsPropertyKey(line, keyIndex, keyPattern.Length))
-            {
-                if (startOfLineDepth == targetDepth)
+                if (reader.TokenType == JsonTokenType.StartObject)
                 {
-                    targetLine = lineIndex;
-                    currentSegmentIndex++;
+                    reader.Read();
+                    bool found = false;
 
-                    // Next segment should be one level deeper.
-                    targetDepth = startOfLineDepth + 1;
-
-                    if (currentSegmentIndex >= segments.Length)
+                    while (reader.TokenType == JsonTokenType.PropertyName)
                     {
-                        return targetLine;
-                    }
-                }
-            }
-
-            // Handle array indices: if the segment is a number, count array elements
-            // at the target depth.
-            if (int.TryParse(segment, out int arrayIndex) && startOfLineDepth == targetDepth)
-            {
-                if (line.StartsWith("{", StringComparison.Ordinal) ||
-                    line.StartsWith("[", StringComparison.Ordinal) ||
-                    line.StartsWith("\"", StringComparison.Ordinal))
-                {
-                    if (arrayIndex == 0)
-                    {
-                        targetLine = lineIndex;
-                        currentSegmentIndex++;
-                        targetDepth = startOfLineDepth + 1;
-
-                        if (currentSegmentIndex >= segments.Length)
+                        if (reader.ValueTextEquals(segment))
                         {
-                            return targetLine;
+                            // Record the property key position.
+                            matchedByteOffset = reader.TokenStartIndex;
+
+                            // Advance to the property value for further navigation.
+                            reader.Read();
+                            found = true;
+                            break;
                         }
+
+                        // Skip this property's name and value.
+                        reader.Skip();
+                        reader.Read();
+                    }
+
+                    if (!found)
+                    {
+                        return null;
                     }
                 }
+                else if (reader.TokenType == JsonTokenType.StartArray)
+                {
+                    if (!int.TryParse(segment, out int targetArrayIndex))
+                    {
+                        return null;
+                    }
+
+                    // Move to the first element.
+                    reader.Read();
+
+                    int currentIndex = 0;
+                    while (currentIndex < targetArrayIndex && reader.TokenType != JsonTokenType.EndArray)
+                    {
+                        currentIndex++;
+                        reader.Skip();
+                        reader.Read();
+                    }
+
+                    if (currentIndex != targetArrayIndex || reader.TokenType == JsonTokenType.EndArray)
+                    {
+                        return null;
+                    }
+
+                // Record the element position.
+                matchedByteOffset = reader.TokenStartIndex;
+            }
+            else
+            {
+                // Can't navigate further into a primitive value.
+                return null;
             }
         }
 
-        // If we matched all segments, return the last matched line.
-        if (currentSegmentIndex >= segments.Length)
-        {
-            return targetLine;
+            return ByteOffsetToLineColumn(utf8Bytes, matchedByteOffset);
         }
-
-        // Could not resolve the full pointer.
-        return null;
+        catch (JsonException)
+        {
+            // Malformed JSON — can't resolve the pointer.
+            return null;
+        }
     }
 
     /// <summary>
-    /// Checks whether the matched key pattern at the given position is actually
-    /// a property key (followed by a colon) rather than a string value.
+    /// Converts a byte offset within a UTF-8 byte array to a 0-based line and column.
     /// </summary>
-    private static bool IsPropertyKey(string line, int keyIndex, int keyLength)
+    private static (int Line, int Column) ByteOffsetToLineColumn(byte[] utf8Bytes, long byteOffset)
     {
-        int afterKey = keyIndex + keyLength;
-        for (int i = afterKey; i < line.Length; i++)
-        {
-            char c = line[i];
-            if (c == ' ' || c == '\t')
-            {
-                continue;
-            }
+        int line = 0;
+        long lineStart = 0;
 
-            return c == ':';
+        for (long i = 0; i < byteOffset && i < utf8Bytes.Length; i++)
+        {
+            if (utf8Bytes[i] == (byte)'\n')
+            {
+                line++;
+                lineStart = i + 1;
+            }
         }
 
-        return false;
+        return (line, (int)(byteOffset - lineStart));
     }
 }

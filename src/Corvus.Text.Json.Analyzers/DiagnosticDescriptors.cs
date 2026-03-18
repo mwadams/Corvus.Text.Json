@@ -18,7 +18,7 @@ internal static class DiagnosticDescriptors
 {
     private const string Category = "Performance";
     private const string UsageCategory = "Usage";
-    private const string HelpLinkBase = "https://corvus-text-json.dev/docs/analyzers/";
+    private const string HelpLinkBase = "https://corvus-text-json.dev/docs/analyzers.html";
 
     /// <summary>
     /// CTJ001: Prefer UTF-8 string literal.
@@ -26,11 +26,11 @@ internal static class DiagnosticDescriptors
     public static readonly DiagnosticDescriptor PreferUtf8StringLiteral = new(
         id: "CTJ001",
         title: "Prefer UTF-8 string literal",
-        messageFormat: "Use '{0}u8' instead of '{0}' — a ReadOnlySpan<byte> overload is available",
+        messageFormat: "Use \"{0}\"u8 instead of \"{0}\" — a ReadOnlySpan<byte> overload is available",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "CTJ001");
+        helpLinkUri: HelpLinkBase + "#ctj001--prefer-utf-8-string-literal");
 
     /// <summary>
     /// CTJ002: Unnecessary conversion to .NET type.
@@ -42,7 +42,7 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "CTJ002");
+        helpLinkUri: HelpLinkBase + "#ctj002--unnecessary-conversion-to-net-type");
 
     /// <summary>
     /// CTJ003: Match lambda should be static.
@@ -54,5 +54,5 @@ internal static class DiagnosticDescriptors
         category: UsageCategory,
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "CTJ003");
+        helpLinkUri: HelpLinkBase + "#ctj003--match-lambda-should-be-static");
 }

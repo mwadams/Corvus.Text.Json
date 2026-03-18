@@ -181,36 +181,50 @@ using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
 ---
 
-### CVJ011 — V4 `With*()` replaced by `Set*()` via mutable builder
+### CVJ011 — V4 immutable mutation replaced by mutable builder
 
 **Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
 
-Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place. The code fix rewrites the receiver variable's type to `.Mutable` so that mutation methods can be called.
+Detects V4's functional mutation methods that return a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and mutate in-place. This covers:
+
+- **`With*()`** on generated types (renamed to `Set*()` in V5)
+- **`SetProperty()`** on `JsonObject` / `IJsonObject<T>` types (name unchanged in V5, but called on `.Mutable`)
+- **`RemoveProperty()`** on `JsonObject` / `IJsonObject<T>` types (name unchanged in V5, but called on `.Mutable`)
 
 The code fix handles several patterns:
 
-**Simple rename (with type rewrite):**
-```csharp
-// Before (V4)
-Person person = default;
-Person updated = person.WithName("Bob");
-
-// After (V5)
-Person.Mutable person = default;
-person.SetName("Bob");
-```
-
-**Unchaining fluent calls:**
+**`With*()` rename and unchain:**
 ```csharp
 // Before (V4)
 Person updated = person.WithName("Bob").WithAge(25);
 
-// After (V5)
+// After (V5) — inside a mutable builder context
 person.SetName("Bob");
 person.SetAge(25);
 ```
 
-**Nested extract-mutate-reassign collapse:**
+**`SetProperty()` unchain and `.Mutable` rewrite:**
+```csharp
+// Before (V4)
+JsonObject updated = person
+    .SetProperty("age", (JsonNumber)31)
+    .SetProperty("email", (JsonString)"alice@example.com");
+
+// After (V5) — receiver becomes .Mutable, calls are unchained
+person.SetProperty("age", 31);
+person.SetProperty("email", "alice@example.com");
+```
+
+**`RemoveProperty()` on core types:**
+```csharp
+// Before (V4)
+JsonObject updated = person.RemoveProperty("temporaryField");
+
+// After (V5)
+person.RemoveProperty("temporaryField");
+```
+
+**Nested extract-mutate-reassign collapse (with CVJ021):**
 ```csharp
 // Before (V4)
 Address address = person.AddressValue;
@@ -221,54 +235,46 @@ Person result = person.WithAddressValue(updated);
 person.AddressValue.SetCity("Manchester");
 ```
 
-**Expression lambdas (rename only):**
-```csharp
-// Before (V4)
-Func<Person, Person> transform = p => p.WithName("Bob");
-
-// After (V5) — lambda preserved, method renamed
-Func<Person, Person> transform = p => p.SetName("Bob");
-```
-
-> **Note:** Expression lambda bodies use rename-only — the code fix does not restructure the lambda since `Set*()` returns void and cannot be used as an expression result. You may need to manually convert to a block lambda.
-
 ---
 
 ### CVJ012 — V4 functional array operations
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`) and renames them to the V5 mutable builder equivalents (`.AddItem()`, `.InsertItem()`, `.SetItem()`, `.RemoveAt()`). The code fix drops the assignment (since V5 mutates in-place) and rewrites the receiver variable's type to `.Mutable`.
+Detects all V4 functional array methods and rewrites them to V5 mutable builder equivalents. The code fix drops the assignment (since V5 mutates in-place), renames methods where needed, and rewrites the receiver variable type to `.Mutable`.
 
-**Simple case:**
+| V4 Method | V5 Equivalent | Renamed? |
+|---|---|---|
+| `Add(item)` | `AddItem(source)` | ✅ Yes |
+| `AddRange(items)` | `AddRange(items)` | ❌ No (manual: loop of `AddItem`) |
+| `Insert(idx, item)` | `InsertItem(idx, source)` | ✅ Yes |
+| `InsertRange(idx, items)` | `InsertRange(idx, items)` | ❌ No (manual: loop of `InsertItem`) |
+| `SetItem(idx, val)` | `SetItem(idx, source)` | ❌ Same name |
+| `RemoveAt(idx)` | `RemoveAt(idx)` | ❌ Same name |
+| `Remove(val)` | `Remove(item)` | ❌ Same name |
+| `RemoveRange(idx, count)` | `RemoveRange(idx, count)` | ❌ Same name |
+| `Replace(old, new)` | `Replace(old, new)` | ❌ Same name |
+
 ```csharp
-// Before (V4)
-JsonArray arr = default;
-JsonArray updated = arr.Add(newItem);
+// Before (V4) — renamed methods
+JsonArray updated = array.Add(newItem);
+JsonArray replaced = array.Insert(0, item);
 
 // After (V5)
-JsonArray.Mutable arr = default;
-arr.AddItem(newItem);
+array.AddItem(newItem);
+array.InsertItem(0, item);
 ```
 
-**Chained calls are split into separate statements:**
 ```csharp
-// Before (V4)
-JsonArray result = arr.Add(a).Add(b);
+// Before (V4) — same-name methods
+JsonArray result = array.Remove(oldItem);
+JsonArray trimmed = array.RemoveRange(0, 2);
+JsonArray swapped = array.Replace(oldItem, newItem);
 
-// After (V5)
-arr.AddItem(a);
-arr.AddItem(b);
-```
-
-**Return statements are preserved:**
-```csharp
-// Before (V4)
-return arr.Add(item);
-
-// After (V5)
-arr.AddItem(item);
-return arr;
+// After (V5) — assignment dropped, receiver becomes .Mutable
+array.Remove(oldItem);
+array.RemoveRange(0, 2);
+array.Replace(oldItem, newItem);
 ```
 
 ---
@@ -279,7 +285,7 @@ return arr;
 
 Detects V4's static `Create(...)` factory method for constructing objects. The code fix chooses between two V5 patterns based on how the result is used:
 
-- **Top-level (used as an instance):** `CreateBuilder(workspace, ...)` — returns a `JsonDocumentBuilder<T>` whose `.RootElement` is the mutable value. The builder does not need `using`; it is disposed with the workspace. Subsequent references are rewritten with `.RootElement`.
+- **Top-level (used as an instance):** `CreateBuilder(workspace, ...)` — the result is a mutable builder that you can call methods on.
 - **Nested (used as a source value):** `Build(...)` — the result is passed into another construction or argument. When the result is assigned to an explicitly typed variable, the type is rewritten to `Type.Source` (since `Build()` returns a Source, not the entity type).
 
 ```csharp
@@ -288,9 +294,9 @@ Person person = Person.Create(name: "Alice", age: 30);
 person.IsValid(); // member access → builder
 
 // After (V5)
-using var workspace = JsonWorkspace.Create();
-var person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
-person.RootElement.EvaluateSchema();
+using JsonWorkspace workspace = JsonWorkspace.Create();
+Person person = Person.CreateBuilder(workspace, name: "Alice", age: 30);
+person.EvaluateSchema();
 ```
 
 ```csharp
@@ -317,15 +323,15 @@ parent.SetChild(child);
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested. Top-level declarations use `var` (since `CreateBuilder` returns `JsonDocumentBuilder<T>`). Explicitly typed variables on the `Build()` path are rewritten to `Type.Source`.
+Detects V4's `FromItems(...)` array factory. The code fix wraps items in `Build()` when used at the top level (inside `CreateBuilder`), or replaces with `Build()` directly when nested. Explicitly typed variables are rewritten to `Type.Source`.
 
 ```csharp
 // Before (V4) — top-level
 MyArray arr = MyArray.FromItems(item1, item2, item3);
 
 // After (V5) — builder wrapping Build()
-using var workspace = JsonWorkspace.Create();
-var arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MyArray arr = MyArray.CreateBuilder(workspace, MyArray.Build(item1, item2, item3));
 ```
 
 ```csharp
@@ -342,15 +348,15 @@ parent.SetItems(MyArray.Build(item1, item2));
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested. Top-level declarations use `var`. Explicitly typed variables on the `Build()` path are rewritten to `Type.Source`.
+Detects V4's `FromValues(span)` numeric array factory. In V5, use `CreateBuilder(workspace, span)` at top level or `Build(span)` when nested. Explicitly typed variables are rewritten to `Type.Source`.
 
 ```csharp
 // Before (V4)
 MyVector vec = MyVector.FromValues(stackalloc double[] { 1.0, 2.0, 3.0 });
 
 // After (V5) — top-level
-using var workspace = JsonWorkspace.Create();
-var vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
+using JsonWorkspace workspace = JsonWorkspace.Create();
+MyVector vec = MyVector.CreateBuilder(workspace, stackalloc double[] { 1.0, 2.0, 3.0 });
 ```
 
 ```csharp
@@ -379,22 +385,48 @@ if (element.TryGetValue(out string value)) { ... }
 
 ---
 
-### CVJ021 — Nested `With*()` chain can use deep property setter
+### CVJ021 — Nested mutation chain can use deep property setter
 
 **Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
 
-Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder. The receiver variable's type is rewritten to `.Mutable`.
+Detects the V4 pattern of extracting a nested value, mutating it, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder because mutations are visible through the parent.
 
+This diagnostic detects all mutator types — not just `With*()`:
+
+- **Object mutators:** `With*()`, `SetProperty()`, `RemoveProperty()`
+- **Array mutators:** `Add()`, `Insert()`, `SetItem()`, `RemoveAt()`
+
+**Object property mutation:**
 ```csharp
 // Before (V4)
-Person person = default;
 Address address = person.AddressValue;
 Address updatedAddress = address.WithCity("Manchester");
 Person updatedPerson = person.WithAddressValue(updatedAddress);
 
 // After (V5)
-Person.Mutable person = default;
 person.AddressValue.SetCity("Manchester");
+```
+
+**Nested SetProperty:**
+```csharp
+// Before (V4)
+JsonObject address = root["address"].As<JsonObject>();
+JsonObject updatedAddress = address.SetProperty("city", (JsonString)"Manchester");
+JsonObject updatedRoot = root.SetProperty("address", updatedAddress.AsAny);
+
+// After (V5)
+root["address"].SetProperty("city", "Manchester");
+```
+
+**Nested array mutation:**
+```csharp
+// Before (V4)
+JsonArray roles = person["roles"].As<JsonArray>();
+JsonArray updatedRoles = roles.Add((JsonString)"admin");
+Person updatedPerson = person.WithRoles(updatedRoles);
+
+// After (V5)
+person.Roles.AddItem("admin");
 ```
 
 ---
@@ -493,6 +525,39 @@ Fires at compilation end when V4 assembly references are detected. Guides you to
 | `Corvus.Json.SourceGenerator` | `Corvus.Text.Json.SourceGenerator` |
 
 ---
+
+## Complete V4→V5 Mutator Equivalence Table
+
+This table lists every V4 functional mutation method and its V5 mutable builder equivalent.
+
+### Object Mutators
+
+| V4 Method | V5 Equivalent | Diagnostic | Notes |
+|---|---|---|---|
+| `With*()` (generated) | `Set*()` on `.Mutable` | CVJ011 | Renamed; code fix handles |
+| `SetProperty(name, val)` | `SetProperty(name, source)` on `.Mutable` | CVJ011 | Same name; assignment dropped |
+| `RemoveProperty(name)` | `RemoveProperty(name)` on `.Mutable` | CVJ011 | Same name; assignment dropped |
+
+### Array Mutators
+
+| V4 Method | V5 Equivalent | Diagnostic | Notes |
+|---|---|---|---|
+| `Add(item)` | `AddItem(source)` | CVJ012 | Renamed |
+| `AddRange(items)` | Loop of `AddItem()` | CVJ012 | No direct V5 equivalent on Mutable |
+| `Insert(idx, item)` | `InsertItem(idx, source)` | CVJ012 | Renamed |
+| `InsertRange(idx, items)` | Loop of `InsertItem()` | CVJ012 | No direct V5 equivalent on Mutable |
+| `SetItem(idx, val)` | `SetItem(idx, source)` | CVJ012 | Same name |
+| `RemoveAt(idx)` | `RemoveAt(idx)` | CVJ012 | Same name |
+| `Remove(val)` | `Remove(item)` | CVJ012 | Same name |
+| `RemoveRange(idx, count)` | `RemoveRange(idx, count)` | CVJ012 | Same name |
+| `Replace(old, new)` | `Replace(old, new)` | CVJ012 | Same name |
+
+### V5-only Methods (no V4 equivalent)
+
+| V5 Method | Description |
+|---|---|
+| `RemoveWhere(predicate)` | Remove all array elements matching a predicate |
+| `AddRange(ReadOnlySpan<T>)` | Add numeric spans (on `ArrayBuilder`, not `Mutable`) |
 
 ## Suppressing Diagnostics
 
