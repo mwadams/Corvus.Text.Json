@@ -185,16 +185,18 @@ using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
 **Severity:** Warning · **Code fix:** ✅ Yes (structural rewrite)
 
-Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place.
+Detects V4's functional `With*()` mutation methods. In V4, `With*()` returns a new immutable instance. In V5, you create a mutable builder from a `JsonWorkspace` and call `Set*()` in-place. The code fix rewrites the receiver variable's type to `.Mutable` so that mutation methods can be called.
 
 The code fix handles several patterns:
 
-**Simple rename:**
+**Simple rename (with type rewrite):**
 ```csharp
 // Before (V4)
+Person person = default;
 Person updated = person.WithName("Bob");
 
-// After (V5) — inside a mutable builder context
+// After (V5)
+Person.Mutable person = default;
 person.SetName("Bob");
 ```
 
@@ -219,22 +221,54 @@ Person result = person.WithAddressValue(updated);
 person.AddressValue.SetCity("Manchester");
 ```
 
+**Expression lambdas (rename only):**
+```csharp
+// Before (V4)
+Func<Person, Person> transform = p => p.WithName("Bob");
+
+// After (V5) — lambda preserved, method renamed
+Func<Person, Person> transform = p => p.SetName("Bob");
+```
+
+> **Note:** Expression lambda bodies use rename-only — the code fix does not restructure the lambda since `Set*()` returns void and cannot be used as an expression result. You may need to manually convert to a block lambda.
+
 ---
 
 ### CVJ012 — V4 functional array operations
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`) and renames them to the V5 mutable builder equivalents (`.AddItem()`, `.InsertItem()`, `.SetItem()`, `.RemoveAt()`). The code fix also drops the assignment since V5 mutates in-place.
+Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`) and renames them to the V5 mutable builder equivalents (`.AddItem()`, `.InsertItem()`, `.SetItem()`, `.RemoveAt()`). The code fix drops the assignment (since V5 mutates in-place) and rewrites the receiver variable's type to `.Mutable`.
 
+**Simple case:**
 ```csharp
 // Before (V4)
-JsonArray updated = array.Add(newItem);
-JsonArray replaced = array.Insert(0, item);
+JsonArray arr = default;
+JsonArray updated = arr.Add(newItem);
 
 // After (V5)
-array.AddItem(newItem);
-array.InsertItem(0, item);
+JsonArray.Mutable arr = default;
+arr.AddItem(newItem);
+```
+
+**Chained calls are split into separate statements:**
+```csharp
+// Before (V4)
+JsonArray result = arr.Add(a).Add(b);
+
+// After (V5)
+arr.AddItem(a);
+arr.AddItem(b);
+```
+
+**Return statements are preserved:**
+```csharp
+// Before (V4)
+return arr.Add(item);
+
+// After (V5)
+arr.AddItem(item);
+return arr;
 ```
 
 ---
@@ -349,15 +383,17 @@ if (element.TryGetValue(out string value)) { ... }
 
 **Severity:** Warning · **Code fix:** ✅ Yes (via CVJ011 code fix)
 
-Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder.
+Detects the V4 pattern of extracting a nested value, mutating it with `With*()`, and reassigning it back to the parent. In V5, this collapses to a single deep setter on the mutable builder. The receiver variable's type is rewritten to `.Mutable`.
 
 ```csharp
 // Before (V4)
+Person person = default;
 Address address = person.AddressValue;
 Address updatedAddress = address.WithCity("Manchester");
 Person updatedPerson = person.WithAddressValue(updatedAddress);
 
 // After (V5)
+Person.Mutable person = default;
 person.AddressValue.SetCity("Manchester");
 ```
 
