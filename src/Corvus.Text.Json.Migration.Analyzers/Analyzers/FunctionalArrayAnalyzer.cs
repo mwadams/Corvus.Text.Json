@@ -18,8 +18,9 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
-/// CVJ012: Detects V4 functional array operations (Add, Insert, SetItem, RemoveAt)
-/// that should use the mutable builder equivalents in V5.
+/// CVJ012: Detects V4 functional array operations (Add, AddRange, Insert, InsertRange,
+/// SetItem, RemoveAt, Remove, RemoveRange, Replace) that should use the mutable builder
+/// equivalents in V5.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class FunctionalArrayAnalyzer : DiagnosticAnalyzer
@@ -27,9 +28,14 @@ public sealed class FunctionalArrayAnalyzer : DiagnosticAnalyzer
     private static readonly Dictionary<string, string> s_methodMapping = new()
     {
         ["Add"] = "AddItem",
+        ["AddRange"] = "AddRange",
         ["Insert"] = "InsertItem",
+        ["InsertRange"] = "InsertRange",
         ["SetItem"] = "SetItem",
         ["RemoveAt"] = "RemoveAt",
+        ["Remove"] = "Remove",
+        ["RemoveRange"] = "RemoveRange",
+        ["Replace"] = "Replace",
     };
 
     /// <inheritdoc/>

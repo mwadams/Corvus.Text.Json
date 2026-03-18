@@ -237,9 +237,12 @@ public sealed class DeepMutationAnalyzer : DiagnosticAnalyzer
         }
 
         // SetProperty / RemoveProperty — untyped object mutators
-        // Add / Insert / SetItem / RemoveAt — functional array mutators
+        // Add / AddRange / Insert / InsertRange / SetItem / RemoveAt /
+        // Remove / RemoveRange / Replace — functional array mutators
         if (name is "SetProperty" or "RemoveProperty"
-                 or "Add" or "Insert" or "SetItem" or "RemoveAt")
+                 or "Add" or "AddRange" or "Insert" or "InsertRange"
+                 or "SetItem" or "RemoveAt" or "Remove" or "RemoveRange"
+                 or "Replace")
         {
             memberAccess = ma;
             methodName = name;
@@ -307,7 +310,17 @@ public sealed class DeepMutationAnalyzer : DiagnosticAnalyzer
             return "InsertItem(...)";
         }
 
-        if (methodName is "SetItem" or "RemoveAt")
+        if (methodName == "AddRange")
+        {
+            return "loop of AddItem(...)";
+        }
+
+        if (methodName == "InsertRange")
+        {
+            return "loop of InsertItem(...)";
+        }
+
+        if (methodName is "SetItem" or "RemoveAt" or "Remove" or "RemoveRange" or "Replace")
         {
             return methodName + "(...)";
         }

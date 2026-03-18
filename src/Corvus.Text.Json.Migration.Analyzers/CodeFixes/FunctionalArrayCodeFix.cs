@@ -23,8 +23,10 @@ namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
 /// Code fix for CVJ012: renames V4 functional array methods
-/// (<c>Add</c>, <c>Insert</c>, <c>SetItem</c>, <c>RemoveAt</c>) to their V5
-/// mutable builder equivalents and drops the assignment since V5 mutates in-place.
+/// (<c>Add</c>, <c>AddRange</c>, <c>Insert</c>, <c>InsertRange</c>,
+/// <c>SetItem</c>, <c>RemoveAt</c>, <c>Remove</c>, <c>RemoveRange</c>,
+/// <c>Replace</c>) to their V5 mutable builder equivalents and drops the
+/// assignment since V5 mutates in-place.
 /// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(FunctionalArrayCodeFix))]
 [Shared]
@@ -158,7 +160,8 @@ public sealed class FunctionalArrayCodeFix : CodeFixProvider
     }
 
     private static bool IsFunctionalArrayMethod(string name) =>
-        name is "Add" or "Insert" or "SetItem" or "RemoveAt";
+        name is "Add" or "AddRange" or "Insert" or "InsertRange"
+            or "SetItem" or "RemoveAt" or "Remove" or "RemoveRange" or "Replace";
 
     /// <summary>
     /// Recursively collects a chain of functional array calls (innermost first).

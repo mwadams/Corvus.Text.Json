@@ -237,16 +237,40 @@ person.AddressValue.SetCity("Manchester");
 
 **Severity:** Warning · **Code fix:** ✅ Yes
 
-Detects V4's functional array methods (`.Add()`, `.Insert()`, `.SetItem()`, `.RemoveAt()`) and renames them to the V5 mutable builder equivalents (`.AddItem()`, `.InsertItem()`, `.SetItem()`, `.RemoveAt()`). The code fix also drops the assignment since V5 mutates in-place.
+Detects all V4 functional array methods and rewrites them to V5 mutable builder equivalents. The code fix drops the assignment (since V5 mutates in-place), renames methods where needed, and rewrites the receiver variable type to `.Mutable`.
+
+| V4 Method | V5 Equivalent | Renamed? |
+|---|---|---|
+| `Add(item)` | `AddItem(source)` | ✅ Yes |
+| `AddRange(items)` | `AddRange(items)` | ❌ No (manual: loop of `AddItem`) |
+| `Insert(idx, item)` | `InsertItem(idx, source)` | ✅ Yes |
+| `InsertRange(idx, items)` | `InsertRange(idx, items)` | ❌ No (manual: loop of `InsertItem`) |
+| `SetItem(idx, val)` | `SetItem(idx, source)` | ❌ Same name |
+| `RemoveAt(idx)` | `RemoveAt(idx)` | ❌ Same name |
+| `Remove(val)` | `Remove(item)` | ❌ Same name |
+| `RemoveRange(idx, count)` | `RemoveRange(idx, count)` | ❌ Same name |
+| `Replace(old, new)` | `Replace(old, new)` | ❌ Same name |
 
 ```csharp
-// Before (V4)
+// Before (V4) — renamed methods
 JsonArray updated = array.Add(newItem);
 JsonArray replaced = array.Insert(0, item);
 
 // After (V5)
 array.AddItem(newItem);
 array.InsertItem(0, item);
+```
+
+```csharp
+// Before (V4) — same-name methods
+JsonArray result = array.Remove(oldItem);
+JsonArray trimmed = array.RemoveRange(0, 2);
+JsonArray swapped = array.Replace(oldItem, newItem);
+
+// After (V5) — assignment dropped, receiver becomes .Mutable
+array.Remove(oldItem);
+array.RemoveRange(0, 2);
+array.Replace(oldItem, newItem);
 ```
 
 ---
@@ -497,6 +521,39 @@ Fires at compilation end when V4 assembly references are detected. Guides you to
 | `Corvus.Json.SourceGenerator` | `Corvus.Text.Json.SourceGenerator` |
 
 ---
+
+## Complete V4→V5 Mutator Equivalence Table
+
+This table lists every V4 functional mutation method and its V5 mutable builder equivalent.
+
+### Object Mutators
+
+| V4 Method | V5 Equivalent | Diagnostic | Notes |
+|---|---|---|---|
+| `With*()` (generated) | `Set*()` on `.Mutable` | CVJ011 | Renamed; code fix handles |
+| `SetProperty(name, val)` | `SetProperty(name, source)` on `.Mutable` | CVJ011 | Same name; assignment dropped |
+| `RemoveProperty(name)` | `RemoveProperty(name)` on `.Mutable` | CVJ011 | Same name; assignment dropped |
+
+### Array Mutators
+
+| V4 Method | V5 Equivalent | Diagnostic | Notes |
+|---|---|---|---|
+| `Add(item)` | `AddItem(source)` | CVJ012 | Renamed |
+| `AddRange(items)` | Loop of `AddItem()` | CVJ012 | No direct V5 equivalent on Mutable |
+| `Insert(idx, item)` | `InsertItem(idx, source)` | CVJ012 | Renamed |
+| `InsertRange(idx, items)` | Loop of `InsertItem()` | CVJ012 | No direct V5 equivalent on Mutable |
+| `SetItem(idx, val)` | `SetItem(idx, source)` | CVJ012 | Same name |
+| `RemoveAt(idx)` | `RemoveAt(idx)` | CVJ012 | Same name |
+| `Remove(val)` | `Remove(item)` | CVJ012 | Same name |
+| `RemoveRange(idx, count)` | `RemoveRange(idx, count)` | CVJ012 | Same name |
+| `Replace(old, new)` | `Replace(old, new)` | CVJ012 | Same name |
+
+### V5-only Methods (no V4 equivalent)
+
+| V5 Method | Description |
+|---|---|
+| `RemoveWhere(predicate)` | Remove all array elements matching a predicate |
+| `AddRange(ReadOnlySpan<T>)` | Add numeric spans (on `ArrayBuilder`, not `Mutable`) |
 
 ## Suppressing Diagnostics
 

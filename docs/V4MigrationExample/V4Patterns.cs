@@ -175,7 +175,9 @@ public static class V4Patterns
     // -----------------------------------------------------------------------
     // 8. Functional array operations  (CVJ012)
     //    Code fix: rewrites receiver type to .Mutable, drops assignment,
-    //    renames Add→AddItem, Insert→InsertItem, splits chained calls
+    //    renames Add→AddItem, Insert→InsertItem, splits chained calls.
+    //    Same-name methods (SetItem, RemoveAt, Remove, RemoveRange, Replace,
+    //    AddRange, InsertRange) keep their name but drop assignment.
     // -----------------------------------------------------------------------
     public static void ArrayOperationsExample()
     {
@@ -185,17 +187,31 @@ public static class V4Patterns
         JsonArray arr = parsed.Instance;                                           // CVJ002, CVJ009
 
         // CVJ012: V4 functional array ops → V5 mutable in-place calls
-        // Code fix: drops result variables, calls arr.AddItem/InsertItem/SetItem/RemoveAt
+        // Renamed methods:
         JsonArray withFour = arr.Add((JsonNumber)4);       // CVJ009, CVJ012
         JsonArray inserted = arr.Insert(0, (JsonNumber)0); // CVJ009, CVJ012
+
+        // Same-name methods (name preserved, assignment dropped):
         JsonArray replaced = arr.SetItem(1, (JsonNumber)99); // CVJ009, CVJ012
         JsonArray removed = arr.RemoveAt(0);               // CVJ009, CVJ012
+        JsonArray withoutFirst = arr.Remove((JsonNumber)1);  // CVJ009, CVJ012
+        JsonArray trimmed = arr.RemoveRange(0, 2);         // CVJ009, CVJ012
+        JsonArray swapped = arr.Replace((JsonNumber)2, (JsonNumber)99); // CVJ009, CVJ012
+
+        // Range operations (name preserved, assignment dropped):
+        const string otherJson = """[10, 20]""";
+        using ParsedValue<JsonArray> otherParsed = ParsedValue<JsonArray>.Parse(otherJson); // CVJ002, CVJ009
+        JsonArray other = otherParsed.Instance;                                              // CVJ002, CVJ009
+        JsonArray appended = arr.AddRange(other);           // CVJ009, CVJ012
+        JsonArray insertedRange = arr.InsertRange(1, other); // CVJ009, CVJ012
 
         // Array item count
         int length = arr.GetArrayLength();
 
         Console.WriteLine($"Added: {withFour}, Inserted: {inserted}");
         Console.WriteLine($"Replaced: {replaced}, Removed: {removed}, Length: {length}");
+        Console.WriteLine($"WithoutFirst: {withoutFirst}, Trimmed: {trimmed}, Swapped: {swapped}");
+        Console.WriteLine($"Appended: {appended}, InsertedRange: {insertedRange}");
     }
 
     // -----------------------------------------------------------------------
