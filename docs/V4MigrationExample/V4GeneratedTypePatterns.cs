@@ -28,6 +28,8 @@ public static class V4GeneratedTypePatterns
 
     // -----------------------------------------------------------------------
     // 2. Strongly-typed With*() property mutation  (CVJ011)
+    //    Code fix: rewrites Person → Person.Mutable, unchains to
+    //    separate Set*() calls
     // -----------------------------------------------------------------------
     public static void MutateGeneratedType()
     {
@@ -35,8 +37,8 @@ public static class V4GeneratedTypePatterns
         using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);
         Person person = parsed.Instance;
 
-        // CVJ011: With*() → V5 builder pattern
-        // Generated V4 types have WithName(), WithAge(), etc.
+        // CVJ011: With*() → V5 Set*() on .Mutable variable
+        // Code fix: Person.Mutable person = ...; person.SetName("Bob"); person.SetAge(25);
         Person updated = person
             .WithName("Bob")
             .WithAge(25);
@@ -132,9 +134,11 @@ public static class V4GeneratedTypePatterns
         Person.Address address = person.AddressValue;
 
         // CVJ011: Mutate nested generated type with With*()
+        // Code fix: Person.Address.Mutable updatedAddress = ...;
         Person.Address updatedAddress = address.WithCity("Manchester");
 
         // CVJ011: Set the updated address back on the person
+        // Code fix: person.SetAddressValue(updatedAddress);
         Person updatedPerson = person.WithAddressValue(updatedAddress);
 
         Console.WriteLine(updatedPerson);
@@ -160,6 +164,7 @@ public static class V4GeneratedTypePatterns
         Person.TagsArray tags = person.Tags;
 
         // CVJ012: Functional array add
+        // Code fix: Person.TagsArray.Mutable updatedTags = ...; updatedTags.AddItem(...);
         Person.TagsArray updatedTags = tags.Add((JsonString)"superadmin");
 
         // CVJ011: Set the updated array back

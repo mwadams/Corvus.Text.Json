@@ -138,6 +138,8 @@ public static class V4Patterns
 
     // -----------------------------------------------------------------------
     // 7. Immutable property mutation with SetProperty  (CVJ011)
+    //    Code fix: rewrites receiver type to .Mutable, unchains to
+    //    separate Set*() calls on the mutable variable
     // -----------------------------------------------------------------------
     public static void PropertyMutationExample()
     {
@@ -146,7 +148,7 @@ public static class V4Patterns
         JsonObject person = parsed.Instance;
 
         // CVJ011: V4 immutable SetProperty returns new instance;
-        // V5 uses JsonWorkspace + builder + .SetProperty() on Mutable
+        // V5 code fix: JsonObject.Mutable person = ...; person.SetProperty(...);
         JsonObject updated = person
             .SetProperty("age", (JsonNumber)31)
             .SetProperty("email", (JsonString)"alice@example.com");
@@ -166,6 +168,8 @@ public static class V4Patterns
 
     // -----------------------------------------------------------------------
     // 8. Functional array operations  (CVJ012)
+    //    Code fix: rewrites receiver type to .Mutable, drops assignment,
+    //    splits chained calls into separate statements
     // -----------------------------------------------------------------------
     public static void ArrayOperationsExample()
     {
@@ -174,6 +178,7 @@ public static class V4Patterns
         JsonArray arr = parsed.Instance;
 
         // CVJ012: V4 functional array ops → V5 mutable builder
+        // Code fix: JsonArray.Mutable arr = ...; arr.AddItem((JsonNumber)4);
         JsonArray withFour = arr.Add((JsonNumber)4);
         JsonArray inserted = arr.Insert(0, (JsonNumber)0);
         JsonArray replaced = arr.SetItem(1, (JsonNumber)99);
