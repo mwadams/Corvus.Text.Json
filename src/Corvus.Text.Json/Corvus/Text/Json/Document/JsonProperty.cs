@@ -29,7 +29,7 @@ public readonly struct JsonProperty<TValue>
     /// The name of this property.
     /// </summary>
     /// <remarks>Note that this allocates.</remarks>
-    /// <seealso cref="NameSpan"/>.
+    /// <seealso cref="Utf8NameSpan"/>.
     public string Name
     {
         get
@@ -47,11 +47,27 @@ public readonly struct JsonProperty<TValue>
     /// disposed when it is no longer needed, as it may use a rented buffer to back the string.
     /// It is only valid for the lifetime of the document that contains this property.
     /// </remarks>
-    public UnescapedUtf8JsonString NameSpan
+    public UnescapedUtf8JsonString Utf8NameSpan
     {
         get
         {
             return Value.ParentDocument.GetUtf8JsonString(Value.ParentDocumentIndex - DbRow.Size, JsonTokenType.PropertyName);
+        }
+    }
+
+    /// <summary>
+    /// Gets the name as an unescaped UTF-16 JSON string.
+    /// </summary>
+    /// <remarks>
+    /// Note that this does not allocate. The result should be
+    /// disposed when it is no longer needed, as it may use a rented buffer to back the string.
+    /// It is only valid for the lifetime of the document that contains this property.
+    /// </remarks>
+    public UnescapedUtf16JsonString Utf16NameSpan
+    {
+        get
+        {
+            return Value.ParentDocument.GetUtf16JsonString(Value.ParentDocumentIndex - DbRow.Size, JsonTokenType.PropertyName);
         }
     }
 
@@ -108,7 +124,7 @@ public readonly struct JsonProperty<TValue>
     /// </exception>
     /// <remarks>
     /// This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
-    /// <see cref="NameSpan" />, but can avoid creating the UTF8 string instance.
+    /// <see cref="Utf8NameSpan" />, but can avoid creating the UTF8 string instance.
     /// </remarks>
     public bool NameEquals(ReadOnlySpan<byte> utf8Text)
     {
@@ -129,7 +145,7 @@ public readonly struct JsonProperty<TValue>
     /// </exception>
     /// <remarks>
     /// This method is functionally equal to doing an ordinal comparison of <paramref name="utf8Text" /> and
-    /// <see cref="NameSpan" />, but can avoid creating the UTF-8 string instance.
+    /// <see cref="Utf8NameSpan" />, but can avoid creating the UTF-8 string instance.
     /// </remarks>
     public bool NameEquals(ReadOnlySpan<char> text)
     {

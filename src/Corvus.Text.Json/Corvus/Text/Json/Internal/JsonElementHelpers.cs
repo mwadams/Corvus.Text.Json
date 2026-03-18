@@ -40,7 +40,7 @@ public static partial class JsonElementHelpers
         where TTarget : struct, IMutableJsonElement<TTarget>
         where TValue : struct, IJsonElement<TValue>
     {
-        using UnescapedUtf8JsonString name = property.NameSpan;
+        using UnescapedUtf8JsonString name = property.Utf8NameSpan;
         var targetParentDocument = (IMutableJsonDocument)targetElement.ParentDocument;
         var cvb = ComplexValueBuilder.Create(targetParentDocument, 30);
         if (targetElement.ParentDocument.TryGetNamedPropertyValue(targetElement.ParentDocumentIndex, name.Span, out TValue value))
