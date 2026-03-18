@@ -41,6 +41,16 @@
     <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
+  <ItemGroup Label="Bundled Analyzers">
+    <ProjectReference Include="..\Corvus.Text.Json.Analyzers\Corvus.Text.Json.Analyzers.csproj"
+                      ReferenceOutputAssembly="false"
+                      PrivateAssets="all" />
+    <None Include="..\Corvus.Text.Json.Analyzers\bin\$(Configuration)\netstandard2.0\Corvus.Text.Json.Analyzers.dll"
+          Pack="true"
+          PackagePath="analyzers/dotnet/cs"
+          Visible="false" />
+  </ItemGroup>
+
   <ItemGroup>
     <InternalsVisibleTo Include="Corvus.Text.Json.Tests" />
   </ItemGroup>
