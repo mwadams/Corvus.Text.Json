@@ -82,12 +82,14 @@ public sealed class MatchLambdaCaptureAnalyzer : DiagnosticAnalyzer
             }
 
             // Analyze whether the lambda captures any variables.
-            SyntaxNode bodyNode = lambda.Body is ExpressionSyntax expr ? (SyntaxNode)expr : lambda.Body;
-            DataFlowAnalysis? dataFlow = bodyNode is StatementSyntax stmt
-                ? context.SemanticModel.AnalyzeDataFlow(stmt)
-                : bodyNode is ExpressionSyntax bodyExpr
-                    ? context.SemanticModel.AnalyzeDataFlow(bodyExpr)
-                    : null;
+            SyntaxNode bodyNode = lambda.Body;
+            DataFlowAnalysis? dataFlow = bodyNode switch
+            {
+                BlockSyntax block => context.SemanticModel.AnalyzeDataFlow(block),
+                StatementSyntax stmt => context.SemanticModel.AnalyzeDataFlow(stmt),
+                ExpressionSyntax bodyExpr => context.SemanticModel.AnalyzeDataFlow(bodyExpr),
+                _ => null,
+            };
             bool captures = dataFlow is not null && dataFlow.CapturedInside.Length > 0;
 
             string message = captures

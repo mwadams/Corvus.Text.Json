@@ -90,7 +90,7 @@ public sealed class IgnoredValidationResultAnalyzer : DiagnosticAnalyzer
         }
 
         string? ns = type.ContainingNamespace?.ToDisplayString();
-        if (ns is not null && ns.StartsWith("Corvus.Text.Json"))
+        if (ns is not null && (ns == "Corvus.Text.Json" || ns.StartsWith("Corvus.Text.Json.")))
         {
             return true;
         }
@@ -99,7 +99,7 @@ public sealed class IgnoredValidationResultAnalyzer : DiagnosticAnalyzer
         foreach (INamedTypeSymbol iface in type.AllInterfaces)
         {
             string? ifaceNs = iface.ContainingNamespace?.ToDisplayString();
-            if (ifaceNs is not null && ifaceNs.StartsWith("Corvus.Text.Json") && iface.Name == "IJsonElement")
+            if (ifaceNs is not null && (ifaceNs == "Corvus.Text.Json" || ifaceNs.StartsWith("Corvus.Text.Json.")) && iface.Name == "IJsonElement")
             {
                 return true;
             }

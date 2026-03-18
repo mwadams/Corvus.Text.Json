@@ -137,6 +137,33 @@ namespace TestApp
     }
 
     [Fact]
+    public async Task BlockBodyCapturingLambda_FiresCTJ003WithCaptureMessage()
+    {
+        string testCode = Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        string M()
+        {
+            int threshold = 10;
+            var element = new TestLib.JsonElement();
+            return element.Match<string>(
+                {|#0:(in TestLib.JsonString s) => { return s.ToString(); }|},
+                {|#1:(in TestLib.JsonNumber n) => { return n > threshold ? ""high"" : ""low""; }|},
+                {|#2:(in TestLib.JsonElement e) => { return ""other""; }|});
+        }
+    }
+}";
+
+        await Verify.VerifyAnalyzerAsync(
+            testCode,
+            Verify.Diagnostic().WithLocation(0).WithArguments("consider adding the 'static' modifier"),
+            Verify.Diagnostic().WithLocation(1).WithArguments("consider using Match<TContext, TResult> to avoid closure allocation"),
+            Verify.Diagnostic().WithLocation(2).WithArguments("consider adding the 'static' modifier"));
+    }
+
+    [Fact]
     public async Task CodeFix_AddsStaticToNonCapturingLambdas()
     {
         var test = new CodeFixTest

@@ -60,7 +60,7 @@ public sealed class PreferMemoryParseAnalyzer : DiagnosticAnalyzer
 
         // Must be on a Corvus.Text.Json type.
         string? containingNs = method.ContainingType?.ContainingNamespace?.ToDisplayString();
-        if (containingNs is null || !containingNs.StartsWith("Corvus.Text.Json"))
+        if (containingNs is null || (containingNs != "Corvus.Text.Json" && !containingNs.StartsWith("Corvus.Text.Json.")))
         {
             return;
         }
