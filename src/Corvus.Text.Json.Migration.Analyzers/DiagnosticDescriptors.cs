@@ -144,12 +144,12 @@ internal static class DiagnosticDescriptors
         helpLinkUri: HelpLinkBase + "#core-type-accessors");
 
     /// <summary>
-    /// CVJ011: V4 With*() mutation should use V5 mutable builder.
+    /// CVJ011: V4 immutable mutation should use V5 mutable builder.
     /// </summary>
     public static readonly DiagnosticDescriptor WithMutationMigration = new(
         id: "CVJ011",
-        title: "V4 With*() replaced by Set*() via mutable builder in V5",
-        messageFormat: "V4 immutable '.{0}(...)' returns a new value. In V5, use 'element.BuildDocument(workspace)' to get a mutable builder, then call '.Set{1}(...)' on the Mutable element.",
+        title: "V4 immutable mutation replaced by mutable builder in V5",
+        messageFormat: "V4 immutable '.{0}(...)' returns a new value. In V5, use 'element.BuildDocument(workspace)' to get a mutable builder, then call '.{1}(...)' on the Mutable element.",
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,

@@ -236,8 +236,10 @@ public sealed class DeepMutationAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
-        // SetProperty / RemoveProperty — untyped V4 mutators
-        if (name == "SetProperty" || name == "RemoveProperty")
+        // SetProperty / RemoveProperty — untyped object mutators
+        // Add / Insert / SetItem / RemoveAt — functional array mutators
+        if (name is "SetProperty" or "RemoveProperty"
+                 or "Add" or "Insert" or "SetItem" or "RemoveAt")
         {
             memberAccess = ma;
             methodName = name;
@@ -260,6 +262,13 @@ public sealed class DeepMutationAnalyzer : DiagnosticAnalyzer
         {
             string keyText = invocation.ArgumentList.Arguments[0].Expression.ToString();
             return $"[{keyText}]";
+        }
+
+        // SetItem(index, value) → [index] (extract the index from arg 0)
+        if (methodName == "SetItem" && invocation.ArgumentList.Arguments.Count > 0)
+        {
+            string indexText = invocation.ArgumentList.Arguments[0].Expression.ToString();
+            return $"[{indexText}]";
         }
 
         return methodName;
@@ -285,6 +294,22 @@ public sealed class DeepMutationAnalyzer : DiagnosticAnalyzer
         {
             string keyText = invocation.ArgumentList.Arguments[0].Expression.ToString();
             return $"RemoveProperty({keyText})";
+        }
+
+        // Array mutators: Add → AddItem, Insert → InsertItem, others keep name
+        if (methodName == "Add")
+        {
+            return "AddItem(...)";
+        }
+
+        if (methodName == "Insert")
+        {
+            return "InsertItem(...)";
+        }
+
+        if (methodName is "SetItem" or "RemoveAt")
+        {
+            return methodName + "(...)";
         }
 
         return methodName + "(...)";

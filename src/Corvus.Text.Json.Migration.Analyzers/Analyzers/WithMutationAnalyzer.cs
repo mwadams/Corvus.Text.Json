@@ -17,7 +17,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace Corvus.Text.Json.Migration.Analyzers;
 
 /// <summary>
-/// CVJ011: Detects V4 With*() mutation methods that should be replaced with Set*() via a JsonWorkspace builder in V5.
+/// CVJ011: Detects V4 With*() and SetProperty/RemoveProperty mutation methods
+/// that should use Set*() via a mutable builder in V5.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public sealed class WithMutationAnalyzer : DiagnosticAnalyzer
@@ -44,26 +45,48 @@ public sealed class WithMutationAnalyzer : DiagnosticAnalyzer
         {
             string methodName = memberAccess.Name.Identifier.Text;
 
-            if (methodName.StartsWith("With") && methodName.Length > 4 && char.IsUpper(methodName[4]))
+            if (!TryGetV5MethodName(methodName, out string? v5Name))
             {
-                if (memberAccess.Expression is { } receiverExpression)
-                {
-                    ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
-                    if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
-                    {
-                        return;
-                    }
-                }
-
-                string propertyName = methodName.Substring(4);
-
-                context.ReportDiagnostic(
-                    Diagnostic.Create(
-                        DiagnosticDescriptors.WithMutationMigration,
-                        memberAccess.Name.GetLocation(),
-                        methodName,
-                        propertyName));
+                return;
             }
+
+            if (memberAccess.Expression is { } receiverExpression)
+            {
+                ITypeSymbol? receiverType = context.SemanticModel.GetTypeInfo(receiverExpression, context.CancellationToken).Type;
+                if (!V4TypeHelper.ImplementsIJsonValueOrUnresolved(receiverType, context.SemanticModel.Compilation))
+                {
+                    return;
+                }
+            }
+
+            context.ReportDiagnostic(
+                Diagnostic.Create(
+                    DiagnosticDescriptors.WithMutationMigration,
+                    memberAccess.Name.GetLocation(),
+                    methodName,
+                    v5Name));
         }
+    }
+
+    /// <summary>
+    /// Returns the V5 method name for a V4 immutable mutation method, or <c>false</c>
+    /// if the method is not a recognized mutation pattern.
+    /// </summary>
+    private static bool TryGetV5MethodName(string methodName, out string? v5Name)
+    {
+        if (methodName.StartsWith("With") && methodName.Length > 4 && char.IsUpper(methodName[4]))
+        {
+            v5Name = "Set" + methodName.Substring(4);
+            return true;
+        }
+
+        if (methodName is "SetProperty" or "RemoveProperty")
+        {
+            v5Name = methodName;
+            return true;
+        }
+
+        v5Name = null;
+        return false;
     }
 }

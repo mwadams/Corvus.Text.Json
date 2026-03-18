@@ -27,6 +27,8 @@ namespace Corvus.Text.Json.Migration.Analyzers;
 /// Code fix for CVJ011: renames <c>With*()</c> to <c>Set*()</c>, unchains
 /// fluent calls into separate statements, and collapses nested
 /// extract-mutate-reassign patterns into deep setters.
+/// Also handles <c>SetProperty()</c> and <c>RemoveProperty()</c> which
+/// keep their names but need unchaining and <c>.Mutable</c> type rewrites.
 /// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(WithMutationCodeFix))]
 [Shared]
@@ -97,7 +99,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
             {
                 context.RegisterCodeFix(
                     CodeAction.Create(
-                        title: "Rename With*() to Set*() and unchain",
+                        title: "Unchain and rewrite to mutable",
                         createChangedDocument: ct => UnchainAndRenameAsync(
                             context.Document, outermost, ct),
                         equivalenceKey: DiagnosticDescriptors.WithMutationMigration.Id),
@@ -107,10 +109,13 @@ public sealed class WithMutationCodeFix : CodeFixProvider
     }
 
     private static bool IsWithMethod(string name)
-        => name.StartsWith("With", StringComparison.Ordinal) && name.Length > 4;
+        => (name.StartsWith("With", StringComparison.Ordinal) && name.Length > 4)
+           || name is "SetProperty" or "RemoveProperty";
 
-    private static string ToSetName(string withName)
-        => "Set" + withName.Substring(4);
+    private static string ToSetName(string methodName)
+        => methodName.StartsWith("With", StringComparison.Ordinal)
+            ? "Set" + methodName.Substring(4)
+            : methodName;
 
     /// <summary>
     /// Checks whether this invocation is inside an <see cref="ArgumentSyntax"/>.

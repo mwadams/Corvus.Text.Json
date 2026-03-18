@@ -137,33 +137,36 @@ public static class V4Patterns
     }
 
     // -----------------------------------------------------------------------
-    // 7. Immutable property mutation with SetProperty  (CVJ009, CVJ021)
+    // 7. Immutable property mutation with SetProperty  (CVJ009, CVJ011, CVJ021)
     //    CVJ009: JsonObject → JsonElement (core type replacement)
+    //    CVJ011: SetProperty returns new instance; code fix rewrites to .Mutable
     //    CVJ021: nested reconstruction pattern (setting modified child back)
-    //    In V5, use JsonElement.Mutable with in-place SetProperty() calls
     // -----------------------------------------------------------------------
     public static void PropertyMutationExample()
     {
         const string json = """{"name":"Alice","age":30}""";
         using ParsedValue<JsonObject> parsed = ParsedValue<JsonObject>.Parse(json);  // CVJ002, CVJ009
-        // V5: use JsonElement.Mutable to call SetProperty() in place
+        // CVJ011 code fix rewrites to: JsonObject.Mutable person = ...;
         JsonObject person = parsed.Instance;                                         // CVJ002, CVJ009
 
-        // CVJ009: SetProperty returns new instance in V4;
-        // in V5, use JsonElement.Mutable which mutates in place
+        // CVJ011: SetProperty returns new instance in V4;
+        // Code fix: drops 'updated', unchains to person.SetProperty(...) calls
         JsonObject updated = person                                                  // CVJ009
-            .SetProperty("age", (JsonNumber)31)                                      // CVJ009
-            .SetProperty("email", (JsonString)"alice@example.com");                  // CVJ009
+            .SetProperty("age", (JsonNumber)31)                                      // CVJ009, CVJ011
+            .SetProperty("email", (JsonString)"alice@example.com");                  // CVJ009, CVJ011
 
         // Nested property mutation — set a property on a child object
         const string nestedJson = """{"address":{"city":"London","postcode":"SW1A"}}""";
         using ParsedValue<JsonObject> nestedParsed = ParsedValue<JsonObject>.Parse(nestedJson); // CVJ002, CVJ009
+        // CVJ011 code fix rewrites to: JsonObject.Mutable root = ...;
         JsonObject root = nestedParsed.Instance;                                     // CVJ002, CVJ009
 
+        // CVJ011 code fix rewrites to: JsonObject.Mutable address = ...;
         JsonObject address = root["address"].As<JsonObject>();                       // CVJ004, CVJ009
-        JsonObject updatedAddress = address.SetProperty("city", (JsonString)"Manchester"); // CVJ009
+        // Code fix: drops 'updatedAddress', becomes address.SetProperty(...)
+        JsonObject updatedAddress = address.SetProperty("city", (JsonString)"Manchester"); // CVJ009, CVJ011
         // CVJ021: nested reconstruction — setting modified child back on parent
-        JsonObject updatedRoot = root.SetProperty("address", updatedAddress.AsAny);  // CVJ009, CVJ010, CVJ021
+        JsonObject updatedRoot = root.SetProperty("address", updatedAddress.AsAny);  // CVJ009, CVJ010, CVJ011, CVJ021
 
         Console.WriteLine($"Updated: {updated}");
         Console.WriteLine($"Updated nested: {updatedRoot}");
@@ -228,7 +231,7 @@ public static class V4Patterns
 
         // CVJ014: FromItems assigned to variable then used as argument → Build()
         JsonArray tags = JsonArray.FromItems((JsonString)"admin", (JsonString)"user");
-        person.SetProperty("tags", tags.AsAny);
+        person.SetProperty("tags", tags.AsAny);   // CVJ010, CVJ011
 
         Console.WriteLine(person);
     }
@@ -328,9 +331,9 @@ public static class V4Patterns
     }
 
     // -----------------------------------------------------------------------
-    // 14. Complex nested mutation scenario  (CVJ004, CVJ009, CVJ010, CVJ012, CVJ021)
+    // 14. Complex nested mutation scenario  (CVJ004, CVJ009, CVJ010, CVJ011, CVJ012, CVJ021)
     //     Combines type coercion, core type replacement, functional array ops,
-    //     and nested reconstruction — the pattern that changes most in V5
+    //     SetProperty mutation, and nested reconstruction
     // -----------------------------------------------------------------------
     public static void ComplexNestedMutationExample()
     {
@@ -354,7 +357,7 @@ public static class V4Patterns
 
         // CVJ012 code fix rewrites to: JsonArray.Mutable users = ...;
         JsonArray users = root["users"].As<JsonArray>();               // CVJ004, CVJ009
-        // V5: use JsonElement.Mutable for in-place mutation
+        // CVJ011 code fix rewrites to: JsonObject.Mutable alice = ...;
         JsonObject alice = users[0].As<JsonObject>();                  // CVJ004, CVJ009
         // CVJ012 code fix rewrites to: JsonArray.Mutable aliceRoles = ...;
         JsonArray aliceRoles = alice["roles"].As<JsonArray>();         // CVJ004, CVJ009
@@ -362,23 +365,23 @@ public static class V4Patterns
         // Add a role to Alice
         // CVJ012 code fix: drops 'updatedRoles', becomes aliceRoles.AddItem(...)
         JsonArray updatedRoles = aliceRoles.Add((JsonString)"superadmin"); // CVJ009, CVJ012
-        // CVJ009: SetProperty on core type — manual migration to Mutable
-        JsonObject updatedAlice = alice.SetProperty("roles", updatedRoles.AsAny); // CVJ009, CVJ010
+        // CVJ011 code fix: drops 'updatedAlice', becomes alice.SetProperty(...)
+        JsonObject updatedAlice = alice.SetProperty("roles", updatedRoles.AsAny); // CVJ009, CVJ010, CVJ011, CVJ021
         // CVJ012 code fix: drops 'updatedUsers', becomes users.SetItem(...)
-        JsonArray updatedUsers = users.SetItem(0, updatedAlice.AsAny);     // CVJ009, CVJ010, CVJ012
+        JsonArray updatedUsers = users.SetItem(0, updatedAlice.AsAny);     // CVJ009, CVJ010, CVJ012, CVJ021
 
         // Update metadata version
-        // V5: use JsonElement.Mutable for in-place mutation
+        // CVJ011 code fix rewrites to: JsonObject.Mutable metadata = ...;
         JsonObject metadata = root["metadata"].As<JsonObject>();       // CVJ004, CVJ009
-        // CVJ009: SetProperty on core type — manual migration to Mutable
-        JsonObject updatedMetadata = metadata.SetProperty("version", (JsonNumber)2); // CVJ009
+        // CVJ011 code fix: drops 'updatedMetadata', becomes metadata.SetProperty(...)
+        JsonObject updatedMetadata = metadata.SetProperty("version", (JsonNumber)2); // CVJ009, CVJ011
 
         // Reassemble the root — CVJ021: nested reconstruction pattern
         // In V5 with Mutable, inner mutations are visible through the parent;
         // this reassembly is no longer needed
         JsonObject result = root                                      // CVJ009, CVJ021
-            .SetProperty("users", updatedUsers.AsAny)                 // CVJ010
-            .SetProperty("metadata", updatedMetadata.AsAny);          // CVJ010
+            .SetProperty("users", updatedUsers.AsAny)                 // CVJ010, CVJ011
+            .SetProperty("metadata", updatedMetadata.AsAny);          // CVJ010, CVJ011
 
         // Validate the result
         bool valid = result.IsValid();  // CVJ003

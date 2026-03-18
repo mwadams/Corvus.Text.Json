@@ -52,11 +52,26 @@ namespace TestApp
     {
         public Address WithCity(string city) => this;
         public Address WithStreet(string street) => this;
+        public Address SetProperty(string name, Corvus.Json.JsonAny value) => this;
+        public Address RemoveProperty(string name) => this;
+
+        public struct Mutable
+        {
+            public void SetCity(string city) { }
+            public void SetStreet(string street) { }
+            public void SetProperty(string name, Corvus.Json.JsonAny value) { }
+            public void RemoveProperty(string name) { }
+        }
     }
 
     struct TagsArray : Corvus.Json.IJsonValue
     {
         public TagsArray Add(Corvus.Json.JsonString value) => this;
+
+        public struct Mutable
+        {
+            public void AddItem(Corvus.Json.JsonString value) { }
+        }
     }
 
     struct Person : Corvus.Json.IJsonValue
@@ -67,6 +82,19 @@ namespace TestApp
         public Person WithAge(int age) => this;
         public Person WithAddressValue(Address addr) => this;
         public Person WithTags(TagsArray tags) => this;
+        public Person SetProperty(string name, Corvus.Json.JsonAny value) => this;
+        public Person RemoveProperty(string name) => this;
+
+        public struct Mutable
+        {
+            public Address.Mutable AddressValue => default;
+            public void SetName(string name) { }
+            public void SetAge(int age) { }
+            public void SetAddressValue(Address addr) { }
+            public void SetTags(TagsArray tags) { }
+            public void SetProperty(string name, Corvus.Json.JsonAny value) { }
+            public void RemoveProperty(string name) { }
+        }
     }
 }
 ";
@@ -106,7 +134,7 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
 
         await test.RunAsync();
     }
@@ -149,11 +177,11 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(1)
-                .WithArguments("WithAge", "Age"));
+                .WithArguments("WithAge", "SetAge"));
 
         await test.RunAsync();
     }
@@ -195,11 +223,11 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithCity", "City"));
+                .WithArguments("WithCity", "SetCity"));
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(1)
-                .WithArguments("WithAddressValue", "AddressValue"));
+                .WithArguments("WithAddressValue", "SetAddressValue"));
 
         await test.RunAsync();
     }
@@ -242,11 +270,11 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithAddressValue", "AddressValue"));
+                .WithArguments("WithAddressValue", "SetAddressValue"));
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(1)
-                .WithArguments("WithCity", "City"));
+                .WithArguments("WithCity", "SetCity"));
 
         await test.RunAsync();
     }
@@ -294,15 +322,15 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithAddressValue", "AddressValue"));
+                .WithArguments("WithAddressValue", "SetAddressValue"));
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(1)
-                .WithArguments("WithCity", "City"));
+                .WithArguments("WithCity", "SetCity"));
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(2)
-                .WithArguments("WithTags", "Tags"));
+                .WithArguments("WithTags", "SetTags"));
 
         await test.RunAsync();
     }
@@ -350,11 +378,11 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(1)
-                .WithArguments("WithAge", "Age"));
+                .WithArguments("WithAge", "SetAge"));
 
         await test.RunAsync();
     }
@@ -396,30 +424,18 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
 
         await test.RunAsync();
     }
 
     [Fact]
-    public async Task WithMutation_AlreadyMutable_DoesNotDoubleAppend()
+    public async Task WithMutation_AlreadyMutable_NoDiagnostic()
     {
-        // If the type is already Person.Mutable, don't change it
+        // Person.Mutable doesn't implement IJsonValue, so no diagnostic fires
         var test = new CodeFixTest
         {
             TestCode = V4Stubs + PersonStubs + @"
-namespace TestApp
-{
-    class Test
-    {
-        void M()
-        {
-            Person.Mutable person = default;
-            person = person.{|#0:WithName|}(""test"");
-        }
-    }
-}",
-            FixedCode = V4Stubs + PersonStubs + @"
 namespace TestApp
 {
     class Test
@@ -433,11 +449,6 @@ namespace TestApp
 }",
             CompilerDiagnostics = CompilerDiagnostics.None,
         };
-
-        test.ExpectedDiagnostics.Add(
-            Verify.Diagnostic()
-                .WithLocation(0)
-                .WithArguments("WithName", "Name"));
 
         await test.RunAsync();
     }
@@ -481,7 +492,7 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
 
         await test.RunAsync();
     }
@@ -525,7 +536,7 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
 
         await test.RunAsync();
     }
@@ -577,7 +588,187 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(
             Verify.Diagnostic()
                 .WithLocation(0)
-                .WithArguments("WithName", "Name"));
+                .WithArguments("WithName", "SetName"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task SetProperty_DetectedAndUnchained()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person person = default;
+            Person updated = person.{|#0:SetProperty|}(""age"", default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            person.SetProperty(""age"", default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("SetProperty", "SetProperty"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task RemoveProperty_DetectedAndUnchained()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person person = default;
+            Person updated = person.{|#0:RemoveProperty|}(""age"");
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            person.RemoveProperty(""age"");
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("RemoveProperty", "RemoveProperty"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task SetProperty_ChainedWithWith_UnchainsAll()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person person = default;
+            Person updated = person
+                .{|#0:WithName|}(""Bob"")
+                .{|#1:SetProperty|}(""extra"", default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            person.SetName(""Bob"");
+            person.SetProperty(""extra"", default(Corvus.Json.JsonAny));
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "SetName"));
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(1)
+                .WithArguments("SetProperty", "SetProperty"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task SetProperty_ChainedMultiple_UnchainsAll()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person person = default;
+            Person updated = person
+                .{|#0:SetProperty|}(""a"", default(Corvus.Json.JsonAny))
+                .{|#1:SetProperty|}(""b"", default(Corvus.Json.JsonAny))
+                .{|#2:RemoveProperty|}(""c"");
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    class C
+    {
+        void M()
+        {
+            Person.Mutable person = default;
+            person.SetProperty(""a"", default(Corvus.Json.JsonAny));
+            person.SetProperty(""b"", default(Corvus.Json.JsonAny));
+            person.RemoveProperty(""c"");
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("SetProperty", "SetProperty"));
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(1)
+                .WithArguments("SetProperty", "SetProperty"));
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(2)
+                .WithArguments("RemoveProperty", "RemoveProperty"));
 
         await test.RunAsync();
     }
