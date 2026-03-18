@@ -20,7 +20,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Corvus.Text.Json.Migration.Analyzers" Version="1.0.0-local.21" PrivateAssets="all" />
+    <PackageReference Include="Corvus.Text.Json.Migration.Analyzers" Version="1.0.0-local.22" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>
