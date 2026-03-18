@@ -34,14 +34,15 @@ public static class V4GeneratedTypePatterns
     public static void MutateGeneratedType()
     {
         const string json = """{"name":"Alice","age":30}""";
-        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);
-        Person person = parsed.Instance;
+        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);  // CVJ002
+        // CVJ011 code fix rewrites to: Person.Mutable person = ...;
+        Person person = parsed.Instance;                                     // CVJ002
 
         // CVJ011: With*() → V5 Set*() on .Mutable variable
-        // Code fix: Person.Mutable person = ...; person.SetName("Bob"); person.SetAge(25);
+        // Code fix: drops 'updated', unchains to person.SetName("Bob"); person.SetAge(25);
         Person updated = person
-            .WithName("Bob")
-            .WithAge(25);
+            .WithName("Bob")      // CVJ011
+            .WithAge(25);         // CVJ011
 
         Console.WriteLine(updated);
     }
@@ -127,25 +128,29 @@ public static class V4GeneratedTypePatterns
         }
         """;
 
-        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);
-        Person person = parsed.Instance;
+        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);  // CVJ002
+        // CVJ011 code fix rewrites this to: Person.Mutable person = ...;
+        // (the .Mutable type is what enables Set*() calls below)
+        Person person = parsed.Instance;                                     // CVJ002
 
         // Access the nested Address via the generated property
+        // CVJ011 code fix rewrites to: Person.Address.Mutable address = ...;
         Person.Address address = person.AddressValue;
 
         // CVJ011: Mutate nested generated type with With*()
-        // Code fix: Person.Address.Mutable updatedAddress = ...;
-        Person.Address updatedAddress = address.WithCity("Manchester");
+        // Code fix: drops 'updatedAddress', unchains to address.SetCity("Manchester");
+        Person.Address updatedAddress = address.WithCity("Manchester");       // CVJ011
 
-        // CVJ011: Set the updated address back on the person
-        // Code fix: person.SetAddressValue(updatedAddress);
-        Person updatedPerson = person.WithAddressValue(updatedAddress);
+        // CVJ011 + CVJ021: Set the updated address back on the person
+        // Code fix: drops 'updatedPerson', becomes person.SetAddressValue(updatedAddress);
+        // (person is already Person.Mutable from the rewrite above)
+        Person updatedPerson = person.WithAddressValue(updatedAddress);       // CVJ011, CVJ021
 
         Console.WriteLine(updatedPerson);
     }
 
     // -----------------------------------------------------------------------
-    // 8. Array property manipulation  (CVJ012)
+    // 8. Array property manipulation  (CVJ011, CVJ012)
     // -----------------------------------------------------------------------
     public static void ArrayPropertyOnGeneratedType()
     {
@@ -157,18 +162,21 @@ public static class V4GeneratedTypePatterns
         }
         """;
 
-        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);
-        Person person = parsed.Instance;
+        using ParsedValue<Person> parsed = ParsedValue<Person>.Parse(json);  // CVJ002
+        // CVJ011 code fix rewrites to: Person.Mutable person = ...;
+        Person person = parsed.Instance;                                     // CVJ002
 
         // Get the tags array
+        // CVJ012 code fix rewrites to: Person.TagsArray.Mutable tags = ...;
         Person.TagsArray tags = person.Tags;
 
         // CVJ012: Functional array add
-        // Code fix: Person.TagsArray.Mutable updatedTags = ...; updatedTags.AddItem(...);
-        Person.TagsArray updatedTags = tags.Add((JsonString)"superadmin");
+        // Code fix: drops 'updatedTags', becomes tags.AddItem(...)
+        Person.TagsArray updatedTags = tags.Add((JsonString)"superadmin");   // CVJ009, CVJ012
 
         // CVJ011: Set the updated array back
-        Person updatedPerson = person.WithTags(updatedTags);
+        // Code fix: drops 'updatedPerson', becomes person.SetTags(updatedTags);
+        Person updatedPerson = person.WithTags(updatedTags);                 // CVJ011
 
         Console.WriteLine(updatedPerson);
     }
