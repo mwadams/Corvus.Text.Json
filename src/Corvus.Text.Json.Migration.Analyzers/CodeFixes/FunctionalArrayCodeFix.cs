@@ -75,13 +75,27 @@ public sealed class FunctionalArrayCodeFix : CodeFixProvider
                 continue;
             }
 
-            context.RegisterCodeFix(
-                CodeAction.Create(
-                    title: $"Rename '{identifierName.Identifier.Text}' to '{v5Name}' and drop assignment",
-                    createChangedDocument: ct => RenameAndDropAssignmentAsync(
-                        context.Document, invocation, identifierName, v5Name, ct),
-                    equivalenceKey: DiagnosticDescriptors.FunctionalArrayMigration.Id),
-                diagnostic);
+            if (IsExpressionLambdaBody(invocation))
+            {
+                // Inside an expression lambda body — only rename, don't restructure.
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        title: $"Rename '{identifierName.Identifier.Text}' to '{v5Name}'",
+                        createChangedDocument: ct => RenameOnlyAsync(
+                            context.Document, identifierName, v5Name, ct),
+                        equivalenceKey: DiagnosticDescriptors.FunctionalArrayMigration.Id),
+                    diagnostic);
+            }
+            else
+            {
+                context.RegisterCodeFix(
+                    CodeAction.Create(
+                        title: $"Rename '{identifierName.Identifier.Text}' to '{v5Name}' and drop assignment",
+                        createChangedDocument: ct => RenameAndDropAssignmentAsync(
+                            context.Document, invocation, identifierName, v5Name, ct),
+                        equivalenceKey: DiagnosticDescriptors.FunctionalArrayMigration.Id),
+                    diagnostic);
+            }
         }
     }
 
@@ -91,6 +105,57 @@ public sealed class FunctionalArrayCodeFix : CodeFixProvider
         "Insert" => "InsertItem",
         _ => v4Name,
     };
+
+    /// <summary>
+    /// Checks whether <paramref name="invocation"/> sits inside an expression
+    /// lambda body (not a block lambda). Restructuring the enclosing statement
+    /// would destroy the lambda, so only a rename fix is safe.
+    /// </summary>
+    private static bool IsExpressionLambdaBody(InvocationExpressionSyntax invocation)
+    {
+        SyntaxNode? current = invocation.Parent;
+
+        while (current is not null)
+        {
+            if (current is BlockSyntax or StatementSyntax)
+            {
+                return false;
+            }
+
+            if (current is LambdaExpressionSyntax)
+            {
+                return true;
+            }
+
+            current = current.Parent;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Simple rename-only fix: just rename the method identifier without
+    /// restructuring the containing statement. Used for expression lambdas
+    /// where restructuring would destroy the lambda.
+    /// </summary>
+    private static async Task<Document> RenameOnlyAsync(
+        Document document,
+        IdentifierNameSyntax identifier,
+        string newName,
+        CancellationToken cancellationToken)
+    {
+        SyntaxNode? root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
+        if (root is null)
+        {
+            return document;
+        }
+
+        IdentifierNameSyntax newIdentifier = identifier.WithIdentifier(
+            SyntaxFactory.Identifier(newName)
+                .WithTriviaFrom(identifier.Identifier));
+
+        return document.WithSyntaxRoot(root.ReplaceNode(identifier, newIdentifier));
+    }
 
     private static bool IsFunctionalArrayMethod(string name) =>
         name is "Add" or "Insert" or "SetItem" or "RemoveAt";

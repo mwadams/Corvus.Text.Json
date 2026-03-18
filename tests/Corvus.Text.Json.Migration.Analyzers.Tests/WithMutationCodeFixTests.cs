@@ -485,4 +485,100 @@ namespace TestApp
 
         await test.RunAsync();
     }
+
+    [Fact]
+    public async Task WithMutation_ExpressionLambda_RenamesOnly()
+    {
+        // Expression lambda: p => p.WithName("test")
+        // The code fix should only rename, not restructure the lambda.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    delegate Person Transform(Person p);
+
+    class Test
+    {
+        void M()
+        {
+            Transform t = p => p.{|#0:WithName|}(""test"");
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    delegate Person Transform(Person p);
+
+    class Test
+    {
+        void M()
+        {
+            Transform t = p => p.SetName(""test"");
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "Name"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task WithMutation_BlockLambda_RenamesAndUnchains()
+    {
+        // Block lambda with assignment: code fix should work within
+        // the lambda's block scope.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    delegate Person Transform(Person p);
+
+    class Test
+    {
+        void M()
+        {
+            Transform t = p =>
+            {
+                p = p.{|#0:WithName|}(""test"");
+                return p;
+            };
+        }
+    }
+}",
+            FixedCode = V4Stubs + PersonStubs + @"
+namespace TestApp
+{
+    delegate Person Transform(Person p);
+
+    class Test
+    {
+        void M()
+        {
+            Transform t = p =>
+            {
+                p.SetName(""test"");
+                return p;
+            };
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("WithName", "Name"));
+
+        await test.RunAsync();
+    }
 }

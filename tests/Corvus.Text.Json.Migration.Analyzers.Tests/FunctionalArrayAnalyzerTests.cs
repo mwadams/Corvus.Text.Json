@@ -496,4 +496,46 @@ namespace TestApp
         test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
         await test.RunAsync();
     }
+
+    [Fact]
+    public async Task Add_ExpressionLambda_RenamesOnly()
+    {
+        // Expression lambda: arr => arr.Add(item)
+        // The code fix should only rename, not restructure.
+        var test = new CodeFixTest
+        {
+            TestCode = V4Stubs + @"
+namespace TestApp
+{
+    delegate Corvus.Json.JsonArray Transform(Corvus.Json.JsonArray arr);
+
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonAny item = default;
+            Transform t = arr => arr.{|#0:Add|}(item);
+        }
+    }
+}",
+            FixedCode = V4Stubs + @"
+namespace TestApp
+{
+    delegate Corvus.Json.JsonArray Transform(Corvus.Json.JsonArray arr);
+
+    class Test
+    {
+        void M()
+        {
+            Corvus.Json.JsonAny item = default;
+            Transform t = arr => arr.AddItem(item);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(Verify.Diagnostic().WithLocation(0).WithArguments("Add", "AddItem"));
+        await test.RunAsync();
+    }
 }

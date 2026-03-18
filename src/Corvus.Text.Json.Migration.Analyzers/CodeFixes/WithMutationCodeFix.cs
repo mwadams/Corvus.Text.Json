@@ -72,10 +72,11 @@ public sealed class WithMutationCodeFix : CodeFixProvider
                 continue;
             }
 
-            if (IsInsideArgument(outermost))
+            if (IsInsideArgument(outermost) || IsExpressionLambdaBody(outermost))
             {
-                // This With*() is nested inside an argument expression.
-                // Only rename the identifier — don't restructure the containing statement.
+                // This With*() is nested inside an argument or an expression
+                // lambda body. Only rename the identifier — don't restructure
+                // the containing statement.
                 string setName = ToSetName(identifierName.Identifier.Text);
 
                 context.RegisterCodeFix(
@@ -122,6 +123,33 @@ public sealed class WithMutationCodeFix : CodeFixProvider
         while (current is not null && current is not StatementSyntax)
         {
             if (current is ArgumentSyntax)
+            {
+                return true;
+            }
+
+            current = current.Parent;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Checks whether <paramref name="invocation"/> sits inside an expression
+    /// lambda body (not a block lambda). Restructuring the enclosing statement
+    /// would destroy the lambda, so only a rename fix is safe.
+    /// </summary>
+    private static bool IsExpressionLambdaBody(InvocationExpressionSyntax invocation)
+    {
+        SyntaxNode? current = invocation.Parent;
+
+        while (current is not null)
+        {
+            if (current is BlockSyntax or StatementSyntax)
+            {
+                return false;
+            }
+
+            if (current is LambdaExpressionSyntax)
             {
                 return true;
             }
