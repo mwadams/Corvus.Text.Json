@@ -31,7 +31,7 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj001--prefer-utf-8-string-literal");
+        helpLinkUri: HelpLinkBase + "#ctj001-prefer-utf-8-string-literal");
 
     /// <summary>
     /// CTJ002: Unnecessary conversion to .NET type.
@@ -43,7 +43,7 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj002--unnecessary-conversion-to-net-type");
+        helpLinkUri: HelpLinkBase + "#ctj002-unnecessary-conversion-to.net-type");
 
     /// <summary>
     /// CTJ003: Match lambda should be static.
@@ -55,7 +55,7 @@ internal static class DiagnosticDescriptors
         category: UsageCategory,
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj003--match-lambda-should-be-static");
+        helpLinkUri: HelpLinkBase + "#ctj003-match-lambda-should-be-static");
 
     /// <summary>
     /// CTJ004: Missing dispose on ParsedJsonDocument.
@@ -67,7 +67,7 @@ internal static class DiagnosticDescriptors
         category: ReliabilityCategory,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj004--missing-dispose-on-parsedjsondocument");
+        helpLinkUri: HelpLinkBase + "#ctj004-missing-dispose-on-parsedjsondocument");
 
     /// <summary>
     /// CTJ005: Missing dispose on JsonWorkspace.
@@ -79,7 +79,7 @@ internal static class DiagnosticDescriptors
         category: ReliabilityCategory,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj005--missing-dispose-on-jsonworkspace");
+        helpLinkUri: HelpLinkBase + "#ctj005-missing-dispose-on-jsonworkspace");
 
     /// <summary>
     /// CTJ006: Missing dispose on JsonDocumentBuilder.
@@ -91,7 +91,7 @@ internal static class DiagnosticDescriptors
         category: ReliabilityCategory,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj006--missing-dispose-on-jsondocumentbuilder");
+        helpLinkUri: HelpLinkBase + "#ctj006-missing-dispose-on-jsondocumentbuilder");
 
     /// <summary>
     /// CTJ007: Ignored schema validation result.
@@ -103,7 +103,7 @@ internal static class DiagnosticDescriptors
         category: UsageCategory,
         defaultSeverity: DiagnosticSeverity.Warning,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj007--ignored-schema-validation-result");
+        helpLinkUri: HelpLinkBase + "#ctj007-ignored-schema-validation-result");
 
     /// <summary>
     /// CTJ008: Prefer non-allocating property name accessors.
@@ -115,7 +115,7 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj008--prefer-non-allocating-property-name-accessors");
+        helpLinkUri: HelpLinkBase + "#ctj008-prefer-non-allocating-property-name-accessors");
 
     /// <summary>
     /// CTJ009: Prefer renting Utf8JsonWriter from workspace.
@@ -127,7 +127,7 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj009--prefer-renting-utf8jsonwriter-from-workspace");
+        helpLinkUri: HelpLinkBase + "#ctj009-prefer-renting-utf8jsonwriter-from-workspace");
 
     /// <summary>
     /// CTJ010: Prefer ReadOnlyMemory/Span-based Parse overload.
@@ -139,5 +139,5 @@ internal static class DiagnosticDescriptors
         category: Category,
         defaultSeverity: DiagnosticSeverity.Info,
         isEnabledByDefault: true,
-        helpLinkUri: HelpLinkBase + "#ctj010--prefer-readonlymemorybyte-parse-overload");
+        helpLinkUri: HelpLinkBase + "#ctj010-prefer-readonlymemoryspan-based-parse-overload");
 }

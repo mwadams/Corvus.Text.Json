@@ -20,22 +20,22 @@ They activate automatically at build time and in Visual Studio's live analysis.
 
 | ID | Title | Severity | Code Fix |
 |----|-------|----------|----------|
-| [CTJ001](#ctj001--prefer-utf-8-string-literal) | Prefer UTF-8 string literal | Warning | ✅ Yes |
-| [CTJ002](#ctj002--unnecessary-conversion-to-net-type) | Unnecessary conversion to .NET type | Warning | ✅ Yes |
-| [CTJ003](#ctj003--match-lambda-should-be-static) | Match lambda should be static | Info | ✅ Yes |
-| [CTJ004](#ctj004--missing-dispose-on-parsedjsondocument) | Missing dispose on ParsedJsonDocument | Warning | ✅ Yes |
-| [CTJ005](#ctj005--missing-dispose-on-jsonworkspace) | Missing dispose on JsonWorkspace | Warning | ✅ Yes |
-| [CTJ006](#ctj006--missing-dispose-on-jsondocumentbuilder) | Missing dispose on JsonDocumentBuilder | Warning | ✅ Yes |
-| [CTJ007](#ctj007--ignored-schema-validation-result) | EvaluateSchema() result is discarded | Warning | — |
-| [CTJ008](#ctj008--prefer-non-allocating-property-name-accessors) | Prefer NameEquals over Name for comparisons | Info | ✅ Yes |
-| [CTJ009](#ctj009--prefer-renting-utf8jsonwriter-from-workspace) | Prefer renting Utf8JsonWriter from workspace | Info | — |
-| [CTJ010](#ctj010--prefer-readonlymemorybyte-parse-overload) | Prefer ReadOnlyMemory/Span-based Parse | Info | — |
+| [CTJ001](#ctj001-prefer-utf-8-string-literal) | Prefer UTF-8 string literal | Warning | ✅ Yes |
+| [CTJ002](#ctj002-unnecessary-conversion-to.net-type) | Unnecessary conversion to .NET type | Warning | ✅ Yes |
+| [CTJ003](#ctj003-match-lambda-should-be-static) | Match lambda should be static | Info | ✅ Yes |
+| [CTJ004](#ctj004-missing-dispose-on-parsedjsondocument) | Missing dispose on ParsedJsonDocument | Warning | ✅ Yes |
+| [CTJ005](#ctj005-missing-dispose-on-jsonworkspace) | Missing dispose on JsonWorkspace | Warning | ✅ Yes |
+| [CTJ006](#ctj006-missing-dispose-on-jsondocumentbuilder) | Missing dispose on JsonDocumentBuilder | Warning | ✅ Yes |
+| [CTJ007](#ctj007-ignored-schema-validation-result) | EvaluateSchema() result is discarded | Warning | — |
+| [CTJ008](#ctj008-prefer-non-allocating-property-name-accessors) | Prefer NameEquals over Name for comparisons | Info | ✅ Yes |
+| [CTJ009](#ctj009-prefer-renting-utf8jsonwriter-from-workspace) | Prefer renting Utf8JsonWriter from workspace | Info | — |
+| [CTJ010](#ctj010-prefer-readonlymemoryspan-based-parse-overload) | Prefer ReadOnlyMemory/Span-based Parse | Info | — |
 
 ## Refactorings
 
 | Name | Description |
 |------|-------------|
-| [CTJ-NAV](#ctj-nav--go-to-schema-definition) | Navigate from a schema-generated type to its JSON Schema source |
+| [CTJ-NAV](#ctj-nav-go-to-schema-definition) | Navigate from a schema-generated type to its JSON Schema source |
 
 ---
 
@@ -221,10 +221,10 @@ If you need the property name for something other than comparison, consider:
 
 | Accessor | Returns | Allocates? | Notes |
 |----------|---------|------------|-------|
-| `property.Name` | `string` | ✅ Yes | Use only when you truly need a `string` |
-| `property.NameEquals("x"u8)` | `bool` | ❌ No | Best for comparison against known values |
-| `property.Utf8NameSpan` | `UnescapedUtf8JsonString` | ❌ No (may rent) | Raw UTF-8 bytes; dispose when done |
-| `property.Utf16NameSpan` | `UnescapedUtf16JsonString` | ❌ No (may rent) | Raw UTF-16 chars; dispose when done |
+| `property.Name` | `string` | Yes | Use only when you truly need a `string` |
+| `property.NameEquals("x"u8)` | `bool` | No | Best for comparison against known values |
+| `property.Utf8NameSpan` | `UnescapedUtf8JsonString` | No (may rent) | Unescaped UTF-8 bytes; dispose when done |
+| `property.Utf16NameSpan` | `UnescapedUtf16JsonString` | No (may rent) | Unescaped UTF-16 chars; dispose when done |
 
 ---
 
