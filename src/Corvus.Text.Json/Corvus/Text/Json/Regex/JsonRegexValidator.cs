@@ -1748,7 +1748,6 @@ internal ref struct JsonRegexValidator
     private bool ScanRegex()
     {
         char ch;
-        bool isQuantifier = false;
 
         // For the main Capture object, strip out the IgnoreCase option. The rest of the nodes will strip it out depending on the content
         // of each node.
@@ -1756,7 +1755,7 @@ internal ref struct JsonRegexValidator
 
         while (_pos < _pattern.Length)
         {
-            isQuantifier = false;
+            bool isQuantifier = false;
 
             if (!ScanBlank())
             {

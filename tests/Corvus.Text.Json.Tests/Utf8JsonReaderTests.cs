@@ -3544,8 +3544,6 @@ public static partial class Utf8JsonReaderTests
             var json = new Utf8JsonReader(dataUtf8.AsSpan(0, i), isFinalBlock: false, state);
             byte[] output = JsonTestHelper.ReaderLoop(outputSpan.Length, out int firstLength, ref json);
             output.AsSpan(0, firstLength).CopyTo(outputSpan);
-            int written = firstLength;
-
             long consumed = json.BytesConsumed;
             Assert.Equal(default, json.Position);
 
@@ -3559,7 +3557,7 @@ public static partial class Utf8JsonReaderTests
 
                 JsonReaderState jsonState = json.CurrentState;
 
-                written = firstLength;
+                int written = firstLength;
                 json = new Utf8JsonReader(dataUtf8.AsSpan((int)consumed, (int)j), isFinalBlock: false, jsonState);
                 output = JsonTestHelper.ReaderLoop(outputSpan.Length - written, out int length, ref json);
                 output.AsSpan(0, length).CopyTo(outputSpan.Slice(written));
@@ -3828,8 +3826,6 @@ public static partial class Utf8JsonReaderTests
             var json = new Utf8JsonReader(dataUtf8.AsSpan(0, i), isFinalBlock: false, state);
             byte[] output = JsonTestHelper.ReaderLoop(outputSpan.Length, out int firstLength, ref json);
             output.AsSpan(0, firstLength).CopyTo(outputSpan);
-            int written = firstLength;
-
             long consumed = json.BytesConsumed;
             Assert.Equal(default, json.Position);
             Assert.Equal(0, json.TokenStartIndex);
@@ -3844,7 +3840,7 @@ public static partial class Utf8JsonReaderTests
 
                 JsonReaderState jsonState = json.CurrentState;
 
-                written = firstLength;
+                int written = firstLength;
                 json = new Utf8JsonReader(dataUtf8.AsSpan((int)consumed, (int)j), isFinalBlock: false, jsonState);
                 output = JsonTestHelper.ReaderLoop(outputSpan.Length - written, out int length, ref json);
                 output.AsSpan(0, length).CopyTo(outputSpan.Slice(written));

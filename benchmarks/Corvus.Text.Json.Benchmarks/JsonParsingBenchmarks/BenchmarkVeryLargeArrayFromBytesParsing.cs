@@ -19,7 +19,7 @@ public class BenchmarkVeryLargeArrayFromBytesParsing
     public void Setup()
     {
         // Very large array (10k elements) - tests array parsing performance from bytes
-        var veryLargeArrayJson = GenerateVeryLargeArrayJson();
+        string veryLargeArrayJson = GenerateVeryLargeArrayJson();
         veryLargeArrayBytes = Encoding.UTF8.GetBytes(veryLargeArrayJson);
     }
 
@@ -93,7 +93,7 @@ public class BenchmarkVeryLargeArrayFromBytesParsing
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
         var random = new Random(42); // Fixed seed for consistent benchmarks
-        var result = new char[length];
+        char[] result = new char[length];
 
         for (int i = 0; i < length; i++)
         {

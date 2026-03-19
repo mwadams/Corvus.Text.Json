@@ -104,7 +104,7 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithExtremelyLongValidString_ShouldWork()
     {
         // Arrange
-        string veryLongNumber = new string('1', 5000) + "E" + new string('9', 9); // Very long input
+        var veryLongNumber = new string('1', 5000) + "E" + new string('9', 9); // Very long input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(veryLongNumber);
 
         // Act
@@ -121,7 +121,7 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithExtremelyLongValidStringButInvalidExponent_ShouldReturnFalse()
     {
         // Arrange
-        string veryLongNumber = new string('1', 5000) + "E" + new string('9', 1000); // Very long input
+        var veryLongNumber = new string('1', 5000) + "E" + new string('9', 1000); // Very long input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(veryLongNumber);
 
         // Act
@@ -137,7 +137,7 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithExtremelyLongInvalidString_ShouldReturnFalse()
     {
         // Arrange
-        string invalidLongString = new string('X', 10000); // Very long invalid input
+        var invalidLongString = new string('X', 10000); // Very long invalid input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(invalidLongString);
 
         // Act

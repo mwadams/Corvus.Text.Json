@@ -206,7 +206,7 @@ public class BenchmarkHighThroughputJsonParsing
             {
                 if (logEntry.TryGetProperty("level", out System.Text.Json.JsonElement levelElement))
                 {
-                    var level = levelElement.GetString();
+                    string? level = levelElement.GetString();
                     switch (level)
                     {
                         case "error":
@@ -423,8 +423,8 @@ public class BenchmarkHighThroughputJsonParsing
         sb.AppendLine("{");
         sb.AppendLine("  \"logs\": [");
 
-        var levels = new[] { "info", "warning", "error", "debug" };
-        var services = new[] { "api", "database", "cache", "auth", "payment" };
+        string[] levels = new[] { "info", "warning", "error", "debug" };
+        string[] services = new[] { "api", "database", "cache", "auth", "payment" };
 
         for (int i = 0; i < 300; i++)
         {
@@ -458,7 +458,7 @@ public class BenchmarkHighThroughputJsonParsing
         sb.AppendLine("{");
         sb.AppendLine("  \"metrics\": [");
 
-        var metricNames = new[] { "cpu_usage", "memory_usage", "disk_io", "network_io", "response_time" };
+        string[] metricNames = new[] { "cpu_usage", "memory_usage", "disk_io", "network_io", "response_time" };
 
         for (int i = 0; i < metricNames.Length; i++)
         {
@@ -506,8 +506,8 @@ public class BenchmarkHighThroughputJsonParsing
         sb.AppendLine("  },");
         sb.AppendLine("  \"records\": [");
 
-        var customerNames = new[] { "Acme Corp", "Tech Solutions", "Global Industries", "Data Systems", "Innovation Labs" };
-        var categories = new[] { "Software", "Hardware", "Services", "Consulting", "Support" };
+        string[] customerNames = new[] { "Acme Corp", "Tech Solutions", "Global Industries", "Data Systems", "Innovation Labs" };
+        string[] categories = new[] { "Software", "Hardware", "Services", "Consulting", "Support" };
 
         for (int i = 0; i < 150; i++)
         {

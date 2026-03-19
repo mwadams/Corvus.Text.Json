@@ -38,7 +38,7 @@ public class BenchmarkEscapeHeavyParsing
             {
                 if (property.Value.ValueKind == Corvus.Text.Json.JsonValueKind.String)
                 {
-                    var str = property.Value.GetString();
+                    string? str = property.Value.GetString();
                     if (!string.IsNullOrEmpty(str))
                     {
                         stringCount++;
@@ -64,7 +64,7 @@ public class BenchmarkEscapeHeavyParsing
             {
                 if (property.Value.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
-                    var str = property.Value.GetString();
+                    string? str = property.Value.GetString();
                     if (!string.IsNullOrEmpty(str))
                     {
                         stringCount++;
@@ -83,7 +83,7 @@ public class BenchmarkEscapeHeavyParsing
         var sb = new StringBuilder();
         sb.AppendLine("{");
 
-        var escapePatterns = new[]
+        string[] escapePatterns = new[]
         {
             "Line 1\\nLine 2\\nLine 3",
             "Tab\\tSeparated\\tValues",
@@ -101,7 +101,7 @@ public class BenchmarkEscapeHeavyParsing
         {
             if (i > 0) sb.AppendLine(",");
 
-            var pattern = escapePatterns[i % escapePatterns.Length];
+            string pattern = escapePatterns[i % escapePatterns.Length];
             sb.Append($"  \"field_{i}\": \"{pattern}_{i}\"");
         }
 

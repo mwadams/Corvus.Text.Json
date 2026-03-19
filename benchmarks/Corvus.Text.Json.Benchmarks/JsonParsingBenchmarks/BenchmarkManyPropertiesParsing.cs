@@ -104,7 +104,7 @@ public class BenchmarkManyPropertiesParsing
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
         var random = new Random(42); // Fixed seed for consistent benchmarks
-        var result = new char[length];
+        char[] result = new char[length];
 
         for (int i = 0; i < length; i++)
         {

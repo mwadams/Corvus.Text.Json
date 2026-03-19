@@ -540,12 +540,11 @@ internal static partial class JsonTestHelper
         var dictionary = new Dictionary<string, object>();
 
         string key = "";
-        object value = null;
-
         while (json.Read())
         {
             JsonTokenType tokenType = json.TokenType;
             ReadOnlySpan<byte> valueSpan = json.ValueSpan;
+            object value;
             switch (tokenType)
             {
                 case JsonTokenType.PropertyName:
@@ -644,13 +643,12 @@ internal static partial class JsonTestHelper
     public static List<object> ReaderListLoop(ref Utf8JsonReader json)
     {
         var arrayList = new List<object>();
-
-        object value = null;
-
         while (json.Read())
         {
             JsonTokenType tokenType = json.TokenType;
             ReadOnlySpan<byte> valueSpan = json.ValueSpan;
+
+            object value;
             switch (tokenType)
             {
                 case JsonTokenType.True:

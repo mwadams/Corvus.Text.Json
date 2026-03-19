@@ -38,7 +38,7 @@ public class BenchmarkNumberHeavyParsing
             {
                 if (property.Value.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
                 {
-                    if (property.Value.TryGetDouble(out var number))
+                    if (property.Value.TryGetDouble(out double number))
                     {
                         sum += number;
                     }
@@ -63,7 +63,7 @@ public class BenchmarkNumberHeavyParsing
             {
                 if (property.Value.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
-                    if (property.Value.TryGetDouble(out var number))
+                    if (property.Value.TryGetDouble(out double number))
                     {
                         sum += number;
                     }
