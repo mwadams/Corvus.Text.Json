@@ -230,6 +230,20 @@ root.Hobbies.SetItem(1, "swimming"u8);
 
 // Remove by index
 root.Hobbies.RemoveAt(0);
+
+// Add multiple items at once
+root.Hobbies.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem("yoga"u8);
+    b.AddItem("hiking"u8);
+});
+
+// Insert multiple items at a specific index
+root.Hobbies.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem("painting"u8);
+    b.AddItem("music"u8);
+});
 ```
 
 The standard mutation workflow is:

@@ -91,8 +91,7 @@ public sealed class CoreTypeAnalyzer : DiagnosticAnalyzer
             ? typeSymbol.ContainingNamespace
             : symbol.ContainingType?.ContainingNamespace;
 
-        if (containingNamespace is not null &&
-            containingNamespace.ToDisplayString() == CorvusJsonNamespace)
+        if (containingNamespace?.ToDisplayString() == CorvusJsonNamespace)
         {
             context.ReportDiagnostic(
                 Diagnostic.Create(

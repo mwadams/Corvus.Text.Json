@@ -94,6 +94,56 @@ public readonly partial struct JsonElement
         }
 
         /// <summary>
+        /// Builds array items using the provided delegate, without wrapping them in
+        /// a JSON array envelope. Each item added by the delegate becomes a top-level
+        /// entry in the <see cref="ComplexValueBuilder"/>.
+        /// </summary>
+        /// <param name="value">The delegate that adds items via the <see cref="ArrayBuilder"/>.</param>
+        /// <param name="valueBuilder">The <see cref="ComplexValueBuilder"/> to use.</param>
+        /// <remarks>
+        /// <para>
+        /// This is similar to <see cref="BuildValue"/> but does not emit
+        /// <c>StartArray</c>/<c>EndArray</c> tokens. It is used by
+        /// <see cref="Mutable.InsertRange(int, Build, int)"/> and
+        /// <see cref="Mutable.AddRange(Build, int)"/> to splice items directly into
+        /// an existing array.
+        /// </para>
+        /// </remarks>
+        public static void BuildItems(Build value, ref ComplexValueBuilder valueBuilder)
+        {
+            ArrayBuilder ovb = new(valueBuilder);
+            value(ref ovb);
+            valueBuilder = ovb._builder;
+        }
+
+        /// <summary>
+        /// Builds array items using the provided delegate and context, without wrapping
+        /// them in a JSON array envelope.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="context">The context to pass to the builder delegate.</param>
+        /// <param name="value">The delegate that adds items via the <see cref="ArrayBuilder"/>.</param>
+        /// <param name="valueBuilder">The <see cref="ComplexValueBuilder"/> to use.</param>
+        /// <remarks>
+        /// <para>
+        /// This is similar to <see cref="BuildValue{TContext}"/> but does not emit
+        /// <c>StartArray</c>/<c>EndArray</c> tokens. It is used by
+        /// <see cref="Mutable.InsertRange{TContext}(int, in TContext, Build{TContext}, int)"/> and
+        /// <see cref="Mutable.AddRange{TContext}(in TContext, Build{TContext}, int)"/> to splice
+        /// items directly into an existing array.
+        /// </para>
+        /// </remarks>
+        public static void BuildItems<TContext>(in TContext context, Build<TContext> value, ref ComplexValueBuilder valueBuilder)
+#if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+#endif
+        {
+            ArrayBuilder ovb = new(valueBuilder);
+            value(context, ref ovb);
+            valueBuilder = ovb._builder;
+        }
+
+        /// <summary>
         /// Adds an object to the array using a builder delegate.
         /// </summary>
         /// <param name="value">A delegate that builds the object to add to the array.</param>

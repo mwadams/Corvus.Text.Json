@@ -79,7 +79,6 @@ public sealed class ParsedValueAnalyzer : DiagnosticAnalyzer
 
         // If symbol is null (unresolved type — e.g. namespace already changed),
         // fall through and report based on the syntax name match alone.
-
         context.ReportDiagnostic(
             Diagnostic.Create(
                 DiagnosticDescriptors.ParsedValueMigration,

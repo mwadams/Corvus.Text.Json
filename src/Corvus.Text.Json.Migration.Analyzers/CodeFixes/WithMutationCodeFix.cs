@@ -89,13 +89,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
                         equivalenceKey: DiagnosticDescriptors.WithMutationMigration.Id),
                     diagnostic);
             }
-            else if (IsResultFeedingAnotherWith(outermost))
-            {
-                // This With*() result is used as an argument to another With*().
-                // Skip — the outer With*() code fix will collapse the whole pattern.
-                continue;
-            }
-            else
+            else if (!IsResultFeedingAnotherWith(outermost))
             {
                 context.RegisterCodeFix(
                     CodeAction.Create(

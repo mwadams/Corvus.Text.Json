@@ -292,5 +292,101 @@ namespace Corvus.Text.Json.Tests
         }
 
         #endregion
+
+        #region InsertRange
+
+        [Fact]
+        public void InsertRange_InsertsMultipleItems()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            root.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+            {
+                b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+                {
+                    ob.AddProperty("id"u8, 10);
+                    ob.AddProperty("label"u8, "ten"u8);
+                });
+                b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+                {
+                    ob.AddProperty("id"u8, 20);
+                    ob.AddProperty("label"u8, "twenty"u8);
+                });
+            });
+
+            Assert.Equal(5, root.GetArrayLength());
+            Assert.Equal(1, (int)root[0].Id);
+            Assert.Equal(10, (int)root[1].Id);
+            Assert.Equal(20, (int)root[2].Id);
+            Assert.Equal(2, (int)root[3].Id);
+            Assert.Equal(3, (int)root[4].Id);
+        }
+
+        [Fact]
+        public void InsertRange_WithContext_InsertsMultipleItems()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            int[] ids = [10, 20];
+            root.InsertRange(0, ids, static (in int[] ctx, ref JsonElement.ArrayBuilder b) =>
+            {
+                for (int i = 0; i < ctx.Length; i++)
+                {
+                    int id = ctx[i];
+                    b.AddItem(id, static (in int id, ref JsonElement.ObjectBuilder ob) =>
+                    {
+                        ob.AddProperty("id"u8, id);
+                        ob.AddProperty("label"u8, "new"u8);
+                    });
+                }
+            });
+
+            Assert.Equal(5, root.GetArrayLength());
+            Assert.Equal(10, (int)root[0].Id);
+            Assert.Equal(20, (int)root[1].Id);
+            Assert.Equal(1, (int)root[2].Id);
+        }
+
+        #endregion
+
+        #region AddRange
+
+        [Fact]
+        public void AddRange_AppendsMultipleItems()
+        {
+            using JsonWorkspace workspace = JsonWorkspace.Create();
+            using ParsedJsonDocument<ArrayOfItems> doc = ParsedJsonDocument<ArrayOfItems>.Parse(SampleJson);
+            using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+            ArrayOfItems.Mutable root = builder.RootElement;
+
+            root.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+            {
+                b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+                {
+                    ob.AddProperty("id"u8, 4);
+                    ob.AddProperty("label"u8, "fourth"u8);
+                });
+                b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+                {
+                    ob.AddProperty("id"u8, 5);
+                    ob.AddProperty("label"u8, "fifth"u8);
+                });
+            });
+
+            Assert.Equal(5, root.GetArrayLength());
+            Assert.Equal(4, (int)root[3].Id);
+            Assert.Equal(5, (int)root[4].Id);
+        }
+
+        #endregion
     }
 }

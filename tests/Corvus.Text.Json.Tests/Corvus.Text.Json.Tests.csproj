@@ -92,6 +92,7 @@
     <Compile Include="JsonDocumentBuilderComplexObjectTests.cs" />
     <Compile Include="JsonDocumentBuilderCreateDynamicTests.cs" />
     <Compile Include="JsonDocumentBuilderInsertItemTests.cs" />
+    <Compile Include="JsonDocumentBuilderRangeTests.cs" />
     <Compile Include="JsonDocumentBuilderTests.cs" />
     <Compile Include="JsonElement.MutableDynamicCloneTests.cs" />
     <Compile Include="JsonElement.MutableDynamicWriteTests.cs" />

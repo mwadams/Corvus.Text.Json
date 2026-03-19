@@ -128,13 +128,8 @@ public sealed class ValidateAnalyzer : DiagnosticAnalyzer
 
         // IsValid() may be an extension method (Corvus.Json.JsonValueExtensions.IsValid<T>)
         ISymbol? methodSymbol = context.SemanticModel.GetSymbolInfo(invocation, context.CancellationToken).Symbol;
-        if (methodSymbol is IMethodSymbol method &&
+        return methodSymbol is IMethodSymbol method &&
             method.IsExtensionMethod &&
-            method.ContainingNamespace?.ToDisplayString() == "Corvus.Json")
-        {
-            return true;
-        }
-
-        return false;
+            method.ContainingNamespace?.ToDisplayString() == "Corvus.Json";
     }
 }
