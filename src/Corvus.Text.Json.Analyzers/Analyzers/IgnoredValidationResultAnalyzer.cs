@@ -53,7 +53,15 @@ public sealed class IgnoredValidationResultAnalyzer : DiagnosticAnalyzer
             _ => null,
         };
 
+        // Only fire when the result is discarded AND no arguments are passed.
+        // EvaluateSchema(collector) has side effects (populates the collector),
+        // so discarding the bool return value is legitimate in that case.
         if (methodName != "EvaluateSchema")
+        {
+            return;
+        }
+
+        if (invocation.ArgumentList.Arguments.Count > 0)
         {
             return;
         }

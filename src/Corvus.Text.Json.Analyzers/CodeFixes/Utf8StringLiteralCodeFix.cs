@@ -55,7 +55,7 @@ public sealed class Utf8StringLiteralCodeFix : CodeFixProvider
 
             context.RegisterCodeFix(
                 CodeAction.Create(
-                    title: $"Use UTF-8 string literal '{literal.Token.ValueText}u8'",
+                    title: $"Use UTF-8 string literal {literal.Token.Text}u8",
                     createChangedDocument: ct => ConvertToUtf8Async(context.Document, literal, ct),
                     equivalenceKey: DiagnosticDescriptors.PreferUtf8StringLiteral.Id),
                 diagnostic);

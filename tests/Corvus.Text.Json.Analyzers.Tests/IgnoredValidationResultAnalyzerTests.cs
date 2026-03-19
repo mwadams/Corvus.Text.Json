@@ -30,14 +30,18 @@ using System;
 
 namespace Corvus.Text.Json
 {
+    public interface IJsonSchemaResultsCollector { }
+
     public interface IJsonElement<T> where T : struct
     {
         bool EvaluateSchema();
+        bool EvaluateSchema(IJsonSchemaResultsCollector collector);
     }
 
     public struct JsonElement : IJsonElement<JsonElement>
     {
         public bool EvaluateSchema() => true;
+        public bool EvaluateSchema(IJsonSchemaResultsCollector collector) => true;
     }
 }
 ";
@@ -226,6 +230,28 @@ namespace TestApp
         {
             var element = new Corvus.Text.Json.JsonElement();
             bool isInvalid = !element.EvaluateSchema();
+        }
+    }
+}";
+
+        await new CSharpAnalyzerTest<IgnoredValidationResultAnalyzer, DefaultVerifier>
+        {
+            TestCode = testCode,
+        }.RunAsync();
+    }
+
+    [Fact]
+    public async Task EvaluateSchema_WithCollectorResultDiscarded_NoDiagnostic()
+    {
+        string testCode = Stubs + @"
+namespace TestApp
+{
+    class Test
+    {
+        void Method(Corvus.Text.Json.IJsonSchemaResultsCollector collector)
+        {
+            var element = new Corvus.Text.Json.JsonElement();
+            element.EvaluateSchema(collector);
         }
     }
 }";
