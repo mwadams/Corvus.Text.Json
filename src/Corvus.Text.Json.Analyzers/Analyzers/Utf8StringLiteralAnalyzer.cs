@@ -27,7 +27,7 @@ public sealed class Utf8StringLiteralAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(DiagnosticDescriptors.PreferUtf8StringLiteral);
+        [DiagnosticDescriptors.PreferUtf8StringLiteral];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

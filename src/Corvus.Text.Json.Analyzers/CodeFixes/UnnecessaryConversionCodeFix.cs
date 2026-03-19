@@ -29,7 +29,7 @@ public sealed class UnnecessaryConversionCodeFix : CodeFixProvider
 {
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds { get; } =
-        ImmutableArray.Create(DiagnosticDescriptors.UnnecessaryConversion.Id);
+        [DiagnosticDescriptors.UnnecessaryConversion.Id];
 
     /// <inheritdoc/>
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;

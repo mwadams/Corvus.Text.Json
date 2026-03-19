@@ -32,7 +32,7 @@ public sealed class MatchLambdaCaptureAnalyzer : DiagnosticAnalyzer
 
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(DiagnosticDescriptors.MatchLambdaShouldBeStatic);
+        [DiagnosticDescriptors.MatchLambdaShouldBeStatic];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

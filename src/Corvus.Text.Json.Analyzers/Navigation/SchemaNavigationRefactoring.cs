@@ -13,12 +13,10 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
 using System.Text;
 using System.Text.Json;
-
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeRefactorings;
@@ -76,9 +74,10 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             return;
         }
 
-        ITypeSymbol? typeSymbol = null;
         IPropertySymbol? accessedProperty = null;
 
+
+        ITypeSymbol? typeSymbol;
         if (node is VariableDeclaratorSyntax variableDeclarator)
         {
             // Handle cursor on variable name in declarations: Order order = ...
@@ -591,8 +590,8 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
     {
         public SchemaInfo(string filePath, DocumentId? documentId)
         {
-            this.FilePath = filePath;
-            this.DocumentId = documentId;
+            FilePath = filePath;
+            DocumentId = documentId;
         }
 
         public string FilePath { get; }
@@ -623,7 +622,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         }
 
         /// <inheritdoc/>
-        public override string Title => this.title;
+        public override string Title => title;
 
         /// <inheritdoc/>
         public override string? EquivalenceKey => "CTJ-NAV";
@@ -634,7 +633,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         {
             var operations = new List<CodeActionOperation>
             {
-                new OpenSchemaFileOperation(this.filePath, this.documentId, this.targetLine, this.targetColumn),
+                new OpenSchemaFileOperation(filePath, documentId, targetLine, targetColumn),
             };
 
             return Task.FromResult<IEnumerable<CodeActionOperation>>(operations);
@@ -663,7 +662,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         }
 
         /// <inheritdoc/>
-        public override string Title => $"Open {Path.GetFileName(this.filePath)}";
+        public override string Title => $"Open {Path.GetFileName(filePath)}";
 
         /// <inheritdoc/>
         public override void Apply(Workspace workspace, CancellationToken cancellationToken)
@@ -677,11 +676,11 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
             }
 
             // Fall back to Roslyn workspace API (no line navigation available).
-            if (this.documentId is not null)
+            if (documentId is not null)
             {
                 try
                 {
-                    workspace.OpenDocument(this.documentId);
+                    workspace.OpenDocument(documentId);
                 }
                 catch (NotSupportedException)
                 {
@@ -739,10 +738,10 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
                 itemOperations.GetType().InvokeMember(
                     "OpenFile", comInvoke, null, itemOperations,
-                    new object[] { this.filePath, vsViewKindTextView });
+                    new object[] { filePath, vsViewKindTextView });
 
                 // Navigate to the target position.
-                if (this.targetLine.HasValue)
+                if (targetLine.HasValue)
                 {
                     object? activeDoc = dte.GetType().InvokeMember(
                         "ActiveDocument", comGet, null, dte, null);
@@ -755,8 +754,8 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                         if (selection is not null)
                         {
                             // DTE lines and offsets are 1-based; ours are 0-based.
-                            int dteLine = this.targetLine.Value + 1;
-                            int dteOffset = (this.targetColumn ?? 0) + 1;
+                            int dteLine = targetLine.Value + 1;
+                            int dteOffset = (targetColumn ?? 0) + 1;
                             selection.GetType().InvokeMember(
                                 "MoveToLineAndOffset", comInvoke, null, selection,
                                 new object[] { dteLine, dteOffset, false });
@@ -857,7 +856,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
             if (assemblyQualified is not null)
             {
-                Type? t = Type.GetType(assemblyQualified, throwOnError: false);
+                var t = Type.GetType(assemblyQualified, throwOnError: false);
                 if (t is not null)
                 {
                     return t;
@@ -991,15 +990,15 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
                         return null;
                     }
 
-                // Record the element position.
-                matchedByteOffset = reader.TokenStartIndex;
+                    // Record the element position.
+                    matchedByteOffset = reader.TokenStartIndex;
+                }
+                else
+                {
+                    // Can't navigate further into a primitive value.
+                    return null;
+                }
             }
-            else
-            {
-                // Can't navigate further into a primitive value.
-                return null;
-            }
-        }
 
             return ByteOffsetToLineColumn(utf8Bytes, matchedByteOffset);
         }

@@ -31,7 +31,7 @@ public sealed class MatchLambdaCaptureCodeFix : CodeFixProvider
 {
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds { get; } =
-        ImmutableArray.Create(DiagnosticDescriptors.MatchLambdaShouldBeStatic.Id);
+        [DiagnosticDescriptors.MatchLambdaShouldBeStatic.Id];
 
     /// <inheritdoc/>
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;

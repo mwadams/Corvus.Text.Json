@@ -31,7 +31,7 @@ public sealed class PreferMemoryParseAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(DiagnosticDescriptors.PreferMemoryParse);
+        [DiagnosticDescriptors.PreferMemoryParse];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

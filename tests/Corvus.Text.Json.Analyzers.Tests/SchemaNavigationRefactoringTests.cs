@@ -9,6 +9,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -1090,11 +1091,11 @@ namespace TestApp
         string? additionalFileContent = null)
     {
         var workspace = new Microsoft.CodeAnalysis.AdhocWorkspace();
-        var project = workspace.AddProject("TestProject", LanguageNames.CSharp);
-        var refs = await ReferenceAssemblies.Net.Net80.ResolveAsync(
+        Project project = workspace.AddProject("TestProject", LanguageNames.CSharp);
+        ImmutableArray<MetadataReference> refs = await ReferenceAssemblies.Net.Net80.ResolveAsync(
                 LanguageNames.CSharp, default);
         project = project.AddMetadataReferences(refs);
-        var document = project.AddDocument("Test.cs", SourceText.From(code), filePath: "Test.cs");
+        Document document = project.AddDocument("Test.cs", SourceText.From(code), filePath: "Test.cs");
 
         if (additionalFilePath is not null && additionalFileContent is not null)
         {
@@ -1110,10 +1111,10 @@ namespace TestApp
             document = document.Project.GetDocument(document.Id)!;
         }
 
-        var tree = await document.GetSyntaxTreeAsync();
-        var root = await tree!.GetRootAsync();
+        SyntaxTree? tree = await document.GetSyntaxTreeAsync();
+        SyntaxNode root = await tree!.GetRootAsync();
 
-        var target = findNode(root!);
+        SyntaxNode target = findNode(root!);
 
         var provider = new SchemaNavigationRefactoring();
         var actions = new List<CodeAction>();

@@ -31,7 +31,7 @@ public sealed class PropertyNameAllocationCodeFix : CodeFixProvider
 {
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds =>
-        ImmutableArray.Create("CTJ008");
+        ["CTJ008"];
 
     /// <inheritdoc/>
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;

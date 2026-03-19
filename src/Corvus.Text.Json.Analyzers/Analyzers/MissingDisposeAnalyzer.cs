@@ -8,7 +8,6 @@
 // </licensing>
 
 using System.Collections.Immutable;
-using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -27,10 +26,11 @@ public sealed class MissingDisposeAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(
+        [
             DiagnosticDescriptors.MissingDisposeOnParsedJsonDocument,
             DiagnosticDescriptors.MissingDisposeOnJsonWorkspace,
-            DiagnosticDescriptors.MissingDisposeOnJsonDocumentBuilder);
+            DiagnosticDescriptors.MissingDisposeOnJsonDocumentBuilder,
+        ];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

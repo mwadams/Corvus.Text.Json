@@ -8,7 +8,6 @@
 // </licensing>
 
 using System.Collections.Immutable;
-using System.Linq;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -26,7 +25,7 @@ public sealed class PropertyNameAllocationAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(DiagnosticDescriptors.PreferNonAllocatingPropertyName);
+        [DiagnosticDescriptors.PreferNonAllocatingPropertyName];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)

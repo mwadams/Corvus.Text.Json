@@ -29,7 +29,7 @@ public sealed class MissingDisposeCodeFix : CodeFixProvider
 {
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds =>
-        ImmutableArray.Create("CTJ004", "CTJ005", "CTJ006");
+        ["CTJ004", "CTJ005", "CTJ006"];
 
     /// <inheritdoc/>
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;

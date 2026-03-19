@@ -30,7 +30,7 @@ public sealed class Utf8StringLiteralCodeFix : CodeFixProvider
 {
     /// <inheritdoc/>
     public override ImmutableArray<string> FixableDiagnosticIds { get; } =
-        ImmutableArray.Create(DiagnosticDescriptors.PreferUtf8StringLiteral.Id);
+        [DiagnosticDescriptors.PreferUtf8StringLiteral.Id];
 
     /// <inheritdoc/>
     public override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;

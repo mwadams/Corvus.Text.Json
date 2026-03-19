@@ -25,7 +25,7 @@ public sealed class IgnoredValidationResultAnalyzer : DiagnosticAnalyzer
 {
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics =>
-        ImmutableArray.Create(DiagnosticDescriptors.IgnoredSchemaValidationResult);
+        [DiagnosticDescriptors.IgnoredSchemaValidationResult];
 
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
