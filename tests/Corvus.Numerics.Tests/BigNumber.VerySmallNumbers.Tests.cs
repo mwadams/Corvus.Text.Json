@@ -2,12 +2,13 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberVerySmallNumbersTests
 {
     #region Construction and Representation
@@ -71,7 +72,7 @@ public class BigNumberVerySmallNumbersTests
     {
         // 0.00000000000000000000000000000000000000000000000123
         string fiftyDecimals = "0." + new string('0', 49) + "123";
-        BigNumber parsed = BigNumber.Parse(fiftyDecimals);
+        var parsed = BigNumber.Parse(fiftyDecimals);
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(new BigInteger(123));
@@ -82,7 +83,7 @@ public class BigNumberVerySmallNumbersTests
     public void Parse_100DecimalPlaces_AllZerosExceptLast_Succeeds()
     {
         string hundredDecimals = "0." + new string('0', 99) + "7";
-        BigNumber parsed = BigNumber.Parse(hundredDecimals);
+        var parsed = BigNumber.Parse(hundredDecimals);
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(new BigInteger(7));
@@ -93,7 +94,7 @@ public class BigNumberVerySmallNumbersTests
     public void Parse_200DecimalPlaces_Succeeds()
     {
         string twoHundredDecimals = "0." + new string('0', 199) + "123456789";
-        BigNumber parsed = BigNumber.Parse(twoHundredDecimals);
+        var parsed = BigNumber.Parse(twoHundredDecimals);
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("123456789"));
@@ -104,7 +105,7 @@ public class BigNumberVerySmallNumbersTests
     [Fact]
     public void Parse_ScientificNotation_Minus100_Succeeds()
     {
-        BigNumber parsed = BigNumber.Parse("1.23456789E-100");
+        var parsed = BigNumber.Parse("1.23456789E-100");
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("123456789"));
@@ -114,7 +115,7 @@ public class BigNumberVerySmallNumbersTests
     [Fact]
     public void Parse_ScientificNotation_Minus500_Succeeds()
     {
-        BigNumber parsed = BigNumber.Parse("9.87654321E-500");
+        var parsed = BigNumber.Parse("9.87654321E-500");
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("987654321"));
@@ -125,7 +126,7 @@ public class BigNumberVerySmallNumbersTests
     [Fact]
     public void Parse_ScientificNotation_Minus1000_Succeeds()
     {
-        BigNumber parsed = BigNumber.Parse("5.5E-1000");
+        var parsed = BigNumber.Parse("5.5E-1000");
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(new BigInteger(55));
@@ -206,7 +207,7 @@ public class BigNumberVerySmallNumbersTests
         BigNumber tiny = new(1, -100);
         BigNumber normal = new(2, 0);
 
-        BigNumber quotient = BigNumber.Divide(tiny, normal, precision: 50);
+        var quotient = BigNumber.Divide(tiny, normal, precision: 50);
 
         // 1 × 10^-100 / 2 = 0.5 × 10^-100 = 5 × 10^-101
         quotient.Normalize().Significand.ShouldBe(new BigInteger(5));
@@ -219,7 +220,7 @@ public class BigNumberVerySmallNumbersTests
         BigNumber normal = new(1, 0);
         BigNumber tiny = new(1, -50);
 
-        BigNumber quotient = BigNumber.Divide(normal, tiny, precision: 50);
+        var quotient = BigNumber.Divide(normal, tiny, precision: 50);
 
         // 1 / (1 × 10^-50) = 1 × 10^50
         quotient.Normalize().Exponent.ShouldBe(50);
@@ -376,7 +377,7 @@ public class BigNumberVerySmallNumbersTests
     public void Physics_ElectronMass_Succeeds()
     {
         // Electron mass: 9.109 × 10^-31 kg
-        BigNumber electronMass = BigNumber.Parse("9.109E-31");
+        var electronMass = BigNumber.Parse("9.109E-31");
 
         electronMass.Normalize().Significand.ShouldBe(new BigInteger(9109));
         electronMass.Normalize().Exponent.ShouldBe(-34);
@@ -386,7 +387,7 @@ public class BigNumberVerySmallNumbersTests
     public void Physics_GravitationalConstant_Succeeds()
     {
         // G = 6.674 × 10^-11 N⋅m²/kg²
-        BigNumber g = BigNumber.Parse("6.674E-11");
+        var g = BigNumber.Parse("6.674E-11");
 
         g.Normalize().Significand.ShouldBe(new BigInteger(6674));
         g.Normalize().Exponent.ShouldBe(-14);
@@ -406,7 +407,7 @@ public class BigNumberVerySmallNumbersTests
     public void Quantum_ReducedPlanckConstant_Succeeds()
     {
         // ℏ = 1.055 × 10^-34 J⋅s
-        BigNumber hBar = BigNumber.Parse("1.055E-34");
+        var hBar = BigNumber.Parse("1.055E-34");
 
         hBar.Normalize().Significand.ShouldBe(new BigInteger(1055));
         hBar.Normalize().Exponent.ShouldBe(-37);
@@ -416,7 +417,7 @@ public class BigNumberVerySmallNumbersTests
     public void Cosmology_VacuumEnergy_Succeeds()
     {
         // Vacuum energy density: ~ 10^-9 J/m³ (simplified)
-        BigNumber vacuumEnergy = BigNumber.Parse("5.7E-10");
+        var vacuumEnergy = BigNumber.Parse("5.7E-10");
 
         vacuumEnergy.Normalize().Significand.ShouldBe(new BigInteger(57));
         vacuumEnergy.Normalize().Exponent.ShouldBe(-11);
@@ -516,7 +517,7 @@ public class BigNumberVerySmallNumbersTests
         BigNumber a = new(1, -100);
         BigNumber b = new(3, -100);
 
-        BigNumber quotient = BigNumber.Divide(a, b, precision: 100);
+        var quotient = BigNumber.Divide(a, b, precision: 100);
 
         // 1/3 with 100 digits of precision
         quotient.Significand.ToString().Length.ShouldBeGreaterThan(90);
@@ -562,7 +563,7 @@ public class BigNumberVerySmallNumbersTests
     {
         BigNumber negativeTiny = new(-123456, -100);
 
-        BigNumber abs = BigNumber.Abs(negativeTiny);
+        var abs = BigNumber.Abs(negativeTiny);
 
         abs.Significand.ShouldBe(new BigInteger(123456));
         abs.Exponent.ShouldBe(-100);
@@ -597,7 +598,7 @@ public class BigNumberVerySmallNumbersTests
     {
         // Create a number with 1000 decimal places
         string thousandDecimals = "0." + new string('0', 999) + "1";
-        BigNumber parsed = BigNumber.Parse(thousandDecimals);
+        var parsed = BigNumber.Parse(thousandDecimals);
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.One);

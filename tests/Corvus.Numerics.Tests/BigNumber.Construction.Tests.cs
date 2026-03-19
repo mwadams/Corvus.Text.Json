@@ -2,12 +2,13 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberConstructionTests
 {
     [Fact]
@@ -67,7 +68,7 @@ public class BigNumberConstructionTests
     [Fact]
     public void ImplicitConversion_FromBigInteger_CreatesCorrectValue()
     {
-        BigInteger value = BigInteger.Parse("999999999999999999999999999999");
+        var value = BigInteger.Parse("999999999999999999999999999999");
         BigNumber number = value;
 
         number.Significand.ShouldBe(value);
@@ -79,7 +80,7 @@ public class BigNumberConstructionTests
     {
         BigNumber number = 123.456m;
 
-        BigNumber parsed = BigNumber.Parse("123.456");
+        var parsed = BigNumber.Parse("123.456");
         number.ShouldBe(parsed);
     }
 
@@ -107,7 +108,7 @@ public class BigNumberConstructionTests
     [Fact]
     public void ExplicitConversion_ToDecimal_WithSimpleValue_ReturnsCorrectValue()
     {
-        BigNumber number = BigNumber.Parse("123.456");
+        var number = BigNumber.Parse("123.456");
 
         decimal result = (decimal)number;
 
@@ -125,7 +126,7 @@ public class BigNumberConstructionTests
     [Fact]
     public void ExplicitConversion_ToDouble_WithSimpleValue_ReturnsCorrectValue()
     {
-        BigNumber number = BigNumber.Parse("123.456");
+        var number = BigNumber.Parse("123.456");
 
         double result = (double)number;
 
@@ -145,7 +146,7 @@ public class BigNumberConstructionTests
     [Fact]
     public void ExplicitConversion_ToLong_WithDecimalValue_Truncates()
     {
-        BigNumber number = BigNumber.Parse("123.456");
+        var number = BigNumber.Parse("123.456");
 
         long result = (long)number;
 
@@ -163,7 +164,7 @@ public class BigNumberConstructionTests
     [Fact]
     public void IsInteger_WithDecimalValue_ReturnsFalse()
     {
-        BigNumber number = BigNumber.Parse("42.5");
+        var number = BigNumber.Parse("42.5");
 
         number.IsInteger().ShouldBeFalse();
     }

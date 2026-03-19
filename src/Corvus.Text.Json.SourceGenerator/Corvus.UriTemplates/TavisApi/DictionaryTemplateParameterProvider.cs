@@ -226,7 +226,7 @@ internal class DictionaryTemplateParameterProvider : ITemplateParameterProvider<
 
         if (valueIsEmpty)
         {
-           output.Append(ifEmpty);
+            output.Append(ifEmpty);
         }
         else
         {
@@ -252,7 +252,7 @@ internal class DictionaryTemplateParameterProvider : ITemplateParameterProvider<
         // Write the name separator
         if (span.Length == 0)
         {
-           output.Append(ifEmpty);
+            output.Append(ifEmpty);
         }
         else
         {

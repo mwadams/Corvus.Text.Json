@@ -222,7 +222,7 @@ public static partial class JsonElementHelpers
                 var arrayEnumerator1 = new ArrayEnumerator<JsonElement>(element1ParentDocument, element1ParentDocumentIndex);
                 while (arrayEnumerator1.MoveNext())
                 {
-                   if (!arrayEnumerator2.MoveNext())
+                    if (!arrayEnumerator2.MoveNext())
                     {
                         return false;
                     }

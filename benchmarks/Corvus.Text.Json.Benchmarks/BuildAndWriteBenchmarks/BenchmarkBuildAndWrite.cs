@@ -45,7 +45,7 @@ public class BenchmarkBuildAndWrite
     {
         var bufferWriter = new ArrayPoolBufferWriter<byte>();
         System.Text.Json.Utf8JsonWriter writer = new(bufferWriter);
-        Benchmark.CorvusJsonSchema.Person person = Benchmark.CorvusJsonSchema.Person.Create(
+        var person = Benchmark.CorvusJsonSchema.Person.Create(
             age: 51,
             name: Benchmark.CorvusJsonSchema.PersonName.Create(
                 firstName: "Michael",
@@ -63,9 +63,9 @@ public class BenchmarkBuildAndWrite
     [Benchmark]
     public bool BuildCorvusTextJson()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
 
-        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateBuilder(            
+        using JsonDocumentBuilder<Person.Mutable> person = Person.CreateBuilder(
             workspace,
             (ref b) => b.Create(
             age: 51,

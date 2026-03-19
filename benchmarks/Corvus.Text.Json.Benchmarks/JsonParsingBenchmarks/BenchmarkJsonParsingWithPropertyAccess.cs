@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -26,24 +26,24 @@ public class BenchmarkSmallObjectPropertyAccess
     public (string?, int, bool) SmallObjectPropertyAccessCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(smallObjectJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         // Simulate typical property access patterns
         string? name = null;
         int id = 0;
         bool active = false;
 
-        if (root.TryGetProperty("name", out var nameElement))
+        if (root.TryGetProperty("name", out Corvus.Text.Json.JsonElement nameElement))
         {
             name = nameElement.GetString();
         }
 
-        if (root.TryGetProperty("id", out var idElement))
+        if (root.TryGetProperty("id", out Corvus.Text.Json.JsonElement idElement))
         {
             id = idElement.GetInt32();
         }
 
-        if (root.TryGetProperty("isActive", out var activeElement))
+        if (root.TryGetProperty("isActive", out Corvus.Text.Json.JsonElement activeElement))
         {
             active = activeElement.GetBoolean();
         }
@@ -55,24 +55,24 @@ public class BenchmarkSmallObjectPropertyAccess
     public (string?, int, bool) SmallObjectPropertyAccessSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(smallObjectJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         // Simulate typical property access patterns
         string? name = null;
         int id = 0;
         bool active = false;
 
-        if (root.TryGetProperty("name", out var nameElement))
+        if (root.TryGetProperty("name", out System.Text.Json.JsonElement nameElement))
         {
             name = nameElement.GetString();
         }
 
-        if (root.TryGetProperty("id", out var idElement))
+        if (root.TryGetProperty("id", out System.Text.Json.JsonElement idElement))
         {
             id = idElement.GetInt32();
         }
 
-        if (root.TryGetProperty("isActive", out var activeElement))
+        if (root.TryGetProperty("isActive", out System.Text.Json.JsonElement activeElement))
         {
             active = activeElement.GetBoolean();
         }
@@ -121,7 +121,7 @@ public class BenchmarkMediumObjectPropertyAccess
     public (string?, string?, int, double, string?) MediumObjectPropertyAccessCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(mediumObjectJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         // Access multiple properties at different levels
         string? userName = null;
@@ -130,25 +130,25 @@ public class BenchmarkMediumObjectPropertyAccess
         double averageScore = 0.0;
         string? status = null;
 
-        if (root.TryGetProperty("user", out var userElement))
+        if (root.TryGetProperty("user", out Corvus.Text.Json.JsonElement userElement))
         {
-            if (userElement.TryGetProperty("username", out var userNameElement))
+            if (userElement.TryGetProperty("username", out Corvus.Text.Json.JsonElement userNameElement))
                 userName = userNameElement.GetString();
 
-            if (userElement.TryGetProperty("email", out var emailElement))
+            if (userElement.TryGetProperty("email", out Corvus.Text.Json.JsonElement emailElement))
                 email = emailElement.GetString();
         }
 
-        if (root.TryGetProperty("stats", out var statsElement))
+        if (root.TryGetProperty("stats", out Corvus.Text.Json.JsonElement statsElement))
         {
-            if (statsElement.TryGetProperty("loginCount", out var loginElement))
+            if (statsElement.TryGetProperty("loginCount", out Corvus.Text.Json.JsonElement loginElement))
                 loginCount = loginElement.GetInt32();
 
-            if (statsElement.TryGetProperty("averageScore", out var scoreElement))
+            if (statsElement.TryGetProperty("averageScore", out Corvus.Text.Json.JsonElement scoreElement))
                 averageScore = scoreElement.GetDouble();
         }
 
-        if (root.TryGetProperty("status", out var statusElement))
+        if (root.TryGetProperty("status", out Corvus.Text.Json.JsonElement statusElement))
         {
             status = statusElement.GetString();
         }
@@ -160,7 +160,7 @@ public class BenchmarkMediumObjectPropertyAccess
     public (string?, string?, int, double, string?) MediumObjectPropertyAccessSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(mediumObjectJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         // Access multiple properties at different levels
         string? userName = null;
@@ -169,25 +169,25 @@ public class BenchmarkMediumObjectPropertyAccess
         double averageScore = 0.0;
         string? status = null;
 
-        if (root.TryGetProperty("user", out var userElement))
+        if (root.TryGetProperty("user", out System.Text.Json.JsonElement userElement))
         {
-            if (userElement.TryGetProperty("username", out var userNameElement))
+            if (userElement.TryGetProperty("username", out System.Text.Json.JsonElement userNameElement))
                 userName = userNameElement.GetString();
 
-            if (userElement.TryGetProperty("email", out var emailElement))
+            if (userElement.TryGetProperty("email", out System.Text.Json.JsonElement emailElement))
                 email = emailElement.GetString();
         }
 
-        if (root.TryGetProperty("stats", out var statsElement))
+        if (root.TryGetProperty("stats", out System.Text.Json.JsonElement statsElement))
         {
-            if (statsElement.TryGetProperty("loginCount", out var loginElement))
+            if (statsElement.TryGetProperty("loginCount", out System.Text.Json.JsonElement loginElement))
                 loginCount = loginElement.GetInt32();
 
-            if (statsElement.TryGetProperty("averageScore", out var scoreElement))
+            if (statsElement.TryGetProperty("averageScore", out System.Text.Json.JsonElement scoreElement))
                 averageScore = scoreElement.GetDouble();
         }
 
-        if (root.TryGetProperty("status", out var statusElement))
+        if (root.TryGetProperty("status", out System.Text.Json.JsonElement statusElement))
         {
             status = statusElement.GetString();
         }
@@ -272,7 +272,7 @@ public class BenchmarkLargeObjectWithPropertyMap
     public (int, string?, string?) LargeObjectWithPropertyMapCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(largeObjectJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         // Ensure property map is built for efficient access
         root.EnsurePropertyMap();
@@ -282,17 +282,17 @@ public class BenchmarkLargeObjectWithPropertyMap
         string? configName = null;
         string? version = null;
 
-        if (root.TryGetProperty("totalItems", out var totalElement))
+        if (root.TryGetProperty("totalItems", out Corvus.Text.Json.JsonElement totalElement))
         {
             totalItems = totalElement.GetInt32();
         }
 
-        if (root.TryGetProperty("configName", out var nameElement))
+        if (root.TryGetProperty("configName", out Corvus.Text.Json.JsonElement nameElement))
         {
             configName = nameElement.GetString();
         }
 
-        if (root.TryGetProperty("version", out var versionElement))
+        if (root.TryGetProperty("version", out Corvus.Text.Json.JsonElement versionElement))
         {
             version = versionElement.GetString();
         }
@@ -304,24 +304,24 @@ public class BenchmarkLargeObjectWithPropertyMap
     public (int, string?, string?) LargeObjectWithPropertyMapSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(largeObjectJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         // Access properties
         int totalItems = 0;
         string? configName = null;
         string? version = null;
 
-        if (root.TryGetProperty("totalItems", out var totalElement))
+        if (root.TryGetProperty("totalItems", out System.Text.Json.JsonElement totalElement))
         {
             totalItems = totalElement.GetInt32();
         }
 
-        if (root.TryGetProperty("configName", out var nameElement))
+        if (root.TryGetProperty("configName", out System.Text.Json.JsonElement nameElement))
         {
             configName = nameElement.GetString();
         }
 
-        if (root.TryGetProperty("version", out var versionElement))
+        if (root.TryGetProperty("version", out System.Text.Json.JsonElement versionElement))
         {
             version = versionElement.GetString();
         }
@@ -392,24 +392,24 @@ public class BenchmarkDeepNestedAccess
     public (string?, string?, bool) DeepNestedAccessCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(nestedAccessJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         // Deep nested property access
         string? theme = null;
         string? language = null;
         bool emailNotifications = false;
 
-        if (root.TryGetProperty("user", out var userElement) &&
-            userElement.TryGetProperty("preferences", out var prefElement))
+        if (root.TryGetProperty("user", out Corvus.Text.Json.JsonElement userElement) &&
+            userElement.TryGetProperty("preferences", out Corvus.Text.Json.JsonElement prefElement))
         {
-            if (prefElement.TryGetProperty("theme", out var themeElement))
+            if (prefElement.TryGetProperty("theme", out Corvus.Text.Json.JsonElement themeElement))
                 theme = themeElement.GetString();
 
-            if (prefElement.TryGetProperty("language", out var langElement))
+            if (prefElement.TryGetProperty("language", out Corvus.Text.Json.JsonElement langElement))
                 language = langElement.GetString();
 
-            if (prefElement.TryGetProperty("notifications", out var notifElement) &&
-                notifElement.TryGetProperty("email", out var emailElement))
+            if (prefElement.TryGetProperty("notifications", out Corvus.Text.Json.JsonElement notifElement) &&
+                notifElement.TryGetProperty("email", out Corvus.Text.Json.JsonElement emailElement))
             {
                 emailNotifications = emailElement.GetBoolean();
             }
@@ -422,24 +422,24 @@ public class BenchmarkDeepNestedAccess
     public (string?, string?, bool) DeepNestedAccessSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(nestedAccessJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         // Deep nested property access
         string? theme = null;
         string? language = null;
         bool emailNotifications = false;
 
-        if (root.TryGetProperty("user", out var userElement) &&
-            userElement.TryGetProperty("preferences", out var prefElement))
+        if (root.TryGetProperty("user", out System.Text.Json.JsonElement userElement) &&
+            userElement.TryGetProperty("preferences", out System.Text.Json.JsonElement prefElement))
         {
-            if (prefElement.TryGetProperty("theme", out var themeElement))
+            if (prefElement.TryGetProperty("theme", out System.Text.Json.JsonElement themeElement))
                 theme = themeElement.GetString();
 
-            if (prefElement.TryGetProperty("language", out var langElement))
+            if (prefElement.TryGetProperty("language", out System.Text.Json.JsonElement langElement))
                 language = langElement.GetString();
 
-            if (prefElement.TryGetProperty("notifications", out var notifElement) &&
-                notifElement.TryGetProperty("email", out var emailElement))
+            if (prefElement.TryGetProperty("notifications", out System.Text.Json.JsonElement notifElement) &&
+                notifElement.TryGetProperty("email", out System.Text.Json.JsonElement emailElement))
             {
                 emailNotifications = emailElement.GetBoolean();
             }
@@ -512,24 +512,24 @@ public class BenchmarkArrayProcessing
     public (int, double, string?) ArrayProcessingCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(arrayAccessJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int itemCount = 0;
         double totalValue = 0.0;
         string? firstItemName = null;
 
-        if (root.TryGetProperty("items", out var itemsElement) && itemsElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
+        if (root.TryGetProperty("items", out Corvus.Text.Json.JsonElement itemsElement) && itemsElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in itemsElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement item in itemsElement.EnumerateArray())
             {
                 itemCount++;
 
-                if (item.TryGetProperty("value", out var valueElement) && valueElement.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
+                if (item.TryGetProperty("value", out Corvus.Text.Json.JsonElement valueElement) && valueElement.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
                 {
                     totalValue += valueElement.GetDouble();
                 }
 
-                if (firstItemName == null && item.TryGetProperty("name", out var nameElement))
+                if (firstItemName == null && item.TryGetProperty("name", out Corvus.Text.Json.JsonElement nameElement))
                 {
                     firstItemName = nameElement.GetString();
                 }
@@ -543,24 +543,24 @@ public class BenchmarkArrayProcessing
     public (int, double, string?) ArrayProcessingSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(arrayAccessJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int itemCount = 0;
         double totalValue = 0.0;
         string? firstItemName = null;
 
-        if (root.TryGetProperty("items", out var itemsElement) && itemsElement.ValueKind == System.Text.Json.JsonValueKind.Array)
+        if (root.TryGetProperty("items", out System.Text.Json.JsonElement itemsElement) && itemsElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in itemsElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement item in itemsElement.EnumerateArray())
             {
                 itemCount++;
 
-                if (item.TryGetProperty("value", out var valueElement) && valueElement.ValueKind == System.Text.Json.JsonValueKind.Number)
+                if (item.TryGetProperty("value", out System.Text.Json.JsonElement valueElement) && valueElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
                     totalValue += valueElement.GetDouble();
                 }
 
-                if (firstItemName == null && item.TryGetProperty("name", out var nameElement))
+                if (firstItemName == null && item.TryGetProperty("name", out System.Text.Json.JsonElement nameElement))
                 {
                     firstItemName = nameElement.GetString();
                 }

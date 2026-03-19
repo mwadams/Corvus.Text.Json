@@ -546,7 +546,7 @@ public static partial class ValidationCodeGeneratorExtensions
         IKeyword? formatKeyword = typeDeclaration.Keywords().OfType<IFormatValidationKeyword>().FirstOrDefault();
 
         string typeKeywordDisplay = typeKeyword is IKeyword t ? SymbolDisplay.FormatLiteral(t.Keyword, true) : "null";
-        string formatKeywordDisplay = formatKeyword is IKeyword f ? SymbolDisplay.FormatLiteral(f.Keyword, true) : "null";
+        _ = formatKeyword is IKeyword f ? SymbolDisplay.FormatLiteral(f.Keyword, true) : "null";
 
         generator
             .AppendSeparatorLine()

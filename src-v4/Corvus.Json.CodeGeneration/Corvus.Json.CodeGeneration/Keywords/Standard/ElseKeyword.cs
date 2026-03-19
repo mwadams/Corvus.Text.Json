@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// The else keyword.
 /// </summary>
 public sealed class ElseKeyword
-    :   ISubschemaTypeBuilderKeyword,
+    : ISubschemaTypeBuilderKeyword,
         ILocalSubschemaRegistrationKeyword,
         IPropertyProviderKeyword,
         ITernaryIfElseValidationKeyword,

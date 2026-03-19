@@ -37,7 +37,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void ItemArray_CreateBuilder_ReturnsEmptyArray()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder =
             V5.MigrationItemArray.CreateBuilder(workspace);
         V5.MigrationItemArray.Mutable root = builder.RootElement;
@@ -49,7 +49,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void ItemArray_CreateBuilder_ThenAddItems()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder =
             V5.MigrationItemArray.CreateBuilder(workspace);
         V5.MigrationItemArray.Mutable root = builder.RootElement;
@@ -67,7 +67,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void ItemArray_CreateBuilder_RoundTrip()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationItemArray.Mutable> builder =
             V5.MigrationItemArray.CreateBuilder(workspace);
         V5.MigrationItemArray.Mutable root = builder.RootElement;
@@ -77,7 +77,7 @@ public class CreateBuilderEquivalenceTests
 
         string json = root.ToString();
 
-        using ParsedJsonDocument<V5.MigrationItemArray> reparsed =
+        using var reparsed =
             ParsedJsonDocument<V5.MigrationItemArray>.Parse(json);
 
         Assert.Equal(1, reparsed.RootElement.GetArrayLength());
@@ -87,7 +87,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void IntVector_CreateBuilder_ReturnsEmptyArray()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
             V5.MigrationIntVector.CreateBuilder(workspace);
         V5.MigrationIntVector.Mutable root = builder.RootElement;
@@ -103,7 +103,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void JsonElementMutable_CreateArrayBuilder_ReturnsEmptyArray()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> builder =
             Corvus.Text.Json.JsonElement.CreateArrayBuilder(workspace);
         Corvus.Text.Json.JsonElement.Mutable root = builder.RootElement;
@@ -115,7 +115,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void JsonElementMutable_CreateArrayBuilder_ThenAddItems()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> builder =
             Corvus.Text.Json.JsonElement.CreateArrayBuilder(workspace);
         Corvus.Text.Json.JsonElement.Mutable root = builder.RootElement;
@@ -131,7 +131,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void JsonElementMutable_CreateObjectBuilder_ReturnsEmptyObject()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> builder =
             Corvus.Text.Json.JsonElement.CreateObjectBuilder(workspace);
         Corvus.Text.Json.JsonElement.Mutable root = builder.RootElement;
@@ -143,7 +143,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void JsonElementMutable_CreateObjectBuilder_ThenSetProperties()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> builder =
             Corvus.Text.Json.JsonElement.CreateObjectBuilder(workspace);
         Corvus.Text.Json.JsonElement.Mutable root = builder.RootElement;
@@ -159,7 +159,7 @@ public class CreateBuilderEquivalenceTests
     [Fact]
     public void JsonElementMutable_CreateObjectBuilder_RoundTrip()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> builder =
             Corvus.Text.Json.JsonElement.CreateObjectBuilder(workspace);
         Corvus.Text.Json.JsonElement.Mutable root = builder.RootElement;
@@ -168,7 +168,7 @@ public class CreateBuilderEquivalenceTests
 
         string json = root.ToString();
 
-        using ParsedJsonDocument<Corvus.Text.Json.JsonElement> reparsed = ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(json);
+        using var reparsed = ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(json);
         Assert.True(reparsed.RootElement.GetProperty("active"u8).GetBoolean());
     }
 

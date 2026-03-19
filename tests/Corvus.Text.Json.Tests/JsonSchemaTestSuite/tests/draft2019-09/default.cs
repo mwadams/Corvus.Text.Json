@@ -18,14 +18,14 @@ public class SuiteInvalidTypeForDefault : IClassFixture<SuiteInvalidTypeForDefau
     [Fact]
     public void TestValidWhenPropertyIsSpecified()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 13}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 13}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestStillValidWhenTheInvalidDefaultIsUsed()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteInvalidStringValueForDefault : IClassFixture<SuiteInvalidStrin
     [Fact]
     public void TestValidWhenPropertyIsSpecified()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": \"good\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": \"good\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestStillValidWhenTheInvalidDefaultIsUsed()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -110,21 +110,21 @@ public class SuiteTheDefaultKeywordDoesNotDoAnythingIfThePropertyIsMissing : ICl
     [Fact]
     public void TestAnExplicitPropertyValueIsCheckedAgainstMaximumPassing()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 1 }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 1 }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnExplicitPropertyValueIsCheckedAgainstMaximumFailing()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 5 }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 5 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMissingPropertiesAreNotFilledInWithTheDefault()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

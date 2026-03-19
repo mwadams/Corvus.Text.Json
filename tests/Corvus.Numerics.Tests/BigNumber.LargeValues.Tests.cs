@@ -2,12 +2,13 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberLargeValuesTests
 {
     #region Values Beyond Decimal Range
@@ -17,7 +18,7 @@ public class BigNumberLargeValuesTests
     {
         // decimal.MaxValue is approximately 7.9 × 10^28
         // Create a value that's 10^50
-        BigInteger significand = BigInteger.Pow(10, 50);
+        var significand = BigInteger.Pow(10, 50);
         BigNumber huge = new(significand, 0);
 
         huge.Significand.ShouldBe(significand);
@@ -84,7 +85,7 @@ public class BigNumberLargeValuesTests
         BigNumber large1 = new(BigInteger.Parse("999999999999999999999999999999"), 0);
         BigNumber large2 = new(BigInteger.Parse("3"), 0);
 
-        BigNumber quotient = BigNumber.Divide(large1, large2, precision: 50);
+        var quotient = BigNumber.Divide(large1, large2, precision: 50);
 
         // Should be roughly 333...333...
         quotient.Significand.ShouldNotBe(BigInteger.Zero);
@@ -94,7 +95,7 @@ public class BigNumberLargeValuesTests
     public void Parse_VeryLargeNumber_Succeeds()
     {
         string largeNumber = "123456789012345678901234567890123456789012345678901234567890";
-        BigNumber parsed = BigNumber.Parse(largeNumber);
+        var parsed = BigNumber.Parse(largeNumber);
 
         parsed.Significand.ShouldBe(BigInteger.Parse(largeNumber) / 10);
         parsed.Exponent.ShouldBe(1);
@@ -105,7 +106,7 @@ public class BigNumberLargeValuesTests
     {
         // A number with 100 decimal places
         string smallNumber = "0." + new string('0', 99) + "123456789";
-        BigNumber parsed = BigNumber.Parse(smallNumber);
+        var parsed = BigNumber.Parse(smallNumber);
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("123456789"));
@@ -116,7 +117,7 @@ public class BigNumberLargeValuesTests
     [Fact]
     public void Parse_ScientificNotation_LargeExponent_Succeeds()
     {
-        BigNumber parsed = BigNumber.Parse("1.23E+100");
+        var parsed = BigNumber.Parse("1.23E+100");
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("123"));
@@ -126,7 +127,7 @@ public class BigNumberLargeValuesTests
     [Fact]
     public void Parse_ScientificNotation_LargeNegativeExponent_Succeeds()
     {
-        BigNumber parsed = BigNumber.Parse("1.23E-100");
+        var parsed = BigNumber.Parse("1.23E-100");
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("123"));
@@ -222,7 +223,7 @@ public class BigNumberLargeValuesTests
     {
         // Create a 100-digit number
         string hundredDigits = string.Concat(Enumerable.Range(1, 10).Select(i => "1234567890"));
-        BigNumber parsed = BigNumber.Parse(hundredDigits);
+        var parsed = BigNumber.Parse(hundredDigits);
 
         parsed.Significand.ToString().Length.ShouldBe(99);
         parsed.Exponent.ShouldBe(1);
@@ -233,7 +234,7 @@ public class BigNumberLargeValuesTests
     {
         // Create a number with 100 decimal places
         string hundredDecimals = "123." + string.Concat(Enumerable.Range(1, 10).Select(i => "1234567890"));
-        BigNumber parsed = BigNumber.Parse(hundredDecimals);
+        var parsed = BigNumber.Parse(hundredDecimals);
 
         // After removing the decimal point, should have 103 digits (123 + 100 decimal places)
         BigNumber normalized = parsed.Normalize();
@@ -248,8 +249,8 @@ public class BigNumberLargeValuesTests
         string num1Str = string.Concat(Enumerable.Range(1, 10).Select(i => "9999999999"));
         string num2Str = string.Concat(Enumerable.Range(1, 10).Select(i => "1111111111"));
 
-        BigNumber num1 = BigNumber.Parse(num1Str);
-        BigNumber num2 = BigNumber.Parse(num2Str);
+        var num1 = BigNumber.Parse(num1Str);
+        var num2 = BigNumber.Parse(num2Str);
 
         BigNumber sum = num1 + num2;
         BigNumber diff = num1 - num2;
@@ -271,7 +272,7 @@ public class BigNumberLargeValuesTests
         BigNumber a = 10;
         BigNumber b = 3;
 
-        BigNumber result = BigNumber.Divide(a, b, precision: 150);
+        var result = BigNumber.Divide(a, b, precision: 150);
 
         // Should have 150+ digits of precision
         string resultStr = result.Significand.ToString();
@@ -284,7 +285,7 @@ public class BigNumberLargeValuesTests
         BigNumber a = 22;
         BigNumber b = 7;
 
-        BigNumber result = BigNumber.Divide(a, b, precision: 200);
+        var result = BigNumber.Divide(a, b, precision: 200);
 
         // Should have 200+ digits of precision
         string resultStr = result.Significand.ToString();
@@ -366,7 +367,7 @@ public class BigNumberLargeValuesTests
     public void Normalize_LargeNumberWithTrailingZeros_RemovesZeros()
     {
         // Create a large number with many trailing zeros
-        BigInteger significand = BigInteger.Parse("123000000000000000000000000000000000000");
+        var significand = BigInteger.Parse("123000000000000000000000000000000000000");
         BigNumber value = new(significand, -10);
 
         BigNumber normalized = value.Normalize();
@@ -423,7 +424,7 @@ public class BigNumberLargeValuesTests
     public void ScientificComputation_AvogadroNumber_Succeeds()
     {
         // Avogadro's number: 6.022 × 10^23
-        BigNumber avogadro = BigNumber.Parse("6.022E+23");
+        var avogadro = BigNumber.Parse("6.022E+23");
 
         avogadro.Significand.ShouldBe(BigInteger.Parse("6022"));
         avogadro.Exponent.ShouldBe(20);
@@ -433,7 +434,7 @@ public class BigNumberLargeValuesTests
     public void ScientificComputation_PlancksConstant_Succeeds()
     {
         // Planck's constant: 6.626 × 10^-34 J⋅s
-        BigNumber planck = BigNumber.Parse("6.626E-34");
+        var planck = BigNumber.Parse("6.626E-34");
 
         BigNumber normalized = planck.Normalize();
         normalized.Significand.ShouldBe(BigInteger.Parse("6626"));
@@ -448,7 +449,7 @@ public class BigNumberLargeValuesTests
         string largePrime = "259117086013202627518482867860615308955131867015976063814050929380356454941947260896007935271960726804834049356252538551270637742625904312577596536218790317834264565463181959390817099175870370806944925783679128708387890362117" +
                            "866023736642950823110257566821";
 
-        BigNumber prime = BigNumber.Parse(largePrime);
+        var prime = BigNumber.Parse(largePrime);
 
         // Verify it parsed correctly - should have the correct number of digits
         prime.Significand.ToString().Length.ShouldBeGreaterThan(250);
@@ -459,7 +460,7 @@ public class BigNumberLargeValuesTests
     {
         // US National Debt is over 31 trillion dollars
         // With interest calculations over centuries, numbers can get huge
-        BigNumber principal = BigNumber.Parse("31000000000000");  // 31 trillion
+        var principal = BigNumber.Parse("31000000000000");  // 31 trillion
         BigNumber rate = 0.05m;  // 5% annual
         int years = 100;
 

@@ -688,8 +688,7 @@ public class JsonSchemaBuilderDriver : IDisposable
                     .GetMethods(BindingFlags.Static | BindingFlags.Public)
                     .Where(m => m.Name == "AsSpan")
                     .Select(
-                        m => new
-                        {
+                        m => new {
                             Method = m,
                             Params = m.GetParameters(),
                             Args = m.GetGenericArguments(),
@@ -707,8 +706,7 @@ public class JsonSchemaBuilderDriver : IDisposable
                     .GetMethods(BindingFlags.Static | BindingFlags.Public)
                     .Where(m => m.Name == "SequenceEqual")
                     .Select(
-                        m => new
-                        {
+                        m => new {
                             Method = m,
                             Params = m.GetParameters(),
                             Args = m.GetGenericArguments(),

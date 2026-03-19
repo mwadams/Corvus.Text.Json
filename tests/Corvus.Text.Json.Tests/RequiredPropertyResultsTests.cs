@@ -18,8 +18,8 @@ public class RequiredPropertyResultsTests
     public void MissingRequiredProperty_AppearsInResults_Verbose()
     {
         // ClosedObjectNoPatterns has required: ["name"]. An empty object is missing "name".
-        using ParsedJsonDocument<ClosedObjectNoPatterns> doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("{}");
-        using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
+        using var doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("{}");
+        using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
 
         bool isValid = doc.RootElement.EvaluateSchema(collector);
 
@@ -42,8 +42,8 @@ public class RequiredPropertyResultsTests
     public void MissingRequiredProperty_AppearsInResults_Detailed()
     {
         // Same test at Detailed level — the required failure should still be reported
-        using ParsedJsonDocument<ClosedObjectNoPatterns> doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("{}");
-        using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+        using var doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("{}");
+        using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
 
         bool isValid = doc.RootElement.EvaluateSchema(collector);
 
@@ -64,8 +64,8 @@ public class RequiredPropertyResultsTests
     public void MissingRequiredProperty_AppearsInResults_Basic()
     {
         // At Basic level, messages may be empty but failure results should still be present
-        using ParsedJsonDocument<ClosedObjectNoPatterns> doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("{}");
-        using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+        using var doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("{}");
+        using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 
         bool isValid = doc.RootElement.EvaluateSchema(collector);
 
@@ -88,8 +88,8 @@ public class RequiredPropertyResultsTests
     public void ValidDocument_StillReturnsTrue_WithCollector()
     {
         // Ensure the fix doesn't break valid document evaluation
-        using ParsedJsonDocument<ClosedObjectNoPatterns> doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("""{"name": "Alice"}""");
-        using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+        using var doc = ParsedJsonDocument<ClosedObjectNoPatterns>.Parse("""{"name": "Alice"}""");
+        using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
 
         bool isValid = doc.RootElement.EvaluateSchema(collector);
 

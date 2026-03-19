@@ -11,7 +11,7 @@ var capacity = LargeIntegerExample.Create(
 
 // Act
 var result = LargeIntegerExample.Parse(capacity.Serialize());
-var validationContext = result.Validate(ValidationContext.ValidContext.UsingResults(), ValidationLevel.Detailed);
+ValidationContext validationContext = result.Validate(ValidationContext.ValidContext.UsingResults(), ValidationLevel.Detailed);
 
 // Assert
 Console.WriteLine($"Results count: {validationContext.Results.Count()}");

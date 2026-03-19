@@ -3,23 +3,22 @@
 
 using System.Buffers;
 
-namespace Corvus.Text.Json.Tests
-{
-    internal class BufferSegment<T> : ReadOnlySequenceSegment<T>
-    {
-        public BufferSegment(ReadOnlyMemory<T> memory)
-        {
-            Memory = memory;
-        }
+namespace Corvus.Text.Json.Tests;
 
-        public BufferSegment<T> Append(ReadOnlyMemory<T> memory)
+internal class BufferSegment<T> : ReadOnlySequenceSegment<T>
+{
+    public BufferSegment(ReadOnlyMemory<T> memory)
+    {
+        Memory = memory;
+    }
+
+    public BufferSegment<T> Append(ReadOnlyMemory<T> memory)
+    {
+        var segment = new BufferSegment<T>(memory)
         {
-            var segment = new BufferSegment<T>(memory)
-            {
-                RunningIndex = RunningIndex + Memory.Length
-            };
-            Next = segment;
-            return segment;
-        }
+            RunningIndex = RunningIndex + Memory.Length
+        };
+        Next = segment;
+        return segment;
     }
 }

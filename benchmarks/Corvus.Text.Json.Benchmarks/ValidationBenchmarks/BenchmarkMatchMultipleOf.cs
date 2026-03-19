@@ -70,11 +70,11 @@ public class BenchmarkMatchMultipleOf
     public bool ValidateCorvusTextJson()
     {
         // This is normally all wrapped up in codegen; you don't have to do this yourself.
-        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjMultipleOf!, 0, false, false);
+        var context = JsonSchemaContext.BeginContext(_ctjMultipleOf!, 0, false, false);
 
         try
         {
-            var raw = _ctjMultipleOfElement!.ParentDocument.GetRawSimpleValue(_ctjMultipleOfElement.ParentDocumentIndex);
+            ReadOnlyMemory<byte> raw = _ctjMultipleOfElement!.ParentDocument.GetRawSimpleValue(_ctjMultipleOfElement.ParentDocumentIndex);
             JsonElementHelpers.ParseNumber(raw.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
             return JsonSchemaEvaluation.MatchMultipleOf(integral, fractional, exponent, 32, 0, "32", "dummy"u8, ref context);
         }

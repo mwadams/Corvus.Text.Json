@@ -403,109 +403,109 @@ namespace TestUtilities
             int length = Formatting.ToPascalCase(buffer);
             return buffer.Slice(0, length).ToString();
         }
-        }
-
-        /// <summary>
-        /// Creates an instance of the <see cref="GeneratedCode"/>.
-        /// </summary>
-        /// <param name="rootType">The root type.</param>
-        /// <param name="generatedFiles">The generated files.</param>
-        public readonly struct GeneratedCode(TypeDeclaration rootType, IReadOnlyCollection<GeneratedCodeFile> generatedFiles)
-        {
-            public TypeDeclaration RootType { get; } = rootType;
-
-            public IReadOnlyCollection<GeneratedCodeFile> GeneratedFiles { get; } = generatedFiles;
-        }
     }
 
     /// <summary>
-    /// Extension methods for <see cref="DynamicJsonElement"/> providing test-specific helpers.
+    /// Creates an instance of the <see cref="GeneratedCode"/>.
     /// </summary>
-    public static class DynamicJsonElementExtensions
+    /// <param name="rootType">The root type.</param>
+    /// <param name="generatedFiles">The generated files.</param>
+    public readonly struct GeneratedCode(TypeDeclaration rootType, IReadOnlyCollection<GeneratedCodeFile> generatedFiles)
     {
-        public static DynamicJsonElement CastFrom<TSource>(TSource s, DynamicJsonType target)
-        {
-            ParameterExpression p = Expression.Parameter(typeof(TSource));
-            UnaryExpression c = Expression.ConvertChecked(p, target.Type);
-            UnaryExpression toIJsonElement = Expression.ConvertChecked(c, typeof(IJsonElement));
-            return new(target.Type, Expression.Lambda<Func<TSource, IJsonElement>>(toIJsonElement, p).Compile()(s));
-        }
+        public TypeDeclaration RootType { get; } = rootType;
 
-        public static bool HasDotnetPropertyValue(this DynamicJsonElement element, string propertyName)
-        {
-            PropertyInfo property = element.Type.GetProperty(propertyName) ?? throw new InvalidOperationException($"Property {propertyName} of type {element.Type.FullName} is not a JSON element");
-            object? value = property.GetValue(element.Element);
-
-            return value is IJsonElement v && v.TokenType == JsonTokenType.None;
-        }
-
-        public static bool CompareDotnetPropertyStringValue(this DynamicJsonElement element, string propertyName, string expectedValue)
-        {
-            PropertyInfo? property = element.Type.GetProperty(propertyName);
-            if (property is null)
-            {
-                return false;
-            }
-
-            object? value = property.GetValue(element.Element);
-
-            if (value is not IJsonElement v)
-            {
-                if (value is null)
-                {
-                    return expectedValue == "null";
-                }
-
-                throw new InvalidOperationException($"Property {propertyName} of type {element.Type.FullName} is not a JSON element");
-            }
-
-            if (v.TokenType != JsonTokenType.String)
-            {
-                return false;
-            }
-
-            string? actualValue = v.ParentDocument.GetString(v.ParentDocumentIndex, JsonTokenType.String);
-
-            return expectedValue.Equals(actualValue);
-        }
-
-        public static bool CompareNullableDotnetPropertyStringValue(this DynamicJsonElement element, string propertyName, string expectedValue)
-        {
-            PropertyInfo? property = element.Type.GetProperty(propertyName);
-            if (property is null)
-            {
-                return false;
-            }
-
-            object? value = property.GetValue(element.Element);
-
-            if (value is not IJsonElement v)
-            {
-                if (value is null)
-                {
-                    return expectedValue == "null";
-                }
-
-                throw new InvalidOperationException($"Property {propertyName} of type {element.Type.FullName} is not a JSON element");
-            }
-
-            if (expectedValue == "Null")
-            {
-                return v.TokenType == JsonTokenType.Null;
-            }
-
-            if (expectedValue == "Undefined")
-            {
-                return v.TokenType == JsonTokenType.None;
-            }
-
-            if (v.TokenType != JsonTokenType.String)
-            {
-                return false;
-            }
-
-            string? actualValue = v.ParentDocument.GetString(v.ParentDocumentIndex, JsonTokenType.String);
-
-            return expectedValue.Equals(actualValue);
-        }
+        public IReadOnlyCollection<GeneratedCodeFile> GeneratedFiles { get; } = generatedFiles;
     }
+}
+
+/// <summary>
+/// Extension methods for <see cref="DynamicJsonElement"/> providing test-specific helpers.
+/// </summary>
+public static class DynamicJsonElementExtensions
+{
+    public static DynamicJsonElement CastFrom<TSource>(TSource s, DynamicJsonType target)
+    {
+        ParameterExpression p = Expression.Parameter(typeof(TSource));
+        UnaryExpression c = Expression.ConvertChecked(p, target.Type);
+        UnaryExpression toIJsonElement = Expression.ConvertChecked(c, typeof(IJsonElement));
+        return new(target.Type, Expression.Lambda<Func<TSource, IJsonElement>>(toIJsonElement, p).Compile()(s));
+    }
+
+    public static bool HasDotnetPropertyValue(this DynamicJsonElement element, string propertyName)
+    {
+        PropertyInfo property = element.Type.GetProperty(propertyName) ?? throw new InvalidOperationException($"Property {propertyName} of type {element.Type.FullName} is not a JSON element");
+        object? value = property.GetValue(element.Element);
+
+        return value is IJsonElement v && v.TokenType == JsonTokenType.None;
+    }
+
+    public static bool CompareDotnetPropertyStringValue(this DynamicJsonElement element, string propertyName, string expectedValue)
+    {
+        PropertyInfo? property = element.Type.GetProperty(propertyName);
+        if (property is null)
+        {
+            return false;
+        }
+
+        object? value = property.GetValue(element.Element);
+
+        if (value is not IJsonElement v)
+        {
+            if (value is null)
+            {
+                return expectedValue == "null";
+            }
+
+            throw new InvalidOperationException($"Property {propertyName} of type {element.Type.FullName} is not a JSON element");
+        }
+
+        if (v.TokenType != JsonTokenType.String)
+        {
+            return false;
+        }
+
+        string? actualValue = v.ParentDocument.GetString(v.ParentDocumentIndex, JsonTokenType.String);
+
+        return expectedValue.Equals(actualValue);
+    }
+
+    public static bool CompareNullableDotnetPropertyStringValue(this DynamicJsonElement element, string propertyName, string expectedValue)
+    {
+        PropertyInfo? property = element.Type.GetProperty(propertyName);
+        if (property is null)
+        {
+            return false;
+        }
+
+        object? value = property.GetValue(element.Element);
+
+        if (value is not IJsonElement v)
+        {
+            if (value is null)
+            {
+                return expectedValue == "null";
+            }
+
+            throw new InvalidOperationException($"Property {propertyName} of type {element.Type.FullName} is not a JSON element");
+        }
+
+        if (expectedValue == "Null")
+        {
+            return v.TokenType == JsonTokenType.Null;
+        }
+
+        if (expectedValue == "Undefined")
+        {
+            return v.TokenType == JsonTokenType.None;
+        }
+
+        if (v.TokenType != JsonTokenType.String)
+        {
+            return false;
+        }
+
+        string? actualValue = v.ParentDocument.GetString(v.ParentDocumentIndex, JsonTokenType.String);
+
+        return expectedValue.Equals(actualValue);
+    }
+}

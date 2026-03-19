@@ -18,35 +18,35 @@ public class SuiteMinLengthValidation : IClassFixture<SuiteMinLengthValidation.F
     [Fact]
     public void TestLongerIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestExactLengthIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"fo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"fo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooShortIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"f\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"f\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonStrings()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOneGraphemeIsNotLongEnough()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\uD83D\\uDCA9\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\uD83D\\uDCA9\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -85,14 +85,14 @@ public class SuiteMinLengthValidationWithADecimal : IClassFixture<SuiteMinLength
     [Fact]
     public void TestLongerIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooShortIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"f\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"f\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

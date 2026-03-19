@@ -7,7 +7,7 @@ namespace Corvus.Json.Internal;
 /// <summary>
 /// Parsing for format uuid.
 /// </summary>
-public static  class StandardUuid
+public static class StandardUuid
 {
     /// <summary>
     /// Parse a uuid string.

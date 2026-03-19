@@ -2698,7 +2698,7 @@ internal static partial class CodeGeneratorExtensions
                 (p.ReducedPropertyType.ImpliedCoreTypesOrAny() & (CoreTypes.Object | CoreTypes.Array)) != 0))
         {
             MethodParameter[] staticMethodParametersWithContext = BuildMethodParametersWithContext(generator, typeDeclaration);
-            MethodParameter[] nonStaticMethodParametersWithContext = [staticMethodParametersWithContext[0], ..staticMethodParametersWithContext.Skip(2)];
+            MethodParameter[] nonStaticMethodParametersWithContext = [staticMethodParametersWithContext[0], .. staticMethodParametersWithContext.Skip(2)];
 
             generator
                     .AppendSeparatorLine()

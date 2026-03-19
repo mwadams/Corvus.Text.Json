@@ -32,7 +32,7 @@ public class CodeGenerationBenchmarks
 
         typeBuilder = new JsonSchemaTypeBuilder(documentResolver, vocabularyRegistry);
 
-        var defaultVocabulary = Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
+        IVocabulary defaultVocabulary = Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
 
         simpleTypes = [await typeBuilder.AddTypeDeclarationsAsync(
             new JsonReference(Path.Combine(schemasDir, "simple-object.json")),
@@ -46,7 +46,7 @@ public class CodeGenerationBenchmarks
             new JsonReference(Path.Combine(schemasDir, "composition-type.json")),
             defaultVocabulary)];
 
-        var draft7Vocabulary = Corvus.Json.CodeGeneration.Draft7.VocabularyAnalyser.DefaultVocabulary;
+        IVocabulary draft7Vocabulary = Corvus.Json.CodeGeneration.Draft7.VocabularyAnalyser.DefaultVocabulary;
 
         krakendTypes = [await typeBuilder.AddTypeDeclarationsAsync(
             new JsonReference(Path.Combine(schemasDir, "krakend.json")),
@@ -62,32 +62,32 @@ public class CodeGenerationBenchmarks
     [Benchmark]
     public int SimpleObject()
     {
-        var languageProvider = CreateLanguageProvider();
-        var files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, simpleTypes);
+        CSharpLanguageProvider languageProvider = CreateLanguageProvider();
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, simpleTypes);
         return files.Count;
     }
 
     [Benchmark]
     public int ComplexObject()
     {
-        var languageProvider = CreateLanguageProvider();
-        var files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, complexTypes);
+        CSharpLanguageProvider languageProvider = CreateLanguageProvider();
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, complexTypes);
         return files.Count;
     }
 
     [Benchmark]
     public int CompositionType()
     {
-        var languageProvider = CreateLanguageProvider();
-        var files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, compositionTypes);
+        CSharpLanguageProvider languageProvider = CreateLanguageProvider();
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, compositionTypes);
         return files.Count;
     }
 
     [Benchmark]
     public int KrakenD()
     {
-        var languageProvider = CreateLanguageProvider();
-        var files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, krakendTypes);
+        CSharpLanguageProvider languageProvider = CreateLanguageProvider();
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, krakendTypes);
         return files.Count;
     }
 }

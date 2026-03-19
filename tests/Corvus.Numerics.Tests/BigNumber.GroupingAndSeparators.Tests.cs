@@ -2,10 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -77,7 +77,7 @@ public class BigNumberGroupingAndSeparatorsTests
     public void FormatNumber_ComplexGrouping_MultiplePatterns()
     {
         // Complex grouping [3, 2, 1]
-        BigNumber num = BigNumber.Parse("1234567890");
+        var num = BigNumber.Parse("1234567890");
         var culture = new CultureInfo("en-US");
         culture.NumberFormat.NumberGroupSizes = new int[] { 3, 2, 1 };
 

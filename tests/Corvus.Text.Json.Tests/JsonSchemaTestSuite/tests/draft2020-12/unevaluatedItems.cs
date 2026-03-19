@@ -18,14 +18,14 @@ public class SuiteUnevaluatedItemsTrue : IClassFixture<SuiteUnevaluatedItemsTrue
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteUnevaluatedItemsFalse : IClassFixture<SuiteUnevaluatedItemsFal
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -110,21 +110,21 @@ public class SuiteUnevaluatedItemsAsSchema : IClassFixture<SuiteUnevaluatedItems
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithValidUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithInvalidUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[42]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -163,7 +163,7 @@ public class SuiteUnevaluatedItemsWithUniformItems : IClassFixture<SuiteUnevalua
     [Fact]
     public void TestUnevaluatedItemsDoesnTApply()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -202,14 +202,14 @@ public class SuiteUnevaluatedItemsWithTuple : IClassFixture<SuiteUnevaluatedItem
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -248,7 +248,7 @@ public class SuiteUnevaluatedItemsWithItemsAndPrefixItems : IClassFixture<SuiteU
     [Fact]
     public void TestUnevaluatedItemsDoesnTApply()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -287,14 +287,14 @@ public class SuiteUnevaluatedItemsWithItems : IClassFixture<SuiteUnevaluatedItem
     [Fact]
     public void TestValidUnderItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[5, 6, 7, 8]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[5, 6, 7, 8]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidUnderItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -333,14 +333,14 @@ public class SuiteUnevaluatedItemsWithNestedTuple : IClassFixture<SuiteUnevaluat
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, true]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, true]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -379,21 +379,21 @@ public class SuiteUnevaluatedItemsWithNestedItems : IClassFixture<SuiteUnevaluat
     [Fact]
     public void TestWithOnlyValidAdditionalItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[true, false]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[true, false]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithNoAdditionalItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"yes\", \"no\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"yes\", \"no\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithInvalidAdditionalItem()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"yes\", false]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"yes\", false]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -432,14 +432,14 @@ public class SuiteUnevaluatedItemsWithNestedPrefixItemsAndItems : IClassFixture<
     [Fact]
     public void TestWithNoAdditionalItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithAdditionalItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, true]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, true]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -478,14 +478,14 @@ public class SuiteUnevaluatedItemsWithNestedUnevaluatedItems : IClassFixture<Sui
     [Fact]
     public void TestWithNoAdditionalItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithAdditionalItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, true]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, true]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -524,28 +524,28 @@ public class SuiteUnevaluatedItemsWithAnyOf : IClassFixture<SuiteUnevaluatedItem
     [Fact]
     public void TestWhenOneSchemaMatchesAndHasNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWhenOneSchemaMatchesAndHasUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", 42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", 42]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWhenTwoSchemasMatchAndHasNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWhenTwoSchemasMatchAndHasUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\", 42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\", 42]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -584,14 +584,14 @@ public class SuiteUnevaluatedItemsWithOneOf : IClassFixture<SuiteUnevaluatedItem
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", 42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", 42]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -630,7 +630,7 @@ public class SuiteUnevaluatedItemsWithNot : IClassFixture<SuiteUnevaluatedItemsW
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -669,28 +669,28 @@ public class SuiteUnevaluatedItemsWithIfThenElse : IClassFixture<SuiteUnevaluate
     [Fact]
     public void TestWhenIfMatchesAndItHasNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"then\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"then\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWhenIfMatchesAndItHasUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"then\", \"else\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"then\", \"else\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWhenIfDoesnTMatchAndItHasNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, 42, \"else\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, 42, \"else\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWhenIfDoesnTMatchAndItHasUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, 42, \"else\", 42]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 42, 42, \"else\", 42]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -729,14 +729,14 @@ public class SuiteUnevaluatedItemsWithBooleanSchemas : IClassFixture<SuiteUneval
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -775,14 +775,14 @@ public class SuiteUnevaluatedItemsWithRef : IClassFixture<SuiteUnevaluatedItemsW
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -821,14 +821,14 @@ public class SuiteUnevaluatedItemsBeforeRef : IClassFixture<SuiteUnevaluatedItem
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -867,14 +867,14 @@ public class SuiteUnevaluatedItemsWithDynamicRef : IClassFixture<SuiteUnevaluate
     [Fact]
     public void TestWithNoUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWithUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\", \"baz\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -913,7 +913,7 @@ public class SuiteUnevaluatedItemsCanTSeeInsideCousins : IClassFixture<SuiteUnev
     [Fact]
     public void TestAlwaysFails()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -952,14 +952,14 @@ public class SuiteItemIsEvaluatedInAnUncleSchemaToUnevaluatedItems : IClassFixtu
     [Fact]
     public void TestNoExtraItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\": [\r\n                        \"test\"\r\n                    ]\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\": [\r\n                        \"test\"\r\n                    ]\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestUncleKeywordEvaluationIsNotSignificant()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\": [\r\n                        \"test\",\r\n                        \"test\"\r\n                    ]\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\": [\r\n                        \"test\",\r\n                        \"test\"\r\n                    ]\r\n                }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -998,21 +998,21 @@ public class SuiteUnevaluatedItemsDependsOnAdjacentContains : IClassFixture<Suit
     [Fact]
     public void TestSecondItemIsEvaluatedByContains()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\" ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestContainsFailsSecondItemIsNotEvaluated()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2 ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestContainsPassesSecondItemIsNotEvaluated()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2, \"foo\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2, \"foo\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -1051,14 +1051,14 @@ public class SuiteUnevaluatedItemsDependsOnMultipleNestedContains : IClassFixtur
     [Fact]
     public void Test5NotEvaluatedPassesUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2, 3, 4, 5, 6 ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2, 3, 4, 5, 6 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void Test7NotEvaluatedFailsUnevaluatedItems()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2, 3, 4, 7, 8 ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2, 3, 4, 7, 8 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -1097,56 +1097,56 @@ public class SuiteUnevaluatedItemsAndContainsInteractToControlItemDependencyRela
     [Fact]
     public void TestEmptyArrayIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOnlyASAreValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"a\", \"a\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"a\", \"a\" ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestASAndBSAreValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"a\", \"b\", \"a\", \"b\", \"a\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"a\", \"b\", \"a\", \"b\", \"a\" ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestASBSAndCSAreValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"a\", \"c\", \"c\", \"b\", \"a\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"a\", \"c\", \"c\", \"b\", \"a\" ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOnlyBSAreInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"b\", \"b\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"b\", \"b\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOnlyCSAreInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"c\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"c\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOnlyBSAndCSAreInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"b\", \"c\", \"b\", \"c\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"b\", \"c\", \"b\", \"c\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOnlyASAndCSAreInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"a\", \"c\", \"a\", \"c\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"c\", \"a\", \"c\", \"a\", \"c\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -1185,28 +1185,28 @@ public class SuiteUnevaluatedItemsWithMinContains0 : IClassFixture<SuiteUnevalua
     [Fact]
     public void TestEmptyArrayIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoItemsEvaluatedByContains()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[0]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[0]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSomeButNotAllItemsEvaluatedByContains()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 0]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", 0]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllItemsEvaluatedByContains()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"foo\", \"bar\"]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -1245,42 +1245,42 @@ public class SuiteNonArrayInstancesAreValid : IClassFixture<SuiteNonArrayInstanc
     [Fact]
     public void TestIgnoresBooleans()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("true");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("true");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresIntegers()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("123");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("123");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresFloats()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1.0");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1.0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresObjects()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresStrings()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNull()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -1319,7 +1319,7 @@ public class SuiteUnevaluatedItemsWithNullInstanceElements : IClassFixture<Suite
     [Fact]
     public void TestAllowsNullElements()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ null ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ null ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -1358,14 +1358,14 @@ public class SuiteUnevaluatedItemsCanSeeAnnotationsFromIfWithoutThenAndElse : IC
     [Fact]
     public void TestValidInCaseIfIsEvaluated()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"a\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"a\" ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidInCaseIfIsEvaluated()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"b\" ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"b\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -1404,7 +1404,7 @@ public class SuiteEvaluatedItemsCollectionNeedsToConsiderInstanceLocation : ICla
     [Fact]
     public void TestWithAnUnevaluatedItemThatExistsAtAnotherLocation()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\r\n                    [\"foo\", \"bar\"],\r\n                    \"bar\"\r\n                ]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\r\n                    [\"foo\", \"bar\"],\r\n                    \"bar\"\r\n                ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

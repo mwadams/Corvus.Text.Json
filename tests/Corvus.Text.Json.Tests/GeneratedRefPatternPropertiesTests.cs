@@ -26,7 +26,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void ValidInstance_WithRequiredNameOnly_PassesValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice"}""");
 
         Assert.True(instance.EvaluateSchema());
@@ -35,7 +35,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void ValidInstance_AccessNameProperty_ReturnsExpectedValue()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice"}""");
 
         Assert.True(instance.Name.ValueEquals("Alice"));
@@ -50,7 +50,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_StringPatternPropertyTreatedAsAdditional_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice","S_color":"blue"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -59,7 +59,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_IntegerPatternPropertyTreatedAsAdditional_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice","I_count":42}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -68,7 +68,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_MixedPatternPropertiesTreatedAsAdditional_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue(
                 """{"name":"Alice","S_color":"blue","I_count":42}""");
 
@@ -82,7 +82,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_MissingRequiredName_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"S_color":"blue"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -95,7 +95,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_UnknownAdditionalProperty_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice","unknown":"value"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -108,7 +108,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_StringPatternWithIntegerValue_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice","S_color":99}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -117,7 +117,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void InvalidInstance_IntegerPatternWithStringValue_FailsValidation()
     {
-        ObjectWithRefPatternProperties instance =
+        var instance =
             ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice","I_count":"not a number"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -130,7 +130,7 @@ public class GeneratedRefPatternPropertiesTests
     [Fact]
     public void Builder_WithRequiredNameOnly_ProducesValidInstance()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithRefPatternProperties.Mutable> builder =
             ObjectWithRefPatternProperties.CreateBuilder(
                 workspace,
@@ -148,7 +148,7 @@ public class GeneratedRefPatternPropertiesTests
             ObjectWithRefPatternProperties.Build(
                 static (ref ObjectWithRefPatternProperties.Builder b) => b.Create("Carol"));
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithRefPatternProperties.Mutable> builder =
             ObjectWithRefPatternProperties.CreateBuilder(workspace, source);
 
@@ -166,7 +166,7 @@ public class GeneratedRefPatternPropertiesTests
     {
         var instance = ObjectWithRefPatternProperties.ParseValue("""{"name":"Alice"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithRefPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 

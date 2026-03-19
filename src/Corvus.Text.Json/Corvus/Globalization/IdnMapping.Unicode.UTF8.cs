@@ -355,7 +355,7 @@ public sealed partial class IdnMapping
 
                 ascii.Slice(iAfterLastDot, length).CopyTo(outputBuffer.Slice(written));
                 written += length;
-             }
+            }
             else
             {
                 // Not ASCII, bump up iAfterLastDot to be after ACE Prefix

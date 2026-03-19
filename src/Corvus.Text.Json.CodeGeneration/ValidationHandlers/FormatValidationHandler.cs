@@ -164,8 +164,8 @@ file static class FormatValidationHandlerExtensions
                 .AppendLineIndent("context.IgnoredKeyword(", "JsonSchemaEvaluation.IgnoredFormatNotAsserted", ", ", SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8);");
         }
 
-            generator
-                .AppendChildValidationCode(typeDeclaration, childHandlers, validationPriority);
+        generator
+            .AppendChildValidationCode(typeDeclaration, childHandlers, validationPriority);
 
         if (!validateOnly)
         {

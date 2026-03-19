@@ -18,14 +18,14 @@ public class SuiteEvaluatingTheSameSchemaLocationAgainstTheSameDataLocationTwice
     [Fact]
     public void TestPassingCase()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFailingCase()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"a string\" }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"a string\" }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

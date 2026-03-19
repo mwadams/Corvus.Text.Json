@@ -771,8 +771,8 @@ internal ref struct JsonRegexValidator
 
                 if (IsCaptureSlot(capnum, requireExplicit: (_options & JsonRegexOptions.ECMAScript) != 0))
                 {
-                        node = CreateNode(JsonRegexNodeKind.Backreference);
-                        return true;
+                    node = CreateNode(JsonRegexNodeKind.Backreference);
+                    return true;
                 }
 
                 node = JsonRegexNode.Null;
@@ -1931,7 +1931,7 @@ internal ref struct JsonRegexValidator
                 return false;
             }
 
-            if (_pos == _pattern.Length || !(isQuantifier = IsTrueQuantifier()))
+            if (_pos == _pattern.Length || !(_ = IsTrueQuantifier()))
             {
                 _concatenation.AddChild(ref this, _unit);
                 _unit = JsonRegexNode.Null;

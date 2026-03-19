@@ -5,9 +5,9 @@ using Corvus.Text.Json;
 using JsonParsingBenchmarks;
 using Microsoft.DiagnosticsHub;
 
-BenchmarkParseObjectWithoutPropertyMapBacking benchmark = new BenchmarkParseObjectWithoutPropertyMapBacking();
+var benchmark = new BenchmarkParseObjectWithoutPropertyMapBacking();
 
-for(int i = 0; i < 100000; i ++)
+for (int i = 0; i < 100000; i++)
 {
     benchmark.ParseObjectToCorvusJsonElement();
 }

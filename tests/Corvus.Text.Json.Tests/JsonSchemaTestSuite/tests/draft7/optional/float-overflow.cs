@@ -18,7 +18,7 @@ public class SuiteAllIntegersAreMultiplesOf05IfOverflowIsHandled : IClassFixture
     [Fact]
     public void TestValidIfOptionalOverflowHandlingIsImplemented()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1e308");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1e308");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

@@ -18,56 +18,56 @@ public class SuiteValidationOfRegularExpressions : IClassFixture<SuiteValidation
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidRegularExpression()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"([abc])+\\\\s+$\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"([abc])+\\\\s+$\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestARegularExpressionWithUnclosedParensIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"^(abc]\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"^(abc]\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

@@ -19,7 +19,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IFormattable_DateProperty_ShortDate()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IFormattable: format "d" produces short date
@@ -30,7 +30,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IFormattable_DateProperty_IsoFormat()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IFormattable: format "o" produces ISO 8601
@@ -41,7 +41,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IFormattable_DateProperty_NullFormat_ReturnsCanonical()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // Null format returns the canonical JSON value
@@ -52,7 +52,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IFormattable_NumberProperty_GroupedFormat()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IFormattable: "N0" produces number with group separators
@@ -64,7 +64,7 @@ public class FormattingEquivalenceTests
     public void V5_IFormattable_NumberProperty_LargeValue()
     {
         string json = """{"name":"Jo","age":123456,"email":"jo@example.com"}""";
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(json);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(json);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         string result = v5.Age.ToString("N0", CultureInfo.InvariantCulture);
@@ -74,7 +74,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IFormattable_StringProperty_NullFormat_ReturnsValue()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // String properties: null format returns the string value
@@ -86,7 +86,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_ISpanFormattable_NumberProperty()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // ISpanFormattable: TryFormat to Span<char>
@@ -99,7 +99,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_ISpanFormattable_DateProperty()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // ISpanFormattable: TryFormat to Span<char> for a date
@@ -112,7 +112,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IUtf8SpanFormattable_NumberProperty()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IUtf8SpanFormattable: TryFormat to Span<byte> (UTF-8)
@@ -125,7 +125,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IUtf8SpanFormattable_DateProperty()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IUtf8SpanFormattable: TryFormat to Span<byte> (UTF-8) for a date
@@ -138,7 +138,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_ISpanFormattable_StringProperty()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // ISpanFormattable: TryFormat to Span<char> for a string property
@@ -151,7 +151,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IUtf8SpanFormattable_StringProperty()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IUtf8SpanFormattable: TryFormat to Span<byte> for a string property
@@ -164,7 +164,7 @@ public class FormattingEquivalenceTests
     [Fact]
     public void V5_IFormattable_ConsistentWithTryFormat()
     {
-        using ParsedJsonDocument<V5.MigrationPerson> parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         // IFormattable ToString and ISpanFormattable TryFormat produce the same result

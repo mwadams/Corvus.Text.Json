@@ -3,24 +3,23 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace System
+namespace System;
+
+/// <summary>Provides downlevel polyfills for static methods on Exception-derived types.</summary>
+internal static class ExceptionPolyfills
 {
-    /// <summary>Provides downlevel polyfills for static methods on Exception-derived types.</summary>
-    internal static class ExceptionPolyfills
+    extension(ArgumentNullException)
     {
-        extension(ArgumentNullException)
+        public static void ThrowIfNull([NotNull] object? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
         {
-            public static void ThrowIfNull([NotNull] object? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+            if (argument is null)
             {
-                if (argument is null)
-                {
-                    ThrowArgumentNullException(paramName);
-                }
+                ThrowArgumentNullException(paramName);
             }
         }
-
-        [DoesNotReturn]
-        private static void ThrowArgumentNullException(string? paramName) =>
-            throw new ArgumentNullException(paramName);
     }
+
+    [DoesNotReturn]
+    private static void ThrowArgumentNullException(string? paramName) =>
+        throw new ArgumentNullException(paramName);
 }

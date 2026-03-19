@@ -121,7 +121,7 @@ public class ValidDocumentBenchmarks : ValidatorBenchmarksBase
     [Benchmark]
     public bool Validate()
     {
-        using JsonDocument doc = JsonDocument.Parse(this.json);
+        using var doc = JsonDocument.Parse(this.json);
         return this.schema.Validate(doc.RootElement).IsValid;
     }
 }
@@ -141,7 +141,7 @@ public class InvalidDocumentBenchmarks : ValidatorBenchmarksBase
     [Benchmark]
     public bool Validate()
     {
-        using JsonDocument doc = JsonDocument.Parse(this.json);
+        using var doc = JsonDocument.Parse(this.json);
         return this.schema.Validate(doc.RootElement).IsValid;
     }
 }

@@ -184,7 +184,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
     [Fact]
     public void Builder_ThenSetProperty_StringPattern_PassesValidation()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(
                 workspace,
@@ -199,7 +199,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
     [Fact]
     public void Builder_ThenSetProperty_IntegerPattern_PassesValidation()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(
                 workspace,
@@ -214,7 +214,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
     [Fact]
     public void Builder_ThenSetProperty_MixedPatterns_PassesValidation()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(
                 workspace,
@@ -238,7 +238,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -253,7 +253,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -268,7 +268,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -283,7 +283,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -302,7 +302,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice","S_color":"blue","I_count":42}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -318,7 +318,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -337,7 +337,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         var instance = ObjectWithUnevaluatedPatternProperties.ParseValue(
             """{"name":"Alice","S_label":"test"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 
@@ -358,7 +358,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
             ObjectWithUnevaluatedPatternProperties.Build(
                 static (ref ObjectWithUnevaluatedPatternProperties.Builder b) => b.Create("Carol"));
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(workspace, source);
 

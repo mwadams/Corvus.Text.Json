@@ -5,37 +5,36 @@ using System.IO;
 using System.Reflection;
 using Xunit;
 
-namespace Corvus.Text.Json.Tests
+namespace Corvus.Text.Json.Tests;
+
+public class DebuggerTests
 {
-    public class DebuggerTests
+    [Fact]
+    public void DefaultJsonElement()
     {
-        [Fact]
-        public void DefaultJsonElement()
-        {
-            // Validating that we don't throw on default
-            JsonElement element = default;
-            GetDebuggerDisplayProperty(element);
-        }
+        // Validating that we don't throw on default
+        JsonElement element = default;
+        GetDebuggerDisplayProperty(element);
+    }
 
-        [Fact]
-        public void DefaultJsonProperty()
-        {
-            // Validating that we don't throw on default
-            JsonProperty<JsonElement> property = default;
-            GetDebuggerDisplayProperty(property);
-        }
+    [Fact]
+    public void DefaultJsonProperty()
+    {
+        // Validating that we don't throw on default
+        JsonProperty<JsonElement> property = default;
+        GetDebuggerDisplayProperty(property);
+    }
 
-        [Fact]
-        public void DefaultUtf8JsonWriter()
-        {
-            // Validating that we don't throw on new object
-            using var writer = new Utf8JsonWriter(new MemoryStream());
-            GetDebuggerDisplayProperty(writer);
-        }
+    [Fact]
+    public void DefaultUtf8JsonWriter()
+    {
+        // Validating that we don't throw on new object
+        using var writer = new Utf8JsonWriter(new MemoryStream());
+        GetDebuggerDisplayProperty(writer);
+    }
 
-        private static string GetDebuggerDisplayProperty<T>(T value)
-        {
-            return (string)typeof(T).GetProperty("DebuggerDisplay", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(value);
-        }
+    private static string GetDebuggerDisplayProperty<T>(T value)
+    {
+        return (string)typeof(T).GetProperty("DebuggerDisplay", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(value);
     }
 }

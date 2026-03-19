@@ -24,8 +24,7 @@ internal class VersionCommand : Command
         string? assemblyLocation = Assembly.GetEntryAssembly()?.Location;
         string? version = null;
         string? build = null;
-
-        if (assemblyLocation is string al)
+        if (assemblyLocation is string)
         {
             var versionInfo = FileVersionInfo.GetVersionInfo(assemblyLocation);
             if (versionInfo is not null)

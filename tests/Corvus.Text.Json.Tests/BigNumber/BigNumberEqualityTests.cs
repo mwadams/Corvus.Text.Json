@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;
@@ -164,7 +165,7 @@ public class BigNumberEqualityTests
         // Act & Assert
         Assert.Equal(expectedEqual, bigNumber1.Equals(bigNumber2));
         Assert.Equal(expectedEqual, bigNumber2.Equals(bigNumber1));
-        
+
         if (expectedEqual)
         {
             BigNumberTestData.AssertBigNumbersEqual(bigNumber1, bigNumber2);
@@ -349,10 +350,10 @@ public class BigNumberEqualityTests
         // Arrange
         var bigNumber1 = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         var bigNumber2 = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
-        
+
         // Normalize both numbers
-        var normalized1 = bigNumber1.Normalize();
-        var normalized2 = bigNumber2.Normalize();
+        BigNumber normalized1 = bigNumber1.Normalize();
+        BigNumber normalized2 = bigNumber2.Normalize();
 
         // Act & Assert
         BigNumberTestData.AssertBigNumbersEqual(bigNumber1, bigNumber2);
@@ -366,13 +367,13 @@ public class BigNumberEqualityTests
     {
         // Arrange
         var originalBigNumber = new Corvus.Numerics.BigNumber(new BigInteger(-789), 123);
-        
+
         // Format and parse back
         Span<char> buffer = stackalloc char[50];
         bool formatSuccess = originalBigNumber.TryFormat(buffer, out int charsWritten);
         Assert.True(formatSuccess);
-        
-        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(buffer.Slice(0, charsWritten).ToString()), out var parsedBigNumber);
+
+        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(buffer.Slice(0, charsWritten).ToString()), out BigNumber parsedBigNumber);
         Assert.True(parseSuccess);
 
         // Act & Assert

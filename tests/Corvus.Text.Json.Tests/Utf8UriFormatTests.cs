@@ -185,7 +185,7 @@ public class Utf8UriFormatTests
         byte[] buffer = new byte[10]; // Too small
 
         var uri = Utf8Uri.CreateUri(inputBytes);
-        bool success = uri.TryFormatDisplay(buffer, out int written);
+        bool success = uri.TryFormatDisplay(buffer, out _);
 
         Assert.False(success);
     }
@@ -197,7 +197,7 @@ public class Utf8UriFormatTests
         byte[] buffer = new byte[10]; // Too small
 
         var uri = Utf8Uri.CreateUri(inputBytes);
-        bool success = uri.TryFormatCanonical(buffer, out int written);
+        bool success = uri.TryFormatCanonical(buffer, out _);
 
         Assert.False(success);
     }

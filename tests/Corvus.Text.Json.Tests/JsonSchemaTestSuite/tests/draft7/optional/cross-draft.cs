@@ -18,14 +18,14 @@ public class SuiteRefsToFutureDraftsAreProcessedAsFutureDrafts : IClassFixture<S
     [Fact]
     public void TestMissingBarIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"any value\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"any value\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPresentBarIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"any value\", \"bar\": \"also any value\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"any value\", \"bar\": \"also any value\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

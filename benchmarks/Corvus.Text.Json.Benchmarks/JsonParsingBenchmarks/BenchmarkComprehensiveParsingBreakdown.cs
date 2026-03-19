@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -39,13 +39,13 @@ public class BenchmarkFlatObjectParsing
     {
         var sb = new StringBuilder();
         sb.AppendLine("{");
-        
+
         // Mix of different property types to simulate real-world objects
         for (int i = 0; i < 50; i++)
         {
             if (i > 0) sb.Append(",");
             sb.AppendLine();
-            
+
             string value = (i % 4) switch
             {
                 0 => $"\"{GenerateRandomString(10 + (i % 20))}\"", // Varying string lengths
@@ -53,10 +53,10 @@ public class BenchmarkFlatObjectParsing
                 2 => (i % 2 == 0).ToString().ToLower(), // Booleans
                 _ => "null"
             };
-            
+
             sb.Append($"  \"property{i}\": {value}");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("}");
         return sb.ToString();
@@ -67,12 +67,12 @@ public class BenchmarkFlatObjectParsing
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
         var random = new Random(42); // Fixed seed for consistent benchmarks
         var result = new char[length];
-        
+
         for (int i = 0; i < length; i++)
         {
             result[i] = chars[random.Next(chars.Length)];
         }
-        
+
         return new string(result);
     }
 }
@@ -182,12 +182,12 @@ public class BenchmarkLargeArrayParsing
     {
         var sb = new StringBuilder();
         sb.AppendLine("[");
-        
+
         for (int i = 0; i < 1000; i++)
         {
             if (i > 0) sb.Append(",");
             sb.AppendLine();
-            
+
             // Mix of numbers, strings, and booleans
             string value = (i % 3) switch
             {
@@ -195,10 +195,10 @@ public class BenchmarkLargeArrayParsing
                 1 => $"\"{GenerateRandomString(5 + (i % 15))}\"",
                 _ => (i % 2 == 0).ToString().ToLower()
             };
-            
+
             sb.Append($"  {value}");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("]");
         return sb.ToString();
@@ -209,12 +209,12 @@ public class BenchmarkLargeArrayParsing
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
         var random = new Random(42); // Fixed seed for consistent benchmarks
         var result = new char[length];
-        
+
         for (int i = 0; i < length; i++)
         {
             result[i] = chars[random.Next(chars.Length)];
         }
-        
+
         return new string(result);
     }
 }
@@ -338,13 +338,13 @@ public class BenchmarkNumericHeavyParsing
         var sb = new StringBuilder();
         sb.AppendLine("{");
         sb.AppendLine("  \"financialData\": {");
-        
+
         // Generate various numeric formats
         for (int i = 0; i < 100; i++)
         {
             if (i > 0) sb.Append(",");
             sb.AppendLine();
-            
+
             string value = (i % 5) switch
             {
                 0 => (i * 1234.5678).ToString("F4"), // Regular decimals
@@ -353,10 +353,10 @@ public class BenchmarkNumericHeavyParsing
                 3 => (-i * 456.789).ToString("F3"), // Negative numbers
                 _ => (i * Math.PI).ToString("F8") // High precision
             };
-            
+
             sb.Append($"    \"metric{i}\": {value}");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("  }");
         sb.AppendLine("}");
@@ -398,18 +398,18 @@ public class BenchmarkStringHeavyParsing
         var sb = new StringBuilder();
         sb.AppendLine("{");
         sb.AppendLine("  \"textData\": {");
-        
+
         // Generate strings of varying lengths
         for (int i = 0; i < 50; i++)
         {
             if (i > 0) sb.Append(",");
             sb.AppendLine();
-            
+
             int length = 10 + (i * 3); // Increasing lengths
             string value = GenerateRandomString(length);
             sb.Append($"    \"text{i}\": \"{value}\"");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("  }");
         sb.AppendLine("}");
@@ -421,12 +421,12 @@ public class BenchmarkStringHeavyParsing
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ";
         var random = new Random(42); // Fixed seed for consistent benchmarks
         var result = new char[length];
-        
+
         for (int i = 0; i < length; i++)
         {
             result[i] = chars[random.Next(chars.Length)];
         }
-        
+
         return new string(result);
     }
 }

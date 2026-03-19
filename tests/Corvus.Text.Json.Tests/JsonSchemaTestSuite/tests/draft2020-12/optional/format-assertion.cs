@@ -18,14 +18,14 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithFormatAssertionFalse : IClas
     [Fact]
     public void TestFormatAssertionFalseValidString()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0.0.1\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0.0.1\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFormatAssertionFalseInvalidString()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"not-an-ipv4\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"not-an-ipv4\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithFormatAssertionTrue : IClass
     [Fact]
     public void TestFormatAssertionTrueValidString()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0.0.1\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0.0.1\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFormatAssertionTrueInvalidString()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"not-an-ipv4\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"not-an-ipv4\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

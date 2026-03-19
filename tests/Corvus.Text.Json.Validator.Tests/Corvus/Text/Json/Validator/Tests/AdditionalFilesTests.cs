@@ -39,7 +39,7 @@ public class AdditionalFilesTests
             }
             """;
 
-        JsonSchema schema = JsonSchema.FromText(personWithAddressSchema, options: options);
+        var schema = JsonSchema.FromText(personWithAddressSchema, options: options);
 
         string validJson =
             """
@@ -96,7 +96,7 @@ public class AdditionalFilesTests
             }
             """;
 
-        JsonSchema schema = JsonSchema.FromText(personWithAddressSchema, options: options);
+        var schema = JsonSchema.FromText(personWithAddressSchema, options: options);
 
         string validJson =
             """
@@ -130,7 +130,7 @@ public class AdditionalFilesTests
                 new AdditionalSchemaFile("https://example.com/schemas/address", addressSchemaPath),
             ]);
 
-        JsonSchema schema = JsonSchema.FromFile(personWithAddressPath, options: options);
+        var schema = JsonSchema.FromFile(personWithAddressPath, options: options);
 
         string validJson =
             """

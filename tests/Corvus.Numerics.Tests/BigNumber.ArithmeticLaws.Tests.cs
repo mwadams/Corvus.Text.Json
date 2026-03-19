@@ -3,8 +3,8 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Xunit;
 using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -18,8 +18,8 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Addition_Commutative_APlusBEqualsBPlusA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
-        BigNumber b = BigNumber.Parse("789.012");
+        var a = BigNumber.Parse("123.456");
+        var b = BigNumber.Parse("789.012");
 
         BigNumber result1 = a + b;
         BigNumber result2 = b + a;
@@ -30,8 +30,8 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Multiplication_Commutative_ATimesBEqualsBTimesA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
-        BigNumber b = BigNumber.Parse("789.012");
+        var a = BigNumber.Parse("123.456");
+        var b = BigNumber.Parse("789.012");
 
         BigNumber result1 = a * b;
         BigNumber result2 = b * a;
@@ -46,9 +46,9 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Addition_Associative_APlusBPlusCEqualsAPlusBPlusC()
     {
-        BigNumber a = BigNumber.Parse("123.456");
-        BigNumber b = BigNumber.Parse("789.012");
-        BigNumber c = BigNumber.Parse("345.678");
+        var a = BigNumber.Parse("123.456");
+        var b = BigNumber.Parse("789.012");
+        var c = BigNumber.Parse("345.678");
 
         BigNumber result1 = (a + b) + c;
         BigNumber result2 = a + (b + c);
@@ -93,7 +93,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Addition_Identity_APlusZeroEqualsA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = a + BigNumber.Zero;
 
@@ -103,7 +103,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Multiplication_Identity_ATimesOneEqualsA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = a * BigNumber.One;
 
@@ -113,7 +113,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Multiplication_Zero_ATimesZeroEqualsZero()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = a * BigNumber.Zero;
 
@@ -127,7 +127,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Addition_Inverse_APlusNegativeAEqualsZero()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = a + (-a);
 
@@ -137,7 +137,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Subtraction_Self_AMinusAEqualsZero()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = a - a;
 
@@ -147,7 +147,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Division_ByItself_ADividedByAEqualsOne()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = a / a;
 
@@ -177,7 +177,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Comparison_Reflexive_AEqualsA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
         BigNumber b = a;
 
         (a == b).ShouldBeTrue();
@@ -187,8 +187,8 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Comparison_Symmetric_IfAEqualsBThenBEqualsA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
-        BigNumber b = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
+        var b = BigNumber.Parse("123.456");
 
         (a == b).ShouldBeTrue();
         (b == a).ShouldBeTrue();
@@ -201,7 +201,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Negation_DoubleNegation_NegativeNegativeAEqualsA()
     {
-        BigNumber a = BigNumber.Parse("123.456");
+        var a = BigNumber.Parse("123.456");
 
         BigNumber result = -(-a);
 
@@ -211,8 +211,8 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Subtraction_AsAdditionOfNegative_AMinusBEqualsAPlusNegativeB()
     {
-        BigNumber a = BigNumber.Parse("123.456");
-        BigNumber b = BigNumber.Parse("789.012");
+        var a = BigNumber.Parse("123.456");
+        var b = BigNumber.Parse("789.012");
 
         BigNumber result1 = a - b;
         BigNumber result2 = a + (-b);
@@ -239,7 +239,7 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Abs_PreservesZero()
     {
-        BigNumber result = BigNumber.Abs(BigNumber.Zero);
+        var result = BigNumber.Abs(BigNumber.Zero);
 
         result.ShouldBe(BigNumber.Zero);
     }
@@ -247,10 +247,10 @@ public class BigNumberArithmeticLawsTests
     [Fact]
     public void Abs_Idempotent_AbsAbsAEqualsAbsA()
     {
-        BigNumber a = BigNumber.Parse("-123.456");
+        var a = BigNumber.Parse("-123.456");
 
-        BigNumber result1 = BigNumber.Abs(a);
-        BigNumber result2 = BigNumber.Abs(result1);
+        var result1 = BigNumber.Abs(a);
+        var result2 = BigNumber.Abs(result1);
 
         result1.ShouldBe(result2);
     }

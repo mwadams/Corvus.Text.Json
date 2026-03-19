@@ -75,8 +75,8 @@ public static class JsonDocumentBuilderComplexObjectTests
     public static void ProcessComplexObject_NestedObjects_PreservesStructure(string json)
     {
         // Arrange & Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -85,8 +85,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Verify the structure is preserved by round-tripping
         string roundTrippedJson = rootElement.ToString();
 
-        using ParsedJsonDocument<JsonElement> originalParsed = ParsedJsonDocument<JsonElement>.Parse(json);
-        using ParsedJsonDocument<JsonElement> roundTrippedParsed = ParsedJsonDocument<JsonElement>.Parse(roundTrippedJson);
+        using var originalParsed = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var roundTrippedParsed = ParsedJsonDocument<JsonElement>.Parse(roundTrippedJson);
 
         AssertJsonStructuresEqual(originalParsed.RootElement, roundTrippedParsed.RootElement);
     }
@@ -96,8 +96,8 @@ public static class JsonDocumentBuilderComplexObjectTests
     public static void ProcessComplexObject_NestedArrays_PreservesStructure(string json)
     {
         // Arrange & Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -106,8 +106,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Verify the structure is preserved by round-tripping
         string roundTrippedJson = rootElement.ToString();
 
-        using ParsedJsonDocument<JsonElement> originalParsed = ParsedJsonDocument<JsonElement>.Parse(json);
-        using ParsedJsonDocument<JsonElement> roundTrippedParsed = ParsedJsonDocument<JsonElement>.Parse(roundTrippedJson);
+        using var originalParsed = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var roundTrippedParsed = ParsedJsonDocument<JsonElement>.Parse(roundTrippedJson);
 
         AssertJsonStructuresEqual(originalParsed.RootElement, roundTrippedParsed.RootElement);
     }
@@ -117,8 +117,8 @@ public static class JsonDocumentBuilderComplexObjectTests
     public static void ProcessComplexObject_MixedComplexStructures_PreservesStructure(string json)
     {
         // Arrange & Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -127,8 +127,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         // Verify the structure is preserved by round-tripping
         string roundTrippedJson = rootElement.ToString();
 
-        using ParsedJsonDocument<JsonElement> originalParsed = ParsedJsonDocument<JsonElement>.Parse(json);
-        using ParsedJsonDocument<JsonElement> roundTrippedParsed = ParsedJsonDocument<JsonElement>.Parse(roundTrippedJson);
+        using var originalParsed = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var roundTrippedParsed = ParsedJsonDocument<JsonElement>.Parse(roundTrippedJson);
 
         AssertJsonStructuresEqual(originalParsed.RootElement, roundTrippedParsed.RootElement);
     }
@@ -144,8 +144,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         string json = GenerateLargeObjectJson(propertyCount);
 
         // Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -154,7 +154,7 @@ public static class JsonDocumentBuilderComplexObjectTests
 
         // Verify all properties are preserved
         int actualPropertyCount = 0;
-        foreach (var prop in rootElement.EnumerateObject())
+        foreach (JsonProperty<JsonElement.Mutable> prop in rootElement.EnumerateObject())
         {
             actualPropertyCount++;
             Assert.True(prop.Name.StartsWith("prop"), $"Unexpected property name: {prop.Name}");
@@ -174,8 +174,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         string json = GenerateDeepNestedJson(nestingDepth);
 
         // Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -199,14 +199,14 @@ public static class JsonDocumentBuilderComplexObjectTests
     public static void ProcessComplexObject_MultipleDocumentsInWorkspace_TracksCorrectly()
     {
         // Arrange
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
 
         string json1 = "{\"obj\": {\"nested\": [1, 2, 3]}, \"type\": \"doc1\"}";
         string json2 = "[{\"prop\": \"value\"}, {\"arr\": [], \"type\": \"doc2\"}]";
 
         // Act
-        using ParsedJsonDocument<JsonElement> doc1 = ParsedJsonDocument<JsonElement>.Parse(json1);
-        using ParsedJsonDocument<JsonElement> doc2 = ParsedJsonDocument<JsonElement>.Parse(json2);
+        using var doc1 = ParsedJsonDocument<JsonElement>.Parse(json1);
+        using var doc2 = ParsedJsonDocument<JsonElement>.Parse(json2);
 
         using JsonDocumentBuilder<JsonElement.Mutable> builder1 = doc1.RootElement.CreateBuilder(workspace);
         using JsonDocumentBuilder<JsonElement.Mutable> builder2 = doc2.RootElement.CreateBuilder(workspace);
@@ -221,7 +221,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         Assert.Equal("doc1", type1.GetString());
 
         Assert.Equal(2, builder2.RootElement.GetArrayLength());
-        var secondArrayElement = builder2.RootElement[1];
+        JsonElement.Mutable secondArrayElement = builder2.RootElement[1];
         Assert.True(secondArrayElement.TryGetProperty("type", out JsonElement.Mutable type2));
         Assert.Equal("doc2", type2.GetString());
 
@@ -241,8 +241,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         var stopwatch = Stopwatch.StartNew();
 
         // Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         stopwatch.Stop();
@@ -266,8 +266,8 @@ public static class JsonDocumentBuilderComplexObjectTests
     public static void ProcessComplexObject_ComplexTokenTypes_ProcessesCorrectly(JsonValueKind expectedKind, string json)
     {
         // Arrange & Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -276,7 +276,7 @@ public static class JsonDocumentBuilderComplexObjectTests
 
         // Verify the structure can be serialized back correctly
         string roundTripped = rootElement.ToString();
-        using ParsedJsonDocument<JsonElement> roundTrippedDoc = ParsedJsonDocument<JsonElement>.Parse(roundTripped);
+        using var roundTrippedDoc = ParsedJsonDocument<JsonElement>.Parse(roundTripped);
         Assert.Equal(expectedKind, roundTrippedDoc.RootElement.ValueKind);
     }
 
@@ -287,8 +287,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         string json = GenerateLargeObjectJson(50);
 
         // Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -297,7 +297,7 @@ public static class JsonDocumentBuilderComplexObjectTests
 
         // Verify all properties are accessible (which means the end token length was calculated correctly)
         int propertyCount = 0;
-        foreach (var property in rootElement.EnumerateObject())
+        foreach (JsonProperty<JsonElement.Mutable> property in rootElement.EnumerateObject())
         {
             propertyCount++;
             // Accessing the property value tests that the metadata structure is correct
@@ -314,8 +314,8 @@ public static class JsonDocumentBuilderComplexObjectTests
         string json = "{\"a\": 1, \"b\": 2, \"c\": 3}";
 
         // Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -341,15 +341,15 @@ public static class JsonDocumentBuilderComplexObjectTests
         string json = "{\"external\": {\"nested\": [1, 2, 3]}, \"local\": \"value\"}";
 
         // Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
 
         // Create first builder - this establishes the document
         using JsonDocumentBuilder<JsonElement.Mutable> builder1 = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Access the external property value (which is an immutable JsonElement)
         JsonElement.Mutable externalProperty = builder1.RootElement.GetProperty("external");
-        
+
         // Verify the external property is properly structured (this exercises ProcessComplexObject)
         Assert.Equal(JsonValueKind.Object, externalProperty.ValueKind);
         Assert.True(externalProperty.TryGetProperty("nested", out JsonElement.Mutable nested));
@@ -368,8 +368,8 @@ public static class JsonDocumentBuilderComplexObjectTests
     public static void ProcessComplexObject_EmptyComplexStructures_HandledCorrectly(string json)
     {
         // Arrange & Act
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var workspace = JsonWorkspace.Create();
+        using var sourceDoc = ParsedJsonDocument<JsonElement>.Parse(json);
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = sourceDoc.RootElement.CreateBuilder(workspace);
 
         // Assert
@@ -381,7 +381,7 @@ public static class JsonDocumentBuilderComplexObjectTests
         Assert.NotEmpty(serialized);
 
         // Parse the serialized result to ensure it's valid JSON
-        using ParsedJsonDocument<JsonElement> roundTripped = ParsedJsonDocument<JsonElement>.Parse(serialized);
+        using var roundTripped = ParsedJsonDocument<JsonElement>.Parse(serialized);
         Assert.Equal(rootElement.ValueKind, roundTripped.RootElement.ValueKind);
     }
 
@@ -463,9 +463,9 @@ public static class JsonDocumentBuilderComplexObjectTests
                 var actualProps = actual.EnumerateObject().ToList();
                 Assert.Equal(expectedProps.Count, actualProps.Count);
 
-                foreach (var expectedProp in expectedProps)
+                foreach (JsonProperty<JsonElement> expectedProp in expectedProps)
                 {
-                    var actualProp = actualProps.FirstOrDefault(p => p.Name == expectedProp.Name);
+                    JsonProperty<JsonElement> actualProp = actualProps.FirstOrDefault(p => p.Name == expectedProp.Name);
                     Assert.True(actualProp.Value.ValueKind != JsonValueKind.Undefined, $"Property '{expectedProp.Name}' not found in actual JSON");
                     AssertJsonStructuresEqual(expectedProp.Value, actualProp.Value);
                 }

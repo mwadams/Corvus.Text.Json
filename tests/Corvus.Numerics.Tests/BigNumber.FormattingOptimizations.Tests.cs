@@ -2,11 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -22,7 +22,7 @@ public class BigNumberFormattingOptimizationsTests
     public void TryFormatOptimized_VeryLargeNumber_HandlesCorrectly()
     {
         // Test with very large number requiring significant buffer space
-        BigNumber num = BigNumber.Parse("123456789012345678901234567890");
+        var num = BigNumber.Parse("123456789012345678901234567890");
         Span<char> buffer = stackalloc char[256];
 
         bool success = num.TryFormatOptimized(buffer, out int written, "F2", CultureInfo.InvariantCulture);

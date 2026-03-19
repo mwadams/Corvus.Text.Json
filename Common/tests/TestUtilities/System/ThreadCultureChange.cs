@@ -2,43 +2,42 @@
 // The .NET Foundation licensed this code under the MIT license.
 using System.Globalization;
 
-namespace System.Tests
+namespace System.Tests;
+
+public sealed class ThreadCultureChange : IDisposable
 {
-    public sealed class ThreadCultureChange : IDisposable
+    private readonly CultureInfo _origCulture = CultureInfo.CurrentCulture;
+
+    private readonly CultureInfo _origUICulture = CultureInfo.CurrentUICulture;
+
+    public ThreadCultureChange(string? cultureName) :
+        this(cultureName != null ? new CultureInfo(cultureName) : null)
     {
-        private readonly CultureInfo _origCulture = CultureInfo.CurrentCulture;
+    }
 
-        private readonly CultureInfo _origUICulture = CultureInfo.CurrentUICulture;
+    public ThreadCultureChange(CultureInfo? newCulture) :
+        this(newCulture, null)
+    {
+    }
 
-        public ThreadCultureChange(string? cultureName) :
-            this(cultureName != null ? new CultureInfo(cultureName) : null)
+    public ThreadCultureChange(CultureInfo? newCulture, CultureInfo? newUICulture)
+    {
+        if (newCulture != null)
         {
+            _origCulture = CultureInfo.CurrentCulture;
+            CultureInfo.CurrentCulture = newCulture;
         }
 
-        public ThreadCultureChange(CultureInfo? newCulture) :
-            this(newCulture, null)
+        if (newUICulture != null)
         {
+            _origUICulture = CultureInfo.CurrentUICulture;
+            CultureInfo.CurrentUICulture = newUICulture;
         }
+    }
 
-        public ThreadCultureChange(CultureInfo? newCulture, CultureInfo? newUICulture)
-        {
-            if (newCulture != null)
-            {
-                _origCulture = CultureInfo.CurrentCulture;
-                CultureInfo.CurrentCulture = newCulture;
-            }
-
-            if (newUICulture != null)
-            {
-                _origUICulture = CultureInfo.CurrentUICulture;
-                CultureInfo.CurrentUICulture = newUICulture;
-            }
-        }
-
-        public void Dispose()
-        {
-            CultureInfo.CurrentCulture = _origCulture;
-            CultureInfo.CurrentUICulture = _origUICulture;
-        }
+    public void Dispose()
+    {
+        CultureInfo.CurrentCulture = _origCulture;
+        CultureInfo.CurrentUICulture = _origUICulture;
     }
 }

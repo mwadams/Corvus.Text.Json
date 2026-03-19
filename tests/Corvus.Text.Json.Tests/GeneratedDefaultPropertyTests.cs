@@ -16,7 +16,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void MissingStringPropertyWithDefault_ReturnsDefaultValue()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -30,7 +30,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void MissingIntegerPropertyWithDefault_ReturnsDefaultValue()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -44,7 +44,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void PresentStringPropertyWithDefault_ReturnsActualValue()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","status":"inactive"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -57,7 +57,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void PresentIntegerPropertyWithDefault_ReturnsActualValue()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","count":42}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -70,7 +70,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void MissingPropertyWithoutDefault_ReturnsNull()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -82,7 +82,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void PresentPropertyWithoutDefault_ReturnsActualValue()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test","label":"hello"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -95,7 +95,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void RequiredPropertyPresent_ReturnsActualValue()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;
@@ -108,7 +108,7 @@ public class GeneratedDefaultPropertyTests
     [Fact]
     public void AllPropertiesPresent_ReturnsActualValues()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"Alice","status":"pending","count":5,"label":"important"}""");
 
         ObjectWithDefaultProperties instance = doc.RootElement;

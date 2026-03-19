@@ -2,10 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using BenchmarkDotNet.Attributes;
-using Corvus.Numerics;
 using System.Globalization;
 using System.Text;
+using BenchmarkDotNet.Attributes;
+using Corvus.Numerics;
 
 namespace Corvus.Numerics.Benchmarks;
 

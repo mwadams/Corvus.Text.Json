@@ -2,13 +2,14 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberValidationTests
 {
     #region Division Validation
@@ -28,7 +29,7 @@ public class BigNumberValidationTests
         BigNumber dividend = new(10, 0);
         BigNumber divisor = new(2, 0);
 
-        BigNumber result = BigNumber.Divide(dividend, divisor, 0);
+        var result = BigNumber.Divide(dividend, divisor, 0);
 
         result.ShouldBe(new BigNumber(5, 0));
     }
@@ -39,7 +40,7 @@ public class BigNumberValidationTests
         BigNumber dividend = new(10, 0);
         BigNumber divisor = new(3, 0);
 
-        BigNumber result = BigNumber.Divide(dividend, divisor, 255);
+        var result = BigNumber.Divide(dividend, divisor, 255);
 
         // Should complete without error
         result.ShouldNotBe(BigNumber.Zero);
@@ -72,8 +73,7 @@ public class BigNumberValidationTests
     {
         // Create a string longer than MaxInputLength (10,000 characters)
         string veryLongInput = new string('1', 10_001);
-
-        bool result = BigNumber.TryParse(veryLongInput, out BigNumber parsed);
+        bool result = BigNumber.TryParse(veryLongInput, out _);
 
         result.ShouldBeFalse();
     }
@@ -96,8 +96,7 @@ public class BigNumberValidationTests
     public void Parse_JustUnderMaxLength_Succeeds()
     {
         string input = new string('7', 9_999);
-
-        bool result = BigNumber.TryParse(input, out BigNumber parsed);
+        bool result = BigNumber.TryParse(input, out _);
 
         result.ShouldBeTrue();
     }
@@ -118,11 +117,11 @@ public class BigNumberValidationTests
     [Fact]
     public void Round_ToZero_RoundsTowardZero()
     {
-        BigNumber value1 = BigNumber.Parse("2.7");
-        BigNumber value2 = BigNumber.Parse("-2.7");
+        var value1 = BigNumber.Parse("2.7");
+        var value2 = BigNumber.Parse("-2.7");
 
-        BigNumber result1 = BigNumber.Round(value1, 0, MidpointRounding.ToZero);
-        BigNumber result2 = BigNumber.Round(value2, 0, MidpointRounding.ToZero);
+        var result1 = BigNumber.Round(value1, 0, MidpointRounding.ToZero);
+        var result2 = BigNumber.Round(value2, 0, MidpointRounding.ToZero);
 
         // ToZero truncates toward zero (no rounding up)
         result1.ShouldBe(new BigNumber(2, 0));
@@ -132,11 +131,11 @@ public class BigNumberValidationTests
     [Fact]
     public void Round_ToPositiveInfinity_RoundsUp()
     {
-        BigNumber value1 = BigNumber.Parse("2.1");
-        BigNumber value2 = BigNumber.Parse("-2.1");
+        var value1 = BigNumber.Parse("2.1");
+        var value2 = BigNumber.Parse("-2.1");
 
-        BigNumber result1 = BigNumber.Round(value1, 0, MidpointRounding.ToPositiveInfinity);
-        BigNumber result2 = BigNumber.Round(value2, 0, MidpointRounding.ToPositiveInfinity);
+        var result1 = BigNumber.Round(value1, 0, MidpointRounding.ToPositiveInfinity);
+        var result2 = BigNumber.Round(value2, 0, MidpointRounding.ToPositiveInfinity);
 
         // ToPositiveInfinity: round toward positive infinity (ceiling)
         // 2.1 -> 3 (positive, round up), -2.1 -> -2 (negative, round toward zero)
@@ -147,11 +146,11 @@ public class BigNumberValidationTests
     [Fact]
     public void Round_ToNegativeInfinity_RoundsDown()
     {
-        BigNumber value1 = BigNumber.Parse("2.1");
-        BigNumber value2 = BigNumber.Parse("-2.1");
+        var value1 = BigNumber.Parse("2.1");
+        var value2 = BigNumber.Parse("-2.1");
 
-        BigNumber result1 = BigNumber.Round(value1, 0, MidpointRounding.ToNegativeInfinity);
-        BigNumber result2 = BigNumber.Round(value2, 0, MidpointRounding.ToNegativeInfinity);
+        var result1 = BigNumber.Round(value1, 0, MidpointRounding.ToNegativeInfinity);
+        var result2 = BigNumber.Round(value2, 0, MidpointRounding.ToNegativeInfinity);
 
         // ToNegativeInfinity: round toward negative infinity (floor)
         // 2.1 -> 2 (positive, round toward zero), -2.1 -> -3 (negative, round away)

@@ -57,14 +57,14 @@ public class BenchmarkLargeArrayWithUnevaluatedItemsVerbose
     [Benchmark]
     public bool ValidateCorvusTextJson()
     {
-        using Corvus.Text.Json.JsonSchemaResultsCollector collector = Corvus.Text.Json.JsonSchemaResultsCollector.Create(Corvus.Text.Json.JsonSchemaResultsLevel.Verbose);
+        using var collector = Corvus.Text.Json.JsonSchemaResultsCollector.Create(Corvus.Text.Json.JsonSchemaResultsLevel.Verbose);
         return documentB1!.RootElement.EvaluateSchema(collector);
     }
 
     [Benchmark]
     public bool ValidateCorvusTextJsonDynamic()
     {
-        using Corvus.Text.Json.JsonSchemaResultsCollector collector = Corvus.Text.Json.JsonSchemaResultsCollector.Create(Corvus.Text.Json.JsonSchemaResultsLevel.Verbose);
+        using var collector = Corvus.Text.Json.JsonSchemaResultsCollector.Create(Corvus.Text.Json.JsonSchemaResultsLevel.Verbose);
         return documentB2!.RootElement.EvaluateSchema(collector);
     }
 }

@@ -2,11 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -245,7 +245,7 @@ public class BigNumberDeepBranchCoverageTests
     {
         // Line 553: ToNegativeInfinity with positive number
         BigNumber positive = new(12344, -3); // 12.344
-        BigNumber result = BigNumber.Round(positive, 2, MidpointRounding.ToNegativeInfinity);
+        var result = BigNumber.Round(positive, 2, MidpointRounding.ToNegativeInfinity);
 
         result.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("12.34");
     }
@@ -255,7 +255,7 @@ public class BigNumberDeepBranchCoverageTests
     {
         // Line 553: ToNegativeInfinity with negative number
         BigNumber negative = new(-12344, -3); // -12.344
-        BigNumber result = BigNumber.Round(negative, 2, MidpointRounding.ToNegativeInfinity);
+        var result = BigNumber.Round(negative, 2, MidpointRounding.ToNegativeInfinity);
 
         result.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("-12.35");
     }
@@ -265,7 +265,7 @@ public class BigNumberDeepBranchCoverageTests
     {
         // Line 556: ToPositiveInfinity with negative number
         BigNumber negative = new(-12344, -3); // -12.344
-        BigNumber result = BigNumber.Round(negative, 2, MidpointRounding.ToPositiveInfinity);
+        var result = BigNumber.Round(negative, 2, MidpointRounding.ToPositiveInfinity);
 
         result.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("-12.34");
     }
@@ -276,7 +276,7 @@ public class BigNumberDeepBranchCoverageTests
     {
         // Line 543-544: ToEven with exact half and even quotient
         BigNumber num = new(125, -2); // 1.25
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
 
         // 1.25 rounds to 1.2 (even)
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.2");
@@ -287,7 +287,7 @@ public class BigNumberDeepBranchCoverageTests
     {
         // Line 543-544: ToEven with exact half and odd quotient
         BigNumber num = new(135, -2); // 1.35
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
 
         // 1.35 rounds to 1.4 (even)
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.4");
@@ -300,8 +300,8 @@ public class BigNumberDeepBranchCoverageTests
         BigNumber positive = new(125, -2); // 1.25
         BigNumber negative = new(-125, -2); // -1.25
 
-        BigNumber resultPos = BigNumber.Round(positive, 1, MidpointRounding.AwayFromZero);
-        BigNumber resultNeg = BigNumber.Round(negative, 1, MidpointRounding.AwayFromZero);
+        var resultPos = BigNumber.Round(positive, 1, MidpointRounding.AwayFromZero);
+        var resultNeg = BigNumber.Round(negative, 1, MidpointRounding.AwayFromZero);
 
         resultPos.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.3");
         resultNeg.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("-1.3");

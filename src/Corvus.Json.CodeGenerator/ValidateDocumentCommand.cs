@@ -43,12 +43,12 @@ internal class ValidateDocumentCommand : Command<ValidateDocumentCommand.Setting
         ArgumentNullException.ThrowIfNullOrEmpty(settings.SchemaFile); // We will never see this exception if the framework is doing its job; it should have blown up inside the CLI command handling
         ArgumentNullException.ThrowIfNullOrEmpty(settings.DocumentFile); // We will never see this exception if the framework is doing its job; it should have blown up inside the CLI command handling
 
-        JsonSchema schema = JsonSchema.FromFile(settings.SchemaFile);
+        var schema = JsonSchema.FromFile(settings.SchemaFile);
 
         // Read as bytes so we can parse into a ParsedJsonDocument for line resolution
         byte[] sourceBytes = File.ReadAllBytes(settings.DocumentFile);
 
-        using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+        using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
         bool isValid = schema.Validate(new ReadOnlyMemory<byte>(sourceBytes), collector);
 
         if (isValid)
@@ -60,7 +60,7 @@ internal class ValidateDocumentCommand : Command<ValidateDocumentCommand.Setting
             AnsiConsole.MarkupLine("[red]Document is invalid[/]");
 
             // Parse the document to get line/offset resolution for error locations
-            using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse(new ReadOnlyMemory<byte>(sourceBytes));
+            using var parsedDoc = ParsedJsonDocument<JsonElement>.Parse(new ReadOnlyMemory<byte>(sourceBytes));
             JsonElement rootElement = parsedDoc.RootElement;
 
             foreach (JsonSchemaResultsCollector.Result result in collector.EnumerateResults())

@@ -18,7 +18,7 @@ public class SuiteAIsNotAnEcma262ControlEscape : IClassFixture<SuiteAIsNotAnEcma
     [Fact]
     public void TestWhenUsedAsAPattern()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\\a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\\a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

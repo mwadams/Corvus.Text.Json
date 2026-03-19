@@ -115,7 +115,7 @@ public class BigNumberTryFormatCharTests
         string result = buffer.Slice(0, charsWritten).ToString();
 
         // Assert
-        BigNumberTestData.AssertFormatResult(success, charsWritten, result, 
+        BigNumberTestData.AssertFormatResult(success, charsWritten, result,
             "1234567890123456789012345678901234567890123456789E1");
     }
 

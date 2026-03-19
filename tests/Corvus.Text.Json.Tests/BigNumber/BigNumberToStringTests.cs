@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;
@@ -226,7 +227,7 @@ public class BigNumberToStringTests
 
         // Act
         string stringResult = originalBigNumber.ToString();
-        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out var parsedBigNumber);
+        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out BigNumber parsedBigNumber);
 
         // Assert
         Assert.True(parseSuccess);
@@ -267,7 +268,7 @@ public class BigNumberToStringTests
     {
         // Arrange
         var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
-        var normalizedBigNumber = bigNumber.Normalize();
+        BigNumber normalizedBigNumber = bigNumber.Normalize();
 
         // Act
         string originalResult = bigNumber.ToString();

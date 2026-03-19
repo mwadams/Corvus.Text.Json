@@ -140,7 +140,7 @@ public class ParseValueStepDefinitions
         IJsonValue result = typeName switch
         {
             "JsonBoolean" => ParsedValue<JsonBoolean>.Parse(utf8bytes).Instance,
-            "JsonNumber" =>  ParsedValue<JsonNumber>.Parse(utf8bytes).Instance,
+            "JsonNumber" => ParsedValue<JsonNumber>.Parse(utf8bytes).Instance,
             "JsonInteger" => ParsedValue<JsonNumber>.Parse(utf8bytes).Instance,
             "JsonNull" => ParsedValue<JsonNull>.Parse(utf8bytes).Instance,
             "JsonString" => ParsedValue<JsonString>.Parse(utf8bytes).Instance,

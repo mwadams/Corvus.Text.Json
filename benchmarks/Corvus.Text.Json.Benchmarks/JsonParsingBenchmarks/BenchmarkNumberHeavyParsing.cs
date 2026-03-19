@@ -1,8 +1,10 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using System.Text.Json;
+using BenchmarkDotNet.Attributes;
+using Corvus.Text.Json;
 
 namespace JsonParsingBenchmarks;
 
@@ -26,13 +28,13 @@ public class BenchmarkNumberHeavyParsing
     public double ParseNumberHeavyCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(numberHeavyJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         double sum = 0;
 
         if (root.ValueKind == Corvus.Text.Json.JsonValueKind.Object)
         {
-            foreach (var property in root.EnumerateObject())
+            foreach (JsonProperty<Corvus.Text.Json.JsonElement> property in root.EnumerateObject())
             {
                 if (property.Value.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
                 {
@@ -51,13 +53,13 @@ public class BenchmarkNumberHeavyParsing
     public double ParseNumberHeavySystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(numberHeavyJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         double sum = 0;
 
         if (root.ValueKind == System.Text.Json.JsonValueKind.Object)
         {
-            foreach (var property in root.EnumerateObject())
+            foreach (JsonProperty property in root.EnumerateObject())
             {
                 if (property.Value.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {

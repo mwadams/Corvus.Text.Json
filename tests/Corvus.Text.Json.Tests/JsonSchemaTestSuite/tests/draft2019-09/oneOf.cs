@@ -18,28 +18,28 @@ public class SuiteOneOf : IClassFixture<SuiteOneOf.Fixture>
     [Fact]
     public void TestFirstOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSecondOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.5");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.5");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNeitherOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1.5");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1.5");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -78,21 +78,21 @@ public class SuiteOneOfWithBaseSchema : IClassFixture<SuiteOneOfWithBaseSchema.F
     [Fact]
     public void TestMismatchBaseSchema()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOneOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobar\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobar\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -131,7 +131,7 @@ public class SuiteOneOfWithBooleanSchemasAllTrue : IClassFixture<SuiteOneOfWithB
     [Fact]
     public void TestAnyValueIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -170,7 +170,7 @@ public class SuiteOneOfWithBooleanSchemasOneTrue : IClassFixture<SuiteOneOfWithB
     [Fact]
     public void TestAnyValueIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -209,7 +209,7 @@ public class SuiteOneOfWithBooleanSchemasMoreThanOneTrue : IClassFixture<SuiteOn
     [Fact]
     public void TestAnyValueIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -248,7 +248,7 @@ public class SuiteOneOfWithBooleanSchemasAllFalse : IClassFixture<SuiteOneOfWith
     [Fact]
     public void TestAnyValueIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -287,28 +287,28 @@ public class SuiteOneOfComplexTypes : IClassFixture<SuiteOneOfComplexTypes.Fixtu
     [Fact]
     public void TestFirstOneOfValidComplex()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 2}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSecondOneOfValidComplex()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"baz\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"baz\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothOneOfValidComplex()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"baz\", \"bar\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"baz\", \"bar\": 2}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNeitherOneOfValidComplex()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 2, \"bar\": \"quux\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 2, \"bar\": \"quux\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -347,14 +347,14 @@ public class SuiteOneOfWithEmptySchema : IClassFixture<SuiteOneOfWithEmptySchema
     [Fact]
     public void TestOneValidValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothValidInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("123");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("123");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -393,28 +393,28 @@ public class SuiteOneOfWithRequired : IClassFixture<SuiteOneOfWithRequired.Fixtu
     [Fact]
     public void TestBothInvalidInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 2}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFirstValidValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSecondValidValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"baz\": 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"baz\": 3}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothValidInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2, \"baz\" : 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2, \"baz\" : 3}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -453,28 +453,28 @@ public class SuiteOneOfWithMissingOptionalProperty : IClassFixture<SuiteOneOfWit
     [Fact]
     public void TestFirstOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 8}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 8}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSecondOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"foo\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"foo\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"foo\", \"bar\": 8}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"foo\", \"bar\": 8}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNeitherOneOfValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"baz\": \"quux\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"baz\": \"quux\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -513,14 +513,14 @@ public class SuiteNestedOneOfToCheckValidationSemantics : IClassFixture<SuiteNes
     [Fact]
     public void TestNullIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnythingNonNullIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("123");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("123");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

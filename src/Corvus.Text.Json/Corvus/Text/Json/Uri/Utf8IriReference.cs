@@ -86,7 +86,7 @@ public readonly ref struct Utf8IriReference
     /// <summary>
     /// Gets a value indicating whether this reference has a port.
     /// </summary>
-    public bool HasPort =>  _offsets.Port > 0 && (_offsets.Path - _offsets.Port > 0);
+    public bool HasPort => _offsets.Port > 0 && (_offsets.Path - _offsets.Port > 0);
 
     /// <summary>
     /// Gets a value indicating whether this reference has a query.

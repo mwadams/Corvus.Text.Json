@@ -51,7 +51,7 @@ public sealed class NamespaceMappingSteps
     [Given(@"I have a namespace map with the following entries")]
     public void GivenIHaveANamespaceMapWithTheFollowingEntries(Table table)
     {
-        var entries = table.CreateSet<NamespaceEntry>();
+        IEnumerable<NamespaceEntry> entries = table.CreateSet<NamespaceEntry>();
         var namespaceMap = entries.ToFrozenDictionary(e => e.BaseUri, e => e.Namespace);
 
         this.scenarioContext.Add("NamespaceMap", namespaceMap);
@@ -64,7 +64,7 @@ public sealed class NamespaceMappingSteps
     [When(@"I try to get the namespace for ""(.*)""")]
     public void WhenITryToGetTheNamespaceFor(string schemaUri)
     {
-        var namespaceMap = this.scenarioContext.Get<FrozenDictionary<string, string>>("NamespaceMap");
+        FrozenDictionary<string, string> namespaceMap = this.scenarioContext.Get<FrozenDictionary<string, string>>("NamespaceMap");
         var jsonReference = new JsonReference(schemaUri);
 
         bool found = CSharpLanguageProvider.Options.TryGetNamespace(jsonReference, namespaceMap, out string? ns);
@@ -80,7 +80,7 @@ public sealed class NamespaceMappingSteps
     [When(@"I try to get the namespace for a relative URI ""(.*)""")]
     public void WhenITryToGetTheNamespaceForARelativeUri(string relativeUri)
     {
-        var namespaceMap = this.scenarioContext.Get<FrozenDictionary<string, string>>("NamespaceMap");
+        FrozenDictionary<string, string> namespaceMap = this.scenarioContext.Get<FrozenDictionary<string, string>>("NamespaceMap");
         var jsonReference = new JsonReference(relativeUri);
 
         bool found = CSharpLanguageProvider.Options.TryGetNamespace(jsonReference, namespaceMap, out string? ns);

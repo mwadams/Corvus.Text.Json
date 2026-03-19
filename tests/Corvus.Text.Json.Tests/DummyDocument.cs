@@ -49,9 +49,9 @@ internal class DummyDocument : IJsonDocument
     { return default; }
 
     void IJsonDocument.GetArrayIndexElement(int currentIndex, int arrayIndex, out IJsonDocument parentDocument, out int parentDocumentIndex)
-    { 
-        parentDocument = this; 
-        parentDocumentIndex = 0; 
+    {
+        parentDocument = this;
+        parentDocumentIndex = 0;
     }
 
     public int GetArrayLength(int index)

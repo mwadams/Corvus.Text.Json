@@ -28,7 +28,7 @@ public class BenchmarkToMutableAndSetProperty
     [Benchmark]
     public string SetPropertyCorvusJsonSchema()
     {
-        using Corvus.Json.ParsedValue<Corvus.Json.JsonObject> corvusParsedValue = Corvus.Json.ParsedValue<Corvus.Json.JsonObject>.Parse(Json);
+        using var corvusParsedValue = Corvus.Json.ParsedValue<Corvus.Json.JsonObject>.Parse(Json);
         if (!corvusParsedValue.Instance.TryGetProperty("name", out Corvus.Json.JsonAny nameValue))
         {
             throw new InvalidOperationException();
@@ -41,8 +41,8 @@ public class BenchmarkToMutableAndSetProperty
     [Benchmark]
     public string SetPropertyCorvusTextJson()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement> corvusDocument = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(Json);
-        using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create(1);
+        using var corvusDocument = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(Json);
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create(1);
         using Corvus.Text.Json.JsonDocumentBuilder<Corvus.Text.Json.JsonElement.Mutable> nameValueDoc = corvusDocument!.RootElement.GetProperty("name").CreateBuilder(workspace);
         nameValueDoc.RootElement.SetProperty("firstName"u8, "Matthew"u8);
         return nameValueDoc.RootElement.ToString();
@@ -51,7 +51,7 @@ public class BenchmarkToMutableAndSetProperty
     [Benchmark(Baseline = true)]
     public string SetPropertyJsonObjectDirect()
     {
-        System.Text.Json.Nodes.JsonNode? node = System.Text.Json.Nodes.JsonNode.Parse(Json);
+        var node = System.Text.Json.Nodes.JsonNode.Parse(Json);
         JsonObject nameValue = node!["name"]?.AsObject() ?? throw new InvalidOperationException();
         nameValue["firstName"] = "Matthew";
         return nameValue.ToJsonString();
@@ -60,7 +60,7 @@ public class BenchmarkToMutableAndSetProperty
     [Benchmark]
     public string SetPropertyJsonObjectFromJsonElement()
     {
-        using System.Text.Json.JsonDocument document = System.Text.Json.JsonDocument.Parse(Json);
+        using var document = System.Text.Json.JsonDocument.Parse(Json);
         System.Text.Json.Nodes.JsonObject nameValue = System.Text.Json.JsonSerializer.SerializeToNode(document.RootElement.GetProperty("name"))?.AsObject() ?? throw new InvalidOperationException();
         nameValue["firstName"] = "Matthew";
         return nameValue.ToJsonString();

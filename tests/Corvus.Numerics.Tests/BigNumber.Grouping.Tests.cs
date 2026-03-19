@@ -4,10 +4,11 @@
 
 using System.Globalization;
 using System.Text;
-using Xunit;
 using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberGroupingTests
 {
     #region Number Format with Grouping

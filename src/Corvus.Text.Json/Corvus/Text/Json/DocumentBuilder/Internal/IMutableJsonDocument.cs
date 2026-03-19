@@ -31,7 +31,7 @@ public interface IMutableJsonDocument : IJsonDocument
     /// <returns>The mutable JSON element at the specified array index.</returns>
     new JsonElement.Mutable GetArrayIndexElement(int currentIndex, int arrayIndex);
 
-        /// <summary>
+    /// <summary>
     /// Gets the element at the specified array index within the current index.
     /// </summary>
     /// <param name="currentIndex">The current index.</param>

@@ -82,7 +82,7 @@ public sealed class CoreTypeCodeFix : CodeFixProvider
                 root.ReplaceNode(triggeringNode, RenameIdentifier(triggeringNode)));
         }
 
-        var jsonAnyNodes = statement
+        IdentifierNameSyntax[] jsonAnyNodes = statement
             .DescendantNodesAndSelf()
             .OfType<IdentifierNameSyntax>()
             .Where(id => id.Identifier.Text == "JsonAny")

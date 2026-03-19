@@ -22,7 +22,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V4_AccessElement0_String()
     {
-        V4.MigrationTuple v4 = V4.MigrationTuple.Parse(TupleJson);
+        var v4 = V4.MigrationTuple.Parse(TupleJson);
         string value = (string)v4.Item1;
         Assert.Equal("hello", value);
     }
@@ -31,7 +31,7 @@ public class TupleEquivalenceTests
     public void V4_AccessElement0_String_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
         V4.MigrationTuple v4 = parsedV4.Instance;
         string value = (string)v4.Item1;
         Assert.Equal("hello", value);
@@ -40,7 +40,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V5_AccessElement0_String()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
         // V5: typed Item1 property — direct parity with V4
         Assert.True(v5.Item1.TryGetValue(out string? value));
@@ -50,7 +50,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V4_AccessElement1_Int()
     {
-        V4.MigrationTuple v4 = V4.MigrationTuple.Parse(TupleJson);
+        var v4 = V4.MigrationTuple.Parse(TupleJson);
         int value = (int)v4.Item2;
         Assert.Equal(42, value);
     }
@@ -59,7 +59,7 @@ public class TupleEquivalenceTests
     public void V4_AccessElement1_Int_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
         V4.MigrationTuple v4 = parsedV4.Instance;
         int value = (int)v4.Item2;
         Assert.Equal(42, value);
@@ -68,7 +68,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V5_AccessElement1_Int()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
         // V5: typed Item2 property with implicit int conversion
         Assert.Equal(42, (int)v5.Item2);
@@ -77,7 +77,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V4_AccessElement2_Bool()
     {
-        V4.MigrationTuple v4 = V4.MigrationTuple.Parse(TupleJson);
+        var v4 = V4.MigrationTuple.Parse(TupleJson);
         bool value = (bool)v4.Item3;
         Assert.True(value);
     }
@@ -86,7 +86,7 @@ public class TupleEquivalenceTests
     public void V4_AccessElement2_Bool_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
         V4.MigrationTuple v4 = parsedV4.Instance;
         bool value = (bool)v4.Item3;
         Assert.True(value);
@@ -95,7 +95,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V5_AccessElement2_Bool()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
         // V5: typed Item3 property with TryGetValue
         Assert.True(v5.Item3.TryGetValue(out bool value));
@@ -105,7 +105,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V5_AccessViaIndexer()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
         // V5 also supports int indexer returning JsonElement
         Assert.Equal(Corvus.Text.Json.JsonValueKind.String, v5[0].ValueKind);
@@ -116,7 +116,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V4_TupleLength()
     {
-        V4.MigrationTuple v4 = V4.MigrationTuple.Parse(TupleJson);
+        var v4 = V4.MigrationTuple.Parse(TupleJson);
         Assert.Equal(3, v4.GetArrayLength());
     }
 
@@ -124,7 +124,7 @@ public class TupleEquivalenceTests
     public void V4_TupleLength_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
         V4.MigrationTuple v4 = parsedV4.Instance;
         Assert.Equal(3, v4.GetArrayLength());
     }
@@ -132,7 +132,7 @@ public class TupleEquivalenceTests
     [Fact]
     public void V5_TupleLength()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
         Assert.Equal(3, v5.GetArrayLength());
     }
@@ -140,10 +140,10 @@ public class TupleEquivalenceTests
     [Fact]
     public void BothEngines_SameTupleElements()
     {
-        using Corvus.Json.ParsedValue<V4.MigrationTuple> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationTuple>.Parse(TupleJson);
         V4.MigrationTuple v4 = parsedV4.Instance;
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
 
         Assert.Equal((string)v4.Item1, (string)v5.Item1);
@@ -155,7 +155,7 @@ public class TupleEquivalenceTests
     public void V4_TupleCreate()
     {
         // V4: static Create(item1, item2, item3) builds a tuple.
-        V4.MigrationTuple v4 = V4.MigrationTuple.Create(
+        var v4 = V4.MigrationTuple.Create(
             (Corvus.Json.JsonString)"hello",
             V4.MigrationTuple.PrefixItems1Entity.Parse("42"),
             (Corvus.Json.JsonBoolean)true);
@@ -168,7 +168,7 @@ public class TupleEquivalenceTests
     public void V5_TupleCreate()
     {
         // V5: workspace builder — equivalent to V4 Create.
-        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationTuple.Mutable> builder =
             V5.MigrationTuple.CreateBuilder(
                 workspace,
@@ -189,7 +189,7 @@ public class TupleEquivalenceTests
     public void V4_TupleToValueTuple()
     {
         // V4: implicit conversion to C# ValueTuple — explicit cast then deconstruct.
-        V4.MigrationTuple v4 = V4.MigrationTuple.Parse(TupleJson);
+        var v4 = V4.MigrationTuple.Parse(TupleJson);
         (Corvus.Json.JsonString first, V4.MigrationTuple.PrefixItems1Entity second, Corvus.Json.JsonBoolean third) =
             ((Corvus.Json.JsonString, V4.MigrationTuple.PrefixItems1Entity, Corvus.Json.JsonBoolean))v4;
         Assert.Equal("hello", (string)first);
@@ -201,7 +201,7 @@ public class TupleEquivalenceTests
     public void V5_TupleDestructure_ViaIndexer()
     {
         // V5 has no ValueTuple operator — access via typed properties instead.
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationTuple>.Parse(TupleJson);
         V5.MigrationTuple v5 = parsedV5.RootElement;
         Assert.Equal("hello", (string)v5.Item1);
         Assert.Equal(42, (int)v5.Item2);

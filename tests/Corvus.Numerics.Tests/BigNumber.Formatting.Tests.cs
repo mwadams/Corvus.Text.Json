@@ -2,14 +2,15 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
 using System.Text;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberFormattingTests
 {
     #region UTF-16 ToString Tests
@@ -596,7 +597,7 @@ public class BigNumberFormattingTests
     [Fact]
     public void Format_ScientificNotation_SingleDigitExponent_ExactFormat()
     {
-        var testCases = new[]
+        (BigNumber, string)[] testCases = new[]
         {
             (new BigNumber(1, 1), "1E1"),
             (new BigNumber(1, 5), "1E5"),
@@ -606,7 +607,7 @@ public class BigNumberFormattingTests
             (new BigNumber(1, -9), "1E-9"),
         };
 
-        foreach (var (value, expected) in testCases)
+        foreach ((BigNumber value, string? expected) in testCases)
         {
             string result = value.ToString();
             result.ShouldBe(expected);
@@ -617,7 +618,7 @@ public class BigNumberFormattingTests
     [Fact]
     public void Format_ScientificNotation_DoubleDigitExponent_ExactFormat()
     {
-        var testCases = new[]
+        (BigNumber, string)[] testCases = new[]
         {
             (new BigNumber(99, 10), "99E10"),
             (new BigNumber(88, 50), "88E50"),
@@ -627,7 +628,7 @@ public class BigNumberFormattingTests
             (new BigNumber(44, -99), "44E-99"),
         };
 
-        foreach (var (value, expected) in testCases)
+        foreach ((BigNumber value, string? expected) in testCases)
         {
             string result = value.ToString();
             result.ShouldBe(expected);
@@ -638,7 +639,7 @@ public class BigNumberFormattingTests
     [Fact]
     public void Format_ScientificNotation_TripleDigitExponent_ExactFormat()
     {
-        var testCases = new[]
+        (BigNumber, string)[] testCases = new[]
         {
             (new BigNumber(333, 100), "333E100"),
             (new BigNumber(222, 500), "222E500"),
@@ -648,7 +649,7 @@ public class BigNumberFormattingTests
             (new BigNumber(666, -999), "666E-999"),
         };
 
-        foreach (var (value, expected) in testCases)
+        foreach ((BigNumber value, string? expected) in testCases)
         {
             string result = value.ToString();
             result.ShouldBe(expected);
@@ -659,7 +660,7 @@ public class BigNumberFormattingTests
     [Fact]
     public void Format_ScientificNotation_NoExponent_ExactFormat()
     {
-        var testCases = new[]
+        (BigNumber, string)[] testCases = new[]
         {
             (new BigNumber(0, 0), "0"),
             (new BigNumber(1, 0), "1"),
@@ -669,7 +670,7 @@ public class BigNumberFormattingTests
             (new BigNumber(12345, 0), "12345"),
         };
 
-        foreach (var (value, expected) in testCases)
+        foreach ((BigNumber value, string? expected) in testCases)
         {
             string result = value.ToString();
             result.ShouldBe(expected);
@@ -707,7 +708,7 @@ public class BigNumberFormattingTests
     [Fact]
     public void Format_PowersOfTen_ExactFormats()
     {
-        var testCases = new[]
+        (BigNumber, string, int)[] testCases = new[]
         {
             (new BigNumber(1, 0), "1", 1),
             (new BigNumber(1, 1), "1E1", 3),
@@ -718,7 +719,7 @@ public class BigNumberFormattingTests
             (new BigNumber(1, -3), "1E-3", 4),
         };
 
-        foreach (var (value, expected, expectedLength) in testCases)
+        foreach ((BigNumber value, string? expected, int expectedLength) in testCases)
         {
             string result = value.ToString();
             result.ShouldBe(expected);
@@ -729,7 +730,7 @@ public class BigNumberFormattingTests
     [Fact]
     public void Format_SpecialValues_ExactFormats()
     {
-        var testCases = new[]
+        (BigNumber, string, int)[] testCases = new[]
         {
             (BigNumber.Zero, "0", 1),
             (BigNumber.One, "1", 1),
@@ -739,7 +740,7 @@ public class BigNumberFormattingTests
             (new BigNumber(-10, 0), "-1E1", 4), // Normalized
         };
 
-        foreach (var (value, expected, expectedLength) in testCases)
+        foreach ((BigNumber value, string? expected, int expectedLength) in testCases)
         {
             string result = value.Normalize().ToString();
             result.ShouldBe(expected);
@@ -788,7 +789,7 @@ public class BigNumberFormattingTests
 
         formatted.ShouldBe("12345");
 
-        BigNumber parsed = BigNumber.Parse(formatted);
+        var parsed = BigNumber.Parse(formatted);
         parsed.ShouldBe(original);
         parsed.Significand.ShouldBe(original.Significand);
         parsed.Exponent.ShouldBe(original.Exponent);
@@ -802,7 +803,7 @@ public class BigNumberFormattingTests
 
         formatted.ShouldBe("789E15");
 
-        BigNumber parsed = BigNumber.Parse(formatted);
+        var parsed = BigNumber.Parse(formatted);
         parsed.ShouldBe(original);
     }
 
@@ -814,7 +815,7 @@ public class BigNumberFormattingTests
 
         formatted.ShouldBe("456E-20");
 
-        BigNumber parsed = BigNumber.Parse(formatted);
+        var parsed = BigNumber.Parse(formatted);
         parsed.ShouldBe(original);
     }
 
@@ -826,7 +827,7 @@ public class BigNumberFormattingTests
 
         formatted.ShouldBe("-987E5");
 
-        BigNumber parsed = BigNumber.Parse(formatted);
+        var parsed = BigNumber.Parse(formatted);
         parsed.ShouldBe(original);
     }
 
@@ -839,7 +840,7 @@ public class BigNumberFormattingTests
         formatted.ShouldBe("0");
         formatted.Length.ShouldBe(1);
 
-        BigNumber parsed = BigNumber.Parse(formatted);
+        var parsed = BigNumber.Parse(formatted);
         parsed.ShouldBe(original);
     }
 
@@ -858,21 +859,21 @@ public class BigNumberFormattingTests
         string formatted = StringFromSpan.CreateFromUtf8(utf8);
         formatted.ShouldBe("654321E-8");
 
-        BigNumber parsed = BigNumber.Parse(utf8);
+        var parsed = BigNumber.Parse(utf8);
         parsed.ShouldBe(original);
     }
 
     [Fact]
     public void RoundTrip_LargeSignificand_ExactMatch()
     {
-        BigInteger largeValue = BigInteger.Parse("123456789012345678901234567890");
+        var largeValue = BigInteger.Parse("123456789012345678901234567890");
         BigNumber original = new(largeValue, -10);
 
         string formatted = original.ToString();
         // This gets normalized to "12345678901234567890123456789E-9" (trailing 0 removed)
         formatted.ShouldBe("12345678901234567890123456789E-9");
 
-        BigNumber parsed = BigNumber.Parse(formatted);
+        var parsed = BigNumber.Parse(formatted);
         parsed.ShouldBe(original);
         // After parsing and normalization, should be equivalent
         parsed.Normalize().Significand.ShouldBe(BigInteger.Parse("12345678901234567890123456789"));

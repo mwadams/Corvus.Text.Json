@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -21,7 +21,7 @@ public class BenchmarkManyPropertiesParsing
     {
         // Object with many properties (500) - tests property lookup performance
         manyPropertiesJson = GenerateManyPropertiesJson();
-        
+
         // Pre-allocate property names to avoid string allocations during benchmarking
         propertyNames = new string[500];
         for (int i = 0; i < 500; i++)
@@ -34,7 +34,7 @@ public class BenchmarkManyPropertiesParsing
     public int ParseManyPropertiesCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(manyPropertiesJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         root.EnsurePropertyMap(); // Ensure property map is built for efficient access
 
@@ -56,7 +56,7 @@ public class BenchmarkManyPropertiesParsing
     public int ParseManyPropertiesSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(manyPropertiesJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int accessedProperties = 0;
 

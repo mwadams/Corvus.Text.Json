@@ -94,8 +94,8 @@ public class PropertyNamesValidationHandler : IChildObjectPropertyValidationHand
     {
         if (typeDeclaration.PropertyNamesSubschemaType() is SingleSubschemaKeywordTypeDeclaration propertyNameType)
         {
-           string evaluationPathProperty = generator.GetPropertyNameInScope(propertyNameType.Keyword.Keyword, suffix: "SchemaEvaluationPath");
-           typeDeclaration.SetMetadata(EvaluationPathPropertyKey, evaluationPathProperty);
+            string evaluationPathProperty = generator.GetPropertyNameInScope(propertyNameType.Keyword.Keyword, suffix: "SchemaEvaluationPath");
+            typeDeclaration.SetMetadata(EvaluationPathPropertyKey, evaluationPathProperty);
             return generator
                 .AppendSeparatorLine()
                 .AppendLineIndent(

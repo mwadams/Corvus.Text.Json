@@ -46,7 +46,7 @@ public class BenchmarkMatchJsonPointer
         // This is normally all wrapped up in codegen; you don't have to do this yourself.
         // (This is also why we just the direct string representation of the pointer, rather than the public
         // get methods.
-        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjJsonPointer!, 0, false, false);
+        var context = JsonSchemaContext.BeginContext(_ctjJsonPointer!, 0, false, false);
 
         try
         {

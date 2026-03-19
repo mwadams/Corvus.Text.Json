@@ -6,10 +6,10 @@ Console.WriteLine();
 Console.WriteLine("************");
 Console.WriteLine();
 
-Utf8IriReference reference = Utf8IriReference.CreateIriReference("note:example%20Schemas/Person.json?foo=bar#/$defs/Person"u8);
+var reference = Utf8IriReference.CreateIriReference("note:example%20Schemas/Person.json?foo=bar#/$defs/Person"u8);
 
 // Parse a document in the usual way
-using ParsedJsonDocument<JsonElement> documentB1 = ParsedJsonDocument<JsonElement>.Parse(
+using var documentB1 = ParsedJsonDocument<JsonElement>.Parse(
         """
         {
             "name": "John",
@@ -40,7 +40,7 @@ using ParsedJsonDocument<JsonElement> documentB1 = ParsedJsonDocument<JsonElemen
 
 Console.WriteLine(documentB1.RootElement.GetProperty("age"));
 
-using ParsedJsonDocument<JsonElement> documentB2 = ParsedJsonDocument<JsonElement>.Parse(
+using var documentB2 = ParsedJsonDocument<JsonElement>.Parse(
         """
         {
             "name": "John",
@@ -69,7 +69,7 @@ using ParsedJsonDocument<JsonElement> documentB2 = ParsedJsonDocument<JsonElemen
         }
         """);
 
-using ParsedJsonDocument<Person> documentB3 = ParsedJsonDocument<Person>.Parse(
+using var documentB3 = ParsedJsonDocument<Person>.Parse(
         """
         {
             "name": { "firstName": "Michael", "lastName": "Adams", "otherNames": ["Francis", "James"] },
@@ -78,7 +78,7 @@ using ParsedJsonDocument<Person> documentB3 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-using ParsedJsonDocument<Person> documentB4 = ParsedJsonDocument<Person>.Parse(
+using var documentB4 = ParsedJsonDocument<Person>.Parse(
         """
         {
             "name": { "firstName": "Michael", "lastName": "Adams", "otherNames": "Francis James" },
@@ -87,7 +87,7 @@ using ParsedJsonDocument<Person> documentB4 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-using ParsedJsonDocument<Person> documentB5 = ParsedJsonDocument<Person>.Parse(
+using var documentB5 = ParsedJsonDocument<Person>.Parse(
         """
         {
             "age": 51,
@@ -95,7 +95,7 @@ using ParsedJsonDocument<Person> documentB5 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-using ParsedJsonDocument<Person> documentB6 = ParsedJsonDocument<Person>.Parse(
+using var documentB6 = ParsedJsonDocument<Person>.Parse(
         """
         {
             "name": { "firstName": "Michael", "lastName": "Adams", "otherNames": "Francis James" },
@@ -104,7 +104,7 @@ using ParsedJsonDocument<Person> documentB6 = ParsedJsonDocument<Person>.Parse(
         }
         """);
 
-using ParsedJsonDocument<Person> documentB7 = ParsedJsonDocument<Person>.Parse(
+using var documentB7 = ParsedJsonDocument<Person>.Parse(
         """
         {
             "name": { "lastName": "Adams", "otherNames": "Francis James" },
@@ -139,7 +139,7 @@ Console.WriteLine("**************");
 Console.WriteLine();
 
 // Create a workspace for manipulating documents
-using JsonWorkspace workspace = JsonWorkspace.Create();
+using var workspace = JsonWorkspace.Create();
 
 using JsonDocumentBuilder<JsonElement.Mutable> initializedBuilder = documentB1.RootElement.CreateBuilder(workspace);
 
@@ -161,7 +161,7 @@ Console.WriteLine("*** BEFORE ***");
 Console.WriteLine("**************");
 Console.WriteLine();
 
-using ParsedJsonDocument<JsonElement> documentB8 = ParsedJsonDocument<JsonElement>.Parse(
+using var documentB8 = ParsedJsonDocument<JsonElement>.Parse(
         """
         {
             "name": "John",
@@ -346,7 +346,7 @@ Console.WriteLine();
 Person.Mutable mutablePerson = docBuilder.RootElement;
 // Implicit conversion from mutable to immutable.
 Person person = docBuilder.RootElement;
-Person.Mutable isItOK = (Person.Mutable)person; // This will throw if `person` wasn't created in a mutable document.
+var isItOK = (Person.Mutable)person; // This will throw if `person` wasn't created in a mutable document.
 
 using JsonDocumentBuilder<Person.Mutable> docBuilder3 = Person.CreateBuilder(
     workspace,
@@ -438,7 +438,7 @@ EvaluateAndWriteResults(brokenPerson, JsonSchemaResultsLevel.Verbose);
 
 static void EvaluateAndWriteResults(Person person, JsonSchemaResultsLevel level)
 {
-    JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(level);
+    var collector = JsonSchemaResultsCollector.Create(level);
     bool personEvaluationResult = person.EvaluateSchema(collector);
 
     JsonSchemaResultsCollector.ResultsEnumerator enumerator = collector.EnumerateResults();
@@ -474,7 +474,7 @@ using JsonDocumentBuilder<Person.Mutable> testPersonDocBuilder = Person.CreateBu
 
 Console.WriteLine(testPersonDocBuilder.RootElement);
 
-ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+var doc = ParsedJsonDocument<JsonElement>.Parse(
     """
     {
         "name": "John",
@@ -486,7 +486,7 @@ ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
     }
     """);
 
-using UniqueItemsHashSet hashSet = new UniqueItemsHashSet(doc, 2, stackalloc int[UniqueItemsHashSet.StackAllocBucketSize], stackalloc byte[UniqueItemsHashSet.StackAllocEntrySize]);
+using var hashSet = new UniqueItemsHashSet(doc, 2, stackalloc int[UniqueItemsHashSet.StackAllocBucketSize], stackalloc byte[UniqueItemsHashSet.StackAllocEntrySize]);
 bool addedFirst = hashSet.AddItemIfNotExists(((IJsonElement)doc.RootElement.GetProperty("1")).ParentDocumentIndex);
 Console.WriteLine($"Added first: {addedFirst}");
 bool addedSecond = hashSet.AddItemIfNotExists(((IJsonElement)doc.RootElement.GetProperty("2")).ParentDocumentIndex);

@@ -18,42 +18,42 @@ public class SuiteAdditionalPropertiesBeingFalseDoesNotAllowOtherProperties : IC
     [Fact]
     public void TestNoAdditionalPropertiesIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnAdditionalPropertyIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1, \"bar\" : 2, \"quux\" : \"boom\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1, \"bar\" : 2, \"quux\" : \"boom\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresArrays()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresStrings()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobarbaz\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobarbaz\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresOtherNonObjects()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPatternPropertiesAreNotAdditionalProperties()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\":1, \"vroom\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\":1, \"vroom\": 2}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -92,14 +92,14 @@ public class SuiteNonAsciiPatternWithAdditionalProperties : IClassFixture<SuiteN
     [Fact]
     public void TestMatchingThePatternIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"ármányos\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"ármányos\": 2}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNotMatchingThePatternIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"élmény\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"élmény\": 2}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -138,21 +138,21 @@ public class SuiteAdditionalPropertiesWithSchema : IClassFixture<SuiteAdditional
     [Fact]
     public void TestNoAdditionalPropertiesIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnAdditionalValidPropertyIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1, \"bar\" : 2, \"quux\" : true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1, \"bar\" : 2, \"quux\" : true}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnAdditionalInvalidPropertyIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1, \"bar\" : 2, \"quux\" : 12}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1, \"bar\" : 2, \"quux\" : 12}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -191,14 +191,14 @@ public class SuiteAdditionalPropertiesCanExistByItself : IClassFixture<SuiteAddi
     [Fact]
     public void TestAnAdditionalValidPropertyIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : true}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnAdditionalInvalidPropertyIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\" : 1}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -237,7 +237,7 @@ public class SuiteAdditionalPropertiesAreAllowedByDefault : IClassFixture<SuiteA
     [Fact]
     public void TestAdditionalPropertiesAreAllowed()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2, \"quux\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2, \"quux\": true}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -276,7 +276,7 @@ public class SuiteAdditionalPropertiesDoesNotLookInApplicators : IClassFixture<S
     [Fact]
     public void TestPropertiesDefinedInAllOfAreNotExamined()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": true}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -315,7 +315,7 @@ public class SuiteAdditionalPropertiesWithNullValuedInstanceProperties : IClassF
     [Fact]
     public void TestAllowsNullValues()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": null}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": null}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

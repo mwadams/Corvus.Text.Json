@@ -18,21 +18,21 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithWithNoValidationVocabulary :
     [Fact]
     public void TestApplicatorVocabularyStillWorks()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"badProperty\": \"this property should not exist\"\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"badProperty\": \"this property should not exist\"\r\n                }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoValidationValidNumber()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"numberProperty\": 20\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"numberProperty\": 20\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoValidationInvalidNumberButItStillValidates()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"numberProperty\": 1\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"numberProperty\": 1\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -71,14 +71,14 @@ public class SuiteIgnoreUnrecognizedOptionalVocabulary : IClassFixture<SuiteIgno
     [Fact]
     public void TestStringValue()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobar\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobar\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNumberValue()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("20");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("20");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

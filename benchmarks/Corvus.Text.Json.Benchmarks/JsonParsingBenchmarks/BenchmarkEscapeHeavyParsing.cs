@@ -1,8 +1,10 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using System.Text.Json;
+using BenchmarkDotNet.Attributes;
+using Corvus.Text.Json;
 
 namespace JsonParsingBenchmarks;
 
@@ -26,13 +28,13 @@ public class BenchmarkEscapeHeavyParsing
     public int ParseEscapeHeavyCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(escapeHeavyJson!);
-        var root = document.RootElement;
-        
+        Corvus.Text.Json.JsonElement root = document.RootElement;
+
         int stringCount = 0;
-        
+
         if (root.ValueKind == Corvus.Text.Json.JsonValueKind.Object)
         {
-            foreach (var property in root.EnumerateObject())
+            foreach (JsonProperty<Corvus.Text.Json.JsonElement> property in root.EnumerateObject())
             {
                 if (property.Value.ValueKind == Corvus.Text.Json.JsonValueKind.String)
                 {
@@ -44,7 +46,7 @@ public class BenchmarkEscapeHeavyParsing
                 }
             }
         }
-        
+
         return stringCount;
     }
 
@@ -52,13 +54,13 @@ public class BenchmarkEscapeHeavyParsing
     public int ParseEscapeHeavySystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(escapeHeavyJson!);
-        var root = document.RootElement;
-        
+        System.Text.Json.JsonElement root = document.RootElement;
+
         int stringCount = 0;
-        
+
         if (root.ValueKind == System.Text.Json.JsonValueKind.Object)
         {
-            foreach (var property in root.EnumerateObject())
+            foreach (JsonProperty property in root.EnumerateObject())
             {
                 if (property.Value.ValueKind == System.Text.Json.JsonValueKind.String)
                 {
@@ -70,7 +72,7 @@ public class BenchmarkEscapeHeavyParsing
                 }
             }
         }
-        
+
         return stringCount;
     }
 
@@ -80,7 +82,7 @@ public class BenchmarkEscapeHeavyParsing
     {
         var sb = new StringBuilder();
         sb.AppendLine("{");
-        
+
         var escapePatterns = new[]
         {
             "Line 1\\nLine 2\\nLine 3",
@@ -94,15 +96,15 @@ public class BenchmarkEscapeHeavyParsing
             "Path: \\\"D:\\\\data\\\\file\\u0020name.json\\\"",
             "URL: \\\"https:\\/\\/example.com\\/path?param=value\\\"",
         };
-        
+
         for (int i = 0; i < 100; i++)
         {
             if (i > 0) sb.AppendLine(",");
-            
+
             var pattern = escapePatterns[i % escapePatterns.Length];
             sb.Append($"  \"field_{i}\": \"{pattern}_{i}\"");
         }
-        
+
         sb.AppendLine();
         sb.AppendLine("}");
         return sb.ToString();

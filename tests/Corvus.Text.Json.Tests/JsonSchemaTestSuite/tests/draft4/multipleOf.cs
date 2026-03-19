@@ -18,21 +18,21 @@ public class SuiteByInt : IClassFixture<SuiteByInt.Fixture>
     [Fact]
     public void TestIntByInt()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("10");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("10");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntByIntFail()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("7");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("7");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonNumbers()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -71,21 +71,21 @@ public class SuiteByNumber : IClassFixture<SuiteByNumber.Fixture>
     [Fact]
     public void TestZeroIsMultipleOfAnything()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void Test45IsMultipleOf15()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("4.5");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("4.5");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void Test35IsNotMultipleOf15()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("35");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("35");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -124,14 +124,14 @@ public class SuiteBySmallNumber : IClassFixture<SuiteBySmallNumber.Fixture>
     [Fact]
     public void Test00075IsMultipleOf00001()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0.0075");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0.0075");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void Test000751IsNotMultipleOf00001()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0.00751");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0.00751");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -170,7 +170,7 @@ public class SuiteFloatDivisionInf : IClassFixture<SuiteFloatDivisionInf.Fixture
     [Fact]
     public void TestInvalidButNaiveImplementationsMayRaiseAnOverflowError()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1e308");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1e308");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -209,7 +209,7 @@ public class SuiteSmallMultipleOfLargeInteger : IClassFixture<SuiteSmallMultiple
     [Fact]
     public void TestAnyIntegerIsAMultipleOf1e8()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12391239123");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12391239123");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

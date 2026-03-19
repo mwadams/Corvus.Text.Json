@@ -46,7 +46,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -81,7 +81,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -101,7 +101,7 @@ public class Utf8UriApplyTests
 
         var iri = Utf8Iri.CreateIri(baseBytes);
         var refIri = Utf8IriReference.CreateIriReference(refBytes);
-        
+
         bool success = iri.TryApply(refIri, buffer, out Utf8Iri result);
 
         Assert.True(success);
@@ -121,7 +121,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -138,7 +138,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -155,7 +155,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -172,7 +172,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -189,7 +189,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -206,7 +206,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -224,7 +224,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -243,7 +243,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -260,8 +260,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
-        bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
+        bool success = uri.TryApply(refUri, buffer, out _);
 
         Assert.False(success);
     }
@@ -281,8 +280,7 @@ public class Utf8UriApplyTests
 
         var uriRef = Utf8UriReference.CreateUriReference(baseBytes);
         var targetRef = Utf8UriReference.CreateUriReference(refBytes);
-        
-        bool success = uriRef.TryApply(targetRef, buffer, out Utf8Uri result);
+        bool success = uriRef.TryApply(targetRef, buffer, out _);
 
         // RFC 3986 requires absolute base URI - should return false for relative base
         Assert.False(success);
@@ -301,7 +299,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -320,7 +318,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -359,9 +357,9 @@ public class Utf8UriApplyTests
     public void Utf8UriReference_PathRootless_ValidUri(string uriString)
     {
         byte[] uriBytes = Encoding.UTF8.GetBytes(uriString);
-        
+
         var uriRef = Utf8UriReference.CreateUriReference(uriBytes);
-        
+
         Assert.Equal(uriString, uriRef.ToString());
     }
 
@@ -378,7 +376,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);
@@ -397,7 +395,7 @@ public class Utf8UriApplyTests
 
         var uri = Utf8Uri.CreateUri(baseBytes);
         var refUri = Utf8UriReference.CreateUriReference(refBytes);
-        
+
         bool success = uri.TryApply(refUri, buffer, out Utf8Uri result);
 
         Assert.True(success);

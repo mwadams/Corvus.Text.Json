@@ -25,7 +25,7 @@ internal interface ITypeSensitiveKeywordValidationHandler : ITypeInsensitiveKeyw
     /// <param name="validateOnly">If <see langword="true"/>, then only the validation code should be emitted. Otherwise
     /// the wrapper to check the type of the outer element, the validation code, and the ignore code should be emitted.</param>
     /// <returns>The code generator, after the operation has completed.</returns>
-   CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, bool validateOnly);
+    CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration, bool validateOnly);
 }
 
 /// <summary>

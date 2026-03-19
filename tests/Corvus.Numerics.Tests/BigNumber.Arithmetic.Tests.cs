@@ -2,12 +2,13 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberArithmeticTests
 {
     [Fact]
@@ -28,7 +29,7 @@ public class BigNumberArithmeticTests
         BigNumber right = new(456, -1);  // 45.6
 
         BigNumber result = left + right;
-        BigNumber expected = BigNumber.Parse("46.83");
+        var expected = BigNumber.Parse("46.83");
 
         result.ShouldBe(expected);
     }
@@ -61,7 +62,7 @@ public class BigNumberArithmeticTests
         BigNumber right = new(123, -2);  // 1.23
 
         BigNumber result = left - right;
-        BigNumber expected = BigNumber.Parse("44.37");
+        var expected = BigNumber.Parse("44.37");
 
         result.ShouldBe(expected);
     }
@@ -125,7 +126,7 @@ public class BigNumberArithmeticTests
         BigNumber divisor = new(4, 0);
 
         BigNumber result = dividend / divisor;
-        BigNumber expected = BigNumber.Parse("25");
+        var expected = BigNumber.Parse("25");
 
         result.ShouldBe(expected);
     }
@@ -136,7 +137,7 @@ public class BigNumberArithmeticTests
         BigNumber dividend = new(10, 0);
         BigNumber divisor = new(3, 0);
 
-        BigNumber result = BigNumber.Divide(dividend, divisor, 10);
+        var result = BigNumber.Divide(dividend, divisor, 10);
 
         double resultDouble = (double)result;
         resultDouble.ShouldBe(10.0 / 3.0, tolerance: 0.0000000001);
@@ -334,7 +335,7 @@ public class BigNumberArithmeticTests
     {
         BigNumber value = new(123, -2);
 
-        BigNumber result = BigNumber.Abs(value);
+        var result = BigNumber.Abs(value);
 
         result.ShouldBe(value);
     }
@@ -344,7 +345,7 @@ public class BigNumberArithmeticTests
     {
         BigNumber value = new(-123, -2);
 
-        BigNumber result = BigNumber.Abs(value);
+        var result = BigNumber.Abs(value);
 
         result.ShouldBe(new BigNumber(123, -2));
     }
@@ -352,7 +353,7 @@ public class BigNumberArithmeticTests
     [Fact]
     public void Abs_Zero_ReturnsZero()
     {
-        BigNumber result = BigNumber.Abs(BigNumber.Zero);
+        var result = BigNumber.Abs(BigNumber.Zero);
 
         result.ShouldBe(BigNumber.Zero);
     }

@@ -2,10 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using BenchmarkDotNet.Attributes;
-using Corvus.Numerics;
 using System.Globalization;
 using System.Text;
+using BenchmarkDotNet.Attributes;
+using Corvus.Numerics;
 
 namespace Corvus.Numerics.Benchmarks;
 
@@ -209,7 +209,7 @@ public class JsonUtf8FormattingBenchmarks
                 buffer[position++] = (byte)',';
             }
 
-            BigNumber num = new BigNumber(1234 + i, -3 + (i % 3));
+            var num = new BigNumber(1234 + i, -3 + (i % 3));
             num.TryFormatUtf8Optimized(buffer.Slice(position), out int written, ReadOnlySpan<char>.Empty, CultureInfo.InvariantCulture);
             position += written;
         }

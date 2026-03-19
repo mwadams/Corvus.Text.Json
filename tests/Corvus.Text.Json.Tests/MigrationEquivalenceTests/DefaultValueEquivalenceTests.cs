@@ -23,7 +23,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V4_ReadExplicitValues()
     {
-        V4.MigrationWithDefaults v4 = V4.MigrationWithDefaults.Parse(FullJson);
+        var v4 = V4.MigrationWithDefaults.Parse(FullJson);
         Assert.Equal("Jo", (string)v4.Name);
         Assert.Equal("pending", (string)v4.Status);
         Assert.Equal(5, (int)v4.CountValue);
@@ -33,7 +33,7 @@ public class DefaultValueEquivalenceTests
     public void V4_ReadExplicitValues_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationWithDefaults> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(FullJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(FullJson);
         V4.MigrationWithDefaults v4 = parsedV4.Instance;
         Assert.Equal("Jo", (string)v4.Name);
         Assert.Equal("pending", (string)v4.Status);
@@ -43,7 +43,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V5_ReadExplicitValues()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(FullJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(FullJson);
         V5.MigrationWithDefaults v5 = parsedV5.RootElement;
         Assert.Equal("Jo", (string)v5.Name);
         Assert.Equal("pending", (string)v5.Status);
@@ -53,7 +53,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V4_OptionalPropertiesUndefinedWhenMissing()
     {
-        V4.MigrationWithDefaults v4 = V4.MigrationWithDefaults.Parse(MinimalJson);
+        var v4 = V4.MigrationWithDefaults.Parse(MinimalJson);
         Assert.Equal("Jo", (string)v4.Name);
 
         // Both V4 and V5 return schema-defined defaults for missing optional properties
@@ -65,7 +65,7 @@ public class DefaultValueEquivalenceTests
     public void V4_OptionalPropertiesUndefinedWhenMissing_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationWithDefaults> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(MinimalJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(MinimalJson);
         V4.MigrationWithDefaults v4 = parsedV4.Instance;
         Assert.Equal("Jo", (string)v4.Name);
 
@@ -77,7 +77,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V5_OptionalPropertiesUndefinedWhenMissing()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(MinimalJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(MinimalJson);
         V5.MigrationWithDefaults v5 = parsedV5.RootElement;
         Assert.Equal("Jo", (string)v5.Name);
 
@@ -102,7 +102,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V4_Validation_MinimalIsValid()
     {
-        V4.MigrationWithDefaults v4 = V4.MigrationWithDefaults.Parse(MinimalJson);
+        var v4 = V4.MigrationWithDefaults.Parse(MinimalJson);
         Corvus.Json.ValidationContext result = v4.Validate(Corvus.Json.ValidationContext.ValidContext, Corvus.Json.ValidationLevel.Flag);
         Assert.True(result.IsValid);
     }
@@ -111,7 +111,7 @@ public class DefaultValueEquivalenceTests
     public void V4_Validation_MinimalIsValid_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationWithDefaults> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(MinimalJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(MinimalJson);
         V4.MigrationWithDefaults v4 = parsedV4.Instance;
         Corvus.Json.ValidationContext result = v4.Validate(Corvus.Json.ValidationContext.ValidContext, Corvus.Json.ValidationLevel.Flag);
         Assert.True(result.IsValid);
@@ -120,7 +120,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V5_Validation_MinimalIsValid()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(MinimalJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(MinimalJson);
         V5.MigrationWithDefaults v5 = parsedV5.RootElement;
         Assert.True(v5.EvaluateSchema());
     }
@@ -128,7 +128,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V4_Validation_MissingRequiredIsInvalid()
     {
-        V4.MigrationWithDefaults v4 = V4.MigrationWithDefaults.Parse("""{"status":"active"}""");
+        var v4 = V4.MigrationWithDefaults.Parse("""{"status":"active"}""");
         Corvus.Json.ValidationContext result = v4.Validate(Corvus.Json.ValidationContext.ValidContext, Corvus.Json.ValidationLevel.Flag);
         Assert.False(result.IsValid);
     }
@@ -137,7 +137,7 @@ public class DefaultValueEquivalenceTests
     public void V4_Validation_MissingRequiredIsInvalid_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationWithDefaults> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse("""{"status":"active"}""");
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse("""{"status":"active"}""");
         V4.MigrationWithDefaults v4 = parsedV4.Instance;
         Corvus.Json.ValidationContext result = v4.Validate(Corvus.Json.ValidationContext.ValidContext, Corvus.Json.ValidationLevel.Flag);
         Assert.False(result.IsValid);
@@ -146,7 +146,7 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void V5_Validation_MissingRequiredIsInvalid()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse("""{"status":"active"}""");
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse("""{"status":"active"}""");
         V5.MigrationWithDefaults v5 = parsedV5.RootElement;
         Assert.False(v5.EvaluateSchema());
     }
@@ -154,10 +154,10 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void BothEngines_ExplicitValues_SameResult()
     {
-        using Corvus.Json.ParsedValue<V4.MigrationWithDefaults> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(FullJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(FullJson);
         V4.MigrationWithDefaults v4 = parsedV4.Instance;
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(FullJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(FullJson);
         V5.MigrationWithDefaults v5 = parsedV5.RootElement;
 
         Assert.Equal((string)v4.Name, (string)v5.Name);
@@ -168,10 +168,10 @@ public class DefaultValueEquivalenceTests
     [Fact]
     public void BothEngines_MinimalJson_DefaultsApplied_SameResult()
     {
-        using Corvus.Json.ParsedValue<V4.MigrationWithDefaults> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(MinimalJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationWithDefaults>.Parse(MinimalJson);
         V4.MigrationWithDefaults v4 = parsedV4.Instance;
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(MinimalJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationWithDefaults>.Parse(MinimalJson);
         V5.MigrationWithDefaults v5 = parsedV5.RootElement;
 
         Assert.Equal((string)v4.Name, (string)v5.Name);

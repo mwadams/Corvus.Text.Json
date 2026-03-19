@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;
@@ -21,7 +22,7 @@ public class BigNumberConversionTests
     {
         // Act
         Corvus.Numerics.BigNumber bigNumber = value;
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         Assert.Equal(new BigInteger(value), normalized.Significand);
@@ -36,7 +37,7 @@ public class BigNumberConversionTests
     {
         // Act
         Corvus.Numerics.BigNumber bigNumber = value;
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         Assert.Equal(new BigInteger(value), normalized.Significand);
@@ -60,7 +61,7 @@ public class BigNumberConversionTests
     {
         // Act
         Corvus.Numerics.BigNumber bigNumber = value;
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         // Convert back to double and check if it's close enough
@@ -87,7 +88,7 @@ public class BigNumberConversionTests
     {
         // Act
         Corvus.Numerics.BigNumber bigNumber = value;
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         // Convert back to float and check if it's close enough

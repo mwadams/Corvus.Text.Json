@@ -15,7 +15,7 @@ public class BenchmarkBuild
     [Benchmark]
     public Person BuildCorvusJsonSchema()
     {
-        Person person = Person.Create(
+        var person = Person.Create(
             age: 51,
             name: PersonName.Create(
                 firstName: "Michael",
@@ -29,7 +29,7 @@ public class BenchmarkBuild
     [Benchmark]
     public Benchmark.CorvusTextJson.Person.Mutable BuildCorvusTextJson()
     {
-        using Corvus.Text.Json.JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create();
 
         using Corvus.Text.Json.JsonDocumentBuilder<Benchmark.CorvusTextJson.Person.Mutable> person = Benchmark.CorvusTextJson.Person.CreateBuilder(
             workspace,
@@ -46,7 +46,7 @@ public class BenchmarkBuild
                             otherNames.AddItem("James"u8);
                         }));
                 }),
-                competedInYears: Benchmark.CorvusTextJson.CompetedInYears.Build([2012,2106,2024])));
+                competedInYears: Benchmark.CorvusTextJson.CompetedInYears.Build([2012, 2106, 2024])));
 
         return person.RootElement;
     }

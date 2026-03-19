@@ -239,8 +239,8 @@ internal class JsonTemplateParameterProvider<TPayload> : ITemplateParameterProvi
                 output.Append("null");
                 break;
             case JsonValueKind.Number:
-                {
-                    double valueNumber = (double)value.AsNumber;
+            {
+                double valueNumber = (double)value.AsNumber;
 
 #if NET8_0_OR_GREATER
                     // The maximum number of digits in a double precision number is 1074; we allocate a little above this
@@ -248,10 +248,10 @@ internal class JsonTemplateParameterProvider<TPayload> : ITemplateParameterProvi
                     valueNumber.TryFormat(buffer, out int written);
                     output.Append(buffer[..written]);
 #else
-                    output.Append(valueNumber.ToString());
+                output.Append(valueNumber.ToString());
 #endif
-                    break;
-                }
+                break;
+            }
         }
     }
 

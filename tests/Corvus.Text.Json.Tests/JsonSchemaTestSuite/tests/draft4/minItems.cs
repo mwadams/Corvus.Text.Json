@@ -18,28 +18,28 @@ public class SuiteMinItemsValidation : IClassFixture<SuiteMinItemsValidation.Fix
     [Fact]
     public void TestLongerIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestExactLengthIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooShortIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonArrays()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

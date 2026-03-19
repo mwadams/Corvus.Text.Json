@@ -18,21 +18,21 @@ public class SuiteIdInsideAnUnknownKeywordIsNotARealIdentifier : IClassFixture<S
     [Fact]
     public void TestTypeMatchesSecondAnyOfWhichHasARealSchemaInIt()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTypeMatchesNonSchemaInFirstAnyOf()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTypeMatchesNonSchemaInThirdAnyOf()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

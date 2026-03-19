@@ -147,12 +147,7 @@ public sealed class PropertyNameAllocationAnalyzer : DiagnosticAnalyzer
 
         // Check if the receiver type is JsonProperty<T> in the Corvus.Text.Json namespace
         // and has a NameEquals method (our indicator it's the right type).
-        if (receiverType.Name == "JsonProperty" &&
-            receiverType.ContainingNamespace?.ToDisplayString() == "Corvus.Text.Json")
-        {
-            return true;
-        }
-
-        return false;
+        return receiverType.Name == "JsonProperty" &&
+            receiverType.ContainingNamespace?.ToDisplayString() == "Corvus.Text.Json";
     }
 }

@@ -21,7 +21,7 @@ internal class ListNamingHeuristicsCommand : Command
     public override int Execute(CommandContext context, CancellationToken cancellationToken)
     {
         AnsiConsole.MarkupLine("[green]Available name heuristics:[/]");
-        foreach((string name, bool isOptional) in CSharpLanguageProvider.Default.GetNameHeuristicNames())
+        foreach ((string name, bool isOptional) in CSharpLanguageProvider.Default.GetNameHeuristicNames())
         {
             if (cancellationToken.IsCancellationRequested)
             {

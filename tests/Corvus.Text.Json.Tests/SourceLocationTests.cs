@@ -11,7 +11,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_SingleLineObject_ReturnsLine1()
     {
         string json = """{"name":"value"}""";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(root.TryGetLineAndOffset(out int line, out int charOffset));
@@ -23,7 +23,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_MultiLineObject_PropertyOnCorrectLine()
     {
         string json = "{\n  \"name\": \"value\",\n  \"age\": 42\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         // "age" property value is on line 3
@@ -36,7 +36,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_MultiLineObject_RootIsLine1()
     {
         string json = "{\n  \"name\": \"value\"\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(root.TryGetLineAndOffset(out int line, out int charOffset));
@@ -48,7 +48,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_NestedObject_DeepPropertyLine()
     {
         string json = "{\n  \"outer\": {\n    \"inner\": {\n      \"deep\": true\n    }\n  }\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         JsonElement deepElement = root.GetProperty("outer"u8).GetProperty("inner"u8).GetProperty("deep"u8);
@@ -60,7 +60,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_Array_ElementsOnSeparateLines()
     {
         string json = "[\n  1,\n  2,\n  3\n]";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         int index = 0;
@@ -78,7 +78,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_CrLfLineEndings()
     {
         string json = "{\r\n  \"name\": \"value\",\r\n  \"age\": 42\r\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         JsonElement ageElement = root.GetProperty("age"u8);
@@ -90,7 +90,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_CharOffset_AccountsForIndentation()
     {
         string json = "{\n  \"name\": \"value\"\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         // "name" property value should be after '  "name": '
@@ -105,7 +105,7 @@ public static class SourceLocationTests
     public static void TryGetLine_ReturnsCorrectLineBytes()
     {
         string json = "{\n  \"name\": \"value\",\n  \"age\": 42\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         // Verify the byte overload returns data for valid line numbers
@@ -129,7 +129,7 @@ public static class SourceLocationTests
     public static void TryGetLine_ReturnsCorrectLineString()
     {
         string json = "{\n  \"name\": \"value\",\n  \"age\": 42\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(root.TryGetLine(1, out string? line1));
@@ -146,7 +146,7 @@ public static class SourceLocationTests
     public static void TryGetLine_CrLf_StripsCarriageReturn()
     {
         string json = "{\r\n  \"a\": 1\r\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(root.TryGetLine(1, out string? line1));
@@ -160,7 +160,7 @@ public static class SourceLocationTests
     public static void TryGetLine_OutOfRange_ReturnsFalse()
     {
         string json = "{\"a\": 1}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.False(root.TryGetLine(0, out string? _));
@@ -172,7 +172,7 @@ public static class SourceLocationTests
     public static void TryGetLine_SingleLine_ReturnsEntireDocument()
     {
         string json = """{"key":"val"}""";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(root.TryGetLine(1, out string? line1));
@@ -185,7 +185,7 @@ public static class SourceLocationTests
     public static void Utf8JsonPointer_TryGetLineAndOffset_ResolvesPointer()
     {
         string json = "{\n  \"name\": \"value\",\n  \"age\": 42\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(Utf8JsonPointer.TryCreateJsonPointer("/age"u8, out Utf8JsonPointer pointer));
@@ -199,7 +199,7 @@ public static class SourceLocationTests
     public static void Utf8JsonPointer_TryGetLineAndOffset_ArrayElement()
     {
         string json = "{\n  \"items\": [\n    1,\n    2,\n    3\n  ]\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         // Pointer /items/1 should resolve to the element "2" on line 4
@@ -212,7 +212,7 @@ public static class SourceLocationTests
     public static void Utf8JsonPointer_TryGetLineAndOffset_InvalidPointer_ReturnsFalse()
     {
         string json = """{"name":"value"}""";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         Assert.True(Utf8JsonPointer.TryCreateJsonPointer("/nonexistent"u8, out Utf8JsonPointer pointer));
@@ -223,7 +223,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_WithLineByteOffset_ReturnsCorrectValues()
     {
         string json = "{\n  \"name\": \"value\"\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         // Root element on line 1
@@ -237,7 +237,7 @@ public static class SourceLocationTests
     public static void TryGetLineAndOffset_SecondLine_CorrectByteOffset()
     {
         string json = "{\n  \"name\": \"value\"\n}";
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         JsonElement root = doc.RootElement;
 
         JsonElement nameElement = root.GetProperty("name"u8);

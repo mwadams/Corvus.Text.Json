@@ -26,7 +26,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void ValidInstance_WithRequiredIdOnly_PassesValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc-123"}""");
 
         Assert.True(instance.EvaluateSchema());
@@ -35,7 +35,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void ValidInstance_AccessIdProperty_ReturnsExpectedValue()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc-123"}""");
 
         Assert.True(instance.Id.ValueEquals("abc-123"));
@@ -50,7 +50,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_StringPatternPropertyTreatedAsAdditional_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc","T_label":"hello"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -59,7 +59,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_NumberPatternPropertyTreatedAsAdditional_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc","N_score":3.14}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -68,7 +68,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_MixedPatternPropertiesTreatedAsAdditional_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue(
                 """{"id":"abc","T_label":"hello","N_score":3.14}""");
 
@@ -82,7 +82,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_MissingRequiredId_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"T_label":"hello"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -95,7 +95,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_UnknownAdditionalProperty_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc","unknown":"value"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -108,7 +108,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_StringPatternWithNumberValue_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc","T_label":99}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -117,7 +117,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void InvalidInstance_NumberPatternWithStringValue_FailsValidation()
     {
-        ObjectWithAllOfPatternProperties instance =
+        var instance =
             ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc","N_score":"not a number"}""");
 
         Assert.False(instance.EvaluateSchema());
@@ -130,7 +130,7 @@ public class GeneratedAllOfPatternPropertiesTests
     [Fact]
     public void Builder_WithRequiredIdOnly_ProducesValidInstance()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithAllOfPatternProperties.Mutable> builder =
             ObjectWithAllOfPatternProperties.CreateBuilder(
                 workspace,
@@ -148,7 +148,7 @@ public class GeneratedAllOfPatternPropertiesTests
             ObjectWithAllOfPatternProperties.Build(
                 static (ref ObjectWithAllOfPatternProperties.Builder b) => b.Create("xyz-789"));
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithAllOfPatternProperties.Mutable> builder =
             ObjectWithAllOfPatternProperties.CreateBuilder(workspace, source);
 
@@ -166,7 +166,7 @@ public class GeneratedAllOfPatternPropertiesTests
     {
         var instance = ObjectWithAllOfPatternProperties.ParseValue("""{"id":"abc"}""");
 
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithAllOfPatternProperties.Mutable> builder =
             instance.CreateBuilder(workspace);
 

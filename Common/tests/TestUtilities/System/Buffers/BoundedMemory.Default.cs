@@ -2,143 +2,142 @@
 // The .NET Foundation licensed this code under the MIT license.
 using System.Runtime.InteropServices;
 
-namespace System.Buffers
+namespace System.Buffers;
+
+public static unsafe partial class BoundedMemory
 {
-    public static unsafe partial class BoundedMemory
+    private static DefaultImplementation<T> AllocateWithoutDataPopulationDefault<T>(int elementCount, PoisonPagePlacement _) where T : unmanaged
     {
-        private static DefaultImplementation<T> AllocateWithoutDataPopulationDefault<T>(int elementCount, PoisonPagePlacement _) where T : unmanaged
+        // On non-Windows platforms, we don't yet have support for changing the permissions of individual pages.
+        // We'll instead use AllocHGlobal / FreeHGlobal to carve out a r+w section of unmanaged memory.
+        return new DefaultImplementation<T>(elementCount);
+    }
+
+    private sealed class AllocHGlobalHandle : SafeHandle
+    {
+        // Called by P/Invoke when returning SafeHandles
+        private AllocHGlobalHandle()
+            : base(IntPtr.Zero, ownsHandle: true)
         {
-            // On non-Windows platforms, we don't yet have support for changing the permissions of individual pages.
-            // We'll instead use AllocHGlobal / FreeHGlobal to carve out a r+w section of unmanaged memory.
-            return new DefaultImplementation<T>(elementCount);
         }
 
-        private sealed class AllocHGlobalHandle : SafeHandle
+        public override bool IsInvalid => (handle == IntPtr.Zero);
+
+        internal static AllocHGlobalHandle Allocate(nint byteLength)
         {
-            // Called by P/Invoke when returning SafeHandles
-            private AllocHGlobalHandle()
-                : base(IntPtr.Zero, ownsHandle: true)
-            {
-            }
+            var retVal = new AllocHGlobalHandle();
+            retVal.SetHandle(Marshal.AllocHGlobal(byteLength)); // this is for unit testing; don't bother setting up a CER on Full Framework
+            return retVal;
+        }
 
-            public override bool IsInvalid => (handle == IntPtr.Zero);
+        // Do not provide a finalizer - SafeHandle's critical finalizer will
+        // call ReleaseHandle for you.
+        protected override bool ReleaseHandle()
+        {
+            Marshal.FreeHGlobal(handle);
+            return true;
+        }
+    }
 
-            internal static AllocHGlobalHandle Allocate(nint byteLength)
-            {
-                AllocHGlobalHandle retVal = new AllocHGlobalHandle();
-                retVal.SetHandle(Marshal.AllocHGlobal(byteLength)); // this is for unit testing; don't bother setting up a CER on Full Framework
-                return retVal;
-            }
+    private sealed class DefaultImplementation<T> : BoundedMemory<T> where T : unmanaged
+    {
+        private readonly int _elementCount;
 
-            // Do not provide a finalizer - SafeHandle's critical finalizer will
-            // call ReleaseHandle for you.
-            protected override bool ReleaseHandle()
+        private readonly AllocHGlobalHandle _handle;
+
+        private readonly BoundedMemoryManager _memoryManager;
+
+        public DefaultImplementation(int elementCount)
+        {
+            _handle = AllocHGlobalHandle.Allocate(checked(elementCount * (nint)sizeof(T)));
+            _elementCount = elementCount;
+            _memoryManager = new BoundedMemoryManager(this);
+        }
+
+        public override bool IsReadonly => false;
+
+        public override int Length => _elementCount;
+
+        public override Memory<T> Memory => _memoryManager.Memory;
+
+        public override Span<T> Span
+        {
+            get
             {
-                Marshal.FreeHGlobal(handle);
-                return true;
+                bool refAdded = false;
+                try
+                {
+                    _handle.DangerousAddRef(ref refAdded);
+                    return new Span<T>((void*)_handle.DangerousGetHandle(), _elementCount);
+                }
+                finally
+                {
+                    if (refAdded)
+                    {
+                        _handle.DangerousRelease();
+                    }
+                }
             }
         }
 
-        private sealed class DefaultImplementation<T> : BoundedMemory<T> where T : unmanaged
+        public override void Dispose()
         {
-            private readonly int _elementCount;
+            _handle.Dispose();
+        }
 
-            private readonly AllocHGlobalHandle _handle;
+        public override void MakeReadonly()
+        {
+            // no-op
+        }
 
-            private readonly BoundedMemoryManager _memoryManager;
+        public override void MakeWriteable()
+        {
+            // no-op
+        }
 
-            public DefaultImplementation(int elementCount)
+        private sealed class BoundedMemoryManager : MemoryManager<T>
+        {
+            private readonly DefaultImplementation<T> _impl;
+
+            public BoundedMemoryManager(DefaultImplementation<T> impl)
             {
-                _handle = AllocHGlobalHandle.Allocate(checked(elementCount * (nint)sizeof(T)));
-                _elementCount = elementCount;
-                _memoryManager = new BoundedMemoryManager(this);
+                _impl = impl;
             }
 
-            public override bool IsReadonly => false;
+            public override Memory<T> Memory => CreateMemory(_impl._elementCount);
 
-            public override int Length => _elementCount;
+            public override Span<T> GetSpan() => _impl.Span;
 
-            public override Memory<T> Memory => _memoryManager.Memory;
-
-            public override Span<T> Span
+            public override MemoryHandle Pin(int elementIndex)
             {
-                get
+                if ((uint)elementIndex > (uint)_impl._elementCount)
                 {
-                    bool refAdded = false;
-                    try
+                    throw new ArgumentOutOfRangeException(paramName: nameof(elementIndex));
+                }
+
+                bool refAdded = false;
+                try
+                {
+                    _impl._handle.DangerousAddRef(ref refAdded);
+                    return new MemoryHandle((T*)_impl._handle.DangerousGetHandle() + elementIndex);
+                }
+                finally
+                {
+                    if (refAdded)
                     {
-                        _handle.DangerousAddRef(ref refAdded);
-                        return new Span<T>((void*)_handle.DangerousGetHandle(), _elementCount);
-                    }
-                    finally
-                    {
-                        if (refAdded)
-                        {
-                            _handle.DangerousRelease();
-                        }
+                        _impl._handle.DangerousRelease();
                     }
                 }
             }
 
-            public override void Dispose()
+            public override void Unpin()
             {
-                _handle.Dispose();
+                // no-op - we don't unpin native memory
             }
 
-            public override void MakeReadonly()
+            protected override void Dispose(bool disposing)
             {
-                // no-op
-            }
-
-            public override void MakeWriteable()
-            {
-                // no-op
-            }
-
-            private sealed class BoundedMemoryManager : MemoryManager<T>
-            {
-                private readonly DefaultImplementation<T> _impl;
-
-                public BoundedMemoryManager(DefaultImplementation<T> impl)
-                {
-                    _impl = impl;
-                }
-
-                public override Memory<T> Memory => CreateMemory(_impl._elementCount);
-
-                public override Span<T> GetSpan() => _impl.Span;
-
-                public override MemoryHandle Pin(int elementIndex)
-                {
-                    if ((uint)elementIndex > (uint)_impl._elementCount)
-                    {
-                        throw new ArgumentOutOfRangeException(paramName: nameof(elementIndex));
-                    }
-
-                    bool refAdded = false;
-                    try
-                    {
-                        _impl._handle.DangerousAddRef(ref refAdded);
-                        return new MemoryHandle((T*)_impl._handle.DangerousGetHandle() + elementIndex);
-                    }
-                    finally
-                    {
-                        if (refAdded)
-                        {
-                            _impl._handle.DangerousRelease();
-                        }
-                    }
-                }
-
-                public override void Unpin()
-                {
-                    // no-op - we don't unpin native memory
-                }
-
-                protected override void Dispose(bool disposing)
-                {
-                    // no-op; the handle will be disposed separately
-                }
+                // no-op; the handle will be disposed separately
             }
         }
     }

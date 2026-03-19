@@ -243,7 +243,7 @@ internal static partial class IPv4AddressHelper
                 if (dotCount >= 3 // Max of 3 dots and 4 segments
                     || !atLeastOneChar // No empty segments: 1...1
 
-                                       // Only the last segment can be more than 255 (if there are less than 3 dots)
+                    // Only the last segment can be more than 255 (if there are less than 3 dots)
                     || currentValue > 0xFF)
                 {
                     return Invalid;

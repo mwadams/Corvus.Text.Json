@@ -146,7 +146,7 @@ public class MathematicalFunctionsBenchmarks
         long sum = 0;
         for (int i = 1; i <= 10; i++)
         {
-            BigNumber result = BigNumber.Pow(this._number, i);
+            var result = BigNumber.Pow(this._number, i);
             sum += result.Exponent;
         }
         return sum;
@@ -158,7 +158,7 @@ public class MathematicalFunctionsBenchmarks
         long sum = 0;
         for (int precision = 5; precision <= 50; precision += 5)
         {
-            BigNumber result = BigNumber.Sqrt(this._number, precision);
+            var result = BigNumber.Sqrt(this._number, precision);
             sum += result.Exponent;
         }
         return sum;
@@ -170,7 +170,7 @@ public class MathematicalFunctionsBenchmarks
         long sum = 0;
         for (int decimals = 0; decimals <= 6; decimals++)
         {
-            BigNumber result = BigNumber.Round(this._decimalNumber, decimals);
+            var result = BigNumber.Round(this._decimalNumber, decimals);
             sum += (long)result.Significand;
         }
         return sum;

@@ -17,7 +17,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        var config = ManualConfig.CreateEmpty()
+        ManualConfig config = ManualConfig.CreateEmpty()
             .AddColumnProvider(DefaultColumnProviders.Instance)
             .AddLogger(ConsoleLogger.Default)
             .AddExporter(MarkdownExporter.Default);

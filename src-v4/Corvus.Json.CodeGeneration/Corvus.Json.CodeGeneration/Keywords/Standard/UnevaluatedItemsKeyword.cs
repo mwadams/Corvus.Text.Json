@@ -11,7 +11,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// The unevaluatedItems keyword.
 /// </summary>
 public sealed class UnevaluatedItemsKeyword
-    :   ISubschemaTypeBuilderKeyword,
+    : ISubschemaTypeBuilderKeyword,
         ILocalSubschemaRegistrationKeyword,
         ISubschemaProviderKeyword,
         IArrayValidationKeyword,

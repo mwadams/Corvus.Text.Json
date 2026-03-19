@@ -112,7 +112,7 @@ public sealed class TestEventListener : EventListener
 
     protected override void OnEventWritten(EventWrittenEventArgs eventData)
     {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
 #if NET || NETSTANDARD2_1_OR_GREATER
         sb.Append($"{eventData.TimeStamp:HH:mm:ss.fffffff}");
@@ -170,7 +170,7 @@ public sealed class TestEventListener : EventListener
         {
             Debug.Assert(IsActivityPath(guid));
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             byte* bytePtr = (byte*)&guid;
             byte* endPtr = bytePtr + 12;

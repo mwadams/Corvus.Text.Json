@@ -44,7 +44,7 @@ public class BenchmarkMatchIri
     public bool ValidateCorvusTextJson()
     {
         // This is normally all wrapped up in codegen; you don't have to do this yourself.
-        JsonSchemaContext context = JsonSchemaContext.BeginContext(_ctjIri!, 0, false, false);
+        var context = JsonSchemaContext.BeginContext(_ctjIri!, 0, false, false);
 
         try
         {

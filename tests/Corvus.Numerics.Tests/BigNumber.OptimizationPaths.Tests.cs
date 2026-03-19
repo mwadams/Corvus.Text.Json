@@ -2,11 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -163,7 +163,7 @@ public class BigNumberOptimizationPathsTests
     public void Normalize_LargeNumberWithManyTrailingZeros_HandlesCorrectly()
     {
         // Very large number with many trailing zeros
-        BigNumber num = BigNumber.Parse("123000000000000000000");
+        var num = BigNumber.Parse("123000000000000000000");
         BigNumber normalized = num.Normalize();
 
         normalized.Significand.ShouldBe(new BigInteger(123));
@@ -265,7 +265,7 @@ public class BigNumberOptimizationPathsTests
     {
         // At exactly 0.5, quotient is even - should NOT round up
         BigNumber num = new(125, -2); // 1.25
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
 
         // 1.25 -> quotient is 12 (even), so round down to 1.2
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.2");
@@ -276,7 +276,7 @@ public class BigNumberOptimizationPathsTests
     {
         // At exactly 0.5, quotient is odd - should round up
         BigNumber num = new(135, -2); // 1.35
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
 
         // 1.35 -> quotient is 13 (odd), so round up to 1.4
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.4");
@@ -287,7 +287,7 @@ public class BigNumberOptimizationPathsTests
     {
         // Less than 0.5 - never rounds
         BigNumber num = new(124, -2); // 1.24
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.2");
     }
@@ -297,7 +297,7 @@ public class BigNumberOptimizationPathsTests
     {
         // Greater than 0.5 - always rounds
         BigNumber num = new(126, -2); // 1.26
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToEven);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.3");
     }
@@ -307,7 +307,7 @@ public class BigNumberOptimizationPathsTests
     {
         // AwayFromZero at exact half with positive number
         BigNumber num = new(125, -2); // 1.25
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.AwayFromZero);
+        var result = BigNumber.Round(num, 1, MidpointRounding.AwayFromZero);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.3");
     }
@@ -317,7 +317,7 @@ public class BigNumberOptimizationPathsTests
     {
         // AwayFromZero at exact half with negative number
         BigNumber num = new(-125, -2); // -1.25
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.AwayFromZero);
+        var result = BigNumber.Round(num, 1, MidpointRounding.AwayFromZero);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("-1.3");
     }
@@ -328,7 +328,7 @@ public class BigNumberOptimizationPathsTests
     {
         // ToNegativeInfinity with positive - rounds down
         BigNumber num = new(127, -2); // 1.27
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToNegativeInfinity);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToNegativeInfinity);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.2");
     }
@@ -338,7 +338,7 @@ public class BigNumberOptimizationPathsTests
     {
         // ToNegativeInfinity with negative - rounds away from zero
         BigNumber num = new(-122, -2); // -1.22
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToNegativeInfinity);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToNegativeInfinity);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("-1.3");
     }
@@ -348,7 +348,7 @@ public class BigNumberOptimizationPathsTests
     {
         // ToPositiveInfinity with positive - rounds away from zero
         BigNumber num = new(121, -2); // 1.21
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToPositiveInfinity);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToPositiveInfinity);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.3");
     }
@@ -358,7 +358,7 @@ public class BigNumberOptimizationPathsTests
     {
         // ToPositiveInfinity with negative - rounds toward zero
         BigNumber num = new(-129, -2); // -1.29
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToPositiveInfinity);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToPositiveInfinity);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("-1.2");
     }
@@ -368,7 +368,7 @@ public class BigNumberOptimizationPathsTests
     {
         // ToZero with positive - always rounds down
         BigNumber num = new(129, -2); // 1.29
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToZero);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToZero);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("1.2");
     }
@@ -378,7 +378,7 @@ public class BigNumberOptimizationPathsTests
     {
         // ToZero with negative - rounds toward zero
         BigNumber num = new(-129, -2); // -1.29
-        BigNumber result = BigNumber.Round(num, 1, MidpointRounding.ToZero);
+        var result = BigNumber.Round(num, 1, MidpointRounding.ToZero);
 
         result.ToString("F1", CultureInfo.InvariantCulture).ShouldBe("-1.2");
     }

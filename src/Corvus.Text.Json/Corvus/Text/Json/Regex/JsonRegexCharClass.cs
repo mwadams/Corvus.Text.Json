@@ -303,7 +303,7 @@ internal static class JsonRegexCharClass
             UnicodeCategory.SpaceSeparator => false,
             _ => true, // We don't know (without testing the character against every other
 
-                      // character), so assume it does.
+            // character), so assume it does.
         };
     }
 

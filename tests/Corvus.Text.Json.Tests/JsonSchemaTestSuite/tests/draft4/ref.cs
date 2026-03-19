@@ -18,28 +18,28 @@ public class SuiteRootPointerRef : IClassFixture<SuiteRootPointerRef.Fixture>
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": false}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": false}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRecursiveMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": {\"foo\": false}}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": {\"foo\": false}}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": false}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": false}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRecursiveMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": {\"bar\": false}}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": {\"bar\": false}}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -78,14 +78,14 @@ public class SuiteRelativePointerRefToObject : IClassFixture<SuiteRelativePointe
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -124,14 +124,14 @@ public class SuiteRelativePointerRefToArray : IClassFixture<SuiteRelativePointer
     [Fact]
     public void TestMatchArray()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatchArray()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, \"foo\"]");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, \"foo\"]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -170,42 +170,42 @@ public class SuiteEscapedPointerRef : IClassFixture<SuiteEscapedPointerRef.Fixtu
     [Fact]
     public void TestSlashInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"slash\": \"aoeu\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"slash\": \"aoeu\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTildeInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"tilde\": \"aoeu\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"tilde\": \"aoeu\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPercentInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"percent\": \"aoeu\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"percent\": \"aoeu\"}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSlashValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"slash\": 123}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"slash\": 123}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTildeValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"tilde\": 123}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"tilde\": 123}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPercentValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"percent\": 123}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"percent\": 123}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -244,14 +244,14 @@ public class SuiteNestedRefs : IClassFixture<SuiteNestedRefs.Fixture>
     [Fact]
     public void TestNestedRefValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("5");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("5");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNestedRefInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -290,21 +290,21 @@ public class SuiteRefOverridesAnySiblingKeywords : IClassFixture<SuiteRefOverrid
     [Fact]
     public void TestRefValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": [] }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": [] }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRefValidMaxItemsIgnored()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": [ 1, 2, 3] }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": [ 1, 2, 3] }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRefInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"string\" }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"string\" }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -343,14 +343,14 @@ public class SuiteRefPreventsASiblingIdFromChangingTheBaseUri : IClassFixture<Su
     [Fact]
     public void TestRefResolvesToDefinitionsBaseFooDataDoesNotValidate()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRefResolvesToDefinitionsBaseFooDataValidates()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -389,14 +389,14 @@ public class SuiteRemoteRefContainingRefsItself : IClassFixture<SuiteRemoteRefCo
     [Fact]
     public void TestRemoteRefValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"minLength\": 1}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"minLength\": 1}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRemoteRefInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"minLength\": -1}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"minLength\": -1}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -435,14 +435,14 @@ public class SuitePropertyNamedRefThatIsNotAReference : IClassFixture<SuitePrope
     [Fact]
     public void TestPropertyNamedRefValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": \"a\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": \"a\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPropertyNamedRefInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": 2}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -481,14 +481,14 @@ public class SuitePropertyNamedRefContainingAnActualRef : IClassFixture<SuitePro
     [Fact]
     public void TestPropertyNamedRefValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": \"a\"}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": \"a\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPropertyNamedRefInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": 2}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$ref\": 2}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -527,14 +527,14 @@ public class SuiteRecursiveReferencesBetweenSchemas : IClassFixture<SuiteRecursi
     [Fact]
     public void TestValidTree()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \r\n                    \"meta\": \"root\",\r\n                    \"nodes\": [\r\n                        {\r\n                            \"value\": 1,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": 1.1},\r\n                                    {\"value\": 1.2}\r\n                                ]\r\n                            }\r\n                        },\r\n                        {\r\n                            \"value\": 2,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": 2.1},\r\n                                    {\"value\": 2.2}\r\n                                ]\r\n                            }\r\n                        }\r\n                    ]\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \r\n                    \"meta\": \"root\",\r\n                    \"nodes\": [\r\n                        {\r\n                            \"value\": 1,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": 1.1},\r\n                                    {\"value\": 1.2}\r\n                                ]\r\n                            }\r\n                        },\r\n                        {\r\n                            \"value\": 2,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": 2.1},\r\n                                    {\"value\": 2.2}\r\n                                ]\r\n                            }\r\n                        }\r\n                    ]\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidTree()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \r\n                    \"meta\": \"root\",\r\n                    \"nodes\": [\r\n                        {\r\n                            \"value\": 1,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": \"string is invalid\"},\r\n                                    {\"value\": 1.2}\r\n                                ]\r\n                            }\r\n                        },\r\n                        {\r\n                            \"value\": 2,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": 2.1},\r\n                                    {\"value\": 2.2}\r\n                                ]\r\n                            }\r\n                        }\r\n                    ]\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \r\n                    \"meta\": \"root\",\r\n                    \"nodes\": [\r\n                        {\r\n                            \"value\": 1,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": \"string is invalid\"},\r\n                                    {\"value\": 1.2}\r\n                                ]\r\n                            }\r\n                        },\r\n                        {\r\n                            \"value\": 2,\r\n                            \"subtree\": {\r\n                                \"meta\": \"child\",\r\n                                \"nodes\": [\r\n                                    {\"value\": 2.1},\r\n                                    {\"value\": 2.2}\r\n                                ]\r\n                            }\r\n                        }\r\n                    ]\r\n                }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -573,14 +573,14 @@ public class SuiteRefsWithQuote : IClassFixture<SuiteRefsWithQuote.Fixture>
     [Fact]
     public void TestObjectWithNumbersIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\\\"bar\": 1\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\\\"bar\": 1\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestObjectWithStringsIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\\\"bar\": \"1\"\r\n                }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"foo\\\"bar\": \"1\"\r\n                }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -619,14 +619,14 @@ public class SuiteLocationIndependentIdentifier : IClassFixture<SuiteLocationInd
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -665,14 +665,14 @@ public class SuiteLocationIndependentIdentifierWithBaseUriChangeInSubschema : IC
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -711,14 +711,14 @@ public class SuiteNaiveReplacementOfRefWithItsDestinationIsNotCorrect : IClassFi
     [Fact]
     public void TestDoNotEvaluateTheRefInsideTheEnumMatchingAnyString()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"this is a string\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"this is a string\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMatchTheEnumExactly()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"$ref\": \"#/definitions/a_string\" }");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"$ref\": \"#/definitions/a_string\" }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -757,14 +757,14 @@ public class SuiteIdMustBeResolvedAgainstNearestParentNotJustImmediateParent : I
     [Fact]
     public void TestNumberIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNonNumberIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -803,14 +803,14 @@ public class SuiteIdWithFileUriStillResolvesPointersNix : IClassFixture<SuiteIdW
     [Fact]
     public void TestNumberIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNonNumberIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -849,14 +849,14 @@ public class SuiteIdWithFileUriStillResolvesPointersWindows : IClassFixture<Suit
     [Fact]
     public void TestNumberIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNonNumberIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -895,14 +895,14 @@ public class SuiteEmptyTokensInRefJsonPointer : IClassFixture<SuiteEmptyTokensIn
     [Fact]
     public void TestNumberIsValid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNonNumberIsInvalid()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

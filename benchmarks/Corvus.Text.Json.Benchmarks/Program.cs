@@ -11,43 +11,42 @@ using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Running;
 using Perfolizer.Mathematics.OutlierDetection;
 
-namespace Corvus.Text.Json.Benchmarks
+namespace Corvus.Text.Json.Benchmarks;
+
+internal class Program
 {
-    internal class Program
+    private static void Main(string[] args)
     {
-        private static void Main(string[] args)
-        {
-            var config = ManualConfig.CreateEmpty()
-                .AddColumnProvider(DefaultColumnProviders.Instance) // empty config does not define any columns for the output table, we need to define it manually
-                .AddLogger(ConsoleLogger.Default)
-                .AddExporter(MarkdownExporter.Default);
+        ManualConfig config = ManualConfig.CreateEmpty()
+            .AddColumnProvider(DefaultColumnProviders.Instance) // empty config does not define any columns for the output table, we need to define it manually
+            .AddLogger(ConsoleLogger.Default)
+            .AddExporter(MarkdownExporter.Default);
 
-            config.AddJob(
-                Job.Default
-                    .WithRuntime(CoreRuntime.Core10_0)
-                    .WithOutlierMode(OutlierMode.RemoveAll)
-                    .WithStrategy(RunStrategy.Throughput));
+        config.AddJob(
+            Job.Default
+                .WithRuntime(CoreRuntime.Core10_0)
+                .WithOutlierMode(OutlierMode.RemoveAll)
+                .WithStrategy(RunStrategy.Throughput));
 
-            ////config.AddJob(
-            ////    Job.Default
-            ////        .AsBaseline()
-            ////        .WithRuntime(CoreRuntime.Core90)
-            ////        .WithOutlierMode(OutlierMode.RemoveAll)
-            ////        .WithStrategy(RunStrategy.Throughput));
+        ////config.AddJob(
+        ////    Job.Default
+        ////        .AsBaseline()
+        ////        .WithRuntime(CoreRuntime.Core90)
+        ////        .WithOutlierMode(OutlierMode.RemoveAll)
+        ////        .WithStrategy(RunStrategy.Throughput));
 
-            ////config.AddJob(
-            ////    Job.Default
-            ////        .WithRuntime(CoreRuntime.Core80)
-            ////        .WithOutlierMode(OutlierMode.RemoveAll)
-            ////        .WithStrategy(RunStrategy.Throughput));
+        ////config.AddJob(
+        ////    Job.Default
+        ////        .WithRuntime(CoreRuntime.Core80)
+        ////        .WithOutlierMode(OutlierMode.RemoveAll)
+        ////        .WithStrategy(RunStrategy.Throughput));
 
-            ////config.AddJob(
-            ////    Job.Default
-            ////        .WithRuntime(ClrRuntime.Net481)
-            ////        .WithOutlierMode(OutlierMode.RemoveAll)
-            ////        .WithStrategy(RunStrategy.Throughput));
+        ////config.AddJob(
+        ////    Job.Default
+        ////        .WithRuntime(ClrRuntime.Net481)
+        ////        .WithOutlierMode(OutlierMode.RemoveAll)
+        ////        .WithStrategy(RunStrategy.Throughput));
 
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config: config);
-        }
+        BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args, config: config);
     }
 }

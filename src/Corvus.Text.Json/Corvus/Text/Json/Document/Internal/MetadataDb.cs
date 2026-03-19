@@ -116,11 +116,11 @@ public struct MetadataDb : IDisposable
     private bool _convertToAlloc; // Convert the rented data to an alloc when complete.
     private bool _isLocked; // Is the array the correct fixed size.
 
-                            // _isLocked _convertToAlloc truth table:
-                            // false     false  Standard flow. Size is not known and renting used throughout lifetime.
-                            // true      false  Used by JsonElement.ParseValue() for primitives and JsonDocument.Clone(). Size is known and no renting.
-                            // false     true   Used by JsonElement.ParseValue() for arrays and objects. Renting used until size is known.
-                            // true      true   not valid
+    // _isLocked _convertToAlloc truth table:
+    // false     false  Standard flow. Size is not known and renting used throughout lifetime.
+    // true      false  Used by JsonElement.ParseValue() for primitives and JsonDocument.Clone(). Size is known and no renting.
+    // false     true   Used by JsonElement.ParseValue() for arrays and objects. Renting used until size is known.
+    // true      true   not valid
     private MetadataDb(byte[] initialDb, bool isLocked, bool convertToAlloc, int length = 0)
     {
         _data = initialDb;

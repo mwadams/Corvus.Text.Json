@@ -141,8 +141,7 @@ public sealed class PreferRentedWriterAnalyzer : DiagnosticAnalyzer
 
     private static bool IsJsonWorkspace(ITypeSymbol? type)
     {
-        return type is not null &&
-               type.Name == "JsonWorkspace" &&
+        return type?.Name == "JsonWorkspace" &&
                type.ContainingNamespace?.ToDisplayString() == "Corvus.Text.Json";
     }
 }

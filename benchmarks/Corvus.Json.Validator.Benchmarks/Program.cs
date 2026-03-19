@@ -13,7 +13,7 @@ using BenchmarkDotNet.Running;
 using Corvus.Json.Validator.Benchmarks;
 using Perfolizer.Mathematics.OutlierDetection;
 
-var config = ManualConfig.CreateEmpty()
+ManualConfig config = ManualConfig.CreateEmpty()
     .AddColumnProvider(DefaultColumnProviders.Instance)
     .AddLogger(ConsoleLogger.Default)
     .AddExporter(MarkdownExporter.Default);

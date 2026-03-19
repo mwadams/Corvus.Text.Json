@@ -16,7 +16,7 @@ public class ResultsCollectorTests
     [Fact]
     public void Validate_WithCollector_ValidDocument_ReturnsTrue()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 
         bool result = Schema.Validate("""{"name":"Alice","age":30}""", collector);
@@ -27,7 +27,7 @@ public class ResultsCollectorTests
     [Fact]
     public void Validate_WithCollector_InvalidDocument_ReturnsFalse()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 
         bool result = Schema.Validate("""{"name":"Alice"}""", collector);
@@ -38,7 +38,7 @@ public class ResultsCollectorTests
     [Fact]
     public void Validate_WithCollector_InvalidDocument_HasResults()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
 
         Schema.Validate("""{"name":"Alice"}""", collector);
@@ -49,7 +49,7 @@ public class ResultsCollectorTests
     [Fact]
     public void Validate_WithCollector_ValidDocument_HasNoFailureResults()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 
         Schema.Validate("""{"name":"Alice","age":30}""", collector);
@@ -77,7 +77,7 @@ public class ResultsCollectorTests
     [Fact]
     public void Validate_WithDetailedCollector_InvalidDocument_HasResults()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
 
         Schema.Validate("""{"name":"Alice"}""", collector);

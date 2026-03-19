@@ -285,7 +285,7 @@ public class Utf8UriMakeRelativeTests
         bool success = baseUriObj.TryMakeRelative(targetUriObj, buffer, out Utf8UriReference result);
 
         Assert.True(success);
-        Assert.True(result.OriginalUriReference.SequenceEqual(expectedBytes), 
+        Assert.True(result.OriginalUriReference.SequenceEqual(expectedBytes),
             $"Expected: {expectedRelative}, Actual: {JsonReaderHelper.GetTextFromUtf8(result.OriginalUriReference)}");
     }
 }

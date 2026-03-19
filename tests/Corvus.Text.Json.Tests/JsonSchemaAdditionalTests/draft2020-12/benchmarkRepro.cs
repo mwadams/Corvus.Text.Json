@@ -19,7 +19,7 @@ public class BenchmarkRepro : IClassFixture<BenchmarkRepro.Fixture>
     [Fact]
     public void TestNullIsNotAPerson()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

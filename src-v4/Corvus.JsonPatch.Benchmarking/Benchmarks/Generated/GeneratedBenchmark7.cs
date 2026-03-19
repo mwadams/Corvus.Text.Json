@@ -25,7 +25,7 @@ namespace Benchmarks
         public async Task GlobalSetup()
         {
             this.jePatch = BuildJEPatch("[{\"op\":\"test\",\"path\":\"/baz\",\"value\":\"qux\"},{\"op\":\"test\",\"path\":\"/foo/1\",\"value\":2}]");
-                
+
             this.corvusPatch = Corvus.Json.Patch.Model.JsonPatchDocument.Parse("[{\"op\":\"test\",\"path\":\"/baz\",\"value\":\"qux\"},{\"op\":\"test\",\"path\":\"/foo/1\",\"value\":2}]");
 
             await this.GlobalSetupJson("{\"baz\":\"qux\",\"foo\":[\"a\",2,\"c\"]}");
@@ -48,9 +48,9 @@ namespace Benchmarks
         {
             try
             {
-               Json.Patch.PatchResult? patchResult = this.jePatch?.Apply(ElementAsNode());
+                Json.Patch.PatchResult? patchResult = this.jePatch?.Apply(ElementAsNode());
             }
-            catch(Exception)
+            catch (Exception)
             {
                 // Swallow failures until we can diagnose the issue with running inside BMDN
                 // https://github.com/dotnet/BenchmarkDotNet/issues/2032

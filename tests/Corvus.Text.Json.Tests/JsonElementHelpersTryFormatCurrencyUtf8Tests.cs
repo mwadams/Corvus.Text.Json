@@ -2,1115 +2,1114 @@ using System.Globalization;
 using Corvus.Text.Json.Internal;
 using Xunit;
 
-namespace Corvus.Text.Json.Tests
+namespace Corvus.Text.Json.Tests;
+
+public class JsonElementHelpersTryFormatCurrencyUtf8Tests
 {
-    public class JsonElementHelpersTryFormatCurrencyUtf8Tests
+    [Theory]
+    [InlineData("1234.56", 0, "$1,235")]
+    [InlineData("1234.56", 2, "$1,234.56")]
+    [InlineData("1234567.89", 2, "$1,234,567.89")]
+    [InlineData("123.456", 2, "$123.46")]
+    public void TryFormatCurrency_WithPositiveNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        [Theory]
-        [InlineData("1234.56", 0, "$1,235")]
-        [InlineData("1234.56", 2, "$1,234.56")]
-        [InlineData("1234567.89", 2, "$1,234,567.89")]
-        [InlineData("123.456", 2, "$123.46")]
-        public void TryFormatCurrency_WithPositiveNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
+
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0, // $n
+            CurrencyNegativePattern = 1  // -$n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0, // $n
-                CurrencyNegativePattern = 1  // -$n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Theory]
+    [InlineData("-1234.56", 0, "-$1,235")]
+    [InlineData("-1234.56", 2, "-$1,234.56")]
+    [InlineData("-123.456", 2, "-$123.46")]
+    public void TryFormatCurrency_WithNegativeNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("-1234.56", 0, "-$1,235")]
-        [InlineData("-1234.56", 2, "-$1,234.56")]
-        [InlineData("-123.456", 2, "-$123.46")]
-        public void TryFormatCurrency_WithNegativeNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0, // $n
+            CurrencyNegativePattern = 1  // -$n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0, // $n
-                CurrencyNegativePattern = 1  // -$n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern0_FormatsAsParentheses()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern0_FormatsAsParentheses()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 0  // ($n)
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 0  // ($n)
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("($1,234.56)", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("($1,234.56)", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_PositivePattern1_FormatsAsNumberCurrency()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_PositivePattern1_FormatsAsNumberCurrency()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 1  // n$
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 1  // n$
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("1,234.56$", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("1,234.56$", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_UsesCustomCurrencySymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_UsesCustomCurrencySymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "€",
+            CurrencyGroupSeparator = ".",
+            CurrencyDecimalSeparator = ",",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "€",
-                CurrencyGroupSeparator = ".",
-                CurrencyDecimalSeparator = ",",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("€1.234,56", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("€1.234,56", result);
-        }
+    [Theory]
+    [InlineData("0.00123", 5, "$0.00123")]
+    [InlineData("0.999", 2, "$1.00")]
+    public void TryFormatCurrency_WithSmallNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("0.00123", 5, "$0.00123")]
-        [InlineData("0.999", 2, "$1.00")]
-        public void TryFormatCurrency_WithSmallNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Theory]
+    [InlineData("0", 2, "$0.00")]
+    [InlineData("0.0", 2, "$0.00")]
+    public void TryFormatCurrency_WithZero_FormatsCorrectly(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("0", 2, "$0.00")]
-        [InlineData("0.0", 2, "$0.00")]
-        public void TryFormatCurrency_WithZero_FormatsCorrectly(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Theory]
+    [InlineData("123.456", 2, "$123.46")]
+    [InlineData("123.454", 2, "$123.45")]
+    [InlineData("123.455", 2, "$123.46")]
+    public void TryFormatCurrency_RoundsCorrectly(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("123.456", 2, "$123.46")]
-        [InlineData("123.454", 2, "$123.45")]
-        [InlineData("123.455", 2, "$123.46")]
-        public void TryFormatCurrency_RoundsCorrectly(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Fact]
+    public void TryFormatCurrency_ReturnsFalseWhenBufferTooSmall()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_ReturnsFalseWhenBufferTooSmall()
+        Span<byte> destination = stackalloc byte[5];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[5];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.False(success);
+        Assert.Equal(0, bytesWritten);
+    }
 
-            Assert.False(success);
-            Assert.Equal(0, bytesWritten);
-        }
+    [Fact]
+    public void TryFormatCurrency_UsesDefaultPrecision()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234.567");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_UsesDefaultPrecision()
+        Span<byte> destination = stackalloc byte[100];
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo; // Default CurrencyDecimalDigits is 2
+
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            formatInfo.CurrencyDecimalDigits,
+            formatInfo);
+
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("¤1,234.57", result); // ¤ is the InvariantInfo currency symbol
+    }
+
+    [Theory]
+    [InlineData("999.99", 0, "$1,000")]
+    [InlineData("999.99", 1, "$1,000.0")]
+    [InlineData("9999.99", 0, "$10,000")]
+    [InlineData("99999.99", 0, "$100,000")]
+    [InlineData("999999.99", 0, "$1,000,000")]
+    [InlineData("9999999.99", 0, "$10,000,000")]
+    public void TryFormatCurrency_RoundingCarriesMultiplePowersOfTen(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
+
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234.567");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = NumberFormatInfo.InvariantInfo; // Default CurrencyDecimalDigits is 2
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                formatInfo.CurrencyDecimalDigits,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("¤1,234.57", result); // ¤ is the InvariantInfo currency symbol
-        }
+    [Theory]
+    [InlineData("-999.99", 0, "-$1,000")]
+    [InlineData("-9999.99", 0, "-$10,000")]
+    [InlineData("-99999.99", 0, "-$100,000")]
+    public void TryFormatCurrency_NegativeRoundingCarriesMultiplePowersOfTen(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("999.99", 0, "$1,000")]
-        [InlineData("999.99", 1, "$1,000.0")]
-        [InlineData("9999.99", 0, "$10,000")]
-        [InlineData("99999.99", 0, "$100,000")]
-        [InlineData("999999.99", 0, "$1,000,000")]
-        [InlineData("9999999.99", 0, "$10,000,000")]
-        public void TryFormatCurrency_RoundingCarriesMultiplePowersOfTen(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0,
+            CurrencyNegativePattern = 1  // -$n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Fact]
+    public void TryFormatCurrency_WithMultiCharacterCurrencySymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("-999.99", 0, "-$1,000")]
-        [InlineData("-9999.99", 0, "-$10,000")]
-        [InlineData("-99999.99", 0, "-$100,000")]
-        public void TryFormatCurrency_NegativeRoundingCarriesMultiplePowersOfTen(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "USD",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0  // $n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0,
-                CurrencyNegativePattern = 1  // -$n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            0,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("USD1,235", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Fact]
+    public void TryFormatCurrency_WithMultiCharacterGroupSeparator()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234567.89");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_WithMultiCharacterCurrencySymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = " ",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "USD",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0  // $n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                0,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("$1 234 567.89", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("USD1,235", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_WithMultiCharacterDecimalSeparator()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_WithMultiCharacterGroupSeparator()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234567.89");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ":::",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = " ",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("$1,234:::56", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("$1 234 567.89", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_RoundingWithMultiCharacterSeparators()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("999.99");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_WithMultiCharacterDecimalSeparator()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "EUR",
+            CurrencyGroupSeparator = " ",
+            CurrencyDecimalSeparator = ",",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ":::",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            0,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("EUR1 000", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("$1,234:::56", result);
-        }
+    [Theory]
+    [InlineData("999.995", 2, "$1,000.00")]
+    [InlineData("999.994", 2, "$999.99")]
+    [InlineData("999.9999", 3, "$1,000.000")]
+    public void TryFormatCurrency_RoundingWithFractionalPrecision(string jsonNumber, int precision, string expected)
+    {
+        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_RoundingWithMultiCharacterSeparators()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("999.99");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyPositivePattern = 0
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "EUR",
-                CurrencyGroupSeparator = " ",
-                CurrencyDecimalSeparator = ",",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            precision,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                0,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal(expected, result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("EUR1 000", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern2_FormatsAsSymbolMinusNumber()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Theory]
-        [InlineData("999.995", 2, "$1,000.00")]
-        [InlineData("999.994", 2, "$999.99")]
-        [InlineData("999.9999", 3, "$1,000.000")]
-        public void TryFormatCurrency_RoundingWithFractionalPrecision(string jsonNumber, int precision, string expected)
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 2  // $-n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyPositivePattern = 0
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                precision,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("$-1,234.56", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal(expected, result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern3_FormatsAsSymbolNumberMinus()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern2_FormatsAsSymbolMinusNumber()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 3  // $n-
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 2  // $-n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("$1,234.56-", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("$-1,234.56", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern4_FormatsAsParenthesesNumberSymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern3_FormatsAsSymbolNumberMinus()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 4  // (n$)
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 3  // $n-
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("(1,234.56$)", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("$1,234.56-", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern5_FormatsAsMinusNumberSymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern4_FormatsAsParenthesesNumberSymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 5  // -n$
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 4  // (n$)
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("-1,234.56$", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("(1,234.56$)", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern6_FormatsAsNumberMinusSymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern5_FormatsAsMinusNumberSymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 6  // n-$
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 5  // -n$
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("1,234.56-$", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("-1,234.56$", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern7_FormatsAsNumberSymbolMinus()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern6_FormatsAsNumberMinusSymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 7  // n$-
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 6  // n-$
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("1,234.56$-", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("1,234.56-$", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern8_FormatsAsMinusNumberSpaceSymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern7_FormatsAsNumberSymbolMinus()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 8  // -n $
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 7  // n$-
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("-1,234.56 $", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("1,234.56$-", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern9_FormatsAsMinusSymbolSpaceNumber()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern8_FormatsAsMinusNumberSpaceSymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 9  // -$ n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 8  // -n $
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("-$ 1,234.56", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("-1,234.56 $", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern10_FormatsAsNumberSpaceSymbolMinus()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern9_FormatsAsMinusSymbolSpaceNumber()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 10  // n $-
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 9  // -$ n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("1,234.56 $-", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("-$ 1,234.56", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern11_FormatsAsSymbolSpaceNumberMinus()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern10_FormatsAsNumberSpaceSymbolMinus()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 11  // $ n-
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 10  // n $-
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("$ 1,234.56-", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("1,234.56 $-", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern12_FormatsAsSymbolSpaceMinusNumber()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern11_FormatsAsSymbolSpaceNumberMinus()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 12  // $ -n
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 11  // $ n-
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("$ -1,234.56", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("$ 1,234.56-", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern13_FormatsAsNumberMinusSpaceSymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern12_FormatsAsSymbolSpaceMinusNumber()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 13  // n- $
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 12  // $ -n
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("1,234.56- $", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("$ -1,234.56", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern14_FormatsAsParenthesesSymbolSpaceNumber()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern13_FormatsAsNumberMinusSpaceSymbol()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 14  // ($ n)
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 13  // n- $
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("($ 1,234.56)", result);
+    }
 
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("1,234.56- $", result);
-        }
+    [Fact]
+    public void TryFormatCurrency_NegativePattern15_FormatsAsParenthesesNumberSpaceSymbol()
+    {
+        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        JsonElementHelpers.ParseNumber(
+            utf8,
+            out bool isNegative,
+            out ReadOnlySpan<byte> integral,
+            out ReadOnlySpan<byte> fractional,
+            out int exponent);
 
-        [Fact]
-        public void TryFormatCurrency_NegativePattern14_FormatsAsParenthesesSymbolSpaceNumber()
+        Span<byte> destination = stackalloc byte[100];
+        var formatInfo = new NumberFormatInfo
         {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
+            CurrencySymbol = "$",
+            CurrencyGroupSeparator = ",",
+            CurrencyDecimalSeparator = ".",
+            CurrencyNegativePattern = 15  // (n $)
+        };
 
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 14  // ($ n)
-            };
+        bool success = JsonElementHelpers.TryFormatCurrency(
+            isNegative,
+            integral,
+            fractional,
+            exponent,
+            destination,
+            out int bytesWritten,
+            2,
+            formatInfo);
 
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
-
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("($ 1,234.56)", result);
-        }
-
-        [Fact]
-        public void TryFormatCurrency_NegativePattern15_FormatsAsParenthesesNumberSpaceSymbol()
-        {
-            var utf8 = Encoding.UTF8.GetBytes("-1234.56");
-            JsonElementHelpers.ParseNumber(
-                utf8,
-                out bool isNegative,
-                out ReadOnlySpan<byte> integral,
-                out ReadOnlySpan<byte> fractional,
-                out int exponent);
-
-            Span<byte> destination = stackalloc byte[100];
-            var formatInfo = new NumberFormatInfo
-            {
-                CurrencySymbol = "$",
-                CurrencyGroupSeparator = ",",
-                CurrencyDecimalSeparator = ".",
-                CurrencyNegativePattern = 15  // (n $)
-            };
-
-            bool success = JsonElementHelpers.TryFormatCurrency(
-                isNegative,
-                integral,
-                fractional,
-                exponent,
-                destination,
-                out int bytesWritten,
-                2,
-                formatInfo);
-
-            Assert.True(success);
-            string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
-            Assert.Equal("(1,234.56 $)", result);
-        }
+        Assert.True(success);
+        string result = JsonReaderHelper.TranscodeHelper(destination.Slice(0, bytesWritten));
+        Assert.Equal("(1,234.56 $)", result);
     }
 }

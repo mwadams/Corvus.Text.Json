@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -26,15 +26,15 @@ public class BenchmarkDeeplyNestedParsing
     public int ParseDeeplyNestedCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(deeplyNestedJson!);
-        var root = document.RootElement;
-        
+        Corvus.Text.Json.JsonElement root = document.RootElement;
+
         int depth = 0;
-        var current = root;
-        
+        Corvus.Text.Json.JsonElement current = root;
+
         while (current.ValueKind == Corvus.Text.Json.JsonValueKind.Object)
         {
             depth++;
-            if (current.TryGetProperty("nested", out var nestedElement))
+            if (current.TryGetProperty("nested", out Corvus.Text.Json.JsonElement nestedElement))
             {
                 current = nestedElement;
             }
@@ -43,7 +43,7 @@ public class BenchmarkDeeplyNestedParsing
                 break;
             }
         }
-        
+
         return depth;
     }
 
@@ -51,15 +51,15 @@ public class BenchmarkDeeplyNestedParsing
     public int ParseDeeplyNestedSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(deeplyNestedJson!);
-        var root = document.RootElement;
-        
+        System.Text.Json.JsonElement root = document.RootElement;
+
         int depth = 0;
-        var current = root;
-        
+        System.Text.Json.JsonElement current = root;
+
         while (current.ValueKind == System.Text.Json.JsonValueKind.Object)
         {
             depth++;
-            if (current.TryGetProperty("nested", out var nestedElement))
+            if (current.TryGetProperty("nested", out System.Text.Json.JsonElement nestedElement))
             {
                 current = nestedElement;
             }
@@ -68,7 +68,7 @@ public class BenchmarkDeeplyNestedParsing
                 break;
             }
         }
-        
+
         return depth;
     }
 
@@ -77,7 +77,7 @@ public class BenchmarkDeeplyNestedParsing
     private static string GenerateDeeplyNestedJson()
     {
         var sb = new StringBuilder();
-        
+
         for (int i = 0; i < 50; i++)
         {
             sb.Append("{");
@@ -85,7 +85,7 @@ public class BenchmarkDeeplyNestedParsing
             sb.Append($"\"name\": \"Level {i}\", ");
             sb.Append($"\"value\": {i * 10.5:F1}, ");
             sb.Append($"\"active\": {(i % 2 == 0).ToString().ToLower()}, ");
-            
+
             if (i < 49)
             {
                 sb.Append("\"nested\": ");
@@ -95,12 +95,12 @@ public class BenchmarkDeeplyNestedParsing
                 sb.Append("\"leaf\": \"final value\"");
             }
         }
-        
+
         for (int i = 0; i < 50; i++)
         {
             sb.Append("}");
         }
-        
+
         return sb.ToString();
     }
 

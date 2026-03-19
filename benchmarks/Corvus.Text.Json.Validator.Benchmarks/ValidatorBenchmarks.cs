@@ -120,7 +120,7 @@ public class ValidDocumentBenchmarks : ValidatorBenchmarksBase
     [Benchmark]
     public bool Validate()
     {
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(this.json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(this.json);
         return this.schema.Validate(doc.RootElement);
     }
 }
@@ -140,7 +140,7 @@ public class InvalidDocumentBenchmarks : ValidatorBenchmarksBase
     [Benchmark]
     public bool Validate()
     {
-        using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(this.json);
+        using var doc = ParsedJsonDocument<JsonElement>.Parse(this.json);
         return this.schema.Validate(doc.RootElement);
     }
 }

@@ -61,7 +61,7 @@ public sealed class FixedStringJsonDocument<T> : IJsonDocument
     public T RootElement => JsonElementHelpers.CreateInstance<T>(this, 0);
 #endif
 
-    void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) { throw new NotSupportedException();  }
+    void IJsonDocument.AppendElementToMetadataDb(int index, JsonWorkspace workspace, ref MetadataDb db) { throw new NotSupportedException(); }
 
     int IJsonDocument.BuildRentedMetadataDb(int parentDocumentIndex, JsonWorkspace workspace, out byte[] rentedBacking) { throw new NotSupportedException(); }
 

@@ -355,7 +355,7 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
             return document;
         }
 
-        BlockSyntax? block = containingStatement.Parent as BlockSyntax;
+        var block = containingStatement.Parent as BlockSyntax;
 
         // Find an existing JsonWorkspace variable in scope.
         string? existingWorkspaceName = block is not null
@@ -449,7 +449,7 @@ public sealed class CreateFactoryCodeFix : CodeFixProvider
         StatementSyntax statement,
         string variableName)
     {
-        List<IdentifierNameSyntax> identifiers = statement
+        var identifiers = statement
             .DescendantNodes()
             .OfType<IdentifierNameSyntax>()
             .Where(id => id.Identifier.Text == variableName)

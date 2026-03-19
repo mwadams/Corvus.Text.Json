@@ -418,8 +418,8 @@ public static class BigNumberTestData
     public static BigInteger GetSignificand(Corvus.Numerics.BigNumber bigNumber)
     {
         // Since BigNumber might not expose Significand publicly, we'll use reflection or parse from string
-        var type = typeof(Corvus.Numerics.BigNumber);
-        var significandProperty = type.GetProperty("Significand", BindingFlags.Public | BindingFlags.Instance);
+        Type type = typeof(Corvus.Numerics.BigNumber);
+        PropertyInfo significandProperty = type.GetProperty("Significand", BindingFlags.Public | BindingFlags.Instance);
         if (significandProperty != null)
         {
             return (BigInteger)significandProperty.GetValue(bigNumber)!;
@@ -441,8 +441,8 @@ public static class BigNumberTestData
     public static int GetExponent(Corvus.Numerics.BigNumber bigNumber)
     {
         // Since BigNumber might not expose Exponent publicly, we'll use reflection or parse from string
-        var type = typeof(Corvus.Numerics.BigNumber);
-        var exponentProperty = type.GetProperty("Exponent", BindingFlags.Public | BindingFlags.Instance);
+        Type type = typeof(Corvus.Numerics.BigNumber);
+        PropertyInfo exponentProperty = type.GetProperty("Exponent", BindingFlags.Public | BindingFlags.Instance);
         if (exponentProperty != null)
         {
             return (int)exponentProperty.GetValue(bigNumber)!;
@@ -465,7 +465,7 @@ public static class BigNumberTestData
     {
         Assert.True(success, $"Should successfully parse: '{input}'");
 
-        var actualSignificand = GetSignificand(result);
+        BigInteger actualSignificand = GetSignificand(result);
         var actualExponent = GetExponent(result);
 
         Assert.True(expectedSignificand.Equals(actualSignificand),

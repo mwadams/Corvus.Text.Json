@@ -25,7 +25,7 @@ public class SerializationEquivalenceTests
     [Fact]
     public void V4_WriteTo_ProducesValidJson()
     {
-        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        var v4 = V4.MigrationPerson.Parse(PersonJson);
         ArrayBufferWriter<byte> buffer = new();
         using System.Text.Json.Utf8JsonWriter writer = new(buffer);
         v4.WriteTo(writer);
@@ -40,7 +40,7 @@ public class SerializationEquivalenceTests
     public void V4_WriteTo_ProducesValidJson_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
         V4.MigrationPerson v4 = parsedV4.Instance;
         ArrayBufferWriter<byte> buffer = new();
         using System.Text.Json.Utf8JsonWriter writer = new(buffer);
@@ -54,7 +54,7 @@ public class SerializationEquivalenceTests
     [Fact]
     public void V5_WriteTo_ProducesValidJson()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
         // V5 uses Corvus.Text.Json.Utf8JsonWriter (not System.Text.Json)
         ArrayBufferWriter<byte> buffer = new();
@@ -69,9 +69,9 @@ public class SerializationEquivalenceTests
     [Fact]
     public void V4_ToString_RoundTrips()
     {
-        V4.MigrationPerson v4 = V4.MigrationPerson.Parse(PersonJson);
+        var v4 = V4.MigrationPerson.Parse(PersonJson);
         string serialized = v4.ToString();
-        V4.MigrationPerson reparsed = V4.MigrationPerson.Parse(serialized);
+        var reparsed = V4.MigrationPerson.Parse(serialized);
         Assert.Equal("Jo", (string)reparsed.Name);
         Assert.Equal(30, (int)reparsed.Age);
     }
@@ -80,10 +80,10 @@ public class SerializationEquivalenceTests
     public void V4_ToString_RoundTrips_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
         V4.MigrationPerson v4 = parsedV4.Instance;
         string serialized = v4.ToString();
-        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedReparsed = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(serialized);
+        using var parsedReparsed = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(serialized);
         V4.MigrationPerson reparsed = parsedReparsed.Instance;
         Assert.Equal("Jo", (string)reparsed.Name);
         Assert.Equal(30, (int)reparsed.Age);
@@ -92,10 +92,10 @@ public class SerializationEquivalenceTests
     [Fact]
     public void V5_ToString_RoundTrips()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
         string serialized = v5.ToString();
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5Reparsed = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(serialized);
+        using var parsedV5Reparsed = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(serialized);
         V5.MigrationPerson reparsed = parsedV5Reparsed.RootElement;
         Assert.Equal("Jo", (string)reparsed.Name);
         Assert.Equal(30, (int)reparsed.Age);
@@ -104,9 +104,9 @@ public class SerializationEquivalenceTests
     [Fact]
     public void V4_ArrayToString_RoundTrips()
     {
-        V4.MigrationItemArray v4 = V4.MigrationItemArray.Parse(ArrayJson);
+        var v4 = V4.MigrationItemArray.Parse(ArrayJson);
         string serialized = v4.ToString();
-        V4.MigrationItemArray reparsed = V4.MigrationItemArray.Parse(serialized);
+        var reparsed = V4.MigrationItemArray.Parse(serialized);
         Assert.Equal(2, reparsed.GetArrayLength());
         Assert.Equal(1, (int)reparsed[0].Id);
     }
@@ -115,10 +115,10 @@ public class SerializationEquivalenceTests
     public void V4_ArrayToString_RoundTrips_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
         V4.MigrationItemArray v4 = parsedV4.Instance;
         string serialized = v4.ToString();
-        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedReparsed = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(serialized);
+        using var parsedReparsed = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(serialized);
         V4.MigrationItemArray reparsed = parsedReparsed.Instance;
         Assert.Equal(2, reparsed.GetArrayLength());
         Assert.Equal(1, (int)reparsed[0].Id);
@@ -127,10 +127,10 @@ public class SerializationEquivalenceTests
     [Fact]
     public void V5_ArrayToString_RoundTrips()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(ArrayJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(ArrayJson);
         V5.MigrationItemArray v5 = parsedV5.RootElement;
         string serialized = v5.ToString();
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray> parsedV5Reparsed = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(serialized);
+        using var parsedV5Reparsed = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(serialized);
         V5.MigrationItemArray reparsed = parsedV5Reparsed.RootElement;
         Assert.Equal(2, reparsed.GetArrayLength());
         Assert.Equal(1, (int)reparsed[0].Id);
@@ -139,10 +139,10 @@ public class SerializationEquivalenceTests
     [Fact]
     public void BothEngines_ProduceSameJson()
     {
-        using Corvus.Json.ParsedValue<V4.MigrationPerson> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationPerson>.Parse(PersonJson);
         V4.MigrationPerson v4 = parsedV4.Instance;
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationPerson>.Parse(PersonJson);
         V5.MigrationPerson v5 = parsedV5.RootElement;
 
         Assert.Equal(v4.ToString(), v5.ToString());
@@ -151,10 +151,10 @@ public class SerializationEquivalenceTests
     [Fact]
     public void BothEngines_ArrayProduceSameJson()
     {
-        using Corvus.Json.ParsedValue<V4.MigrationItemArray> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationItemArray>.Parse(ArrayJson);
         V4.MigrationItemArray v4 = parsedV4.Instance;
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(ArrayJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationItemArray>.Parse(ArrayJson);
         V5.MigrationItemArray v5 = parsedV5.RootElement;
 
         Assert.Equal(v4.ToString(), v5.ToString());

@@ -1,9 +1,9 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
+using System.Text;
 using BenchmarkDotNet.Attributes;
 using Corvus.Text.Json;
-using System.Text;
 
 namespace JsonParsingBenchmarks;
 
@@ -49,18 +49,18 @@ public class BenchmarkHighThroughputJsonParsing
     public int ProcessBatchApiResponseCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(batchApiResponseJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int totalProcessed = 0;
 
-        if (root.TryGetProperty("data"u8, out var dataElement) &&
-            dataElement.TryGetProperty("users"u8, out var usersElement) &&
+        if (root.TryGetProperty("data"u8, out Corvus.Text.Json.JsonElement dataElement) &&
+            dataElement.TryGetProperty("users"u8, out Corvus.Text.Json.JsonElement usersElement) &&
             usersElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var user in usersElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement user in usersElement.EnumerateArray())
             {
                 // Simulate processing each user
-                if (user.TryGetProperty("active"u8, out var activeElement) && activeElement.GetBoolean())
+                if (user.TryGetProperty("active"u8, out Corvus.Text.Json.JsonElement activeElement) && activeElement.GetBoolean())
                 {
                     totalProcessed++;
                 }
@@ -74,18 +74,18 @@ public class BenchmarkHighThroughputJsonParsing
     public int ProcessBatchApiResponseSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(batchApiResponseJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int totalProcessed = 0;
 
-        if (root.TryGetProperty("data"u8, out var dataElement) &&
-            dataElement.TryGetProperty("users"u8, out var usersElement) &&
+        if (root.TryGetProperty("data"u8, out System.Text.Json.JsonElement dataElement) &&
+            dataElement.TryGetProperty("users"u8, out System.Text.Json.JsonElement usersElement) &&
             usersElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var user in usersElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement user in usersElement.EnumerateArray())
             {
                 // Simulate processing each user
-                if (user.TryGetProperty("active"u8, out var activeElement) && activeElement.GetBoolean())
+                if (user.TryGetProperty("active"u8, out System.Text.Json.JsonElement activeElement) && activeElement.GetBoolean())
                 {
                     totalProcessed++;
                 }
@@ -103,17 +103,17 @@ public class BenchmarkHighThroughputJsonParsing
     public int ProcessBatchApiResponseFromBytesCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(batchApiResponseBytes!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int totalProcessed = 0;
 
-        if (root.TryGetProperty("data", out var dataElement) &&
-            dataElement.TryGetProperty("users", out var usersElement) &&
+        if (root.TryGetProperty("data", out Corvus.Text.Json.JsonElement dataElement) &&
+            dataElement.TryGetProperty("users", out Corvus.Text.Json.JsonElement usersElement) &&
             usersElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var user in usersElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement user in usersElement.EnumerateArray())
             {
-                if (user.TryGetProperty("active", out var activeElement) && activeElement.GetBoolean())
+                if (user.TryGetProperty("active", out Corvus.Text.Json.JsonElement activeElement) && activeElement.GetBoolean())
                 {
                     totalProcessed++;
                 }
@@ -127,17 +127,17 @@ public class BenchmarkHighThroughputJsonParsing
     public int ProcessBatchApiResponseFromBytesSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(batchApiResponseBytes!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int totalProcessed = 0;
 
-        if (root.TryGetProperty("data", out var dataElement) &&
-            dataElement.TryGetProperty("users", out var usersElement) &&
+        if (root.TryGetProperty("data", out System.Text.Json.JsonElement dataElement) &&
+            dataElement.TryGetProperty("users", out System.Text.Json.JsonElement usersElement) &&
             usersElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var user in usersElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement user in usersElement.EnumerateArray())
             {
-                if (user.TryGetProperty("active", out var activeElement) && activeElement.GetBoolean())
+                if (user.TryGetProperty("active", out System.Text.Json.JsonElement activeElement) && activeElement.GetBoolean())
                 {
                     totalProcessed++;
                 }
@@ -155,18 +155,18 @@ public class BenchmarkHighThroughputJsonParsing
     public (int, int, int) ProcessLogEntriesCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(logEntriesJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int errorCount = 0;
         int warningCount = 0;
         int infoCount = 0;
 
-        if (root.TryGetProperty("logs"u8, out var logsElement) &&
+        if (root.TryGetProperty("logs"u8, out Corvus.Text.Json.JsonElement logsElement) &&
             logsElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var logEntry in logsElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement logEntry in logsElement.EnumerateArray())
             {
-                if (logEntry.TryGetProperty("level"u8, out var levelElement))
+                if (logEntry.TryGetProperty("level"u8, out Corvus.Text.Json.JsonElement levelElement))
                 {
                     using UnescapedUtf8JsonString level = levelElement.GetUtf8String();
                     ReadOnlySpan<byte> levelText = level.Span;
@@ -179,7 +179,7 @@ public class BenchmarkHighThroughputJsonParsing
                         warningCount++;
                     }
                     else if (levelText.SequenceEqual("info"u8))
-                    { 
+                    {
                         infoCount++;
                     }
                 }
@@ -193,18 +193,18 @@ public class BenchmarkHighThroughputJsonParsing
     public (int, int, int) ProcessLogEntriesSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(logEntriesJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int errorCount = 0;
         int warningCount = 0;
         int infoCount = 0;
 
-        if (root.TryGetProperty("logs", out var logsElement) &&
+        if (root.TryGetProperty("logs", out System.Text.Json.JsonElement logsElement) &&
             logsElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var logEntry in logsElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement logEntry in logsElement.EnumerateArray())
             {
-                if (logEntry.TryGetProperty("level", out var levelElement))
+                if (logEntry.TryGetProperty("level", out System.Text.Json.JsonElement levelElement))
                 {
                     var level = levelElement.GetString();
                     switch (level)
@@ -234,23 +234,23 @@ public class BenchmarkHighThroughputJsonParsing
     public (double, double, int) ProcessMetricsDataCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(metricsDataJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         double totalValue = 0.0;
         double maxValue = double.MinValue;
         int dataPointCount = 0;
 
-        if (root.TryGetProperty("metrics", out var metricsElement) &&
+        if (root.TryGetProperty("metrics", out Corvus.Text.Json.JsonElement metricsElement) &&
             metricsElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var metric in metricsElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement metric in metricsElement.EnumerateArray())
             {
-                if (metric.TryGetProperty("dataPoints"u8, out var dataPointsElement) &&
+                if (metric.TryGetProperty("dataPoints"u8, out Corvus.Text.Json.JsonElement dataPointsElement) &&
                     dataPointsElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
                 {
-                    foreach (var dataPoint in dataPointsElement.EnumerateArray())
+                    foreach (Corvus.Text.Json.JsonElement dataPoint in dataPointsElement.EnumerateArray())
                     {
-                        if (dataPoint.TryGetProperty("value"u8, out var valueElement) &&
+                        if (dataPoint.TryGetProperty("value"u8, out Corvus.Text.Json.JsonElement valueElement) &&
                             valueElement.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
                         {
                             double value = valueElement.GetDouble();
@@ -270,23 +270,23 @@ public class BenchmarkHighThroughputJsonParsing
     public (double, double, int) ProcessMetricsDataSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(metricsDataJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         double totalValue = 0.0;
         double maxValue = double.MinValue;
         int dataPointCount = 0;
 
-        if (root.TryGetProperty("metrics"u8, out var metricsElement) &&
+        if (root.TryGetProperty("metrics"u8, out System.Text.Json.JsonElement metricsElement) &&
             metricsElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var metric in metricsElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement metric in metricsElement.EnumerateArray())
             {
-                if (metric.TryGetProperty("dataPoints"u8, out var dataPointsElement) &&
+                if (metric.TryGetProperty("dataPoints"u8, out System.Text.Json.JsonElement dataPointsElement) &&
                     dataPointsElement.ValueKind == System.Text.Json.JsonValueKind.Array)
                 {
-                    foreach (var dataPoint in dataPointsElement.EnumerateArray())
+                    foreach (System.Text.Json.JsonElement dataPoint in dataPointsElement.EnumerateArray())
                     {
-                        if (dataPoint.TryGetProperty("value"u8, out var valueElement) &&
+                        if (dataPoint.TryGetProperty("value"u8, out System.Text.Json.JsonElement valueElement) &&
                             valueElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                         {
                             double value = valueElement.GetDouble();
@@ -310,26 +310,26 @@ public class BenchmarkHighThroughputJsonParsing
     public (int, decimal, int) ProcessDataExportCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(dataExportJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int recordCount = 0;
         decimal totalAmount = 0m;
         UnescapedUtf8JsonString lastCustomer = default;
 
-        if (root.TryGetProperty("records"u8, out var recordsElement) &&
+        if (root.TryGetProperty("records"u8, out Corvus.Text.Json.JsonElement recordsElement) &&
             recordsElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var record in recordsElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement record in recordsElement.EnumerateArray())
             {
                 recordCount++;
 
-                if (record.TryGetProperty("amountu8", out var amountElement) &&
+                if (record.TryGetProperty("amountu8", out Corvus.Text.Json.JsonElement amountElement) &&
                     amountElement.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
                 {
                     totalAmount += (decimal)amountElement.GetDouble();
                 }
 
-                if (record.TryGetProperty("customerName"u8, out var customerElement))
+                if (record.TryGetProperty("customerName"u8, out Corvus.Text.Json.JsonElement customerElement))
                 {
                     lastCustomer = customerElement.GetUtf8String();
                 }
@@ -343,26 +343,26 @@ public class BenchmarkHighThroughputJsonParsing
     public (int, decimal, int) ProcessDataExportSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(dataExportJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int recordCount = 0;
         decimal totalAmount = 0m;
         string? lastCustomer = null;
 
-        if (root.TryGetProperty("records"u8, out var recordsElement) &&
+        if (root.TryGetProperty("records"u8, out System.Text.Json.JsonElement recordsElement) &&
             recordsElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var record in recordsElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement record in recordsElement.EnumerateArray())
             {
                 recordCount++;
 
-                if (record.TryGetProperty("amount"u8, out var amountElement) &&
+                if (record.TryGetProperty("amount"u8, out System.Text.Json.JsonElement amountElement) &&
                     amountElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {
                     totalAmount += (decimal)amountElement.GetDouble();
                 }
 
-                if (record.TryGetProperty("customerName"u8, out var customerElement))
+                if (record.TryGetProperty("customerName"u8, out System.Text.Json.JsonElement customerElement))
                 {
                     lastCustomer = customerElement.GetString();
                 }

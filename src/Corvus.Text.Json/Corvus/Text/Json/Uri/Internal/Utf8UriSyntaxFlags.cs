@@ -47,5 +47,5 @@ internal enum Utf8UriSyntaxFlags
     AllowIdn = 0x4000000,    // IDN host conversion allowed
     AllowIriParsing = 0x10000000,   // Iri parsing. String is normalized, bidi control
 
-                                    // characters are removed, unicode char limits are checked etc.
+    // characters are removed, unicode char limits are checked etc.
 }

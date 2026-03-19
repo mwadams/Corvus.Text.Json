@@ -4,8 +4,8 @@
 
 using System.Globalization;
 using System.Text;
-using Xunit;
 using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -185,7 +185,7 @@ public class BigNumberTryParseJsonUtf8Tests
     public void TryParseJsonUtf8_InvalidFormat_ReturnsFalse()
     {
         ReadOnlySpan<byte> utf8 = "not-a-number"u8;
-        bool success = BigNumber.TryParseJsonUtf8(utf8, out BigNumber result);
+        bool success = BigNumber.TryParseJsonUtf8(utf8, out _);
 
         success.ShouldBeFalse();
     }
@@ -244,7 +244,7 @@ public class BigNumberTryParseJsonUtf8Tests
     [Fact]
     public void TryParseJsonUtf8_RoundtripLargeNumber_Succeeds()
     {
-        BigNumber original = BigNumber.Parse("123456789012345678901234567890.123456789");
+        var original = BigNumber.Parse("123456789012345678901234567890.123456789");
 
         // Format to UTF-8
         Span<byte> utf8Buffer = stackalloc byte[256];
@@ -261,7 +261,7 @@ public class BigNumberTryParseJsonUtf8Tests
     [Fact]
     public void TryParseJsonUtf8_VariousFormats_AllSucceed()
     {
-        var testCases = new[]
+        (string, BigNumber)[] testCases = new[]
         {
             ("0", BigNumber.Zero),
             ("1", new BigNumber(1, 0)),
@@ -276,7 +276,7 @@ public class BigNumberTryParseJsonUtf8Tests
             ("-12E-5", new BigNumber(-12, -5)),
         };
 
-        foreach (var (input, expected) in testCases)
+        foreach ((string? input, BigNumber expected) in testCases)
         {
             byte[] utf8Bytes = Encoding.UTF8.GetBytes(input);
             bool success = BigNumber.TryParseJsonUtf8(utf8Bytes, out BigNumber result);
@@ -297,7 +297,7 @@ public class BigNumberTryParseJsonUtf8Tests
 
         for (int i = 0; i < 1000; i++)
         {
-            bool success = BigNumber.TryParseJsonUtf8(utf8, out BigNumber result);
+            bool success = BigNumber.TryParseJsonUtf8(utf8, out _);
             success.ShouldBeTrue();
         }
     }
@@ -306,7 +306,7 @@ public class BigNumberTryParseJsonUtf8Tests
     public void TryParseJsonUtf8_DirectUtf8Parsing_NoCharConversion()
     {
         // Verify that parsing works correctly without char conversion
-        var testCases = new[]
+        (string, BigNumber)[] testCases = new[]
         {
             ("0", BigNumber.Zero),
             ("123", new BigNumber(123, 0)),
@@ -320,7 +320,7 @@ public class BigNumberTryParseJsonUtf8Tests
             ("  -456.78E-5  ", BigNumber.Parse("-456.78E-5")),
         };
 
-        foreach (var (input, expected) in testCases)
+        foreach ((string? input, BigNumber expected) in testCases)
         {
             byte[] utf8 = Encoding.UTF8.GetBytes(input);
             bool success = BigNumber.TryParseJsonUtf8(utf8, out BigNumber result);

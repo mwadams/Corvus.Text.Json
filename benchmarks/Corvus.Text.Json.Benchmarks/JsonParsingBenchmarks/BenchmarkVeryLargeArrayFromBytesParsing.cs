@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -27,12 +27,12 @@ public class BenchmarkVeryLargeArrayFromBytesParsing
     public int ParseVeryLargeArrayFromBytesCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(veryLargeArrayBytes!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }
@@ -45,12 +45,12 @@ public class BenchmarkVeryLargeArrayFromBytesParsing
     public int ParseVeryLargeArrayFromBytesSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(veryLargeArrayBytes!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (System.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }

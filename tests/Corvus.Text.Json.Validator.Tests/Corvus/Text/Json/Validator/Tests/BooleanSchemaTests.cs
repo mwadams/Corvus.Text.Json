@@ -19,7 +19,7 @@ public class BooleanSchemaTests
             "Schemas",
             "boolean-true.json");
 
-        JsonSchema schema = JsonSchema.FromFile(schemaPath);
+        var schema = JsonSchema.FromFile(schemaPath);
 
         Assert.True(schema.Validate("\"hello\""));
         Assert.True(schema.Validate("42"));
@@ -37,7 +37,7 @@ public class BooleanSchemaTests
             "Schemas",
             "boolean-false.json");
 
-        JsonSchema schema = JsonSchema.FromFile(schemaPath);
+        var schema = JsonSchema.FromFile(schemaPath);
 
         Assert.False(schema.Validate("\"hello\""));
         Assert.False(schema.Validate("42"));
@@ -50,7 +50,7 @@ public class BooleanSchemaTests
     [Fact]
     public void TrueSchema_FromText()
     {
-        JsonSchema schema = JsonSchema.FromText(
+        var schema = JsonSchema.FromText(
             "true",
             "https://example.com/test/boolean-true-text");
 
@@ -61,7 +61,7 @@ public class BooleanSchemaTests
     [Fact]
     public void FalseSchema_FromText()
     {
-        JsonSchema schema = JsonSchema.FromText(
+        var schema = JsonSchema.FromText(
             "false",
             "https://example.com/test/boolean-false-text");
 
@@ -72,10 +72,10 @@ public class BooleanSchemaTests
     [Fact]
     public void TrueSchema_WithResultsCollector_ReturnsTrue()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 
-        JsonSchema schema = JsonSchema.FromText(
+        var schema = JsonSchema.FromText(
             "true",
             "https://example.com/test/boolean-true-collector");
 
@@ -85,10 +85,10 @@ public class BooleanSchemaTests
     [Fact]
     public void FalseSchema_WithResultsCollector_ReturnsFalse()
     {
-        using JsonSchemaResultsCollector collector =
+        using var collector =
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 
-        JsonSchema schema = JsonSchema.FromText(
+        var schema = JsonSchema.FromText(
             "false",
             "https://example.com/test/boolean-false-collector");
 

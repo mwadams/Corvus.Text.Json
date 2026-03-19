@@ -157,63 +157,63 @@ public class UriTemplate
         switch (order)
         {
             case QueryStringParameterOrder.Strict:
+            {
+                IUriTemplateParser? parser = this.parser;
+
+                if (parser == null)
                 {
-                    IUriTemplateParser? parser = this.parser;
-
-                    if (parser == null)
+                    parser = UriTemplateParserFactory.CreateParser(this.template);
+                    lock (this.lockObject)
                     {
-                        parser = UriTemplateParserFactory.CreateParser(this.template);
-                        lock (this.lockObject)
-                        {
-                            this.parser = parser;
-                        }
+                        this.parser = parser;
                     }
+                }
 
-                    var parameters = new Dictionary<string, object>();
+                var parameters = new Dictionary<string, object>();
 
-                    if (parser.ParseUri(uri.OriginalString.AsSpan(), AddResults, ref parameters))
+                if (parser.ParseUri(uri.OriginalString.AsSpan(), AddResults, ref parameters))
+                {
+                    return parameters;
+                }
+                else
+                {
+                    return null;
+                }
+
+                static void AddResults(bool reset, ReadOnlySpan<char> name, ReadOnlySpan<char> value, ref Dictionary<string, object> results)
+                {
+                    if (reset)
                     {
-                        return parameters;
+                        results.Clear();
                     }
                     else
                     {
-                        return null;
-                    }
-
-                    static void AddResults(bool reset, ReadOnlySpan<char> name, ReadOnlySpan<char> value, ref Dictionary<string, object> results)
-                    {
-                        if (reset)
-                        {
-                            results.Clear();
-                        }
-                        else
-                        {
-                            // Note we are making no attempt to make this low-allocation
-                            results.Add(name.ToString(), Uri.UnescapeDataString(value.ToString()));
-                        }
+                        // Note we are making no attempt to make this low-allocation
+                        results.Add(name.ToString(), Uri.UnescapeDataString(value.ToString()));
                     }
                 }
+            }
 
             case QueryStringParameterOrder.Any:
+            {
+                if (!uri.IsAbsoluteUri)
                 {
-                    if (!uri.IsAbsoluteUri)
-                    {
-                        uri = new Uri(ComponentBaseUri, uri);
-                    }
-
-                    string uriString = uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path | UriComponents.Fragment, UriFormat.UriEscaped);
-                    var uriWithoutQuery = new Uri(uriString, UriKind.Absolute);
-
-                    IDictionary<string, object> pathParameters = this.GetParameters(uriWithoutQuery) ?? new Dictionary<string, object>(this.parameters.Comparer);
-
-                    HashSet<string> parameterNames = this.GetParameterNamesHashSet();
-
-                    (HashSet<string> ParameterNames, IDictionary<string, object> PathParameters) parameterState = (parameterNames, pathParameters);
-
-                    uri.GetQueryStringParameters(MatchParameterNames, ref parameterState);
-
-                    return pathParameters.Count == 0 ? null : pathParameters;
+                    uri = new Uri(ComponentBaseUri, uri);
                 }
+
+                string uriString = uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path | UriComponents.Fragment, UriFormat.UriEscaped);
+                var uriWithoutQuery = new Uri(uriString, UriKind.Absolute);
+
+                IDictionary<string, object> pathParameters = this.GetParameters(uriWithoutQuery) ?? new Dictionary<string, object>(this.parameters.Comparer);
+
+                HashSet<string> parameterNames = this.GetParameterNamesHashSet();
+
+                (HashSet<string> ParameterNames, IDictionary<string, object> PathParameters) parameterState = (parameterNames, pathParameters);
+
+                uri.GetQueryStringParameters(MatchParameterNames, ref parameterState);
+
+                return pathParameters.Count == 0 ? null : pathParameters;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(order), order, null);
@@ -232,38 +232,38 @@ public class UriTemplate
         switch (order)
         {
             case QueryStringParameterOrder.Strict:
-                {
-                    IUriTemplateParser? parser = this.parser;
+            {
+                IUriTemplateParser? parser = this.parser;
 
-                    if (parser == null)
+                if (parser == null)
+                {
+                    parser = UriTemplateParserFactory.CreateParser(this.template);
+                    lock (this.lockObject)
                     {
-                        parser = UriTemplateParserFactory.CreateParser(this.template);
-                        lock (this.lockObject)
-                        {
-                            this.parser = parser;
-                        }
+                        this.parser = parser;
                     }
+                }
 
                 return parser.IsMatch(uri.OriginalString.AsSpan());
             }
 
             case QueryStringParameterOrder.Any:
+            {
+                if (!uri.IsAbsoluteUri)
                 {
-                    if (!uri.IsAbsoluteUri)
-                    {
-                        uri = new Uri(ComponentBaseUri, uri);
-                    }
-
-                    IDictionary<string, object> pathParameters = new Dictionary<string, object>(this.parameters.Comparer);
-
-                    HashSet<string> parameterNames = this.GetParameterNamesHashSet();
-
-                    (HashSet<string> ParameterNames, IDictionary<string, object> PathParameters) parameterState = (parameterNames, pathParameters);
-
-                    uri.GetQueryStringParameters(MatchParameterNames, ref parameterState);
-
-                    return pathParameters.Count != 0;
+                    uri = new Uri(ComponentBaseUri, uri);
                 }
+
+                IDictionary<string, object> pathParameters = new Dictionary<string, object>(this.parameters.Comparer);
+
+                HashSet<string> parameterNames = this.GetParameterNamesHashSet();
+
+                (HashSet<string> ParameterNames, IDictionary<string, object> PathParameters) parameterState = (parameterNames, pathParameters);
+
+                uri.GetQueryStringParameters(MatchParameterNames, ref parameterState);
+
+                return pathParameters.Count != 0;
+            }
 
             default:
                 throw new ArgumentOutOfRangeException(nameof(order), order, null);

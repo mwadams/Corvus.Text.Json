@@ -76,7 +76,6 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
         IPropertySymbol? accessedProperty = null;
 
-
         ITypeSymbol? typeSymbol;
         if (node is VariableDeclaratorSyntax variableDeclarator)
         {
@@ -164,7 +163,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
 
         // If the type's SchemaLocation contains a full URL with $id, resolve the
         // schema file by matching $id in AdditionalDocuments.
-        if (schemaInfo is null && schemaLocation is not null && schemaLocation.Length > 0)
+        if (schemaInfo is null && schemaLocation?.Length > 0)
         {
             string? baseUrl = ExtractBaseUrl(schemaLocation);
             if (baseUrl is not null)
@@ -253,7 +252,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         SchemaInfo? schemaInfo = FindSchemaInfo(containingType, project, cancellationToken);
         string? schemaLocation = GetSchemaLocation(containingType);
 
-        if (schemaInfo is null && schemaLocation is not null && schemaLocation.Length > 0)
+        if (schemaInfo is null && schemaLocation?.Length > 0)
         {
             string? baseUrl = ExtractBaseUrl(schemaLocation);
             if (baseUrl is not null)
@@ -418,7 +417,7 @@ public sealed class SchemaNavigationRefactoring : CodeRefactoringProvider
         Project project,
         CancellationToken cancellationToken)
     {
-        string idPattern = "\"$id\"";
+        const string idPattern = "\"$id\"";
 
         foreach (TextDocument doc in project.AdditionalDocuments)
         {

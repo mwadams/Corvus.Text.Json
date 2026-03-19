@@ -215,7 +215,7 @@ file static class ConstValidationHandlerExtensions
         string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
         generator
             .AppendSeparatorLine()
-            .AppendLineIndent("if (tokenType == JsonTokenType.", expectation ? "True" : "False",  ")")
+            .AppendLineIndent("if (tokenType == JsonTokenType.", expectation ? "True" : "False", ")")
             .AppendLineIndent("{")
             .PushIndent()
                 .AppendLineIndent("context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedBoolean", expectation ? "True" : "False", ", ", formattedKeyword, "u8);")

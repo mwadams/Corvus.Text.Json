@@ -168,8 +168,7 @@ public static class PublicCodeGeneratorExtensions
             .Append(".WithResult(isValid: ")
             .Append(isValid ? "true" : "false")
             .Append(", ");
-
-        if (reducedPathModifier is string rpm)
+        if (reducedPathModifier is string)
         {
             Debug.Assert(!withKeyword, "You cannot use the reduced path modifier and the keyword");
             generator
@@ -226,8 +225,7 @@ public static class PublicCodeGeneratorExtensions
             .Append(".WithResult(isValid: ")
             .Append(isValid ? "true" : "false")
             .Append(", ");
-
-        if (reducedPathModifier is string rpm)
+        if (reducedPathModifier is string)
         {
             Debug.Assert(!withKeyword, "You cannot use the reduced path modifier and the keyword");
             generator

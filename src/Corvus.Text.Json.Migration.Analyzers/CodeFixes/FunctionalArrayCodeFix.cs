@@ -269,7 +269,7 @@ public sealed class FunctionalArrayCodeFix : CodeFixProvider
 
         // Rebuild the block to replace the statement and rewrite the
         // receiver variable's type to .Mutable.
-        BlockSyntax? block = containingStatement.Parent as BlockSyntax;
+        var block = containingStatement.Parent as BlockSyntax;
         if (block is not null)
         {
             var newBlockStatements = new List<StatementSyntax>();

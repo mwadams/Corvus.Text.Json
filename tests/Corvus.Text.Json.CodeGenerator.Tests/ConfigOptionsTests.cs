@@ -28,8 +28,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithAdditionalFiles_ResolvesExternalRef()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.AdditionalFiles",
             outputPath = _outputDir,
             typesToGenerate = new[]
@@ -67,8 +66,7 @@ public class ConfigOptionsTests : IDisposable
         string schemaPath = Path.Combine(schemasDir, "person-with-ref.json");
         string addressPath = Path.Combine(schemasDir, "address.json");
 
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.NamedTypes",
             outputPath = _outputDir,
             typesToGenerate = new[]
@@ -114,8 +112,7 @@ public class ConfigOptionsTests : IDisposable
         string schemaPath = Path.Combine(schemasDir, "person-with-ref.json");
         string addressPath = Path.Combine(schemasDir, "address.json");
 
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.WithNamespace",
             outputPath = _outputDir,
             typesToGenerate = new[]
@@ -165,8 +162,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithOutputRootNamespace_OverridesDefault()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Default",
             outputPath = _outputDir,
             typesToGenerate = new[]
@@ -200,8 +196,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithUseUnixLineEndings_GeneratesLfOnly()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Unix",
             outputPath = _outputDir,
             useUnixLineEndings = true,
@@ -228,8 +223,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithAddExplicitUsings_IncludesUsingStatements()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Usings",
             outputPath = _outputDir,
             addExplicitUsings = true,
@@ -259,8 +253,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithoutAddExplicitUsings_OmitsStandardUsings()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.NoUsings",
             outputPath = _outputDir,
             addExplicitUsings = false,
@@ -291,8 +284,7 @@ public class ConfigOptionsTests : IDisposable
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
         string mapFile = Path.Combine(_outputDir, "generated.map.json");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Map",
             outputPath = _outputDir,
             outputMapFile = mapFile,
@@ -320,8 +312,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithAssertFormat_ProducesFiles()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Format",
             outputPath = _outputDir,
             assertFormat = true,
@@ -344,8 +335,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithOptionalAsNullable_ProducesFiles()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Nullable",
             outputPath = _outputDir,
             optionalAsNullable = "NullOrUndefined",
@@ -371,8 +361,7 @@ public class ConfigOptionsTests : IDisposable
         string schemaPath = Path.Combine(schemasDir, "person-with-ref.json");
         string addressPath = Path.Combine(schemasDir, "address.json");
 
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.NsMapped",
             outputPath = _outputDir,
             typesToGenerate = new[]
@@ -406,8 +395,7 @@ public class ConfigOptionsTests : IDisposable
     public async Task Config_WithSchemaVariant_Draft201909_ProducesFiles()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated.Draft201909",
             outputPath = _outputDir,
             useSchema = "Draft201909",

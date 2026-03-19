@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -56,12 +56,12 @@ public class BenchmarkSpecializedJsonParsing
     public int ParseVeryLargeArrayCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(veryLargeArrayJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }
@@ -74,12 +74,12 @@ public class BenchmarkSpecializedJsonParsing
     public int ParseVeryLargeArraySystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(veryLargeArrayJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (System.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }
@@ -92,12 +92,12 @@ public class BenchmarkSpecializedJsonParsing
     public int ParseVeryLargeArrayFromBytesCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(veryLargeArrayBytes!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }
@@ -110,12 +110,12 @@ public class BenchmarkSpecializedJsonParsing
     public int ParseVeryLargeArrayFromBytesSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(veryLargeArrayBytes!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (System.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }
@@ -132,13 +132,13 @@ public class BenchmarkSpecializedJsonParsing
     public string? ParseDeeplyNestedCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(deeplyNestedJson!);
-        var current = document.RootElement;
+        Corvus.Text.Json.JsonElement current = document.RootElement;
 
         // Navigate to the deepest level
         string? deepValue = null;
         for (int i = 0; i < 10; i++)
         {
-            if (current.TryGetProperty($"level{i}", out var nextLevel))
+            if (current.TryGetProperty($"level{i}", out Corvus.Text.Json.JsonElement nextLevel))
             {
                 current = nextLevel;
             }
@@ -148,7 +148,7 @@ public class BenchmarkSpecializedJsonParsing
             }
         }
 
-        if (current.TryGetProperty("value", out var valueElement))
+        if (current.TryGetProperty("value", out Corvus.Text.Json.JsonElement valueElement))
         {
             deepValue = valueElement.GetString();
         }
@@ -160,13 +160,13 @@ public class BenchmarkSpecializedJsonParsing
     public string? ParseDeeplyNestedSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(deeplyNestedJson!);
-        var current = document.RootElement;
+        System.Text.Json.JsonElement current = document.RootElement;
 
         // Navigate to the deepest level
         string? deepValue = null;
         for (int i = 0; i < 10; i++)
         {
-            if (current.TryGetProperty($"level{i}", out var nextLevel))
+            if (current.TryGetProperty($"level{i}", out System.Text.Json.JsonElement nextLevel))
             {
                 current = nextLevel;
             }
@@ -176,7 +176,7 @@ public class BenchmarkSpecializedJsonParsing
             }
         }
 
-        if (current.TryGetProperty("value", out var valueElement))
+        if (current.TryGetProperty("value", out System.Text.Json.JsonElement valueElement))
         {
             deepValue = valueElement.GetString();
         }
@@ -192,7 +192,7 @@ public class BenchmarkSpecializedJsonParsing
     public (string?, string?, int) ParseManyPropertiesCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(manyPropertiesJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         // Trigger property map creation for efficient access
         root.EnsurePropertyMap();
@@ -204,7 +204,7 @@ public class BenchmarkSpecializedJsonParsing
         // Access ALL properties using TryGetProperty to test property lookup performance
         for (int i = 0; i < 200; i++)
         {
-            if (root.TryGetProperty($"property{i}", out var element))
+            if (root.TryGetProperty($"property{i}", out Corvus.Text.Json.JsonElement element))
             {
                 accessedProperties++;
                 if (i == 0) firstProperty = element.GetString();
@@ -219,7 +219,7 @@ public class BenchmarkSpecializedJsonParsing
     public (string?, string?, int) ParseManyPropertiesSystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(manyPropertiesJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         string? firstProperty = null;
         string? lastProperty = null;
@@ -228,7 +228,7 @@ public class BenchmarkSpecializedJsonParsing
         // Access ALL properties using TryGetProperty to test property lookup performance
         for (int i = 0; i < 200; i++)
         {
-            if (root.TryGetProperty($"property{i}", out var element))
+            if (root.TryGetProperty($"property{i}", out System.Text.Json.JsonElement element))
             {
                 accessedProperties++;
                 if (i == 0) firstProperty = element.GetString();
@@ -247,10 +247,10 @@ public class BenchmarkSpecializedJsonParsing
     public string? ParseEscapeHeavyCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(escapeHeavyJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         string? combinedText = null;
-        if (root.TryGetProperty("escapedText", out var textElement))
+        if (root.TryGetProperty("escapedText", out Corvus.Text.Json.JsonElement textElement))
         {
             combinedText = textElement.GetString();
         }
@@ -262,10 +262,10 @@ public class BenchmarkSpecializedJsonParsing
     public string? ParseEscapeHeavySystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(escapeHeavyJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         string? combinedText = null;
-        if (root.TryGetProperty("escapedText", out var textElement))
+        if (root.TryGetProperty("escapedText", out System.Text.Json.JsonElement textElement))
         {
             combinedText = textElement.GetString();
         }
@@ -281,16 +281,16 @@ public class BenchmarkSpecializedJsonParsing
     public (double, double, int) ParseNumberHeavyCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(numberHeavyJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         double sum = 0.0;
         double max = double.MinValue;
         int count = 0;
 
-        if (root.TryGetProperty("numbers", out var numbersElement) &&
+        if (root.TryGetProperty("numbers", out Corvus.Text.Json.JsonElement numbersElement) &&
             numbersElement.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var numberElement in numbersElement.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement numberElement in numbersElement.EnumerateArray())
             {
                 if (numberElement.ValueKind == Corvus.Text.Json.JsonValueKind.Number)
                 {
@@ -309,16 +309,16 @@ public class BenchmarkSpecializedJsonParsing
     public (double, double, int) ParseNumberHeavySystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(numberHeavyJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         double sum = 0.0;
         double max = double.MinValue;
         int count = 0;
 
-        if (root.TryGetProperty("numbers", out var numbersElement) &&
+        if (root.TryGetProperty("numbers", out System.Text.Json.JsonElement numbersElement) &&
             numbersElement.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var numberElement in numbersElement.EnumerateArray())
+            foreach (System.Text.Json.JsonElement numberElement in numbersElement.EnumerateArray())
             {
                 if (numberElement.ValueKind == System.Text.Json.JsonValueKind.Number)
                 {

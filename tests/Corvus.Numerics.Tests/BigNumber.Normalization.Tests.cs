@@ -2,12 +2,13 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
+
 public class BigNumberNormalizationTests
 {
     [Fact]
@@ -56,7 +57,7 @@ public class BigNumberNormalizationTests
     [Fact]
     public void Normalize_LargeNumberWithTrailingZeros_Succeeds()
     {
-        BigInteger significand = BigInteger.Parse("999999999999999999999999999999000000");
+        var significand = BigInteger.Parse("999999999999999999999999999999000000");
         BigNumber value = new(significand, -10);
 
         BigNumber normalized = value.Normalize();
@@ -107,7 +108,7 @@ public class BigNumberNormalizationTests
     [Fact]
     public void Parse_Number_ProducesCorrectSignificandAndExponent()
     {
-        BigNumber parsed = BigNumber.Parse("123.456");
+        var parsed = BigNumber.Parse("123.456");
 
         // Should be 123456 × 10^-3
         parsed.Significand.ShouldBe(new BigInteger(123456));
@@ -117,7 +118,7 @@ public class BigNumberNormalizationTests
     [Fact]
     public void Parse_NumberWithTrailingZeros_CanBeNormalized()
     {
-        BigNumber parsed = BigNumber.Parse("123.4500");
+        var parsed = BigNumber.Parse("123.4500");
 
         BigNumber normalized = parsed.Normalize();
         normalized.Significand.ShouldBe(new BigInteger(1234500) / 100);
@@ -151,7 +152,7 @@ public class BigNumberNormalizationTests
     {
         // Number with 50 trailing zeros
         string fiftyZeros = "1" + new string('0', 50);
-        BigInteger significand = BigInteger.Parse(fiftyZeros);
+        var significand = BigInteger.Parse(fiftyZeros);
         BigNumber value = new(significand, -10);
 
         BigNumber normalized = value.Normalize();

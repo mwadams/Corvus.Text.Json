@@ -18,14 +18,14 @@ public class SuiteReferenceOfARootArbitraryKeyword : IClassFixture<SuiteReferenc
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteReferenceOfARootArbitraryKeywordWithEncodedRef : IClassFixture
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -110,14 +110,14 @@ public class SuiteReferenceOfAnArbitraryKeywordOfASubSchema : IClassFixture<Suit
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -156,14 +156,14 @@ public class SuiteReferenceInternalsOfKnownNonApplicator : IClassFixture<SuiteRe
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string\"");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("42");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("42");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -202,14 +202,14 @@ public class SuiteReferenceOfAnArbitraryKeywordOfASubSchemaWithEncodedRef : ICla
     [Fact]
     public void TestMatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": 3}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"bar\": true}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

@@ -5,90 +5,89 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace System.IO
+namespace System.IO;
+
+// Helpers to write Memory<byte> to Stream on netstandard 2.0
+internal static class StreamExtensions
 {
-    // Helpers to write Memory<byte> to Stream on netstandard 2.0
-    internal static class StreamExtensions
+    public static ValueTask<int> ReadAsync(this Stream stream, Memory<byte> buffer, CancellationToken cancellationToken = default)
     {
-        public static ValueTask<int> ReadAsync(this Stream stream, Memory<byte> buffer, CancellationToken cancellationToken = default)
+        if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
         {
-            if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
-            {
-                return new ValueTask<int>(stream.ReadAsync(array.Array, array.Offset, array.Count, cancellationToken));
-            }
-            else
-            {
-                byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length);
-                return FinishReadAsync(stream.ReadAsync(sharedBuffer, 0, buffer.Length, cancellationToken), sharedBuffer, buffer);
-
-                static async ValueTask<int> FinishReadAsync(Task<int> readTask, byte[] localBuffer, Memory<byte> localDestination)
-                {
-                    try
-                    {
-                        int result = await readTask.ConfigureAwait(false);
-
-                        new Span<byte>(localBuffer, 0, result).CopyTo(localDestination.Span);
-                        return result;
-                    }
-                    finally
-                    {
-                        ArrayPool<byte>.Shared.Return(localBuffer);
-                    }
-                }
-            }
+            return new ValueTask<int>(stream.ReadAsync(array.Array, array.Offset, array.Count, cancellationToken));
         }
-
-        public static void Write(this Stream stream, ReadOnlyMemory<byte> buffer)
+        else
         {
-            if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
+            byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length);
+            return FinishReadAsync(stream.ReadAsync(sharedBuffer, 0, buffer.Length, cancellationToken), sharedBuffer, buffer);
+
+            static async ValueTask<int> FinishReadAsync(Task<int> readTask, byte[] localBuffer, Memory<byte> localDestination)
             {
-                stream.Write(array.Array, array.Offset, array.Count);
-            }
-            else
-            {
-                byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length);
                 try
                 {
-                    buffer.Span.CopyTo(sharedBuffer);
-                    stream.Write(sharedBuffer, 0, buffer.Length);
+                    int result = await readTask.ConfigureAwait(false);
+
+                    new Span<byte>(localBuffer, 0, result).CopyTo(localDestination.Span);
+                    return result;
                 }
                 finally
                 {
-                    ArrayPool<byte>.Shared.Return(sharedBuffer);
+                    ArrayPool<byte>.Shared.Return(localBuffer);
                 }
             }
         }
+    }
 
-        public static ValueTask WriteAsync(this Stream stream, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+    public static void Write(this Stream stream, ReadOnlyMemory<byte> buffer)
+    {
+        if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
         {
-            if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
-            {
-                return new ValueTask(stream.WriteAsync(array.Array, array.Offset, array.Count, cancellationToken));
-            }
-            else
-            {
-                byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length);
-                buffer.Span.CopyTo(sharedBuffer);
-                return new ValueTask(FinishWriteAsync(stream.WriteAsync(sharedBuffer, 0, buffer.Length, cancellationToken), sharedBuffer));
-            }
+            stream.Write(array.Array, array.Offset, array.Count);
         }
-
-        private static async Task FinishWriteAsync(Task writeTask, byte[] localBuffer)
+        else
         {
+            byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length);
             try
             {
-                await writeTask.ConfigureAwait(false);
+                buffer.Span.CopyTo(sharedBuffer);
+                stream.Write(sharedBuffer, 0, buffer.Length);
             }
             finally
             {
-                ArrayPool<byte>.Shared.Return(localBuffer);
+                ArrayPool<byte>.Shared.Return(sharedBuffer);
             }
         }
+    }
 
-        public static Task CopyToAsync(this Stream source, Stream destination, CancellationToken cancellationToken = default)
+    public static ValueTask WriteAsync(this Stream stream, ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
+    {
+        if (MemoryMarshal.TryGetArray(buffer, out ArraySegment<byte> array))
         {
-            const int DefaultBufferSize = 81920;
-            return source.CopyToAsync(destination, DefaultBufferSize, cancellationToken);
+            return new ValueTask(stream.WriteAsync(array.Array, array.Offset, array.Count, cancellationToken));
         }
+        else
+        {
+            byte[] sharedBuffer = ArrayPool<byte>.Shared.Rent(buffer.Length);
+            buffer.Span.CopyTo(sharedBuffer);
+            return new ValueTask(FinishWriteAsync(stream.WriteAsync(sharedBuffer, 0, buffer.Length, cancellationToken), sharedBuffer));
+        }
+    }
+
+    private static async Task FinishWriteAsync(Task writeTask, byte[] localBuffer)
+    {
+        try
+        {
+            await writeTask.ConfigureAwait(false);
+        }
+        finally
+        {
+            ArrayPool<byte>.Shared.Return(localBuffer);
+        }
+    }
+
+    public static Task CopyToAsync(this Stream source, Stream destination, CancellationToken cancellationToken = default)
+    {
+        const int DefaultBufferSize = 81920;
+        return source.CopyToAsync(destination, DefaultBufferSize, cancellationToken);
     }
 }

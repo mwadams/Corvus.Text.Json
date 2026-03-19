@@ -23,7 +23,7 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void V4_TryGetNumericValues()
     {
-        V4.MigrationIntVector v4 = V4.MigrationIntVector.Parse(VectorJson);
+        var v4 = V4.MigrationIntVector.Parse(VectorJson);
         Span<int> values = stackalloc int[3];
         Assert.True(v4.TryGetNumericValues(values, out int written));
         Assert.Equal(3, written);
@@ -36,7 +36,7 @@ public class NumericArrayEquivalenceTests
     public void V4_TryGetNumericValues_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationIntVector> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
         V4.MigrationIntVector v4 = parsedV4.Instance;
         Span<int> values = stackalloc int[3];
         Assert.True(v4.TryGetNumericValues(values, out int written));
@@ -49,7 +49,7 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void V5_TryGetNumericValues()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
         V5.MigrationIntVector v5 = parsedV5.RootElement;
         Span<int> values = stackalloc int[3];
         Assert.True(v5.TryGetNumericValues(values, out int written));
@@ -62,7 +62,7 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void V4_ElementAccess()
     {
-        V4.MigrationIntVector v4 = V4.MigrationIntVector.Parse(VectorJson);
+        var v4 = V4.MigrationIntVector.Parse(VectorJson);
         Assert.Equal(10, (int)v4[0]);
         Assert.Equal(20, (int)v4[1]);
         Assert.Equal(30, (int)v4[2]);
@@ -72,7 +72,7 @@ public class NumericArrayEquivalenceTests
     public void V4_ElementAccess_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationIntVector> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
         V4.MigrationIntVector v4 = parsedV4.Instance;
         Assert.Equal(10, (int)v4[0]);
         Assert.Equal(20, (int)v4[1]);
@@ -82,7 +82,7 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void V5_ElementAccess()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
         V5.MigrationIntVector v5 = parsedV5.RootElement;
         Assert.Equal(10, (int)v5[0]);
         Assert.Equal(20, (int)v5[1]);
@@ -108,7 +108,7 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void V4_GetArrayLength()
     {
-        V4.MigrationIntVector v4 = V4.MigrationIntVector.Parse(VectorJson);
+        var v4 = V4.MigrationIntVector.Parse(VectorJson);
         Assert.Equal(3, v4.GetArrayLength());
     }
 
@@ -116,7 +116,7 @@ public class NumericArrayEquivalenceTests
     public void V4_GetArrayLength_ParsedValue()
     {
         // Preferred V4 pattern: ParsedValue<T> manages the underlying JsonDocument lifetime.
-        using Corvus.Json.ParsedValue<V4.MigrationIntVector> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
         V4.MigrationIntVector v4 = parsedV4.Instance;
         Assert.Equal(3, v4.GetArrayLength());
     }
@@ -124,7 +124,7 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void V5_GetArrayLength()
     {
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
         V5.MigrationIntVector v5 = parsedV5.RootElement;
         Assert.Equal(3, v5.GetArrayLength());
     }
@@ -132,10 +132,10 @@ public class NumericArrayEquivalenceTests
     [Fact]
     public void BothEngines_SameNumericValues()
     {
-        using Corvus.Json.ParsedValue<V4.MigrationIntVector> parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationIntVector>.Parse(VectorJson);
         V4.MigrationIntVector v4 = parsedV4.Instance;
 
-        using Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector> parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
+        using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationIntVector>.Parse(VectorJson);
         V5.MigrationIntVector v5 = parsedV5.RootElement;
 
         Span<int> v4Values = stackalloc int[3];
@@ -157,7 +157,7 @@ public class NumericArrayEquivalenceTests
     public void V4_FromValues()
     {
         // V4: static FromValues(ReadOnlySpan<int>) creates a vector directly.
-        V4.MigrationIntVector v4 = V4.MigrationIntVector.FromValues([10, 20, 30]);
+        var v4 = V4.MigrationIntVector.FromValues([10, 20, 30]);
         Assert.Equal(3, v4.GetArrayLength());
         Assert.Equal(10, (int)v4[0]);
         Assert.Equal(20, (int)v4[1]);
@@ -168,7 +168,7 @@ public class NumericArrayEquivalenceTests
     public void V5_BuildFromSpan()
     {
         // V5: Build(ReadOnlySpan<int>) returns a Source; pass to CreateBuilder.
-        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create();
         V5.MigrationIntVector.Source source = V5.MigrationIntVector.Build([10, 20, 30]);
         using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
             V5.MigrationIntVector.CreateBuilder(workspace, source);
@@ -184,7 +184,7 @@ public class NumericArrayEquivalenceTests
     public void V5_CreateBuilderFromSpan()
     {
         // V5: CreateBuilder(workspace, ReadOnlySpan<int>) — single-call convenience.
-        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
             V5.MigrationIntVector.CreateBuilder(workspace, [10, 20, 30]);
         V5.MigrationIntVector v5 = builder.RootElement;
@@ -199,10 +199,10 @@ public class NumericArrayEquivalenceTests
     public void BothEngines_ConstructFromSpan_SameValues()
     {
         // V4: FromValues
-        V4.MigrationIntVector v4 = V4.MigrationIntVector.FromValues([10, 20, 30]);
+        var v4 = V4.MigrationIntVector.FromValues([10, 20, 30]);
 
         // V5: CreateBuilder from span
-        using JsonWorkspace workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create();
         using JsonDocumentBuilder<V5.MigrationIntVector.Mutable> builder =
             V5.MigrationIntVector.CreateBuilder(workspace, [10, 20, 30]);
         V5.MigrationIntVector v5 = builder.RootElement;

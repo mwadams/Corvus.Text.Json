@@ -265,7 +265,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
             return document;
         }
 
-        BlockSyntax? block = containingStatement.Parent as BlockSyntax;
+        var block = containingStatement.Parent as BlockSyntax;
         SyntaxTriviaList leadingTrivia = containingStatement.GetLeadingTrivia();
         string receiverText = rootReceiver.WithoutTrivia().ToFullString();
 

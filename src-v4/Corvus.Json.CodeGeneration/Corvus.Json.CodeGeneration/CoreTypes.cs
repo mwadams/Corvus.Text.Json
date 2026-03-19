@@ -8,7 +8,7 @@ namespace Corvus.Json.CodeGeneration;
 /// Indicates core types supported by the generator.
 /// </summary>
 [Flags]
-public enum CoreTypes :  byte
+public enum CoreTypes : byte
 {
     /// <summary>
     /// No core type is specified.

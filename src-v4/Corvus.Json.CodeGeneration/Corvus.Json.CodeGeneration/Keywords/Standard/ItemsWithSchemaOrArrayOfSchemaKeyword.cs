@@ -11,7 +11,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// The items keyword for 2019-09 and earlier.
 /// </summary>
 public sealed class ItemsWithSchemaOrArrayOfSchemaKeyword
-    :   ISubschemaTypeBuilderKeyword,
+    : ISubschemaTypeBuilderKeyword,
         ILocalSubschemaRegistrationKeyword,
         INonTupleArrayItemsTypeProviderKeyword,
         IArrayValidationKeyword,

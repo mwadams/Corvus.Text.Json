@@ -30,7 +30,7 @@ public class JsonSchemaFactoryTests
     [Fact]
     public void FromText_WithCanonicalUri_CreatesSchema()
     {
-        JsonSchema schema = JsonSchema.FromText(
+        var schema = JsonSchema.FromText(
             PersonSchemaJson,
             "https://example.com/test/person");
 
@@ -40,7 +40,7 @@ public class JsonSchemaFactoryTests
     [Fact]
     public void FromText_WithoutCanonicalUri_UsesSchemaId()
     {
-        JsonSchema schema = JsonSchema.FromText(PersonSchemaJson);
+        var schema = JsonSchema.FromText(PersonSchemaJson);
 
         Assert.True(schema.Validate("""{"name":"Alice","age":30}"""));
     }
@@ -62,7 +62,7 @@ public class JsonSchemaFactoryTests
     [Fact]
     public void FromText_ValidatesInvalidDocument()
     {
-        JsonSchema schema = JsonSchema.FromText(
+        var schema = JsonSchema.FromText(
             PersonSchemaJson,
             "https://example.com/test/person");
 
@@ -74,7 +74,7 @@ public class JsonSchemaFactoryTests
     {
         using MemoryStream stream = new(Encoding.UTF8.GetBytes(PersonSchemaJson));
 
-        JsonSchema schema = JsonSchema.FromStream(
+        var schema = JsonSchema.FromStream(
             stream,
             "https://example.com/test/person-from-stream");
 
@@ -89,7 +89,7 @@ public class JsonSchemaFactoryTests
             "Schemas",
             "person.json");
 
-        JsonSchema schema = JsonSchema.FromFile(schemaPath);
+        var schema = JsonSchema.FromFile(schemaPath);
 
         Assert.True(schema.Validate("""{"name":"Charlie","age":40}"""));
     }
@@ -102,7 +102,7 @@ public class JsonSchemaFactoryTests
             "Schemas",
             "person.json");
 
-        JsonSchema schema = JsonSchema.FromFile(schemaPath);
+        var schema = JsonSchema.FromFile(schemaPath);
 
         Assert.False(schema.Validate("""{"name":"Charlie","age":-1}"""));
     }
@@ -121,7 +121,7 @@ public class JsonSchemaFactoryTests
             }
             """;
 
-        JsonSchema jsonSchema = JsonSchema.FromText(schema);
+        var jsonSchema = JsonSchema.FromText(schema);
 
         Assert.True(jsonSchema.Validate("\"hello\""));
         Assert.False(jsonSchema.Validate("\"\""));
@@ -142,7 +142,7 @@ public class JsonSchemaFactoryTests
             }
             """;
 
-        JsonSchema jsonSchema = JsonSchema.FromText(schema);
+        var jsonSchema = JsonSchema.FromText(schema);
 
         Assert.True(jsonSchema.Validate("50"));
         Assert.False(jsonSchema.Validate("101"));
@@ -164,7 +164,7 @@ public class JsonSchemaFactoryTests
             }
             """;
 
-        JsonSchema jsonSchema = JsonSchema.FromText(schema);
+        var jsonSchema = JsonSchema.FromText(schema);
 
         Assert.True(jsonSchema.Validate("""["a","b"]"""));
         Assert.False(jsonSchema.Validate("[]"));

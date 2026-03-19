@@ -90,7 +90,7 @@ public sealed class MatchLambdaCaptureAnalyzer : DiagnosticAnalyzer
                 ExpressionSyntax bodyExpr => context.SemanticModel.AnalyzeDataFlow(bodyExpr),
                 _ => null,
             };
-            bool captures = dataFlow is not null && dataFlow.CapturedInside.Length > 0;
+            bool captures = dataFlow?.CapturedInside.Length > 0;
 
             string message = captures
                 ? "consider using Match<TContext, TResult> to avoid closure allocation"

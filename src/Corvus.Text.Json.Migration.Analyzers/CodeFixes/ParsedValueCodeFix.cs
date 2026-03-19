@@ -92,7 +92,7 @@ public sealed class ParsedValueCodeFix : CodeFixProvider
         }
 
         // Find every ParsedValue<T> generic name within the statement.
-        var parsedValueNodes = statement
+        GenericNameSyntax[] parsedValueNodes = statement
             .DescendantNodesAndSelf()
             .OfType<GenericNameSyntax>()
             .Where(g => g.Identifier.Text == "ParsedValue")

@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;
@@ -18,7 +19,7 @@ public class BigNumberNormalizeTests
         var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, 0);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(bigNumber, normalized);
@@ -31,7 +32,7 @@ public class BigNumberNormalizeTests
         var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 0);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(bigNumber, normalized);
@@ -45,7 +46,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(new BigInteger(123), 6);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized);
@@ -59,7 +60,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(new BigInteger(123), 8);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized);
@@ -73,7 +74,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(new BigInteger(-567), 13);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized);
@@ -87,7 +88,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(new BigInteger(123456), 1);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized);
@@ -100,7 +101,7 @@ public class BigNumberNormalizeTests
         var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(12345), 7);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(bigNumber, normalized);
@@ -114,7 +115,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(new BigInteger(1), 5);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized);
@@ -131,7 +132,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(expectedSignificand, expectedExponent);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized,
@@ -145,9 +146,9 @@ public class BigNumberNormalizeTests
         var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(12300), 5);
 
         // Act
-        var normalized1 = bigNumber.Normalize();
-        var normalized2 = normalized1.Normalize();
-        var normalized3 = normalized2.Normalize();
+        BigNumber normalized1 = bigNumber.Normalize();
+        BigNumber normalized2 = normalized1.Normalize();
+        BigNumber normalized3 = normalized2.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(normalized1, normalized2);
@@ -164,7 +165,7 @@ public class BigNumberNormalizeTests
         var expected = new Corvus.Numerics.BigNumber(expectedSignificand, 0);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         BigNumberTestData.AssertBigNumberEqual(expected, normalized);

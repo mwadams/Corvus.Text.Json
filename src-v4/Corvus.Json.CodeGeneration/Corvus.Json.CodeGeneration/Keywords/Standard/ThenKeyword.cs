@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// The then keyword.
 /// </summary>
 public sealed class ThenKeyword
-    :   ISubschemaTypeBuilderKeyword,
+    : ISubschemaTypeBuilderKeyword,
         ILocalSubschemaRegistrationKeyword,
         IPropertyProviderKeyword,
         IIfThenValidationKeyword,

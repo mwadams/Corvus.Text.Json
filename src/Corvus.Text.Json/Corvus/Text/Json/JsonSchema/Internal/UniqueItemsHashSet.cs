@@ -245,7 +245,7 @@ public ref struct UniqueItemsHashSet
             _buckets = buckets.Slice(0, _size);
         }
 
-        if  (entriesSize > entries.Length)
+        if (entriesSize > entries.Length)
         {
             _entriesBacking = ArrayPool<byte>.Shared.Rent(entriesSize);
             _entries = _entriesBacking.AsSpan(0, entriesSize);

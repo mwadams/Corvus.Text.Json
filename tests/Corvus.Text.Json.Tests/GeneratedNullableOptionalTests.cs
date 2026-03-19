@@ -19,7 +19,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_PresentEmail_ReturnsValue()
     {
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"email":"a@b.com"}""");
 
         JsonEmail? email = doc.RootElement.Email;
@@ -30,7 +30,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_PresentIsActive_ReturnsValue()
     {
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"isActive":true}""");
 
         JsonBoolean? isActive = doc.RootElement.IsActive;
@@ -45,7 +45,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_AbsentEmail_ReturnsNull()
     {
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30}""");
 
         Assert.Null(doc.RootElement.Email);
@@ -54,7 +54,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_AbsentIsActive_ReturnsNull()
     {
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30}""");
 
         Assert.Null(doc.RootElement.IsActive);
@@ -67,8 +67,8 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_Mutable_SetEmail_ThenRemove_ReturnsNull()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var workspace = JsonWorkspace.Create();
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"email":"a@b.com"}""");
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
@@ -85,8 +85,8 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_Mutable_SetUndefined_RemovesAndReturnsNull()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var workspace = JsonWorkspace.Create();
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"Alice","age":30,"isActive":true}""");
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
@@ -102,7 +102,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_DefaultProperty_MissingReturnsDefaultNotNull()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         ObjectWithDefaultProperties.StatusEntity? status = doc.RootElement.Status;
@@ -113,7 +113,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_PropertyWithoutDefault_MissingReturnsNull()
     {
-        using ParsedJsonDocument<ObjectWithDefaultProperties> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithDefaultProperties>.Parse("""{"name":"test"}""");
 
         JsonString? label = doc.RootElement.Label;
@@ -127,7 +127,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_NestedObject_AbsentNotes_ReturnsNull()
     {
-        using ParsedJsonDocument<NestedObject> doc =
+        using var doc =
             ParsedJsonDocument<NestedObject>.Parse("""{"address":{"street":"123 Main","city":"X","zip":"00000"}}""");
 
         Assert.Null(doc.RootElement.Notes);
@@ -136,7 +136,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_NestedObject_PresentNotes_ReturnsValue()
     {
-        using ParsedJsonDocument<NestedObject> doc =
+        using var doc =
             ParsedJsonDocument<NestedObject>.Parse("""{"address":{"street":"123 Main","city":"X","zip":"00000"},"notes":"hello"}""");
 
         Assert.NotNull(doc.RootElement.Notes);
@@ -150,7 +150,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_CompositionAllOf_OptionalProperties_ReturnNullWhenAbsent()
     {
-        using ParsedJsonDocument<CompositionAllOf> doc =
+        using var doc =
             ParsedJsonDocument<CompositionAllOf>.Parse("{}");
 
         Assert.Null(doc.RootElement.FirstName);
@@ -160,7 +160,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_CompositionAllOf_OptionalProperties_ReturnValueWhenPresent()
     {
-        using ParsedJsonDocument<CompositionAllOf> doc =
+        using var doc =
             ParsedJsonDocument<CompositionAllOf>.Parse("""{"firstName":"Alice","lastName":"Smith"}""");
 
         Assert.Equal("Alice", doc.RootElement.FirstName?.ToString());
@@ -174,7 +174,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_AbsentArrayProperty_ReturnsNull()
     {
-        using ParsedJsonDocument<ObjectWithArrayProperty> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithArrayProperty>.Parse("""{"tags":["a"]}""");
 
         Assert.Null(doc.RootElement.Scores);
@@ -183,7 +183,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_PresentArrayProperty_ReturnsValue()
     {
-        using ParsedJsonDocument<ObjectWithArrayProperty> doc =
+        using var doc =
             ParsedJsonDocument<ObjectWithArrayProperty>.Parse("""{"tags":["a"],"scores":[1.0,2.0]}""");
 
         Assert.NotNull(doc.RootElement.Scores);
@@ -197,7 +197,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_Indexer_OptionalLabel_ReturnsNullWhenAbsent()
     {
-        using ParsedJsonDocument<ArrayOfItems> doc =
+        using var doc =
             ParsedJsonDocument<ArrayOfItems>.Parse("""[{"id":1}]""");
 
         Assert.Null(doc.RootElement[0].Label);
@@ -206,7 +206,7 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_Indexer_OptionalLabel_ReturnsValueWhenPresent()
     {
-        using ParsedJsonDocument<ArrayOfItems> doc =
+        using var doc =
             ParsedJsonDocument<ArrayOfItems>.Parse("""[{"id":1,"label":"hello"}]""");
 
         Assert.Equal("hello", (string)doc.RootElement[0].Label!);
@@ -219,8 +219,8 @@ public class GeneratedNullableOptionalTests
     [Fact]
     public void NullableOptional_RoundTrip_OptionalPropertiesPreserved()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using ParsedJsonDocument<ObjectWithMixedProperties> doc =
+        using var workspace = JsonWorkspace.Create();
+        using var doc =
             ParsedJsonDocument<ObjectWithMixedProperties>.Parse("""{"name":"X","age":0}""");
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
@@ -229,7 +229,7 @@ public class GeneratedNullableOptionalTests
         root.SetIsActive(true);
         string json = root.ToString();
 
-        using ParsedJsonDocument<ObjectWithMixedProperties> roundTrip = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(json);
+        using var roundTrip = ParsedJsonDocument<ObjectWithMixedProperties>.Parse(json);
         Assert.Equal("test@test.com", roundTrip.RootElement.Email?.ToString());
         Assert.True((bool)roundTrip.RootElement.IsActive!.Value);
     }

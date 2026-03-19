@@ -2,11 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
-using System.Globalization;
 using System;
+using System.Globalization;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -103,7 +103,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishUS_FixedPoint_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        var culture = CultureInfo.GetCultureInfo("en-US");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -117,7 +117,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishUS_Number_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        var culture = CultureInfo.GetCultureInfo("en-US");
         BigNumber bigValue = new(1234567, -2); // 12345.67
         decimal decimalValue = 12345.67m;
 
@@ -131,7 +131,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishUS_Currency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        var culture = CultureInfo.GetCultureInfo("en-US");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -145,7 +145,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishUS_Percent_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        var culture = CultureInfo.GetCultureInfo("en-US");
         BigNumber bigValue = new(75, -2); // 0.75 = 75%
         decimal decimalValue = 0.75m;
 
@@ -159,7 +159,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishUS_NegativeCurrency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        var culture = CultureInfo.GetCultureInfo("en-US");
         BigNumber bigValue = new(-12345, -2); // -123.45
         decimal decimalValue = -123.45m;
 
@@ -174,7 +174,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishUS_LargeNumber_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-US");
+        var culture = CultureInfo.GetCultureInfo("en-US");
         BigNumber bigValue = new(123456789, -2); // 1234567.89
         decimal decimalValue = 1234567.89m;
 
@@ -192,7 +192,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_FrenchFrance_FixedPoint_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
+        var culture = CultureInfo.GetCultureInfo("fr-FR");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -206,7 +206,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_FrenchFrance_Number_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
+        var culture = CultureInfo.GetCultureInfo("fr-FR");
         BigNumber bigValue = new(1234567, -2); // 12345.67
         decimal decimalValue = 12345.67m;
 
@@ -221,7 +221,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_FrenchFrance_Currency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
+        var culture = CultureInfo.GetCultureInfo("fr-FR");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -235,7 +235,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_FrenchFrance_Percent_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
+        var culture = CultureInfo.GetCultureInfo("fr-FR");
         BigNumber bigValue = new(75, -2); // 0.75 = 75%
         decimal decimalValue = 0.75m;
 
@@ -249,7 +249,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_FrenchFrance_NegativeNumber_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("fr-FR");
+        var culture = CultureInfo.GetCultureInfo("fr-FR");
         BigNumber bigValue = new(-1234567, -2); // -12345.67
         decimal decimalValue = -12345.67m;
 
@@ -267,7 +267,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_GermanGermany_FixedPoint_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("de-DE");
+        var culture = CultureInfo.GetCultureInfo("de-DE");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -281,7 +281,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_GermanGermany_Number_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("de-DE");
+        var culture = CultureInfo.GetCultureInfo("de-DE");
         BigNumber bigValue = new(1234567, -2); // 12345.67
         decimal decimalValue = 12345.67m;
 
@@ -295,7 +295,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_GermanGermany_Currency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("de-DE");
+        var culture = CultureInfo.GetCultureInfo("de-DE");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -309,7 +309,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_GermanGermany_Percent_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("de-DE");
+        var culture = CultureInfo.GetCultureInfo("de-DE");
         BigNumber bigValue = new(75, -2); // 0.75 = 75%
         decimal decimalValue = 0.75m;
 
@@ -327,7 +327,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_JapaneseJapan_FixedPoint_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("ja-JP");
+        var culture = CultureInfo.GetCultureInfo("ja-JP");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -341,7 +341,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_JapaneseJapan_Number_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("ja-JP");
+        var culture = CultureInfo.GetCultureInfo("ja-JP");
         BigNumber bigValue = new(1234567, -2); // 12345.67
         decimal decimalValue = 12345.67m;
 
@@ -355,7 +355,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_JapaneseJapan_Currency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("ja-JP");
+        var culture = CultureInfo.GetCultureInfo("ja-JP");
         BigNumber bigValue = new(12345, 0); // 12345 (yen doesn't use decimals)
         decimal decimalValue = 12345m;
 
@@ -369,7 +369,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_JapaneseJapan_Percent_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("ja-JP");
+        var culture = CultureInfo.GetCultureInfo("ja-JP");
         BigNumber bigValue = new(75, -2); // 0.75 = 75%
         decimal decimalValue = 0.75m;
 
@@ -387,7 +387,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishGB_FixedPoint_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-GB");
+        var culture = CultureInfo.GetCultureInfo("en-GB");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -401,7 +401,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishGB_Number_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-GB");
+        var culture = CultureInfo.GetCultureInfo("en-GB");
         BigNumber bigValue = new(1234567, -2); // 12345.67
         decimal decimalValue = 12345.67m;
 
@@ -415,7 +415,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishGB_Currency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-GB");
+        var culture = CultureInfo.GetCultureInfo("en-GB");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -429,7 +429,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_EnglishGB_Percent_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("en-GB");
+        var culture = CultureInfo.GetCultureInfo("en-GB");
         BigNumber bigValue = new(75, -2); // 0.75 = 75%
         decimal decimalValue = 0.75m;
 
@@ -447,7 +447,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_SpanishSpain_FixedPoint_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("es-ES");
+        var culture = CultureInfo.GetCultureInfo("es-ES");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -461,7 +461,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_SpanishSpain_Number_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("es-ES");
+        var culture = CultureInfo.GetCultureInfo("es-ES");
         BigNumber bigValue = new(1234567, -2); // 12345.67
         decimal decimalValue = 12345.67m;
 
@@ -475,7 +475,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_SpanishSpain_Currency_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("es-ES");
+        var culture = CultureInfo.GetCultureInfo("es-ES");
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
@@ -489,7 +489,7 @@ public class BigNumberLocaleFormattingTests
     [Fact]
     public void Format_SpanishSpain_Percent_ExactMatch()
     {
-        CultureInfo culture = CultureInfo.GetCultureInfo("es-ES");
+        var culture = CultureInfo.GetCultureInfo("es-ES");
         BigNumber bigValue = new(75, -2); // 0.75 = 75%
         decimal decimalValue = 0.75m;
 
@@ -510,7 +510,7 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = BigNumber.Zero;
         decimal decimalValue = 0m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
@@ -519,7 +519,7 @@ public class BigNumberLocaleFormattingTests
             CultureInfo.GetCultureInfo("ja-JP"),
         };
 
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             string bigResult = bigValue.ToString("F2", culture);
             string decimalResult = decimalValue.ToString("F2", culture);
@@ -534,7 +534,7 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = BigNumber.Zero;
         decimal decimalValue = 0m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
@@ -543,7 +543,7 @@ public class BigNumberLocaleFormattingTests
             CultureInfo.GetCultureInfo("ja-JP"),
         };
 
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             string bigResult = bigValue.ToString("N2", culture);
             string decimalResult = decimalValue.ToString("N2", culture);
@@ -558,7 +558,7 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = BigNumber.Zero;
         decimal decimalValue = 0m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
@@ -566,7 +566,7 @@ public class BigNumberLocaleFormattingTests
             CultureInfo.GetCultureInfo("de-DE"),
         };
 
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             string bigResult = bigValue.ToString("C2", culture);
             string decimalResult = decimalValue.ToString("C2", culture);
@@ -581,7 +581,7 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = BigNumber.Zero;
         decimal decimalValue = 0m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
@@ -590,7 +590,7 @@ public class BigNumberLocaleFormattingTests
             CultureInfo.GetCultureInfo("ja-JP"),
         };
 
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             string bigResult = bigValue.ToString("P2", culture);
             string decimalResult = decimalValue.ToString("P2", culture);
@@ -678,7 +678,7 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = new(-12345, -2); // -123.45
         decimal decimalValue = -123.45m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
@@ -687,7 +687,7 @@ public class BigNumberLocaleFormattingTests
             CultureInfo.GetCultureInfo("ja-JP"),
         };
 
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             string bigResultF = bigValue.ToString("F2", culture);
             string decimalResultF = decimalValue.ToString("F2", culture);
@@ -709,7 +709,7 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
@@ -718,7 +718,7 @@ public class BigNumberLocaleFormattingTests
         };
 
         Span<char> buffer = stackalloc char[128];
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             bool success = bigValue.TryFormat(buffer, out int charsWritten, "N2", culture);
 
@@ -736,14 +736,14 @@ public class BigNumberLocaleFormattingTests
         BigNumber bigValue = new(12345, -2); // 123.45
         decimal decimalValue = 123.45m;
 
-        var cultures = new[]
+        CultureInfo[] cultures = new[]
         {
             CultureInfo.InvariantCulture,
             CultureInfo.GetCultureInfo("en-US"),
         };
 
         Span<byte> buffer = stackalloc byte[128];
-        foreach (var culture in cultures)
+        foreach (CultureInfo? culture in cultures)
         {
             bool success = bigValue.TryFormat(buffer, out int bytesWritten, "F2", culture);
 
@@ -770,7 +770,7 @@ public class BigNumberLocaleFormattingTests
         formatted.ShouldBe("1234,56");
 
         // Parse back with same culture
-        BigNumber parsed = BigNumber.Parse(formatted, NumberStyles.Float | NumberStyles.AllowThousands, culture);
+        var parsed = BigNumber.Parse(formatted, NumberStyles.Float | NumberStyles.AllowThousands, culture);
 
         parsed.ShouldBe(original);
     }
@@ -786,7 +786,7 @@ public class BigNumberLocaleFormattingTests
         formatted.ShouldBe("12\u202F345,67");
 
         // Parse back with same culture
-        BigNumber parsed = BigNumber.Parse(formatted, NumberStyles.Float | NumberStyles.AllowThousands, culture);
+        var parsed = BigNumber.Parse(formatted, NumberStyles.Float | NumberStyles.AllowThousands, culture);
 
         parsed.ShouldBe(original);
     }

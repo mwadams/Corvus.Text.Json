@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// The propertyNames keyword.
 /// </summary>
 public sealed class PropertyNamesKeyword
-    :   ISubschemaTypeBuilderKeyword,
+    : ISubschemaTypeBuilderKeyword,
         ILocalSubschemaRegistrationKeyword,
         IObjectPropertyNameSubschemaValidationKeyword
 {

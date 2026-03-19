@@ -27,8 +27,7 @@ public class ConfigCommandTests : IDisposable
     public async Task Config_SingleType_ProducesFiles()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated",
             outputPath = _outputDir,
             typesToGenerate = new[]
@@ -49,8 +48,7 @@ public class ConfigCommandTests : IDisposable
     public async Task Config_MultipleTypes_ProducesFilesForAll()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated",
             outputPath = _outputDir,
             typesToGenerate = new object[]
@@ -72,8 +70,7 @@ public class ConfigCommandTests : IDisposable
     public async Task Config_WithV4Engine_ProducesFiles()
     {
         string schemasDir = CodeGeneratorRunner.GetFixturePath("Schemas");
-        string configPath = CreateConfigFile(new
-        {
+        string configPath = CreateConfigFile(new {
             rootNamespace = "TestGenerated",
             outputPath = _outputDir,
             typesToGenerate = new[]

@@ -2,10 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -116,7 +116,7 @@ public class BigNumberArithmeticEdgeCasesTests
     public void Normalize_VeryLargeWithTrailingZeros_HandlesCorrectly()
     {
         string manyNines = new string('9', 100) + new string('0', 50);
-        BigNumber num = BigNumber.Parse(manyNines);
+        var num = BigNumber.Parse(manyNines);
 
         BigNumber normalized = num.Normalize();
 

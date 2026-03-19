@@ -2,10 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
+using System.Globalization;
+using System.Numerics;
 using BenchmarkDotNet.Attributes;
 using Corvus.Numerics;
-using System.Numerics;
-using System.Globalization;
 
 namespace Corvus.Numerics.Benchmarks;
 
@@ -163,8 +163,8 @@ public class OptimizationBenchmarks
     public BigNumber Multiply_RequiresPowerOf10_Small()
     {
         // Requires 10^3 (in cache)
-        BigNumber a = new BigNumber(123, 0);
-        BigNumber b = new BigNumber(456, 3);
+        var a = new BigNumber(123, 0);
+        var b = new BigNumber(456, 3);
         return a + b;
     }
 
@@ -172,8 +172,8 @@ public class OptimizationBenchmarks
     public BigNumber Multiply_RequiresPowerOf10_Large()
     {
         // Requires 10^50 (in cache)
-        BigNumber a = new BigNumber(123, 0);
-        BigNumber b = new BigNumber(456, 50);
+        var a = new BigNumber(123, 0);
+        var b = new BigNumber(456, 50);
         return a + b;
     }
 
@@ -181,8 +181,8 @@ public class OptimizationBenchmarks
     public BigNumber Multiply_RequiresPowerOf10_VeryLarge()
     {
         // Requires 10^150 (outside cache)
-        BigNumber a = new BigNumber(123, 0);
-        BigNumber b = new BigNumber(456, 150);
+        var a = new BigNumber(123, 0);
+        var b = new BigNumber(456, 150);
         return a + b;
     }
 
@@ -234,7 +234,7 @@ public class OptimizationBenchmarks
     public string Format_AlreadyPrecise()
     {
         // Number already at exact precision (should hit fast path)
-        BigNumber precise = new BigNumber(12345, -2); // 123.45, precision = 2
+        var precise = new BigNumber(12345, -2); // 123.45, precision = 2
         return precise.ToString("F2", CultureInfo.InvariantCulture);
     }
 
@@ -242,7 +242,7 @@ public class OptimizationBenchmarks
     public string Format_NeedsRounding()
     {
         // Number needs rounding
-        BigNumber imprecise = new BigNumber(123456, -3); // 123.456, round to 2
+        var imprecise = new BigNumber(123456, -3); // 123.456, round to 2
         return imprecise.ToString("F2", CultureInfo.InvariantCulture);
     }
 

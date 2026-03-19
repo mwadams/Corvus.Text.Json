@@ -88,7 +88,7 @@ public static partial class ValidationCodeGeneratorExtensions
             if (keyword.TryGetNotType(typeDeclaration, out ReducedTypeDeclaration? value) &&
                 value is ReducedTypeDeclaration notType)
             {
-                string notField = generator.GetPropertyNameInScope(keyword.Keyword, rootScope: generator.ValidationClassScope());
+                _ = generator.GetPropertyNameInScope(keyword.Keyword, rootScope: generator.ValidationClassScope());
                 string realisedMethodName = generator.GetUniqueMethodNameInScope(keyword.Keyword, prefix: "Validate");
                 generator
                     .AppendSeparatorLine();

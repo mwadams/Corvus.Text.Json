@@ -18,14 +18,14 @@ public class SuiteValidateDefinitionAgainstMetaschema : IClassFixture<SuiteValid
     [Fact]
     public void TestValidDefinitionSchema()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$defs\": {\"foo\": {\"type\": \"integer\"}}}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$defs\": {\"foo\": {\"type\": \"integer\"}}}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidDefinitionSchema()
     {
-        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$defs\": {\"foo\": {\"type\": 1}}}");
+        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"$defs\": {\"foo\": {\"type\": 1}}}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

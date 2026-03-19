@@ -630,139 +630,139 @@ internal static partial class CodeGenerationExtensions
             switch (value.ValueKind)
             {
                 case JsonValueKind.String:
-                    {
-                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
-                        string propertyBaseName = value.GetString()!;
-                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope);
-                        string utf8PropertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: "Utf8");
+                {
+                    string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                    string propertyBaseName = value.GetString()!;
+                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope);
+                    string utf8PropertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: "Utf8");
 
-                        generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the string ", SymbolDisplay.FormatLiteral(propertyBaseName, true))
-                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ")
-                            .Append(dotnetTypeName)
-                            .Append(" ")
-                            .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the string ", SymbolDisplay.FormatLiteral(propertyBaseName, true))
+                        .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ")
+                        .Append(dotnetTypeName)
+                        .Append(" ")
+                        .Append(propertyName)
+                        .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
 
-                        generator
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the string ", SymbolDisplay.FormatLiteral(propertyBaseName, true))
-                            .AppendLineIndent("/// as a UTF8 byte array.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ReadOnlySpan<byte> ")
-                            .Append(utf8PropertyName)
-                            .AppendLine(" => ", constantsClassName, ".", utf8FieldName, ";");
-                    }
+                    generator
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the string ", SymbolDisplay.FormatLiteral(propertyBaseName, true))
+                        .AppendLineIndent("/// as a UTF8 byte array.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ReadOnlySpan<byte> ")
+                        .Append(utf8PropertyName)
+                        .AppendLine(" => ", constantsClassName, ".", utf8FieldName, ";");
+                }
 
-                    break;
+                break;
 
                 case JsonValueKind.Number:
-                    {
-                        string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
-                        string rawText = value.GetRawText();
-                        string propertyBaseName = rawText.Replace(".", "Point").Replace("-", "Minus");
-                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, prefix: "Number");
+                {
+                    string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
+                    string rawText = value.GetRawText();
+                    string propertyBaseName = rawText.Replace(".", "Point").Replace("-", "Minus");
+                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, prefix: "Number");
 
-                        generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the number ", rawText)
-                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ")
-                            .Append(dotnetTypeName)
-                            .Append(" ")
-                            .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
-                    }
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the number ", rawText)
+                        .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ")
+                        .Append(dotnetTypeName)
+                        .Append(" ")
+                        .Append(propertyName)
+                        .AppendLine(" { get; } = ", constantsClassName, ".", jsonFieldName, ";");
+                }
 
-                    break;
+                break;
 
                 case JsonValueKind.True:
-                    {
-                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("True", rootScope: enumValuesScope);
+                {
+                    string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("True", rootScope: enumValuesScope);
 
-                        generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the boolean <c>true</c>")
-                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ")
-                            .Append(dotnetTypeName)
-                            .Append(" ")
-                            .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
-                    }
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the boolean <c>true</c>")
+                        .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ")
+                        .Append(dotnetTypeName)
+                        .Append(" ")
+                        .Append(propertyName)
+                        .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
+                }
 
-                    break;
+                break;
 
                 case JsonValueKind.False:
-                    {
-                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("False", rootScope: enumValuesScope);
+                {
+                    string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("False", rootScope: enumValuesScope);
 
-                        generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the boolean <c>false</c>")
-                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ")
-                            .Append(dotnetTypeName)
-                            .Append(" ")
-                            .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
-                    }
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the boolean <c>false</c>")
+                        .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ")
+                        .Append(dotnetTypeName)
+                        .Append(" ")
+                        .Append(propertyName)
+                        .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
+                }
 
-                    break;
+                break;
 
                 case JsonValueKind.Null:
-                    {
-                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("Null", rootScope: enumValuesScope);
+                {
+                    string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("Null", rootScope: enumValuesScope);
 
-                        generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the <c>null</c> value")
-                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ")
-                            .Append(dotnetTypeName)
-                            .Append(" ")
-                            .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
-                    }
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the <c>null</c> value")
+                        .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ")
+                        .Append(dotnetTypeName)
+                        .Append(" ")
+                        .Append(propertyName)
+                        .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
+                }
 
-                    break;
+                break;
 
                 case JsonValueKind.Array:
                 case JsonValueKind.Object:
-                    {
-                        string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                        string propertyBaseName = value.ValueKind == JsonValueKind.Array ? "ArrayValue" : "ObjectValue";
-                        string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: suffix);
+                {
+                    string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
+                    string propertyBaseName = value.ValueKind == JsonValueKind.Array ? "ArrayValue" : "ObjectValue";
+                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: suffix);
 
-                        generator
-                            .AppendSeparatorLine()
-                            .AppendLineIndent("/// <summary>")
-                            .AppendLineIndent("/// Gets the ", value.ValueKind == JsonValueKind.Array ? "array" : "object", " value")
-                            .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
-                            .AppendLineIndent("/// </summary>")
-                            .AppendIndent("public static ")
-                            .Append(dotnetTypeName)
-                            .Append(" ")
-                            .Append(propertyName)
-                            .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
-                    }
+                    generator
+                        .AppendSeparatorLine()
+                        .AppendLineIndent("/// <summary>")
+                        .AppendLineIndent("/// Gets the ", value.ValueKind == JsonValueKind.Array ? "array" : "object", " value")
+                        .AppendLineIndent("/// as a <see cref=\"", dotnetTypeName, "\"/>.")
+                        .AppendLineIndent("/// </summary>")
+                        .AppendIndent("public static ")
+                        .Append(dotnetTypeName)
+                        .Append(" ")
+                        .Append(propertyName)
+                        .AppendLine(" { get; } = ", constantsClassName, ".", fieldName, ";");
+                }
 
-                    break;
+                break;
 
                 default:
                     break;

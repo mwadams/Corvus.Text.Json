@@ -1,8 +1,8 @@
 // Derived from code licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licensed this code under the MIT license.
 
-using BenchmarkDotNet.Attributes;
 using System.Text;
+using BenchmarkDotNet.Attributes;
 
 namespace JsonParsingBenchmarks;
 
@@ -20,16 +20,17 @@ public class BenchmarkVeryLargeArrayParsing
     {
         // Very large array (10k elements) - tests array parsing performance
         veryLargeArrayJson = GenerateVeryLargeArrayJson();
-    }    [Benchmark]
+    }
+    [Benchmark]
     public int ParseVeryLargeArrayCorvus()
     {
         using var document = Corvus.Text.Json.ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(veryLargeArrayJson!);
-        var root = document.RootElement;
+        Corvus.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == Corvus.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (Corvus.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }
@@ -42,12 +43,12 @@ public class BenchmarkVeryLargeArrayParsing
     public int ParseVeryLargeArraySystemTextJson()
     {
         using var document = System.Text.Json.JsonDocument.Parse(veryLargeArrayJson!);
-        var root = document.RootElement;
+        System.Text.Json.JsonElement root = document.RootElement;
 
         int count = 0;
         if (root.ValueKind == System.Text.Json.JsonValueKind.Array)
         {
-            foreach (var item in root.EnumerateArray())
+            foreach (System.Text.Json.JsonElement item in root.EnumerateArray())
             {
                 count++;
             }

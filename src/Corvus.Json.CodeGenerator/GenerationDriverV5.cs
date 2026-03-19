@@ -326,7 +326,7 @@ public static class GenerationDriverV5
             }
 
             string? typeName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(generatedCodeFile);
-            
+
             if (typeName is not null && generatedCodeFile.TypeDeclaration is not null)
             {
                 File.AppendAllText(mapFile, $"{{\"key\": \"{JsonEncodedText.Encode(generatedCodeFile.TypeDeclaration.LocatedSchema.Location)}\", \"class\": \"{JsonEncodedText.Encode(typeName)}\", \"path\": \"{JsonEncodedText.Encode(outputFile)}\"}}\r\n");

@@ -2,11 +2,11 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -276,7 +276,7 @@ public class BigNumberCoverageGapsTests
         BigNumber dividend = new(1, 0);
         BigNumber divisor = new(3, 0);
 
-        BigNumber result = BigNumber.Divide(dividend, divisor, 200);
+        var result = BigNumber.Divide(dividend, divisor, 200);
 
         // Should have 200 decimal places of precision
         string resultStr = result.ToString("F200", CultureInfo.InvariantCulture);
@@ -322,7 +322,7 @@ public class BigNumberCoverageGapsTests
         BigNumber dividend = new(10, 1000);
         BigNumber divisor = new(2, 500);
 
-        BigNumber result = BigNumber.Divide(dividend, divisor, 10);
+        var result = BigNumber.Divide(dividend, divisor, 10);
         result.Significand.ShouldBe(new BigInteger(5));
         result.Exponent.ShouldBe(500);
     }
@@ -393,7 +393,7 @@ public class BigNumberCoverageGapsTests
     public void Parse_WithExtremelyLargeExponent_WorksCorrectly()
     {
         string input = "1E+1000";
-        BigNumber result = BigNumber.Parse(input);
+        var result = BigNumber.Parse(input);
         result.Significand.ShouldBe(BigInteger.One);
         result.Exponent.ShouldBe(1000);
     }
@@ -402,7 +402,7 @@ public class BigNumberCoverageGapsTests
     public void Parse_WithExtremelySmallExponent_WorksCorrectly()
     {
         string input = "1E-1000";
-        BigNumber result = BigNumber.Parse(input);
+        var result = BigNumber.Parse(input);
         result.Significand.ShouldBe(BigInteger.One);
         result.Exponent.ShouldBe(-1000);
     }

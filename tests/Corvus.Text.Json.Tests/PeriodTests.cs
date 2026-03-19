@@ -10,8 +10,8 @@ namespace Corvus.Text.Json.Tests;
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 using NodaTime;
 using NodaTime.Text;
 using Xunit;
@@ -26,8 +26,8 @@ public class PeriodTest
     [InlineData("2016-05-16", "2016-07-13", 58)]
     public void BetweenLocalDates_SingleUnit(string startText, string endText, int expectedValue)
     {
-        var start = LocalDatePattern.Iso.Parse(startText).Value;
-        var end = LocalDatePattern.Iso.Parse(endText).Value;
+        LocalDate start = LocalDatePattern.Iso.Parse(startText).Value;
+        LocalDate end = LocalDatePattern.Iso.Parse(endText).Value;
         var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expectedValue, actual);
     }
@@ -44,7 +44,7 @@ public class PeriodTest
     public void DaysBetweenLocalDates_SameDatesReturnsZero()
     {
         var start = new LocalDate(2020, 6, 13, CalendarSystem.Iso);
-        var end = start;
+        LocalDate end = start;
         var expected = 0;
         var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expected, actual);
@@ -58,8 +58,8 @@ public class PeriodTest
     [InlineData("2020-03-23", "2020-06-12", 81)]
     public void DaysBetweenLocalDates(string startText, string endText, int expected)
     {
-        var start = LocalDatePattern.Iso.Parse(startText).Value;
-        var end = LocalDatePattern.Iso.Parse(endText).Value;
+        LocalDate start = LocalDatePattern.Iso.Parse(startText).Value;
+        LocalDate end = LocalDatePattern.Iso.Parse(endText).Value;
         var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expected, actual);
     }
@@ -72,8 +72,8 @@ public class PeriodTest
     [InlineData("2020-05-16", "2019-05-16", -366)]
     public void DaysBetweenLocalDates_StartDateGreaterThanEndDate(string startText, string endText, int expected)
     {
-        var start = LocalDatePattern.Iso.Parse(startText).Value;
-        var end = LocalDatePattern.Iso.Parse(endText).Value;
+        LocalDate start = LocalDatePattern.Iso.Parse(startText).Value;
+        LocalDate end = LocalDatePattern.Iso.Parse(endText).Value;
         var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expected, actual);
     }
@@ -89,8 +89,8 @@ public class PeriodTest
     [Fact]
     public void Addition_WithDifferentPeriodTypes()
     {
-        Corvus.Text.Json.Period p1 = Corvus.Text.Json.Period.FromHours(3);
-        Corvus.Text.Json.Period p2 = Corvus.Text.Json.Period.FromMinutes(20);
+        var p1 = Corvus.Text.Json.Period.FromHours(3);
+        var p2 = Corvus.Text.Json.Period.FromMinutes(20);
         Corvus.Text.Json.Period sum = p1 + p2;
         Assert.Equal(3, sum.Hours);
         Assert.Equal(20, sum.Minutes);
@@ -108,8 +108,8 @@ public class PeriodTest
     [Fact]
     public void Addition_WithIdenticalPeriodTypes()
     {
-        Corvus.Text.Json.Period p1 = Corvus.Text.Json.Period.FromHours(3);
-        Corvus.Text.Json.Period p2 = Corvus.Text.Json.Period.FromHours(2);
+        var p1 = Corvus.Text.Json.Period.FromHours(3);
+        var p2 = Corvus.Text.Json.Period.FromHours(2);
         Corvus.Text.Json.Period sum = p1 + p2;
         Assert.Equal(5, sum.Hours);
         Assert.Equal(sum, Corvus.Text.Json.Period.Add(p1, p2));
@@ -118,7 +118,7 @@ public class PeriodTest
     [Fact]
     public void Addition_DayCrossingMonthBoundary()
     {
-        LocalDateTime start = new LocalDateTime(2010, 2, 20, 10, 0);
+        var start = new LocalDateTime(2010, 2, 20, 10, 0);
         LocalDateTime result = start + Corvus.Text.Json.Period.FromDays(10);
         Assert.Equal(new LocalDateTime(2010, 3, 2, 10, 0), result);
     }
@@ -126,7 +126,7 @@ public class PeriodTest
     [Fact]
     public void Addition_OneYearOnLeapDay()
     {
-        LocalDateTime start = new LocalDateTime(2012, 2, 29, 10, 0);
+        var start = new LocalDateTime(2012, 2, 29, 10, 0);
         LocalDateTime result = start + Corvus.Text.Json.Period.FromYears(1);
         // Feb 29th becomes Feb 28th
         Assert.Equal(new LocalDateTime(2013, 2, 28, 10, 0), result);
@@ -135,7 +135,7 @@ public class PeriodTest
     [Fact]
     public void Addition_FourYearsOnLeapDay()
     {
-        LocalDateTime start = new LocalDateTime(2012, 2, 29, 10, 0);
+        var start = new LocalDateTime(2012, 2, 29, 10, 0);
         LocalDateTime result = start + Corvus.Text.Json.Period.FromYears(4);
         // Feb 29th is still valid in 2016
         Assert.Equal(new LocalDateTime(2016, 2, 29, 10, 0), result);
@@ -146,7 +146,7 @@ public class PeriodTest
     {
         // One year, one month, two days
         Corvus.Text.Json.Period period = Corvus.Text.Json.Period.FromYears(1) + Corvus.Text.Json.Period.FromMonths(1) + Corvus.Text.Json.Period.FromDays(2);
-        LocalDateTime start = new LocalDateTime(2007, 1, 30, 0, 0);
+        var start = new LocalDateTime(2007, 1, 30, 0, 0);
         // Corvus.Text.Json.Periods are added in order, so this becomes...
         // Add one year: Jan 30th 2008
         // Add one month: Feb 29th 2008
@@ -159,8 +159,8 @@ public class PeriodTest
     [Fact]
     public void Subtraction_WithDifferentPeriodTypes()
     {
-        Corvus.Text.Json.Period p1 = Corvus.Text.Json.Period.FromHours(3);
-        Corvus.Text.Json.Period p2 = Corvus.Text.Json.Period.FromMinutes(20);
+        var p1 = Corvus.Text.Json.Period.FromHours(3);
+        var p2 = Corvus.Text.Json.Period.FromMinutes(20);
         Corvus.Text.Json.Period difference = p1 - p2;
         Assert.Equal(3, difference.Hours);
         Assert.Equal(-20, difference.Minutes);
@@ -170,8 +170,8 @@ public class PeriodTest
     [Fact]
     public void Subtraction_WithIdenticalPeriodTypes()
     {
-        Corvus.Text.Json.Period p1 = Corvus.Text.Json.Period.FromHours(3);
-        Corvus.Text.Json.Period p2 = Corvus.Text.Json.Period.FromHours(2);
+        var p1 = Corvus.Text.Json.Period.FromHours(3);
+        var p2 = Corvus.Text.Json.Period.FromHours(2);
         Corvus.Text.Json.Period difference = p1 - p2;
         Assert.Equal(1, difference.Hours);
         Assert.Equal(difference, Corvus.Text.Json.Period.Subtract(p1, p2));
@@ -189,7 +189,7 @@ public class PeriodTest
     public void Equality_WithDifferentPeriodTypes_OnlyConsidersValues()
     {
         Corvus.Text.Json.Period allFields = Corvus.Text.Json.Period.FromMinutes(1) + Corvus.Text.Json.Period.FromHours(1) - Corvus.Text.Json.Period.FromMinutes(1);
-        Corvus.Text.Json.Period justHours = Corvus.Text.Json.Period.FromHours(1);
+        var justHours = Corvus.Text.Json.Period.FromHours(1);
         Assert.Equal(allFields, justHours);
     }
 
@@ -206,9 +206,9 @@ public class PeriodTest
     [Fact]
     public void EqualityOperators()
     {
-        Corvus.Text.Json.Period val1 = Corvus.Text.Json.Period.FromHours(1);
-        Corvus.Text.Json.Period val2 = Corvus.Text.Json.Period.FromHours(1);
-        Corvus.Text.Json.Period val3 = Corvus.Text.Json.Period.FromHours(2);
+        var val1 = Corvus.Text.Json.Period.FromHours(1);
+        var val2 = Corvus.Text.Json.Period.FromHours(1);
+        var val3 = Corvus.Text.Json.Period.FromHours(2);
         Corvus.Text.Json.Period? val4 = null;
         Assert.True(val1 == val2);
         Assert.False(val1 == val3);
@@ -238,7 +238,7 @@ public class PeriodTest
     [InlineData(PeriodUnits.Nanoseconds, true)]
     public void HasTimeComponent_SingleValued(PeriodUnits unit, bool hasTimeComponent)
     {
-        var period = new Corvus.Text.Json.PeriodBuilder { [unit] = 1 }.BuildPeriod();
+        Json.Period period = new Corvus.Text.Json.PeriodBuilder { [unit] = 1 }.BuildPeriod();
         Assert.Equal(hasTimeComponent, period.HasTimeComponent);
     }
 
@@ -255,7 +255,7 @@ public class PeriodTest
     [InlineData(PeriodUnits.Nanoseconds, false)]
     public void HasDateComponent_SingleValued(PeriodUnits unit, bool hasDateComponent)
     {
-        var period = new Corvus.Text.Json.PeriodBuilder { [unit] = 1 }.BuildPeriod();
+        Json.Period period = new Corvus.Text.Json.PeriodBuilder { [unit] = 1 }.BuildPeriod();
         Assert.Equal(hasDateComponent, period.HasDateComponent);
     }
 
@@ -289,27 +289,27 @@ public class PeriodTest
     [Fact]
     public void Normalize_Weeks()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Weeks = 2, Days = 5 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Days = 19 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Weeks = 2, Days = 5 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Days = 19 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_Hours()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Hours = 25, Days = 1 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Days = 2 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Hours = 25, Days = 1 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Days = 2 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_Minutes()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Minutes = 150 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Hours = 3, Minutes = 30 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Minutes = 150 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Hours = 3, Minutes = 30 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
@@ -317,86 +317,86 @@ public class PeriodTest
     [Fact]
     public void Normalize_Seconds()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Minutes = 1, Seconds = 150 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Minutes = 3, Seconds = 30 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Minutes = 1, Seconds = 150 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Minutes = 3, Seconds = 30 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_Milliseconds()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Seconds = 1, Milliseconds = 1500 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Seconds = 2, Milliseconds = 500 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Seconds = 1, Milliseconds = 1500 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Seconds = 2, Milliseconds = 500 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_Ticks()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Milliseconds = 1, Ticks = 15000 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Milliseconds = 2, Ticks = 0, Nanoseconds = 500000 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Milliseconds = 1, Ticks = 15000 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Milliseconds = 2, Ticks = 0, Nanoseconds = 500000 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_Nanoseconds()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Ticks = 1, Nanoseconds = 150 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Nanoseconds = 250 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Ticks = 1, Nanoseconds = 150 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Nanoseconds = 250 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_MultipleFields()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Minutes = 119, Seconds = 150 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Hours = 3, Minutes = 1, Seconds = 30 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Minutes = 119, Seconds = 150 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Hours = 3, Minutes = 1, Seconds = 30 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_AllNegative()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Hours = -1, Minutes = -119, Seconds = -150 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Hours = -3, Minutes = -1, Seconds = -30 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Hours = -1, Minutes = -119, Seconds = -150 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Hours = -3, Minutes = -1, Seconds = -30 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_MixedSigns_PositiveResult()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Hours = 3, Minutes = -1 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Hours = 2, Minutes = 59 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Hours = 3, Minutes = -1 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Hours = 2, Minutes = 59 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_MixedSigns_NegativeResult()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Minutes = -121 }.BuildPeriod();
-        var normalized = original.Normalize();
-        var expected = new Corvus.Text.Json.PeriodBuilder { Hours = -1, Minutes = -1 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Hours = 1, Minutes = -121 }.BuildPeriod();
+        Json.Period normalized = original.Normalize();
+        Json.Period expected = new Corvus.Text.Json.PeriodBuilder { Hours = -1, Minutes = -1 }.BuildPeriod();
         Assert.Equal(expected, normalized);
     }
 
     [Fact]
     public void Normalize_DoesntAffectMonthsAndYears()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Years = 2, Months = 1, Days = 400 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Years = 2, Months = 1, Days = 400 }.BuildPeriod();
         Assert.Equal(original, original.Normalize());
     }
 
     [Fact]
     public void Normalize_ZeroResult()
     {
-        var original = new Corvus.Text.Json.PeriodBuilder { Years = 0 }.BuildPeriod();
+        Json.Period original = new Corvus.Text.Json.PeriodBuilder { Years = 0 }.BuildPeriod();
         Assert.Equal(Corvus.Text.Json.Period.Zero, original.Normalize());
     }
 
@@ -410,21 +410,21 @@ public class PeriodTest
     [Fact]
     public void ToString_MultipleUnits()
     {
-        var period = new Corvus.Text.Json.PeriodBuilder { Hours = 5, Minutes = 30 }.BuildPeriod();
+        Json.Period period = new Corvus.Text.Json.PeriodBuilder { Hours = 5, Minutes = 30 }.BuildPeriod();
         Assert.Equal("PT5H30M", period.ToString());
     }
 
     [Fact]
     public void ToDuration_InvalidWithYears()
     {
-        Corvus.Text.Json.Period period = Corvus.Text.Json.Period.FromYears(1);
+        var period = Corvus.Text.Json.Period.FromYears(1);
         Assert.Throws<InvalidOperationException>(() => period.ToDuration());
     }
 
     [Fact]
     public void ToDuration_InvalidWithMonths()
     {
-        Corvus.Text.Json.Period period = Corvus.Text.Json.Period.FromMonths(1);
+        var period = Corvus.Text.Json.Period.FromMonths(1);
         Assert.Throws<InvalidOperationException>(() => period.ToDuration());
     }
 
@@ -463,31 +463,31 @@ public class PeriodTest
     [Fact]
     public void NormalizingEqualityComparer_PeriodToItself()
     {
-        Corvus.Text.Json.Period period = Corvus.Text.Json.Period.FromYears(1);
+        var period = Corvus.Text.Json.Period.FromYears(1);
         Assert.True(Corvus.Text.Json.Period.NormalizingEqualityComparer.Equals(period, period));
     }
 
     [Fact]
     public void NormalizingEqualityComparer_NonEqualAfterNormalization()
     {
-        Corvus.Text.Json.Period period1 = Corvus.Text.Json.Period.FromHours(2);
-        Corvus.Text.Json.Period period2 = Corvus.Text.Json.Period.FromMinutes(150);
+        var period1 = Corvus.Text.Json.Period.FromHours(2);
+        var period2 = Corvus.Text.Json.Period.FromMinutes(150);
         Assert.False(Corvus.Text.Json.Period.NormalizingEqualityComparer.Equals(period1, period2));
     }
 
     [Fact]
     public void NormalizingEqualityComparer_EqualAfterNormalization()
     {
-        Corvus.Text.Json.Period period1 = Corvus.Text.Json.Period.FromHours(2);
-        Corvus.Text.Json.Period period2 = Corvus.Text.Json.Period.FromMinutes(120);
+        var period1 = Corvus.Text.Json.Period.FromHours(2);
+        var period2 = Corvus.Text.Json.Period.FromMinutes(120);
         Assert.True(Corvus.Text.Json.Period.NormalizingEqualityComparer.Equals(period1, period2));
     }
 
     [Fact]
     public void NormalizingEqualityComparer_GetHashCodeAfterNormalization()
     {
-        Corvus.Text.Json.Period period1 = Corvus.Text.Json.Period.FromHours(2);
-        Corvus.Text.Json.Period period2 = Corvus.Text.Json.Period.FromMinutes(120);
+        var period1 = Corvus.Text.Json.Period.FromHours(2);
+        var period2 = Corvus.Text.Json.Period.FromMinutes(120);
         Assert.Equal(Corvus.Text.Json.Period.NormalizingEqualityComparer.GetHashCode(period1),
             Corvus.Text.Json.Period.NormalizingEqualityComparer.GetHashCode(period2));
     }
@@ -497,7 +497,7 @@ public class PeriodTest
     {
         var bigger = Corvus.Text.Json.Period.FromHours(25);
         var smaller = Corvus.Text.Json.Period.FromDays(1);
-        var comparer = Corvus.Text.Json.Period.CreateComparer(new LocalDateTime(2000, 1, 1, 0, 0));
+        IComparer<Json.Period> comparer = Corvus.Text.Json.Period.CreateComparer(new LocalDateTime(2000, 1, 1, 0, 0));
         Assert.True(comparer.Compare(bigger, smaller) > 0);
         Assert.True(comparer.Compare(smaller, bigger) < 0);
         Assert.Equal(0, comparer.Compare(bigger, bigger));
@@ -509,13 +509,13 @@ public class PeriodTest
         var month = Corvus.Text.Json.Period.FromMonths(1);
         var days = Corvus.Text.Json.Period.FromDays(30);
         // At the start of January, a month is longer than 30 days
-        var januaryComparer = Corvus.Text.Json.Period.CreateComparer(new LocalDateTime(2000, 1, 1, 0, 0));
+        IComparer<Json.Period> januaryComparer = Corvus.Text.Json.Period.CreateComparer(new LocalDateTime(2000, 1, 1, 0, 0));
         Assert.True(januaryComparer.Compare(month, days) > 0);
         Assert.True(januaryComparer.Compare(days, month) < 0);
         Assert.Equal(0, januaryComparer.Compare(month, month));
 
         // At the start of February, a month is shorter than 30 days
-        var februaryComparer = Corvus.Text.Json.Period.CreateComparer(new LocalDateTime(2000, 2, 1, 0, 0));
+        IComparer<Json.Period> februaryComparer = Corvus.Text.Json.Period.CreateComparer(new LocalDateTime(2000, 2, 1, 0, 0));
         Assert.True(februaryComparer.Compare(month, days) < 0);
         Assert.True(februaryComparer.Compare(days, month) > 0);
         Assert.Equal(0, februaryComparer.Compare(month, month));
@@ -534,7 +534,7 @@ public class PeriodTest
     [MemberData(nameof(PeriodMaxAndMinValues))]
     public void Period_MaxAndMinValues_AllMembers(Corvus.Text.Json.Period period, int expectedIntValue, long expectedLongValue)
     {
-        foreach (var property in typeof(Corvus.Text.Json.Period).GetProperties(BindingFlags.Instance | BindingFlags.Public))
+        foreach (PropertyInfo property in typeof(Corvus.Text.Json.Period).GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
             var actualValue = property.GetValue(period);
 
@@ -556,7 +556,7 @@ public class PeriodTest
                 return;
             }
 
-            throw new InvalidOperationException($"Property {property.Name} has unexpected type {actualValue?.GetType().Name}.");            
+            throw new InvalidOperationException($"Property {property.Name} has unexpected type {actualValue?.GetType().Name}.");
         }
     }
 
