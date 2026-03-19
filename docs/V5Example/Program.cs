@@ -91,3 +91,6 @@ string descriptionStatic = payment.Match<string>(
     static (in Payment p) => "Unknown payment type");
 
 Console.WriteLine($"Payment (static): {descriptionStatic}");
+
+using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+payment.EvaluateSchema(collector);

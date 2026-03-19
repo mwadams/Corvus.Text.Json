@@ -2748,7 +2748,7 @@
     "Title": "JsonProperty<TValue>",
     "Description": "Represents a single property for a JSON object.",
     "Keywords": "JsonProperty<TValue> struct Corvus.Text.Json TValue",
-    "Body": "Represents a single property for a JSON object.\r\nName: The name of this property.\r\nNameSpan: Gets the name as an unescaped UTF-8 JSON string.\r\nValue: The value of this property.\r\nNameEquals: Compares `text` to the name of this property.\r\nNameEquals: Compares the text represented by `utf8Text` to the name of this property.\r\nNameEquals: Compares `text` to the name of this property.\r\nToString: Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes.\r\nWriteTo: Write the property into the provided writer as a named JSON object property."
+    "Body": "Represents a single property for a JSON object.\r\nName: The name of this property.\r\nUtf8NameSpan: Gets the name as an unescaped UTF-8 JSON string.\r\nUtf16NameSpan: Gets the name as an unescaped UTF-16 JSON string.\r\nValue: The value of this property.\r\nNameEquals: Compares `text` to the name of this property.\r\nNameEquals: Compares the text represented by `utf8Text` to the name of this property.\r\nNameEquals: Compares `text` to the name of this property.\r\nToString: Provides a [`String`](https://learn.microsoft.com/dotnet/api/system.string) representation of the property for debugging purposes.\r\nWriteTo: Write the property into the provided writer as a named JSON object property."
   },
   {
     "Url": "/api/corvus-text-json-jsonproperty-tvalue.name.html",
@@ -2758,11 +2758,18 @@
     "Body": "The name of this property."
   },
   {
-    "Url": "/api/corvus-text-json-jsonproperty-tvalue.namespan.html",
-    "Title": "JsonProperty<TValue>.NameSpan",
+    "Url": "/api/corvus-text-json-jsonproperty-tvalue.utf8namespan.html",
+    "Title": "JsonProperty<TValue>.Utf8NameSpan",
     "Description": "Gets the name as an unescaped UTF-8 JSON string.",
-    "Keywords": "JsonProperty<TValue> NameSpan property Corvus.Text.Json",
+    "Keywords": "JsonProperty<TValue> Utf8NameSpan property Corvus.Text.Json",
     "Body": "Gets the name as an unescaped UTF-8 JSON string."
+  },
+  {
+    "Url": "/api/corvus-text-json-jsonproperty-tvalue.utf16namespan.html",
+    "Title": "JsonProperty<TValue>.Utf16NameSpan",
+    "Description": "Gets the name as an unescaped UTF-16 JSON string.",
+    "Keywords": "JsonProperty<TValue> Utf16NameSpan property Corvus.Text.Json",
+    "Body": "Gets the name as an unescaped UTF-16 JSON string."
   },
   {
     "Url": "/api/corvus-text-json-jsonproperty-tvalue.value.html",

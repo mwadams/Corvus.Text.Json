@@ -19,7 +19,7 @@ Title: "JsonProperty<TValue>.NameEquals Method — Corvus.Text.Json"
 
 ## NameEquals(string) {#nameequals-string}
 
-**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L95)
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L111)
 
 Compares `text` to the name of this property.
 
@@ -60,7 +60,7 @@ This method is functionally equal to doing an ordinal comparison of `text` and [
 
 ## NameEquals(ReadOnlySpan&lt;byte&gt;) {#nameequals-readonlyspan-byte}
 
-**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L115)
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L131)
 
 Compares the text represented by `utf8Text` to the name of this property.
 
@@ -101,7 +101,7 @@ This method is functionally equal to doing an ordinal comparison of `utf8Text` a
 
 ## NameEquals(ReadOnlySpan&lt;char&gt;) {#nameequals-readonlyspan-char}
 
-**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L136)
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L152)
 
 Compares `text` to the name of this property.
 

@@ -19,6 +19,13 @@ They activate automatically at build time and in Visual Studio's live analysis.
 | [CTJ001](#ctj001--prefer-utf-8-string-literal) | Prefer UTF-8 string literal | Warning | ✅ Yes |
 | [CTJ002](#ctj002--unnecessary-conversion-to-net-type) | Unnecessary conversion to .NET type | Warning | ✅ Yes |
 | [CTJ003](#ctj003--match-lambda-should-be-static) | Match lambda should be static | Info | ✅ Yes |
+| [CTJ004](#ctj004--missing-dispose-on-parsedjsondocument) | Missing dispose on ParsedJsonDocument | Warning | ✅ Yes |
+| [CTJ005](#ctj005--missing-dispose-on-jsonworkspace) | Missing dispose on JsonWorkspace | Warning | ✅ Yes |
+| [CTJ006](#ctj006--missing-dispose-on-jsondocumentbuilder) | Missing dispose on JsonDocumentBuilder | Warning | ✅ Yes |
+| [CTJ007](#ctj007--ignored-schema-validation-result) | EvaluateSchema() result is discarded | Warning | — |
+| [CTJ008](#ctj008--prefer-non-allocating-property-name-accessors) | Prefer NameEquals over Name for comparisons | Info | ✅ Yes |
+| [CTJ009](#ctj009--prefer-renting-utf8jsonwriter-from-workspace) | Prefer renting Utf8JsonWriter from workspace | Info | — |
+| [CTJ010](#ctj010--prefer-readonlymemorybyte-parse-overload) | Prefer ReadOnlyMemory/Span-based Parse | Info | — |
 
 ## Refactorings
 
@@ -110,6 +117,174 @@ string result = value.Match(
 ```
 
 > **Note:** The code fix only applies the `static` modifier for non-capturing lambdas. Capturing-lambda refactoring to `Match<TContext, TResult>` requires manual changes.
+
+---
+
+## CTJ004 — Missing dispose on ParsedJsonDocument
+
+**Severity:** Warning · **Code fix:** ✅ Yes · **Category:** Reliability
+
+`ParsedJsonDocument<T>` uses pooled memory from `ArrayPool<byte>`. Failing to dispose it leaks those buffers, increasing GC pressure and potentially exhausting the pool.
+
+This analyzer fires when a `ParsedJsonDocument<T>.Parse(...)` result is assigned to a local variable without `using`, or when the result is discarded entirely.
+
+```csharp
+// Before — CTJ004 fires
+var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+// After — code fix applied
+using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+```
+
+The code fix adds the `using` keyword to the local declaration.
+
+If you need to control lifetime explicitly (e.g., returning the document from a method), call `Dispose()` in a `finally` block instead.
+
+---
+
+## CTJ005 — Missing dispose on JsonWorkspace
+
+**Severity:** Warning · **Code fix:** ✅ Yes · **Category:** Reliability
+
+`JsonWorkspace` manages pooled arrays of `IJsonDocument` and a writer cache. Failing to dispose it leaks these pool resources and all child document builders.
+
+```csharp
+// Before — CTJ005 fires
+var workspace = JsonWorkspace.Create();
+
+// After — code fix applied
+using var workspace = JsonWorkspace.Create();
+```
+
+---
+
+## CTJ006 — Missing dispose on JsonDocumentBuilder
+
+**Severity:** Warning · **Code fix:** ✅ Yes · **Category:** Reliability
+
+`JsonDocumentBuilder<T>` holds mutable document state backed by pooled memory. Failing to dispose it leaks those buffers.
+
+```csharp
+// Before — CTJ006 fires
+var builder = doc.RootElement.BuildDocument(workspace);
+
+// After — code fix applied
+using var builder = doc.RootElement.BuildDocument(workspace);
+```
+
+---
+
+## CTJ007 — Ignored schema validation result
+
+**Severity:** Warning · **Category:** Usage
+
+`EvaluateSchema()` returns a `bool` indicating whether validation passed. Discarding this return value means the validation call has no effect — the schema is evaluated but no action is taken based on the result.
+
+```csharp
+// Before — CTJ007 fires
+element.EvaluateSchema();
+
+// After — use the result
+if (!element.EvaluateSchema())
+{
+    // Handle validation failure
+}
+```
+
+This also detects discarded results on schema-generated types that implement `IJsonElement<T>`.
+
+---
+
+## CTJ008 — Prefer non-allocating property name accessors
+
+**Severity:** Info · **Code fix:** ✅ Yes · **Category:** Performance
+
+`JsonProperty<T>.Name` allocates a new `string` on every access. When comparing the property name against a known literal, use `NameEquals()` instead — it performs the comparison directly on the underlying UTF-8 bytes without allocating.
+
+```csharp
+// Before — CTJ008 fires
+if (property.Name == "data") { ... }
+
+// After — code fix applied
+if (property.NameEquals("data"u8)) { ... }
+```
+
+The code fix replaces `==`/`!=` comparisons and `.Equals()` calls with `NameEquals("..."u8)`. For `!=`, the result is negated: `!property.NameEquals("data"u8)`.
+
+### Alternative non-allocating accessors
+
+If you need the property name for something other than comparison, consider:
+
+| Accessor | Returns | Allocates? | Notes |
+|----------|---------|------------|-------|
+| `property.Name` | `string` | ✅ Yes | Use only when you truly need a `string` |
+| `property.NameEquals("x"u8)` | `bool` | ❌ No | Best for comparison against known values |
+| `property.Utf8NameSpan` | `UnescapedUtf8JsonString` | ❌ No (may rent) | Raw UTF-8 bytes; dispose when done |
+| `property.Utf16NameSpan` | `UnescapedUtf16JsonString` | ❌ No (may rent) | Raw UTF-16 chars; dispose when done |
+
+---
+
+## CTJ009 — Prefer renting Utf8JsonWriter from workspace
+
+**Severity:** Info · **Category:** Performance
+
+When a `JsonWorkspace` is in scope, you should rent a `Utf8JsonWriter` from it rather than allocating a new one. The workspace maintains a writer cache that avoids repeated allocation and provides consistent writer options.
+
+```csharp
+// Before — CTJ009 fires
+using var workspace = JsonWorkspace.Create();
+var writer = new Utf8JsonWriter(stream);  // allocates
+
+// After — use workspace rental
+using var workspace = JsonWorkspace.Create();
+var writer = workspace.RentWriter(bufferWriter);
+// ... use writer ...
+workspace.ReturnWriter(writer);
+```
+
+The workspace provides two rental methods:
+- `RentWriter(IBufferWriter<byte>)` — when you already have a buffer
+- `RentWriterAndBuffer(int defaultBufferSize, out IByteBufferWriter bufferWriter)` — rents both
+
+Always return the writer with `ReturnWriter()` or `ReturnWriterAndBuffer()` when done.
+
+---
+
+## CTJ010 — Prefer ReadOnlyMemory/Span-based Parse overload
+
+**Severity:** Info · **Category:** Performance
+
+`ParsedJsonDocument<T>.Parse(string)` and `JsonElement.ParseValue(string)` allocate an internal UTF-8 copy of the input. When you already have the data as bytes, use the `ReadOnlyMemory<byte>` or `ReadOnlySpan<byte>` overload to avoid this copy.
+
+### Encoding roundtrip
+
+```csharp
+// Before — CTJ010 fires (encoding roundtrip)
+string json = Encoding.UTF8.GetString(bytes);
+var doc = ParsedJsonDocument<JsonElement>.Parse(json);
+
+// After — pass bytes directly
+var doc = ParsedJsonDocument<JsonElement>.Parse(bytes.AsMemory());
+```
+
+### String literal
+
+```csharp
+// Before — CTJ010 fires (string literal)
+var element = JsonElement.ParseValue("{}");
+
+// After — use UTF-8 literal
+var element = JsonElement.ParseValue("{}"u8);
+```
+
+### Overload preference
+
+For `ParsedJsonDocument<T>`, prefer overloads in this order:
+1. `Parse(ReadOnlyMemory<byte>)` — zero-copy; the document holds a reference directly
+2. `Parse(ReadOnlySequence<byte>)` — for pipeline scenarios
+3. `Parse(Stream)` / `ParseAsync(Stream)` — for I/O scenarios
+4. `Parse(ReadOnlyMemory<char>)` — if you have `char[]` data
+5. `Parse(string)` — least preferred; allocates internal UTF-8 copy
 
 ---
 

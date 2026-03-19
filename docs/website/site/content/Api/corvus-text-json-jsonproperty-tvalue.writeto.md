@@ -8,7 +8,7 @@ Title: "JsonProperty<TValue>.WriteTo Method — Corvus.Text.Json"
 
 **Namespace:** Corvus.Text.Json  
 **Assembly:** Corvus.Text.Json.dll  
-**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L177)
+**Source:** [JsonProperty.cs](https://github.com/mwadams/Corvus.Text.Json/blob/main/src/Corvus.Text.Json/Corvus/Text/Json/Document/JsonProperty.cs#L193)
 
 ## WriteTo {#writeto}
 
