@@ -3,19 +3,17 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 using System.Numerics;
 
 namespace Corvus.Numerics.Tests;
-
-[TestClass]
 public class BigNumberValidationTests
 {
     #region Division Validation
 
-    [TestMethod]
+    [Fact]
     public void Divide_NegativePrecision_ThrowsArgumentOutOfRangeException()
     {
         BigNumber dividend = new(10, 0);
@@ -24,7 +22,7 @@ public class BigNumberValidationTests
         Should.Throw<ArgumentOutOfRangeException>(() => BigNumber.Divide(dividend, divisor, -1));
     }
 
-    [TestMethod]
+    [Fact]
     public void Divide_ZeroPrecision_Succeeds()
     {
         BigNumber dividend = new(10, 0);
@@ -35,7 +33,7 @@ public class BigNumberValidationTests
         result.ShouldBe(new BigNumber(5, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void Divide_MaxValidPrecision_Succeeds()
     {
         BigNumber dividend = new(10, 0);
@@ -47,7 +45,7 @@ public class BigNumberValidationTests
         result.ShouldNotBe(BigNumber.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void Divide_PrecisionAbove255_ThrowsArgumentOutOfRangeException()
     {
         BigNumber dividend = new(10, 0);
@@ -56,7 +54,7 @@ public class BigNumberValidationTests
         Should.Throw<ArgumentOutOfRangeException>(() => BigNumber.Divide(dividend, divisor, 256));
     }
 
-    [TestMethod]
+    [Fact]
     public void Divide_PrecisionWellAbove255_ThrowsArgumentOutOfRangeException()
     {
         BigNumber dividend = new(10, 0);
@@ -69,7 +67,7 @@ public class BigNumberValidationTests
 
     #region Parsing Validation
 
-    [TestMethod]
+    [Fact]
     public void Parse_VeryLongInput_ReturnsFalse()
     {
         // Create a string longer than MaxInputLength (10,000 characters)
@@ -80,7 +78,7 @@ public class BigNumberValidationTests
         result.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void Parse_ExactlyMaxLength_Succeeds()
     {
         // Create a string exactly at MaxInputLength
@@ -94,7 +92,7 @@ public class BigNumberValidationTests
         parsed.Significand.ShouldNotBe(BigInteger.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void Parse_JustUnderMaxLength_Succeeds()
     {
         string input = new string('7', 9_999);
@@ -108,7 +106,7 @@ public class BigNumberValidationTests
 
     #region Round Validation
 
-    [TestMethod]
+    [Fact]
     public void Round_NegativeDecimals_ThrowsArgumentOutOfRangeException()
     {
         BigNumber value = new(123, 0);
@@ -117,7 +115,7 @@ public class BigNumberValidationTests
     }
 
 #if NET
-    [TestMethod]
+    [Fact]
     public void Round_ToZero_RoundsTowardZero()
     {
         BigNumber value1 = BigNumber.Parse("2.7");
@@ -131,7 +129,7 @@ public class BigNumberValidationTests
         result2.ShouldBe(new BigNumber(-2, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void Round_ToPositiveInfinity_RoundsUp()
     {
         BigNumber value1 = BigNumber.Parse("2.1");
@@ -146,7 +144,7 @@ public class BigNumberValidationTests
         result2.ShouldBe(new BigNumber(-2, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void Round_ToNegativeInfinity_RoundsDown()
     {
         BigNumber value1 = BigNumber.Parse("2.1");

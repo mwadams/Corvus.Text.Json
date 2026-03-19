@@ -6,7 +6,7 @@ This guide covers the test projects in the solution and how to run them.
 
 ```powershell
 # Run the standard test suite (excludes slow stress tests)
-dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "category!=failing&category!=outerloop"
 ```
 
 Always exclude the `failing` and `outerloop` categories when running the full suite. The `outerloop` tests are long-running stress and thread-safety tests that are not suitable for routine development.
@@ -40,7 +40,7 @@ The solution contains five runnable test projects and four supporting model/util
 ### All V5 library tests
 
 ```powershell
-dotnet test tests\Corvus.Text.Json.Tests --filter "Category!=failing&Category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "category!=failing&category!=outerloop"
 ```
 
 This is the main test suite covering the V5 library: reader, writer, parsed documents, mutable documents, schema validation, and generated type behaviour.
@@ -50,7 +50,7 @@ This is the main test suite covering the V5 library: reader, writer, parsed docu
 The `MigrationEquivalenceTests` folder within the main test project compares V4-generated and V5-generated types side-by-side for parsing, serialization, mutation, validation, and property access:
 
 ```powershell
-dotnet test tests\Corvus.Text.Json.Tests --filter "FullyQualifiedName~MigrationEquivalence&Category!=failing&Category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "FullyQualifiedName~MigrationEquivalence&category!=failing&category!=outerloop"
 ```
 
 ### Migration analyzer tests
@@ -67,14 +67,14 @@ Tests are generated from the [JSON Schema Test Suite](https://github.com/json-sc
 
 ```powershell
 # All schema drafts
-dotnet test tests\Corvus.Text.Json.Tests --filter "Trait~JsonSchemaTestSuite&Category!=failing&Category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "Trait~JsonSchemaTestSuite&category!=failing&category!=outerloop"
 
 # A single draft
-dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft202012&Category!=failing&Category!=outerloop"
-dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft201909&Category!=failing&Category!=outerloop"
-dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft7&Category!=failing&Category!=outerloop"
-dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft6&Category!=failing&Category!=outerloop"
-dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft4&Category!=failing&Category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft202012&category!=failing&category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft201909&category!=failing&category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft7&category!=failing&category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft6&category!=failing&category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests --filter "JsonSchemaTestSuite=Draft4&category!=failing&category!=outerloop"
 ```
 
 ### Numerics tests
@@ -86,7 +86,7 @@ dotnet test tests\Corvus.Numerics.Tests
 ### Validator tests
 
 ```powershell
-dotnet test tests\Corvus.Text.Json.Validator.Tests --filter "Category!=failing&Category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Validator.Tests --filter "category!=failing&category!=outerloop"
 ```
 
 ### Code generator tests
@@ -99,10 +99,10 @@ dotnet test tests\Corvus.Text.Json.CodeGenerator.Tests
 
 ```powershell
 # Single class
-dotnet test Corvus.Text.Json.slnx --filter "ClassName=Corvus.Text.Json.Tests.ParsedJsonDocumentTests&Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "ClassName=Corvus.Text.Json.Tests.ParsedJsonDocumentTests&category!=failing&category!=outerloop"
 
 # Single method (substring match)
-dotnet test Corvus.Text.Json.slnx --filter "FullyQualifiedName~ParseValidUtf8BOM&Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "FullyQualifiedName~ParseValidUtf8BOM&category!=failing&category!=outerloop"
 ```
 
 ## Outerloop (stress) tests
@@ -118,8 +118,8 @@ dotnet test tests\Corvus.Text.Json.Tests --filter "Category=outerloop"
 The main test projects multi-target `net9.0`, `net10.0`, and `net481`. To run against a specific framework:
 
 ```powershell
-dotnet test tests\Corvus.Text.Json.Tests -f net10.0 --filter "Category!=failing&Category!=outerloop"
-dotnet test tests\Corvus.Text.Json.Tests -f net481 --filter "Category!=failing&Category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests -f net10.0 --filter "category!=failing&category!=outerloop"
+dotnet test tests\Corvus.Text.Json.Tests -f net481 --filter "category!=failing&category!=outerloop"
 ```
 
 ## Regenerating JSON Schema Test Suite tests
@@ -189,5 +189,5 @@ After running both generators, rebuild and re-run the tests to verify:
 
 ```powershell
 dotnet build Corvus.Text.Json.slnx
-dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "category!=failing&category!=outerloop"
 ```

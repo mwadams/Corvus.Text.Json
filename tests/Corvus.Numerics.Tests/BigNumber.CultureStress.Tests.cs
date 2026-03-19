@@ -3,7 +3,7 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 
@@ -13,12 +13,11 @@ namespace Corvus.Numerics.Tests;
 /// Tier 1 Option 3: Culture stress testing.
 /// Target: +1.5% coverage (26 tests).
 /// </summary>
-[TestClass]
 public class BigNumberCultureStressTests
 {
     #region All Installed Cultures (+1 test)
 
-    [TestMethod]
+    [Fact]
     public void Format_AllInstalledCultures_WorkCorrectly()
     {
         BigNumber num = new(123456789, -2); // 1234567.89
@@ -56,7 +55,7 @@ public class BigNumberCultureStressTests
 
     #region Exotic Separator Configurations (+10 tests)
 
-    [TestMethod]
+    [Fact]
     public void Format_VeryLongDecimalSeparator_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -69,7 +68,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("123");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_VeryLongGroupSeparator_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -81,7 +80,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("GROUP_SEP");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_UnicodeDecimalSeparator_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -93,7 +92,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("123•45");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_EmojiSeparators_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -107,7 +106,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("🔹");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_MultiByteCharacterSeparators_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -121,7 +120,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("、");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_WhitespaceSeparators_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -133,7 +132,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain(" ");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatCurrency_VeryLongCurrencySymbol_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -146,7 +145,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_VeryLongPercentSymbol_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -158,7 +157,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain("PERCENT");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_AllSeparatorsVeryLong_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -182,7 +181,7 @@ public class BigNumberCultureStressTests
         resultP.ShouldContain("PERCENT");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ExoticNegativeSign_HandlesCorrectly()
     {
         var culture = new CultureInfo("en-US");
@@ -199,7 +198,7 @@ public class BigNumberCultureStressTests
 
     #region RTL and Asian Cultures (+5 tests)
 
-    [TestMethod]
+    [Fact]
     public void Format_ArabicCulture_HandlesCorrectly()
     {
         var culture = new CultureInfo("ar-SA");
@@ -212,7 +211,7 @@ public class BigNumberCultureStressTests
         resultC.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_HebrewCulture_HandlesCorrectly()
     {
         var culture = new CultureInfo("he-IL");
@@ -225,7 +224,7 @@ public class BigNumberCultureStressTests
         resultC.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_JapaneseCulture_HandlesCorrectly()
     {
         var culture = new CultureInfo("ja-JP");
@@ -238,7 +237,7 @@ public class BigNumberCultureStressTests
         resultC.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ChineseCulture_HandlesCorrectly()
     {
         var culture = new CultureInfo("zh-CN");
@@ -251,7 +250,7 @@ public class BigNumberCultureStressTests
         resultC.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_KoreanCulture_HandlesCorrectly()
     {
         var culture = new CultureInfo("ko-KR");
@@ -268,7 +267,7 @@ public class BigNumberCultureStressTests
 
     #region Special Grouping Patterns (+5 tests)
 
-    [TestMethod]
+    [Fact]
     public void Format_IndianNumbering_ThreeTwoRepeating()
     {
         // Indian numbering: 12,34,56,789.00
@@ -281,7 +280,7 @@ public class BigNumberCultureStressTests
         result.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_NoGrouping_NoSeparators()
     {
         var culture = new CultureInfo("en-US");
@@ -293,7 +292,7 @@ public class BigNumberCultureStressTests
         result.ShouldNotContain(",");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_CustomGroupingSizeFive_FiveDigitGroups()
     {
         var culture = new CultureInfo("en-US");
@@ -305,7 +304,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain(",");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_IrregularGrouping_MultiplePatterns()
     {
         var culture = new CultureInfo("en-US");
@@ -317,7 +316,7 @@ public class BigNumberCultureStressTests
         result.ShouldContain(",");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_SwissGermanCulture_ApostropheSeparator()
     {
         // Swiss German uses apostrophe as group separator
@@ -333,7 +332,7 @@ public class BigNumberCultureStressTests
 
     #region Edge Cases (+5 tests)
 
-    [TestMethod]
+    [Fact]
     public void Format_VeryLargeNumberAllCultures_HandlesCorrectly()
     {
         BigNumber huge = BigNumber.Parse(new string('9', 100));
@@ -349,7 +348,7 @@ public class BigNumberCultureStressTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ZeroWithAllCultures_HandlesCorrectly()
     {
         BigNumber zero = BigNumber.Zero;
@@ -364,7 +363,7 @@ public class BigNumberCultureStressTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_NegativeWithAllCultures_HandlesCorrectly()
     {
         BigNumber negative = new(-123456, -2);
@@ -379,7 +378,7 @@ public class BigNumberCultureStressTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_FractionalOnlyAllCultures_HandlesCorrectly()
     {
         BigNumber fraction = new(5, -3); // 0.005
@@ -394,7 +393,7 @@ public class BigNumberCultureStressTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_InvariantCultureConsistency_AlwaysSame()
     {
         BigNumber num = new(123456789, -2);

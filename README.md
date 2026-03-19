@@ -116,7 +116,7 @@ dotnet build Corvus.Text.Json.slnx
 ## Testing
 
 ```bash
-dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "category!=failing&category!=outerloop"
 ```
 
 ## Comparison with System.Text.Json

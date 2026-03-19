@@ -3,16 +3,14 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Numerics;
 
 namespace Corvus.Numerics.Tests;
-
-[TestClass]
 public class BigNumberConstructionTests
 {
-    [TestMethod]
+    [Fact]
     public void Constructor_WithSignificandAndExponent_CreatesCorrectValue()
     {
         BigNumber number = new(BigInteger.Parse("12345"), -2);
@@ -21,34 +19,34 @@ public class BigNumberConstructionTests
         number.Exponent.ShouldBe(-2);
     }
 
-    [TestMethod]
+    [Fact]
     public void Zero_ReturnsZeroValue()
     {
         BigNumber.Zero.Significand.ShouldBe(BigInteger.Zero);
         BigNumber.Zero.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void One_ReturnsOneValue()
     {
         BigNumber.One.Significand.ShouldBe(BigInteger.One);
         BigNumber.One.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void MinusOne_ReturnsMinusOneValue()
     {
         BigNumber.MinusOne.Significand.ShouldBe(BigInteger.MinusOne);
         BigNumber.MinusOne.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void Radix_ReturnsTen()
     {
         BigNumber.Radix.ShouldBe(10);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromInt_CreatesCorrectValue()
     {
         BigNumber number = 42;
@@ -57,7 +55,7 @@ public class BigNumberConstructionTests
         number.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromLong_CreatesCorrectValue()
     {
         BigNumber number = 123456789012345L;
@@ -66,7 +64,7 @@ public class BigNumberConstructionTests
         number.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromBigInteger_CreatesCorrectValue()
     {
         BigInteger value = BigInteger.Parse("999999999999999999999999999999");
@@ -76,7 +74,7 @@ public class BigNumberConstructionTests
         number.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromDecimal_CreatesCorrectValue()
     {
         BigNumber number = 123.456m;
@@ -85,7 +83,7 @@ public class BigNumberConstructionTests
         number.ShouldBe(parsed);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromDouble_CreatesCorrectValue()
     {
         BigNumber number = 123.456;
@@ -93,20 +91,20 @@ public class BigNumberConstructionTests
         number.Significand.ShouldNotBe(BigInteger.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromDouble_WithNaN_ThrowsArgumentException()
     {
         Should.Throw<ArgumentException>(() => (BigNumber)double.NaN);
     }
 
-    [TestMethod]
+    [Fact]
     public void ImplicitConversion_FromDouble_WithInfinity_ThrowsArgumentException()
     {
         Should.Throw<ArgumentException>(() => (BigNumber)double.PositiveInfinity);
         Should.Throw<ArgumentException>(() => (BigNumber)double.NegativeInfinity);
     }
 
-    [TestMethod]
+    [Fact]
     public void ExplicitConversion_ToDecimal_WithSimpleValue_ReturnsCorrectValue()
     {
         BigNumber number = BigNumber.Parse("123.456");
@@ -116,7 +114,7 @@ public class BigNumberConstructionTests
         result.ShouldBe(123.456m);
     }
 
-    [TestMethod]
+    [Fact]
     public void ExplicitConversion_ToDecimal_WithZero_ReturnsZero()
     {
         decimal result = (decimal)BigNumber.Zero;
@@ -124,7 +122,7 @@ public class BigNumberConstructionTests
         result.ShouldBe(decimal.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void ExplicitConversion_ToDouble_WithSimpleValue_ReturnsCorrectValue()
     {
         BigNumber number = BigNumber.Parse("123.456");
@@ -134,7 +132,7 @@ public class BigNumberConstructionTests
         result.ShouldBe(123.456, tolerance: 0.001);
     }
 
-    [TestMethod]
+    [Fact]
     public void ExplicitConversion_ToLong_WithIntegerValue_ReturnsCorrectValue()
     {
         BigNumber number = 12345;
@@ -144,7 +142,7 @@ public class BigNumberConstructionTests
         result.ShouldBe(12345L);
     }
 
-    [TestMethod]
+    [Fact]
     public void ExplicitConversion_ToLong_WithDecimalValue_Truncates()
     {
         BigNumber number = BigNumber.Parse("123.456");
@@ -154,7 +152,7 @@ public class BigNumberConstructionTests
         result.ShouldBe(123L);
     }
 
-    [TestMethod]
+    [Fact]
     public void IsInteger_WithIntegerValue_ReturnsTrue()
     {
         BigNumber number = 42;
@@ -162,7 +160,7 @@ public class BigNumberConstructionTests
         number.IsInteger().ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void IsInteger_WithDecimalValue_ReturnsFalse()
     {
         BigNumber number = BigNumber.Parse("42.5");
@@ -170,7 +168,7 @@ public class BigNumberConstructionTests
         number.IsInteger().ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void IsInteger_WithZero_ReturnsTrue()
     {
         BigNumber.Zero.IsInteger().ShouldBeTrue();

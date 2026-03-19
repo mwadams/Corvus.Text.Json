@@ -13,13 +13,13 @@ The repo structure mirrors the dotnet/runtime repository conventions: shared sou
 dotnet build Corvus.Text.Json.slnx
 
 # Run the standard test suite — exclude the 'failing' and 'outerloop' categories
-dotnet test Corvus.Text.Json.slnx --filter "Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "category!=failing&category!=outerloop"
 
 # Run a single test class
-dotnet test Corvus.Text.Json.slnx --filter "ClassName=Corvus.Text.Json.Tests.ParsedJsonDocumentTests&Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "ClassName=Corvus.Text.Json.Tests.ParsedJsonDocumentTests&category!=failing&category!=outerloop"
 
 # Run a single test method
-dotnet test Corvus.Text.Json.slnx --filter "FullyQualifiedName~ParseValidUtf8BOM&Category!=failing&Category!=outerloop"
+dotnet test Corvus.Text.Json.slnx --filter "FullyQualifiedName~ParseValidUtf8BOM&category!=failing&category!=outerloop"
 ```
 
 Always exclude `failing` and `outerloop` categories when running tests. Never run all tests without these filters.

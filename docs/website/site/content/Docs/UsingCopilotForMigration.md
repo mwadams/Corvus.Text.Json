@@ -1,4 +1,4 @@
-﻿---
+---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
@@ -252,7 +252,7 @@ After migrating a group of files:
 
 2. **Run tests:**
    ```bash
-   dotnet test --filter "Category!=failing&Category!=outerloop"
+   dotnet test --filter "category!=failing&category!=outerloop"
    ```
 
 3. **If tests fail**, give Copilot the error output:

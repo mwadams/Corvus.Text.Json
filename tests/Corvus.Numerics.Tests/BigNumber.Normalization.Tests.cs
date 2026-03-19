@@ -3,16 +3,14 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Numerics;
 
 namespace Corvus.Numerics.Tests;
-
-[TestClass]
 public class BigNumberNormalizationTests
 {
-    [TestMethod]
+    [Fact]
     public void Normalize_RemovesTrailingZeros()
     {
         BigNumber value = new(12300, -2);
@@ -23,7 +21,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_Zero_ReturnsZero()
     {
         BigNumber value = new(0, 5);
@@ -33,7 +31,7 @@ public class BigNumberNormalizationTests
         normalized.ShouldBe(BigNumber.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_NoTrailingZeros_ReturnsSame()
     {
         BigNumber value = new(123, -2);
@@ -44,7 +42,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(-2);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_ManyTrailingZeros_RemovesAll()
     {
         BigNumber value = new(BigInteger.Parse("1230000000000"), -5);
@@ -55,7 +53,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(5);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_LargeNumberWithTrailingZeros_Succeeds()
     {
         BigInteger significand = BigInteger.Parse("999999999999999999999999999999000000");
@@ -67,7 +65,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(-4);
     }
 
-    [TestMethod]
+    [Fact]
     public void Addition_Result_IsNormalized()
     {
         BigNumber a = new(1000, -2);  // 10.00
@@ -80,7 +78,7 @@ public class BigNumberNormalizationTests
         normalized.Significand.ToString().ShouldNotEndWith("0");
     }
 
-    [TestMethod]
+    [Fact]
     public void Subtraction_Result_IsNormalized()
     {
         BigNumber a = new(5000, -2);  // 50.00
@@ -92,7 +90,7 @@ public class BigNumberNormalizationTests
         normalized.Significand.ToString().ShouldNotEndWith("0");
     }
 
-    [TestMethod]
+    [Fact]
     public void Multiplication_Result_IsNormalized()
     {
         BigNumber a = new(100, 0);
@@ -106,7 +104,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(4);
     }
 
-    [TestMethod]
+    [Fact]
     public void Parse_Number_ProducesCorrectSignificandAndExponent()
     {
         BigNumber parsed = BigNumber.Parse("123.456");
@@ -116,7 +114,7 @@ public class BigNumberNormalizationTests
         parsed.Exponent.ShouldBe(-3);
     }
 
-    [TestMethod]
+    [Fact]
     public void Parse_NumberWithTrailingZeros_CanBeNormalized()
     {
         BigNumber parsed = BigNumber.Parse("123.4500");
@@ -126,7 +124,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(-2);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_IdempotentOperation_MultipleCallsReturnSame()
     {
         BigNumber value = new(12300, -2);
@@ -137,7 +135,7 @@ public class BigNumberNormalizationTests
         normalized1.ShouldBe(normalized2);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_NegativeNumber_WorksCorrectly()
     {
         BigNumber value = new(-12300, -2);
@@ -148,7 +146,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_VeryLargeTrailingZeros_HandlesCorrectly()
     {
         // Number with 50 trailing zeros
@@ -162,7 +160,7 @@ public class BigNumberNormalizationTests
         normalized.Exponent.ShouldBe(40);  // -10 + 50 = 40
     }
 
-    [TestMethod]
+    [Fact]
     public void IsInteger_AfterNormalization_ReturnsCorrectValue()
     {
         BigNumber withDecimals = new(12345, -2);  // 123.45
@@ -172,7 +170,7 @@ public class BigNumberNormalizationTests
         integer.IsInteger().ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void Normalize_PreservesValueEquality()
     {
         BigNumber original = new(123000, -3);

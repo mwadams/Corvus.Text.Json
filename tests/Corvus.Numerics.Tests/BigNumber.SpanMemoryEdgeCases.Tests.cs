@@ -3,7 +3,7 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 
@@ -13,12 +13,11 @@ namespace Corvus.Numerics.Tests;
 /// Tier 2/3: Span/Memory edge cases.
 /// Target: +0.5% coverage (15 tests).
 /// </summary>
-[TestClass]
 public class BigNumberSpanMemoryEdgeCasesTests
 {
     #region Empty/Null Handling (+5 tests)
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_EmptySpan_ReturnsFalse()
     {
         BigNumber num = new(123, 0);
@@ -30,7 +29,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         written.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_EmptyFormatString_UsesGeneral()
     {
         BigNumber num = new(123, 0);
@@ -42,7 +41,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         written.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_EmptySpan_ReturnsFalse()
     {
         BigNumber num = new(123, 0);
@@ -54,7 +53,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         written.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_EmptyFormat_UsesGeneral()
     {
         BigNumber num = new(123, 0);
@@ -66,7 +65,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         written.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleCharBuffer_TooSmall()
     {
         BigNumber num = new(123, 0);
@@ -81,7 +80,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
 
     #region Format String Variations (+5 tests)
 
-    [TestMethod]
+    [Fact]
     public void Format_LowercaseFormatSpecifiers_Work()
     {
         BigNumber num = new(12345, -2);
@@ -102,7 +101,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         g.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_MixedCaseFormatSpecifiers_Work()
     {
         BigNumber num = new(12345, -2);
@@ -114,7 +113,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         result1.ShouldBe(result2);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_NoPrecisionSpecified_UsesDefault()
     {
         BigNumber num = new(12345, -2);
@@ -126,7 +125,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_VeryLongFormatString_HandlesCorrectly()
     {
         BigNumber num = new(123, 0);
@@ -138,7 +137,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_GeneralWithNoPrecision_UsesDefault()
     {
         BigNumber num = new(123456789, 0);
@@ -152,7 +151,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
 
     #region Culture Edge Cases (+5 tests)
 
-    [TestMethod]
+    [Fact]
     public void Format_CurrentCulture_WorksCorrectly()
     {
         BigNumber num = new(12345, -2);
@@ -163,7 +162,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         result.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_CultureWithEmptyGroupSeparator_HandlesCorrectly()
     {
         BigNumber num = new(1234567, -2);
@@ -175,7 +174,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         result.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_CultureWithSameDecimalAndGroupSeparator_HandlesCorrectly()
     {
         BigNumber num = new(1234567, -2);
@@ -188,7 +187,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         result.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_NullCultureUsesInvariant_WorksCorrectly()
     {
         BigNumber num = new(12345, -2);
@@ -199,7 +198,7 @@ public class BigNumberSpanMemoryEdgeCasesTests
         result.ShouldNotBeEmpty();
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_NullCultureUsesInvariant_WorksCorrectly()
     {
         BigNumber num = new(12345, -2);

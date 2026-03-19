@@ -3,7 +3,7 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 
@@ -12,10 +12,9 @@ namespace Corvus.Numerics.Tests;
 /// <summary>
 /// Additional tests for TryFormatOptimized to achieve better branch coverage.
 /// </summary>
-[TestClass]
 public class BigNumberOptimizedFormattingCoverageTests
 {
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_WithNullProvider_UsesInvariant()
     {
         BigNumber num = new(12345, -2);
@@ -27,7 +26,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_WithInvariantCulture_UsesFastPath()
     {
         BigNumber num = new(12345, -2);
@@ -39,7 +38,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_WithCustomCulture_UsesCulturePath()
     {
         BigNumber num = new(12345, -2);
@@ -53,7 +52,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("123,45");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_ZeroWithEmptyFormat_InvariantCulture()
     {
         BigNumber zero = BigNumber.Zero;
@@ -65,7 +64,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("0");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_ZeroWithFormat_InvariantCulture()
     {
         BigNumber zero = BigNumber.Zero;
@@ -77,7 +76,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("0.00");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_ZeroWithCustomCulture()
     {
         BigNumber zero = BigNumber.Zero;
@@ -90,7 +89,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("0,00");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_EmptyFormat_InvariantCulture()
     {
         BigNumber num = new(12345, -2);
@@ -102,7 +101,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("12345E-2");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_EmptyFormat_CustomCulture()
     {
         BigNumber num = new(12345, -2);
@@ -115,7 +114,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("12345E-2");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_FixedPoint()
     {
         BigNumber num = new(123456, -3);
@@ -127,7 +126,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("123.456");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_Exponential()
     {
         BigNumber num = new(12345, 0);
@@ -139,7 +138,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("1.2345E+004");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_ExponentialLowerCase()
     {
         BigNumber num = new(12345, 0);
@@ -151,7 +150,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("1.2345e+004");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_Number()
     {
         BigNumber num = new(123456, -2);
@@ -163,7 +162,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("1,234.56");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_General()
     {
         BigNumber num = new(12345, 10);
@@ -175,7 +174,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("1.2345E+14");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_GeneralLowerCase()
     {
         BigNumber num = new(12345, 10);
@@ -187,7 +186,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("1.2345e+14");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_Currency()
     {
         BigNumber num = new(12345, -2);
@@ -199,7 +198,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("¤123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_Percent()
     {
         BigNumber num = new(12345, -4); // 1.2345
@@ -211,7 +210,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("123.45 %");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_SingleDigitPrecision_UnknownFormat_FallsBackToGeneral()
     {
         BigNumber num = new(12345, -2);
@@ -224,7 +223,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         // Based on implementation, it should use general path
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_MultiCharFormat_UsesGeneralPath()
     {
         BigNumber num = new(12345, -2);
@@ -236,7 +235,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("123.4500000000");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_NonDigitSecondChar_UsesGeneralPath()
     {
         BigNumber num = new(12345, -2);
@@ -247,7 +246,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         // Should fall back to general path which will throw FormatException or return false
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_BufferTooSmall_ReturnsFalse()
     {
         BigNumber num = new(1234567890, 0);
@@ -259,7 +258,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         written.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_CustomCulture_AllFormats()
     {
         BigNumber num = new(12345, -2);
@@ -283,7 +282,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_NegativeNumber_AllFormats()
     {
         BigNumber num = new(-12345, -2);
@@ -307,7 +306,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         success.ShouldBeTrue();
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_VeryLargeNumber_WorksCorrectly()
     {
         BigNumber num = new(123456789, 100);
@@ -319,7 +318,7 @@ public class BigNumberOptimizedFormattingCoverageTests
         buffer.Slice(0, written).ToString().ShouldBe("1.23E+108");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_VerySmallNumber_WorksCorrectly()
     {
         BigNumber num = new(123456789, -100);

@@ -3,7 +3,7 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 
@@ -13,12 +13,11 @@ namespace Corvus.Numerics.Tests;
 /// Phase 4: Pattern application tests.
 /// Target: +0.7% coverage (8 branches).
 /// </summary>
-[TestClass]
 public class BigNumberPatternApplicationTests
 {
     #region Percent Negative Patterns (+4 branches)
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern0_MinusSymbolAfter()
     {
         // Pattern 0: -n %
@@ -32,7 +31,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern1_MinusSymbolAfterNumber()
     {
         // Pattern 1: -n%
@@ -46,7 +45,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern2_MinusAfterPercent()
     {
         // Pattern 2: -%n
@@ -60,7 +59,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern3_PercentBefore()
     {
         // Pattern 3: %-n
@@ -74,7 +73,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern4_PercentAfterMinus()
     {
         // Pattern 4: %n-
@@ -88,7 +87,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern5_MinusAfterNumber()
     {
         // Pattern 5: n-%
@@ -102,7 +101,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern6_NumberPercentMinus()
     {
         // Pattern 6: n%-
@@ -116,7 +115,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern7_MinusPercent()
     {
         // Pattern 7: -% n
@@ -130,7 +129,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern8_NumberMinusPercent()
     {
         // Pattern 8: n -%
@@ -144,7 +143,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern9_PercentMinusNumber()
     {
         // Pattern 9: % n-
@@ -158,7 +157,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern10_PercentNumberMinus()
     {
         // Pattern 10: % -n
@@ -172,7 +171,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("%");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePattern11_NumberPercentSpace()
     {
         // Pattern 11: n- %
@@ -190,7 +189,7 @@ public class BigNumberPatternApplicationTests
 
     #region Symbol Variations (+4 branches)
 
-    [TestMethod]
+    [Fact]
     public void FormatCurrency_LongSymbol_FormatsCorrectly()
     {
         // Multi-character currency symbol
@@ -204,7 +203,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_CustomSymbol_FormatsCorrectly()
     {
         // Custom percent symbol
@@ -217,7 +216,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("percent");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatCurrency_EmojiSymbol_FormatsCorrectly()
     {
         // Unicode/emoji symbol
@@ -230,7 +229,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("💵");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatNumber_CustomNegativeSign_FormatsCorrectly()
     {
         // Custom negative sign
@@ -244,7 +243,7 @@ public class BigNumberPatternApplicationTests
         result.ShouldContain("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatCurrency_PositivePatternAllVariants_Work()
     {
         // Test that positive patterns 0-3 all work
@@ -260,7 +259,7 @@ public class BigNumberPatternApplicationTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_PositivePatternAllVariants_Work()
     {
         // Test that positive patterns 0-3 all work

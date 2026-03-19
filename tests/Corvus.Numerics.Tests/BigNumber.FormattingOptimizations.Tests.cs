@@ -3,7 +3,7 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 using System.Numerics;
@@ -14,12 +14,11 @@ namespace Corvus.Numerics.Tests;
 /// Phase 2: Formatting optimization tests - Buffer boundaries, cultures, precision.
 /// Target: +2.1% coverage (25 branches).
 /// </summary>
-[TestClass]
 public class BigNumberFormattingOptimizationsTests
 {
     #region Buffer Boundary Conditions (+8 branches)
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_VeryLargeNumber_HandlesCorrectly()
     {
         // Test with very large number requiring significant buffer space
@@ -32,7 +31,7 @@ public class BigNumberFormattingOptimizationsTests
         written.ShouldBeGreaterThan(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_ExactBufferSize_Succeeds()
     {
         // Test number that exactly fills expected buffer size
@@ -45,7 +44,7 @@ public class BigNumberFormattingOptimizationsTests
         buffer.Slice(0, written).ToString().ShouldBe("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_BufferTooSmallForCurrency_ReturnsFalse()
     {
         // Currency format requires more space for symbol
@@ -58,7 +57,7 @@ public class BigNumberFormattingOptimizationsTests
         success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_BufferTooSmallForPercent_ReturnsFalse()
     {
         // Percent format requires more space
@@ -71,7 +70,7 @@ public class BigNumberFormattingOptimizationsTests
         written.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_LargeBufferSmallNumber_Succeeds()
     {
         // Large buffer with small number - no overflow risk
@@ -84,7 +83,7 @@ public class BigNumberFormattingOptimizationsTests
         buffer.Slice(0, written).ToString().ShouldBe("5.0000000000");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormatOptimized_ExponentialWithHighPrecision_UsesBuffer()
     {
         // Exponential with high precision
@@ -101,7 +100,7 @@ public class BigNumberFormattingOptimizationsTests
 
     #region Custom Culture Separators (+10 branches)
 
-    [TestMethod]
+    [Fact]
     public void FormatNumber_MultiCharDecimalSeparator_FormatsCorrectly()
     {
         // Custom culture with multi-character decimal separator
@@ -115,7 +114,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("123");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatNumber_MultiCharGroupSeparator_FormatsCorrectly()
     {
         // Custom culture with multi-character group separator
@@ -128,7 +127,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("--");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatCurrency_MultiCharCurrencySymbol_FormatsCorrectly()
     {
         // Custom culture with multi-character currency symbol
@@ -142,7 +141,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_MultiCharPercentSymbol_FormatsCorrectly()
     {
         // Custom culture with multi-character percent symbol
@@ -155,7 +154,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("pct");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatNumber_CustomCultureAllSeparators_FormatsCorrectly()
     {
         // Culture with all custom separators
@@ -170,7 +169,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("--");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_CustomDecimalSeparator_UsesCustomSeparator()
     {
         // Zero with custom decimal separator
@@ -183,7 +182,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldBe("0@@000");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatExponential_CustomDecimalSeparator_UsesCustomSeparator()
     {
         // Exponential with custom decimal separator
@@ -201,7 +200,7 @@ public class BigNumberFormattingOptimizationsTests
 
     #region Precision Edge Cases (+7 branches)
 
-    [TestMethod]
+    [Fact]
     public void FormatFixedPoint_PrecisionZero_NoDecimalPoint()
     {
         // Precision 0 - no decimal point should appear
@@ -212,7 +211,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldNotContain(".");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatFixedPoint_PrecisionOne_OneDecimal()
     {
         // Precision 1 - one decimal place
@@ -222,7 +221,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldBe("123.5");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatFixedPoint_PrecisionTen_TenDecimals()
     {
         // Precision 10 - ten decimal places
@@ -232,7 +231,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldBe("5.0000000000");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatFixedPoint_PrecisionFifty_FiftyDecimals()
     {
         // Precision 50 - very high precision
@@ -243,7 +242,7 @@ public class BigNumberFormattingOptimizationsTests
         result.Length.ShouldBe(52); // "0." + 50 digits
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatExponential_PrecisionZeroNoDecimal_SingleDigit()
     {
         // Exponential precision 0 - no decimal point
@@ -254,7 +253,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldNotContain(".");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatNumber_VeryHighPrecision_HandlesCorrectly()
     {
         // Number format with very high precision
@@ -269,63 +268,63 @@ public class BigNumberFormattingOptimizationsTests
 
     #region Zero Formatting All Types (+5 branches)
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_FixedPointPrecision0_OnlyZero()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("F0", CultureInfo.InvariantCulture).ShouldBe("0");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_FixedPointPrecision10_ZeroWithDecimals()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("F10", CultureInfo.InvariantCulture).ShouldBe("0.0000000000");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_NumberPrecision0_OnlyZero()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("N0", CultureInfo.InvariantCulture).ShouldBe("0");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_NumberPrecision10_ZeroWithDecimals()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("N10", CultureInfo.InvariantCulture).ShouldBe("0.0000000000");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_ExponentialPrecision0_ZeroExponential()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("E0", CultureInfo.InvariantCulture).ShouldBe("0E+000");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_ExponentialPrecision10_ZeroWithDecimals()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("E10", CultureInfo.InvariantCulture).ShouldBe("0.0000000000E+000");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_CurrencyPrecision0_ZeroCurrency()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("C0", CultureInfo.InvariantCulture).ShouldBe("¤0");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_PercentPrecision0_ZeroPercent()
     {
         BigNumber zero = BigNumber.Zero;
         zero.ToString("P0", CultureInfo.InvariantCulture).ShouldBe("0 %");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatZero_WithNegativeSign_StillFormatsAsZero()
     {
         // Even with negative sign, zero is zero
@@ -337,7 +336,7 @@ public class BigNumberFormattingOptimizationsTests
 
     #region Format Type Detection (+5 branches)
 
-    [TestMethod]
+    [Fact]
     public void Format_GeneralUpperCaseNoExponent_ReturnsSignificand()
     {
         // G format with exponent 0
@@ -347,7 +346,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldBe("12345");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_GeneralLowerCaseWithExponent_UsesLowerE()
     {
         // g format with exponent - uses lowercase e
@@ -358,7 +357,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("12345");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_GeneralWithPrecision_LimitsSignificantDigits()
     {
         // G format with precision specified
@@ -369,7 +368,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("12346");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_GeneralWithNegativePrecision_UsesDefault()
     {
         // G format with no precision uses default representation
@@ -383,7 +382,7 @@ public class BigNumberFormattingOptimizationsTests
 
     #region Negative Number Formatting (+5 branches)
 
-    [TestMethod]
+    [Fact]
     public void FormatFixedPoint_NegativeNumber_ShowsSign()
     {
         BigNumber num = new(-12345, -2);
@@ -393,7 +392,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("123.45");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatExponential_NegativeNumber_ShowsSign()
     {
         BigNumber num = new(-12345, 0);
@@ -403,7 +402,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("E+");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatNumber_NegativeNumberWithGrouping_FormatsCorrectly()
     {
         BigNumber num = new(-1234567, -2);
@@ -413,7 +412,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain(",");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatCurrency_NegativeSmallNumber_UsesNegativePattern()
     {
         BigNumber num = new(-5, -2); // -0.05
@@ -431,7 +430,7 @@ public class BigNumberFormattingOptimizationsTests
         result.ShouldContain("0.05");
     }
 
-    [TestMethod]
+    [Fact]
     public void FormatPercent_NegativePercent_UsesNegativePattern()
     {
         BigNumber num = new(-12345, -4); // -1.2345 = -123.45%

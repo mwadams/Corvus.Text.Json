@@ -3,20 +3,18 @@
 // </copyright>
 
 using Corvus.Numerics;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 using System.Globalization;
 using System.Numerics;
 using System.Text;
 
 namespace Corvus.Numerics.Tests;
-
-[TestClass]
 public class BigNumberFormattingTests
 {
     #region UTF-16 ToString Tests
 
-    [TestMethod]
+    [Fact]
     public void ToString_IntegerNoExponent_ExactOutput()
     {
         BigNumber value = new(12345, 0);
@@ -27,7 +25,7 @@ public class BigNumberFormattingTests
         result.Length.ShouldBe(5);
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_PositiveExponent_ExactOutput()
     {
         BigNumber value = new(123, 5);
@@ -44,7 +42,7 @@ public class BigNumberFormattingTests
         result[4].ShouldBe('5');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_NegativeExponent_ExactOutput()
     {
         BigNumber value = new(456, -10);
@@ -62,7 +60,7 @@ public class BigNumberFormattingTests
         result[6].ShouldBe('0');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_NegativeNumber_ExactOutput()
     {
         BigNumber value = new(-789, 0);
@@ -77,7 +75,7 @@ public class BigNumberFormattingTests
         result[3].ShouldBe('9');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_NegativeWithExponent_ExactOutput()
     {
         BigNumber value = new(-123, 7);
@@ -94,7 +92,7 @@ public class BigNumberFormattingTests
         result[5].ShouldBe('7');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_Zero_ExactOutput()
     {
         BigNumber value = BigNumber.Zero;
@@ -106,7 +104,7 @@ public class BigNumberFormattingTests
         result[0].ShouldBe('0');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_One_ExactOutput()
     {
         BigNumber value = BigNumber.One;
@@ -118,7 +116,7 @@ public class BigNumberFormattingTests
         result[0].ShouldBe('1');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_MinusOne_ExactOutput()
     {
         BigNumber value = BigNumber.MinusOne;
@@ -131,7 +129,7 @@ public class BigNumberFormattingTests
         result[1].ShouldBe('1');
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_LargeExponent_ExactOutput()
     {
         BigNumber value = new(999, 100);
@@ -142,7 +140,7 @@ public class BigNumberFormattingTests
         result.Length.ShouldBe(7);
     }
 
-    [TestMethod]
+    [Fact]
     public void ToString_SmallExponent_ExactOutput()
     {
         BigNumber value = new(5, -50);
@@ -157,7 +155,7 @@ public class BigNumberFormattingTests
 
     #region UTF-16 TryFormat Tests
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_IntegerNoExponent_ExactChars()
     {
         BigNumber value = new(12345, 0);
@@ -179,7 +177,7 @@ public class BigNumberFormattingTests
         buffer[4].ShouldBe('5');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_PositiveExponent_ExactChars()
     {
         BigNumber value = new(789, 3);
@@ -197,7 +195,7 @@ public class BigNumberFormattingTests
         buffer[4].ShouldBe('3');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_NegativeExponent_ExactChars()
     {
         BigNumber value = new(42, -8);
@@ -215,7 +213,7 @@ public class BigNumberFormattingTests
         buffer[4].ShouldBe('8');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_NegativeNumber_ExactChars()
     {
         BigNumber value = new(-567, 0);
@@ -232,7 +230,7 @@ public class BigNumberFormattingTests
         buffer[3].ShouldBe('7');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_Zero_ExactChars()
     {
         BigNumber value = BigNumber.Zero;
@@ -245,7 +243,7 @@ public class BigNumberFormattingTests
         buffer[0].ShouldBe('0');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_LargeNumber_ExactChars()
     {
         BigNumber value = new(BigInteger.Parse("123456789012345678901234567890"), 0);
@@ -261,7 +259,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("12345678901234567890123456789E1");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_MultiDigitExponent_ExactChars()
     {
         BigNumber value = new(7, 123);
@@ -279,7 +277,7 @@ public class BigNumberFormattingTests
         buffer[4].ShouldBe('3');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_InsufficientBuffer_ReturnsFalse()
     {
         BigNumber value = new(BigInteger.Parse("999999999999999999999999999999"), 0);
@@ -295,7 +293,7 @@ public class BigNumberFormattingTests
 
     #region UTF-8 TryFormat Tests
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_IntegerNoExponent_ExactBytes()
     {
         BigNumber value = new(98765, 0);
@@ -317,7 +315,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("98765");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_PositiveExponent_ExactBytes()
     {
         BigNumber value = new(321, 15);
@@ -339,7 +337,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("321E15");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_NegativeExponent_ExactBytes()
     {
         BigNumber value = new(654, -99);
@@ -362,7 +360,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("654E-99");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_NegativeNumber_ExactBytes()
     {
         BigNumber value = new(-888, 0);
@@ -382,7 +380,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("-888");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_Zero_ExactBytes()
     {
         BigNumber value = BigNumber.Zero;
@@ -398,7 +396,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("0");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_LargeSignificand_ExactBytes()
     {
         BigNumber value = new(BigInteger.Parse("987654321098765432109876543210"), 0);
@@ -418,7 +416,7 @@ public class BigNumberFormattingTests
         buffer[30].ShouldBe((byte)'1');
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_NegativeWithExponent_ExactBytes()
     {
         BigNumber value = new(-246, 12);
@@ -441,7 +439,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("-246E12");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_InsufficientBuffer_ReturnsFalse()
     {
         BigNumber value = new(BigInteger.Parse("999999999999999999999999999999"), 0);
@@ -453,7 +451,7 @@ public class BigNumberFormattingTests
         bytesWritten.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_SingleDigit_ExactBytes()
     {
         BigNumber value = new(9, 0);
@@ -470,7 +468,7 @@ public class BigNumberFormattingTests
 
     #region Format Consistency Tests
 
-    [TestMethod]
+    [Fact]
     public void Format_UTF16AndUTF8_ExactMatch_PositiveInteger()
     {
         BigNumber value = new(123456, 0);
@@ -491,7 +489,7 @@ public class BigNumberFormattingTests
         charsWritten.ShouldBe(6);
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_UTF16AndUTF8_ExactMatch_NegativeInteger()
     {
         BigNumber value = new(-987654, 0);
@@ -510,7 +508,7 @@ public class BigNumberFormattingTests
         charsWritten.ShouldBe(7);
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_UTF16AndUTF8_ExactMatch_WithPositiveExponent()
     {
         BigNumber value = new(12345, 10);
@@ -529,7 +527,7 @@ public class BigNumberFormattingTests
         charsWritten.ShouldBe(8);
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_UTF16AndUTF8_ExactMatch_WithNegativeExponent()
     {
         BigNumber value = new(777, -25);
@@ -548,7 +546,7 @@ public class BigNumberFormattingTests
         charsWritten.ShouldBe(7);
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_UTF16AndUTF8_ExactMatch_Zero()
     {
         BigNumber value = BigNumber.Zero;
@@ -571,7 +569,7 @@ public class BigNumberFormattingTests
         byteBuffer[0].ShouldBe((byte)'0');
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_UTF16AndUTF8_ExactMatch_LargeSignificand()
     {
         BigNumber value = new(BigInteger.Parse("111222333444555666777888999000"), 0);
@@ -595,7 +593,7 @@ public class BigNumberFormattingTests
 
     #region Scientific Notation Exact Format Tests
 
-    [TestMethod]
+    [Fact]
     public void Format_ScientificNotation_SingleDigitExponent_ExactFormat()
     {
         var testCases = new[]
@@ -616,7 +614,7 @@ public class BigNumberFormattingTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ScientificNotation_DoubleDigitExponent_ExactFormat()
     {
         var testCases = new[]
@@ -637,7 +635,7 @@ public class BigNumberFormattingTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ScientificNotation_TripleDigitExponent_ExactFormat()
     {
         var testCases = new[]
@@ -658,7 +656,7 @@ public class BigNumberFormattingTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ScientificNotation_NoExponent_ExactFormat()
     {
         var testCases = new[]
@@ -684,7 +682,7 @@ public class BigNumberFormattingTests
 
     #region Edge Cases with Exact Validation
 
-    [TestMethod]
+    [Fact]
     public void Format_MaximumExponent_ExactOutput()
     {
         BigNumber value = new(123, int.MaxValue - 1000);
@@ -695,7 +693,7 @@ public class BigNumberFormattingTests
         result.ShouldContain("2147482647"); // int.MaxValue - 1000
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_MinimumExponent_ExactOutput()
     {
         BigNumber value = new(456, int.MinValue + 1000);
@@ -706,7 +704,7 @@ public class BigNumberFormattingTests
         result.ShouldContain("2147482648"); // -(int.MinValue + 1000) as string
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_PowersOfTen_ExactFormats()
     {
         var testCases = new[]
@@ -728,7 +726,7 @@ public class BigNumberFormattingTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_SpecialValues_ExactFormats()
     {
         var testCases = new[]
@@ -749,7 +747,7 @@ public class BigNumberFormattingTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_ConsecutiveSmallIntegers_ExactFormats()
     {
         for (int i = 0; i <= 9; i++)
@@ -763,7 +761,7 @@ public class BigNumberFormattingTests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_NegativeSmallIntegers_ExactFormats()
     {
         for (int i = -9; i <= -1; i++)
@@ -782,7 +780,7 @@ public class BigNumberFormattingTests
 
     #region Round-Trip with Exact Validation
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_SimpleInteger_ExactMatch()
     {
         BigNumber original = new(12345, 0);
@@ -796,7 +794,7 @@ public class BigNumberFormattingTests
         parsed.Exponent.ShouldBe(original.Exponent);
     }
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_WithPositiveExponent_ExactMatch()
     {
         BigNumber original = new(789, 15);
@@ -808,7 +806,7 @@ public class BigNumberFormattingTests
         parsed.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_WithNegativeExponent_ExactMatch()
     {
         BigNumber original = new(456, -20);
@@ -820,7 +818,7 @@ public class BigNumberFormattingTests
         parsed.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_NegativeNumber_ExactMatch()
     {
         BigNumber original = new(-987, 5);
@@ -832,7 +830,7 @@ public class BigNumberFormattingTests
         parsed.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_Zero_ExactMatch()
     {
         BigNumber original = BigNumber.Zero;
@@ -845,7 +843,7 @@ public class BigNumberFormattingTests
         parsed.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_UTF8_ExactMatch()
     {
         BigNumber original = new(654321, -8);
@@ -864,7 +862,7 @@ public class BigNumberFormattingTests
         parsed.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void RoundTrip_LargeSignificand_ExactMatch()
     {
         BigInteger largeValue = BigInteger.Parse("123456789012345678901234567890");
@@ -885,7 +883,7 @@ public class BigNumberFormattingTests
 
     #region Buffer Boundary Tests
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_ExactSizeBuffer_Succeeds()
     {
         BigNumber value = new(123, 5);
@@ -900,7 +898,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("123E5");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF16_OneTooSmall_Fails()
     {
         BigNumber value = new(123, 5);
@@ -912,7 +910,7 @@ public class BigNumberFormattingTests
         charsWritten.ShouldBe(0);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_ExactSizeBuffer_Succeeds()
     {
         // This test validates that we can format to a reasonably-sized buffer
@@ -930,7 +928,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("12E-1");
     }
 
-    [TestMethod]
+    [Fact]
     public void TryFormat_UTF8_OneTooSmall_Fails()
     {
         BigNumber value = new(777, -9);
@@ -946,7 +944,7 @@ public class BigNumberFormattingTests
 
     #region Culture and Format Provider Tests
 
-    [TestMethod]
+    [Fact]
     public void Format_InvariantCulture_ExactOutput()
     {
         BigNumber value = new(123456, -3);
@@ -957,7 +955,7 @@ public class BigNumberFormattingTests
         result.ShouldBe("123456E-3");
     }
 
-    [TestMethod]
+    [Fact]
     public void Format_NullFormatProvider_ExactOutput()
     {
         BigNumber value = new(98765, 7);

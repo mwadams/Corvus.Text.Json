@@ -4,7 +4,7 @@
 
 using System.Globalization;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 using Shouldly;
 
 namespace Corvus.Numerics.Tests;
@@ -12,12 +12,11 @@ namespace Corvus.Numerics.Tests;
 /// <summary>
 /// Tests for <see cref="BigNumber.TryParseJsonUtf8"/>.
 /// </summary>
-[TestClass]
 public class BigNumberTryParseJsonUtf8Tests
 {
     #region Basic Parsing Tests
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_Zero_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "0"u8;
@@ -27,7 +26,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(BigNumber.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_PositiveInteger_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "12345"u8;
@@ -37,7 +36,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(12345, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_NegativeInteger_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "-12345"u8;
@@ -47,7 +46,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(-12345, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_DecimalNumber_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "123.45"u8;
@@ -57,7 +56,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(BigNumber.Parse("123.45"));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_NegativeDecimal_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "-123.45"u8;
@@ -71,7 +70,7 @@ public class BigNumberTryParseJsonUtf8Tests
 
     #region Scientific Notation Tests
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_PositiveExponent_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "123E2"u8;
@@ -81,7 +80,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(123, 2));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_NegativeExponent_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "1234E-3"u8;
@@ -91,7 +90,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(1234, -3));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_LowercaseE_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "123e2"u8;
@@ -101,7 +100,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(123, 2));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_NegativeWithPositiveExponent_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "-123E2"u8;
@@ -111,7 +110,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(-123, 2));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_NegativeWithNegativeExponent_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "-1234E-3"u8;
@@ -121,7 +120,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(-1234, -3));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_DecimalWithExponent_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "1.23E5"u8;
@@ -135,7 +134,7 @@ public class BigNumberTryParseJsonUtf8Tests
 
     #region Large Number Tests
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_LargeNumber_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "123456789012345678901234567890"u8;
@@ -145,7 +144,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(BigNumber.Parse("123456789012345678901234567890"));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_VeryLargeNumber_ReturnsTrue()
     {
         // 300-digit number (triggers ArrayPool path)
@@ -158,7 +157,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(BigNumber.Parse(largeNumber));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_LargeNumberWithExponent_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "12345678901234567890123456789E10"u8;
@@ -172,7 +171,7 @@ public class BigNumberTryParseJsonUtf8Tests
 
     #region Edge Cases
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_EmptySpan_ReturnsFalse()
     {
         ReadOnlySpan<byte> utf8 = ReadOnlySpan<byte>.Empty;
@@ -182,7 +181,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(BigNumber.Zero);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_InvalidFormat_ReturnsFalse()
     {
         ReadOnlySpan<byte> utf8 = "not-a-number"u8;
@@ -191,7 +190,7 @@ public class BigNumberTryParseJsonUtf8Tests
         success.ShouldBeFalse();
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_LeadingWhitespace_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = " 123"u8;
@@ -201,7 +200,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(123, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_TrailingWhitespace_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "123 "u8;
@@ -211,7 +210,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(new BigNumber(123, 0));
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_VerySmallNumber_ReturnsTrue()
     {
         ReadOnlySpan<byte> utf8 = "0.00000000000000000001"u8;
@@ -225,7 +224,7 @@ public class BigNumberTryParseJsonUtf8Tests
 
     #region Roundtrip Tests
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_RoundtripWithFormat_Succeeds()
     {
         BigNumber original = new(12345, -2);
@@ -242,7 +241,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_RoundtripLargeNumber_Succeeds()
     {
         BigNumber original = BigNumber.Parse("123456789012345678901234567890.123456789");
@@ -259,7 +258,7 @@ public class BigNumberTryParseJsonUtf8Tests
         result.ShouldBe(original);
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_VariousFormats_AllSucceed()
     {
         var testCases = new[]
@@ -291,7 +290,7 @@ public class BigNumberTryParseJsonUtf8Tests
 
     #region Performance Tests
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_BatchOf1000_CompletesQuickly()
     {
         byte[] utf8 = "123.45"u8.ToArray();
@@ -303,7 +302,7 @@ public class BigNumberTryParseJsonUtf8Tests
         }
     }
 
-    [TestMethod]
+    [Fact]
     public void TryParseJsonUtf8_DirectUtf8Parsing_NoCharConversion()
     {
         // Verify that parsing works correctly without char conversion
