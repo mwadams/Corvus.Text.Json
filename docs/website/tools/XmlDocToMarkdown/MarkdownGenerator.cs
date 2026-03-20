@@ -23,7 +23,6 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             WriteNamespaceContent(sb, nsInfo);
 
             File.WriteAllText(filePath, sb.ToString());
-            Console.WriteLine($"  Written: {filePath}");
         }
     }
 
@@ -59,7 +58,6 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
                 WriteTypeBody(sb, type, ns, baseUrl, nsSlug, typeSlug, sourceResolver?.GetTypeSourceUrl(type.FullName));
 
                 File.WriteAllText(filePath, sb.ToString());
-                Console.WriteLine($"  Written: {filePath}");
             }
         }
     }
@@ -68,8 +66,9 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
     /// Generates one markdown file per member group (method overloads, property, etc.).
     /// File names use: {nsSlug}-{typeSlug}.{memberSlug}.md
     /// </summary>
-    public void GenerateMemberPages(Dictionary<string, NamespaceInfo> namespaces)
+    public int GenerateMemberPages(Dictionary<string, NamespaceInfo> namespaces)
     {
+        int fileCount = 0;
         foreach (KeyValuePair<string, NamespaceInfo> kvp in namespaces.OrderBy(n => n.Key))
         {
             string ns = kvp.Key;
@@ -78,18 +77,22 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             foreach (TypeInfo type in kvp.Value.Types)
             {
                 string typeSlug = TypeToSlug(type.Name);
-                GenerateMemberPagesForType(ns, nsSlug, type, typeSlug);
+                fileCount += GenerateMemberPagesForType(ns, nsSlug, type, typeSlug);
             }
         }
+
+        return fileCount;
     }
 
-    private void GenerateMemberPagesForType(string ns, string nsSlug, TypeInfo type, string typeSlug)
+    private int GenerateMemberPagesForType(string ns, string nsSlug, TypeInfo type, string typeSlug)
     {
+        int count = 0;
         // Constructors (all on one page)
         if (type.Constructors.Count > 0)
         {
             WriteMemberPageFile(ns, nsSlug, type, typeSlug, ".ctor", "ctor",
                 $"{type.Name} Constructors", "Constructor", type.Constructors);
+            count++;
         }
 
         // Properties (grouped by name — indexer overloads share one page)
@@ -97,6 +100,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         {
             WriteMemberPageFile(ns, nsSlug, type, typeSlug, group.Key, MemberToSlug(group.Key),
                 $"{type.Name}.{group.Key} Property", "Property", group.ToList());
+            count++;
         }
 
         // Methods (grouped by name — all overloads on one page)
@@ -104,6 +108,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         {
             WriteMemberPageFile(ns, nsSlug, type, typeSlug, group.Key, MemberToSlug(group.Key),
                 $"{type.Name}.{group.Key} Method", "Method", group.ToList());
+            count++;
         }
 
         // Operators (grouped by CLR name — e.g. all op_Implicit on one page)
@@ -112,6 +117,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             string displayGroupName = GetOperatorGroupDisplayName(group.Key);
             WriteMemberPageFile(ns, nsSlug, type, typeSlug, displayGroupName, MemberToSlug(group.Key),
                 $"{type.Name}.{displayGroupName} Operator", "Operator", group.ToList());
+            count++;
         }
 
         // Fields (each on its own page)
@@ -119,6 +125,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         {
             WriteMemberPageFile(ns, nsSlug, type, typeSlug, field.Name, MemberToSlug(field.GroupKey),
                 $"{type.Name}.{field.Name} Field", "Field", [field]);
+            count++;
         }
 
         // Events (each on its own page)
@@ -126,7 +133,10 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         {
             WriteMemberPageFile(ns, nsSlug, type, typeSlug, evt.Name, MemberToSlug(evt.GroupKey),
                 $"{type.Name}.{evt.Name} Event", "Event", [evt]);
+            count++;
         }
+
+        return count;
     }
 
     private void WriteMemberPageFile(

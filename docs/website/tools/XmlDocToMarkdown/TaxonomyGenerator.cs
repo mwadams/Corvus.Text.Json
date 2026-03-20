@@ -46,7 +46,6 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
             sb.AppendLine($"      Path: {contentRelativePath}");
 
             File.WriteAllText(yamlPath, sb.ToString());
-            Console.WriteLine($"  Written: {yamlPath}");
 
             rank++;
         }
@@ -98,14 +97,14 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 sb.AppendLine($"      Path: {contentRelativePath}");
 
                 File.WriteAllText(yamlPath, sb.ToString());
-                Console.WriteLine($"  Written: {yamlPath}");
                 rank++;
             }
         }
     }
 
-    public void GeneratePerMember(Dictionary<string, NamespaceInfo> namespaces)
+    public int GeneratePerMember(Dictionary<string, NamespaceInfo> namespaces)
     {
+        int count = 0;
         string taxonomyDir = Path.GetFullPath(taxonomyOutputDir);
         string contentDir = Path.GetFullPath(contentOutputDir);
         string relativePath = Path.GetRelativePath(taxonomyDir, contentDir).Replace('\\', '/');
@@ -124,6 +123,7 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 {
                     WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
                         "ctor", $"{type.Name} Constructors", "Constructor");
+                    count++;
                 }
 
                 // Properties (grouped by name)
@@ -131,6 +131,7 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 {
                     WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
                         MarkdownGenerator.MemberToSlug(group.Key), $"{type.Name}.{group.Key} Property", "Property");
+                    count++;
                 }
 
                 // Methods (grouped by name)
@@ -138,6 +139,7 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 {
                     WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
                         MarkdownGenerator.MemberToSlug(group.Key), $"{type.Name}.{group.Key} Method", "Method");
+                    count++;
                 }
 
                 // Operators (grouped by CLR name)
@@ -146,6 +148,7 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                     string displayGroupName = MarkdownGenerator.GetOperatorGroupDisplayName(group.Key);
                     WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
                         MarkdownGenerator.MemberToSlug(group.Key), $"{type.Name}.{displayGroupName} Operator", "Operator");
+                    count++;
                 }
 
                 // Fields (each on its own page)
@@ -153,6 +156,7 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 {
                     WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
                         MarkdownGenerator.MemberToSlug(field.GroupKey), $"{type.Name}.{field.Name} Field", "Field");
+                    count++;
                 }
 
                 // Events (each on its own page)
@@ -160,9 +164,12 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
                 {
                     WriteMemberTaxonomy(taxonomyDir, relativePath, ns, nsSlug, type, typeSlug,
                         MarkdownGenerator.MemberToSlug(evt.GroupKey), $"{type.Name}.{evt.Name} Event", "Event");
+                    count++;
                 }
             }
         }
+
+        return count;
     }
 
     private void WriteMemberTaxonomy(
@@ -204,7 +211,6 @@ public sealed class TaxonomyGenerator(string taxonomyOutputDir, string contentOu
         sb.AppendLine($"      Path: {contentRelativePath}");
 
         File.WriteAllText(yamlPath, sb.ToString());
-        Console.WriteLine($"  Written: {yamlPath}");
     }
 
     private static string EscapeYaml(string value)

@@ -55,18 +55,14 @@ $v4ApiTaxonomyDir = Join-Path $siteDir "taxonomy\api-v4"
 $v4ApiViewsDir = Join-Path $siteDir "theme\corvus\views\api\v4"
 
 # V4 consumer-facing libraries to document
+# NOTE: The 7 JsonSchema dialect libraries (Draft4/6/7/201909/202012/OpenApi30/31) are excluded
+# because they contain thousands of generated types with repetitive patterns, adding ~25K pages
+# that make the build impractically slow. The core API libraries below cover the primary user-facing surface.
 $v4Projects = @(
     "Corvus.Json.ExtendedTypes",
     "Corvus.Json.JsonReference",
     "Corvus.Json.Patch",
     "Corvus.Json.Validator",
-    "Corvus.Json.JsonSchema.Draft4",
-    "Corvus.Json.JsonSchema.Draft6",
-    "Corvus.Json.JsonSchema.Draft7",
-    "Corvus.Json.JsonSchema.Draft201909",
-    "Corvus.Json.JsonSchema.Draft202012",
-    "Corvus.Json.JsonSchema.OpenApi30",
-    "Corvus.Json.JsonSchema.OpenApi31",
     "Corvus.Json.CodeGeneration",
     "Corvus.Json.CodeGeneration.CSharp",
     "Corvus.Json.CodeGeneration.CSharp.QuickStart",
@@ -80,33 +76,48 @@ function ConvertTo-KebabCase([string]$text) {
     return $result.ToLower()
 }
 
+# ── Helper: timed step reporting ────────────────────────────────────────────
+function Write-StepDuration($stepName, $sw) {
+    $elapsed = $sw.Elapsed
+    if ($elapsed.TotalMinutes -ge 1) {
+        Write-Host "  $stepName completed in $([math]::Floor($elapsed.TotalMinutes))m $($elapsed.Seconds)s." -ForegroundColor Green
+    } else {
+        Write-Host "  $stepName completed in $([math]::Round($elapsed.TotalSeconds, 1))s." -ForegroundColor Green
+    }
+}
+
 # ── Step 1a: Build Corvus.Text.Json (V5) ────────────────────────────────────
 Write-Host "`n[1a/10] Building Corvus.Text.Json (V5)..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
 & dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
 & dotnet build $mainProject -c Release -f netstandard2.0 --no-incremental -v q
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2.0)" }
-Write-Host "  V5 XML documentation generated." -ForegroundColor Green
+Write-StepDuration "V5 build" $sw
 
 # ── Step 1b: Build V4 libraries ─────────────────────────────────────────────
 Write-Host "`n[1b/10] Building V4 libraries..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
+$projIndex = 0
 foreach ($proj in $v4Projects) {
+    $projIndex++
     $projPath = Join-Path $v4SrcDir "$proj\$proj.csproj"
     if (!(Test-Path $projPath)) {
         Write-Warning "  V4 project not found: $projPath — skipping"
         continue
     }
-    Write-Host "  Building $proj..." -ForegroundColor Gray
+    Write-Host "  [$projIndex/$($v4Projects.Count)] Building $proj..." -ForegroundColor Gray
     & dotnet build $projPath -c Release -f net10.0 --no-incremental -v q
     if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (net10.0)" }
     & dotnet build $projPath -c Release -f netstandard2.0 --no-incremental -v q
     if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (netstandard2.0)" }
 }
-Write-Host "  V4 libraries built." -ForegroundColor Green
+Write-StepDuration "V4 builds ($($v4Projects.Count) libraries)" $sw
 
 # ── Step 2a: Generate V5 API markdown, taxonomy & views ─────────────────────
 Write-Host "`n[2a/10] Generating V5 API markdown, taxonomy & views..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 & dotnet run --project $toolProject -c Release -- `
     --xml $v5XmlPath `
     --assembly $v5AssemblyPath `
@@ -120,10 +131,11 @@ Write-Host "`n[2a/10] Generating V5 API markdown, taxonomy & views..." -Foregrou
     --sidebar-partial-name _ApiSidebarV5 `
     --layout-path "../../Shared/_Layout.cshtml"
 if ($LASTEXITCODE -ne 0) { throw "V5 API generation failed" }
-Write-Host "  V5 API markdown, taxonomy & views generated." -ForegroundColor Green
+Write-StepDuration "V5 API generation" $sw
 
 # ── Step 2b: Generate V4 API markdown, taxonomy & views ─────────────────────
 Write-Host "`n[2b/10] Generating V4 API markdown, taxonomy & views..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 
 # Build the --xml / --assembly argument pairs for all V4 libraries
 $v4ToolArgs = @()
@@ -151,10 +163,11 @@ foreach ($proj in $v4Projects) {
     --sidebar-partial-name _ApiSidebarV4 `
     --layout-path "../../Shared/_Layout.cshtml"
 if ($LASTEXITCODE -ne 0) { throw "V4 API generation failed" }
-Write-Host "  V4 API markdown, taxonomy & views generated." -ForegroundColor Green
+Write-StepDuration "V4 API generation" $sw
 
 # ── Step 3: Generate recipe content from ExampleRecipes ─────────────────────
 Write-Host "`n[3/10] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 
 $recipesSourceDir = Join-Path $repoRoot "docs\ExampleRecipes"
 $recipesContentDir = Join-Path $siteDir "content\Examples"
@@ -299,10 +312,11 @@ ContentBlocks:
     $recipeCount++
     Write-Host "  $number $title -> $slug" -ForegroundColor Gray
 }
-Write-Host "  $recipeCount recipe(s) generated." -ForegroundColor Green
+Write-StepDuration "Recipe generation ($recipeCount recipes)" $sw
 
 # ── Step 4: Generate docs content from source documentation ─────────────────
 Write-Host "`n[4/10] Generating docs content from source documentation..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 
 $docsSourceDir = Join-Path $repoRoot "docs"
 $docsContentDir = Join-Path $siteDir "content\Docs"
@@ -417,7 +431,7 @@ ContentBlocks:
     $docCount++
     Write-Host "  $docTitle -> $slug" -ForegroundColor Gray
 }
-Write-Host "  $docCount doc page(s) generated." -ForegroundColor Green
+Write-StepDuration "Docs generation ($docCount pages)" $sw
 
 # ── Step 5: Install Vellum ──────────────────────────────────────────────────
 $vellumVersion = "2.0.9"
@@ -439,6 +453,7 @@ if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
 
 # ── Step 6: Run Vellum ──────────────────────────────────────────────────────
 Write-Host "`n[6/10] Running Vellum..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 
 # Prepare output directory (clean contents but keep dir if locked by another process)
 if (Test-Path $outputDir) {
@@ -470,24 +485,26 @@ foreach ($file in @("site.yml")) {
     $spurious = Join-Path $outputDir $file
     if (Test-Path $spurious) { Remove-Item $spurious -Force }
 }
-Write-Host "  Site rendered." -ForegroundColor Green
+Write-StepDuration "Vellum site generation" $sw
 
 # ── Step 7: Compile SCSS ────────────────────────────────────────────────────
 Write-Host "`n[7/10] Compiling SCSS..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 $scssPath = Join-Path $assetsSource "css\scss\main.scss"
 $cssOutputPath = Join-Path $outputDir "main.css"
 & npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
 if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
-Write-Host "  CSS written to $cssOutputPath" -ForegroundColor Green
+Write-StepDuration "SCSS compilation" $sw
 
 # ── Step 8: Build search index ──────────────────────────────────────────────
 Write-Host "`n[8/10] Building search index..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
 $searchIndexOutput = Join-Path $outputDir "search-index.json"
 & node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
 if ($LASTEXITCODE -ne 0) {
     Write-Warning "Search index generation failed — site will build without search."
 } else {
-    Write-Host "  Search index written." -ForegroundColor Green
+    Write-StepDuration "Search index" $sw
 }
 
 Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green

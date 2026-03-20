@@ -310,11 +310,21 @@ if (outputPath is not null)
 {
     Directory.CreateDirectory(outputPath);
 
-    Console.WriteLine($"Generating namespace markdown to: {outputPath}");
+    Console.WriteLine($"Generating markdown to: {outputPath}");
     MarkdownGenerator markdownGen = new(outputPath, resolvedBaseUrl, nsDescriptionsDir, sourceResolver);
+
+    Console.Write("  Namespace pages...");
     markdownGen.Generate(namespaces);
+    Console.WriteLine($" {namespaces.Count} files.");
+
+    int typeCount = namespaces.Values.Sum(ns => ns.Types.Count);
+    Console.Write($"  Type pages ({typeCount} types)...");
     markdownGen.GeneratePerType(namespaces);
-    markdownGen.GenerateMemberPages(namespaces);
+    Console.WriteLine(" done.");
+
+    Console.Write("  Member pages...");
+    int memberPageCount = markdownGen.GenerateMemberPages(namespaces);
+    Console.WriteLine($" {memberPageCount} files.");
 }
 
 if (taxonomyOutputPath is not null)
@@ -324,11 +334,21 @@ if (taxonomyOutputPath is not null)
     // Derive template name from base URL (e.g., "/api" → "api/api-page")
     string templateName = resolvedBaseUrl.TrimStart('/') + "/api-page";
 
-    Console.WriteLine($"Generating API taxonomy to: {taxonomyOutputPath}");
+    Console.WriteLine($"Generating taxonomy to: {taxonomyOutputPath}");
     TaxonomyGenerator taxonomyGen = new(taxonomyOutputPath, outputPath!, resolvedBaseUrl, templateName);
+
+    Console.Write("  Namespace taxonomy...");
     taxonomyGen.Generate(namespaces);
+    Console.WriteLine($" {namespaces.Count} files.");
+
+    int typeCount = namespaces.Values.Sum(ns => ns.Types.Count);
+    Console.Write($"  Type taxonomy ({typeCount} types)...");
     taxonomyGen.GeneratePerType(namespaces);
-    taxonomyGen.GeneratePerMember(namespaces);
+    Console.WriteLine(" done.");
+
+    Console.Write("  Member taxonomy...");
+    int memberTaxCount = taxonomyGen.GeneratePerMember(namespaces);
+    Console.WriteLine($" {memberTaxCount} files.");
 }
 
 if (apiViewsDir is not null)
