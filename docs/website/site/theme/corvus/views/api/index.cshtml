@@ -3,52 +3,22 @@
     Layout = "../Shared/_Layout.cshtml";
 }
 <div class="layout-docs container">
-    @await Html.PartialAsync("_ApiSidebar").ConfigureAwait(false)
-    <main id="main-content" class="layout-docs__main">
+    <main id="main-content" class="layout-docs__main" style="max-width:800px; margin:0 auto;">
         <div class="doc__content">
             <h1>API Reference</h1>
-            <p>Browse the public API by namespace. Each namespace section in the sidebar lists its types.</p>
-            <div class="api-browser">
-                <input id="api-browser-input" class="api-browser__input" type="search"
-                       placeholder="Search types and members…" autocomplete="off" />
-                <div id="api-browser-status" class="api-browser__status"></div>
-            </div>
-            <div id="api-browser-results" class="api-browser__results" hidden></div>
-            <div id="api-browser-default" class="card-grid" style="margin-top:var(--space-lg)">
-                <a class="card card--link" href="/api/corvus-globalization.html">
-                    <h3 class="card__title">Corvus.Globalization</h3>
-                    <p class="card__body">Provides Unicode and internationalization helpers for processing domain names and character categories in JSON string values.</p>
-                    <div class="card__meta"><span class="card__tag">2 types</span></div>
+            <p>Corvus.Text.Json provides two engine generations. Choose the version that matches your project:</p>
+            <div class="card-grid" style="margin-top:var(--space-lg)">
+                <a class="card card--link" href="/api/v5/index.html">
+                    <h3 class="card__title">V5 Engine</h3>
+                    <p class="card__body">The current generation &mdash; a unified <code>Corvus.Text.Json</code> library with code-generated types, high-performance JSON handling, and full JSON Schema support.</p>
+                    <div class="card__meta"><span class="card__tag">Recommended</span></div>
                 </a>
-                <a class="card card--link" href="/api/corvus-numerics.html">
-                    <h3 class="card__title">Corvus.Numerics</h3>
-                    <p class="card__body">Contains [`BigNumber`](/api/corvus-numerics-bignumber.html), a high-precision arbitrary-scale decimal type that preserves the exact representation of JSON numbers beyond the 28–29 significant digit...</p>
-                    <div class="card__meta"><span class="card__tag">1 type</span></div>
-                </a>
-                <a class="card card--link" href="/api/corvus-runtime-interopservices.html">
-                    <h3 class="card__title">Corvus.Runtime.InteropServices</h3>
-                    <p class="card__body">Low-level marshalling utilities for direct access to the internal memory layout of JSON documents.</p>
-                    <div class="card__meta"><span class="card__tag">1 type</span></div>
-                </a>
-                <a class="card card--link" href="/api/corvus-text-json.html">
-                    <h3 class="card__title">Corvus.Text.Json</h3>
-                    <p class="card__body">The primary public API for Corvus.Text.Json.</p>
-                    <div class="card__meta"><span class="card__tag">58 types</span></div>
-                </a>
-                <a class="card card--link" href="/api/corvus-text-json-compatibility.html">
-                    <h3 class="card__title">Corvus.Text.Json.Compatibility</h3>
-                    <p class="card__body">Backward-compatibility shims for migrating from Corvus.Json V4 (based on `System.Text.Json`).</p>
-                    <div class="card__meta"><span class="card__tag">5 types</span></div>
-                </a>
-                <a class="card card--link" href="/api/corvus-text-json-internal.html">
-                    <h3 class="card__title">Corvus.Text.Json.Internal</h3>
-                    <p class="card__body">Internal implementation types that power the Corvus.Text.Json runtime.</p>
-                    <div class="card__meta"><span class="card__tag">43 types</span></div>
+                <a class="card card--link" href="/api/v4/index.html">
+                    <h3 class="card__title">V4 Engine</h3>
+                    <p class="card__body">The previous generation &mdash; a modular library suite including <code>Corvus.Json.ExtendedTypes</code>, <code>Corvus.Json.Patch</code>, <code>Corvus.Json.Validator</code>, and JSON Schema dialect packages.</p>
+                    <div class="card__meta"><span class="card__tag">Legacy</span></div>
                 </a>
             </div>
         </div>
     </main>
 </div>
-@section scripts {
-    <script src="/assets/js/api-browser.js" defer></script>
-}

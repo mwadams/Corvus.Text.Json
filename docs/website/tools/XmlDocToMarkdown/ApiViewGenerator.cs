@@ -9,21 +9,27 @@ namespace XmlDocToMarkdown;
 internal static class ApiViewGenerator
 {
     /// <summary>
-    /// Writes <c>api/index.cshtml</c> — the API landing page with a hierarchical
+    /// Writes <c>index.cshtml</c> — the API landing page with a hierarchical
     /// namespace sidebar and namespace cards in the main content area.
     /// </summary>
-    public static void GenerateIndexView(string viewsDir, Dictionary<string, NamespaceInfo> namespaces, string baseUrl, string? nsDescriptionsDir = null)
+    public static void GenerateIndexView(
+        string viewsDir,
+        Dictionary<string, NamespaceInfo> namespaces,
+        string baseUrl,
+        string sidebarPartialName = "_ApiSidebar",
+        string layoutPath = "../Shared/_Layout.cshtml",
+        string? nsDescriptionsDir = null)
     {
         StringBuilder sb = new();
 
         sb.AppendLine("@model SiteViewModel");
         sb.AppendLine("@{");
-        sb.AppendLine("    Layout = \"../Shared/_Layout.cshtml\";");
+        sb.AppendLine($"    Layout = \"{layoutPath}\";");
         sb.AppendLine("}");
         sb.AppendLine("<div class=\"layout-docs container\">");
 
         // Use the shared sidebar partial (generated separately)
-        sb.AppendLine("    @await Html.PartialAsync(\"_ApiSidebar\").ConfigureAwait(false)");
+        sb.AppendLine($"    @await Html.PartialAsync(\"{sidebarPartialName}\").ConfigureAwait(false)");
 
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
@@ -68,18 +74,21 @@ internal static class ApiViewGenerator
     }
 
     /// <summary>
-    /// Generates the <c>_ApiSidebar.cshtml</c> Razor partial containing the
-    /// hierarchical API sidebar tree. This is referenced by the static
-    /// <c>api-page.cshtml</c> view via <c>Html.PartialAsync("_ApiSidebar")</c>.
+    /// Generates the sidebar Razor partial containing the hierarchical API sidebar tree.
+    /// The output filename is controlled by <paramref name="sidebarPartialName"/>.
     /// </summary>
-    public static void GenerateApiSidebar(string sharedViewsDir, Dictionary<string, NamespaceInfo> namespaces, string baseUrl)
+    public static void GenerateApiSidebar(
+        string sharedViewsDir,
+        Dictionary<string, NamespaceInfo> namespaces,
+        string baseUrl,
+        string sidebarPartialName = "_ApiSidebar")
     {
         StringBuilder sb = new();
 
         // Sidebar with no active state — JS sets active link based on URL
         SidebarBuilder.AppendSidebar(sb, namespaces, currentNsSlug: null, currentTypeFileBase: null, baseUrl);
 
-        string outputPath = Path.Combine(sharedViewsDir, "_ApiSidebar.cshtml");
+        string outputPath = Path.Combine(sharedViewsDir, sidebarPartialName + ".cshtml");
         File.WriteAllText(outputPath, sb.ToString());
         Console.WriteLine($"  Written: {outputPath}");
     }

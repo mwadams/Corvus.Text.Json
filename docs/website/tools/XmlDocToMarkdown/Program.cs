@@ -1,25 +1,35 @@
 using XmlDocToMarkdown;
 
-string? xmlPath = null;
-string? assemblyPath = null;
+// Collect multiple --xml/--assembly/--ns20-assembly sets (paired positionally)
+List<string> xmlPaths = [];
+List<string> assemblyPaths = [];
+List<string?> ns20AssemblyPaths = [];
+
 string? outputPath = null;
 string? taxonomyOutputPath = null;
 string? apiViewsDir = null;
 string? sharedViewsDir = null;
 string? repoUrl = null;
 string? nsDescriptionsDir = null;
-string? ns20AssemblyPath = null;
 string? apiBaseUrl = null;
+string? sidebarPartialName = null;
+string? layoutPath = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
     switch (args[i])
     {
         case "--xml":
-            xmlPath = args[++i];
+            xmlPaths.Add(args[++i]);
+            // Ensure ns20 list stays aligned (placeholder for this pair)
+            while (ns20AssemblyPaths.Count < xmlPaths.Count)
+            {
+                ns20AssemblyPaths.Add(null);
+            }
+
             break;
         case "--assembly":
-            assemblyPath = args[++i];
+            assemblyPaths.Add(args[++i]);
             break;
         case "--output":
             outputPath = args[++i];
@@ -40,62 +50,139 @@ for (int i = 0; i < args.Length - 1; i++)
             nsDescriptionsDir = args[++i];
             break;
         case "--ns20-assembly":
-            ns20AssemblyPath = args[++i];
+            // Apply to the most recent --xml pair
+            if (ns20AssemblyPaths.Count > 0)
+            {
+                ns20AssemblyPaths[^1] = args[++i];
+            }
+            else
+            {
+                ns20AssemblyPaths.Add(args[++i]);
+            }
+
             break;
         case "--api-base-url":
             apiBaseUrl = args[++i];
+            break;
+        case "--sidebar-partial-name":
+            sidebarPartialName = args[++i];
+            break;
+        case "--layout-path":
+            layoutPath = args[++i];
             break;
     }
 }
 
 string resolvedBaseUrl = (apiBaseUrl ?? "/api").TrimEnd('/');
+string resolvedSidebarName = sidebarPartialName ?? "_ApiSidebar";
+string resolvedLayoutPath = layoutPath ?? "../Shared/_Layout.cshtml";
 
-if (xmlPath is null || assemblyPath is null)
+if (xmlPaths.Count == 0 || assemblyPaths.Count == 0)
 {
-    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> [--output <path>] [--taxonomy-output <path>] [--repo-url <url>]");
+    Console.Error.WriteLine("Usage: XmlDocToMarkdown --xml <path> --assembly <path> [--xml <path2> --assembly <path2> ...] [options]");
     Console.Error.WriteLine();
-    Console.Error.WriteLine("  --xml              Path to the XML documentation file (e.g., Corvus.Text.Json.xml)");
-    Console.Error.WriteLine("  --assembly         Path to the compiled DLL");
-    Console.Error.WriteLine("  --output           Output directory for generated markdown files");
-    Console.Error.WriteLine("  --taxonomy-output  Output directory for generated taxonomy YAML files");
-    Console.Error.WriteLine("  --api-views-dir    (Optional) Directory for the generated API index view");
-    Console.Error.WriteLine("  --shared-views-dir (Optional) Directory for generated shared Razor partials (e.g. _ApiSidebar.cshtml)");
-    Console.Error.WriteLine("  --repo-url         (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
-    Console.Error.WriteLine("  --ns-descriptions  (Optional) Directory containing {Namespace}.md files with namespace descriptions");
-    Console.Error.WriteLine("  --api-base-url     (Optional) Base URL path for API pages (default: /api)");
+    Console.Error.WriteLine("  --xml                  Path to an XML documentation file (repeatable for multi-assembly)");
+    Console.Error.WriteLine("  --assembly             Path to the compiled DLL (repeatable, paired with --xml)");
+    Console.Error.WriteLine("  --ns20-assembly        (Optional) netstandard2.0 build of the preceding assembly");
+    Console.Error.WriteLine("  --output               Output directory for generated markdown files");
+    Console.Error.WriteLine("  --taxonomy-output      Output directory for generated taxonomy YAML files");
+    Console.Error.WriteLine("  --api-views-dir        (Optional) Directory for the generated API index view");
+    Console.Error.WriteLine("  --shared-views-dir     (Optional) Directory for generated shared Razor partials");
+    Console.Error.WriteLine("  --repo-url             (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
+    Console.Error.WriteLine("  --ns-descriptions      (Optional) Directory containing {Namespace}.md files with namespace descriptions");
+    Console.Error.WriteLine("  --api-base-url         (Optional) Base URL path for API pages (default: /api)");
+    Console.Error.WriteLine("  --sidebar-partial-name (Optional) Name for the sidebar Razor partial (default: _ApiSidebar)");
+    Console.Error.WriteLine("  --layout-path          (Optional) Relative path to Layout.cshtml from the views dir (default: ../Shared/_Layout.cshtml)");
     return 1;
 }
 
-if (!File.Exists(xmlPath))
+if (xmlPaths.Count != assemblyPaths.Count)
 {
-    Console.Error.WriteLine($"XML documentation file not found: {xmlPath}");
+    Console.Error.WriteLine($"Mismatched --xml ({xmlPaths.Count}) and --assembly ({assemblyPaths.Count}) counts. Each --xml must be paired with an --assembly.");
     return 1;
 }
 
-if (!File.Exists(assemblyPath))
+// Pad ns20 list to match
+while (ns20AssemblyPaths.Count < xmlPaths.Count)
 {
-    Console.Error.WriteLine($"Assembly file not found: {assemblyPath}");
-    return 1;
+    ns20AssemblyPaths.Add(null);
 }
 
-// Pre-scan assembly for type names to build the URL map before parsing XML
-Console.WriteLine($"Pre-scanning assembly: {assemblyPath}");
-AssemblyInspector inspector = new(assemblyPath);
-XmlDocParser.TypeUrlMap = inspector.PreScanTypeUrls(resolvedBaseUrl);
-Console.WriteLine($"  Built type URL map with {XmlDocParser.TypeUrlMap.Count} entries.");
+// Validate all files exist
+for (int i = 0; i < xmlPaths.Count; i++)
+{
+    if (!File.Exists(xmlPaths[i]))
+    {
+        Console.Error.WriteLine($"XML documentation file not found: {xmlPaths[i]}");
+        return 1;
+    }
 
-Console.WriteLine($"Parsing XML documentation from: {xmlPath}");
-XmlDocParser parser = new(xmlPath);
-Dictionary<string, DocMember> members = parser.Parse();
-Console.WriteLine($"  Found {members.Count} documented members.");
+    if (!File.Exists(assemblyPaths[i]))
+    {
+        Console.Error.WriteLine($"Assembly file not found: {assemblyPaths[i]}");
+        return 1;
+    }
+}
 
-Console.WriteLine($"Inspecting assembly: {assemblyPath}");
-Dictionary<string, NamespaceInfo> namespaces = inspector.Inspect(members);
-Console.WriteLine($"  Found {namespaces.Count} namespace(s) with public types.");
+// Pre-scan all assemblies to build a combined type URL map
+Dictionary<string, string> combinedTypeUrlMap = new(StringComparer.Ordinal);
+for (int i = 0; i < assemblyPaths.Count; i++)
+{
+    Console.WriteLine($"Pre-scanning assembly [{i + 1}/{assemblyPaths.Count}]: {assemblyPaths[i]}");
+    AssemblyInspector inspector = new(assemblyPaths[i]);
+    Dictionary<string, string> partialMap = inspector.PreScanTypeUrls(resolvedBaseUrl);
+    foreach (KeyValuePair<string, string> kvp in partialMap)
+    {
+        combinedTypeUrlMap[kvp.Key] = kvp.Value;
+    }
+}
+
+XmlDocParser.TypeUrlMap = combinedTypeUrlMap;
+Console.WriteLine($"  Built combined type URL map with {combinedTypeUrlMap.Count} entries.");
+
+// Parse all XML documentation files into a combined members dictionary
+Dictionary<string, DocMember> members = new(StringComparer.Ordinal);
+for (int i = 0; i < xmlPaths.Count; i++)
+{
+    Console.WriteLine($"Parsing XML documentation [{i + 1}/{xmlPaths.Count}]: {xmlPaths[i]}");
+    XmlDocParser parser = new(xmlPaths[i]);
+    Dictionary<string, DocMember> partialMembers = parser.Parse();
+    foreach (KeyValuePair<string, DocMember> kvp in partialMembers)
+    {
+        members[kvp.Key] = kvp.Value;
+    }
+
+    Console.WriteLine($"  Found {partialMembers.Count} documented members (total: {members.Count}).");
+}
+
+// Inspect all assemblies and merge namespace dictionaries
+Dictionary<string, NamespaceInfo> namespaces = new(StringComparer.Ordinal);
+for (int i = 0; i < assemblyPaths.Count; i++)
+{
+    Console.WriteLine($"Inspecting assembly [{i + 1}/{assemblyPaths.Count}]: {assemblyPaths[i]}");
+    AssemblyInspector inspector = new(assemblyPaths[i]);
+    Dictionary<string, NamespaceInfo> partialNamespaces = inspector.Inspect(members);
+
+    // Merge: if a namespace already exists, append its types
+    foreach (KeyValuePair<string, NamespaceInfo> kvp in partialNamespaces)
+    {
+        if (namespaces.TryGetValue(kvp.Key, out NamespaceInfo? existing))
+        {
+            existing.Types.AddRange(kvp.Value.Types);
+            existing.Types.Sort((a, b) => string.Compare(a.Name, b.Name, StringComparison.Ordinal));
+        }
+        else
+        {
+            namespaces[kvp.Key] = kvp.Value;
+        }
+    }
+}
+
+Console.WriteLine($"  Found {namespaces.Count} namespace(s) with public types across {assemblyPaths.Count} assemblies.");
 
 // Build implementedBy reverse map: for each interface, collect which types implement it
 Dictionary<string, TypeInfo> typesByFullName = new(StringComparer.Ordinal);
-List<TypeInfo> allTypes = new();
+List<TypeInfo> allTypes = [];
 foreach (NamespaceInfo nsInfo in namespaces.Values)
 {
     foreach (TypeInfo typeInfo in nsInfo.Types)
@@ -130,17 +217,30 @@ foreach (KeyValuePair<string, NamespaceInfo> ns in namespaces)
     Console.WriteLine($"    {ns.Key}: {ns.Value.Types.Count} type(s)");
 }
 
-// Scan netstandard2.0 assembly to determine TFM-specific member availability
-if (ns20AssemblyPath is not null && File.Exists(ns20AssemblyPath))
+// Scan netstandard2.0 assemblies to determine TFM-specific member availability
+HashSet<string> combinedNs20Keys = new(StringComparer.Ordinal);
+bool hasNs20 = false;
+for (int i = 0; i < ns20AssemblyPaths.Count; i++)
 {
-    Console.WriteLine($"Scanning netstandard2.0 assembly: {ns20AssemblyPath}");
-    HashSet<string> ns20Keys = AssemblyInspector.ScanMemberKeys(ns20AssemblyPath);
-    Console.WriteLine($"  Found {ns20Keys.Count} members in netstandard2.0 build.");
+    string? ns20Path = ns20AssemblyPaths[i];
+    if (ns20Path is not null && File.Exists(ns20Path))
+    {
+        Console.WriteLine($"Scanning netstandard2.0 assembly [{i + 1}]: {ns20Path}");
+        HashSet<string> partialKeys = AssemblyInspector.ScanMemberKeys(ns20Path);
+        Console.WriteLine($"  Found {partialKeys.Count} members.");
+        combinedNs20Keys.UnionWith(partialKeys);
+        hasNs20 = true;
+    }
+}
 
-    // Mark types and members not present in the ns2.0 assembly
+if (hasNs20)
+{
+    Console.WriteLine($"  Combined netstandard2.0 member set: {combinedNs20Keys.Count} entries.");
+
+    // Mark types and members not present in any ns2.0 assembly
     foreach (TypeInfo typeInfo in allTypes)
     {
-        if (!ns20Keys.Contains($"T:{typeInfo.FullName}"))
+        if (!combinedNs20Keys.Contains($"T:{typeInfo.FullName}"))
         {
             typeInfo.AvailableOnNetStandard20 = false;
         }
@@ -149,7 +249,7 @@ if (ns20AssemblyPath is not null && File.Exists(ns20AssemblyPath))
             .Concat(typeInfo.Methods).Concat(typeInfo.Operators)
             .Concat(typeInfo.Fields).Concat(typeInfo.Events))
         {
-            if (!ns20Keys.Contains(m.XmlDocKey))
+            if (!combinedNs20Keys.Contains(m.XmlDocKey))
             {
                 m.AvailableOnNetStandard20 = false;
             }
@@ -157,9 +257,9 @@ if (ns20AssemblyPath is not null && File.Exists(ns20AssemblyPath))
     }
 }
 
-// Build source URL map from PDB if possible
+// Build source URL map from PDB if possible (uses first assembly's PDB)
 SourceLinkResolver? sourceResolver = null;
-string pdbPath = Path.ChangeExtension(Path.GetFullPath(assemblyPath), ".pdb");
+string pdbPath = Path.ChangeExtension(Path.GetFullPath(assemblyPaths[0]), ".pdb");
 if (File.Exists(pdbPath))
 {
     Console.WriteLine($"Reading PDB for source links: {pdbPath}");
@@ -193,7 +293,7 @@ if (File.Exists(pdbPath))
     {
         Console.WriteLine($"  Repo URL: {repoUrl}");
         Console.WriteLine($"  Branch: {branch}");
-        sourceResolver = new SourceLinkResolver(pdbPath, Path.GetFullPath(assemblyPath), repoUrl, branch, repoRoot);
+        sourceResolver = new SourceLinkResolver(pdbPath, Path.GetFullPath(assemblyPaths[0]), repoUrl, branch, repoRoot);
         sourceResolver.Build();
     }
     else
@@ -235,14 +335,14 @@ if (apiViewsDir is not null)
 {
     Console.WriteLine($"Generating API views to: {apiViewsDir}");
     Directory.CreateDirectory(apiViewsDir);
-    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces, resolvedBaseUrl, nsDescriptionsDir);
+    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces, resolvedBaseUrl, resolvedSidebarName, resolvedLayoutPath, nsDescriptionsDir);
 }
 
 if (sharedViewsDir is not null)
 {
     Console.WriteLine($"Generating API sidebar partial to: {sharedViewsDir}");
     Directory.CreateDirectory(sharedViewsDir);
-    ApiViewGenerator.GenerateApiSidebar(sharedViewsDir, namespaces, resolvedBaseUrl);
+    ApiViewGenerator.GenerateApiSidebar(sharedViewsDir, namespaces, resolvedBaseUrl, resolvedSidebarName);
 }
 
 if (outputPath is not null)

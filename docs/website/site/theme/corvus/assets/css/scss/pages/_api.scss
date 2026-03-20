@@ -4,6 +4,43 @@
 
 @use '../abstracts/mixins' as *;
 
+// ---- Version switcher bar ----
+.api-version-bar {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.api-version-switcher {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+
+  &__current {
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    border-radius: 4px;
+    background: var(--color-brand);
+    color: #fff;
+    font-weight: var(--font-weight-medium);
+  }
+
+  &__alt {
+    color: var(--color-text-muted, #6b7280);
+    text-decoration: none;
+    border-bottom: 1px dashed currentColor;
+
+    &:hover {
+      color: var(--color-brand);
+    }
+  }
+}
+
 .api {
   // ---- Search / filter ----
   &__filter {

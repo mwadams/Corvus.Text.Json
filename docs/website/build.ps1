@@ -3,8 +3,10 @@
     Builds the Corvus.Text.Json documentation website.
 .DESCRIPTION
     End-to-end build pipeline:
-      1. Build Corvus.Text.Json (generates XML doc + assembly)
-      2. Generate API markdown, taxonomy & views
+      1a. Build Corvus.Text.Json V5 (generates XML doc + assembly)
+      1b. Build V4 libraries (generates XML docs + assemblies)
+      2a. Generate V5 API markdown, taxonomy & views
+      2b. Generate V4 API markdown, taxonomy & views
       3. Generate recipe content from ExampleRecipes source docs
       4. Generate docs content from source documentation
       5. Install Vellum SSG (if not present)
@@ -34,12 +36,42 @@ $siteDir = Join-Path $here "site"
 $outputDir = Join-Path $here ".output"
 
 # Paths used by multiple steps
-$xmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
-$assemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.dll"
-$ns20AssemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\netstandard2.0\Corvus.Text.Json.dll"
-$apiContentDir = Join-Path $siteDir "content\Api"
-$apiTaxonomyDir = Join-Path $siteDir "taxonomy\api"
 $toolProject = Join-Path $here "tools\XmlDocToMarkdown"
+$sharedViewsDir = Join-Path $siteDir "theme\corvus\views\Shared"
+
+# V5 paths
+$v5XmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
+$v5AssemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.dll"
+$v5Ns20AssemblyPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\netstandard2.0\Corvus.Text.Json.dll"
+$v5ApiContentDir = Join-Path $siteDir "content\Api-v5"
+$v5ApiTaxonomyDir = Join-Path $siteDir "taxonomy\api-v5"
+$v5ApiViewsDir = Join-Path $siteDir "theme\corvus\views\api\v5"
+$v5NsDescriptionsDir = Join-Path $siteDir "content\Api-v5\namespaces"
+
+# V4 paths
+$v4SrcDir = Join-Path $repoRoot "src-v4"
+$v4ApiContentDir = Join-Path $siteDir "content\Api-v4"
+$v4ApiTaxonomyDir = Join-Path $siteDir "taxonomy\api-v4"
+$v4ApiViewsDir = Join-Path $siteDir "theme\corvus\views\api\v4"
+
+# V4 consumer-facing libraries to document
+$v4Projects = @(
+    "Corvus.Json.ExtendedTypes",
+    "Corvus.Json.JsonReference",
+    "Corvus.Json.Patch",
+    "Corvus.Json.Validator",
+    "Corvus.Json.JsonSchema.Draft4",
+    "Corvus.Json.JsonSchema.Draft6",
+    "Corvus.Json.JsonSchema.Draft7",
+    "Corvus.Json.JsonSchema.Draft201909",
+    "Corvus.Json.JsonSchema.Draft202012",
+    "Corvus.Json.JsonSchema.OpenApi30",
+    "Corvus.Json.JsonSchema.OpenApi31",
+    "Corvus.Json.CodeGeneration",
+    "Corvus.Json.CodeGeneration.CSharp",
+    "Corvus.Json.CodeGeneration.CSharp.QuickStart",
+    "Corvus.Json.CodeGeneration.HttpClientDocumentResolver"
+)
 
 # ── Helper: PascalCase to kebab-case ────────────────────────────────────────
 function ConvertTo-KebabCase([string]$text) {
@@ -48,34 +80,81 @@ function ConvertTo-KebabCase([string]$text) {
     return $result.ToLower()
 }
 
-# ── Step 1: Build Corvus.Text.Json ──────────────────────────────────────────
-Write-Host "`n[1/8] Building Corvus.Text.Json..." -ForegroundColor Cyan
+# ── Step 1a: Build Corvus.Text.Json (V5) ────────────────────────────────────
+Write-Host "`n[1a/10] Building Corvus.Text.Json (V5)..." -ForegroundColor Cyan
 $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
 & dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
 & dotnet build $mainProject -c Release -f netstandard2.0 --no-incremental -v q
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2.0)" }
-Write-Host "  XML documentation generated." -ForegroundColor Green
+Write-Host "  V5 XML documentation generated." -ForegroundColor Green
 
-# ── Step 2: Generate API namespace markdown & taxonomy ──────────────────────
-Write-Host "`n[2/8] Generating API markdown, taxonomy & views..." -ForegroundColor Cyan
-$apiViewsDir = Join-Path $siteDir "theme\corvus\views\api"
-$sharedViewsDir = Join-Path $siteDir "theme\corvus\views\Shared"
-$nsDescriptionsDir = Join-Path $siteDir "content\Api\namespaces"
+# ── Step 1b: Build V4 libraries ─────────────────────────────────────────────
+Write-Host "`n[1b/10] Building V4 libraries..." -ForegroundColor Cyan
+foreach ($proj in $v4Projects) {
+    $projPath = Join-Path $v4SrcDir "$proj\$proj.csproj"
+    if (!(Test-Path $projPath)) {
+        Write-Warning "  V4 project not found: $projPath — skipping"
+        continue
+    }
+    Write-Host "  Building $proj..." -ForegroundColor Gray
+    & dotnet build $projPath -c Release -f net10.0 --no-incremental -v q
+    if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (net10.0)" }
+    & dotnet build $projPath -c Release -f netstandard2.0 --no-incremental -v q
+    if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (netstandard2.0)" }
+}
+Write-Host "  V4 libraries built." -ForegroundColor Green
+
+# ── Step 2a: Generate V5 API markdown, taxonomy & views ─────────────────────
+Write-Host "`n[2a/10] Generating V5 API markdown, taxonomy & views..." -ForegroundColor Cyan
 & dotnet run --project $toolProject -c Release -- `
-    --xml $xmlPath `
-    --assembly $assemblyPath `
-    --ns20-assembly $ns20AssemblyPath `
-    --output $apiContentDir `
-    --taxonomy-output $apiTaxonomyDir `
-    --api-views-dir $apiViewsDir `
+    --xml $v5XmlPath `
+    --assembly $v5AssemblyPath `
+    --ns20-assembly $v5Ns20AssemblyPath `
+    --output $v5ApiContentDir `
+    --taxonomy-output $v5ApiTaxonomyDir `
+    --api-views-dir $v5ApiViewsDir `
     --shared-views-dir $sharedViewsDir `
-    --ns-descriptions $nsDescriptionsDir
-if ($LASTEXITCODE -ne 0) { throw "API namespace generation failed" }
-Write-Host "  API markdown, taxonomy & views generated." -ForegroundColor Green
+    --ns-descriptions $v5NsDescriptionsDir `
+    --api-base-url /api/v5 `
+    --sidebar-partial-name _ApiSidebarV5 `
+    --layout-path "../../Shared/_Layout.cshtml"
+if ($LASTEXITCODE -ne 0) { throw "V5 API generation failed" }
+Write-Host "  V5 API markdown, taxonomy & views generated." -ForegroundColor Green
+
+# ── Step 2b: Generate V4 API markdown, taxonomy & views ─────────────────────
+Write-Host "`n[2b/10] Generating V4 API markdown, taxonomy & views..." -ForegroundColor Cyan
+
+# Build the --xml / --assembly argument pairs for all V4 libraries
+$v4ToolArgs = @()
+foreach ($proj in $v4Projects) {
+    $binDir = Join-Path $v4SrcDir "$proj\bin\Release\net10.0"
+    $xmlFile = Join-Path $binDir "$proj.xml"
+    $dllFile = Join-Path $binDir "$proj.dll"
+    $ns20Dll = Join-Path $v4SrcDir "$proj\bin\Release\netstandard2.0\$proj.dll"
+    if ((Test-Path $xmlFile) -and (Test-Path $dllFile)) {
+        $v4ToolArgs += "--xml", $xmlFile, "--assembly", $dllFile
+        if (Test-Path $ns20Dll) {
+            $v4ToolArgs += "--ns20-assembly", $ns20Dll
+        }
+    } else {
+        Write-Warning "  Missing XML or DLL for $proj — skipping"
+    }
+}
+
+& dotnet run --project $toolProject -c Release -- @v4ToolArgs `
+    --output $v4ApiContentDir `
+    --taxonomy-output $v4ApiTaxonomyDir `
+    --api-views-dir $v4ApiViewsDir `
+    --shared-views-dir $sharedViewsDir `
+    --api-base-url /api/v4 `
+    --sidebar-partial-name _ApiSidebarV4 `
+    --layout-path "../../Shared/_Layout.cshtml"
+if ($LASTEXITCODE -ne 0) { throw "V4 API generation failed" }
+Write-Host "  V4 API markdown, taxonomy & views generated." -ForegroundColor Green
 
 # ── Step 3: Generate recipe content from ExampleRecipes ─────────────────────
-Write-Host "`n[3/8] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
+Write-Host "`n[3/10] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
 
 $recipesSourceDir = Join-Path $repoRoot "docs\ExampleRecipes"
 $recipesContentDir = Join-Path $siteDir "content\Examples"
@@ -223,7 +302,7 @@ ContentBlocks:
 Write-Host "  $recipeCount recipe(s) generated." -ForegroundColor Green
 
 # ── Step 4: Generate docs content from source documentation ─────────────────
-Write-Host "`n[4/8] Generating docs content from source documentation..." -ForegroundColor Cyan
+Write-Host "`n[4/10] Generating docs content from source documentation..." -ForegroundColor Cyan
 
 $docsSourceDir = Join-Path $repoRoot "docs"
 $docsContentDir = Join-Path $siteDir "content\Docs"
@@ -346,7 +425,7 @@ $vellumDir = Join-Path $here ".endjin"
 $vellumCmd = Join-Path $vellumDir "vellum"
 
 if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
-    Write-Host "`n[5/8] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
+    Write-Host "`n[5/10] Installing Vellum $vellumVersion..." -ForegroundColor Cyan
     if (!(Test-Path $vellumDir)) {
         New-Item -ItemType Directory -Path $vellumDir | Out-Null
     }
@@ -355,11 +434,11 @@ if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
     if ($LASTEXITCODE -ne 0) { throw "Failed to install Vellum" }
     Write-Host "  Vellum installed." -ForegroundColor Green
 } else {
-    Write-Host "`n[5/8] Vellum already installed." -ForegroundColor DarkGray
+    Write-Host "`n[5/10] Vellum already installed." -ForegroundColor DarkGray
 }
 
 # ── Step 6: Run Vellum ──────────────────────────────────────────────────────
-Write-Host "`n[6/8] Running Vellum..." -ForegroundColor Cyan
+Write-Host "`n[6/10] Running Vellum..." -ForegroundColor Cyan
 
 # Prepare output directory (clean contents but keep dir if locked by another process)
 if (Test-Path $outputDir) {
@@ -394,7 +473,7 @@ foreach ($file in @("site.yml")) {
 Write-Host "  Site rendered." -ForegroundColor Green
 
 # ── Step 7: Compile SCSS ────────────────────────────────────────────────────
-Write-Host "`n[7/8] Compiling SCSS..." -ForegroundColor Cyan
+Write-Host "`n[7/10] Compiling SCSS..." -ForegroundColor Cyan
 $scssPath = Join-Path $assetsSource "css\scss\main.scss"
 $cssOutputPath = Join-Path $outputDir "main.css"
 & npx sass $scssPath $cssOutputPath --style=compressed --no-source-map
@@ -402,7 +481,7 @@ if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
 Write-Host "  CSS written to $cssOutputPath" -ForegroundColor Green
 
 # ── Step 8: Build search index ──────────────────────────────────────────────
-Write-Host "`n[8/8] Building search index..." -ForegroundColor Cyan
+Write-Host "`n[8/10] Building search index..." -ForegroundColor Cyan
 $searchIndexOutput = Join-Path $outputDir "search-index.json"
 & node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
 if ($LASTEXITCODE -ne 0) {
