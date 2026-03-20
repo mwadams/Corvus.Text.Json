@@ -229,8 +229,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] data = [(byte)'1', (byte)'1'];
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(data)))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(new MemoryStream(data)))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -244,8 +244,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] data = [(byte)'1', (byte)'1'];
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc =
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc =
             ParsedJsonDocument<JsonElement>.Parse(new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
@@ -260,7 +260,7 @@ public static class JsonDocumentBuilderTests
     {
         byte[] data = [(byte)'1', (byte)'1'];
 
-        using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
+        using (var workspace = JsonWorkspace.CreateUnrented())
         using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(new MemoryStream(data)))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
@@ -275,7 +275,7 @@ public static class JsonDocumentBuilderTests
     {
         byte[] data = [(byte)'1', (byte)'1'];
 
-        using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
+        using (var workspace = JsonWorkspace.CreateUnrented())
         using (ParsedJsonDocument<JsonElement> doc = await ParsedJsonDocument<JsonElement>.ParseAsync(
             new WrappedMemoryStream(canRead: true, canWrite: false, canSeek: false, data: data)))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
@@ -454,7 +454,7 @@ public static class JsonDocumentBuilderTests
 
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
+        using (var workspace = JsonWorkspace.CreateUnrented())
         using (ParsedJsonDocument<JsonElement> doc = await (stringDocBuilder?.Invoke(jsonString) ?? bytesDocBuilder?.Invoke(dataUtf8)))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
@@ -487,7 +487,7 @@ public static class JsonDocumentBuilderTests
                 using (var streamReader = new StreamReader(stream, Encoding.UTF8, false, 1024, true))
                 using (var jsonReader = new JsonTextReader(streamReader) { MaxDepth = null })
                 {
-                    JToken jToken = JToken.ReadFrom(jsonReader);
+                    var jToken = JToken.ReadFrom(jsonReader);
 
                     expectedCustom = expectedFunc(jToken);
                     actualCustom = actualFunc(rootElement);
@@ -566,8 +566,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             string actual = builderDoc.PrintJson();
@@ -582,8 +582,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void FromParsedArray()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleArrayJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleArrayJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -603,8 +603,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void FromParsedSimpleObject()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable parsedObject = builderDoc.RootElement;
@@ -636,8 +636,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void FromParsedNestedJson()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable parsedObject = builderDoc.RootElement;
@@ -685,8 +685,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void FromParsedSimpleObjectWithSourcePropertyMap()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
         {
             doc.RootElement.EnsurePropertyMap();
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
@@ -719,8 +719,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void FromParsedNestedJsonWithSourcePropertyMap()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
         {
             using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
@@ -772,8 +772,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void ParseBoolean()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[true,false]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("[true,false]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable parsedObject = builderDoc.RootElement;
@@ -787,8 +787,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void JsonArrayToString()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.ParseJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -801,8 +801,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void JsonObjectToString()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.BasicJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.BasicJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -824,8 +824,8 @@ public static class JsonDocumentBuilderTests
         // Within root[2] the array has only simple values, so it uses a different indexing algorithm.
         const string json = " [ 6, { \"hi\": \"mom\" }, [ \"425-214-3151\", 25 ], null ] ";
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -854,8 +854,8 @@ public static class JsonDocumentBuilderTests
         float expectedFloat = value;
         decimal expectedDecimal = value;
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -957,8 +957,8 @@ public static class JsonDocumentBuilderTests
         float expectedFloat = value;
         decimal expectedDecimal = value;
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1057,8 +1057,8 @@ public static class JsonDocumentBuilderTests
         float expectedFloat = value;
         decimal expectedDecimal = value;
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1154,8 +1154,8 @@ public static class JsonDocumentBuilderTests
         float expectedFloat = value;
         decimal expectedDecimal = value;
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1257,8 +1257,8 @@ public static class JsonDocumentBuilderTests
         float expectedFloat = value;
         decimal expectedDecimal = value;
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + value + "  "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1334,8 +1334,8 @@ public static class JsonDocumentBuilderTests
         expectedFloat *= 10;
         expectedDecimal *= 10;
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + ulong.MaxValue + "0  ", default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + ulong.MaxValue + "0  ", default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1406,14 +1406,14 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
 
-            DateTime expectedDateTime = DateTime.Parse(expectedString);
-            DateTimeOffset expectedDateTimeOffset = DateTimeOffset.Parse(expectedString);
+            var expectedDateTime = DateTime.Parse(expectedString);
+            var expectedDateTimeOffset = DateTimeOffset.Parse(expectedString);
 
             Assert.Equal(JsonValueKind.String, root.ValueKind);
 
@@ -1448,14 +1448,14 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
 
-            DateTime expectedDateTime = DateTime.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
-            DateTimeOffset expectedDateTimeOffset = DateTimeOffset.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            var expectedDateTime = DateTime.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            var expectedDateTimeOffset = DateTimeOffset.ParseExact(expectedString, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 
             Assert.Equal(JsonValueKind.String, root.ValueKind);
 
@@ -1476,8 +1476,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1501,8 +1501,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{jsonString}\"");
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1538,8 +1538,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes($"\"{jsonString}\"");
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1569,8 +1569,8 @@ public static class JsonDocumentBuilderTests
     [MemberData(nameof(NonIntegerCases))]
     public static void ReadNonInteger(string str, double expectedDouble, float expectedFloat, decimal expectedDecimal)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    " + str + "  "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    " + str + "  "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1642,8 +1642,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void ReadTooPreciseDouble()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("    1e+100000002"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("    1e+100000002"))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1740,8 +1740,8 @@ public static class JsonDocumentBuilderTests
             CommentHandling = JsonCommentHandling.Skip,
         };
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(
             "[ 0, 1, 2, 3/*.14159*/           , /* 42, 11, hut, hut, hike! */ 4 ]",
             options))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
@@ -1801,8 +1801,8 @@ public static class JsonDocumentBuilderTests
     public static void CheckUseAfterDispose()
     {
         var buffer = new ArrayBufferWriter<byte>(1024);
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1}", default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("{\"First\":1}", default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1924,8 +1924,8 @@ public static class JsonDocumentBuilderTests
     [InlineData("\"\\u0033\\u0031\"", "31")]
     public static void ReadString(string json, string expectedValue)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             Assert.Equal(expectedValue, doc.RootElement.GetString());
@@ -1938,8 +1938,8 @@ public static class JsonDocumentBuilderTests
         // The Arabic ligature Lam-Alef (U+FEFB) (which happens to, as a standalone, mean "no" in English)
         // is UTF-8 EF BB BB.  So let's leave out a BB and put it in quotes.
         byte[] badUtf8 = [0x22, 0xEF, 0xBB, 0x22];
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(badUtf8))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(badUtf8))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1961,8 +1961,8 @@ public static class JsonDocumentBuilderTests
     {
         // The Arabic ligature Lam-Alef (U+FEFB) (which happens to, as a standalone, mean "no" in English)
         // is UTF-8 EF BB BB.  So let's leave out a BB and put it in quotes.
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(new byte[] { 0x22, 0xEF, 0xBB, 0x22 }))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(new byte[] { 0x22, 0xEF, 0xBB, 0x22 }))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -1981,8 +1981,8 @@ public static class JsonDocumentBuilderTests
 
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             byte[] expected = Convert.FromBase64String("1234"); // new byte[3] { 215, 109, 248 }
@@ -2000,8 +2000,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] expected = Convert.FromBase64String(jsonString.AsSpan(1, jsonString.Length - 2).ToString());
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             Assert.Equal(expected, doc.RootElement.GetBytesFromBase64());
@@ -2017,8 +2017,8 @@ public static class JsonDocumentBuilderTests
     {
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             Assert.False(doc.RootElement.TryGetBytesFromBase64(out byte[] value));
@@ -2034,8 +2034,8 @@ public static class JsonDocumentBuilderTests
     [InlineData(" { \"outer\": { \"inner\": [ 1, 2, 3 ] }, \"secondOuter\": [ 2, 4, 6, 0, 1 ] }")]
     public static void TryGetProperty_NoProperty(string json)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2070,8 +2070,8 @@ public static class JsonDocumentBuilderTests
 
         string json = $"{{ \"{PascalString}\": \"no\", \"{CamelString}\": 42, \"{OddString}\": false }}";
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2153,8 +2153,8 @@ public static class JsonDocumentBuilderTests
 
         byte[] dataUtf8 = Encoding.UTF8.GetBytes(jsonString);
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(dataUtf8, default))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2172,8 +2172,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void GetPropertyByNullName()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{ }"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("{ }"))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             AssertExtensions.Throws<ArgumentNullException>(
@@ -2189,8 +2189,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void GetPropertyInvalidUtf16()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"value\"}"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("{\"name\":\"value\"}"))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             Assert.Throws<ArgumentException>(() => doc.RootElement.GetProperty("unpaired\uDFFE"));
@@ -2206,8 +2206,8 @@ public static class JsonDocumentBuilderTests
     {
         string json = $"{{ \"{propertyName}\": 1, \"{propertyName}\": 2, \"nope\": -1, \"{propertyName}\": 3 }}";
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2268,8 +2268,8 @@ public static class JsonDocumentBuilderTests
         string json =
             $"{{ \"{propertyName}\": 0, \"{first}\": 1, \"{pn2}\": 0, \"{second}\": 2, \"{pn3}\": 0, \"nope\": -1, \"{third}\": 3 }}";
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2320,13 +2320,13 @@ public static class JsonDocumentBuilderTests
 // Don't let there be a newline before the first embedded quote,
 // because the index would change across CRLF vs LF compile environments.
 @"{  ""  weird  property  name""
-              :
-   {
-     ""nested"":
-     [ 1, 2, 3
+                  :
+       {
+         ""nested"":
+         [ 1, 2, 3
 ,
 4, 5, 6 ],
-    ""also"" : 3
+        ""also"" : 3
   },
   ""number"": 1.02e+4,
   ""bool"": false,
@@ -2339,7 +2339,7 @@ public static class JsonDocumentBuilderTests
 1,
 2,
 
-3
+    3
 
 ],
   ""string"":
@@ -2347,8 +2347,8 @@ public static class JsonDocumentBuilderTests
 ""Aren't string just the greatest?\r\nNot a terminating quote: \""     \r   \n   \t  \\   ""
 }";
 
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             Assert.Equal(6, builderDoc.RootElement.GetPropertyCount());
@@ -2432,8 +2432,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void ArrayEnumeratorIndependentWalk()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("[0, 1, 2, 3, 4, 5]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("[0, 1, 2, 3, 4, 5]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2592,8 +2592,8 @@ public static class JsonDocumentBuilderTests
   ""name4"": 4,
   ""name5"": 5
 }";
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2791,8 +2791,8 @@ public static class JsonDocumentBuilderTests
 ""glub"": { ""bool"": false }
   }
 }";
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable root = builderDoc.RootElement;
@@ -2817,8 +2817,8 @@ public static class JsonDocumentBuilderTests
     [InlineData("""{ "foo" : {"nested:" : {"nested": 1, "bla": [1, 2, {"bla": 3}] } }, "test": true, "foo2" : {"nested:" : {"nested": 1, "bla": [1, 2, {"bla": 3}] } }}""", 3)]
     public static void TestGetPropertyCount(string json, int expectedCount)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(json))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable element = builderDoc.RootElement;
@@ -2829,8 +2829,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void VerifyGetPropertyCountAndArrayLengthUsingEnumerateMethods()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.ProjectLockJson))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.ProjectLockJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(builderDoc.RootElement);
@@ -2860,8 +2860,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void ValueEquals_Null_TrueForNullFalseForEmpty()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("   null   "))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("   null   "))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2879,8 +2879,8 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void ValueEquals_EmptyJsonString_True()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse("\"\""))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse("\"\""))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2895,10 +2895,10 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void ValueEquals_TestTextEqualsLargeMatch_True()
     {
-        var lookup = new string('a', 320);
+        string lookup = new string('a', 320);
         string jsonString = "\"" + lookup + "\"";
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2914,8 +2914,8 @@ public static class JsonDocumentBuilderTests
     [InlineData("\"My name is \\\"Ahson\\\"\"", "My name is \"Ahson\"")]
     public static void ValueEquals_JsonTokenStringType_True(string jsonString, string expected)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2930,8 +2930,8 @@ public static class JsonDocumentBuilderTests
     [InlineData("\"conne\\u0063tionId\"", "c")]
     public static void ValueEquals_DestinationTooSmallComparesEscaping_False(string jsonString, string other)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2947,8 +2947,8 @@ public static class JsonDocumentBuilderTests
     [InlineData("\"hello\"", new char[1] { (char)0xD801 })]    // high surrogate - missing pair
     public static void InvalidUTF16Search(string jsonString, char[] lookup)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2962,8 +2962,8 @@ public static class JsonDocumentBuilderTests
     [InlineData("\"conne\\u0063tionId\"", "bonnectionId")] // intentionally changing the expected starting character
     public static void ValueEquals_JsonTokenStringType_False(string jsonString, string otherText)
     {
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -2984,8 +2984,8 @@ public static class JsonDocumentBuilderTests
     public static void ValueEquals_NotString_Throws(string jsonString)
     {
         const string ErrorMessage = "The requested operation requires an element of type 'String', but the target element has type 'Object'.";
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -3001,8 +3001,8 @@ public static class JsonDocumentBuilderTests
     {
         const string jsonString = "{\"\" : \"some-value\"}";
         const string ErrorMessage = "The requested operation requires an element of type 'String', but the target element has type 'Object'.";
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
+        using (var workspace = JsonWorkspace.Create())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable jElement = builderDoc.RootElement;
@@ -3018,8 +3018,8 @@ public static class JsonDocumentBuilderTests
     [OuterLoop] // thread-safety / stress test
     public static async Task GetString_ConcurrentUse_ThreadSafe()
     {
-        using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
-        using (ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
+        using (var workspace = JsonWorkspace.CreateUnrented())
+        using (var doc = ParsedJsonDocument<JsonElement>.Parse(SR.SimpleObjectJson))
         using (JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace))
         {
             JsonElement.Mutable first = builderDoc.RootElement.GetProperty("first");
@@ -3055,8 +3055,8 @@ public static class JsonDocumentBuilderTests
     public static void CopySingleDimensionalArray()
     {
         const int length = 3;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             sbyte[] outputSbyte = new sbyte[length];
@@ -3144,8 +3144,8 @@ public static class JsonDocumentBuilderTests
     {
         const int length = 3;
         const int rank = 1;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             sbyte[] outputSbyte = new sbyte[length];
@@ -3233,8 +3233,8 @@ public static class JsonDocumentBuilderTests
     {
         const int length = 2;
         const int rank = 1;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             IJsonElement root = doc.RootElement;
@@ -3309,8 +3309,8 @@ public static class JsonDocumentBuilderTests
     {
         const int length = 9;
         const int rank = 2;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5,6],[7,8,9]]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5,6],[7,8,9]]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             sbyte[] outputSbyte = new sbyte[length];
@@ -3398,8 +3398,8 @@ public static class JsonDocumentBuilderTests
     {
         const int length = 8;
         const int rank = 2;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             sbyte[] outputSbyte = new sbyte[length];
@@ -3487,8 +3487,8 @@ public static class JsonDocumentBuilderTests
     {
         const int length = 7; // The JSON array has 8 elements, so this is too short
         const int rank = 2;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             IJsonElement root = doc.RootElement;
@@ -3577,8 +3577,8 @@ public static class JsonDocumentBuilderTests
     {
         const int length = 8;
         const int rank = 2;
-        using (JsonWorkspace workspace = JsonWorkspace.Create())
-        using (ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,\"stringValue\"],[6,7,8]]"))
+        using (var workspace = JsonWorkspace.Create())
+        using (var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,\"stringValue\"],[6,7,8]]"))
         using (JsonDocumentBuilder<JsonElement.Mutable> doc = parsedDoc.RootElement.CreateBuilder(workspace))
         {
             sbyte[] outputSbyte = new sbyte[length];
@@ -3715,10 +3715,10 @@ public static class JsonDocumentBuilderTests
         using (var jsonReader = new JsonTextReader(new StringReader(jsonString)) { MaxDepth = null })
         {
             jsonReader.FloatParseHandling = FloatParseHandling.Decimal;
-            JToken jtoken = JToken.ReadFrom(jsonReader);
+            var jtoken = JToken.ReadFrom(jsonReader);
             var stringWriter = new StringWriter();
 
-            using (JsonTextWriter jsonWriter = new JsonTextWriter(stringWriter))
+            using (var jsonWriter = new JsonTextWriter(stringWriter))
             {
                 jtoken.WriteTo(jsonWriter);
                 existing = stringWriter.ToString();
@@ -3734,11 +3734,11 @@ public static class JsonDocumentBuilderTests
         Action<object> disposeAction = document => ((ParsedJsonDocument<JsonElement>)document).Dispose();
 
         // Create a bunch of parallel tasks that call Dispose several times on the same object.
-        Task[] tasks = new Task[100];
+        var tasks = new Task[100];
         int count = 0;
         for (int j = 0; j < 10; j++)
         {
-            ParsedJsonDocument<JsonElement> document = ParsedJsonDocument<JsonElement>.Parse("123" + j);
+            var document = ParsedJsonDocument<JsonElement>.Parse("123" + j);
             for (int i = 0; i < 10; i++)
             {
                 tasks[count] = new Task(disposeAction, document);
@@ -3753,7 +3753,7 @@ public static class JsonDocumentBuilderTests
         // When ArrayPool gets corrupted, the Rent method might return an already rented array, which is incorrect.
         // So we will rent as many arrays as calls to JsonElement.Dispose and check they are unique.
         // The minimum length that we ask for is a mirror of the size of the string passed to ParsedJsonDocument<JsonElement>.Parse.
-        HashSet<byte[]> uniqueAddresses = new HashSet<byte[]>();
+        var uniqueAddresses = new HashSet<byte[]>();
         while (count > 0)
         {
             byte[] arr = ArrayPool<byte>.Shared.Rent(4);
@@ -3774,7 +3774,7 @@ public static class JsonDocumentBuilderTests
     public static void CreateBuilderFromMutableBuilderThrows()
     {
         const string ErrorMessage = "You cannot create a mutable copy of a mutable document. Consider calling Freeze() on the source document.";
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateBuilder(workspace, "Hello"u8);
         AssertExtensions.Throws<InvalidOperationException>(() => mutableBuilder.RootElement.CreateBuilder(workspace), ErrorMessage);
     }
@@ -3782,7 +3782,7 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void CreateBuilderFromImmutableBuilderSucceeds()
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder = JsonElement.CreateBuilder(workspace, "Hello"u8);
         Assert.False(mutableBuilder.IsImmutable);
         mutableBuilder.Freeze();
@@ -3795,7 +3795,7 @@ public static class JsonDocumentBuilderTests
     public static void ModifyingImmutableBuilderFails()
     {
         const string ErrorMessage = "You cannot modify an immutable document.";
-        using JsonWorkspace workspace = JsonWorkspace.Create();
+        using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder =
             JsonElement.CreateBuilder(
                 workspace,
@@ -4192,8 +4192,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
-        Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
+        var bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
+        var smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
 
         root.SetItem(0, bigValue);
         Assert.Equal(bigValue, root[0].GetInt128());
@@ -4210,7 +4210,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
+        var bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
         UInt128 smallValue = 42;
 
         root.SetItem(0, bigValue);
@@ -4228,8 +4228,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Half value1 = (Half)3.25;
-        Half value2 = (Half)(-2.5);
+        var value1 = (Half)3.25;
+        var value2 = (Half)(-2.5);
 
         root.SetItem(0, value1);
         Assert.Equal(value1, root[0].GetHalf());
@@ -4511,7 +4511,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Half value = (Half)1.0;
+        var value = (Half)1.0;
 
         Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(-1, value));
         Assert.Throws<IndexOutOfRangeException>(() => root.SetItem(2, value));
@@ -4909,7 +4909,7 @@ public static class JsonDocumentBuilderTests
     [Fact]
     public static void SetProperty_Period_Works()
     {
-        var dto1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
+        Period dto1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
         Period dto2 = Period.Zero;
         using var doc = ParsedJsonDocument<JsonElement>.Parse("{\"a\":\"P1W\"}");
         using var workspace = JsonWorkspace.Create();
@@ -5134,8 +5134,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
-        Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
+        var bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
+        var smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
 
         root.SetProperty("a"u8, bigValue);
         Assert.Equal(bigValue, root.GetProperty("a").GetInt128());
@@ -5155,7 +5155,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
+        var bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
         UInt128 smallValue = 42;
 
         root.SetProperty("a"u8, bigValue);
@@ -5176,8 +5176,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Half value1 = (Half)3.25;
-        Half value2 = (Half)(-2.5);
+        var value1 = (Half)3.25;
+        var value2 = (Half)(-2.5);
 
         root.SetProperty("a"u8, value1);
         Assert.Equal(value1, root.GetProperty("a").GetHalf());
@@ -5439,8 +5439,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
-        Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
+        var bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
+        var smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
 
         root.SetProperty("a", bigValue);
         Assert.Equal(bigValue, root.GetProperty("a").GetInt128());
@@ -5460,7 +5460,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
+        var bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
         UInt128 smallValue = 42;
 
         root.SetProperty("a", bigValue);
@@ -5481,8 +5481,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Half value1 = (Half)3.25;
-        Half value2 = (Half)(-2.5);
+        var value1 = (Half)3.25;
+        var value2 = (Half)(-2.5);
 
         root.SetProperty("a", value1);
         Assert.Equal(value1, root.GetProperty("a").GetHalf());
@@ -5811,8 +5811,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Int128 bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
-        Int128 smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
+        var bigValue = Int128.Parse("170141183460469231731687303715884105727"); // Int128.MaxValue
+        var smallValue = Int128.Parse("-170141183460469231731687303715884105728"); // Int128.MinValue
 
         root.SetProperty("héllo"u8, bigValue);
         Assert.Equal(bigValue, root.GetProperty("héllo").GetInt128());
@@ -5829,7 +5829,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        UInt128 bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
+        var bigValue = UInt128.Parse("340282366920938463463374607431768211455"); // UInt128.MaxValue
         UInt128 smallValue = 42;
 
         root.SetProperty("héllo"u8, bigValue);
@@ -5847,8 +5847,8 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        Half value1 = (Half)3.25;
-        Half value2 = (Half)(-2.5);
+        var value1 = (Half)3.25;
+        var value2 = (Half)(-2.5);
 
         root.SetProperty("héllo"u8, value1);
         Assert.Equal(value1, root.GetProperty("héllo").GetHalf());
@@ -6003,7 +6003,7 @@ public static class JsonDocumentBuilderTests
         var od = new OffsetDate(new LocalDate(2025, 1, 1), Offset.Zero);
         var ot = new OffsetTime(new LocalTime(14, 0, 3), Offset.Zero);
         var ld = new LocalDate(2025, 1, 1);
-        var period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
+        Period period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
 
         // Test data for various numeric types
         byte[] byteArray = [1, 2, 3];
@@ -6024,7 +6024,7 @@ public static class JsonDocumentBuilderTests
         Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
 #endif
 
-        using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
+        using var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
         // Build an array using every method on JsonJsonElement.ArrayBuilder
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
@@ -6432,7 +6432,7 @@ public static class JsonDocumentBuilderTests
         var od = new OffsetDate(new LocalDate(2025, 1, 1), Offset.Zero);
         var ot = new OffsetTime(new LocalTime(14, 0, 3), Offset.Zero);
         var ld = new LocalDate(2025, 1, 1);
-        var period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
+        Period period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
 
         // Test data for various numeric types
         byte[] byteArray = [1, 2, 3];
@@ -6453,7 +6453,7 @@ public static class JsonDocumentBuilderTests
         Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
 #endif
 
-        using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
+        using var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
         // Build an object using every method on JsonJsonElement.ObjectBuilder
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
@@ -6693,7 +6693,7 @@ public static class JsonDocumentBuilderTests
         var od = new OffsetDate(new LocalDate(2025, 1, 1), Offset.Zero);
         var ot = new OffsetTime(new LocalTime(14, 0, 3), Offset.Zero);
         var ld = new LocalDate(2025, 1, 1);
-        var period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
+        Period period = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 10).Normalize();
 
         // Test data for various numeric types
         byte[] byteArray = [1, 2, 3];
@@ -6714,7 +6714,7 @@ public static class JsonDocumentBuilderTests
         Half[] halfArray = [(Half)1.5, (Half)2.5, (Half)3.5];
 #endif
 
-        using ParsedJsonDocument<JsonElement> parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
+        using var parsedDoc = ParsedJsonDocument<JsonElement>.Parse("{\"foo\":3}");
 
         // Build an object using every method on JsonJsonElement.ObjectBuilder
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
@@ -7136,7 +7136,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        var p1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
+        Period p1 = new Period(1, 2, 3, 4, 5, 6, 7, 8, 9, 1).Normalize();
         Period p2 = Period.Zero;
 
         root.SetItem(0, p1);

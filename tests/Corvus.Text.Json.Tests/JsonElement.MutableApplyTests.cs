@@ -185,7 +185,7 @@ public class JsonElementMutableApplyTests
         using var sourceParsed = ParsedJsonDocument<JsonElement>.Parse("""{"source": "value"}""");
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
-        var originalSourceString = sourceParsed.RootElement.ToString();
+        string originalSourceString = sourceParsed.RootElement.ToString();
 
         // Act - Apply immutable source to mutable target
         targetDoc.RootElement.Apply(sourceParsed.RootElement);
@@ -203,7 +203,7 @@ public class JsonElementMutableApplyTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> targetDoc = targetParsed.RootElement.CreateBuilder(workspace);
         using JsonDocumentBuilder<JsonElement.Mutable> sourceDoc = sourceParsed.RootElement.CreateBuilder(workspace);
-        var originalSourceString = sourceDoc.RootElement.ToString();
+        string originalSourceString = sourceDoc.RootElement.ToString();
 
         // Act - Apply mutable source to mutable target
         targetDoc.RootElement.Apply(sourceDoc.RootElement);

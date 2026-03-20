@@ -57,35 +57,35 @@ public class JsonElementHelpersDateTimeTests
     [Fact]
     public void ParseLocalDate_ThrowsOnInvalid()
     {
-        var invalid = Encoding.UTF8.GetBytes("2024-13-40");
+        byte[] invalid = Encoding.UTF8.GetBytes("2024-13-40");
         Assert.Throws<FormatException>(() => JsonElementHelpers.ParseLocalDate(invalid));
     }
 
     [Fact]
     public void ParseOffsetDate_ThrowsOnInvalid()
     {
-        var invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
+        byte[] invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
         Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetDate(invalid));
     }
 
     [Fact]
     public void ParseOffsetDateTime_ThrowsOnInvalid()
     {
-        var invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
+        byte[] invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
         Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetDateTime(invalid));
     }
 
     [Fact]
     public void ParseOffsetTime_ThrowsOnInvalid()
     {
-        var invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
+        byte[] invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
         Assert.Throws<FormatException>(() => JsonElementHelpers.ParseOffsetTime(invalid));
     }
 
     [Fact]
     public void ParsePeriod_ThrowsOnInvalid()
     {
-        var invalid = Encoding.UTF8.GetBytes("notaperiod");
+        byte[] invalid = Encoding.UTF8.GetBytes("notaperiod");
         Assert.Throws<FormatException>(() => JsonElementHelpers.ParsePeriod(invalid));
     }
 
@@ -194,44 +194,44 @@ public class JsonElementHelpersDateTimeTests
     [Fact]
     public void TryParseLocalDate_ValidAndInvalid()
     {
-        var valid = Encoding.UTF8.GetBytes("2024-06-07");
+        byte[] valid = Encoding.UTF8.GetBytes("2024-06-07");
         Assert.True(JsonElementHelpers.TryParseLocalDate(valid, out LocalDate date));
         Assert.Equal(new LocalDate(2024, 6, 7), date);
 
-        var invalid = Encoding.UTF8.GetBytes("2024-13-40");
+        byte[] invalid = Encoding.UTF8.GetBytes("2024-13-40");
         Assert.False(JsonElementHelpers.TryParseLocalDate(invalid, out _));
     }
 
     [Fact]
     public void TryParseOffsetDate_ValidAndInvalid()
     {
-        var valid = Encoding.UTF8.GetBytes("2024-06-07+01:00");
+        byte[] valid = Encoding.UTF8.GetBytes("2024-06-07+01:00");
         Assert.True(JsonElementHelpers.TryParseOffsetDate(valid, out OffsetDate date));
         Assert.Equal(new OffsetDate(new LocalDate(2024, 6, 7), Offset.FromHours(1)), date);
 
-        var invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
+        byte[] invalid = Encoding.UTF8.GetBytes("2024-13-40+01:00");
         Assert.False(JsonElementHelpers.TryParseOffsetDate(invalid, out _));
     }
 
     [Fact]
     public void TryParseOffsetDateTime_ValidAndInvalid()
     {
-        var valid = Encoding.UTF8.GetBytes("2024-06-07T12:34:56.7890000+01:00");
+        byte[] valid = Encoding.UTF8.GetBytes("2024-06-07T12:34:56.7890000+01:00");
         Assert.True(JsonElementHelpers.TryParseOffsetDateTime(valid, out OffsetDateTime dt));
         Assert.Equal(new OffsetDateTime(new LocalDateTime(2024, 6, 7, 12, 34, 56, 789), Offset.FromHours(1)), dt);
 
-        var invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
+        byte[] invalid = Encoding.UTF8.GetBytes("2024-06-07T25:00:00+01:00");
         Assert.False(JsonElementHelpers.TryParseOffsetDateTime(invalid, out _));
     }
 
     [Fact]
     public void TryParseOffsetTime_ValidAndInvalid()
     {
-        var valid = Encoding.UTF8.GetBytes("12:34:56.7890000+01:00");
+        byte[] valid = Encoding.UTF8.GetBytes("12:34:56.7890000+01:00");
         Assert.True(JsonElementHelpers.TryParseOffsetTime(valid, out OffsetTime t));
         Assert.Equal(new OffsetTime(new LocalTime(12, 34, 56, 789), Offset.FromHours(1)), t);
 
-        var invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
+        byte[] invalid = Encoding.UTF8.GetBytes("25:00:00+01:00");
         Assert.False(JsonElementHelpers.TryParseOffsetTime(invalid, out _));
     }
 
@@ -239,51 +239,51 @@ public class JsonElementHelpersDateTimeTests
     public void TryParsePeriod_ValidAndInvalid()
     {
         // Valid examples
-        var validDay = Encoding.UTF8.GetBytes("P1D");
+        byte[] validDay = Encoding.UTF8.GetBytes("P1D");
         Assert.True(JsonElementHelpers.TryParsePeriod(validDay, out Period periodDay));
         Assert.Equal(Period.FromDays(1).Normalize(), periodDay);
 
-        var validMonth = Encoding.UTF8.GetBytes("P2M");
+        byte[] validMonth = Encoding.UTF8.GetBytes("P2M");
         Assert.True(JsonElementHelpers.TryParsePeriod(validMonth, out Period periodMonth));
         Assert.Equal(Period.FromMonths(2).Normalize(), periodMonth);
 
-        var validYear = Encoding.UTF8.GetBytes("P3Y");
+        byte[] validYear = Encoding.UTF8.GetBytes("P3Y");
         Assert.True(JsonElementHelpers.TryParsePeriod(validYear, out Period periodYear));
         Assert.Equal(Period.FromYears(3).Normalize(), periodYear);
 
-        var validWeek = Encoding.UTF8.GetBytes("P4W");
+        byte[] validWeek = Encoding.UTF8.GetBytes("P4W");
         Assert.True(JsonElementHelpers.TryParsePeriod(validWeek, out Period periodWeek));
         Assert.Equal(Period.FromWeeks(4).Normalize(), periodWeek);
 
-        var validTime = Encoding.UTF8.GetBytes("PT5H6M7S");
+        byte[] validTime = Encoding.UTF8.GetBytes("PT5H6M7S");
         Assert.True(JsonElementHelpers.TryParsePeriod(validTime, out Period periodTime));
         Assert.Equal((Period.FromHours(5) + Period.FromMinutes(6) + Period.FromSeconds(7)).Normalize(), periodTime);
 
-        var validFull = Encoding.UTF8.GetBytes("P1Y2M3DT4H5M6S");
+        byte[] validFull = Encoding.UTF8.GetBytes("P1Y2M3DT4H5M6S");
         Assert.True(JsonElementHelpers.TryParsePeriod(validFull, out Period periodFull));
         Assert.Equal(
             (Period.FromYears(1) + Period.FromMonths(2) + Period.FromDays(3) +
             Period.FromHours(4) + Period.FromMinutes(5) + Period.FromSeconds(6)).Normalize(),
             periodFull);
 
-        var validFractional = Encoding.UTF8.GetBytes("PT0.5S");
+        byte[] validFractional = Encoding.UTF8.GetBytes("PT0.5S");
         Assert.True(JsonElementHelpers.TryParsePeriod(validFractional, out Period periodFractional));
         Assert.Equal(Period.FromMilliseconds(500).Normalize(), periodFractional);
 
         // Invalid examples
-        var invalid = Encoding.UTF8.GetBytes("notaperiod");
+        byte[] invalid = Encoding.UTF8.GetBytes("notaperiod");
         Assert.False(JsonElementHelpers.TryParsePeriod(invalid, out _));
 
-        var invalidEmpty = Encoding.UTF8.GetBytes("");
+        byte[] invalidEmpty = Encoding.UTF8.GetBytes("");
         Assert.False(JsonElementHelpers.TryParsePeriod(invalidEmpty, out _));
 
-        var invalidNoP = Encoding.UTF8.GetBytes("1Y2M");
+        byte[] invalidNoP = Encoding.UTF8.GetBytes("1Y2M");
         Assert.False(JsonElementHelpers.TryParsePeriod(invalidNoP, out _));
 
-        var invalidBadOrder = Encoding.UTF8.GetBytes("P1DT1Y");
+        byte[] invalidBadOrder = Encoding.UTF8.GetBytes("P1DT1Y");
         Assert.False(JsonElementHelpers.TryParsePeriod(invalidBadOrder, out _));
 
-        var invalidDoubleT = Encoding.UTF8.GetBytes("P1YT2H3MT4S");
+        byte[] invalidDoubleT = Encoding.UTF8.GetBytes("P1YT2H3MT4S");
         Assert.False(JsonElementHelpers.TryParsePeriod(invalidDoubleT, out _));
     }
 }

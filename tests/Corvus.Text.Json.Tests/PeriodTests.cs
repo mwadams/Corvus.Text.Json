@@ -28,7 +28,7 @@ public class PeriodTest
     {
         LocalDate start = LocalDatePattern.Iso.Parse(startText).Value;
         LocalDate end = LocalDatePattern.Iso.Parse(endText).Value;
-        var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
+        int actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expectedValue, actual);
     }
 
@@ -45,8 +45,8 @@ public class PeriodTest
     {
         var start = new LocalDate(2020, 6, 13, CalendarSystem.Iso);
         LocalDate end = start;
-        var expected = 0;
-        var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
+        int expected = 0;
+        int actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expected, actual);
     }
 
@@ -60,7 +60,7 @@ public class PeriodTest
     {
         LocalDate start = LocalDatePattern.Iso.Parse(startText).Value;
         LocalDate end = LocalDatePattern.Iso.Parse(endText).Value;
-        var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
+        int actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expected, actual);
     }
 
@@ -74,7 +74,7 @@ public class PeriodTest
     {
         LocalDate start = LocalDatePattern.Iso.Parse(startText).Value;
         LocalDate end = LocalDatePattern.Iso.Parse(endText).Value;
-        var actual = Corvus.Text.Json.Period.DaysBetween(start, end);
+        int actual = Corvus.Text.Json.Period.DaysBetween(start, end);
         Assert.Equal(expected, actual);
     }
 
@@ -536,7 +536,7 @@ public class PeriodTest
     {
         foreach (PropertyInfo property in typeof(Corvus.Text.Json.Period).GetProperties(BindingFlags.Instance | BindingFlags.Public))
         {
-            var actualValue = property.GetValue(period);
+            object actualValue = property.GetValue(period);
 
             // HasTimeComponent is a public property that will get included in this loop.
             // This block allows us to ignore it.

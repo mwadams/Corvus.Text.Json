@@ -14,7 +14,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("0.123", 3, "0.123")]
     public void TryFormatNumber_WithGroupSeparators_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -23,7 +23,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -46,7 +46,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("-0.123", 3, "-0.123")]
     public void TryFormatNumber_WithNegativeNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -55,7 +55,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -80,7 +80,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("999.999", 2, "1,000.00")]
     public void TryFormatNumber_RoundsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -89,7 +89,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -112,7 +112,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("1e6", 2, "1,000,000.00")]
     public void TryFormatNumber_WithLargeIntegers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -121,7 +121,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -144,7 +144,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("0.000123", 3, "0.000")]
     public void TryFormatNumber_WithSmallNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -153,7 +153,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -175,7 +175,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("0", 2, "0.00")]
     public void TryFormatNumber_WithZero_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -184,7 +184,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -204,7 +204,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [Fact]
     public void TryFormatNumber_UsesCustomGroupSeparator()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -237,7 +237,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [Fact]
     public void TryFormatNumber_UsesCustomNegativeSign()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -266,7 +266,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [Fact]
     public void TryFormatNumber_ReturnsFalseWhenBufferTooSmall()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -275,7 +275,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[5];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -296,7 +296,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("9999.995", 2, "10,000.00")]
     public void TryFormatNumber_RoundingWithCarryIntoGroupSeparator(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -305,7 +305,7 @@ public class JsonElementHelpersTryFormatNumberTests
             out int exponent);
 
         Span<char> destination = stackalloc char[100];
-        var formatInfo = NumberFormatInfo.InvariantInfo;
+        NumberFormatInfo formatInfo = NumberFormatInfo.InvariantInfo;
 
         bool success = JsonElementHelpers.TryFormatNumber(
             isNegative,
@@ -327,7 +327,7 @@ public class JsonElementHelpersTryFormatNumberTests
     [InlineData("999.995", 2, "1 000.00")]
     public void TryFormatNumber_RoundingWithCarryIntoMultiCharGroupSeparator(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,

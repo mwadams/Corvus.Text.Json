@@ -13,7 +13,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("1234567", 2, 'e', "1.23e+006")]
     public void TryFormatExponential_WithPrecision_FormatsCorrectly(string jsonNumber, int precision, char exponentChar, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -45,7 +45,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("0.00123", 'e', "1.230000e-003")]
     public void TryFormatExponential_DefaultPrecision_UsesSixDigits(string jsonNumber, char exponentChar, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -77,7 +77,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("-0.00123", 3, "-1.230e-003")]
     public void TryFormatExponential_WithNegativeNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -109,7 +109,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("123.456", 'E', "1.23E+002")]
     public void TryFormatExponential_UsesSpecifiedExponentChar(string jsonNumber, char exponentChar, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -141,7 +141,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("0.0", 3, "0.000e+000")]
     public void TryFormatExponential_WithZero_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -173,7 +173,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("9.995", 2, "1.00e+001")]
     public void TryFormatExponential_RoundsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -203,7 +203,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [Fact]
     public void TryFormatExponential_UsesCustomDecimalSeparator()
     {
-        var utf8 = Encoding.UTF8.GetBytes("123.456");
+        byte[] utf8 = Encoding.UTF8.GetBytes("123.456");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -233,7 +233,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [Fact]
     public void TryFormatExponential_UsesCustomNegativeSign()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-123.456");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-123.456");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -263,7 +263,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [Fact]
     public void TryFormatExponential_ReturnsFalseWhenBufferTooSmall()
     {
-        var utf8 = Encoding.UTF8.GetBytes("123.456");
+        byte[] utf8 = Encoding.UTF8.GetBytes("123.456");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -295,7 +295,7 @@ public class JsonElementHelpersTryFormatExponentialUtf8Tests
     [InlineData("1.23e5", 3, "1.230e+005")]
     public void TryFormatExponential_WithExistingExponent_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,

@@ -15,7 +15,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [InlineData("99.999", 2, "100.00")]
     public void TryFormatFixedPoint_RoundsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -49,7 +49,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [InlineData("1.23e3", 2, "1230.00")]
     public void TryFormatFixedPoint_HandlesIntegersWithTrailingZeros(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -86,7 +86,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [InlineData("1.23e-5", 6, "0.000012")]
     public void TryFormatFixedPoint_HandlesSmallNumbers(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -120,7 +120,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [InlineData("-0.000123", 5, "-0.00012")]
     public void TryFormatFixedPoint_HandlesNegativeNumbers(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -154,7 +154,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [InlineData("0.00", 3, "0.000")]
     public void TryFormatFixedPoint_HandlesZero(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -184,7 +184,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [Fact]
     public void TryFormatFixedPoint_UsesCustomDecimalSeparator()
     {
-        var utf8 = Encoding.UTF8.GetBytes("123.456");
+        byte[] utf8 = Encoding.UTF8.GetBytes("123.456");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -214,7 +214,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [Fact]
     public void TryFormatFixedPoint_UsesCustomNegativeSign()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-123.456");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-123.456");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -244,7 +244,7 @@ public class JsonElementHelpersTryFormatFixedPointUtf8Tests
     [Fact]
     public void TryFormatFixedPoint_ReturnsFalseWhenBufferTooSmall()
     {
-        var utf8 = Encoding.UTF8.GetBytes("123.456");
+        byte[] utf8 = Encoding.UTF8.GetBytes("123.456");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,

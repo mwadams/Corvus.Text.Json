@@ -14,7 +14,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [InlineData("0.12345", "12.35 %")]
     public void TryFormatPercent_BasicValues_MultipliesBy100(string jsonNumber, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -48,7 +48,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [InlineData("0.12345", 4, "12.3450 %")]
     public void TryFormatPercent_WithPrecision_FormatsToSpecifiedDecimalPlaces(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -80,7 +80,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [InlineData("-1.5", "-150.00 %")]
     public void TryFormatPercent_WithNegativeNumbers_IncludesNegativeSign(string jsonNumber, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -109,7 +109,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [Fact]
     public void TryFormatPercent_WithGrouping_InsertsGroupSeparators()
     {
-        var utf8 = Encoding.UTF8.GetBytes("12.345");
+        byte[] utf8 = Encoding.UTF8.GetBytes("12.345");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -145,7 +145,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [Fact]
     public void TryFormatPercent_UsesCustomPercentSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("0.5");
+        byte[] utf8 = Encoding.UTF8.GetBytes("0.5");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -184,7 +184,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [InlineData(3, "% 50.00")]  // % n
     public void TryFormatPercent_RespectsPositivePattern(int pattern, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes("0.5");
+        byte[] utf8 = Encoding.UTF8.GetBytes("0.5");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -230,7 +230,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [InlineData(11, "50.00- %")]  // n- %
     public void TryFormatPercent_RespectsNegativePattern(int pattern, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes("-0.5");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-0.5");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -264,7 +264,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [Fact]
     public void TryFormatPercent_ReturnsFalseWhenBufferTooSmall()
     {
-        var utf8 = Encoding.UTF8.GetBytes("0.5");
+        byte[] utf8 = Encoding.UTF8.GetBytes("0.5");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -295,7 +295,7 @@ public class JsonElementHelpersTryFormatPercentUtf8Tests
     [InlineData("0.99995", 2, "100.00 %")] // Rounds to 100
     public void TryFormatPercent_RoundsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,

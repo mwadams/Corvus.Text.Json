@@ -12,7 +12,7 @@ public class JsonElementHelpersParseNumberTests
     [InlineData("0.01e2", false, "", "1", 0)]
     public void ParseNumber_HandlesExponentAndFractional(string jsonNumber, bool expectedNegative, string expectedIntegral, string expectedFractional, int expectedExponent)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -32,7 +32,7 @@ public class JsonElementHelpersParseNumberTests
     [InlineData("1.2300e-2", false, "1", "23", -4)]
     public void ParseNumber_NormalizesZeros(string jsonNumber, bool expectedNegative, string expectedIntegral, string expectedFractional, int expectedExponent)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -62,7 +62,7 @@ public class JsonElementHelpersParseNumberTests
     [InlineData("-0", false, "", "", 0)]
     public void ParseNumber_ParsesCorrectly(string jsonNumber, bool expectedNegative, string expectedIntegral, string expectedFractional, int expectedExponent)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,

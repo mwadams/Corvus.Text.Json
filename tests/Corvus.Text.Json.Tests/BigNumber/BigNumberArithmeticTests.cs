@@ -2,6 +2,7 @@
 // The .NET Foundation licensed this code under the MIT license.
 
 using System.Numerics;
+using Corvus.Numerics;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;
@@ -24,7 +25,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = bn1 + bn2;
+        BigNumber result = bn1 + bn2;
 
         // Assert
         Assert.Equal(expected, result);
@@ -43,7 +44,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = bn1 - bn2;
+        BigNumber result = bn1 - bn2;
 
         // Assert
         Assert.Equal(expected, result);
@@ -62,7 +63,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = bn1 * bn2;
+        BigNumber result = bn1 * bn2;
 
         // Assert
         Assert.Equal(expected, result);
@@ -112,7 +113,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = bn1 % bn2;
+        BigNumber result = bn1 % bn2;
 
         // Assert
         Assert.Equal(expected, result);
@@ -138,7 +139,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(0, 0);
 
         // Act
-        var result = bn1 % bn2;
+        BigNumber result = bn1 % bn2;
 
         // Assert
         Assert.Equal(expected, result);
@@ -155,7 +156,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = ++value;
+        BigNumber result = ++value;
 
         // Assert
         Assert.Equal(expected, result);
@@ -172,7 +173,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = --value;
+        BigNumber result = --value;
 
         // Assert
         Assert.Equal(expected, result);
@@ -189,7 +190,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = +value;
+        BigNumber result = +value;
 
         // Assert
         Assert.Equal(expected, result);
@@ -206,7 +207,7 @@ public class BigNumberArithmeticTests
         var expected = new Corvus.Numerics.BigNumber(expectedS, expectedE);
 
         // Act
-        var result = -value;
+        BigNumber result = -value;
 
         // Assert
         Assert.Equal(expected, result);
@@ -219,7 +220,7 @@ public class BigNumberArithmeticTests
         var original = new Corvus.Numerics.BigNumber(123, 5);
 
         // Act
-        var result = -(-original);
+        BigNumber result = -(-original);
 
         // Assert
         Assert.Equal(original, result);
@@ -230,11 +231,11 @@ public class BigNumberArithmeticTests
     {
         // Arrange
         var original = new Corvus.Numerics.BigNumber(100, 0);
-        var unchangedOriginal = original;
+        BigNumber unchangedOriginal = original;
 
         // Act
-        var incremented = original++;
-        var decremented = incremented--;
+        BigNumber incremented = original++;
+        BigNumber decremented = incremented--;
 
         // Assert
         // Note: increment/decrement work on the significand, so 100 (sig=100,exp=0) 
@@ -251,11 +252,11 @@ public class BigNumberArithmeticTests
         var bn2 = new Corvus.Numerics.BigNumber(BigInteger.Parse("987654321"), 0);
 
         // Act
-        var result = bn1 % bn2;
+        BigNumber result = bn1 % bn2;
 
         // Assert
-      // 123456789012345678901234567890 % 987654321 = expected remainder
-        var expectedRemainder = BigInteger.Parse("123456789012345678901234567890") % BigInteger.Parse("987654321");
+        // 123456789012345678901234567890 % 987654321 = expected remainder
+        BigInteger expectedRemainder = BigInteger.Parse("123456789012345678901234567890") % BigInteger.Parse("987654321");
         var expected = new Corvus.Numerics.BigNumber(expectedRemainder, 0);
         Assert.Equal(expected, result);
     }
@@ -266,8 +267,8 @@ public class BigNumberArithmeticTests
         // Arrange
       var value = new Corvus.Numerics.BigNumber(125, -2); // 1.25
 
-   // Act
-   var result = ++value;
+        // Act
+        BigNumber result = ++value;
 
         // Assert
         var expected = new Corvus.Numerics.BigNumber(225, -2); // 2.25
@@ -281,7 +282,7 @@ public class BigNumberArithmeticTests
         var value = new Corvus.Numerics.BigNumber(225, -2); // 2.25
 
         // Act
- var result = --value;
+        BigNumber result = --value;
 
         // Assert
         var expected = new Corvus.Numerics.BigNumber(125, -2); // 1.25
@@ -296,7 +297,7 @@ public class BigNumberArithmeticTests
         var bn2 = new Corvus.Numerics.BigNumber(1, 0); // 1
 
         // Act
-        var result = bn1 % bn2;
+        BigNumber result = bn1 % bn2;
 
         // Assert
         var expected = new Corvus.Numerics.BigNumber(5, -1); // 0.5
@@ -310,7 +311,7 @@ public class BigNumberArithmeticTests
       var value = new Corvus.Numerics.BigNumber(99, -2); // 0.99
 
         // Act
-        var result = ++value;
+        BigNumber result = ++value;
 
      // Assert
         var expected = new Corvus.Numerics.BigNumber(199, -2); // 1.99
@@ -323,8 +324,8 @@ public class BigNumberArithmeticTests
         // Arrange
     var value = new Corvus.Numerics.BigNumber(1, -2); // 0.01
 
-    // Act
- var result = --value;
+        // Act
+        BigNumber result = --value;
 
         // Assert
      var expected = new Corvus.Numerics.BigNumber(-99, -2); // -0.99
@@ -338,7 +339,7 @@ public class BigNumberArithmeticTests
         var value = new Corvus.Numerics.BigNumber(12345, -4); // 1.2345
 
         // Act
-        var result = -value;
+        BigNumber result = -value;
 
         // Assert
     Assert.Equal(-12345, result.Significand);
@@ -352,8 +353,8 @@ public class BigNumberArithmeticTests
         var bn1 = new Corvus.Numerics.BigNumber(5, -1); // 0.5
         var bn2 = new Corvus.Numerics.BigNumber(2, -1); // 0.2
 
-  // Act
-        var result = bn1 % bn2;
+        // Act
+        BigNumber result = bn1 % bn2;
 
         // Assert
         var expected = new Corvus.Numerics.BigNumber(1, -1); // 0.1
@@ -365,11 +366,11 @@ public class BigNumberArithmeticTests
     {
       // Arrange
       var original = new Corvus.Numerics.BigNumber(75, -2); // 0.75
-     var unchangedOriginal = original;
+        BigNumber unchangedOriginal = original;
 
         // Act
-      var incremented = original++;
-        var decremented = incremented--;
+        BigNumber incremented = original++;
+        BigNumber decremented = incremented--;
 
         // Assert
         Assert.Equal(unchangedOriginal, decremented);

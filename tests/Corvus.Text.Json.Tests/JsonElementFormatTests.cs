@@ -31,10 +31,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test JsonElement.TryFormat(char)
         Span<char> charDest = stackalloc char[200];
@@ -86,10 +86,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -133,10 +133,10 @@ public class JsonElementFormatTests
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -177,10 +177,10 @@ public class JsonElementFormatTests
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -224,10 +224,10 @@ public class JsonElementFormatTests
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test all 6 methods
         Span<char> charDest = stackalloc char[512];
@@ -272,10 +272,10 @@ public class JsonElementFormatTests
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test all 6 methods
         Span<char> charDest = stackalloc char[200];
@@ -309,10 +309,10 @@ public class JsonElementFormatTests
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test all 6 methods
         Span<char> charDest = stackalloc char[200];
@@ -349,7 +349,7 @@ public class JsonElementFormatTests
         string expected = "1,427,247,692,705,959,881,058,285,969,449,495,136,382,746,624.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[512];
         bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
@@ -369,7 +369,7 @@ public class JsonElementFormatTests
         string expected = "1.16E+077";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -389,7 +389,7 @@ public class JsonElementFormatTests
         string expected = "1.23456789012346E+29";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -407,7 +407,7 @@ public class JsonElementFormatTests
         string expected = "1,234,567,890,123,456,789,000.00 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -424,7 +424,7 @@ public class JsonElementFormatTests
         string jsonValue = "1427247692705959881058285969449495136382746624";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Buffer too small for formatted output with thousand separators
         Span<char> smallBuffer = stackalloc char[10];
@@ -440,7 +440,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // N2 format
         Span<char> charDest = stackalloc char[100];
@@ -470,7 +470,7 @@ public class JsonElementFormatTests
         string expected = "123,456,789,012,345,678,901,234,567,890.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -488,7 +488,7 @@ public class JsonElementFormatTests
         string expected = "123,456,789,012,345,678,901,234,567,890.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -505,7 +505,7 @@ public class JsonElementFormatTests
         string jsonValue = "12345678901234567890.123456";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // N0 - no decimal places
         Span<char> charDest = stackalloc char[200];
@@ -534,7 +534,7 @@ public class JsonElementFormatTests
         string expected = "¤12,345,678,901,234,567,890.50";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -553,7 +553,7 @@ public class JsonElementFormatTests
         string expected = "¤98,765,432,109,876,543,210.99";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[512];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "C2", CultureInfo.InvariantCulture);
@@ -571,7 +571,7 @@ public class JsonElementFormatTests
         string expected = "12,345.60 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[200];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "P2", CultureInfo.InvariantCulture);
@@ -591,7 +591,7 @@ public class JsonElementFormatTests
         string expected = "1.23E+029";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[200];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "E2", CultureInfo.InvariantCulture);
@@ -611,7 +611,7 @@ public class JsonElementFormatTests
         string expected = "9.87654321098765E+29";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[200];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "G", CultureInfo.InvariantCulture);
@@ -629,7 +629,7 @@ public class JsonElementFormatTests
         string expected = "12345678901234567890.12";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -647,7 +647,7 @@ public class JsonElementFormatTests
         string expected = "98765432109876543210.99";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[200];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "F2", CultureInfo.InvariantCulture);
@@ -666,7 +666,7 @@ public class JsonElementFormatTests
         string expected = "(¤123,456,789,012,345.67)";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -685,7 +685,7 @@ public class JsonElementFormatTests
         string expected = "-1,234.50 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -702,7 +702,7 @@ public class JsonElementFormatTests
         string jsonValue = "123456789012345678901234567890";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         
@@ -724,7 +724,7 @@ public class JsonElementFormatTests
         string jsonValue = "12345678901234567890123456789012345678901234567890";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Very small buffer
         Span<byte> smallBuffer = stackalloc byte[5];
@@ -745,7 +745,7 @@ public class JsonElementFormatTests
         string jsonValue = "0.000000123456789";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         
@@ -778,7 +778,7 @@ public class JsonElementFormatTests
         string expected = "123,456,789,012,345,678,901,234,567,890.1234567890";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[300];
         bool success = element.TryFormat(charDest, out int charsWritten, "N10", CultureInfo.InvariantCulture);
@@ -797,7 +797,7 @@ public class JsonElementFormatTests
         string expected = "0.000000000010";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N12", CultureInfo.InvariantCulture);
@@ -816,7 +816,7 @@ public class JsonElementFormatTests
         string expected = "0.000001";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[100];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "N6", CultureInfo.InvariantCulture);
@@ -835,7 +835,7 @@ public class JsonElementFormatTests
         string expected = "1,000.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -854,7 +854,7 @@ public class JsonElementFormatTests
         string expected = "10,000.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -873,7 +873,7 @@ public class JsonElementFormatTests
         string expected = "12,345.100";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N3", CultureInfo.InvariantCulture);
@@ -892,7 +892,7 @@ public class JsonElementFormatTests
         string expected = "1.00E+100";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -911,7 +911,7 @@ public class JsonElementFormatTests
         string expected = "-1.235E+014";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E3", CultureInfo.InvariantCulture);
@@ -930,7 +930,7 @@ public class JsonElementFormatTests
         string expected = "0.00000000000000000000";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N20", CultureInfo.InvariantCulture);
@@ -949,7 +949,7 @@ public class JsonElementFormatTests
         string expected = "123,456,789,012,345,678,901,234,567,890.000000001";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[300];
         bool success = element.TryFormat(charDest, out int charsWritten, "N9", CultureInfo.InvariantCulture);
@@ -968,7 +968,7 @@ public class JsonElementFormatTests
         string expected = "0.9999999999";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N10", CultureInfo.InvariantCulture);
@@ -987,7 +987,7 @@ public class JsonElementFormatTests
         string expected = "1.2345678900E+005";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E10", CultureInfo.InvariantCulture);
@@ -1006,7 +1006,7 @@ public class JsonElementFormatTests
         string expected = "12.34568 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P5", CultureInfo.InvariantCulture);
@@ -1025,7 +1025,7 @@ public class JsonElementFormatTests
         string expected = "123456789012345";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "F0", CultureInfo.InvariantCulture);
@@ -1046,7 +1046,7 @@ public class JsonElementFormatTests
         string jsonValue = "12345.67";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         // X is not a valid format for numbers (it's for hex, only works with integers)
@@ -1063,7 +1063,7 @@ public class JsonElementFormatTests
         string expected = "12345.67";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "", CultureInfo.InvariantCulture);
@@ -1079,7 +1079,7 @@ public class JsonElementFormatTests
         string jsonValue = "12345.67";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[5]; // Too small for "12345.67"
         bool success = element.TryFormat(charDest, out int charsWritten, "", CultureInfo.InvariantCulture);
@@ -1093,7 +1093,7 @@ public class JsonElementFormatTests
         string jsonValue = "12345.67";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "NX", CultureInfo.InvariantCulture);
@@ -1109,7 +1109,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[1];
         bool success = element.TryFormat(charDest, out int charsWritten, "", CultureInfo.InvariantCulture);
@@ -1124,7 +1124,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[0];
         bool success = element.TryFormat(charDest, out int charsWritten, "", CultureInfo.InvariantCulture);
@@ -1139,7 +1139,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Buffer size that can fit "0.00" but not " %"
         Span<char> charDest = stackalloc char[5];
@@ -1155,7 +1155,7 @@ public class JsonElementFormatTests
         string jsonValue = "-1";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[2];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -1170,7 +1170,7 @@ public class JsonElementFormatTests
         string jsonValue = "-123";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[0];
         bool success = element.TryFormat(charDest, out int charsWritten, "N0", CultureInfo.InvariantCulture);
@@ -1185,7 +1185,7 @@ public class JsonElementFormatTests
         string jsonValue = "1";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[5]; // Too small for "1.00E+000"
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -1200,7 +1200,7 @@ public class JsonElementFormatTests
         string jsonValue = "1.23";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[2]; // Too small for "1.23"
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -1216,7 +1216,7 @@ public class JsonElementFormatTests
         string expected = "12,345.68";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         string result = element.ToString("N2", CultureInfo.InvariantCulture);
         Assert.Equal(expected, result);
@@ -1229,7 +1229,7 @@ public class JsonElementFormatTests
         string jsonValue = "12345.678";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Try to format with invalid format via ToString
         // This should trigger the fallback path that returns false
@@ -1245,7 +1245,7 @@ public class JsonElementFormatTests
         string jsonValue = "-0.5";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[5]; // Too small for "-50.00 %"
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -1260,7 +1260,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[2]; // Too small for "0.00"
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -1275,7 +1275,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[5]; // Too small for "0.00E+000"
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -1290,7 +1290,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[2]; // Too small for "¤0.00"
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -1310,7 +1310,7 @@ public class JsonElementFormatTests
         string expected = "(¤123.45)";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -1331,7 +1331,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 1;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1352,7 +1352,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 2;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1373,7 +1373,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 3;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1394,7 +1394,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 4;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1415,7 +1415,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 8;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1433,7 +1433,7 @@ public class JsonElementFormatTests
         string expected = "¤123.45";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -1454,7 +1454,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 5;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1475,7 +1475,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 6;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1496,7 +1496,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 7;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1517,7 +1517,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 9;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1538,7 +1538,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 10;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1559,7 +1559,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 11;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1580,7 +1580,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 12;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1601,7 +1601,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 13;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1622,7 +1622,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 14;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1643,7 +1643,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyNegativePattern = 15;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", culture);
@@ -1681,7 +1681,7 @@ public class JsonElementFormatTests
         var culture = new CultureInfo("en-US");
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         
@@ -1709,7 +1709,7 @@ public class JsonElementFormatTests
         string expected = "-50.00 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -1730,7 +1730,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 1;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1751,7 +1751,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 2;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1772,7 +1772,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 3;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1793,7 +1793,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 7;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1811,7 +1811,7 @@ public class JsonElementFormatTests
         string expected = "50.00 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -1829,7 +1829,7 @@ public class JsonElementFormatTests
         string expected = "12,345.60 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -1846,7 +1846,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // P0
         Span<char> charDest = stackalloc char[100];
@@ -1869,7 +1869,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 4;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1890,7 +1890,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 5;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1911,7 +1911,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 6;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1932,7 +1932,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 8;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1953,7 +1953,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 9;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1974,7 +1974,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 10;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -1995,7 +1995,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.PercentNegativePattern = 11;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", culture);
@@ -2029,7 +2029,7 @@ public class JsonElementFormatTests
         var culture = new CultureInfo("en-US");
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         
@@ -2057,7 +2057,7 @@ public class JsonElementFormatTests
         string expected = "-1,234,567.89";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -2080,7 +2080,7 @@ public class JsonElementFormatTests
         string expected = "1E-2";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2099,7 +2099,7 @@ public class JsonElementFormatTests
         string expected = "1E-3";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2117,7 +2117,7 @@ public class JsonElementFormatTests
         string expected = "123456.789";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2136,7 +2136,7 @@ public class JsonElementFormatTests
         string expected = "1.23456789012346E+19";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2155,7 +2155,7 @@ public class JsonElementFormatTests
         string expected = "1.2346E+6";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G5", CultureInfo.InvariantCulture);
@@ -2173,7 +2173,7 @@ public class JsonElementFormatTests
         string expected = "1E-2";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[100];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "G", CultureInfo.InvariantCulture);
@@ -2191,7 +2191,7 @@ public class JsonElementFormatTests
         string expected = "1.23456789012346E+19";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[100];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "G", CultureInfo.InvariantCulture);
@@ -2209,7 +2209,7 @@ public class JsonElementFormatTests
         string expected = "12.3";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2227,7 +2227,7 @@ public class JsonElementFormatTests
         string expected = "1E+15";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2248,7 +2248,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[100];
         
@@ -2280,7 +2280,7 @@ public class JsonElementFormatTests
         var culture = new CultureInfo("en-US");
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         
@@ -2308,7 +2308,7 @@ public class JsonElementFormatTests
         string expected = "¤0.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", CultureInfo.InvariantCulture);
@@ -2331,10 +2331,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test all 6 methods
         Span<char> charDest = stackalloc char[100];
@@ -2373,10 +2373,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test all 6 methods
         Span<char> charDest = stackalloc char[100];
@@ -2417,10 +2417,10 @@ public class JsonElementFormatTests
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
 
         // Test all 6 methods
         Span<char> charDest = stackalloc char[100];
@@ -2462,10 +2462,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Arrays should format as JSON (no spaces)
         string expected = json;
@@ -2514,10 +2514,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(json);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Objects should format as JSON (no spaces)
         string expected = json;
@@ -2561,10 +2561,10 @@ public class JsonElementFormatTests
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("1234567.89");
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
-        
-        var element = doc.RootElement;
-        var mutableElement = mutableDoc.RootElement;
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
+
+        JsonElement element = doc.RootElement;
+        JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Char version - buffer too small
         Span<char> smallCharBuffer = stackalloc char[5];
@@ -2602,7 +2602,7 @@ public class JsonElementFormatTests
         string expected = "1.23E-003";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -2620,7 +2620,7 @@ public class JsonElementFormatTests
         string expected = "-9.88E+029";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -2638,7 +2638,7 @@ public class JsonElementFormatTests
         string expected = "1.23e+004";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "e2", CultureInfo.InvariantCulture);
@@ -2656,7 +2656,7 @@ public class JsonElementFormatTests
         string expected = "1E+004";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E0", CultureInfo.InvariantCulture);
@@ -2674,7 +2674,7 @@ public class JsonElementFormatTests
         string expected = "4.56E-004";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[100];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "E2", CultureInfo.InvariantCulture);
@@ -2696,7 +2696,7 @@ public class JsonElementFormatTests
         string expected = "123.45678901234567890123";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "F20", CultureInfo.InvariantCulture);
@@ -2714,7 +2714,7 @@ public class JsonElementFormatTests
         string expected = "-12345.68";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -2732,7 +2732,7 @@ public class JsonElementFormatTests
         string expected = "124.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -2750,7 +2750,7 @@ public class JsonElementFormatTests
         string expected = "123456789012345678901234567890.12";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[300];
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -2768,7 +2768,7 @@ public class JsonElementFormatTests
         string expected = "9.8765432100";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[100];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "F10", CultureInfo.InvariantCulture);
@@ -2790,7 +2790,7 @@ public class JsonElementFormatTests
         string expected = "-1E-3";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2808,7 +2808,7 @@ public class JsonElementFormatTests
         string expected = "1.23456789012346e+19";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "g", CultureInfo.InvariantCulture);
@@ -2826,7 +2826,7 @@ public class JsonElementFormatTests
         string expected = "1E+15";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2844,7 +2844,7 @@ public class JsonElementFormatTests
         string expected = "999999999999999";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2862,7 +2862,7 @@ public class JsonElementFormatTests
         string expected = "1E+3";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G1", CultureInfo.InvariantCulture);
@@ -2880,7 +2880,7 @@ public class JsonElementFormatTests
         string expected = "0.123";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -2903,7 +2903,7 @@ public class JsonElementFormatTests
         string expected = "2.23"; // Rounds up from 2.225
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -2921,7 +2921,7 @@ public class JsonElementFormatTests
         string expected = "1,000.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -2939,7 +2939,7 @@ public class JsonElementFormatTests
         string expected = "12,345,678,901,234,567,891.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[200];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -2968,7 +2968,7 @@ public class JsonElementFormatTests
         };
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", formatInfo);
@@ -2994,7 +2994,7 @@ public class JsonElementFormatTests
         };
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3019,7 +3019,7 @@ public class JsonElementFormatTests
         };
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3044,7 +3044,7 @@ public class JsonElementFormatTests
         };
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", formatInfo);
@@ -3075,7 +3075,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3100,7 +3100,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3125,7 +3125,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3150,7 +3150,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3175,7 +3175,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3200,7 +3200,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3225,7 +3225,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3250,7 +3250,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3275,7 +3275,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3300,7 +3300,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3325,7 +3325,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3350,7 +3350,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3378,7 +3378,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3403,7 +3403,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3428,7 +3428,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3453,7 +3453,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3478,7 +3478,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3503,7 +3503,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3528,7 +3528,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3553,7 +3553,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3578,7 +3578,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3603,7 +3603,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3627,7 +3627,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3651,7 +3651,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3670,7 +3670,7 @@ public class JsonElementFormatTests
         string expected = "1,235";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N0", CultureInfo.InvariantCulture);
@@ -3685,7 +3685,7 @@ public class JsonElementFormatTests
         string expected = "1,234.123456789012345";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N15", CultureInfo.InvariantCulture);
@@ -3700,7 +3700,7 @@ public class JsonElementFormatTests
         string expected = "0.00";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -3723,7 +3723,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3746,7 +3746,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "P2", formatInfo);
@@ -3761,7 +3761,7 @@ public class JsonElementFormatTests
         string expected = "0.00";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -3785,7 +3785,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", formatInfo);
@@ -3808,7 +3808,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C2", formatInfo);
@@ -3828,7 +3828,7 @@ public class JsonElementFormatTests
         string expected = "12.34 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3853,7 +3853,7 @@ public class JsonElementFormatTests
         string expected = "12.34%";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3878,7 +3878,7 @@ public class JsonElementFormatTests
         string expected = "%12.34";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3903,7 +3903,7 @@ public class JsonElementFormatTests
         string expected = "% 12.34";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3928,7 +3928,7 @@ public class JsonElementFormatTests
         string expected = "-12.34 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3953,7 +3953,7 @@ public class JsonElementFormatTests
         string expected = "-12.34%";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3978,7 +3978,7 @@ public class JsonElementFormatTests
         string expected = "-%12.34";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -3999,7 +3999,7 @@ public class JsonElementFormatTests
     public void ScientificFormat_VerySmallNumber_FormatsCorrectly()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("0.00000123");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E2", CultureInfo.InvariantCulture);
@@ -4012,7 +4012,7 @@ public class JsonElementFormatTests
     public void ScientificFormat_LowerCase_FormatsCorrectly()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("1234567.89");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "e2", CultureInfo.InvariantCulture);
@@ -4025,7 +4025,7 @@ public class JsonElementFormatTests
     public void ScientificFormat_NegativeNumber_FormatsCorrectly()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("-1234567.89");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "E3", CultureInfo.InvariantCulture);
@@ -4047,7 +4047,7 @@ public class JsonElementFormatTests
         };
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse("1234567.89");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "N2", culture);
@@ -4064,7 +4064,7 @@ public class JsonElementFormatTests
         string expected = "%-12.34";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4089,7 +4089,7 @@ public class JsonElementFormatTests
         string expected = "%12.34-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4114,7 +4114,7 @@ public class JsonElementFormatTests
         string expected = "12.34-%";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4139,7 +4139,7 @@ public class JsonElementFormatTests
         string expected = "12.34%-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4164,7 +4164,7 @@ public class JsonElementFormatTests
         string expected = "-% 12.34";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4189,7 +4189,7 @@ public class JsonElementFormatTests
         string expected = "12.34 %-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4214,7 +4214,7 @@ public class JsonElementFormatTests
         string expected = "% 12.34-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4239,7 +4239,7 @@ public class JsonElementFormatTests
         string expected = "% -12.34";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4264,7 +4264,7 @@ public class JsonElementFormatTests
         string expected = "12.34- %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4289,7 +4289,7 @@ public class JsonElementFormatTests
         string expected = "1,234,567,890,123,456,789,012.30 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         Span<char> charDest = stackalloc char[200];
         element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -4304,7 +4304,7 @@ public class JsonElementFormatTests
         string expected = "0.00 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "P2", CultureInfo.InvariantCulture);
@@ -4318,7 +4318,7 @@ public class JsonElementFormatTests
         string jsonValue = "0.123456";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // P0 - no decimal places
         Span<char> charDest = stackalloc char[100];
@@ -4346,7 +4346,7 @@ public class JsonElementFormatTests
         string expected = "1,427,247,692,705,959,881,058,285,969,449,495,136,382,746,624.00";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -4361,7 +4361,7 @@ public class JsonElementFormatTests
         string expected = "1,606,938,044,258,990,275,541,962,092,341,162,602,522,202,993,782,792,835,301,376";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "N0", CultureInfo.InvariantCulture);
@@ -4376,7 +4376,7 @@ public class JsonElementFormatTests
         string expected = "123,456,789,012,345,678,901,234,567,890.12";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "N2", CultureInfo.InvariantCulture);
@@ -4390,7 +4390,7 @@ public class JsonElementFormatTests
         string expected = "1427247692705959881058285969449495136382746624";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "F0", CultureInfo.InvariantCulture);
@@ -4404,7 +4404,7 @@ public class JsonElementFormatTests
         string expected = "1427247692705959881058285969449495136382746624.00";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "F2", CultureInfo.InvariantCulture);
@@ -4419,7 +4419,7 @@ public class JsonElementFormatTests
         string expected = "¤12,345,678,901,234,567,891";
 
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         element.TryFormat(charDest, out int charsWritten, "C0", CultureInfo.InvariantCulture);
@@ -4437,7 +4437,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyPositivePattern = 1;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C", culture);
@@ -4455,7 +4455,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[10];
         bool success = element.TryFormat(charDest, out int charsWritten, "G", CultureInfo.InvariantCulture);
@@ -4470,7 +4470,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[10];
         bool success = element.TryFormat(charDest, out int charsWritten, "g", CultureInfo.InvariantCulture);
@@ -4485,7 +4485,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[10];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "G", CultureInfo.InvariantCulture);
@@ -4502,7 +4502,7 @@ public class JsonElementFormatTests
         string expected = "0.00"; // Default is 2 decimal places
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[10];
         bool success = element.TryFormat(charDest, out int charsWritten, "F", CultureInfo.InvariantCulture);
@@ -4517,7 +4517,7 @@ public class JsonElementFormatTests
         string expected = "0.00000";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "F5", CultureInfo.InvariantCulture);
@@ -4532,7 +4532,7 @@ public class JsonElementFormatTests
         string expected = "0.00";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[20];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "F", CultureInfo.InvariantCulture);
@@ -4547,7 +4547,7 @@ public class JsonElementFormatTests
         string expected = "0.000000E+000"; // Default precision is 6
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "E", CultureInfo.InvariantCulture);
@@ -4562,7 +4562,7 @@ public class JsonElementFormatTests
         string expected = "0.000000e+000"; // Lowercase e
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "e", CultureInfo.InvariantCulture);
@@ -4577,7 +4577,7 @@ public class JsonElementFormatTests
         string expected = "0.000E+000";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "E3", CultureInfo.InvariantCulture);
@@ -4592,7 +4592,7 @@ public class JsonElementFormatTests
         string expected = "0.000000E+000";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[20];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "E", CultureInfo.InvariantCulture);
@@ -4612,7 +4612,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencySymbol = "$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "C", culture);
@@ -4632,7 +4632,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencySymbol = "$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "C", culture);
@@ -4652,7 +4652,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencySymbol = "$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "C", culture);
@@ -4672,7 +4672,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencySymbol = "$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[20];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "C", culture);
@@ -4692,7 +4692,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencySymbol = "$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[20];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "C", culture);
@@ -4712,7 +4712,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencySymbol = "$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[20];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "C", culture);
@@ -4727,7 +4727,7 @@ public class JsonElementFormatTests
         string expected = "0.00 %"; // Default precision is 2
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "P", CultureInfo.InvariantCulture);
@@ -4742,7 +4742,7 @@ public class JsonElementFormatTests
         string expected = "0.0000 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[20];
         bool success = element.TryFormat(charDest, out int charsWritten, "P4", CultureInfo.InvariantCulture);
@@ -4757,7 +4757,7 @@ public class JsonElementFormatTests
         string expected = "0.00 %";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[20];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "P", CultureInfo.InvariantCulture);
@@ -4771,7 +4771,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[5]; // Too small for "0.00 %"
         bool success = element.TryFormat(charDest, out int charsWritten, "P", CultureInfo.InvariantCulture);
@@ -4785,7 +4785,7 @@ public class JsonElementFormatTests
         string jsonValue = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[5]; // Too small
         bool success = element.TryFormat(byteDest, out int bytesWritten, "P", CultureInfo.InvariantCulture);
@@ -4800,7 +4800,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[10];
         bool success = element.TryFormat(charDest, out int charsWritten, "Z", CultureInfo.InvariantCulture);
@@ -4815,7 +4815,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[10];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "Z", CultureInfo.InvariantCulture);
@@ -4830,7 +4830,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[10];
         bool success = element.TryFormat(charDest, out int charsWritten, "Nabc", CultureInfo.InvariantCulture);
@@ -4845,7 +4845,7 @@ public class JsonElementFormatTests
         string expected = "0";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[10];
         bool success = element.TryFormat(byteDest, out int bytesWritten, "Fxyz", CultureInfo.InvariantCulture);
@@ -4866,7 +4866,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyPositivePattern = 1;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C", culture);
@@ -4887,7 +4887,7 @@ public class JsonElementFormatTests
         culture.NumberFormat.CurrencyPositivePattern = 3;
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[100];
         bool success = element.TryFormat(charDest, out int charsWritten, "C", culture);
@@ -4906,7 +4906,7 @@ public class JsonElementFormatTests
         string expected = "($123.45)";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4932,7 +4932,7 @@ public class JsonElementFormatTests
         string expected = "-$123.45";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4958,7 +4958,7 @@ public class JsonElementFormatTests
         string expected = "$-123.45";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -4984,7 +4984,7 @@ public class JsonElementFormatTests
         string expected = "$123.45-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5010,7 +5010,7 @@ public class JsonElementFormatTests
         string expected = "(123.45$)";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5036,7 +5036,7 @@ public class JsonElementFormatTests
         string expected = "-123.45$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5062,7 +5062,7 @@ public class JsonElementFormatTests
         string expected = "123.45-$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5088,7 +5088,7 @@ public class JsonElementFormatTests
         string expected = "123.45$-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5114,7 +5114,7 @@ public class JsonElementFormatTests
         string expected = "-123.45 $";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5140,7 +5140,7 @@ public class JsonElementFormatTests
         string expected = "-$ 123.45";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5166,7 +5166,7 @@ public class JsonElementFormatTests
         string expected = "123.45 $-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5192,7 +5192,7 @@ public class JsonElementFormatTests
         string expected = "$ 123.45-";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5218,7 +5218,7 @@ public class JsonElementFormatTests
         string expected = "$ -123.45";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5244,7 +5244,7 @@ public class JsonElementFormatTests
         string expected = "123.45- $";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5270,7 +5270,7 @@ public class JsonElementFormatTests
         string expected = "($ 123.45)";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5296,7 +5296,7 @@ public class JsonElementFormatTests
         string expected = "(123.45 $)";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5323,7 +5323,7 @@ public class JsonElementFormatTests
         string expected = "123.45$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5349,7 +5349,7 @@ public class JsonElementFormatTests
         string expected = "$ 123.45";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5375,7 +5375,7 @@ public class JsonElementFormatTests
         string expected = "123.45 $";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5401,7 +5401,7 @@ public class JsonElementFormatTests
         string expected = "$1,234.56";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5427,7 +5427,7 @@ public class JsonElementFormatTests
         string expected = "1,234.56$";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5453,7 +5453,7 @@ public class JsonElementFormatTests
         string expected = "$ 1,234.56";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5479,7 +5479,7 @@ public class JsonElementFormatTests
         string expected = "1,234.56 $";
         
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         var formatInfo = new NumberFormatInfo
         {
@@ -5522,7 +5522,7 @@ public class JsonElementFormatTests
     public void Number_HexFormatChar_FormatsCorrectly(string jsonValue, string format, string expected)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[256];
         bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
@@ -5552,7 +5552,7 @@ public class JsonElementFormatTests
     public void Number_HexFormatUtf8_FormatsCorrectly(string jsonValue, string format, string expected)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[256];
         bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
@@ -5568,7 +5568,7 @@ public class JsonElementFormatTests
     public void Number_HexFormatChar_FailsForInvalidValues(string jsonValue, string format)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[256];
         bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
@@ -5582,7 +5582,7 @@ public class JsonElementFormatTests
     public void Number_HexFormatUtf8_FailsForInvalidValues(string jsonValue, string format)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[256];
         bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
@@ -5617,7 +5617,7 @@ public class JsonElementFormatTests
     public void Number_BinaryFormatChar_FormatsCorrectly(string jsonValue, string format, string expected)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[1024];
         bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
@@ -5650,7 +5650,7 @@ public class JsonElementFormatTests
     public void Number_BinaryFormatUtf8_FormatsCorrectly(string jsonValue, string format, string expected)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[1024];
         bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
@@ -5666,7 +5666,7 @@ public class JsonElementFormatTests
     public void Number_BinaryFormatChar_FailsForInvalidValues(string jsonValue, string format)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<char> charDest = stackalloc char[1024];
         bool success = element.TryFormat(charDest, out int charsWritten, format, CultureInfo.InvariantCulture);
@@ -5680,7 +5680,7 @@ public class JsonElementFormatTests
     public void Number_BinaryFormatUtf8_FailsForInvalidValues(string jsonValue, string format)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         Span<byte> byteDest = stackalloc byte[1024];
         bool success = element.TryFormat(byteDest, out int bytesWritten, format, CultureInfo.InvariantCulture);
@@ -5695,7 +5695,7 @@ public class JsonElementFormatTests
     public void HexFormat_BufferTooSmall_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("255");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Buffer too small for "FF" result
         Span<char> charDest = stackalloc char[1];
@@ -5708,7 +5708,7 @@ public class JsonElementFormatTests
     public void HexFormat_BufferTooSmall_Utf8_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("255");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Buffer too small for "FF" result
         Span<byte> byteDest = stackalloc byte[1];
@@ -5721,7 +5721,7 @@ public class JsonElementFormatTests
     public void BinaryFormat_BufferTooSmall_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("15");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Buffer too small for "1111" result
         Span<char> charDest = stackalloc char[3];
@@ -5734,7 +5734,7 @@ public class JsonElementFormatTests
     public void BinaryFormat_BufferTooSmall_Utf8_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("15");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Buffer too small for "1111" result
         Span<byte> byteDest = stackalloc byte[3];
@@ -5751,7 +5751,7 @@ public class JsonElementFormatTests
     public void HexBinaryFormat_VeryLargeNumbers_UsesArrayPool(string jsonValue, string format)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Test char path - should use ArrayPool for large numbers
         Span<char> charDest = stackalloc char[2048];
@@ -5773,7 +5773,7 @@ public class JsonElementFormatTests
     public void HexFormat_LargeIntegers_FormatsCorrectly(string jsonValue, string format, string expected)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Test char path
         Span<char> charDest = stackalloc char[256];
@@ -5797,7 +5797,7 @@ public class JsonElementFormatTests
     public void BinaryFormat_LargeIntegers_FormatsCorrectly(string jsonValue, string format, string expected)
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonValue);
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
         
         // Test char path
         Span<char> charDest = stackalloc char[512];
@@ -5818,7 +5818,7 @@ public class JsonElementFormatTests
     public void HexFormat_NegativeNumber_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("-42");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Test char path
         Span<char> charDest = stackalloc char[100];
@@ -5837,7 +5837,7 @@ public class JsonElementFormatTests
     public void BinaryFormat_NegativeNumber_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("-42");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Test char path
         Span<char> charDest = stackalloc char[100];
@@ -5856,7 +5856,7 @@ public class JsonElementFormatTests
     public void HexFormat_NonInteger_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("123.456");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Test char path
         Span<char> charDest = stackalloc char[100];
@@ -5875,7 +5875,7 @@ public class JsonElementFormatTests
     public void BinaryFormat_NonInteger_ReturnsFalse()
     {
         using var doc = ParsedJsonDocument<JsonElement>.Parse("123.456");
-        var element = doc.RootElement;
+        JsonElement element = doc.RootElement;
 
         // Test char path
         Span<char> charDest = stackalloc char[100];

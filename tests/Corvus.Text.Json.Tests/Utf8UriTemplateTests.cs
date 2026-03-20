@@ -447,7 +447,7 @@ public class Utf8UriTemplateTests
     [Fact]
     public void Validate_LongTemplateWithManyVariables_Valid()
     {
-        var template = GenerateTemplateWithManyVariables(50);
+        string template = GenerateTemplateWithManyVariables(50);
         bool result = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template));
         Assert.True(result);
     }
@@ -455,7 +455,7 @@ public class Utf8UriTemplateTests
     [Fact]
     public void Validate_VeryLongLiteral_Valid()
     {
-        var template = GenerateVeryLongLiteral(1000) + "{var}";
+        string template = GenerateVeryLongLiteral(1000) + "{var}";
         bool result = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template));
         Assert.True(result);
     }
@@ -464,17 +464,17 @@ public class Utf8UriTemplateTests
     public void Validate_PathologicalCases_Invalid()
     {
         // Many opening braces
-        var template1 = new string('{', 100);
+        string template1 = new string('{', 100);
         bool result1 = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template1));
         Assert.False(result1);
 
         // Many closing braces
-        var template2 = new string('}', 100);
+        string template2 = new string('}', 100);
         bool result2 = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template2));
         Assert.False(result2);
 
         // Alternating braces
-        var template3 = GenerateAlternatingBraces(100);
+        string template3 = GenerateAlternatingBraces(100);
         bool result3 = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template3));
         Assert.False(result3);
     }

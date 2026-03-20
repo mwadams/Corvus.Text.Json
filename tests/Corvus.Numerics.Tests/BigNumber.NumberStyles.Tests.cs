@@ -1,9 +1,9 @@
-namespace Corvus.Numerics.Tests;
 
 using System.Globalization;
-using Xunit;
 using Shouldly;
+using Xunit;
 
+namespace Corvus.Numerics.Tests;
 /// <summary>
 /// Tests for BigNumber parsing with different NumberStyles.
 /// </summary>
@@ -16,7 +16,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.None, null);
+        var result = BigNumber.Parse(input, NumberStyles.None, null);
 
         result.Significand.ShouldBe(12345);
         result.Exponent.ShouldBe(0);
@@ -63,7 +63,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "  12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Integer, null);
+        var result = BigNumber.Parse(input, NumberStyles.Integer, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -73,7 +73,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345  ";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Integer, null);
+        var result = BigNumber.Parse(input, NumberStyles.Integer, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -83,7 +83,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "+12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Integer, null);
+        var result = BigNumber.Parse(input, NumberStyles.Integer, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -93,7 +93,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "-12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Integer, null);
+        var result = BigNumber.Parse(input, NumberStyles.Integer, null);
 
         result.Significand.ShouldBe(-12345);
     }
@@ -115,7 +115,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "   12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowLeadingWhite, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowLeadingWhite, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -125,7 +125,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "\t\t12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowLeadingWhite, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowLeadingWhite, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -139,7 +139,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345   ";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowTrailingWhite, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowTrailingWhite, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -149,7 +149,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345\t\t";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowTrailingWhite, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowTrailingWhite, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -163,7 +163,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "+12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowLeadingSign, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowLeadingSign, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -173,7 +173,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "-12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowLeadingSign, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowLeadingSign, null);
 
         result.Significand.ShouldBe(-12345);
     }
@@ -187,7 +187,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345+";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowTrailingSign, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowTrailingSign, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -197,7 +197,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345-";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowTrailingSign, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowTrailingSign, null);
 
         result.Significand.ShouldBe(-12345);
     }
@@ -211,7 +211,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "(12345)";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowParentheses, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowParentheses, null);
 
         result.Significand.ShouldBe(-12345);
     }
@@ -221,7 +221,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "12345";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowParentheses, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowParentheses, null);
 
         result.Significand.ShouldBe(12345);
     }
@@ -235,7 +235,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123.45";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowDecimalPoint, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowDecimalPoint, null);
 
         result.Normalize().Significand.ShouldBe(12345);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -246,7 +246,7 @@ public class BigNumberNumberStylesTests
     {
         string input = ".45";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowDecimalPoint, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowDecimalPoint, null);
 
         result.Normalize().Significand.ShouldBe(45);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -257,7 +257,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123.";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowDecimalPoint, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowDecimalPoint, null);
 
         result.Significand.ShouldBe(123);
         result.Exponent.ShouldBe(0);
@@ -272,7 +272,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "1,234,567";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+        var result = BigNumber.Parse(input, NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
 
         result.Significand.ShouldBe(1234567);
     }
@@ -282,7 +282,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "1,234,567,890";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
+        var result = BigNumber.Parse(input, NumberStyles.AllowThousands, CultureInfo.InvariantCulture);
 
         result.Significand.ShouldBe(123456789);
         result.Exponent.ShouldBe(1);
@@ -297,7 +297,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123E5";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowExponent, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowExponent, null);
 
         result.Significand.ShouldBe(123);
         result.Exponent.ShouldBe(5);
@@ -308,7 +308,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123E-5";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowExponent, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowExponent, null);
 
         result.Significand.ShouldBe(123);
         result.Exponent.ShouldBe(-5);
@@ -319,7 +319,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123e5";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowExponent, null);
+        var result = BigNumber.Parse(input, NumberStyles.AllowExponent, null);
 
         result.Significand.ShouldBe(123);
         result.Exponent.ShouldBe(5);
@@ -334,7 +334,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "$123.45";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowCurrencySymbol, CultureInfo.GetCultureInfo("en-US"));
+        var result = BigNumber.Parse(input, NumberStyles.AllowCurrencySymbol, CultureInfo.GetCultureInfo("en-US"));
 
         result.Normalize().Significand.ShouldBe(12345);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -345,7 +345,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123,45€"; // fr-FR uses comma as decimal separator
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.AllowCurrencySymbol, CultureInfo.GetCultureInfo("fr-FR"));
+        var result = BigNumber.Parse(input, NumberStyles.AllowCurrencySymbol, CultureInfo.GetCultureInfo("fr-FR"));
 
         result.Normalize().Significand.ShouldBe(12345);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -360,7 +360,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "  -1,234.56  ";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Number, CultureInfo.InvariantCulture);
+        var result = BigNumber.Parse(input, NumberStyles.Number, CultureInfo.InvariantCulture);
 
         result.Normalize().Significand.ShouldBe(-123456);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -375,7 +375,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "  -1.23E10  ";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Float, null);
+        var result = BigNumber.Parse(input, NumberStyles.Float, null);
 
         result.Normalize().Significand.ShouldBe(-123);
         result.Normalize().Exponent.ShouldBe(8);
@@ -406,7 +406,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "($1,234.56)";
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"));
+        var result = BigNumber.Parse(input, NumberStyles.Currency, CultureInfo.GetCultureInfo("en-US"));
 
         result.Normalize().Significand.ShouldBe(-123456);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -419,7 +419,7 @@ public class BigNumberNumberStylesTests
     [Fact]
     public void Parse_NumberStyles_Any_AcceptsAnyValidFormat()
     {
-        var testCases = new[]
+        (string, int, int)[] testCases = new[]
         {
             ("123", 123, 0),
             ("  123  ", 123, 0),
@@ -430,10 +430,10 @@ public class BigNumberNumberStylesTests
             ("1,234,567", 1234567, 0),
         };
 
-        foreach (var (input, expectedSig, expectedExp) in testCases)
+        foreach ((string? input, int expectedSig, int expectedExp) in testCases)
         {
-            BigNumber result = BigNumber.Parse(input, NumberStyles.Any, CultureInfo.InvariantCulture);
-            var normalized = result.Normalize();
+            var result = BigNumber.Parse(input, NumberStyles.Any, CultureInfo.InvariantCulture);
+            BigNumber normalized = result.Normalize();
 
             if (input.StartsWith("-"))
             {
@@ -469,7 +469,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "123,45"; // French uses comma as decimal separator
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Number, CultureInfo.GetCultureInfo("fr-FR"));
+        var result = BigNumber.Parse(input, NumberStyles.Number, CultureInfo.GetCultureInfo("fr-FR"));
 
         result.Normalize().Significand.ShouldBe(12345);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -480,7 +480,7 @@ public class BigNumberNumberStylesTests
     {
         string input = "1.234.567,89"; // German uses dot for thousands, comma for decimal
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Number, CultureInfo.GetCultureInfo("de-DE"));
+        var result = BigNumber.Parse(input, NumberStyles.Number, CultureInfo.GetCultureInfo("de-DE"));
 
         result.Normalize().Significand.ShouldBe(123456789);
         result.Normalize().Exponent.ShouldBe(-2);
@@ -534,7 +534,7 @@ public class BigNumberNumberStylesTests
     {
         ReadOnlySpan<byte> input = "  -12345  "u8;
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Integer, null);
+        var result = BigNumber.Parse(input, NumberStyles.Integer, null);
 
         result.Significand.ShouldBe(-12345);
     }
@@ -544,7 +544,7 @@ public class BigNumberNumberStylesTests
     {
         ReadOnlySpan<byte> input = "123.45E10"u8;
 
-        BigNumber result = BigNumber.Parse(input, NumberStyles.Float, null);
+        var result = BigNumber.Parse(input, NumberStyles.Float, null);
 
         result.Normalize().Significand.ShouldBe(12345);
         result.Normalize().Exponent.ShouldBe(8);

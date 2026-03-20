@@ -27,7 +27,7 @@ internal static partial class JsonTestHelper
     {
         double mantissa = (random.NextDouble() * 2.0) - 1.0;
         double exponent = Math.Pow(2.0, random.Next(-15, 16));
-        Half value = (Half)(mantissa * exponent);
+        var value = (Half)(mantissa * exponent);
         return value;
     }
 
@@ -55,8 +55,8 @@ internal static partial class JsonTestHelper
 
     public static void AssertJsonEqual(string expected, string actual)
     {
-        using ParsedJsonDocument<JsonElement> expectedDom = ParsedJsonDocument<JsonElement>.Parse(expected);
-        using ParsedJsonDocument<JsonElement> actualDom = ParsedJsonDocument<JsonElement>.Parse(actual);
+        using var expectedDom = ParsedJsonDocument<JsonElement>.Parse(expected);
+        using var actualDom = ParsedJsonDocument<JsonElement>.Parse(actual);
         AssertJsonEqual(expectedDom.RootElement, actualDom.RootElement);
     }
 

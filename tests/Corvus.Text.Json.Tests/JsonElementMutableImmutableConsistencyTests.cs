@@ -17,11 +17,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetByte_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -39,7 +39,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetByte());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetByte());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -50,11 +50,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetSByte_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -72,7 +72,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetSByte());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetSByte());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -83,11 +83,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetInt16_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -105,7 +105,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetInt16());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetInt16());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -116,11 +116,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetUInt16_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -138,7 +138,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetUInt16());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetUInt16());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -149,11 +149,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetInt32_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -171,7 +171,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetInt32());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetInt32());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -182,11 +182,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetUInt32_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -204,7 +204,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetUInt32());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetUInt32());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -215,11 +215,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetInt64_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -237,7 +237,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetInt64());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetInt64());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -248,11 +248,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetUInt64_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -270,7 +270,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetUInt64());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetUInt64());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -281,11 +281,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetSingle_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -316,7 +316,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetSingle());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetSingle());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -327,11 +327,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetDouble_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -362,7 +362,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetDouble());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetDouble());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -373,11 +373,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetDecimal_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -395,7 +395,7 @@ public class JsonElementMutableImmutableConsistencyTests
             catch (Exception immutableEx)
             {
                 // If immutable throws, mutable should throw same type
-                var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetDecimal());
+                Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetDecimal());
                 Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
             }
         }
@@ -410,11 +410,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetBoolean_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -429,7 +429,7 @@ public class JsonElementMutableImmutableConsistencyTests
         catch (Exception immutableEx)
         {
             // If immutable throws, mutable should throw same type
-            var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetBoolean());
+            Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetBoolean());
             Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
         }
     }
@@ -443,11 +443,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetString_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -462,7 +462,7 @@ public class JsonElementMutableImmutableConsistencyTests
         catch (Exception immutableEx)
         {
             // If immutable throws, mutable should throw same type
-            var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetString());
+            Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetString());
             Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
         }
     }
@@ -472,11 +472,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetDateTimeOffset_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -491,7 +491,7 @@ public class JsonElementMutableImmutableConsistencyTests
         catch (Exception immutableEx)
         {
             // If immutable throws, mutable should throw same type
-            var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetDateTimeOffset());
+            Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetDateTimeOffset());
             Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
         }
     }
@@ -501,11 +501,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetGuid_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -520,7 +520,7 @@ public class JsonElementMutableImmutableConsistencyTests
         catch (Exception immutableEx)
         {
             // If immutable throws, mutable should throw same type
-            var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetGuid());
+            Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetGuid());
             Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
         }
     }
@@ -530,11 +530,11 @@ public class JsonElementMutableImmutableConsistencyTests
     public void GetBytesFromBase64_MutableImmutableConsistency(string json)
     {
         // Immutable version
-        JsonElement immutableElement = JsonElement.ParseValue(json);
+        var immutableElement = JsonElement.ParseValue(json);
         
         // Mutable version
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> mutableDoc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable mutableElement = mutableDoc.RootElement;
         
         // Both should have same value kind
@@ -549,7 +549,7 @@ public class JsonElementMutableImmutableConsistencyTests
         catch (Exception immutableEx)
         {
             // If immutable throws, mutable should throw same type
-            var mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetBytesFromBase64());
+            Exception mutableEx = Assert.ThrowsAny<Exception>(() => mutableElement.GetBytesFromBase64());
             Assert.Equal(immutableEx.GetType(), mutableEx.GetType());
         }
     }

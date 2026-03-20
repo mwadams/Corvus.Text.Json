@@ -2,11 +2,12 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
 using System.Numerics;
+using System.Reflection;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -22,7 +23,7 @@ public class BigNumberBranchCoverageTests
     {
         // Line 82-84: Test negative exponent in GetPowerOf10
         // This is internal, so we trigger it through reflection
-        var method = typeof(BigNumber).GetMethod("GetPowerOf10",
+        MethodInfo? method = typeof(BigNumber).GetMethod("GetPowerOf10",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
 
         Should.Throw<System.Reflection.TargetInvocationException>(() =>
@@ -212,7 +213,7 @@ public class BigNumberBranchCoverageTests
     {
         // Line 530-532: remainder.IsZero branch
         BigNumber num = new(12500, -3); // 12.500
-        BigNumber result = BigNumber.Round(num, 2, MidpointRounding.ToEven);
+        var result = BigNumber.Round(num, 2, MidpointRounding.ToEven);
 
         result.ShouldBe(new BigNumber(125, -1)); // 12.5
     }
@@ -223,7 +224,7 @@ public class BigNumberBranchCoverageTests
     {
         // Line 556-558: ToPositiveInfinity branch  
         BigNumber num = new(12345, -3); // 12.345
-        BigNumber result = BigNumber.Round(num, 2, MidpointRounding.ToPositiveInfinity);
+        var result = BigNumber.Round(num, 2, MidpointRounding.ToPositiveInfinity);
 
         // Should round up to 12.35
         result.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("12.35");
@@ -235,7 +236,7 @@ public class BigNumberBranchCoverageTests
     {
         // Line 558: default case in rounding switch
         BigNumber num = new(12345, -3); // 12.345
-        BigNumber result = BigNumber.Round(num, 2, (MidpointRounding)99); // Invalid mode
+        var result = BigNumber.Round(num, 2, (MidpointRounding)99); // Invalid mode
 
         // Should use default logic
         result.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("12.35");
@@ -374,7 +375,7 @@ public class BigNumberBranchCoverageTests
     {
         // Additional rounding mode coverage
         BigNumber num = new(12345, -3); // 12.345
-        BigNumber result = BigNumber.Round(num, 2, MidpointRounding.ToNegativeInfinity);
+        var result = BigNumber.Round(num, 2, MidpointRounding.ToNegativeInfinity);
 
         result.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("12.34");
     }
@@ -386,8 +387,8 @@ public class BigNumberBranchCoverageTests
         BigNumber positive = new(12345, -3); // 12.345
         BigNumber negative = new(-12345, -3); // -12.345
 
-        BigNumber resultPos = BigNumber.Round(positive, 2, MidpointRounding.ToZero);
-        BigNumber resultNeg = BigNumber.Round(negative, 2, MidpointRounding.ToZero);
+        var resultPos = BigNumber.Round(positive, 2, MidpointRounding.ToZero);
+        var resultNeg = BigNumber.Round(negative, 2, MidpointRounding.ToZero);
 
         resultPos.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("12.34");
         resultNeg.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("-12.34");
@@ -401,8 +402,8 @@ public class BigNumberBranchCoverageTests
         BigNumber positive = new(12355, -3); // 12.355
         BigNumber negative = new(-12355, -3); // -12.355
 
-        BigNumber resultPos = BigNumber.Round(positive, 2, MidpointRounding.AwayFromZero);
-        BigNumber resultNeg = BigNumber.Round(negative, 2, MidpointRounding.AwayFromZero);
+        var resultPos = BigNumber.Round(positive, 2, MidpointRounding.AwayFromZero);
+        var resultNeg = BigNumber.Round(negative, 2, MidpointRounding.AwayFromZero);
 
         resultPos.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("12.36");
         resultNeg.ToString("F2", CultureInfo.InvariantCulture).ShouldBe("-12.36");

@@ -3,6 +3,7 @@
 
 using System.Numerics;
 using System.Threading.Tasks;
+using Corvus.Numerics;
 using Xunit;
 
 namespace Corvus.Text.Json.Tests.BigNumberTests;
@@ -44,7 +45,7 @@ public class BigNumberEdgeCaseTests
     public void Constructor_WithVeryLargeNegativeSignificand_ShouldWork()
     {
         // Arrange
-        var veryLargeNegativeSignificand = -BigInteger.Parse(new string('9', 1000)); // -1000 nines
+        BigInteger veryLargeNegativeSignificand = -BigInteger.Parse(new string('9', 1000)); // -1000 nines
 
         // Act
         var bigNumber = new Corvus.Numerics.BigNumber(veryLargeNegativeSignificand, 0);
@@ -104,11 +105,11 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithExtremelyLongValidString_ShouldWork()
     {
         // Arrange
-        var veryLongNumber = new string('1', 5000) + "E" + new string('9', 9); // Very long input
+        string veryLongNumber = new string('1', 5000) + "E" + new string('9', 9); // Very long input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(veryLongNumber);
 
         // Act
-        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out BigNumber result);
 
         // Assert
         Assert.True(success);
@@ -121,15 +122,15 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithExtremelyLongValidStringButInvalidExponent_ShouldReturnFalse()
     {
         // Arrange
-        var veryLongNumber = new string('1', 5000) + "E" + new string('9', 1000); // Very long input
+        string veryLongNumber = new string('1', 5000) + "E" + new string('9', 1000); // Very long input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(veryLongNumber);
 
         // Act
-        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out BigNumber result);
 
         // Assert
         Assert.False(success);
-        string resultString = result.ToString();
+        _ = result.ToString();
         Assert.Equal(default(Corvus.Numerics.BigNumber), result);
     }
 
@@ -137,11 +138,11 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithExtremelyLongInvalidString_ShouldReturnFalse()
     {
         // Arrange
-        var invalidLongString = new string('X', 10000); // Very long invalid input
+        string invalidLongString = new string('X', 10000); // Very long invalid input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(invalidLongString);
 
         // Act
-        bool success = Corvus.Numerics.BigNumber.TryParse(input, out var result);
+        bool success = Corvus.Numerics.BigNumber.TryParse(input, out BigNumber result);
 
         // Assert
         Assert.False(success);
@@ -155,7 +156,7 @@ public class BigNumberEdgeCaseTests
         var bigNumber = new Corvus.Numerics.BigNumber(BigInteger.Zero, int.MaxValue);
 
         // Act
-        var normalized = bigNumber.Normalize();
+        BigNumber normalized = bigNumber.Normalize();
 
         // Assert
         Assert.Equal(BigInteger.Zero, BigNumberTestData.GetSignificand(normalized));
@@ -170,8 +171,8 @@ public class BigNumberEdgeCaseTests
         var maxExponentBigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), int.MaxValue);
 
         // Act & Assert - Should not throw
-        var normalizedMin = minExponentBigNumber.Normalize();
-        var normalizedMax = maxExponentBigNumber.Normalize();
+        _ = minExponentBigNumber.Normalize();
+        _ = maxExponentBigNumber.Normalize();
 
         // Value types cannot be null, so we just verify they normalized successfully
         Assert.True(true, "Normalization completed without exceptions");
@@ -231,7 +232,7 @@ public class BigNumberEdgeCaseTests
 
         // Act
         string stringRepresentation = originalBigNumber.ToString();
-        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringRepresentation), out var parsedBigNumber);
+        bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringRepresentation), out BigNumber parsedBigNumber);
 
         originalBigNumber = originalBigNumber.Normalize();
 
@@ -244,7 +245,7 @@ public class BigNumberEdgeCaseTests
     public void TryFormat_WithExactBoundaryConditions_ShouldWork()
     {
         // Test various exact boundary conditions for buffer sizes
-        var testCases = new[]
+        (BigInteger, int, int)[] testCases = new[]
         {
             (new BigInteger(1), 0, 1),          // "1" - 1 char
             (new BigInteger(10), 1, 3),         // "1E2" - 3 chars
@@ -258,13 +259,13 @@ public class BigNumberEdgeCaseTests
         Span<char> exactBuffer = stackalloc char[20]; // Larger buffer to accommodate all test cases
         Span<char> tooSmallBuffer = stackalloc char[20];
 
-        foreach (var (significand, exponent, expectedLength) in testCases)
+        foreach ((BigInteger significand, int exponent, int expectedLength) in testCases)
         {
             // Arrange
             var bigNumber = new Corvus.Numerics.BigNumber(significand, exponent);
-            var exactBufferSlice = exactBuffer.Slice(0, expectedLength);
-            var tooSmallLength = Math.Max(0, expectedLength - 1);
-            var tooSmallBufferSlice = tooSmallBuffer.Slice(0, tooSmallLength);
+            Span<char> exactBufferSlice = exactBuffer.Slice(0, expectedLength);
+            int tooSmallLength = Math.Max(0, expectedLength - 1);
+            Span<char> tooSmallBufferSlice = tooSmallBuffer.Slice(0, tooSmallLength);
 
             // Act
             bool exactSuccess = bigNumber.TryFormat(exactBufferSlice, out int exactCharsWritten);
@@ -282,7 +283,7 @@ public class BigNumberEdgeCaseTests
     public void TryParse_WithBoundaryNumericValues_ShouldWork()
     {
         // Test parsing at various numeric boundaries
-        var testCases = new[]
+        string[] testCases = new[]
         {
             "0",
             "1",
@@ -312,14 +313,14 @@ public class BigNumberEdgeCaseTests
         foreach (string testCase in testCases)
         {
             // Act
-            bool success = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(testCase), out var result);
+            bool success = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(testCase), out BigNumber result);
 
             // Assert
             Assert.True(success, $"Should successfully parse '{testCase}'");
 
             // Round trip test
             string roundTrip = result.ToString();
-            bool roundTripSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(roundTrip), out var roundTripResult);
+            bool roundTripSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(roundTrip), out BigNumber roundTripResult);
             Assert.True(roundTripSuccess, $"Should successfully parse round trip for '{testCase}'");
             BigNumberTestData.AssertBigNumbersEqual(result, roundTripResult);
         }
@@ -337,7 +338,7 @@ public class BigNumberEdgeCaseTests
         string stringResult = bigNumber.ToString();
         Assert.NotNull(stringResult);
 
-        var normalizedResult = bigNumber.Normalize();
+        BigNumber normalizedResult = bigNumber.Normalize();
         Assert.NotEqual(default(Corvus.Numerics.BigNumber), normalizedResult);
 
         int hashCode = bigNumber.GetHashCode();
@@ -353,7 +354,7 @@ public class BigNumberEdgeCaseTests
     public void SpecialNumbers_BigIntegerEdgeCases_ShouldWork()
     {
         // Test with BigInteger edge cases
-        var testCases = new[]
+        BigInteger[] testCases = new[]
         {
             BigInteger.Zero,
             BigInteger.One,
@@ -367,7 +368,7 @@ public class BigNumberEdgeCaseTests
             -BigInteger.Pow(10, 100),     // Large negative power of 10
         };
 
-        foreach (var significand in testCases)
+        foreach (BigInteger significand in testCases)
         {
             foreach (int exponent in new[] { int.MinValue, -1000, -1, 0, 1, 1000, int.MaxValue })
             {
@@ -378,7 +379,7 @@ public class BigNumberEdgeCaseTests
                 bigNumber = bigNumber.Normalize();
 
                 // Parsing round trip
-                bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out var parsedResult);
+                bool parseSuccess = Corvus.Numerics.BigNumber.TryParse(Encoding.UTF8.GetBytes(stringResult), out BigNumber parsedResult);
                 Assert.True(parseSuccess, $"Failed to parse: {stringResult}");
                 BigNumberTestData.AssertBigNumbersEqual(bigNumber, parsedResult);
             }
@@ -393,7 +394,7 @@ public class BigNumberEdgeCaseTests
         const int threadCount = 10;
         const int operationsPerThread = 1000;
         var tasks = new Task[threadCount];
-        var results = new bool[threadCount];
+        bool[] results = new bool[threadCount];
 
         for (int i = 0; i < threadCount; i++)
         {
@@ -410,7 +411,7 @@ public class BigNumberEdgeCaseTests
                         // Perform various operations
                         string str = bigNumber.ToString();
                         int hash = bigNumber.GetHashCode();
-                        var normalized = bigNumber.Normalize();
+                        BigNumber normalized = bigNumber.Normalize();
                         bool equals = bigNumber.Equals(bigNumber);
 
                         bool formatSuccess = bigNumber.TryFormat(buffer, out int charsWritten);

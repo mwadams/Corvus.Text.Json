@@ -2,10 +2,10 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using Corvus.Numerics;
-using Xunit;
-using Shouldly;
 using System.Globalization;
+using Corvus.Numerics;
+using Shouldly;
+using Xunit;
 
 namespace Corvus.Numerics.Tests;
 
@@ -24,7 +24,7 @@ public class BigNumberCultureStressTests
         int successCount = 0;
         int totalCount = 0;
 
-        foreach (var culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
+        foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.AllCultures))
         {
             totalCount++;
             try
@@ -335,12 +335,12 @@ public class BigNumberCultureStressTests
     [Fact]
     public void Format_VeryLargeNumberAllCultures_HandlesCorrectly()
     {
-        BigNumber huge = BigNumber.Parse(new string('9', 100));
+        var huge = BigNumber.Parse(new string('9', 100));
 
         // Test with a subset of diverse cultures
-        var cultures = new[] { "en-US", "de-DE", "fr-FR", "ja-JP", "ar-SA" };
+        string[] cultures = new[] { "en-US", "de-DE", "fr-FR", "ja-JP", "ar-SA" };
 
-        foreach (var cultureName in cultures)
+        foreach (string? cultureName in cultures)
         {
             var culture = new CultureInfo(cultureName);
             string result = huge.ToString("N0", culture);
@@ -353,9 +353,9 @@ public class BigNumberCultureStressTests
     {
         BigNumber zero = BigNumber.Zero;
 
-        var cultures = new[] { "en-US", "de-DE", "fr-FR", "ja-JP", "ar-SA", "he-IL" };
+        string[] cultures = new[] { "en-US", "de-DE", "fr-FR", "ja-JP", "ar-SA", "he-IL" };
 
-        foreach (var cultureName in cultures)
+        foreach (string? cultureName in cultures)
         {
             var culture = new CultureInfo(cultureName);
             string result = zero.ToString("N2", culture);
@@ -368,9 +368,9 @@ public class BigNumberCultureStressTests
     {
         BigNumber negative = new(-123456, -2);
 
-        var cultures = new[] { "en-US", "de-DE", "fr-FR", "ja-JP" };
+        string[] cultures = new[] { "en-US", "de-DE", "fr-FR", "ja-JP" };
 
-        foreach (var cultureName in cultures)
+        foreach (string? cultureName in cultures)
         {
             var culture = new CultureInfo(cultureName);
             string result = negative.ToString("N2", culture);
@@ -383,9 +383,9 @@ public class BigNumberCultureStressTests
     {
         BigNumber fraction = new(5, -3); // 0.005
 
-        var cultures = new[] { "en-US", "de-DE", "fr-FR" };
+        string[] cultures = new[] { "en-US", "de-DE", "fr-FR" };
 
-        foreach (var cultureName in cultures)
+        foreach (string? cultureName in cultures)
         {
             var culture = new CultureInfo(cultureName);
             string result = fraction.ToString("N3", culture);

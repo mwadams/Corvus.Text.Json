@@ -29,7 +29,7 @@ public class AllOfConversionEquivalenceTests
     [Fact]
     public void V4_ImplicitConversionToRequiredName()
     {
-        V4.MigrationComposite v4Composite = V4.MigrationComposite.Parse(CompositeJson);
+        var v4Composite = V4.MigrationComposite.Parse(CompositeJson);
         
         // Implicit conversion to allOf constituent type
         V4.MigrationComposite.RequiredName v4Base = v4Composite;
@@ -54,7 +54,7 @@ public class AllOfConversionEquivalenceTests
     [Fact]
     public void V4_ImplicitConversionToRequiredCount()
     {
-        V4.MigrationComposite v4Composite = V4.MigrationComposite.Parse(CompositeJson);
+        var v4Composite = V4.MigrationComposite.Parse(CompositeJson);
         
         // Implicit conversion to other allOf constituent type
         V4.MigrationComposite.RequiredCountEntity v4Count = v4Composite;
@@ -78,10 +78,10 @@ public class AllOfConversionEquivalenceTests
     public void V4_ExplicitConversionFromRequiredName()
     {
         const string baseJson = """{ "name": "Just Name", "description": "Only name properties" }""";
-        V4.MigrationComposite.RequiredName v4Base = V4.MigrationComposite.RequiredName.Parse(baseJson);
+        var v4Base = V4.MigrationComposite.RequiredName.Parse(baseJson);
         
         // Explicit conversion from constituent to composite
-        V4.MigrationComposite v4Composite = (V4.MigrationComposite)v4Base;
+        var v4Composite = (V4.MigrationComposite)v4Base;
         
         Assert.Equal("Just Name", (string)v4Composite.Name);
     }
@@ -94,7 +94,7 @@ public class AllOfConversionEquivalenceTests
         V5.MigrationComposite.RequiredName v5Base = parsed.RootElement;
         
         // Explicit conversion from constituent to composite (same as V4)
-        V5.MigrationComposite v5Composite = (V5.MigrationComposite)v5Base;
+        var v5Composite = (V5.MigrationComposite)v5Base;
         
         Assert.Equal("Just Name", (string)v5Composite.Name);
     }
@@ -102,7 +102,7 @@ public class AllOfConversionEquivalenceTests
     [Fact]
     public void V4_AllPropertiesAccessibleViaCompositeAndConstituents()
     {
-        V4.MigrationComposite v4Composite = V4.MigrationComposite.Parse(CompositeJson);
+        var v4Composite = V4.MigrationComposite.Parse(CompositeJson);
         
         // Access via composite
         Assert.Equal("Test Item", (string)v4Composite.Name);

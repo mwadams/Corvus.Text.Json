@@ -420,7 +420,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("[\"boolean\", \"null\"]")]
     public static async Task GenerateCode_Emits_ArrayTypes(string type)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"types_{GetNameFor(type)}.json",
             string.Format(ArrayType, type),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -448,7 +448,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_TupleType ()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"types_tupletype.json",
             TupleType,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -465,7 +465,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_TupleWithAdditionalItemsType()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"types_tuplewithadditionalitemstype.json",
             TupleWithAdditionalItemsType,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -482,7 +482,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_AllOfInlineTupleWithUnevaluated()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"types_allofinlinetuplewithunevaluated.json",
             AllOfInlineTupleWithUnevaluated,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -549,7 +549,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("unevaluatedItems", "string", "regex")]
     public static async Task GenerateCode_Emits_ArrayTypeWithItemsConstraintAndFormat(string keyword, string type, string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"arrayTypeWithItemsAndFormat_{keyword}_{type}_{format}.json",
             string.Format(ArrayTypeWithItemsConstraintAndFormat, keyword, type, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -566,7 +566,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_ComplexComposedObjectWithProperties()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             "complexComposedObjectWithProperties.json",
             ComplexComposedObjectWithProperties,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -583,7 +583,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_ComposedArrayMultiItemType()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             "composedArrayMultiItemType.json",
             ComposedArrayMultiItemType,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -605,7 +605,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("number", "int64", "number", "int128")]
     public static async Task GenerateCode_Emits_ComposedFormatTypes(string type1, string format1, string type2, string format2)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"composedFormat_{type1}_{format1}_{type2}_{format2}.json",
             string.Format(ComposedMultiFormatType, type1, format1, type2, format2),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -624,7 +624,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("number", "int64", "string", "date")]
     public static async Task GenerateCode_Emits_ComposedMultiFormatNumericWithAdditionalConstraint(string type1, string format1, string type2, string format2)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"composedNumericFormatWithConstraint_{type1}_{format1}_{type2}_{format2}.json",
             string.Format(ComposedMultiFormatNumericWithAdditionalConstraint, type1, format1, type2, format2),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -641,7 +641,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_ComposedObjectWithProperties()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             "composedObjectWithProperties.json",
             ComposedObjectWithProperties,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -658,7 +658,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_ComposedObjectWithRequiredProperties()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             "composedObjectWithRequiredProperties.json",
             ComposedObjectWithRequiredProperties,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -689,7 +689,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("half")]
     public static async Task GenerateCode_Emits_FixedSizeNumericArrayTypes(string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"fixedSizeNumericArray_{format}.json",
             string.Format(FixedSizeNumericArrayFormat, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -720,7 +720,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("half")]
     public static async Task GenerateCode_Emits_MultiDimensionFixedSizeNumericArrayTypes(string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"multiDimensionFixedSizeNumericArray_{format}.json",
             string.Format(MultiDimensionFixedSizeNumericArrayFormat, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -751,7 +751,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("half")]
     public static async Task GenerateCode_Emits_MultiDimensionHigherRankFixedSizeNumericArrayTypes(string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"multiDimensionHigherRankFixedSizeNumericArray_{format}.json",
             string.Format(MultiDimensionHigherRankFixedSizeNumericArrayFormat, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -782,7 +782,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("half")]
     public static async Task GenerateCode_Emits_NumericArrayTypes(string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"numericArray_{format}.json",
             string.Format(NumericArrayFormat, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -813,7 +813,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("half")]
     public static async Task GenerateCode_Emits_NumericFormatTypes(string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"numericFormat_{format}.json",
             string.Format(NumericFormat, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -830,7 +830,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_Person()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             "person.json",
             Person,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -847,7 +847,7 @@ public static class JsonSchemaCodeGeneratorTests
     [Fact]
     public static async Task GenerateCode_Emits_SimpleObjectWithProperties()
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             "simpleObjectWithProperties.json",
             SimpleObjectWithProperties,
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -870,7 +870,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("null")]
     public static async Task GenerateCode_Emits_SimpleTypes(string type)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"type_{type}.json",
             string.Format(SimpleType, type),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",
@@ -899,7 +899,7 @@ public static class JsonSchemaCodeGeneratorTests
     [InlineData("regex")]
     public static async Task GenerateCode_Emits_StringFormatTypes(string format)
     {
-        DynamicJsonType generatedType = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
+        _ = await TestJsonSchemaCodeGenerator.GenerateTypeForVirtualFile(
             $"stringFormat_{format}.json",
             string.Format(StringFormat, format),
             $"{MethodBase.GetCurrentMethod().DeclaringType.FullName}.{MethodBase.GetCurrentMethod().Name}",

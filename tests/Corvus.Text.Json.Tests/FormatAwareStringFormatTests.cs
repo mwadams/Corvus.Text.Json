@@ -91,7 +91,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDate.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 #else
@@ -102,7 +102,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDate.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 #endif
@@ -179,7 +179,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDate.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<char> dest = stackalloc char[100];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
         Assert.Equal(expected, dest[..n].ToString());
@@ -192,7 +192,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDate.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<byte> dest = stackalloc byte[100];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
         Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -260,7 +260,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDateTime.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 #else
@@ -271,7 +271,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDateTime.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 #endif
@@ -317,7 +317,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
         Span<char> dest = stackalloc char[200];
-        foreach (var culture in new[] { CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("fr-FR"), new CultureInfo("de-DE") })
+        foreach (CultureInfo culture in new[] { CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("fr-FR"), new CultureInfo("de-DE") })
         {
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, culture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -378,7 +378,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDateTime>.Parse(DateTimeJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDateTime.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<char> dest = stackalloc char[200];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
         Assert.Equal(expected, dest[..n].ToString());
@@ -434,7 +434,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonTime.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 #else
@@ -445,7 +445,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonTime.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 #endif
@@ -477,7 +477,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
         Span<char> dest = stackalloc char[100];
-        foreach (var culture in new[] { CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("fr-FR"), new CultureInfo("de-DE") })
+        foreach (CultureInfo culture in new[] { CultureInfo.InvariantCulture, new CultureInfo("en-US"), new CultureInfo("fr-FR"), new CultureInfo("de-DE") })
         {
             Assert.True(doc.RootElement.TryFormat(dest, out int n, format, culture));
             Assert.Equal(expected, dest[..n].ToString());
@@ -532,7 +532,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonTime>.Parse(TimeJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonTime.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<char> dest = stackalloc char[100];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, CultureInfo.InvariantCulture));
         Assert.Equal(expected, dest[..n].ToString());
@@ -575,7 +575,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonUuid.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(expected, mutableDoc.RootElement.ToString(format, null));
     }
 
@@ -626,7 +626,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonUuid.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<char> dest = stackalloc char[100];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
         Assert.Equal(expected, dest[..n].ToString());
@@ -639,7 +639,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonUuid>.Parse(UuidJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonUuid.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<byte> dest = stackalloc byte[100];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, format, null));
         Assert.Equal(expected, JsonReaderHelper.TranscodeHelper(dest[..n]));
@@ -710,7 +710,7 @@ public class FormatAwareStringFormatTests
 
         using var doc = ParsedJsonDocument<JsonDate>.Parse(DateJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDate.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Span<char> dest = stackalloc char[200];
         Assert.True(mutableDoc.RootElement.TryFormat(dest, out int n, "d", heIL));
         Assert.Equal(expected, dest[..n].ToString());
@@ -731,7 +731,7 @@ public class FormatAwareStringFormatTests
     {
         var jaJP = new CultureInfo("ja-JP");
         jaJP.DateTimeFormat.Calendar = new System.Globalization.JapaneseCalendar();
-        var expected = DateOnly.ParseExact(isoDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
+        string expected = DateOnly.ParseExact(isoDate, "yyyy-MM-dd", CultureInfo.InvariantCulture)
                                .ToString(format, jaJP);
 
         using var doc = ParsedJsonDocument<JsonDate>.Parse($"\"{isoDate}\"");
@@ -751,7 +751,7 @@ public class FormatAwareStringFormatTests
         jaJP.DateTimeFormat.Calendar = new System.Globalization.JapaneseCalendar();
 
         using var doc = ParsedJsonDocument<JsonDate>.Parse("\"1200-06-15\"");
-        var entity = doc.RootElement;
+        JsonDate entity = doc.RootElement;
 
         // Span<char> cannot be captured in a lambda, so we use try/catch directly.
         char[] buffer = new char[200];
@@ -791,7 +791,7 @@ public class FormatAwareStringFormatTests
     {
         using var doc = ParsedJsonDocument<JsonDuration>.Parse(DurationJson);
         using var workspace = JsonWorkspace.Create();
-        using var mutableDoc = doc.RootElement.CreateBuilder(workspace);
+        using JsonDocumentBuilder<JsonDuration.Mutable> mutableDoc = doc.RootElement.CreateBuilder(workspace);
         Assert.Equal(CanonicalDuration, mutableDoc.RootElement.ToString(format, CultureInfo.InvariantCulture));
     }
 }

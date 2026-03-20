@@ -300,7 +300,7 @@ internal class JsonNumberTestData
         };
         for (int i = 0; i < numberOfItems; i++)
         {
-            UInt128 value = (UInt128)random.Next(int.MinValue, int.MaxValue);
+            var value = (UInt128)random.Next(int.MinValue, int.MaxValue);
             UInt128s.Add(value);
         }
 

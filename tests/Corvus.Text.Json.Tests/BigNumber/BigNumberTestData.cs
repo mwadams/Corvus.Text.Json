@@ -466,7 +466,7 @@ public static class BigNumberTestData
         Assert.True(success, $"Should successfully parse: '{input}'");
 
         BigInteger actualSignificand = GetSignificand(result);
-        var actualExponent = GetExponent(result);
+        int actualExponent = GetExponent(result);
 
         Assert.True(expectedSignificand.Equals(actualSignificand),
             $"Significand should match for input: '{input}'. Expected: {expectedSignificand}, Actual: {actualSignificand}");

@@ -4534,17 +4534,17 @@ public static class ParsedJsonDocumentTests
         const int length = 3;
         using (var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
         {
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -4621,17 +4621,17 @@ public static class ParsedJsonDocumentTests
         const int rank = 1;
         using (var doc = ParsedJsonDocument<JsonElement>.Parse("[1,2,3]"))
         {
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -4711,17 +4711,17 @@ public static class ParsedJsonDocumentTests
             IJsonElement root = doc.RootElement;
             int written;
 
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -4782,17 +4782,17 @@ public static class ParsedJsonDocumentTests
         const int rank = 2;
         using (var doc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5,6],[7,8,9]]"))
         {
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -4869,17 +4869,17 @@ public static class ParsedJsonDocumentTests
         const int rank = 2;
         using (var doc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,5],[6,7,8]]"))
         {
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -4959,17 +4959,17 @@ public static class ParsedJsonDocumentTests
             IJsonElement root = doc.RootElement;
             int written;
 
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -5044,17 +5044,17 @@ public static class ParsedJsonDocumentTests
         const int rank = 2;
         using (var doc = ParsedJsonDocument<JsonElement>.Parse("[[1,2,3],[4,\"stringValue\"],[6,7,8]]"))
         {
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];
@@ -5244,17 +5244,17 @@ public static class ParsedJsonDocumentTests
             int written;
 
             // All output arrays are too short (length 2, but need 3)
-            var outputSbyte = new sbyte[length];
-            var outputByte = new byte[length];
-            var outputInt16 = new short[length];
-            var outputUInt16 = new ushort[length];
-            var outputInt32 = new int[length];
-            var outputUInt32 = new uint[length];
-            var outputInt64 = new long[length];
-            var outputUInt64 = new ulong[length];
-            var outputDouble = new double[length];
-            var outputSingle = new float[length];
-            var outputDecimal = new decimal[length];
+            sbyte[] outputSbyte = new sbyte[length];
+            byte[] outputByte = new byte[length];
+            short[] outputInt16 = new short[length];
+            ushort[] outputUInt16 = new ushort[length];
+            int[] outputInt32 = new int[length];
+            uint[] outputUInt32 = new uint[length];
+            long[] outputInt64 = new long[length];
+            ulong[] outputUInt64 = new ulong[length];
+            double[] outputDouble = new double[length];
+            float[] outputSingle = new float[length];
+            decimal[] outputDecimal = new decimal[length];
 #if NET
             var outputInt128 = new Int128[length];
             var outputUInt128 = new UInt128[length];

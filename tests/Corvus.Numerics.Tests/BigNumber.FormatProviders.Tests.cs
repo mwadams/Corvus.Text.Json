@@ -1,10 +1,10 @@
-namespace Corvus.Numerics.Tests;
 
 using System.Globalization;
 using System.Text;
-using Xunit;
 using Shouldly;
+using Xunit;
 
+namespace Corvus.Numerics.Tests;
 /// <summary>
 /// Tests for BigNumber formatting with standard format providers (G, F, N, E, C, P).
 /// Tests the same format strings that System.Decimal supports.
@@ -437,7 +437,7 @@ public class BigNumberFormatProvidersTests
         BigNumber original = new(123456789, -5);
 
         string formatted = original.ToString("G", CultureInfo.InvariantCulture);
-        BigNumber parsed = BigNumber.Parse(formatted, NumberStyles.Float, CultureInfo.InvariantCulture);
+        var parsed = BigNumber.Parse(formatted, NumberStyles.Float, CultureInfo.InvariantCulture);
 
         parsed.ShouldBe(original);
     }
@@ -448,7 +448,7 @@ public class BigNumberFormatProvidersTests
         BigNumber original = new(123456789, 10);
 
         string formatted = original.ToString("E", CultureInfo.InvariantCulture);
-        BigNumber parsed = BigNumber.Parse(formatted, NumberStyles.Float, CultureInfo.InvariantCulture);
+        var parsed = BigNumber.Parse(formatted, NumberStyles.Float, CultureInfo.InvariantCulture);
 
         // May have rounding differences due to precision
         parsed.ToString().ShouldNotBeEmpty();

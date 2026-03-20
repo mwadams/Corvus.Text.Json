@@ -13,7 +13,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("123.456", 2, "$123.46")]
     public void TryFormatCurrency_WithPositiveNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -52,7 +52,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("-123.456", 2, "-$123.46")]
     public void TryFormatCurrency_WithNegativeNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -88,7 +88,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern0_FormatsAsParentheses()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -123,7 +123,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_PositivePattern1_FormatsAsNumberCurrency()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -158,7 +158,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_UsesCustomCurrencySymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -195,7 +195,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("0.999", 2, "$1.00")]
     public void TryFormatCurrency_WithSmallNumbers_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -232,7 +232,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("0.0", 2, "$0.00")]
     public void TryFormatCurrency_WithZero_FormatsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -270,7 +270,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("123.455", 2, "$123.46")]
     public void TryFormatCurrency_RoundsCorrectly(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -305,7 +305,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_ReturnsFalseWhenBufferTooSmall()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -339,7 +339,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_UsesDefaultPrecision()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.567");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.567");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -374,7 +374,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("9999999.99", 0, "$10,000,000")]
     public void TryFormatCurrency_RoundingCarriesMultiplePowersOfTen(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -412,7 +412,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("-99999.99", 0, "-$100,000")]
     public void TryFormatCurrency_NegativeRoundingCarriesMultiplePowersOfTen(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -448,7 +448,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_WithMultiCharacterCurrencySymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -483,7 +483,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_WithMultiCharacterGroupSeparator()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234567.89");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234567.89");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -518,7 +518,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_WithMultiCharacterDecimalSeparator()
     {
-        var utf8 = Encoding.UTF8.GetBytes("1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -553,7 +553,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_RoundingWithMultiCharacterSeparators()
     {
-        var utf8 = Encoding.UTF8.GetBytes("999.99");
+        byte[] utf8 = Encoding.UTF8.GetBytes("999.99");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -591,7 +591,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [InlineData("999.9999", 3, "$1,000.000")]
     public void TryFormatCurrency_RoundingWithFractionalPrecision(string jsonNumber, int precision, string expected)
     {
-        var utf8 = Encoding.UTF8.GetBytes(jsonNumber);
+        byte[] utf8 = Encoding.UTF8.GetBytes(jsonNumber);
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -626,7 +626,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern2_FormatsAsSymbolMinusNumber()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -661,7 +661,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern3_FormatsAsSymbolNumberMinus()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -696,7 +696,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern4_FormatsAsParenthesesNumberSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -731,7 +731,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern5_FormatsAsMinusNumberSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -766,7 +766,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern6_FormatsAsNumberMinusSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -801,7 +801,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern7_FormatsAsNumberSymbolMinus()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -836,7 +836,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern8_FormatsAsMinusNumberSpaceSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -871,7 +871,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern9_FormatsAsMinusSymbolSpaceNumber()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -906,7 +906,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern10_FormatsAsNumberSpaceSymbolMinus()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -941,7 +941,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern11_FormatsAsSymbolSpaceNumberMinus()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -976,7 +976,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern12_FormatsAsSymbolSpaceMinusNumber()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -1011,7 +1011,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern13_FormatsAsNumberMinusSpaceSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -1046,7 +1046,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern14_FormatsAsParenthesesSymbolSpaceNumber()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,
@@ -1081,7 +1081,7 @@ public class JsonElementHelpersTryFormatCurrencyUtf8Tests
     [Fact]
     public void TryFormatCurrency_NegativePattern15_FormatsAsParenthesesNumberSpaceSymbol()
     {
-        var utf8 = Encoding.UTF8.GetBytes("-1234.56");
+        byte[] utf8 = Encoding.UTF8.GetBytes("-1234.56");
         JsonElementHelpers.ParseNumber(
             utf8,
             out bool isNegative,

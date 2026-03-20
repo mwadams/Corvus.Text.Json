@@ -54,7 +54,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForBoolean))]
     public void GetBoolean_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetBoolean());
@@ -64,8 +64,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForBoolean))]
     public void GetBoolean_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -80,7 +80,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForString))]
     public void GetString_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetString());
@@ -90,8 +90,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForString))]
     public void GetString_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -106,7 +106,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetInt32_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetInt32());
@@ -116,8 +116,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetInt32_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -128,7 +128,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetInt64_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetInt64());
@@ -138,7 +138,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetDouble_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetDouble());
@@ -148,7 +148,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetDecimal_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetDecimal());
@@ -158,7 +158,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetSingle_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetSingle());
@@ -168,7 +168,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetByte_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetByte());
@@ -178,7 +178,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetSByte_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetSByte());
@@ -188,7 +188,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetInt16_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetInt16());
@@ -198,7 +198,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetUInt16_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetUInt16());
@@ -208,7 +208,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetUInt32_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetUInt32());
@@ -218,7 +218,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetUInt64_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetUInt64());
@@ -233,7 +233,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetInt128());
@@ -243,8 +243,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetInt128_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -255,7 +255,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void TryGetInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.TryGetInt128(out _));
@@ -265,7 +265,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetUInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetUInt128());
@@ -275,8 +275,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetUInt128_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -287,7 +287,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void TryGetUInt128_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.TryGetUInt128(out _));
@@ -297,7 +297,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetHalf_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetHalf());
@@ -307,8 +307,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void GetHalf_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -319,7 +319,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForNumeric))]
     public void TryGetHalf_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.TryGetHalf(out _));
@@ -330,7 +330,7 @@ public class JsonElementGetMethodExceptionTests
     {
         // Int128.MaxValue + 1
         string json = "170141183460469231731687303715884105728";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Throws<FormatException>(() => element.GetInt128());
     }
@@ -340,7 +340,7 @@ public class JsonElementGetMethodExceptionTests
     {
         // Int128.MaxValue + 1
         string json = "170141183460469231731687303715884105728";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.False(element.TryGetInt128(out Int128 value));
         Assert.Equal(default, value);
@@ -351,7 +351,7 @@ public class JsonElementGetMethodExceptionTests
     {
         // Int128.MinValue - 1
         string json = "-170141183460469231731687303715884105729";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Throws<FormatException>(() => element.GetInt128());
     }
@@ -361,7 +361,7 @@ public class JsonElementGetMethodExceptionTests
     {
         // Int128.MinValue - 1
         string json = "-170141183460469231731687303715884105729";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.False(element.TryGetInt128(out Int128 value));
         Assert.Equal(default, value);
@@ -372,7 +372,7 @@ public class JsonElementGetMethodExceptionTests
     {
         // UInt128.MaxValue + 1
         string json = "340282366920938463463374607431768211456";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Throws<FormatException>(() => element.GetUInt128());
     }
@@ -382,7 +382,7 @@ public class JsonElementGetMethodExceptionTests
     {
         // UInt128.MaxValue + 1
         string json = "340282366920938463463374607431768211456";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.False(element.TryGetUInt128(out UInt128 value));
         Assert.Equal(default, value);
@@ -392,7 +392,7 @@ public class JsonElementGetMethodExceptionTests
     public void GetUInt128_Negative_ThrowsFormatException()
     {
         string json = "-1";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Throws<FormatException>(() => element.GetUInt128());
     }
@@ -401,7 +401,7 @@ public class JsonElementGetMethodExceptionTests
     public void TryGetUInt128_Negative_ReturnsFalse()
     {
         string json = "-1";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.False(element.TryGetUInt128(out UInt128 value));
         Assert.Equal(default, value);
@@ -411,7 +411,7 @@ public class JsonElementGetMethodExceptionTests
     public void TryGetInt128_FractionalValue_ReturnsFalse()
     {
         string json = "1.5";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.False(element.TryGetInt128(out Int128 value));
         Assert.Equal(default, value);
@@ -421,7 +421,7 @@ public class JsonElementGetMethodExceptionTests
     public void TryGetUInt128_FractionalValue_ReturnsFalse()
     {
         string json = "1.5";
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.False(element.TryGetUInt128(out UInt128 value));
         Assert.Equal(default, value);
@@ -436,7 +436,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForStringParsing))]
     public void GetDateTimeOffset_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetDateTimeOffset());
@@ -446,8 +446,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForStringParsing))]
     public void GetDateTimeOffset_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -458,7 +458,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForStringParsing))]
     public void GetGuid_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetGuid());
@@ -468,8 +468,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForStringParsing))]
     public void GetGuid_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -480,7 +480,7 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForStringParsing))]
     public void GetBytesFromBase64_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(expectedKind, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetBytesFromBase64());
@@ -490,8 +490,8 @@ public class JsonElementGetMethodExceptionTests
     [MemberData(nameof(InvalidValueKindsForStringParsing))]
     public void GetBytesFromBase64_Mutable_InvalidValueKind_ThrowsInvalidOperationException(string json, JsonValueKind expectedKind)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(expectedKind, element.ValueKind);
@@ -509,7 +509,7 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"hello world\"")]
     public void GetInt32_InvalidFormat_ThrowsInvalidOperationException(string json)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
         Assert.Throws<InvalidOperationException>(() => element.GetInt32());
@@ -522,8 +522,8 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"hello world\"")]
     public void GetInt32_Mutable_InvalidFormat_ThrowsInvalidOperationException(string json)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -538,7 +538,7 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"12345678-1234-1234-1234-12345678901G\"")]
     public void GetGuid_InvalidFormat_ThrowsFormatException(string json)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
         Assert.Throws<FormatException>(() => element.GetGuid());
@@ -552,8 +552,8 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"12345678-1234-1234-1234-12345678901G\"")]
     public void GetGuid_Mutable_InvalidFormat_ThrowsFormatException(string json)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -569,7 +569,7 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"2024-02-30T10:00:00Z\"")]
     public void GetDateTimeOffset_InvalidFormat_ThrowsFormatException(string json)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
         Assert.Throws<FormatException>(() => element.GetDateTimeOffset());
@@ -584,8 +584,8 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"2024-02-30T10:00:00Z\"")]
     public void GetDateTimeOffset_Mutable_InvalidFormat_ThrowsFormatException(string json)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
@@ -599,7 +599,7 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"Hello@World\"")]
     public void GetBytesFromBase64_InvalidFormat_ThrowsFormatException(string json)
     {
-        JsonElement element = JsonElement.ParseValue(json);
+        var element = JsonElement.ParseValue(json);
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);
         Assert.Throws<FormatException>(() => element.GetBytesFromBase64());
@@ -612,8 +612,8 @@ public class JsonElementGetMethodExceptionTests
     [InlineData("\"Hello@World\"")]
     public void GetBytesFromBase64_Mutable_InvalidFormat_ThrowsFormatException(string json)
     {
-        using JsonWorkspace workspace = JsonWorkspace.Create();
-        using var doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
+        using var workspace = JsonWorkspace.Create();
+        using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(workspace, JsonElement.ParseValue(json));
         JsonElement.Mutable element = doc.RootElement;
 
         Assert.Equal(JsonValueKind.String, element.ValueKind);

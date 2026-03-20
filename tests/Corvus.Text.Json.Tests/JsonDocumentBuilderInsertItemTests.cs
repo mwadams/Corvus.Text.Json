@@ -352,7 +352,7 @@ public static class JsonDocumentBuilderInsertItemTests
         using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
   using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
-        Guid testGuid = Guid.Parse("12345678-1234-1234-1234-123456789012");
+        var testGuid = Guid.Parse("12345678-1234-1234-1234-123456789012");
 
         // Act
         builderDoc.RootElement.InsertItem(1, testGuid);
@@ -392,7 +392,7 @@ builderDoc.RootElement.InsertItem(1, testDate);
         using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
  using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
-DateTimeOffset testDate = new DateTimeOffset(2024, 1, 15, 10, 30, 0, TimeSpan.FromHours(2));
+var testDate = new DateTimeOffset(2024, 1, 15, 10, 30, 0, TimeSpan.FromHours(2));
 
    // Act
  builderDoc.RootElement.InsertItem(1, testDate);
@@ -622,7 +622,7 @@ using var workspace = JsonWorkspace.Create();
    using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
         using var workspace = JsonWorkspace.Create();
    using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
-   Int128 bigNumber = Int128.Parse("170141183460469231731687303715884105727");
+   var bigNumber = Int128.Parse("170141183460469231731687303715884105727");
 
         // Act
    builderDoc.RootElement.InsertItem(1, bigNumber);
@@ -642,7 +642,7 @@ using var workspace = JsonWorkspace.Create();
   using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
    using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
-   UInt128 bigNumber = UInt128.Parse("340282366920938463463374607431768211455");
+   var bigNumber = UInt128.Parse("340282366920938463463374607431768211455");
 
         // Act
    builderDoc.RootElement.InsertItem(1, bigNumber);
@@ -662,7 +662,7 @@ public static void InsertItem_Half_Works()
   using var doc = ParsedJsonDocument<JsonElement>.Parse("[1, 2]");
  using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
-        Half halfValue = (Half)1.5;
+        var halfValue = (Half)1.5;
 
    // Act
    builderDoc.RootElement.InsertItem(1, halfValue);
