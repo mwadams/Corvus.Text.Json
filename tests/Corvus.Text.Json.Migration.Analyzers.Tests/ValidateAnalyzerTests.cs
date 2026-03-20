@@ -88,7 +88,7 @@ namespace TestApp
     [Fact]
     public async Task ValidateCall_TriggersCVJ003()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class ValidationContext
@@ -121,7 +121,7 @@ namespace TestApp
     [Fact]
     public async Task NoIsValidCall_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyJsonType
@@ -145,7 +145,7 @@ namespace TestApp
     [Fact]
     public async Task IsValidCall_OnNonJsonValueType_NoDiagnostic()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyPlainType
@@ -169,7 +169,7 @@ namespace TestApp
     [Fact]
     public async Task ValidateCall_OnNonJsonValueType_NoDiagnostic()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class ValidationContext

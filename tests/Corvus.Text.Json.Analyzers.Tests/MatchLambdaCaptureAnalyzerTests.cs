@@ -64,7 +64,7 @@ namespace TestLib
     [Fact]
     public async Task NonStaticNonCapturingLambdas_FiresCTJ003()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -90,7 +90,7 @@ namespace TestApp
     [Fact]
     public async Task AlreadyStaticLambdas_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -112,7 +112,7 @@ namespace TestApp
     [Fact]
     public async Task CapturingLambda_FiresCTJ003WithCaptureMessage()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -139,7 +139,7 @@ namespace TestApp
     [Fact]
     public async Task BlockBodyCapturingLambda_FiresCTJ003WithCaptureMessage()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -211,7 +211,7 @@ namespace TestApp
     public async Task ContextOverload_NoDiagnostic()
     {
         // Using Match<TIn, TOut> with context — no diagnostic since it already has context.
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -236,7 +236,7 @@ namespace TestApp
     public async Task NonMatchMethod_NoDiagnostic()
     {
         // A non-Match method with lambda args should not trigger.
-        string testCode = @"
+        const string testCode = @"
 using System;
 
 namespace TestApp

@@ -256,7 +256,7 @@ namespace TestApp
     [Fact]
     public async Task NonJsonValueType_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 using System.Collections.Generic;
 
 namespace TestApp
@@ -275,7 +275,6 @@ namespace TestApp
     }
 
     // ── Edge case tests ─────────────────────────────────────────────
-
     [Fact]
     public async Task Add_VarType_DropsAssignment()
     {
@@ -359,7 +358,7 @@ namespace TestApp
     {
         // Add() used as argument — cannot drop the outer call, but
         // should still rename Add to AddItem (or at least fire diagnostic).
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test
@@ -468,7 +467,7 @@ namespace TestApp
     {
         // If the receiver is already a Mutable type (V5), no V4 diagnostic fires
         // because Mutable does not implement IJsonValue.
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test
@@ -528,7 +527,6 @@ namespace TestApp
     }
 
     // ── New array mutator tests ─────────────────────────────────────
-
     [Fact]
     public async Task AddRange_TriggersCVJ012_AndDropsAssignment()
     {

@@ -82,7 +82,7 @@ namespace TestApp
     [Fact]
     public async Task TryGetString_OnNonJsonValue_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyClass

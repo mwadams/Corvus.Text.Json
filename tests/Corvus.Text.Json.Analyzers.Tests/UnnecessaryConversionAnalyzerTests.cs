@@ -67,7 +67,7 @@ namespace TestLib
     [Fact]
     public async Task CastToString_WhenSourceAcceptsOriginal_FiresCTJ002()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -89,7 +89,7 @@ namespace TestApp
     [Fact]
     public async Task CastToInt_WhenSourceAcceptsOriginal_FiresCTJ002()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -111,7 +111,7 @@ namespace TestApp
     [Fact]
     public async Task CastToString_InAddItem_FiresCTJ002()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -171,7 +171,7 @@ namespace TestApp
     [Fact]
     public async Task NoCast_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -192,7 +192,7 @@ namespace TestApp
     public async Task CastToSameAsParameter_NoDiagnostic()
     {
         // When the cast target type IS the parameter type, it's not unnecessary.
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyClass
@@ -219,7 +219,7 @@ namespace TestApp
     {
         // Source has no implicit conversion from Widget, so the cast to string IS necessary
         // (it's the only way to get to a Source-compatible type).
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Widget

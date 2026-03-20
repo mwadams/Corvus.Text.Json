@@ -98,7 +98,7 @@ namespace TestApp
     [Fact]
     public async Task RegularGenericMethodCall_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyService
@@ -122,7 +122,7 @@ namespace TestApp
     [Fact]
     public async Task AsGenericCall_OnNonJsonValueType_NoDiagnostic()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class PlainValue

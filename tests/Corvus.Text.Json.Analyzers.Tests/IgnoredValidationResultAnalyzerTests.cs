@@ -49,7 +49,7 @@ namespace Corvus.Text.Json
     [Fact]
     public async Task EvaluateSchema_ResultDiscarded_FiresCTJ007()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -76,7 +76,7 @@ namespace TestApp
     [Fact]
     public async Task EvaluateSchema_ResultUsedInIf_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -100,7 +100,7 @@ namespace TestApp
     [Fact]
     public async Task EvaluateSchema_ResultAssigned_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -122,7 +122,7 @@ namespace TestApp
     [Fact]
     public async Task EvaluateSchema_ResultReturned_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -144,7 +144,7 @@ namespace TestApp
     [Fact]
     public async Task EvaluateSchema_OnGeneratedType_FiresCTJ007()
     {
-        string stubs = @"
+        const string stubs = @"
 using System;
 
 namespace Corvus.Text.Json
@@ -164,7 +164,7 @@ namespace MyApp
 }
 ";
 
-        string testCode = stubs + @"
+        const string testCode = stubs + @"
 namespace TestApp
 {
     class Test
@@ -191,7 +191,7 @@ namespace TestApp
     [Fact]
     public async Task NonCorvusEvaluateSchema_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace SomeOther
 {
     public struct Thing
@@ -221,7 +221,7 @@ namespace TestApp
     [Fact]
     public async Task EvaluateSchema_ResultUsedInNegation_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -243,7 +243,7 @@ namespace TestApp
     [Fact]
     public async Task EvaluateSchema_WithCollectorResultDiscarded_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test

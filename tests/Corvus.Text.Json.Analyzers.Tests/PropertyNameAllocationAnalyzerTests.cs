@@ -52,11 +52,10 @@ namespace Corvus.Text.Json
     // ========================
     // Positive: == comparison
     // ========================
-
     [Fact]
     public async Task PropertyName_EqualityComparison_FiresCTJ008()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -85,7 +84,7 @@ namespace TestApp
     [Fact]
     public async Task PropertyName_InequalityComparison_FiresCTJ008()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -114,7 +113,7 @@ namespace TestApp
     [Fact]
     public async Task PropertyName_ReversedComparison_FiresCTJ008()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -143,11 +142,10 @@ namespace TestApp
     // ========================
     // Positive: .Equals() call
     // ========================
-
     [Fact]
     public async Task PropertyName_InstanceEquals_FiresCTJ008()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -176,7 +174,7 @@ namespace TestApp
     [Fact]
     public async Task PropertyName_StringEquals_FiresCTJ008()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -205,11 +203,10 @@ namespace TestApp
     // ========================
     // Code fix tests
     // ========================
-
     [Fact]
     public async Task CodeFix_EqualityToNameEquals()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -223,7 +220,7 @@ namespace TestApp
     }
 }";
 
-        string fixedCode = Stubs + @"
+        const string fixedCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -253,7 +250,7 @@ namespace TestApp
     [Fact]
     public async Task CodeFix_InequalityToNegatedNameEquals()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -267,7 +264,7 @@ namespace TestApp
     }
 }";
 
-        string fixedCode = Stubs + @"
+        const string fixedCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -297,7 +294,7 @@ namespace TestApp
     [Fact]
     public async Task CodeFix_InstanceEqualsToNameEquals()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -311,7 +308,7 @@ namespace TestApp
     }
 }";
 
-        string fixedCode = Stubs + @"
+        const string fixedCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -341,11 +338,10 @@ namespace TestApp
     // ========================
     // Negative tests
     // ========================
-
     [Fact]
     public async Task PropertyName_ComparedToVariable_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -368,7 +364,7 @@ namespace TestApp
     [Fact]
     public async Task NonJsonProperty_NameComparison_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace SomeOther
 {
     public class Thing
@@ -399,7 +395,7 @@ namespace TestApp
     [Fact]
     public async Task PropertyName_UsedAsVariable_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -420,7 +416,7 @@ namespace TestApp
     [Fact]
     public async Task NameEquals_AlreadyUsed_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test

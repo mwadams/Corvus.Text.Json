@@ -50,7 +50,7 @@ namespace Corvus.Text.Json
     [Fact]
     public async Task NewUtf8JsonWriter_WithWorkspaceInScope_FiresCTJ009()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -77,7 +77,7 @@ namespace TestApp
     [Fact]
     public async Task NewUtf8JsonWriter_WithWorkspaceAsParameter_FiresCTJ009()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -103,7 +103,7 @@ namespace TestApp
     [Fact]
     public async Task NewUtf8JsonWriter_WithoutWorkspace_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -124,7 +124,7 @@ namespace TestApp
     [Fact]
     public async Task RentWriter_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -146,7 +146,7 @@ namespace TestApp
     [Fact]
     public async Task NonCorvusUtf8JsonWriter_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 using System;
 using System.IO;
 
@@ -185,7 +185,7 @@ namespace TestApp
     [Fact]
     public async Task NewUtf8JsonWriter_WorkspaceDeclaredAfter_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test

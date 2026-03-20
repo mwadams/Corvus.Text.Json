@@ -77,7 +77,7 @@ namespace TestLib
     [Fact]
     public async Task MethodWithUtf8Overload_FiresCTJ001()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -134,7 +134,7 @@ namespace TestApp
     [Fact]
     public async Task SetProperty_OnMutable_FiresCTJ001()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -155,7 +155,7 @@ namespace TestApp
     [Fact]
     public async Task RemoveProperty_OnMutable_FiresCTJ001()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -176,7 +176,7 @@ namespace TestApp
     [Fact]
     public async Task ElementAccessWithStringLiteral_FiresCTJ001()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -197,7 +197,7 @@ namespace TestApp
     [Fact]
     public async Task MethodWithNoUtf8Overload_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyClass
@@ -221,7 +221,7 @@ namespace TestApp
     [Fact]
     public async Task VariableArgument_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test

@@ -50,11 +50,10 @@ namespace Corvus.Text.Json
     // ========================
     // Pattern A: Encoding roundtrip
     // ========================
-
     [Fact]
     public async Task Parse_EncodingGetString_FiresCTJ010()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -81,11 +80,10 @@ namespace TestApp
     // ========================
     // Pattern B: String literal
     // ========================
-
     [Fact]
     public async Task ParseValue_StringLiteral_FiresCTJ010()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -112,11 +110,10 @@ namespace TestApp
     // ========================
     // Negative tests
     // ========================
-
     [Fact]
     public async Task Parse_WithReadOnlyMemory_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -137,7 +134,7 @@ namespace TestApp
     [Fact]
     public async Task Parse_WithStringVariable_NoDiagnostic()
     {
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -158,7 +155,7 @@ namespace TestApp
     [Fact]
     public async Task NonCorvusParse_StringLiteral_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace SomeOther
 {
     public class Parser
@@ -189,7 +186,7 @@ namespace TestApp
     {
         // If the user already uses the u8 suffix, we don't flag it.
         // The u8 literal calls the ReadOnlySpan<byte> overload, not the string one.
-        string testCode = Stubs + @"
+        const string testCode = Stubs + @"
 namespace TestApp
 {
     class Test
@@ -211,7 +208,7 @@ namespace TestApp
     public async Task Parse_NoBytesOverload_NoDiagnostic()
     {
         // If there's no bytes overload, don't suggest it.
-        string testCode = @"
+        const string testCode = @"
 namespace Corvus.Text.Json
 {
     public class SimpleParser

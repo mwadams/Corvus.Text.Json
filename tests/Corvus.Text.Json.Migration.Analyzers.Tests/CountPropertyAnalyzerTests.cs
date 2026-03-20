@@ -82,7 +82,7 @@ namespace TestApp
     [Fact]
     public async Task CountMethodCall_NoDiagnostic()
     {
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test
@@ -101,7 +101,7 @@ namespace TestApp
     [Fact]
     public async Task CountInExpression_TriggersCVJ005()
     {
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test

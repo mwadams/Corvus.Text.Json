@@ -33,7 +33,7 @@ namespace Corvus.Json
     [Fact]
     public async Task AsString_TriggersCVJ010()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyJsonType : Corvus.Json.IJsonValue
@@ -61,7 +61,7 @@ namespace TestApp
     [Fact]
     public async Task AsNumber_TriggersCVJ010()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyJsonType : Corvus.Json.IJsonValue
@@ -89,7 +89,7 @@ namespace TestApp
     [Fact]
     public async Task AsObject_TriggersCVJ010()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyJsonType : Corvus.Json.IJsonValue
@@ -117,7 +117,7 @@ namespace TestApp
     [Fact]
     public async Task AsArray_TriggersCVJ010()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyJsonType : Corvus.Json.IJsonValue
@@ -145,7 +145,7 @@ namespace TestApp
     [Fact]
     public async Task AsBoolean_TriggersCVJ010()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyJsonType : Corvus.Json.IJsonValue
@@ -173,7 +173,7 @@ namespace TestApp
     [Fact]
     public async Task ToString_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyJsonType
@@ -196,7 +196,7 @@ namespace TestApp
     [Fact]
     public async Task RegularProperty_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyJsonType
@@ -220,7 +220,7 @@ namespace TestApp
     [Fact]
     public async Task AsString_OnNonJsonValueType_NoDiagnostic()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class MyPlainType

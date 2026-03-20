@@ -314,6 +314,7 @@ namespace TestApp
     }
 }",
             CompilerDiagnostics = CompilerDiagnostics.None,
+
             // Iteration 1: outer chain unchains both calls
             // Iteration 2: inner WithCity renames to SetCity
             NumberOfFixAllIterations = 2,

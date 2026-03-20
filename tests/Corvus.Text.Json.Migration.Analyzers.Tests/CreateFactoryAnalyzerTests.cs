@@ -63,7 +63,6 @@ public struct JsonWorkspace : System.IDisposable
 ";
 
     // ── Top-level (Builder) tests ────────────────────────────────────
-
     [Fact]
     public async Task Create_TopLevel_RewritesToCreateBuilder()
     {
@@ -178,7 +177,6 @@ namespace TestApp
     }
 
     // ── Source (Build) tests ─────────────────────────────────────────
-
     [Fact]
     public async Task Create_DirectArgument_RewritesToBuild()
     {
@@ -256,7 +254,6 @@ namespace TestApp
     }
 
     // ── FromItems (CVJ014) tests ─────────────────────────────────────
-
     [Fact]
     public async Task FromItems_TopLevel_RewritesToCreateBuilderWithBuild()
     {
@@ -333,7 +330,6 @@ namespace TestApp
     }
 
     // ── FromValues (CVJ015) tests ────────────────────────────────────
-
     [Fact]
     public async Task FromValues_TopLevel_RewritesToCreateBuilder()
     {
@@ -410,7 +406,6 @@ namespace TestApp
     }
 
     // ── Edge case tests ─────────────────────────────────────────────
-
     [Fact]
     public async Task Create_VarType_BuildPath_DoesNotAppendSource()
     {
@@ -503,7 +498,7 @@ namespace TestApp
         // Expression-bodied member — no BlockSyntax to insert workspace into.
         // The diagnostic fires but the code fix cannot apply (no statement
         // context). We verify only the diagnostic, not a code fix.
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test

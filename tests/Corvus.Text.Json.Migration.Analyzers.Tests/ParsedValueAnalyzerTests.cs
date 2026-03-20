@@ -99,7 +99,7 @@ namespace TestApp
     [Fact]
     public async Task InstanceProperty_TriggersCVJ002()
     {
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test
@@ -122,7 +122,7 @@ namespace TestApp
     [Fact]
     public async Task NonParsedValueType_NoDiagnosticOnInstance()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyClass
@@ -146,7 +146,7 @@ namespace TestApp
     [Fact]
     public async Task UsingDeclarationWithParsedValue_TriggersCVJ002()
     {
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test

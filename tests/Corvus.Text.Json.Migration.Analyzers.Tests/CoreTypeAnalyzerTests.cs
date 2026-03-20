@@ -80,7 +80,7 @@ namespace TestApp
     [Fact]
     public async Task JsonObject_TriggersCVJ009()
     {
-        string testCode = V4Stubs + @"
+        const string testCode = V4Stubs + @"
 namespace TestApp
 {
     class Test
@@ -102,7 +102,7 @@ namespace TestApp
     [Fact]
     public async Task NonCorvusJsonAny_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace OtherLib
 {
     struct JsonAny { }
@@ -126,7 +126,7 @@ namespace TestApp
     public async Task JsonAnyInsideUsingDirective_NoDiagnostic()
     {
         // CVJ001 handles using directives, not CVJ007
-        string testCode = @"
+        const string testCode = @"
 using Corvus.Json;
 
 namespace Corvus.Json

@@ -63,11 +63,10 @@ namespace Corvus.Text.Json
     // ========================
     // CTJ004: ParsedJsonDocument
     // ========================
-
     [Fact]
     public async Task ParsedJsonDocument_WithoutUsing_FiresCTJ004()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -94,7 +93,7 @@ namespace TestApp
     [Fact]
     public async Task ParsedJsonDocument_WithUsingDeclaration_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -115,7 +114,7 @@ namespace TestApp
     [Fact]
     public async Task ParsedJsonDocument_WithUsingBlock_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -138,7 +137,7 @@ namespace TestApp
     [Fact]
     public async Task ParsedJsonDocument_WithExplicitDispose_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -160,7 +159,7 @@ namespace TestApp
     [Fact]
     public async Task ParsedJsonDocument_ResultDiscarded_FiresCTJ004()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -187,11 +186,10 @@ namespace TestApp
     // ========================
     // CTJ005: JsonWorkspace
     // ========================
-
     [Fact]
     public async Task JsonWorkspace_WithoutUsing_FiresCTJ005()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -218,7 +216,7 @@ namespace TestApp
     [Fact]
     public async Task JsonWorkspace_WithUsingDeclaration_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -239,7 +237,7 @@ namespace TestApp
     [Fact]
     public async Task JsonWorkspace_WithExplicitDispose_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -261,11 +259,10 @@ namespace TestApp
     // ========================
     // CTJ006: JsonDocumentBuilder
     // ========================
-
     [Fact]
     public async Task JsonDocumentBuilder_WithoutUsing_FiresCTJ006()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -294,7 +291,7 @@ namespace TestApp
     [Fact]
     public async Task JsonDocumentBuilder_WithUsingDeclaration_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -317,11 +314,10 @@ namespace TestApp
     // ========================
     // Code fix tests
     // ========================
-
     [Fact]
     public async Task CodeFix_AddsUsingKeyword()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -333,7 +329,7 @@ namespace TestApp
     }
 }";
 
-        string fixedCode = DisposableStubs + @"
+        const string fixedCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -361,7 +357,7 @@ namespace TestApp
     [Fact]
     public async Task CodeFix_WorkspaceAddsUsing()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -373,7 +369,7 @@ namespace TestApp
     }
 }";
 
-        string fixedCode = DisposableStubs + @"
+        const string fixedCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test
@@ -401,11 +397,10 @@ namespace TestApp
     // ========================
     // Negative tests
     // ========================
-
     [Fact]
     public async Task NonCorvusDisposable_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 using System;
 
 namespace SomeOther
@@ -437,7 +432,7 @@ namespace TestApp
     [Fact]
     public async Task UnrelatedLocalVariable_NoDiagnostic()
     {
-        string testCode = DisposableStubs + @"
+        const string testCode = DisposableStubs + @"
 namespace TestApp
 {
     class Test

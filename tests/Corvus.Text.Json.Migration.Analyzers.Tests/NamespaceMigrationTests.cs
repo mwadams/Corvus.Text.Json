@@ -74,7 +74,7 @@ class C { }",
     [Fact]
     public async Task UsingSystemTextJson_NoDiagnostic()
     {
-        string testCode = @"using System.Text.Json;
+        const string testCode = @"using System.Text.Json;
 class C { }";
 
         await Verify.VerifyAnalyzerAsync(testCode);

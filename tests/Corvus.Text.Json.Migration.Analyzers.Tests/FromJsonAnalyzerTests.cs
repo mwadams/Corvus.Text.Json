@@ -150,7 +150,7 @@ namespace TestApp
     [Fact]
     public async Task RegularMethodCall_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace TestApp
 {
     class MyType
@@ -173,7 +173,7 @@ namespace TestApp
     [Fact]
     public async Task FromJsonCall_OnNonJsonValueType_NoDiagnostic()
     {
-        string testCode = V4InterfaceStubs + @"
+        const string testCode = V4InterfaceStubs + @"
 namespace TestApp
 {
     class JsonElement

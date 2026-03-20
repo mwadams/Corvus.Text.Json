@@ -58,7 +58,7 @@ namespace Corvus.Json
     [Fact]
     public async Task JsonDocumentParse_TriggersCVJ008()
     {
-        string testCode = StjStubs + @"
+        const string testCode = StjStubs + @"
 namespace TestApp
 {
     class Test
@@ -146,7 +146,7 @@ namespace TestApp
     [Fact]
     public async Task NonJsonDocumentParse_NoDiagnostic()
     {
-        string testCode = @"
+        const string testCode = @"
 namespace MyLib
 {
     class JsonDocument
@@ -170,7 +170,6 @@ namespace TestApp
     }
 
     // ── Edge case tests ─────────────────────────────────────────────
-
     [Fact]
     public async Task ParseWithFromJson_ExplicitType_CollapsesCorrectly()
     {

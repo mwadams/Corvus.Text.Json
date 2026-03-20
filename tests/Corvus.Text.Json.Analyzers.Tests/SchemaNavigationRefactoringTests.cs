@@ -81,12 +81,10 @@ namespace Corvus.Text.Json.Internal
 }
 ";
 
-    #region Basic navigation tests
-
     [Fact]
     public async Task TypeDeclarationWithSchemaAttribute_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -117,7 +115,7 @@ namespace TestApp
     [Fact]
     public async Task TypeWithoutSchemaAttribute_DoesNotOfferNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     public readonly struct PlainType { }
@@ -139,14 +137,10 @@ namespace TestApp
         Assert.Empty(actions);
     }
 
-    #endregion
-
-    #region JSON Pointer resolution tests
-
     [Fact]
     public async Task TypeWithSchemaLocation_ShowsPointerInTitle()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -185,7 +179,7 @@ namespace TestApp
     public async Task TopLevelType_NoPointerInTitle()
     {
         // Top-level types have SchemaLocation like "widget.json" with no pointer fragment.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -242,7 +236,7 @@ namespace TestApp
     [Fact]
     public void ResolveJsonPointer_SingleLineJson_FindsCorrectColumn()
     {
-        string singleLine = @"{""properties"":{""name"":{""type"":""string""},""age"":{""type"":""integer""}}}";
+        const string singleLine = @"{""properties"":{""name"":{""type"":""string""},""age"":{""type"":""integer""}}}";
         (int Line, int Column)? pos = SchemaNavigationRefactoring.ResolveJsonPointerToPosition(singleLine, "/properties/name");
         Assert.NotNull(pos);
         Assert.Equal(0, pos!.Value.Line);
@@ -277,14 +271,10 @@ namespace TestApp
         Assert.Null(pos);
     }
 
-    #endregion
-
-    #region IJsonElement<T> / IMutableJsonElement<T> unwrapping tests
-
     [Fact]
     public async Task IJsonElementVariable_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -316,7 +306,7 @@ namespace TestApp
     [Fact]
     public async Task IMutableJsonElementVariable_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -347,7 +337,7 @@ namespace TestApp
     [Fact]
     public async Task NonGenericIJsonElement_DoesNotOfferNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     class Test
@@ -370,7 +360,7 @@ namespace TestApp
     [Fact]
     public async Task IJsonElementParameter_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -398,17 +388,13 @@ namespace TestApp
         Assert.Contains("Go to schema", actions[0].Title);
     }
 
-    #endregion
-
-    #region Property declaration fallback tests
-
     [Fact]
     public async Task PropertyAccessOnGlobalType_FallsBackToContainingTypeSchema()
     {
         // When a property returns a project-global type (like JsonString) that has
         // no schema attribute, fall back to the containing type's schema and append
         // /properties/{jsonPropName} to the pointer.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -450,7 +436,7 @@ namespace TestApp
     {
         // When the containing type has a SchemaLocation with a pointer fragment,
         // the property suffix is appended to it.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -496,7 +482,7 @@ namespace TestApp
         // When a property's type IS a schema-generated entity (e.g., Widget.Address
         // returning AddressEntity), offer two actions: one to navigate to the type's
         // own schema, and one to navigate to the property declaration on the parent.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -542,14 +528,10 @@ namespace TestApp
         Assert.Contains("#/properties/address", actions[1].Title);
     }
 
-    #endregion
-
-    #region Variable and parameter declaration tests
-
     [Fact]
     public async Task VariableDeclarator_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -581,7 +563,7 @@ namespace TestApp
     [Fact]
     public async Task ParameterSyntax_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -610,14 +592,10 @@ namespace TestApp
         Assert.Contains("Go to schema", actions[0].Title);
     }
 
-    #endregion
-
-    #region Code construct coverage tests
-
     [Fact]
     public async Task FieldDeclaration_OffersNavigation()
     {
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -647,7 +625,7 @@ namespace TestApp
     public async Task FieldType_OffersNavigation()
     {
         // Cursor on the type name in a field declaration.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -676,7 +654,7 @@ namespace TestApp
     public async Task MethodReturnType_OffersNavigation()
     {
         // Cursor on a method name whose return type is schema-generated.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -709,7 +687,7 @@ namespace TestApp
     public async Task GenericTypeArgument_CursorOnWidgetInGeneric_OffersNavigation()
     {
         // Cursor on Widget inside a generic type argument like List<Widget>.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -743,7 +721,7 @@ namespace TestApp
     public async Task GenericTypeArgument_CursorOnListNotWidget_DoesNotOfferNavigation()
     {
         // Cursor on List (not Widget) — List is not a schema type, no action.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -774,7 +752,7 @@ namespace TestApp
     public async Task LocalVariableUsage_OffersNavigation()
     {
         // Cursor on a local variable usage (not its declaration).
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -801,6 +779,7 @@ namespace TestApp
                     .OfType<IdentifierNameSyntax>()
                     .Where(id => id.Identifier.Text == "w")
                     .ToList();
+
                 // The last "w" is the usage on the right-hand side of w2 = w.
                 return identifiers.Last();
             },
@@ -815,7 +794,7 @@ namespace TestApp
     public async Task CastExpression_TypeName_OffersNavigation()
     {
         // Cursor on the type name in a cast expression.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -844,16 +823,12 @@ namespace TestApp
         Assert.Contains("Go to schema", actions[0].Title);
     }
 
-    #endregion
-
-    #region Edge case and robustness tests
-
     [Fact]
     public async Task CliGeneratedType_NoAttribute_NoSchemaFile_ReturnsNoActions()
     {
         // CLI-generated types have SchemaLocation but no [JsonSchemaTypeGenerator]
         // attribute and the schema file is not in AdditionalFiles.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
@@ -886,7 +861,7 @@ namespace TestApp
     {
         // CLI-generated type with no attribute, but the schema file IS in
         // AdditionalFiles and matches via $id lookup.
-        string schemaWithId = @"{
+        const string schemaWithId = @"{
   ""$id"": ""https://example.com/widget"",
   ""type"": ""object"",
   ""properties"": {
@@ -894,7 +869,7 @@ namespace TestApp
   }
 }";
 
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     public readonly partial struct Widget : Corvus.Text.Json.Internal.IJsonElement<Widget>
@@ -930,7 +905,7 @@ namespace TestApp
     {
         // Attribute points to a file path, but no matching AdditionalFile exists.
         // No action should be offered because there is nothing to navigate to.
-        string code = AttributeAndInterfaceStubs + @"
+        const string code = AttributeAndInterfaceStubs + @"
 namespace TestApp
 {
     [Corvus.Text.Json.JsonSchemaTypeGenerator(""Schemas/widget.json"")]
@@ -964,7 +939,7 @@ namespace TestApp
     public void ResolveJsonPointer_MalformedJson_ReturnsNull()
     {
         // Malformed JSON should not throw — just return null.
-        string malformed = @"{ ""properties"": { not valid json";
+        const string malformed = @"{ ""properties"": { not valid json";
         (int, int)? pos = SchemaNavigationRefactoring.ResolveJsonPointerToPosition(
             malformed, "/properties/name");
         Assert.Null(pos);
@@ -983,7 +958,7 @@ namespace TestApp
     public void ResolveJsonPointer_EscapedTilde_Resolves()
     {
         // ~0 decodes to ~ in JSON Pointer.
-        string schemaWithTilde = @"{
+        const string schemaWithTilde = @"{
   ""type"": ""object"",
   ""properties"": {
     ""has~tilde"": { ""type"": ""string"" }
@@ -999,7 +974,7 @@ namespace TestApp
     public void ResolveJsonPointer_EscapedSlash_Resolves()
     {
         // ~1 decodes to / in JSON Pointer.
-        string schemaWithSlash = @"{
+        const string schemaWithSlash = @"{
   ""type"": ""object"",
   ""properties"": {
     ""has/slash"": { ""type"": ""string"" }
@@ -1043,7 +1018,7 @@ namespace TestApp
     {
         // Ensure the resolver doesn't match a property name that appears inside
         // a string value rather than as a key.
-        string schemaWithStringValue = @"{
+        const string schemaWithStringValue = @"{
   ""type"": ""object"",
   ""properties"": {
     ""description"": { ""type"": ""string"", ""default"": ""has properties inside"" },
@@ -1055,10 +1030,6 @@ namespace TestApp
         Assert.NotNull(pos);
         Assert.Equal(4, pos!.Value.Line);
     }
-
-    #endregion
-
-    #region Helpers
 
     private static async Task<List<CodeAction>> GetRefactoringsForIdentifier(
         string code,
@@ -1128,6 +1099,4 @@ namespace TestApp
 
         return actions;
     }
-
-    #endregion
 }
