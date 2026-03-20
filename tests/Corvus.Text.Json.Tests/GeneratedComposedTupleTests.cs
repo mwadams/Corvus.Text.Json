@@ -72,7 +72,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefTupleWithContains.Source source = RefTupleWithContains.Build(
-            static (ref RefTupleWithContains.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 99);
             });
@@ -92,7 +92,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefTupleWithContains.Source source = RefTupleWithContains.Build(
-            static (ref RefTupleWithContains.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("hello", 42);
             });
@@ -172,7 +172,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfOpenTupleClosedLocally.Source source = AllOfOpenTupleClosedLocally.Build(
-            static (ref AllOfOpenTupleClosedLocally.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 2.718);
             });
@@ -192,7 +192,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfOpenTupleClosedLocally.Source source = AllOfOpenTupleClosedLocally.Build(
-            static (ref AllOfOpenTupleClosedLocally.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("hello", 1.5);
             });
@@ -287,7 +287,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
-            static (ref RefTupleWithAdditionalItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("hello", 42);
                 builder.AddItem(true);
@@ -311,7 +311,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
-            static (ref RefTupleWithAdditionalItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 99);
             });
@@ -331,7 +331,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
-            static (ref RefTupleWithAdditionalItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(true);
             });
@@ -355,7 +355,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefTupleWithAdditionalItems.Source source = RefTupleWithAdditionalItems.Build(
-            static (ref RefTupleWithAdditionalItems.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("hello", 42);
                 b.AddItem(true);
@@ -517,7 +517,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
-            static (ref AllOfInlineTupleWithUnevaluated.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("hello", 3.14);
                 builder.AddItem(true);
@@ -541,7 +541,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
-            static (ref AllOfInlineTupleWithUnevaluated.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 2.718);
             });
@@ -561,7 +561,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
-            static (ref AllOfInlineTupleWithUnevaluated.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(true);
             });
@@ -585,7 +585,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInlineTupleWithUnevaluated.Source source = AllOfInlineTupleWithUnevaluated.Build(
-            static (ref AllOfInlineTupleWithUnevaluated.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("hello", 3.14);
                 b.AddItem(true);
@@ -660,7 +660,7 @@ public class GeneratedComposedTupleTests
             doc.RootElement.CreateBuilder(workspace);
 
         AllOfInlineTupleWithUnevaluated.Mutable root = builderDoc.RootElement;
-        root.RemoveWhere(static (in JsonBoolean item) =>
+        root.RemoveWhere(static (in item) =>
             item.ToString() == "True");
 
         Assert.Equal(3, root.GetArrayLength());
@@ -729,7 +729,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefClosedTupleWithContains.Source source = RefClosedTupleWithContains.Build(
-            static (ref RefClosedTupleWithContains.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 99);
             });
@@ -749,7 +749,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefClosedTupleWithContains.Source source = RefClosedTupleWithContains.Build(
-            static (ref RefClosedTupleWithContains.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("hello", 42);
             });
@@ -829,7 +829,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
-            static (ref RefOpenTupleWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("hello", 42);
                 builder.AddItem(true);
@@ -853,7 +853,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
-            static (ref RefOpenTupleWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 99);
             });
@@ -873,7 +873,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
-            static (ref RefOpenTupleWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(true);
             });
@@ -897,7 +897,7 @@ public class GeneratedComposedTupleTests
         using var workspace = JsonWorkspace.Create();
 
         RefOpenTupleWithItems.Source source = RefOpenTupleWithItems.Build(
-            static (ref RefOpenTupleWithItems.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("hello", 42);
                 b.AddItem(true);

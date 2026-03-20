@@ -104,30 +104,30 @@ namespace TestApp
     {
         var test = new CodeFixTest
         {
-            TestCode = V4Stubs + PersonStubs + @"
+            TestCode = $@"{V4Stubs}{PersonStubs}
 namespace TestApp
-{
+{{
     class Test
-    {
+    {{
         void M()
-        {
+        {{
             Person person = default;
-            Person updated = person.{|#0:WithName|}(""Bob"");
-        }
-    }
-}",
-            FixedCode = V4Stubs + PersonStubs + @"
+            Person updated = person.{{|#0:WithName|}}(""Bob"");
+        }}
+    }}
+}}",
+            FixedCode = $@"{V4Stubs}{PersonStubs}
 namespace TestApp
-{
+{{
     class Test
-    {
+    {{
         void M()
-        {
+        {{
             Person.Mutable person = default;
             person.SetName(""Bob"");
-        }
-    }
-}",
+        }}
+    }}
+}}",
             CompilerDiagnostics = CompilerDiagnostics.None,
         };
 

@@ -121,23 +121,25 @@ namespace TestApp
     [Fact]
     public async Task NoIsValidCall_NoDiagnostic()
     {
-        const string testCode = @"
-namespace TestApp
-{
-    class MyJsonType
-    {
-        public string GetValue() => ""hello"";
-    }
+        const string testCode = """
 
-    class Test
-    {
-        void M()
-        {
-            var x = new MyJsonType();
-            var result = x.GetValue();
-        }
-    }
-}";
+            namespace TestApp
+            {
+                class MyJsonType
+                {
+                    public string GetValue() => "hello";
+                }
+
+                class Test
+                {
+                    void M()
+                    {
+                        var x = new MyJsonType();
+                        var result = x.GetValue();
+                    }
+                }
+            }
+            """;
 
         await Verify.VerifyAnalyzerAsync(testCode);
     }

@@ -57,7 +57,7 @@ public class GeneratedNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         Rank1DoubleVector.Source source = Rank1DoubleVector.Build(
-            static (ref Rank1DoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
                 builder.CreateTensor(values);
@@ -79,7 +79,7 @@ public class GeneratedNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         Rank1DoubleVector.Source source = Rank1DoubleVector.Build(
-            static (ref Rank1DoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
                 builder.CreateTensor(values);
@@ -108,7 +108,7 @@ public class GeneratedNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         Rank1Int32Vector.Source source = Rank1Int32Vector.Build(
-            static (ref Rank1Int32Vector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [10, 20, 30, 40];
                 builder.CreateTensor(values);
@@ -131,7 +131,7 @@ public class GeneratedNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         Rank1Int32Vector.Source source = Rank1Int32Vector.Build(
-            static (ref Rank1Int32Vector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [10, 20, 30, 40];
                 builder.CreateTensor(values);
@@ -163,7 +163,7 @@ public class GeneratedNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             Rank1DoubleVector.Source source = Rank1DoubleVector.Build(
-                static (ref Rank1DoubleVector.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<double> values = [1.0, 2.0];
                     builder.CreateTensor(values);
@@ -181,7 +181,7 @@ public class GeneratedNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             Rank1Int32Vector.Source source = Rank1Int32Vector.Build(
-                static (ref Rank1Int32Vector.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<int> values = [1, 2, 3, 4, 5];
                     builder.CreateTensor(values);
@@ -202,7 +202,7 @@ public class GeneratedNumericArrayTests
 
         // 2×3 matrix: [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]
         Rank2DoubleMatrix.Source source = Rank2DoubleMatrix.Build(
-            static (ref Rank2DoubleMatrix.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
                 builder.CreateTensor(values);
@@ -235,7 +235,7 @@ public class GeneratedNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         Rank2DoubleMatrix.Source source = Rank2DoubleMatrix.Build(
-            static (ref Rank2DoubleMatrix.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
                 builder.CreateTensor(values);
@@ -271,7 +271,7 @@ public class GeneratedNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             Rank2DoubleMatrix.Source source = Rank2DoubleMatrix.Build(
-                static (ref Rank2DoubleMatrix.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<double> values = [1.0, 2.0, 3.0];
                     builder.CreateTensor(values);
@@ -304,7 +304,7 @@ public class GeneratedNumericArrayTests
 
         // 2×2×3 cube: [[[1,2,3],[4,5,6]],[[7,8,9],[10,11,12]]]
         Rank3Int32Cube.Source source = Rank3Int32Cube.Build(
-            static (ref Rank3Int32Cube.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
                 builder.CreateTensor(values);
@@ -351,7 +351,7 @@ public class GeneratedNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         Rank3Int32Cube.Source source = Rank3Int32Cube.Build(
-            static (ref Rank3Int32Cube.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
                 builder.CreateTensor(values);
@@ -390,7 +390,7 @@ public class GeneratedNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             Rank3Int32Cube.Source source = Rank3Int32Cube.Build(
-                static (ref Rank3Int32Cube.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6];
                     builder.CreateTensor(values);

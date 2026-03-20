@@ -14,6 +14,6 @@ var result = LargeIntegerExample.Parse(capacity.Serialize());
 ValidationContext validationContext = result.Validate(ValidationContext.ValidContext.UsingResults(), ValidationLevel.Detailed);
 
 // Assert
-Console.WriteLine($"Results count: {validationContext.Results.Count()}");
+Console.WriteLine($"Results count: {validationContext.Results.Count}");
 Console.WriteLine($"IsValid: {validationContext.IsValid}");
 Console.WriteLine($"{result.LargeDecimal.As<JsonDecimal>().AsDecimal()} == {expectedValue} is {result.LargeDecimal.As<JsonDecimal>().AsDecimal() == expectedValue}");

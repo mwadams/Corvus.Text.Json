@@ -49,10 +49,7 @@ internal static class BufferFactory
                 segment = newSegment;
             }
 
-            if (first == null)
-            {
-                first = segment = new ReadOnlyBufferSegment();
-            }
+            first ??= segment = new ReadOnlyBufferSegment();
 
             return new ReadOnlySequence<byte>(first, 0, segment, segment.Memory.Length);
         }

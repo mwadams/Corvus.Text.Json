@@ -467,7 +467,7 @@ public class BigNumberLargeValuesTests
         BigNumber amount = principal;
         for (int i = 0; i < years; i++)
         {
-            amount = amount * (BigNumber.One + rate);
+            amount *= (BigNumber.One + rate);
         }
 
         // Should be astronomically large

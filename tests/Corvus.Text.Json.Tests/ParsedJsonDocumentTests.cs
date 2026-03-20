@@ -2907,7 +2907,7 @@ public static class ParsedJsonDocumentTests
         ReadOnlySequence<byte> multiSegment = JsonTestHelper.SegmentInto(utf8, 6);
         Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(multiSegment));
 
-        Stream stream = new MemoryStream(utf8);
+        var stream = new MemoryStream(utf8);
         Assert.ThrowsAny<JsonException>(() => ParsedJsonDocument<JsonElement>.Parse(stream));
 
         stream.Seek(0, SeekOrigin.Begin);

@@ -22,9 +22,9 @@ public class GeneratedCompositionMatchTests
             ParsedJsonDocument<CompositionAnyOf>.Parse("""{"kind":"text","message":"hello"}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredKindAndMessage: static (in CompositionAnyOf.RequiredKindAndMessage v) => "text:" + v.Message.ToString(),
-            matchRequiredCodeAndKind: static (in CompositionAnyOf.RequiredCodeAndKind _) => "numeric",
-            defaultMatch: static (in CompositionAnyOf _) => "default");
+            matchRequiredKindAndMessage: static (in v) => "text:" + v.Message.ToString(),
+            matchRequiredCodeAndKind: static (in _) => "numeric",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("text:hello", result);
     }
@@ -36,9 +36,9 @@ public class GeneratedCompositionMatchTests
             ParsedJsonDocument<CompositionAnyOf>.Parse("""{"kind":"numeric","code":42}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredKindAndMessage: static (in CompositionAnyOf.RequiredKindAndMessage _) => "text",
-            matchRequiredCodeAndKind: static (in CompositionAnyOf.RequiredCodeAndKind v) => "numeric:" + ((int)v.Code).ToString(),
-            defaultMatch: static (in CompositionAnyOf _) => "default");
+            matchRequiredKindAndMessage: static (in _) => "text",
+            matchRequiredCodeAndKind: static (in v) => "numeric:" + ((int)v.Code).ToString(),
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("numeric:42", result);
     }
@@ -50,9 +50,9 @@ public class GeneratedCompositionMatchTests
             ParsedJsonDocument<CompositionAnyOf>.Parse("""{"other":"value"}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredKindAndMessage: static (in CompositionAnyOf.RequiredKindAndMessage _) => "text",
-            matchRequiredCodeAndKind: static (in CompositionAnyOf.RequiredCodeAndKind _) => "numeric",
-            defaultMatch: static (in CompositionAnyOf _) => "default");
+            matchRequiredKindAndMessage: static (in _) => "text",
+            matchRequiredCodeAndKind: static (in _) => "numeric",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("default", result);
     }
@@ -65,9 +65,9 @@ public class GeneratedCompositionMatchTests
 
         string result = doc.RootElement.Match(
             "prefix",
-            matchRequiredKindAndMessage: static (in CompositionAnyOf.RequiredKindAndMessage v, in string ctx) => ctx + ":" + v.Message.ToString(),
-            matchRequiredCodeAndKind: static (in CompositionAnyOf.RequiredCodeAndKind _, in string _2) => "numeric",
-            defaultMatch: static (in CompositionAnyOf _, in string _2) => "default");
+            matchRequiredKindAndMessage: static (in v, in ctx) => ctx + ":" + v.Message.ToString(),
+            matchRequiredCodeAndKind: static (in _, in _2) => "numeric",
+            defaultMatch: static (in _, in _2) => "default");
 
         Assert.Equal("prefix:hello", result);
     }
@@ -83,10 +83,10 @@ public class GeneratedCompositionMatchTests
             ParsedJsonDocument<CompositionOneOf>.Parse("\"hello\"");
 
         string result = doc.RootElement.Match(
-            matchJsonString: static (in JsonString v) => "string:" + v.ToString(),
-            matchJsonInt32: static (in JsonInt32 _) => "number",
-            matchJsonBoolean: static (in JsonBoolean _) => "boolean",
-            defaultMatch: static (in CompositionOneOf _) => "default");
+            matchJsonString: static (in v) => "string:" + v.ToString(),
+            matchJsonInt32: static (in _) => "number",
+            matchJsonBoolean: static (in _) => "boolean",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("string:hello", result);
     }
@@ -98,10 +98,10 @@ public class GeneratedCompositionMatchTests
             ParsedJsonDocument<CompositionOneOf>.Parse("42");
 
         string result = doc.RootElement.Match(
-            matchJsonString: static (in JsonString _) => "string",
-            matchJsonInt32: static (in JsonInt32 v) => "number:" + ((int)v).ToString(),
-            matchJsonBoolean: static (in JsonBoolean _) => "boolean",
-            defaultMatch: static (in CompositionOneOf _) => "default");
+            matchJsonString: static (in _) => "string",
+            matchJsonInt32: static (in v) => "number:" + ((int)v).ToString(),
+            matchJsonBoolean: static (in _) => "boolean",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("number:42", result);
     }
@@ -113,10 +113,10 @@ public class GeneratedCompositionMatchTests
             ParsedJsonDocument<CompositionOneOf>.Parse("true");
 
         string result = doc.RootElement.Match(
-            matchJsonString: static (in JsonString _) => "string",
-            matchJsonInt32: static (in JsonInt32 _) => "number",
-            matchJsonBoolean: static (in JsonBoolean v) => "boolean:" + ((bool)v).ToString(),
-            defaultMatch: static (in CompositionOneOf _) => "default");
+            matchJsonString: static (in _) => "string",
+            matchJsonInt32: static (in _) => "number",
+            matchJsonBoolean: static (in v) => "boolean:" + ((bool)v).ToString(),
+            defaultMatch: static (in _) => "default");
 
         Assert.StartsWith("boolean:", result);
     }

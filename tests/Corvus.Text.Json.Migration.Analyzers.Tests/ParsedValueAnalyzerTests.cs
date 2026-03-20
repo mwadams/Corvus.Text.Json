@@ -99,18 +99,18 @@ namespace TestApp
     [Fact]
     public async Task InstanceProperty_TriggersCVJ002()
     {
-        const string testCode = V4Stubs + @"
+        const string testCode = $@"{V4Stubs}
 namespace TestApp
-{
+{{
     class Test
-    {
+    {{
         void M()
-        {
-            var parsed = Corvus.Json.{|#1:ParsedValue<Corvus.Json.JsonAny>|}.Parse(""{ }"");
-            var value = parsed.{|#0:Instance|};
-        }
-    }
-}";
+        {{
+            var parsed = Corvus.Json.{{|#1:ParsedValue<Corvus.Json.JsonAny>|}}.Parse(""{{ }}"");
+            var value = parsed.{{|#0:Instance|}};
+        }}
+    }}
+}}";
 
         await Verify.VerifyAnalyzerAsync(
             testCode,

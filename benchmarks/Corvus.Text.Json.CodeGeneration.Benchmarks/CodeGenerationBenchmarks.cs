@@ -63,7 +63,7 @@ public class CodeGenerationBenchmarks
     public int SimpleObject()
     {
         CSharpLanguageProvider languageProvider = CreateLanguageProvider();
-        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, simpleTypes);
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, simpleTypes, CancellationToken.None);
         return files.Count;
     }
 
@@ -71,7 +71,7 @@ public class CodeGenerationBenchmarks
     public int ComplexObject()
     {
         CSharpLanguageProvider languageProvider = CreateLanguageProvider();
-        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, complexTypes);
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, complexTypes, CancellationToken.None);
         return files.Count;
     }
 
@@ -79,7 +79,7 @@ public class CodeGenerationBenchmarks
     public int CompositionType()
     {
         CSharpLanguageProvider languageProvider = CreateLanguageProvider();
-        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, compositionTypes);
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, compositionTypes, CancellationToken.None);
         return files.Count;
     }
 
@@ -87,7 +87,7 @@ public class CodeGenerationBenchmarks
     public int KrakenD()
     {
         CSharpLanguageProvider languageProvider = CreateLanguageProvider();
-        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, CancellationToken.None, krakendTypes);
+        IReadOnlyCollection<GeneratedCodeFile> files = typeBuilder.GenerateCodeUsing(languageProvider, krakendTypes, CancellationToken.None);
         return files.Count;
     }
 }

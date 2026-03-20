@@ -23,9 +23,9 @@ public class GeneratedMixedCompositionTests
             ParsedJsonDocument<AllOfWithAnyOf>.Parse("""{"id":"a1","role":"admin","level":5}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole v) => "admin:level=" + v.Level.ToString(),
-            matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole _) => "user",
-            defaultMatch: static (in AllOfWithAnyOf _) => "default");
+            matchRequiredRole: static (in v) => "admin:level=" + v.Level.ToString(),
+            matchAllOfWithAnyOfRequiredRole: static (in _) => "user",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("admin:level=5", result);
     }
@@ -37,9 +37,9 @@ public class GeneratedMixedCompositionTests
             ParsedJsonDocument<AllOfWithAnyOf>.Parse("""{"id":"u1","role":"user","email":"u@test.com"}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole _) => "admin",
-            matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole v) => "user:email=" + v.Email.ToString(),
-            defaultMatch: static (in AllOfWithAnyOf _) => "default");
+            matchRequiredRole: static (in _) => "admin",
+            matchAllOfWithAnyOfRequiredRole: static (in v) => "user:email=" + v.Email.ToString(),
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("user:email=u@test.com", result);
     }
@@ -51,9 +51,9 @@ public class GeneratedMixedCompositionTests
             ParsedJsonDocument<AllOfWithAnyOf>.Parse("""{"id":"x1","other":"value"}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole _) => "admin",
-            matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole _) => "user",
-            defaultMatch: static (in AllOfWithAnyOf _) => "default");
+            matchRequiredRole: static (in _) => "admin",
+            matchAllOfWithAnyOfRequiredRole: static (in _) => "user",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("default", result);
     }
@@ -87,9 +87,9 @@ public class GeneratedMixedCompositionTests
 
         AllOfWithAnyOf.Mutable root = builder.RootElement;
         string result = root.Match(
-            matchRequiredRole: static (in AllOfWithAnyOf.RequiredRole v) => "admin:" + v.Level.ToString(),
-            matchAllOfWithAnyOfRequiredRole: static (in AllOfWithAnyOf.AllOfWithAnyOfRequiredRole _) => "user",
-            defaultMatch: static (in AllOfWithAnyOf.Mutable _) => "default");
+            matchRequiredRole: static (in v) => "admin:" + v.Level.ToString(),
+            matchAllOfWithAnyOfRequiredRole: static (in _) => "user",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("admin:5", result);
     }
@@ -114,9 +114,9 @@ public class GeneratedMixedCompositionTests
             ParsedJsonDocument<PropertiesWithOneOf>.Parse("""{"kind":"text","content":"hello"}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredContent: static (in PropertiesWithOneOf.RequiredContent v) => "text:" + v.Content.ToString(),
-            matchRequiredValue: static (in PropertiesWithOneOf.RequiredValue _) => "number",
-            defaultMatch: static (in PropertiesWithOneOf _) => "default");
+            matchRequiredContent: static (in v) => "text:" + v.Content.ToString(),
+            matchRequiredValue: static (in _) => "number",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("text:hello", result);
     }
@@ -128,9 +128,9 @@ public class GeneratedMixedCompositionTests
             ParsedJsonDocument<PropertiesWithOneOf>.Parse("""{"kind":"number","value":99}""");
 
         string result = doc.RootElement.Match(
-            matchRequiredContent: static (in PropertiesWithOneOf.RequiredContent _) => "text",
-            matchRequiredValue: static (in PropertiesWithOneOf.RequiredValue v) => "number:" + v.Value.ToString(),
-            defaultMatch: static (in PropertiesWithOneOf _) => "default");
+            matchRequiredContent: static (in _) => "text",
+            matchRequiredValue: static (in v) => "number:" + v.Value.ToString(),
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("number:99", result);
     }
@@ -160,9 +160,9 @@ public class GeneratedMixedCompositionTests
 
         string result = doc.RootElement.Match(
             matchCorvusTextJsonTestsGeneratedModelsDraft202012AllOfWithIfThenElseRequiredDiscount:
-                static (in AllOfWithIfThenElse.RequiredDiscount v) => "then:discount=" + v.Discount.ToString(),
+                static (in v) => "then:discount=" + v.Discount.ToString(),
             matchCorvusTextJsonTestsGeneratedModelsDraft202012AllOfWithIfThenElseElseEntity:
-                static (in AllOfWithIfThenElse.ElseEntity _) => "else");
+                static (in _) => "else");
 
         Assert.StartsWith("then:discount=", result);
     }
@@ -175,9 +175,9 @@ public class GeneratedMixedCompositionTests
 
         string result = doc.RootElement.Match(
             matchCorvusTextJsonTestsGeneratedModelsDraft202012AllOfWithIfThenElseRequiredDiscount:
-                static (in AllOfWithIfThenElse.RequiredDiscount _) => "then",
+                static (in _) => "then",
             matchCorvusTextJsonTestsGeneratedModelsDraft202012AllOfWithIfThenElseElseEntity:
-                static (in AllOfWithIfThenElse.ElseEntity v) => "else:msg=" + v.Message.ToString());
+                static (in v) => "else:msg=" + v.Message.ToString());
 
         Assert.Equal("else:msg=no discount", result);
     }

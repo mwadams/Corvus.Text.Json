@@ -3799,7 +3799,7 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> mutableBuilder =
             JsonElement.CreateBuilder(
                 workspace,
-                new((ref JsonElement.ArrayBuilder arrayBuilder) => arrayBuilder.AddItem(true)));
+                new((ref arrayBuilder) => arrayBuilder.AddItem(true)));
         Assert.False(mutableBuilder.IsImmutable);
         mutableBuilder.Freeze();
         Assert.True(mutableBuilder.IsImmutable);
@@ -4528,22 +4528,22 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement;
 
         // Existing UTF-8 property name tests
-        root.SetProperty("a"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("a"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
-        root.SetProperty("a".AsSpan(), (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "there"u8); });
+        root.SetProperty("a".AsSpan(), (ref o) => { o.AddProperty("hello"u8, "there"u8); });
         Assert.Equal("{\"hello\":\"there\"}", root.GetProperty("a").ToString());
-        root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("héllo"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
-        root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("foo\"bar"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty("str", (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty(spanName, (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
     }
 
@@ -4556,20 +4556,20 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
         // Existing UTF-8 property name tests
-        root.SetProperty("b"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("b"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
-        root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("héllo"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
-        root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("foo\"bar"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty("str", (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty(spanName, (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
     }
 
@@ -4582,24 +4582,24 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement;
 
         // Existing UTF-8 property name test
-        root.SetProperty("a"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("a"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("a").ToString());
 
         // Non-ASCII property name
-        root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("héllo"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
 
         // Encoded UTF-8 property name: "foo\"bar"
-        root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("foo\"bar"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty("str", (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty(spanName, (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
     }
 
@@ -4612,24 +4612,24 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
         // Existing UTF-8 property name test
-        root.SetProperty("b"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("b"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("b").ToString());
 
         // Non-ASCII property name
-        root.SetProperty("héllo"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("héllo"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("héllo").ToString());
 
         // Encoded UTF-8 property name: "foo\"bar"
-        root.SetProperty("foo\"bar"u8, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetProperty("foo\"bar"u8, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root.GetProperty("foo\"bar").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty("str", (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("x", "y"); });
+        root.SetProperty(spanName, (ref o) => { o.AddProperty("x", "y"); });
         Assert.Equal("{\"x\":\"y\"}", root.GetProperty("span").ToString());
     }
 
@@ -4642,24 +4642,24 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement;
 
         // ASCII property name
-        root.SetProperty("a"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("a"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
 
         // Non-ASCII property name
-        root.SetProperty("héllo"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("héllo"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("héllo").ToString());
 
         // Encoded UTF-8 property name: "foo\"bar"
-        root.SetProperty("foo\"bar"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("foo\"bar"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("str", (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty(spanName, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
     }
 
@@ -4672,24 +4672,24 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
         // ASCII property name
-        root.SetProperty("b"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("b"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
 
         // Non-ASCII property name
-        root.SetProperty("héllo"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("héllo"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("héllo").ToString());
 
         // Encoded UTF-8 property name: "foo\"bar"
-        root.SetProperty("foo\"bar"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("foo\"bar"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("foo\"bar").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("str", (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty(spanName, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
     }
 
@@ -4702,16 +4702,16 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement;
 
         // ASCII property name
-        root.SetProperty("a"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("a"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("a").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("str", (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty(spanName, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
     }
 
@@ -4724,19 +4724,19 @@ public static class JsonDocumentBuilderTests
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
         // ASCII property name
-        root.SetProperty("b"u8, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("b"u8, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("b").ToString());
 
-        root.SetProperty("b".AsSpan(), (ref JsonElement.ArrayBuilder o) => { o.AddItem("there"u8); });
+        root.SetProperty("b".AsSpan(), (ref o) => { o.AddItem("there"u8); });
         Assert.Equal("[\"there\"]", root.GetProperty("b").ToString());
 
         // New: string property name
-        root.SetProperty("str", (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty("str", (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("str").ToString());
 
         // New: ReadOnlySpan<char> property name
         ReadOnlySpan<char> spanName = "span";
-        root.SetProperty(spanName, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetProperty(spanName, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root.GetProperty("span").ToString());
     }
 
@@ -6029,7 +6029,7 @@ public static class JsonDocumentBuilderTests
         // Build an array using every method on JsonJsonElement.ArrayBuilder
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ArrayBuilder arrayBuilder) =>
+            new((ref arrayBuilder) =>
             {
                 // Add primitive types
                 arrayBuilder.AddItem(true);
@@ -6069,14 +6069,14 @@ public static class JsonDocumentBuilderTests
                 arrayBuilder.AddItem(period);
 
                 // Add nested array
-                arrayBuilder.AddItem((ref JsonElement.ArrayBuilder ab) =>
+                arrayBuilder.AddItem((ref ab) =>
                 {
                     ab.AddItem(1);
                     ab.AddItem(2);
                 });
 
                 // Add nested object
-                arrayBuilder.AddItem((ref JsonElement.ObjectBuilder ob) =>
+                arrayBuilder.AddItem((ref ob) =>
                 {
                     ob.AddProperty("foo"u8, "bar"u8);
                 });
@@ -6326,7 +6326,7 @@ public static class JsonDocumentBuilderTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
         workspace,
-        new((ref JsonElement.ObjectBuilder objBuilder) =>
+        new((ref objBuilder) =>
         {
             // Add some properties
             objBuilder.AddProperty("name"u8, "John Doe"u8);
@@ -6351,7 +6351,7 @@ public static class JsonDocumentBuilderTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
         workspace,
-        new((ref JsonElement.ObjectBuilder objBuilder) =>
+        new((ref objBuilder) =>
         {
             // Add some properties
             objBuilder.AddProperty("name"u8, "John Doe"u8);
@@ -6376,7 +6376,7 @@ public static class JsonDocumentBuilderTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
         workspace,
-        new((ref JsonElement.ObjectBuilder objBuilder) =>
+        new((ref objBuilder) =>
         {
             // Add some properties
             objBuilder.AddProperty("name"u8, "John Doe"u8);
@@ -6401,7 +6401,7 @@ public static class JsonDocumentBuilderTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
         workspace,
-        new((ref JsonElement.ObjectBuilder objBuilder) =>
+        new((ref objBuilder) =>
         {
             // Add some properties
             objBuilder.AddProperty("name"u8, "John Doe"u8);
@@ -6458,7 +6458,7 @@ public static class JsonDocumentBuilderTests
         // Build an object using every method on JsonJsonElement.ObjectBuilder
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 // Add primitive types
                 objBuilder.AddProperty("boolTrue"u8, true);
@@ -6503,14 +6503,14 @@ public static class JsonDocumentBuilderTests
                 objBuilder.AddProperty("period"u8, period);
 
                 // Add nested array
-                objBuilder.AddProperty("array"u8, (ref JsonElement.ArrayBuilder ab) =>
+                objBuilder.AddProperty("array"u8, (ref ab) =>
                 {
                     ab.AddItem(1);
                     ab.AddItem(2);
                 });
 
                 // Add nested object
-                objBuilder.AddProperty("object"u8, (ref JsonElement.ObjectBuilder ob) =>
+                objBuilder.AddProperty("object"u8, (ref ob) =>
                 {
                     ob.AddProperty("foo"u8, "bar"u8);
                 });
@@ -6719,7 +6719,7 @@ public static class JsonDocumentBuilderTests
         // Build an object using every method on JsonJsonElement.ObjectBuilder
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 // Add primitive types
                 objBuilder.AddProperty("boolTrue", true);
@@ -6763,14 +6763,14 @@ public static class JsonDocumentBuilderTests
                 objBuilder.AddProperty("period"u8, period);
 
                 // Add nested array
-                objBuilder.AddProperty("array", (ref JsonElement.ArrayBuilder ab) =>
+                objBuilder.AddProperty("array", (ref ab) =>
                 {
                     ab.AddItem(1);
                     ab.AddItem(2);
                 });
 
                 // Add nested object
-                objBuilder.AddProperty("object", (ref JsonElement.ObjectBuilder ob) =>
+                objBuilder.AddProperty("object", (ref ob) =>
                 {
                     ob.AddProperty("foo"u8, "bar"u8);
                 });
@@ -6948,10 +6948,10 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(0, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[0].ToString());
 
-        root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(1, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[1].ToString());
     }
 
@@ -6963,10 +6963,10 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-        root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(0, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[0].ToString());
 
-        root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(1, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[1].ToString());
     }
 
@@ -6978,10 +6978,10 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(0, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[0].ToString());
 
-        root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(1, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[1].ToString());
     }
 
@@ -6993,10 +6993,10 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-        root.SetItem(0, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(0, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[0].ToString());
 
-        root.SetItem(1, (ref JsonElement.ArrayBuilder o) => { o.AddItem("world"u8); });
+        root.SetItem(1, (ref o) => { o.AddItem("world"u8); });
         Assert.Equal("[\"world\"]", root[1].ToString());
     }
 
@@ -7008,9 +7008,9 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(0, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-        root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(1, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
     }
 
@@ -7022,9 +7022,9 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-        root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(0, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-        root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(1, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
     }
 
@@ -7036,9 +7036,9 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement;
 
-        root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(0, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-        root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(1, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
     }
 
@@ -7050,9 +7050,9 @@ public static class JsonDocumentBuilderTests
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
         JsonElement.Mutable root = builderDoc.RootElement.GetProperty("a");
 
-        root.SetItem(0, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(0, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[0].ToString());
-        root.SetItem(1, (ref JsonElement.ObjectBuilder o) => { o.AddProperty("hello"u8, "world"u8); });
+        root.SetItem(1, (ref o) => { o.AddProperty("hello"u8, "world"u8); });
         Assert.Equal("{\"hello\":\"world\"}", root[1].ToString());
     }
 
@@ -7158,7 +7158,7 @@ public static class JsonDocumentBuilderTests
         // Create target object with TryApply
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("name"u8, "John"u8);
                 objBuilder.AddProperty("age"u8, 30);
@@ -7183,7 +7183,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("name"u8, "John"u8);
                 objBuilder.AddProperty("age"u8, 30);
@@ -7220,7 +7220,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("existing"u8, "value"u8);
                 
@@ -7253,7 +7253,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("name"u8, "John"u8);
                 objBuilder.AddProperty("age"u8, 30);
@@ -7279,7 +7279,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("name"u8, "OldName"u8);
                 objBuilder.AddProperty("age"u8, 30);
@@ -7313,7 +7313,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("existing"u8, "value"u8);
                 
@@ -7340,7 +7340,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("initial"u8, "value"u8);
                 
@@ -7370,7 +7370,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 // Initial setup
                 objBuilder.AddProperty("name"u8, "Initial"u8);
@@ -7405,7 +7405,7 @@ public static class JsonDocumentBuilderTests
         // Create complex source object using document builder
         using JsonDocumentBuilder<JsonElement.Mutable> sourceBuilder = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 objBuilder.AddProperty("string"u8, "test"u8);
                 objBuilder.AddProperty("number"u8, 42);
@@ -7421,7 +7421,7 @@ public static class JsonDocumentBuilderTests
         
         using JsonDocumentBuilder<JsonElement.Mutable> doc = JsonElement.CreateBuilder(
             workspace,
-            new((ref JsonElement.ObjectBuilder objBuilder) =>
+            new((ref objBuilder) =>
             {
                 bool result = objBuilder.TryApply(sourceElement);
                 Assert.True(result);

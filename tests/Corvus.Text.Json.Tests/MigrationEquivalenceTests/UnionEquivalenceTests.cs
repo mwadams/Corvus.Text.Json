@@ -298,10 +298,10 @@ public class UnionEquivalenceTests
         using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("\"hello\"");
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
-            static (in V5.JsonString s) => $"string:{(string)s}",
-            static (in V5.JsonInt32 n) => $"number:{(int)n}",
-            static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
-            static (in V5.MigrationUnion v) => "none");
+            static (in s) => $"string:{(string)s}",
+            static (in n) => $"number:{(int)n}",
+            static (in b) => $"bool:{(bool)b}",
+            static (in v) => "none");
         Assert.Equal("string:hello", result);
     }
 
@@ -311,10 +311,10 @@ public class UnionEquivalenceTests
         using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("42");
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
-            static (in V5.JsonString s) => $"string:{(string)s}",
-            static (in V5.JsonInt32 n) => $"number:{(int)n}",
-            static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
-            static (in V5.MigrationUnion v) => "none");
+            static (in s) => $"string:{(string)s}",
+            static (in n) => $"number:{(int)n}",
+            static (in b) => $"bool:{(bool)b}",
+            static (in v) => "none");
         Assert.Equal("number:42", result);
     }
 
@@ -324,10 +324,10 @@ public class UnionEquivalenceTests
         using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse("true");
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
-            static (in V5.JsonString s) => $"string:{(string)s}",
-            static (in V5.JsonInt32 n) => $"number:{(int)n}",
-            static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
-            static (in V5.MigrationUnion v) => "none");
+            static (in s) => $"string:{(string)s}",
+            static (in n) => $"number:{(int)n}",
+            static (in b) => $"bool:{(bool)b}",
+            static (in v) => "none");
         Assert.Equal("bool:True", result);
     }
 
@@ -337,10 +337,10 @@ public class UnionEquivalenceTests
         using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("\"hello\"");
         V4.MigrationUnion v4 = parsedV4.Instance;
         string result = v4.Match(
-            static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
-            static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-            static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
-            static (in V4.MigrationUnion v) => "none");
+            static (in s) => $"string:{(string)s}",
+            static (in n) => $"number:{(int)n}",
+            static (in b) => $"bool:{(bool)b}",
+            static (in v) => "none");
         Assert.Equal("string:hello", result);
     }
 
@@ -350,10 +350,10 @@ public class UnionEquivalenceTests
         using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("42");
         V4.MigrationUnion v4 = parsedV4.Instance;
         string result = v4.Match(
-            static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
-            static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-            static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
-            static (in V4.MigrationUnion v) => "none");
+            static (in s) => $"string:{(string)s}",
+            static (in n) => $"number:{(int)n}",
+            static (in b) => $"bool:{(bool)b}",
+            static (in v) => "none");
         Assert.Equal("number:42", result);
     }
 
@@ -363,10 +363,10 @@ public class UnionEquivalenceTests
         using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse("true");
         V4.MigrationUnion v4 = parsedV4.Instance;
         string result = v4.Match(
-            static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
-            static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-            static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
-            static (in V4.MigrationUnion v) => "none");
+            static (in s) => $"string:{(string)s}",
+            static (in n) => $"number:{(int)n}",
+            static (in b) => $"bool:{(bool)b}",
+            static (in v) => "none");
         Assert.Equal("bool:True", result);
     }
 
@@ -381,18 +381,18 @@ public class UnionEquivalenceTests
             using var parsedV4 = Corvus.Json.ParsedValue<V4.MigrationUnion>.Parse(jsons[i]);
             V4.MigrationUnion v4 = parsedV4.Instance;
             string v4Result = v4.Match(
-                static (in Corvus.Json.JsonString s) => $"string:{(string)s}",
-                static (in V4.MigrationUnion.OneOf1Entity n) => $"number:{(int)n}",
-                static (in Corvus.Json.JsonBoolean b) => $"bool:{(bool)b}",
-                static (in V4.MigrationUnion v) => "none");
+                static (in s) => $"string:{(string)s}",
+                static (in n) => $"number:{(int)n}",
+                static (in b) => $"bool:{(bool)b}",
+                static (in v) => "none");
 
             using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse(jsons[i]);
             V5.MigrationUnion v5 = parsedV5.RootElement;
             string v5Result = v5.Match(
-                static (in V5.JsonString s) => $"string:{(string)s}",
-                static (in V5.JsonInt32 n) => $"number:{(int)n}",
-                static (in V5.JsonBoolean b) => $"bool:{(bool)b}",
-                static (in V5.MigrationUnion v) => "none");
+                static (in s) => $"string:{(string)s}",
+                static (in n) => $"number:{(int)n}",
+                static (in b) => $"bool:{(bool)b}",
+                static (in v) => "none");
 
             Assert.Equal(expected[i], v4Result);
             Assert.Equal(v4Result, v5Result);
@@ -406,10 +406,10 @@ public class UnionEquivalenceTests
         V4.MigrationUnion v4 = parsedV4.Instance;
         string result = v4.Match(
             "prefix",
-            static (in Corvus.Json.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V4.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in Corvus.Json.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-            static (in V4.MigrationUnion v, in string ctx) => $"{ctx}:none");
+            static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+            static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+            static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in v, in ctx) => $"{ctx}:none");
         Assert.Equal("prefix:string:hello", result);
     }
 
@@ -420,10 +420,10 @@ public class UnionEquivalenceTests
         V4.MigrationUnion v4 = parsedV4.Instance;
         string result = v4.Match(
             "prefix",
-            static (in Corvus.Json.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V4.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in Corvus.Json.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-            static (in V4.MigrationUnion v, in string ctx) => $"{ctx}:none");
+            static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+            static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+            static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in v, in ctx) => $"{ctx}:none");
         Assert.Equal("prefix:number:42", result);
     }
 
@@ -434,10 +434,10 @@ public class UnionEquivalenceTests
         V4.MigrationUnion v4 = parsedV4.Instance;
         string result = v4.Match(
             "prefix",
-            static (in Corvus.Json.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V4.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in Corvus.Json.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-            static (in V4.MigrationUnion v, in string ctx) => $"{ctx}:none");
+            static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+            static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+            static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in v, in ctx) => $"{ctx}:none");
         Assert.Equal("prefix:bool:True", result);
     }
 
@@ -448,10 +448,10 @@ public class UnionEquivalenceTests
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
             "prefix",
-            static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-            static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
+            static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+            static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+            static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in v, in ctx) => $"{ctx}:none");
         Assert.Equal("prefix:string:hello", result);
     }
 
@@ -462,10 +462,10 @@ public class UnionEquivalenceTests
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
             "prefix",
-            static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-            static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
+            static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+            static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+            static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in v, in ctx) => $"{ctx}:none");
         Assert.Equal("prefix:number:42", result);
     }
 
@@ -476,10 +476,10 @@ public class UnionEquivalenceTests
         V5.MigrationUnion v5 = parsedV5.RootElement;
         string result = v5.Match(
             "prefix",
-            static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-            static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
-            static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-            static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
+            static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+            static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+            static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+            static (in v, in ctx) => $"{ctx}:none");
         Assert.Equal("prefix:bool:True", result);
     }
 
@@ -496,19 +496,19 @@ public class UnionEquivalenceTests
             V4.MigrationUnion v4 = parsedV4.Instance;
             string v4Result = v4.Match(
                 "prefix",
-                static (in Corvus.Json.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-                static (in V4.MigrationUnion.OneOf1Entity n, in string ctx) => $"{ctx}:number:{(int)n}",
-                static (in Corvus.Json.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-                static (in V4.MigrationUnion v, in string ctx) => $"{ctx}:none");
+                static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+                static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+                static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+                static (in v, in ctx) => $"{ctx}:none");
 
             using var parsedV5 = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationUnion>.Parse(jsons[i]);
             V5.MigrationUnion v5 = parsedV5.RootElement;
             string v5Result = v5.Match(
                 "prefix",
-                static (in V5.JsonString s, in string ctx) => $"{ctx}:string:{(string)s}",
-                static (in V5.JsonInt32 n, in string ctx) => $"{ctx}:number:{(int)n}",
-                static (in V5.JsonBoolean b, in string ctx) => $"{ctx}:bool:{(bool)b}",
-                static (in V5.MigrationUnion v, in string ctx) => $"{ctx}:none");
+                static (in s, in ctx) => $"{ctx}:string:{(string)s}",
+                static (in n, in ctx) => $"{ctx}:number:{(int)n}",
+                static (in b, in ctx) => $"{ctx}:bool:{(bool)b}",
+                static (in v, in ctx) => $"{ctx}:none");
 
             Assert.Equal(expected[i], v4Result);
             Assert.Equal(v4Result, v5Result);

@@ -214,32 +214,32 @@ namespace TestApp
         // Should still replace JsonDocument.Parse but NOT collapse statements.
         var test = new CodeFixTest
         {
-            TestCode = StjStubs + V4Stubs + @"
+            TestCode = $@"{StjStubs}{V4Stubs}
 namespace TestApp
-{
+{{
     class Test
-    {
+    {{
         void M()
-        {
-            using var doc = {|#0:System.Text.Json.JsonDocument.Parse(""{ }"")|};
+        {{
+            using var doc = {{|#0:System.Text.Json.JsonDocument.Parse(""{{ }}"")|}};
             Corvus.Json.MyType element = Corvus.Json.MyType.FromJson(doc.RootElement);
             var raw = doc.RootElement;
-        }
-    }
-}",
-            FixedCode = StjStubs + V4Stubs + @"
+        }}
+    }}
+}}",
+            FixedCode = $@"{StjStubs}{V4Stubs}
 namespace TestApp
-{
+{{
     class Test
-    {
+    {{
         void M()
-        {
-            using var doc = ParsedJsonDocument<Corvus.Json.MyType>.Parse(""{ }"");
+        {{
+            using var doc = ParsedJsonDocument<Corvus.Json.MyType>.Parse(""{{ }}"");
             Corvus.Json.MyType element = doc.RootElement;
             var raw = doc.RootElement;
-        }
-    }
-}",
+        }}
+    }}
+}}",
             CompilerDiagnostics = CompilerDiagnostics.None,
         };
 

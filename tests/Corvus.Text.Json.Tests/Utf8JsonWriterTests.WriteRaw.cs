@@ -16,7 +16,7 @@ public partial class Utf8JsonWriterTests
     private const string TestGuidAsStr = "eb97fadd-3ebf-4781-8722-f4773989160e";
     private static readonly Guid s_guid = Guid.Parse(TestGuidAsStr);
 
-    private static byte[] s_oneAsJson = new byte[] { (byte)'1' };
+    private static byte[] s_oneAsJson = "1"u8.ToArray();
 
     private enum OverloadParamType
     {
@@ -229,7 +229,7 @@ public partial class Utf8JsonWriterTests
             {
                 writer.WriteRawValue(@"{}", skipInputValidation);
                 writer.Flush();
-                Assert.True(ms.ToArray().SequenceEqual(new byte[] { (byte)'{', (byte)'{', (byte)'}' }));
+                Assert.True(ms.ToArray().SequenceEqual("{{}"u8));
             }
             else
             {

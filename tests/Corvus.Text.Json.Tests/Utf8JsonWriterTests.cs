@@ -5074,10 +5074,10 @@ public partial class Utf8JsonWriterTests
         JsonTestHelper.AssertContents("{\"a \\uD800\\uDC00\\uFFFD a\":\"a \\uD800\\uDC00\\uFFFD a\"}", output);
     }
 
-    private static readonly byte[] s_InvalidUtf8Input = new byte[2] { 0xc3, 0x28 };
+    private static readonly byte[] s_InvalidUtf8Input = "�("u8.ToArray();
     private const string InvalidUtf8Expected = "\"\\uFFFD(\"";
 
-    private static readonly byte[] s_ValidUtf8Input = new byte[2] { 0xc3, 0xb1 }; // 0xF1
+    private static readonly byte[] s_ValidUtf8Input = "ñ"u8.ToArray(); // 0xF1
     private const string ValidUtf8Expected = "\"\\u00F1\"";
 
     [Theory]

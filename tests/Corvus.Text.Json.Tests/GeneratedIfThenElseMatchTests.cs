@@ -21,9 +21,9 @@ public class GeneratedIfThenElseMatchTests
 
         string result = doc.RootElement.Match(
             matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseThenEntity:
-                static (in IfThenElse.ThenEntity v) => "then:" + v.Value.ToString(),
+                static (in v) => "then:" + v.Value.ToString(),
             matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseElseEntity:
-                static (in IfThenElse.ElseEntity _) => "else");
+                static (in _) => "else");
 
         Assert.Equal("then:42", result);
     }
@@ -36,9 +36,9 @@ public class GeneratedIfThenElseMatchTests
 
         string result = doc.RootElement.Match(
             matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseThenEntity:
-                static (in IfThenElse.ThenEntity _) => "then",
+                static (in _) => "then",
             matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseElseEntity:
-                static (in IfThenElse.ElseEntity v) => "else:" + v.Value.ToString());
+                static (in v) => "else:" + v.Value.ToString());
 
         Assert.Equal("else:hello", result);
     }
@@ -52,9 +52,9 @@ public class GeneratedIfThenElseMatchTests
         string result = doc.RootElement.Match(
             "ctx",
             matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseThenEntity:
-                static (in IfThenElse.ThenEntity v, in string ctx) => ctx + ":then:" + v.Value.ToString(),
+                static (in v, in ctx) => ctx + ":then:" + v.Value.ToString(),
             matchCorvusTextJsonTestsGeneratedModelsDraft202012IfThenElseElseEntity:
-                static (in IfThenElse.ElseEntity _, in string ctx) => ctx + ":else");
+                static (in _, in ctx) => ctx + ":else");
 
         Assert.Equal("ctx:then:99", result);
     }

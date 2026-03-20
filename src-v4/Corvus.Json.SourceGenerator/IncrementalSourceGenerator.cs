@@ -140,8 +140,8 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
             generatedCode =
                 typeBuilder.GenerateCodeUsing(
                     languageProvider,
-                    context.CancellationToken,
-                    typesToGenerate);
+                    typesToGenerate,
+                    context.CancellationToken);
         }
         catch (Exception ex)
         {

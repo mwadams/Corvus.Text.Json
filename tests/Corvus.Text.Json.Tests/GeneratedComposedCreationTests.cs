@@ -21,7 +21,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         CompositionAllOf.Source source = CompositionAllOf.Build(
-            static (ref CompositionAllOf.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(firstName: "Alice", lastName: "Smith");
             });
@@ -41,7 +41,7 @@ public class GeneratedComposedCreationTests
 
         // Both firstName and lastName are optional in CompositionAllOf
         CompositionAllOf.Source source = CompositionAllOf.Build(
-            static (ref CompositionAllOf.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(firstName: "Alice");
             });
@@ -59,7 +59,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         CompositionAllOf.Source source = CompositionAllOf.Build(
-            static (ref CompositionAllOf.Builder b) =>
+            static (ref b) =>
             {
                 b.Create(firstName: "Alice", lastName: "Smith");
             });
@@ -85,7 +85,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfObjectWithProperties.Source source = AllOfObjectWithProperties.Build(
-            static (ref AllOfObjectWithProperties.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(name: "Bob", age: 30, email: "bob@test.com");
             });
@@ -105,7 +105,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfObjectWithProperties.Source source = AllOfObjectWithProperties.Build(
-            static (ref AllOfObjectWithProperties.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(name: "Bob");
             });
@@ -123,7 +123,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfObjectWithProperties.Source source = AllOfObjectWithProperties.Build(
-            static (ref AllOfObjectWithProperties.Builder b) =>
+            static (ref b) =>
             {
                 b.Create(name: "Bob", age: 30, email: "bob@test.com");
             });
@@ -168,7 +168,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         RefObjectWithProperties.Source source = RefObjectWithProperties.Build(
-            static (ref RefObjectWithProperties.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(name: "Carol", age: 45, email: "carol@test.com");
             });
@@ -188,7 +188,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         RefObjectWithProperties.Source source = RefObjectWithProperties.Build(
-            static (ref RefObjectWithProperties.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(name: "Carol");
             });
@@ -206,7 +206,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         RefObjectWithProperties.Source source = RefObjectWithProperties.Build(
-            static (ref RefObjectWithProperties.Builder b) =>
+            static (ref b) =>
             {
                 b.Create(name: "Carol", age: 45, email: "carol@test.com");
             });
@@ -317,15 +317,15 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         ArrayOfItems.Source source = ArrayOfItems.Build(
-            static (ref ArrayOfItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(ArrayOfItems.RequiredId.Build(
-                    static (ref ArrayOfItems.RequiredId.Builder b) =>
+                    static (ref b) =>
                     {
                         b.Create(id: 1, label: "first");
                     }));
                 builder.AddItem(ArrayOfItems.RequiredId.Build(
-                    static (ref ArrayOfItems.RequiredId.Builder b) =>
+                    static (ref b) =>
                     {
                         b.Create(id: 2, label: "second");
                     }));
@@ -344,10 +344,10 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         ArrayOfItems.Source source = ArrayOfItems.Build(
-            static (ref ArrayOfItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(ArrayOfItems.RequiredId.Build(
-                    static (ref ArrayOfItems.RequiredId.Builder b) =>
+                    static (ref b) =>
                     {
                         b.Create(id: 1, label: "first");
                     }));
@@ -375,7 +375,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfArrayWithItems.Source source = AllOfArrayWithItems.Build(
-            static (ref AllOfArrayWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem("hello");
                 builder.AddItem("world");
@@ -396,7 +396,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfArrayWithItems.Source source = AllOfArrayWithItems.Build(
-            static (ref AllOfArrayWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem("hello");
                 builder.AddItem("world");
@@ -475,7 +475,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         RefArrayWithItems.Source source = RefArrayWithItems.Build(
-            static (ref RefArrayWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem("hello");
                 builder.AddItem("world");
@@ -496,7 +496,7 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         RefArrayWithItems.Source source = RefArrayWithItems.Build(
-            static (ref RefArrayWithItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem("hello");
                 builder.AddItem("world");
@@ -587,7 +587,7 @@ public class GeneratedComposedCreationTests
 
         RefArrayWithItems.Mutable root = builderDoc.RootElement;
         root.RemoveWhere(
-            static (in JsonString item) =>
+            static (in item) =>
                 item.ToString() == "world");
 
         Assert.Equal(2, root.GetArrayLength());
@@ -605,11 +605,11 @@ public class GeneratedComposedCreationTests
         using var workspace = JsonWorkspace.Create();
 
         ObjectWithArrayProperty.Source source = ObjectWithArrayProperty.Build(
-            static (ref ObjectWithArrayProperty.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.Create(
                     tags: ObjectWithArrayProperty.JsonStringArray.Build(
-                        static (ref ObjectWithArrayProperty.JsonStringArray.Builder b) =>
+                        static (ref b) =>
                         {
                             b.AddItem("tag1");
                             b.AddItem("tag2");

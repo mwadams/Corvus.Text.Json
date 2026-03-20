@@ -276,7 +276,7 @@ public static class AssertExtensions
         }
     }
 
-    public static void Canceled(CancellationToken cancellationToken, Action testCode)
+    public static void Canceled(Action testCode, CancellationToken cancellationToken)
     {
         OperationCanceledException oce = Assert.ThrowsAny<OperationCanceledException>(testCode);
         if (cancellationToken.CanBeCanceled)
@@ -285,7 +285,7 @@ public static class AssertExtensions
         }
     }
 
-    public static Task CanceledAsync(CancellationToken cancellationToken, Task task)
+    public static Task CanceledAsync(Task task, CancellationToken cancellationToken)
     {
         Assert.NotNull(task);
         return CanceledAsync(cancellationToken, () => task);

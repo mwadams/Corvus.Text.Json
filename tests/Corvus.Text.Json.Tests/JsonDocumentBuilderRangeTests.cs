@@ -21,7 +21,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(0, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(0, static (ref b) =>
         {
             b.AddItem(10);
             b.AddItem(20);
@@ -43,7 +43,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(1, static (ref b) =>
         {
             b.AddItem(10);
             b.AddItem(20);
@@ -65,7 +65,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(3, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(3, static (ref b) =>
         {
             b.AddItem(10);
             b.AddItem(20);
@@ -87,7 +87,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(0, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(0, static (ref b) =>
         {
             // No items added.
         });
@@ -103,7 +103,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(0, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(0, static (ref b) =>
         {
             b.AddItem("hello"u8);
             b.AddItem(true);
@@ -127,13 +127,13 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(0, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(0, static (ref b) =>
         {
-            b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+            b.AddItem(static (ref ob) =>
             {
                 ob.AddProperty("name"u8, "Alice"u8);
             });
-            b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+            b.AddItem(static (ref ob) =>
             {
                 ob.AddProperty("name"u8, "Bob"u8);
             });
@@ -156,7 +156,7 @@ public static class JsonDocumentBuilderRangeTests
         builderDoc.RootElement.InsertRange(
             1,
             values,
-            static (in int[] ctx, ref JsonElement.ArrayBuilder b) =>
+            static (in ctx, ref b) =>
             {
                 for (int i = 0; i < ctx.Length; i++)
                 {
@@ -185,7 +185,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.AddRange(static (ref b) =>
         {
             b.AddItem(3);
             b.AddItem(4);
@@ -206,7 +206,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.AddRange(static (ref b) =>
         {
             b.AddItem(1);
             b.AddItem(2);
@@ -227,7 +227,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.AddRange(static (ref b) =>
         {
             // No items added.
         });
@@ -246,7 +246,7 @@ public static class JsonDocumentBuilderRangeTests
         int[] values = [2, 3, 4];
         builderDoc.RootElement.AddRange(
             values,
-            static (in int[] ctx, ref JsonElement.ArrayBuilder b) =>
+            static (in ctx, ref b) =>
             {
                 for (int i = 0; i < ctx.Length; i++)
                 {
@@ -269,13 +269,13 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.AddRange(static (ref b) =>
         {
             b.AddItem(1);
             b.AddItem(2);
         });
 
-        builderDoc.RootElement.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.AddRange(static (ref b) =>
         {
             b.AddItem(3);
             b.AddItem(4);
@@ -296,7 +296,7 @@ public static class JsonDocumentBuilderRangeTests
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.InsertRange(1, static (ref b) =>
         {
             b.AddItem("b"u8);
             b.AddItem("c"u8);

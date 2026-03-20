@@ -150,22 +150,24 @@ namespace TestApp
     [Fact]
     public async Task RegularMethodCall_NoDiagnostic()
     {
-        const string testCode = @"
-namespace TestApp
-{
-    class MyType
-    {
-        public static MyType From(string s) => new();
-    }
+        const string testCode = """
 
-    class Test
-    {
-        void M()
-        {
-            var result = MyType.From(""hello"");
-        }
-    }
-}";
+            namespace TestApp
+            {
+                class MyType
+                {
+                    public static MyType From(string s) => new();
+                }
+
+                class Test
+                {
+                    void M()
+                    {
+                        var result = MyType.From("hello");
+                    }
+                }
+            }
+            """;
 
         await Verify.VerifyAnalyzerAsync(testCode);
     }

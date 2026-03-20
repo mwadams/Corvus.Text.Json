@@ -170,7 +170,7 @@ public class BigNumberTryFormatByteTests
         // Arrange
         var bigNumber = new Corvus.Numerics.BigNumber(new BigInteger(123), 5);
         Span<byte> buffer = stackalloc byte[5]; // Exact size for "123E5"
-        buffer.Fill(0); // Initialize to ensure we only write what we expect
+        buffer.Clear(); // Initialize to ensure we only write what we expect
 
         // Act
         bool success = bigNumber.TryFormat(buffer, out int bytesWritten);

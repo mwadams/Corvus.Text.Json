@@ -188,7 +188,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithUnevaluatedPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithUnevaluatedPatternProperties.Mutable root = builder.RootElement;
         root.SetProperty("S_color", JsonElement.ParseValue("\"red\""));
@@ -203,7 +203,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithUnevaluatedPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithUnevaluatedPatternProperties.Mutable root = builder.RootElement;
         root.SetProperty("I_count", JsonElement.ParseValue("42"));
@@ -218,7 +218,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =
             ObjectWithUnevaluatedPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithUnevaluatedPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithUnevaluatedPatternProperties.Mutable root = builder.RootElement;
         root.SetProperty("S_color", JsonElement.ParseValue("\"blue\""));
@@ -356,7 +356,7 @@ public class GeneratedUnevaluatedPatternPropertiesTests
     {
         ObjectWithUnevaluatedPatternProperties.Source source =
             ObjectWithUnevaluatedPatternProperties.Build(
-                static (ref ObjectWithUnevaluatedPatternProperties.Builder b) => b.Create("Carol"));
+                static (ref b) => b.Create("Carol"));
 
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithUnevaluatedPatternProperties.Mutable> builder =

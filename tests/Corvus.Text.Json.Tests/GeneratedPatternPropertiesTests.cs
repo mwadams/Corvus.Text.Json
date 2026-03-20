@@ -186,7 +186,7 @@ public class GeneratedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithPatternProperties.Mutable> builder =
             ObjectWithPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithPatternProperties.Mutable root = builder.RootElement;
         Assert.True(root.EvaluateSchema());
@@ -197,7 +197,7 @@ public class GeneratedPatternPropertiesTests
     {
         ObjectWithPatternProperties.Source source =
             ObjectWithPatternProperties.Build(
-                static (ref ObjectWithPatternProperties.Builder b) => b.Create("Carol"));
+                static (ref b) => b.Create("Carol"));
 
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithPatternProperties.Mutable> builder =
@@ -391,7 +391,7 @@ public class GeneratedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithPatternProperties.Mutable> builder =
             ObjectWithPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithPatternProperties.Mutable root = builder.RootElement;
         root.SetProperty("S_color", JsonElement.ParseValue("\"red\""));
@@ -406,7 +406,7 @@ public class GeneratedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithPatternProperties.Mutable> builder =
             ObjectWithPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithPatternProperties.Mutable root = builder.RootElement;
         root.SetProperty("I_count", JsonElement.ParseValue("42"));
@@ -421,7 +421,7 @@ public class GeneratedPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithPatternProperties.Mutable> builder =
             ObjectWithPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithPatternProperties.Mutable root = builder.RootElement;
         root.SetProperty("S_color", JsonElement.ParseValue("\"blue\""));

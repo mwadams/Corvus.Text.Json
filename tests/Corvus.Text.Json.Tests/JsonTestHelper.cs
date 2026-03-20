@@ -340,7 +340,7 @@ internal static partial class JsonTestHelper
         var sb = new StringBuilder();
         var sw = new StringWriter(sb);
 
-        using (JsonWriter writer = new JsonTextWriter(sw))
+        using (var writer = new JsonTextWriter(sw))
         {
             writer.Formatting = Formatting.Indented;
 
@@ -453,22 +453,22 @@ internal static partial class JsonTestHelper
                     break;
 
                 case JsonTokenType.StartObject:
-                    Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'{' }));
+                    Assert.True(json.ValueSpan.SequenceEqual("{"u8));
                     Assert.True(json.ValueSequence.IsEmpty);
                     break;
 
                 case JsonTokenType.EndObject:
-                    Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'}' }));
+                    Assert.True(json.ValueSpan.SequenceEqual("}"u8));
                     Assert.True(json.ValueSequence.IsEmpty);
                     break;
 
                 case JsonTokenType.StartArray:
-                    Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'[' }));
+                    Assert.True(json.ValueSpan.SequenceEqual("["u8));
                     Assert.True(json.ValueSequence.IsEmpty);
                     break;
 
                 case JsonTokenType.EndArray:
-                    Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)']' }));
+                    Assert.True(json.ValueSpan.SequenceEqual("]"u8));
                     Assert.True(json.ValueSequence.IsEmpty);
                     break;
 
@@ -509,21 +509,21 @@ internal static partial class JsonTestHelper
                     break;
 
                 case JsonTokenType.StartObject:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'{' }));
+                    Assert.True(valueSpan.SequenceEqual("{"u8));
                     root = ReaderDictionaryLoop(ref json);
                     break;
 
                 case JsonTokenType.StartArray:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'[' }));
+                    Assert.True(valueSpan.SequenceEqual("["u8));
                     root = ReaderListLoop(ref json);
                     break;
 
                 case JsonTokenType.EndObject:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'}' }));
+                    Assert.True(valueSpan.SequenceEqual("}"u8));
                     break;
 
                 case JsonTokenType.EndArray:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)']' }));
+                    Assert.True(valueSpan.SequenceEqual("]"u8));
                     break;
 
                 case JsonTokenType.None:
@@ -602,7 +602,7 @@ internal static partial class JsonTestHelper
                     break;
 
                 case JsonTokenType.StartObject:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'{' }));
+                    Assert.True(valueSpan.SequenceEqual("{"u8));
                     value = ReaderDictionaryLoop(ref json);
                     if (dictionary.TryGetValue(key, out _))
                     {
@@ -615,7 +615,7 @@ internal static partial class JsonTestHelper
                     break;
 
                 case JsonTokenType.StartArray:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'[' }));
+                    Assert.True(valueSpan.SequenceEqual("["u8));
                     value = ReaderListLoop(ref json);
                     if (dictionary.TryGetValue(key, out _))
                     {
@@ -628,7 +628,7 @@ internal static partial class JsonTestHelper
                     break;
 
                 case JsonTokenType.EndObject:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'}' }));
+                    Assert.True(valueSpan.SequenceEqual("}"u8));
                     return dictionary;
 
                 case JsonTokenType.None:
@@ -673,19 +673,19 @@ internal static partial class JsonTestHelper
                     break;
 
                 case JsonTokenType.StartObject:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'{' }));
+                    Assert.True(valueSpan.SequenceEqual("{"u8));
                     value = ReaderDictionaryLoop(ref json);
                     arrayList.Add(value);
                     break;
 
                 case JsonTokenType.StartArray:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)'[' }));
+                    Assert.True(valueSpan.SequenceEqual("["u8));
                     value = ReaderListLoop(ref json);
                     arrayList.Add(value);
                     break;
 
                 case JsonTokenType.EndArray:
-                    Assert.True(valueSpan.SequenceEqual(new byte[] { (byte)']' }));
+                    Assert.True(valueSpan.SequenceEqual("]"u8));
                     return arrayList;
 
                 case JsonTokenType.None:

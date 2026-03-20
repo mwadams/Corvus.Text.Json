@@ -133,10 +133,10 @@ public class JsonSchemaTypeBuilder(
     /// Generates code for the types using the given language provider.
     /// </summary>
     /// <param name="languageProvider">The <see cref="ILanguageProvider"/> for which to generate code.</param>
-    /// <param name="cancellationToken">The cancellation token.</param>
     /// <param name="rootTypeDeclarations">The root type declarations for which to generate types.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The <see cref="GeneratedCodeFile"/> collection.</returns>
-    public IReadOnlyCollection<GeneratedCodeFile> GenerateCodeUsing(ILanguageProvider languageProvider, CancellationToken cancellationToken, IEnumerable<TypeDeclaration> rootTypeDeclarations)
+    public IReadOnlyCollection<GeneratedCodeFile> GenerateCodeUsing(ILanguageProvider languageProvider, IEnumerable<TypeDeclaration> rootTypeDeclarations, CancellationToken cancellationToken)
     {
         return this.GenerateCodeUsing(languageProvider, cancellationToken, rootTypeDeclarations.ToArray());
     }

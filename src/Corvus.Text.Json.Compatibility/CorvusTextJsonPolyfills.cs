@@ -98,7 +98,7 @@ public static class CorvusTextJsonPolyfills
         {
             var abw = new ArrayBufferWriter<byte>();
             using var writer = new System.Text.Json.Utf8JsonWriter(abw, ToSTJ(writerOptions));
-            System.Text.Json.JsonSerializer.Serialize(writer, instance, typeof(TObject));
+            System.Text.Json.JsonSerializer.Serialize(writer, instance);
             writer.Flush();
 
             Utf8JsonReader reader = new(abw.WrittenMemory.Span, readerOptions);

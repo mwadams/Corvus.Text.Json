@@ -191,7 +191,7 @@ public class GeneratedArrayMutationTests
         using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ArrayOfItems.Mutable root = builder.RootElement;
-        root.RemoveWhere(static (in ArrayOfItems.RequiredId item) => (int)item.Id > 1);
+        root.RemoveWhere(static (in item) => (int)item.Id > 1);
         Assert.Equal(1, root.GetArrayLength());
         Assert.Equal(1, (int)root[0].Id);
     }
@@ -304,14 +304,14 @@ public class GeneratedArrayMutationTests
 
         ArrayOfItems.Mutable root = builder.RootElement;
 
-        root.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+        root.InsertRange(1, static (ref b) =>
         {
-            b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+            b.AddItem(static (ref ob) =>
             {
                 ob.AddProperty("id"u8, 10);
                 ob.AddProperty("label"u8, "ten"u8);
             });
-            b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+            b.AddItem(static (ref ob) =>
             {
                 ob.AddProperty("id"u8, 20);
                 ob.AddProperty("label"u8, "twenty"u8);
@@ -336,12 +336,12 @@ public class GeneratedArrayMutationTests
         ArrayOfItems.Mutable root = builder.RootElement;
 
         int[] ids = [10, 20];
-        root.InsertRange(0, ids, static (in int[] ctx, ref JsonElement.ArrayBuilder b) =>
+        root.InsertRange(0, ids, static (in ctx, ref b) =>
         {
             for (int i = 0; i < ctx.Length; i++)
             {
                 int id = ctx[i];
-                b.AddItem(id, static (in int id, ref JsonElement.ObjectBuilder ob) =>
+                b.AddItem(id, static (in id, ref ob) =>
                 {
                     ob.AddProperty("id"u8, id);
                     ob.AddProperty("label"u8, "new"u8);
@@ -368,14 +368,14 @@ public class GeneratedArrayMutationTests
 
         ArrayOfItems.Mutable root = builder.RootElement;
 
-        root.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+        root.AddRange(static (ref b) =>
         {
-            b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+            b.AddItem(static (ref ob) =>
             {
                 ob.AddProperty("id"u8, 4);
                 ob.AddProperty("label"u8, "fourth"u8);
             });
-            b.AddItem(static (ref JsonElement.ObjectBuilder ob) =>
+            b.AddItem(static (ref ob) =>
             {
                 ob.AddProperty("id"u8, 5);
                 ob.AddProperty("label"u8, "fifth"u8);

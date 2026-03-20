@@ -29,7 +29,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         RefItemsDoubleVector.Source source = RefItemsDoubleVector.Build(
-            static (ref RefItemsDoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
                 builder.CreateTensor(values);
@@ -51,7 +51,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         RefItemsDoubleVector.Source source = RefItemsDoubleVector.Build(
-            static (ref RefItemsDoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
                 builder.CreateTensor(values);
@@ -78,7 +78,7 @@ public class GeneratedRefNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             RefItemsDoubleVector.Source source = RefItemsDoubleVector.Build(
-                static (ref RefItemsDoubleVector.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<double> values = [1.0, 2.0];
                     builder.CreateTensor(values);
@@ -106,7 +106,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         RefItemsInt32Vector.Source source = RefItemsInt32Vector.Build(
-            static (ref RefItemsInt32Vector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [10, 20, 30, 40];
                 builder.CreateTensor(values);
@@ -129,7 +129,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         RefItemsInt32Vector.Source source = RefItemsInt32Vector.Build(
-            static (ref RefItemsInt32Vector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [10, 20, 30, 40];
                 builder.CreateTensor(values);
@@ -176,7 +176,7 @@ public class GeneratedRefNumericArrayTests
 
         // 2×3 matrix: [[1.0, 2.0, 3.0], [4.0, 5.0, 6.0]]
         RefInnerArrayDoubleMatrix.Source source = RefInnerArrayDoubleMatrix.Build(
-            static (ref RefInnerArrayDoubleMatrix.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
                 builder.CreateTensor(values);
@@ -207,7 +207,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         RefInnerArrayDoubleMatrix.Source source = RefInnerArrayDoubleMatrix.Build(
-            static (ref RefInnerArrayDoubleMatrix.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0];
                 builder.CreateTensor(values);
@@ -243,7 +243,7 @@ public class GeneratedRefNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             RefInnerArrayDoubleMatrix.Source source = RefInnerArrayDoubleMatrix.Build(
-                static (ref RefInnerArrayDoubleMatrix.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<double> values = [1.0, 2.0, 3.0];
                     builder.CreateTensor(values);
@@ -279,7 +279,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
-            static (ref AllOfDoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
                 builder.CreateTensor(values);
@@ -301,7 +301,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
-            static (ref AllOfDoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<double> values = [1.5, 2.5, 3.5];
                 builder.CreateTensor(values);
@@ -326,7 +326,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
-            static (ref AllOfDoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(1.5);
                 builder.AddItem(2.5);
@@ -349,7 +349,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
-            static (ref AllOfDoubleVector.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(1.5);
                 builder.AddItem(2.5);
@@ -377,7 +377,7 @@ public class GeneratedRefNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             AllOfDoubleVector.Source source = AllOfDoubleVector.Build(
-                static (ref AllOfDoubleVector.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<double> values = [1.0, 2.0];
                     builder.CreateTensor(values);
@@ -427,7 +427,7 @@ public class GeneratedRefNumericArrayTests
 
         // 2×3 matrix: [[1, 2, 3], [4, 5, 6]]
         AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
-            static (ref AllOfInt32Matrix.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6];
                 builder.CreateTensor(values);
@@ -458,7 +458,7 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
-            static (ref AllOfInt32Matrix.Builder builder) =>
+            static (ref builder) =>
             {
                 ReadOnlySpan<int> values = [1, 2, 3, 4, 5, 6];
                 builder.CreateTensor(values);
@@ -492,17 +492,17 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
-            static (ref AllOfInt32Matrix.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
-                    static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
+                    static (ref inner) =>
                     {
                         inner.AddItem(1);
                         inner.AddItem(2);
                         inner.AddItem(3);
                     }));
                 builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
-                    static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
+                    static (ref inner) =>
                     {
                         inner.AddItem(4);
                         inner.AddItem(5);
@@ -535,17 +535,17 @@ public class GeneratedRefNumericArrayTests
         using var workspace = JsonWorkspace.Create();
 
         AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
-            static (ref AllOfInt32Matrix.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
-                    static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
+                    static (ref inner) =>
                     {
                         inner.AddItem(1);
                         inner.AddItem(2);
                         inner.AddItem(3);
                     }));
                 builder.AddItem(AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Build(
-                    static (ref AllOfInt32Matrix.BaseMatrix.JsonInt32Array.Builder inner) =>
+                    static (ref inner) =>
                     {
                         inner.AddItem(4);
                         inner.AddItem(5);
@@ -583,7 +583,7 @@ public class GeneratedRefNumericArrayTests
         Assert.Throws<ArgumentException>(() =>
         {
             AllOfInt32Matrix.Source source = AllOfInt32Matrix.Build(
-                static (ref AllOfInt32Matrix.Builder builder) =>
+                static (ref builder) =>
                 {
                     ReadOnlySpan<int> values = [1, 2, 3];
                     builder.CreateTensor(values);

@@ -424,7 +424,7 @@ public static class JsonElementSourceCoverageTests
         var localDateValue = new LocalDate(2023, 7, 15);
         Period periodValue = Period.FromYears(1) + Period.FromMonths(2);
         
-        var source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref JsonElement.ObjectBuilder builder) =>
+        var source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref builder) =>
         {
             builder.AddProperty("byte"u8, (byte)42);
             builder.AddProperty("sbyte"u8, (sbyte)-42);
@@ -569,7 +569,7 @@ public static class JsonElementSourceCoverageTests
         var localDateValue = new LocalDate(2023, 7, 15);
         Period periodValue = Period.FromYears(1) + Period.FromMonths(2);
         
-        var source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref JsonElement.ObjectBuilder builder) =>
+        var source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref builder) =>
         {
             builder.AddProperty("byte", (byte)42);
             builder.AddProperty("sbyte", (sbyte)-42);
@@ -714,7 +714,7 @@ public static class JsonElementSourceCoverageTests
         var localDateValue = new LocalDate(2023, 7, 15);
         Period periodValue = Period.FromYears(1) + Period.FromMonths(2);
         
-        var source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref JsonElement.ObjectBuilder builder) =>
+        var source = new JsonElement.Source(new JsonElement.ObjectBuilder.Build((ref builder) =>
         {
             builder.AddProperty("byte".AsSpan(), (byte)42);
             builder.AddProperty("sbyte".AsSpan(), (sbyte)-42);

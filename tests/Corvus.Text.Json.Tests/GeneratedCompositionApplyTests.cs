@@ -30,9 +30,9 @@ public class GeneratedCompositionApplyTests
         // Verify via Match that the result matches the RequiredKindAndMessage variant
         using var roundTrip = ParsedJsonDocument<CompositionAnyOf>.Parse(json);
         string result = roundTrip.RootElement.Match(
-            matchRequiredKindAndMessage: static (in CompositionAnyOf.RequiredKindAndMessage v) => "text:" + v.Message.ToString(),
-            matchRequiredCodeAndKind: static (in CompositionAnyOf.RequiredCodeAndKind _) => "numeric",
-            defaultMatch: static (in CompositionAnyOf _) => "default");
+            matchRequiredKindAndMessage: static (in v) => "text:" + v.Message.ToString(),
+            matchRequiredCodeAndKind: static (in _) => "numeric",
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("text:hello", result);
     }
@@ -55,9 +55,9 @@ public class GeneratedCompositionApplyTests
         // Verify via Match that the result matches the RequiredCodeAndKind variant
         using var roundTrip = ParsedJsonDocument<CompositionAnyOf>.Parse(json);
         string result = roundTrip.RootElement.Match(
-            matchRequiredKindAndMessage: static (in CompositionAnyOf.RequiredKindAndMessage _) => "text",
-            matchRequiredCodeAndKind: static (in CompositionAnyOf.RequiredCodeAndKind v) => "numeric:" + ((int)v.Code).ToString(),
-            defaultMatch: static (in CompositionAnyOf _) => "default");
+            matchRequiredKindAndMessage: static (in _) => "text",
+            matchRequiredCodeAndKind: static (in v) => "numeric:" + ((int)v.Code).ToString(),
+            defaultMatch: static (in _) => "default");
 
         Assert.Equal("numeric:42", result);
     }

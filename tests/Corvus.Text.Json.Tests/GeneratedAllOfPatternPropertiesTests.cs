@@ -134,7 +134,7 @@ public class GeneratedAllOfPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithAllOfPatternProperties.Mutable> builder =
             ObjectWithAllOfPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithAllOfPatternProperties.Builder b) => b.Create("abc-123"));
+                static (ref b) => b.Create("abc-123"));
 
         ObjectWithAllOfPatternProperties.Mutable root = builder.RootElement;
         Assert.True(root.EvaluateSchema());
@@ -146,7 +146,7 @@ public class GeneratedAllOfPatternPropertiesTests
     {
         ObjectWithAllOfPatternProperties.Source source =
             ObjectWithAllOfPatternProperties.Build(
-                static (ref ObjectWithAllOfPatternProperties.Builder b) => b.Create("xyz-789"));
+                static (ref b) => b.Create("xyz-789"));
 
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithAllOfPatternProperties.Mutable> builder =

@@ -685,7 +685,7 @@ using var workspace = JsonWorkspace.Create();
  using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
         // Act
-        builderDoc.RootElement.InsertItem(1, (ref JsonElement.ObjectBuilder o) =>
+        builderDoc.RootElement.InsertItem(1, (ref o) =>
 {
  o.AddProperty("name", "test");
       o.AddProperty("value", 42);
@@ -710,7 +710,7 @@ public static void InsertItem_Array_Works()
   using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
  // Act
-        builderDoc.RootElement.InsertItem(1, (ref JsonElement.ArrayBuilder a) =>
+        builderDoc.RootElement.InsertItem(1, (ref a) =>
  {
        a.AddItem(10);
   a.AddItem(20);
@@ -981,7 +981,7 @@ Assert.Equal("char span", root[1].GetString());
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.AddItem(static (ref JsonElement.ObjectBuilder b) =>
+        builderDoc.RootElement.AddItem(static (ref b) =>
         {
             b.AddProperty("name", "test");
             b.AddProperty("value", 42);
@@ -1000,7 +1000,7 @@ Assert.Equal("char span", root[1].GetString());
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<JsonElement.Mutable> builderDoc = doc.RootElement.CreateBuilder(workspace);
 
-        builderDoc.RootElement.AddItem(static (ref JsonElement.ArrayBuilder b) =>
+        builderDoc.RootElement.AddItem(static (ref b) =>
         {
             b.AddItem(2);
             b.AddItem(3);

@@ -186,7 +186,7 @@ public class ConfigOptionsTests : IDisposable
         // Verify the root type file uses the overridden namespace
         string rootFile = files.First(f =>
             Path.GetFileName(f).Contains("CustomPerson", StringComparison.OrdinalIgnoreCase)
-            && !Path.GetFileName(f).Contains(".", StringComparison.Ordinal)
+            && !Path.GetFileName(f).Contains('.', StringComparison.Ordinal)
                 || Path.GetFileName(f).Equals("CustomPerson.cs", StringComparison.OrdinalIgnoreCase));
         string content = await File.ReadAllTextAsync(rootFile);
         Assert.Contains("TestGenerated.Custom", content);

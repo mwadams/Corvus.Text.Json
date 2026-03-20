@@ -107,8 +107,8 @@ public static class SourceGeneratorHelpers
             generatedCode =
                 typeBuilder.GenerateCodeUsing(
                     languageProvider,
-                    context.CancellationToken,
-                    typeDeclarationsToGenerate);
+                    typeDeclarationsToGenerate,
+                    context.CancellationToken);
         }
         catch (Exception ex)
         {

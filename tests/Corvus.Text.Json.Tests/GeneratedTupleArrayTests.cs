@@ -259,7 +259,7 @@ public class GeneratedTupleArrayTests
         using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         TupleWithAdditionalItems.Mutable root = builder.RootElement;
-        root.RemoveWhere(static (in JsonBoolean item) => item.ToString() == "False");
+        root.RemoveWhere(static (in item) => item.ToString() == "False");
         // Original: ["hello", 42, true, false, true]
         // After removing false items: ["hello", 42, true, true]
         Assert.Equal(4, root.GetArrayLength());
@@ -275,7 +275,7 @@ public class GeneratedTupleArrayTests
         using var workspace = JsonWorkspace.Create();
 
         PureTuple.Source source = PureTuple.Build(
-            static (ref PureTuple.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 99, false);
             });
@@ -295,7 +295,7 @@ public class GeneratedTupleArrayTests
         using var workspace = JsonWorkspace.Create();
 
         PureTuple.Source tupleSource = PureTuple.Build(
-            static (ref PureTuple.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("world", 99, false);
             });
@@ -324,7 +324,7 @@ public class GeneratedTupleArrayTests
             ObjectWithMixedProperties.CreateBuilder(
                 workspace,
                 context,
-                static (in (string Name, int Age, bool IsActive) ctx, ref ObjectWithMixedProperties.Builder b) =>
+                static (in ctx, ref b) =>
                 {
                     b.Create(ctx.Age, ctx.Name, isActive: ctx.IsActive);
                 });
@@ -345,7 +345,7 @@ public class GeneratedTupleArrayTests
         using var workspace = JsonWorkspace.Create();
 
         TupleWithAdditionalItems.Source source = TupleWithAdditionalItems.Build(
-            static (ref TupleWithAdditionalItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.AddItem(true);
             });
@@ -369,7 +369,7 @@ public class GeneratedTupleArrayTests
         using var workspace = JsonWorkspace.Create();
 
         TupleWithAdditionalItems.Source source = TupleWithAdditionalItems.Build(
-            static (ref TupleWithAdditionalItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("hello", 42);
                 builder.AddItem(true);
@@ -393,7 +393,7 @@ public class GeneratedTupleArrayTests
         using var workspace = JsonWorkspace.Create();
 
         TupleWithAdditionalItems.Source source = TupleWithAdditionalItems.Build(
-            static (ref TupleWithAdditionalItems.Builder builder) =>
+            static (ref builder) =>
             {
                 builder.CreateTuple("world", 99);
             });
@@ -480,7 +480,7 @@ public class GeneratedTupleArrayTests
 
         // Build using Build + CreateTuple
         PureTuple.Source buildSource = PureTuple.Build(
-            static (ref PureTuple.Builder b) =>
+            static (ref b) =>
             {
                 b.CreateTuple("test", 123, false);
             });

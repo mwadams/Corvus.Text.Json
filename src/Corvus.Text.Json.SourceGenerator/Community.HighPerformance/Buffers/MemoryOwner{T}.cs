@@ -317,7 +317,7 @@ public sealed class MemoryOwner<T> : IMemoryOwner<T>
     /// </summary>
     private static void ThrowObjectDisposedException()
     {
-        throw new ObjectDisposedException(nameof(MemoryOwner<T>), "The current buffer has already been disposed");
+        throw new ObjectDisposedException(nameof(MemoryOwner<>), "The current buffer has already been disposed");
     }
 
     /// <summary>

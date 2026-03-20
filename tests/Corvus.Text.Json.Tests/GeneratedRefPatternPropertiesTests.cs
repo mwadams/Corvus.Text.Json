@@ -134,7 +134,7 @@ public class GeneratedRefPatternPropertiesTests
         using JsonDocumentBuilder<ObjectWithRefPatternProperties.Mutable> builder =
             ObjectWithRefPatternProperties.CreateBuilder(
                 workspace,
-                static (ref ObjectWithRefPatternProperties.Builder b) => b.Create("Alice"));
+                static (ref b) => b.Create("Alice"));
 
         ObjectWithRefPatternProperties.Mutable root = builder.RootElement;
         Assert.True(root.EvaluateSchema());
@@ -146,7 +146,7 @@ public class GeneratedRefPatternPropertiesTests
     {
         ObjectWithRefPatternProperties.Source source =
             ObjectWithRefPatternProperties.Build(
-                static (ref ObjectWithRefPatternProperties.Builder b) => b.Create("Carol"));
+                static (ref b) => b.Create("Carol"));
 
         using var workspace = JsonWorkspace.Create();
         using JsonDocumentBuilder<ObjectWithRefPatternProperties.Mutable> builder =
