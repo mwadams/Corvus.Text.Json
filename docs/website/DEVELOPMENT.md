@@ -24,7 +24,7 @@ cd docs/website
 ./build.ps1
 ```
 
-This runs all 9 pipeline steps (see [Build Pipeline](#build-pipeline) below) and produces a complete site in `.output/`.
+This runs all 10 pipeline steps (see [Build Pipeline](#build-pipeline) below) and produces a complete site in `.output/`.
 
 ### Preview with local server
 
@@ -33,6 +33,14 @@ This runs all 9 pipeline steps (see [Build Pipeline](#build-pipeline) below) and
 ```
 
 This runs `build.ps1 -Preview`, which builds everything then starts a local server.
+
+### Serve existing output (no rebuild)
+
+```powershell
+./build.ps1 -ServeOnly
+```
+
+Starts the Vellum preview server on existing `.output/` without rebuilding anything. Useful when you've already done a full build and just want to view the site.
 
 ### Incremental rebuilds (during development)
 
@@ -94,42 +102,43 @@ dotnet build ..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj -c Release -f ne
 
 `build.ps1` runs these steps in order:
 
-### Step 1: Build Corvus.Text.Json
+### Step 1a: Build Corvus.Text.Json (V5)
 
 ```powershell
 dotnet build src/Corvus.Text.Json/Corvus.Text.Json.csproj -c Release -f net10.0
 ```
 
-Compiles the library, generating:
-- `bin/Release/net10.0/Corvus.Text.Json.xml` — XML documentation comments
-- `bin/Release/net10.0/Corvus.Text.Json.dll` — assembly (with embedded PDB + source via SourceLink)
+Compiles the V5 library, generating XML documentation and assembly.
 
-The library has `<EmbedAllSources>true</EmbedAllSources>` and `Microsoft.SourceLink.GitHub`, so the PDB contains full source code for declaration-line resolution.
+### Step 1b: Build V4 libraries
 
-### Step 2: Generate API namespace markdown & taxonomy
+Builds 8 core V4 libraries (Release, net10.0 + netstandard2.0):
 
-Runs `XmlDocToMarkdown` in namespace-generation mode (no `--html-output`):
-- Parses XML doc comments and assembly metadata
-- Generates namespace-level markdown in `content/Api/`
-- Generates taxonomy YAML in `taxonomy/api/`
-- Generates Razor views in `theme/corvus/views/api/`
+- Corvus.Json.ExtendedTypes, JsonReference, Patch, Validator
+- Corvus.Json.CodeGeneration, CodeGeneration.CSharp, CodeGeneration.CSharp.QuickStart
+- Corvus.Json.CodeGeneration.HttpClientDocumentResolver
+
+> **Note:** The 7 JsonSchema dialect libraries (Draft4/6/7/201909/202012/OpenApi30/31) are excluded from docs because they contain thousands of generated types with repetitive patterns (~25K pages), making the build impractically slow.
+
+### Step 2a: Generate V5 API markdown, taxonomy & views
+
+Runs `XmlDocToMarkdown` for the V5 library with `--api-base-url /api/v5`, `--version-label "V5 Engine"`, and related version switcher params. Generates:
+- Namespace-level markdown in `content/Api-v5/`
+- Taxonomy YAML in `taxonomy/api-v5/`
+- Razor views (index + sidebar) in `theme/corvus/views/api/v5/`
+- Per-version search index at `content/Api-v5/search-index.json`
+
+### Step 2b: Generate V4 API markdown, taxonomy & views
+
+Same as 2a but for all 8 V4 libraries (multi-assembly mode with multiple `--xml`/`--assembly` pairs), output to `Api-v4/` and `api-v4/` paths with `--version-label "V4 Engine"`.
 
 ### Step 3: Generate recipe content
 
-Scans `docs/ExampleRecipes/` for numbered recipe directories (e.g. `01-AllOf/`). For each:
-- Extracts the README.md content
-- Generates content markdown with Vellum frontmatter in `content/Examples/`
-- Generates taxonomy YAML in `taxonomy/examples/`
-- Generates Razor views in `theme/corvus/views/examples/`
-- Extracts FAQ sections as JSON-LD structured data
-- Builds keyword lists from JSON Schema terms and API method names
+Scans `docs/ExampleRecipes/` for numbered recipe directories. Generates content, taxonomy, and views for each recipe.
 
 ### Step 4: Generate docs content
 
-Processes selected markdown files from `docs/` (the list is hardcoded in `build.ps1`):
-- Strips headings and TOC sections
-- Generates content, taxonomy, and views for each doc page
-- Applies custom navigation titles and card descriptions
+Processes selected markdown files from `docs/` into content, taxonomy, and views.
 
 ### Step 5: Install Vellum
 
@@ -137,7 +146,7 @@ Downloads and installs Vellum SSG if not already present in `.endjin/`.
 
 ### Step 6: Run Vellum
 
-Renders the site from content + taxonomy + views → `.output/`. Then cleans spurious copies of source directories that Vellum copies into `.output/`.
+Renders the site from content + taxonomy + views into `.output/`.
 
 ### Step 7: Compile SCSS
 
@@ -145,24 +154,13 @@ Renders the site from content + taxonomy + views → `.output/`. Then cleans spu
 npx sass theme/corvus/assets/css/scss/main.scss .output/main.css --style=compressed --no-source-map
 ```
 
-JavaScript files are copied from `theme/corvus/assets/js/` to `.output/` as part of the Vellum asset copy in Step 6.
-
-### Step 8: Generate per-type API HTML pages
-
-Runs `XmlDocToMarkdown` again with `--html-output` to generate standalone per-type HTML pages:
-- One HTML page per type (class, struct, interface, enum, delegate)
-- Includes source links resolved from PDB metadata (SourceLink + TypeDefinitionDocuments + EmbeddedSource)
-- Per-overload source links for methods and indexers with full signature matching
-- Sidebar navigation tree
-- Search integration
-
-### Step 9: Build search index
+### Step 8: Build search index
 
 ```powershell
 node tools/build-search-index.js --output .output/search-index.json
 ```
 
-Builds a Lunr search index from the generated API markdown files.
+Builds a site-wide Lunr search index. Per-version API search indices are generated in Step 2a/2b.
 
 ## Directory Structure
 
@@ -174,14 +172,17 @@ docs/website/
 ├── package.json           # Node dependencies (sass, vellum, js-yaml)
 │
 ├── content/               # Markdown content (input to Vellum)
-│   ├── Api/               # Generated — namespace index pages + search-index.json
+│   ├── Api-v5/            # Generated — V5 namespace index pages + search-index.json
+│   ├── Api-v4/            # Generated — V4 namespace index pages + search-index.json
 │   ├── Docs/              # Generated — from docs/*.md
 │   ├── Examples/          # Generated — from docs/ExampleRecipes/
 │   ├── GettingStarted/    # Hand-authored getting started guide
 │   └── Home/              # Hand-authored homepage content
 │
 ├── taxonomy/              # Vellum taxonomy (navigation, metadata, content blocks)
-│   ├── api/               # Generated — per-namespace and per-type entries
+│   ├── api/               # Hand-authored — version selector landing page
+│   ├── api-v5/            # Generated — V5 per-namespace and per-type entries
+│   ├── api-v4/            # Generated — V4 per-namespace and per-type entries
 │   ├── docs/              # Generated — per-doc entries
 │   └── examples/          # Generated — per-recipe entries
 │
@@ -190,27 +191,17 @@ docs/website/
 │   │   ├── css/scss/      # SCSS source (main.scss entry point)
 │   │   └── js/            # JavaScript (search, sidebar, mobile nav)
 │   └── views/             # Razor views (.cshtml templates)
-│       ├── Shared/        # Layout, partials (_Layout.cshtml, _Sidebar.cshtml)
-│       ├── api/           # Generated — per-namespace views
+│       ├── Shared/        # Layout, partials (_Layout.cshtml, _ApiSidebar*.cshtml)
+│       ├── api/           # Version selector landing page (index.cshtml)
+│       │   ├── v5/        # V5 API views (index.cshtml + api-page.cshtml)
+│       │   └── v4/        # V4 API views (index.cshtml + api-page.cshtml)
 │       ├── docs/          # Generated — per-doc views
 │       └── examples/      # Generated — per-recipe views
 │
 ├── tools/
-│   ├── XmlDocToMarkdown/  # .NET tool: XML docs + assembly → markdown + HTML
-│   │   ├── Program.cs             # CLI entry point & argument parsing
-│   │   ├── XmlDocParser.cs        # Parses XML documentation comments
-│   │   ├── AssemblyInspector.cs   # Reads assembly metadata via reflection
-│   │   ├── MarkdownGenerator.cs   # Generates markdown for namespace pages + member details
-│   │   ├── HtmlPageGenerator.cs   # Generates standalone per-type HTML pages
-│   │   ├── SourceLinkResolver.cs  # PDB-based source link resolution (3 features)
-│   │   ├── XmlDocIdTypeProvider.cs # PE signature → XmlDocKey format conversion
-│   │   ├── SidebarBuilder.cs      # Hierarchical sidebar navigation
-│   │   ├── TaxonomyGenerator.cs   # Vellum taxonomy YAML generation
-│   │   ├── ViewGenerator.cs       # Razor view generation
-│   │   ├── ApiViewGenerator.cs    # API-specific view generation
-│   │   └── SearchIndexGenerator.cs # Search index JSON generation
-│   ├── build-search-index.js       # Node script for Lunr search index
-│   └── PdbDiag.csx                 # Diagnostic script for PDB inspection
+│   ├── XmlDocToMarkdown/  # .NET tool: XML docs + assembly → markdown + views
+│   ├── build-search-index.js  # Node script for Lunr search index
+│   └── PdbDiag.csx       # Diagnostic script for PDB inspection
 │
 ├── .endjin/               # Vellum SSG binary (gitignored)
 ├── .output/               # Build output (gitignored)
@@ -219,40 +210,36 @@ docs/website/
 
 ## XmlDocToMarkdown Tool
 
-The core tool that generates API documentation. It has two operating modes controlled by CLI arguments:
-
-### Mode 1: Namespace generation (no `--html-output`)
-
-Generates namespace-level markdown, taxonomy YAML, and Razor views. Run in Step 2 of the pipeline.
-
-### Mode 2: Full generation (with `--html-output`)
-
-Does everything in Mode 1 plus generates standalone per-type HTML pages. Run in Step 8.
+The core tool that generates API documentation. It supports multi-assembly input (for V4's 8 libraries) and versioned output with version switcher integration.
 
 ### Key CLI arguments
 
 | Argument | Purpose |
 |---|---|
-| `--xml <path>` | Path to XML documentation file |
-| `--assembly <path>` | Path to compiled assembly DLL |
+| `--xml <path>` | Path to XML documentation file (repeatable for multi-assembly) |
+| `--assembly <path>` | Path to compiled assembly DLL (repeatable, paired with `--xml`) |
+| `--ns20-assembly <path>` | Path to netstandard2.0 assembly (repeatable, for API surface comparison) |
 | `--output <dir>` | Output directory for namespace markdown |
 | `--taxonomy-output <dir>` | Output directory for taxonomy YAML |
 | `--api-views-dir <dir>` | Output directory for Razor views |
-| `--html-output <dir>` | Output directory for per-type HTML pages (enables full mode) |
-| `--site-title <text>` | Site title for HTML pages |
-| `--repo-url <url>` | Override repository URL for source links (auto-detected from git) |
+| `--shared-views-dir <dir>` | Output directory for shared partials (sidebar) |
+| `--ns-descriptions <dir>` | Directory containing hand-authored namespace description markdown |
+| `--api-base-url <url>` | Base URL prefix for links (e.g. `/api/v5`) |
+| `--sidebar-partial-name <name>` | Sidebar partial filename (e.g. `_ApiSidebarV5`) |
+| `--layout-path <path>` | Relative path to layout from views dir |
+| `--version-label <text>` | Current version label (e.g. `"V5 Engine"`) |
+| `--alt-version-label <text>` | Alternate version label (e.g. `"V4 Engine"`) |
+| `--alt-version-url <url>` | URL to switch to alternate version |
+| `--repo-url <url>` | Override repository URL for source links |
 
-### Source Link Resolution
+### Version switcher
 
-`SourceLinkResolver` uses three portable PDB features to resolve source code links:
+When `--version-label`, `--alt-version-label`, and `--alt-version-url` are all provided, the generated `index.cshtml` includes:
+- A version bar showing the current version with a link to switch
+- A `data-search-index` attribute on the search input pointing to the per-version search index
+- A localStorage script that saves the user's version preference (`corvus-api-version`)
 
-1. **SourceLink JSON** (GUID `CC110556`) — maps local build paths to GitHub URLs
-2. **TypeDefinitionDocuments** (GUID `932E74BC`) — maps interfaces, enums, and delegates (which have no method bodies) to their source documents
-3. **EmbeddedSource** (GUID `0E8A571B`) — contains the actual source code, enabling scanning for precise declaration line numbers
-
-The resolver produces GitHub `/blob/main/` URLs with line anchors (e.g. `#L42`).
-
-For overloaded members, full parameter signatures are used to disambiguate (via `XmlDocIdTypeProvider` which decodes PE method signatures into XmlDocKey format).
+The `/api/index.html` landing page reads this localStorage value and redirects to the preferred version (defaulting to V5).
 
 ## Making Changes
 

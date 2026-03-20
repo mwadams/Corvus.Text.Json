@@ -15,6 +15,9 @@
       8. Build Lunr search index
 .PARAMETER Preview
     Launches a local preview server after building.
+.PARAMETER ServeOnly
+    Skips the build and just starts the preview server on existing output.
+    Requires a previous build to have been completed.
 .PARAMETER Watch
     Monitors for file changes and auto-regenerates.
 #>
@@ -22,6 +25,9 @@
 param (
     [Parameter()]
     [switch] $Preview,
+
+    [Parameter()]
+    [switch] $ServeOnly,
 
     [Parameter()]
     [switch] $Watch
@@ -84,6 +90,44 @@ function Write-StepDuration($stepName, $sw) {
     } else {
         Write-Host "  $stepName completed in $([math]::Round($elapsed.TotalSeconds, 1))s." -ForegroundColor Green
     }
+}
+
+# -- ServeOnly: skip build, just start preview server -----------------------
+if ($ServeOnly) {
+    if (!(Test-Path $outputDir)) {
+        throw "No output directory found at $outputDir. Run a full build first."
+    }
+
+    Write-Host "Starting static file server on existing output..." -ForegroundColor Cyan
+    Write-Host "  Serving: $outputDir" -ForegroundColor DarkGray
+    Write-Host "  URL:     http://localhost:5000" -ForegroundColor Green
+    Write-Host "  Press Ctrl+C to stop." -ForegroundColor DarkGray
+
+    $serverScript = @"
+const http = require('http');
+const fs = require('fs');
+const path = require('path');
+const mimeTypes = {
+  '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript',
+  '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff',
+  '.jpg': 'image/jpeg', '.gif': 'image/gif', '.xml': 'application/xml',
+};
+const root = process.argv[2];
+http.createServer((req, res) => {
+  let url = req.url.split('?')[0];
+  if (url.endsWith('/')) url += 'index.html';
+  const fp = path.join(root, url);
+  fs.readFile(fp, (err, data) => {
+    if (err) { res.writeHead(404); res.end('Not found'); return; }
+    const ext = path.extname(fp);
+    res.writeHead(200, { 'Content-Type': mimeTypes[ext] || 'application/octet-stream' });
+    res.end(data);
+  });
+}).listen(5000, () => console.log('Serving at http://localhost:5000'));
+"@
+    & node -e $serverScript $outputDir
+    return
 }
 
 # -- Step 1a: Build Corvus.Text.Json (V5) ------------------------------------
