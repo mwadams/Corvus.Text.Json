@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Data Object Validation — Corvus.Text.Json Examples"
+  Title: "Data Object Validation - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."
   Keywords: ["recipe", "JSON Schema", "C#", "data", "object", "validation", "type", "required", "properties", "minLength", "maxLength", "format", "minimum", "maximum", "EvaluateSchema", "IsValid", "CreateBuilder"]
 OpenGraph:
-  Title: "Data Object Validation — Corvus.Text.Json Examples"
+  Title: "Data Object Validation - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to validate JSON data against schema constraints using the generated types from Corvus.Text.Json, including fast boolean-only validation and detailed diagnostic output with the `JsonSchemaResultsCollector`."
   Image:
 ContentBlocks:

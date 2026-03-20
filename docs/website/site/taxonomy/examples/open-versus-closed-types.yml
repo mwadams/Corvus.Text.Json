@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Open Versus Closed Types — Corvus.Text.Json Examples"
+  Title: "Open Versus Closed Types - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `unevaluatedProperties` to control whether a JSON Schema object type is open (extensible) or closed (strict), and how that affects validation and mutation in generated .NET code."
   Keywords: ["recipe", "JSON Schema", "C#", "open", "versus", "closed", "types", "type", "required", "properties", "$ref", "format", "maximum", "$defs", "minLength", "maxLength", "unevaluatedProperties", "EvaluateSchema", "IsValid", "From", "TryGetProperty"]
 OpenGraph:
-  Title: "Open Versus Closed Types — Corvus.Text.Json Examples"
+  Title: "Open Versus Closed Types - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `unevaluatedProperties` to control whether a JSON Schema object type is open (extensible) or closed (strict), and how that affects validation and mutation in generated .NET code."
   Image:
 ContentBlocks:

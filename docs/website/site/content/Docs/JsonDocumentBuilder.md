@@ -439,6 +439,20 @@ JsonElement.Mutable items = root.GetProperty("items");
 // Add more items to the array
 items.AddItem("item3"u8);
 
+// Add multiple items at once
+items.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem("item4"u8);
+    b.AddItem("item5"u8);
+});
+
+// Insert multiple items at a specific index
+items.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem("inserted1"u8);
+    b.AddItem("inserted2"u8);
+});
+
 // Set an item at an index
 items.SetItem(0, "Replace item1"u8);
 

@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Extending a Base Type — Corvus.Text.Json Examples"
+  Title: "Extending a Base Type - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."
   Keywords: ["recipe", "JSON Schema", "C#", "extending", "base", "type", "$ref", "required", "properties", "format", "maximum", "$defs", "minLength", "maxLength", "allOf", "TryGetProperty", "CreateBuilder", "From"]
 OpenGraph:
-  Title: "Extending a Base Type — Corvus.Text.Json Examples"
+  Title: "Extending a Base Type - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use `$ref` to extend an open base type with additional properties, creating a derived schema that includes all base properties plus its own — similar to inheritance in object-oriented languages."
   Image:
 ContentBlocks:

@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "CLI Code Generation — Corvus.Text.Json"
+  Title: "CLI Code Generation - Corvus.Text.Json"
   Description: "Generate strongly-typed C# models from JSON Schema files using the generatejsonschematypes CLI tool. Same output as the source generator, for CI pipelines and pre-generation workflows."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "CLI Code Generation — Corvus.Text.Json"
+  Title: "CLI Code Generation - Corvus.Text.Json"
   Description: "Generate strongly-typed C# models from JSON Schema files using the generatejsonschematypes CLI tool. Same output as the source generator, for CI pipelines and pre-generation workflows."
   Image:
 ContentBlocks:

@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Maps of Strings to Strongly Typed Values — Corvus.Text.Json Examples"
+  Title: "Maps of Strings to Strongly Typed Values - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."
   Keywords: ["recipe", "JSON Schema", "C#", "maps", "strings", "strongly", "typed", "values", "type", "additionalProperties", "$ref", "TryGetProperty", "SetProperty", "RemoveProperty"]
 OpenGraph:
-  Title: "Maps of Strings to Strongly Typed Values — Corvus.Text.Json Examples"
+  Title: "Maps of Strings to Strongly Typed Values - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `additionalProperties` to create strongly-typed map/dictionary structures with string keys and typed values."
   Image:
 ContentBlocks:

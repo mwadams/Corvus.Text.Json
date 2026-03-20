@@ -142,6 +142,34 @@ root.InsertItem(0, personAtIndex1);
 // Add an item at the end
 root.AddItem(personAtIndex0);
 
+// Add multiple items at once
+root.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem(PersonClosed.Build(
+        static (ref PersonClosed.Builder pb) => pb.Create(
+            birthDate: new LocalDate(1930, 6, 12),
+            familyName: "Doe"u8,
+            givenName: "Jane"u8,
+            otherNames: "Q."u8)));
+    b.AddItem(PersonClosed.Build(
+        static (ref PersonClosed.Builder pb) => pb.Create(
+            birthDate: new LocalDate(1945, 3, 8),
+            familyName: "Smith"u8,
+            givenName: "Bob"u8,
+            otherNames: "R."u8)));
+});
+
+// Insert multiple items at a specific index
+root.InsertRange(2, static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem(PersonClosed.Build(
+        static (ref PersonClosed.Builder pb) => pb.Create(
+            birthDate: new LocalDate(1950, 9, 21),
+            familyName: "Chen"u8,
+            givenName: "Wei"u8,
+            otherNames: "X."u8)));
+});
+
 updatedArray = mutableDoc.RootElement;
 if (updatedArray.EvaluateSchema())
 {

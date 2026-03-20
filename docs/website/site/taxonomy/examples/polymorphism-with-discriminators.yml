@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Polymorphism with Discriminator Properties — Corvus.Text.Json Examples"
+  Title: "Polymorphism with Discriminator Properties - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties to create polymorphic types with discriminators - a pattern similar to OpenAPI's polymorphism feature and `System.Text.Json`'s polymorphic serialization."
   Keywords: ["recipe", "JSON Schema", "C#", "polymorphism", "discriminator", "properties", "oneOf", "type", "required", "const", "Match", "From"]
 OpenGraph:
-  Title: "Polymorphism with Discriminator Properties — Corvus.Text.Json Examples"
+  Title: "Polymorphism with Discriminator Properties - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `oneOf` with `const` properties to create polymorphic types with discriminators - a pattern similar to OpenAPI's polymorphism feature and `System.Text.Json`'s polymorphic serialization."
   Image:
 ContentBlocks:

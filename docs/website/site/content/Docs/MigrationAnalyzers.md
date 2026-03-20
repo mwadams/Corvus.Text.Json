@@ -246,9 +246,9 @@ Detects all V4 functional array methods and rewrites them to V5 mutable builder 
 | V4 Method | V5 Equivalent | Renamed? |
 |---|---|---|
 | `Add(item)` | `AddItem(source)` | ✅ Yes |
-| `AddRange(items)` | `AddRange(items)` | ❌ No (manual: loop of `AddItem`) |
+| `AddRange(items)` | `AddRange(builder)` | ✅ Yes (uses builder delegate) |
 | `Insert(idx, item)` | `InsertItem(idx, source)` | ✅ Yes |
-| `InsertRange(idx, items)` | `InsertRange(idx, items)` | ❌ No (manual: loop of `InsertItem`) |
+| `InsertRange(idx, items)` | `InsertRange(idx, builder)` | ✅ Yes (uses builder delegate) |
 | `SetItem(idx, val)` | `SetItem(idx, source)` | ❌ Same name |
 | `RemoveAt(idx)` | `RemoveAt(idx)` | ❌ Same name |
 | `Remove(val)` | `Remove(item)` | ❌ Same name |
@@ -543,9 +543,9 @@ This table lists every V4 functional mutation method and its V5 mutable builder 
 | V4 Method | V5 Equivalent | Diagnostic | Notes |
 |---|---|---|---|
 | `Add(item)` | `AddItem(source)` | CVJ012 | Renamed |
-| `AddRange(items)` | Loop of `AddItem()` | CVJ012 | No direct V5 equivalent on Mutable |
+| `AddRange(items)` | `AddRange(builder)` | CVJ012 | Uses builder delegate pattern |
 | `Insert(idx, item)` | `InsertItem(idx, source)` | CVJ012 | Renamed |
-| `InsertRange(idx, items)` | Loop of `InsertItem()` | CVJ012 | No direct V5 equivalent on Mutable |
+| `InsertRange(idx, items)` | `InsertRange(idx, builder)` | CVJ012 | Uses builder delegate pattern |
 | `SetItem(idx, val)` | `SetItem(idx, source)` | CVJ012 | Same name |
 | `RemoveAt(idx)` | `RemoveAt(idx)` | CVJ012 | Same name |
 | `Remove(val)` | `Remove(item)` | CVJ012 | Same name |
@@ -557,6 +557,8 @@ This table lists every V4 functional mutation method and its V5 mutable builder 
 | V5 Method | Description |
 |---|---|
 | `RemoveWhere(predicate)` | Remove all array elements matching a predicate |
+| `AddRange(builder)` | Add multiple items using a builder delegate |
+| `InsertRange(idx, builder)` | Insert multiple items at an index using a builder delegate |
 | `AddRange(ReadOnlySpan<T>)` | Add numeric spans (on `ArrayBuilder`, not `Mutable`) |
 
 ## Suppressing Diagnostics

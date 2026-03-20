@@ -18,7 +18,10 @@ internal static class ApiViewGenerator
         string baseUrl,
         string sidebarPartialName = "_ApiSidebar",
         string layoutPath = "../Shared/_Layout.cshtml",
-        string? nsDescriptionsDir = null)
+        string? nsDescriptionsDir = null,
+        string? versionLabel = null,
+        string? altVersionLabel = null,
+        string? altVersionUrl = null)
     {
         StringBuilder sb = new();
 
@@ -33,13 +36,31 @@ internal static class ApiViewGenerator
 
         sb.AppendLine("    <main id=\"main-content\" class=\"layout-docs__main\">");
         sb.AppendLine("        <div class=\"doc__content\">");
-        sb.AppendLine("            <h1>API Reference</h1>");
+
+        // Version switcher bar (only if version info is provided)
+        if (versionLabel is not null && altVersionLabel is not null && altVersionUrl is not null)
+        {
+            sb.AppendLine("            <div class=\"api-version-bar\">");
+            sb.AppendLine("                <h1>API Reference</h1>");
+            sb.AppendLine("                <div class=\"api-version-switcher\">");
+            sb.AppendLine($"                    <span class=\"api-version-switcher__current\">{versionLabel}</span>");
+            sb.AppendLine($"                    <a href=\"{altVersionUrl}\" class=\"api-version-switcher__alt\" data-api-version-switch>Switch to {altVersionLabel}</a>");
+            sb.AppendLine("                </div>");
+            sb.AppendLine("            </div>");
+        }
+        else
+        {
+            sb.AppendLine("            <h1>API Reference</h1>");
+        }
+
         sb.AppendLine("            <p>Browse the public API by namespace. Each namespace section in the sidebar lists its types.</p>");
 
-        // Search / filter UI
+        // Search / filter UI — include data attribute for versioned search index
+        string searchIndexUrl = $"{baseUrl}/search-index.json";
         sb.AppendLine("            <div class=\"api-browser\">");
-        sb.AppendLine("                <input id=\"api-browser-input\" class=\"api-browser__input\" type=\"search\"");
-        sb.AppendLine("                       placeholder=\"Search types and members\u2026\" autocomplete=\"off\" />");
+        sb.AppendLine($"                <input id=\"api-browser-input\" class=\"api-browser__input\" type=\"search\"");
+        sb.AppendLine($"                       placeholder=\"Search types and members\u2026\" autocomplete=\"off\"");
+        sb.AppendLine($"                       data-search-index=\"{searchIndexUrl}\" />");
         sb.AppendLine("                <div id=\"api-browser-status\" class=\"api-browser__status\"></div>");
         sb.AppendLine("            </div>");
         sb.AppendLine("            <div id=\"api-browser-results\" class=\"api-browser__results\" hidden></div>");
@@ -66,6 +87,18 @@ internal static class ApiViewGenerator
         sb.AppendLine("</div>");
         sb.AppendLine("@section scripts {");
         sb.AppendLine("    <script src=\"/assets/js/api-browser.js\" defer></script>");
+
+        // Save version preference to localStorage and handle version switch clicks
+        string versionKey = baseUrl.TrimEnd('/').Split('/')[^1];
+        sb.AppendLine("    <script>");
+        sb.AppendLine($"        try {{ localStorage.setItem('corvus-api-version', '{versionKey}'); }} catch(e) {{}}");
+        sb.AppendLine("        document.addEventListener('click', function(e) {");
+        sb.AppendLine("            var link = e.target.closest('[data-api-version-switch]');");
+        sb.AppendLine("            if (!link) return;");
+        sb.AppendLine("            var m = link.href.match(/\\/api\\/(v\\d+)\\//);");
+        sb.AppendLine("            if (m) try { localStorage.setItem('corvus-api-version', m[1]); } catch(e) {}");
+        sb.AppendLine("        });");
+        sb.AppendLine("    </script>");
         sb.AppendLine("}");
 
         string outputPath = Path.Combine(viewsDir, "index.cshtml");

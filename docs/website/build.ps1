@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Builds the Corvus.Text.Json documentation website.
 .DESCRIPTION
@@ -69,14 +69,14 @@ $v4Projects = @(
     "Corvus.Json.CodeGeneration.HttpClientDocumentResolver"
 )
 
-# ── Helper: PascalCase to kebab-case ────────────────────────────────────────
+# -- Helper: PascalCase to kebab-case ----------------------------------------
 function ConvertTo-KebabCase([string]$text) {
     $result = $text -creplace '([a-z0-9])([A-Z])', '$1-$2'
     $result = $result -creplace '([A-Z]+)([A-Z][a-z])', '$1-$2'
     return $result.ToLower()
 }
 
-# ── Helper: timed step reporting ────────────────────────────────────────────
+# -- Helper: timed step reporting --------------------------------------------
 function Write-StepDuration($stepName, $sw) {
     $elapsed = $sw.Elapsed
     if ($elapsed.TotalMinutes -ge 1) {
@@ -86,7 +86,7 @@ function Write-StepDuration($stepName, $sw) {
     }
 }
 
-# ── Step 1a: Build Corvus.Text.Json (V5) ────────────────────────────────────
+# -- Step 1a: Build Corvus.Text.Json (V5) ------------------------------------
 Write-Host "`n[1a/10] Building Corvus.Text.Json (V5)..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
@@ -96,7 +96,7 @@ if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
 if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2.0)" }
 Write-StepDuration "V5 build" $sw
 
-# ── Step 1b: Build V4 libraries ─────────────────────────────────────────────
+# -- Step 1b: Build V4 libraries ---------------------------------------------
 Write-Host "`n[1b/10] Building V4 libraries..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $projIndex = 0
@@ -104,7 +104,7 @@ foreach ($proj in $v4Projects) {
     $projIndex++
     $projPath = Join-Path $v4SrcDir "$proj\$proj.csproj"
     if (!(Test-Path $projPath)) {
-        Write-Warning "  V4 project not found: $projPath — skipping"
+        Write-Warning "  V4 project not found: $projPath - skipping"
         continue
     }
     Write-Host "  [$projIndex/$($v4Projects.Count)] Building $proj..." -ForegroundColor Gray
@@ -113,9 +113,9 @@ foreach ($proj in $v4Projects) {
     & dotnet build $projPath -c Release -f netstandard2.0 --no-incremental -v q
     if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (netstandard2.0)" }
 }
-Write-StepDuration "V4 builds ($($v4Projects.Count) libraries)" $sw
+Write-StepDuration "V4 builds - $($v4Projects.Count) libraries" $sw
 
-# ── Step 2a: Generate V5 API markdown, taxonomy & views ─────────────────────
+# -- Step 2a: Generate V5 API markdown, taxonomy & views ---------------------
 Write-Host "`n[2a/10] Generating V5 API markdown, taxonomy & views..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 & dotnet run --project $toolProject -c Release -- `
@@ -129,11 +129,14 @@ $sw = [System.Diagnostics.Stopwatch]::StartNew()
     --ns-descriptions $v5NsDescriptionsDir `
     --api-base-url /api/v5 `
     --sidebar-partial-name _ApiSidebarV5 `
-    --layout-path "../../Shared/_Layout.cshtml"
+    --layout-path "../../Shared/_Layout.cshtml" `
+    --version-label "V5 Engine" `
+    --alt-version-label "V4 Engine" `
+    --alt-version-url "/api/v4/index.html"
 if ($LASTEXITCODE -ne 0) { throw "V5 API generation failed" }
 Write-StepDuration "V5 API generation" $sw
 
-# ── Step 2b: Generate V4 API markdown, taxonomy & views ─────────────────────
+# -- Step 2b: Generate V4 API markdown, taxonomy & views ---------------------
 Write-Host "`n[2b/10] Generating V4 API markdown, taxonomy & views..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -150,7 +153,7 @@ foreach ($proj in $v4Projects) {
             $v4ToolArgs += "--ns20-assembly", $ns20Dll
         }
     } else {
-        Write-Warning "  Missing XML or DLL for $proj — skipping"
+        Write-Warning "  Missing XML or DLL for $proj - skipping"
     }
 }
 
@@ -161,11 +164,14 @@ foreach ($proj in $v4Projects) {
     --shared-views-dir $sharedViewsDir `
     --api-base-url /api/v4 `
     --sidebar-partial-name _ApiSidebarV4 `
-    --layout-path "../../Shared/_Layout.cshtml"
+    --layout-path "../../Shared/_Layout.cshtml" `
+    --version-label "V4 Engine" `
+    --alt-version-label "V5 Engine" `
+    --alt-version-url "/api/v5/index.html"
 if ($LASTEXITCODE -ne 0) { throw "V4 API generation failed" }
 Write-StepDuration "V4 API generation" $sw
 
-# ── Step 3: Generate recipe content from ExampleRecipes ─────────────────────
+# -- Step 3: Generate recipe content from ExampleRecipes ---------------------
 Write-Host "`n[3/10] Generating recipe content from ExampleRecipes..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -194,7 +200,7 @@ foreach ($dir in $recipeDirs) {
     $raw = Get-Content $readmePath -Raw -Encoding utf8
 
     # Extract title from "# JSON Schema Patterns in .NET - <title>"
-    if ($raw -match '^# JSON Schema Patterns in \.NET\s*[-–—]\s*(.+?)[\r\n]') {
+    if ($raw -match '^# JSON Schema Patterns in \.NET\s*[---]\s*(.+?)[\r\n]') {
         $title = $Matches[1].Trim()
     } else {
         $title = ($pascalName -creplace '([a-z])([A-Z])', '$1 $2')
@@ -293,11 +299,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "$title — Corvus.Text.Json Examples"
+  Title: "$title - Corvus.Text.Json Examples"
   Description: "$description"
   Keywords: [$keywordsYaml]
 OpenGraph:
-  Title: "$title — Corvus.Text.Json Examples"
+  Title: "$title - Corvus.Text.Json Examples"
   Description: "$description"
   Image:
 ContentBlocks:
@@ -314,7 +320,7 @@ ContentBlocks:
 }
 Write-StepDuration "Recipe generation ($recipeCount recipes)" $sw
 
-# ── Step 4: Generate docs content from source documentation ─────────────────
+# -- Step 4: Generate docs content from source documentation -----------------
 Write-Host "`n[4/10] Generating docs content from source documentation..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -345,13 +351,13 @@ foreach ($descriptorFile in $descriptorFiles) {
 
     $docFile = $descriptor['source']
     if (!$docFile) {
-        Write-Warning "  Descriptor $($descriptorFile.Name) missing 'source' — skipping"
+        Write-Warning "  Descriptor $($descriptorFile.Name) missing 'source' - skipping"
         continue
     }
 
     $sourcePath = Join-Path $docsSourceDir $docFile
     if (!(Test-Path $sourcePath)) {
-        Write-Warning "  Source doc not found: $docFile — skipping"
+        Write-Warning "  Source doc not found: $docFile - skipping"
         continue
     }
 
@@ -412,11 +418,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "$($docTitle -replace '"', '\"') — Corvus.Text.Json"
+  Title: "$($docTitle -replace '"', '\"') - Corvus.Text.Json"
   Description: "$docDescription"
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "$($docTitle -replace '"', '\"') — Corvus.Text.Json"
+  Title: "$($docTitle -replace '"', '\"') - Corvus.Text.Json"
   Description: "$docDescription"
   Image:
 ContentBlocks:
@@ -433,7 +439,7 @@ ContentBlocks:
 }
 Write-StepDuration "Docs generation ($docCount pages)" $sw
 
-# ── Step 5: Install Vellum ──────────────────────────────────────────────────
+# -- Step 5: Install Vellum --------------------------------------------------
 $vellumVersion = "2.0.9"
 $vellumDir = Join-Path $here ".endjin"
 $vellumCmd = Join-Path $vellumDir "vellum"
@@ -451,7 +457,7 @@ if (!(Test-Path $vellumCmd) -and !(Test-Path "$vellumCmd.exe")) {
     Write-Host "`n[5/10] Vellum already installed." -ForegroundColor DarkGray
 }
 
-# ── Step 6: Run Vellum ──────────────────────────────────────────────────────
+# -- Step 6: Run Vellum ------------------------------------------------------
 Write-Host "`n[6/10] Running Vellum..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 
@@ -476,7 +482,7 @@ try {
     Pop-Location
 }
 
-# Vellum copies the site/ source files into output — remove the lightweight copies
+# Vellum copies the site/ source files into output - remove the lightweight copies
 foreach ($dir in @("taxonomy", "content", "theme")) {
     $spurious = Join-Path $outputDir $dir
     if (Test-Path $spurious) { Remove-Item $spurious -Recurse -Force }
@@ -487,7 +493,7 @@ foreach ($file in @("site.yml")) {
 }
 Write-StepDuration "Vellum site generation" $sw
 
-# ── Step 7: Compile SCSS ────────────────────────────────────────────────────
+# -- Step 7: Compile SCSS ----------------------------------------------------
 Write-Host "`n[7/10] Compiling SCSS..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $scssPath = Join-Path $assetsSource "css\scss\main.scss"
@@ -496,13 +502,13 @@ $cssOutputPath = Join-Path $outputDir "main.css"
 if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
 Write-StepDuration "SCSS compilation" $sw
 
-# ── Step 8: Build search index ──────────────────────────────────────────────
+# -- Step 8: Build search index ----------------------------------------------
 Write-Host "`n[8/10] Building search index..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
 $searchIndexOutput = Join-Path $outputDir "search-index.json"
 & node (Join-Path $here "tools\build-search-index.js") --output $searchIndexOutput
 if ($LASTEXITCODE -ne 0) {
-    Write-Warning "Search index generation failed — site will build without search."
+    Write-Warning "Search index generation failed - site will build without search."
 } else {
     Write-StepDuration "Search index" $sw
 }

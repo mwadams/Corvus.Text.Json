@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Dynamic Schema Validation — Corvus.Text.Json"
+  Title: "Dynamic Schema Validation - Corvus.Text.Json"
   Description: "Dynamically load, compile, and validate JSON documents against JSON Schema at runtime using Roslyn. Ideal for schema registries, configuration validation, and user-supplied schemas."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "Dynamic Schema Validation — Corvus.Text.Json"
+  Title: "Dynamic Schema Validation - Corvus.Text.Json"
   Description: "Dynamically load, compile, and validate JSON documents against JSON Schema at runtime using Roslyn. Ideal for schema registries, configuration validation, and user-supplied schemas."
   Image:
 ContentBlocks:

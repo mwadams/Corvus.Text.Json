@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Source Generator Code Generation — Corvus.Text.Json"
+  Title: "Source Generator Code Generation - Corvus.Text.Json"
   Description: "Generate strongly-typed C# from JSON Schema at build time with the Roslyn incremental source generator. Annotate a partial struct, register your schema, and get full IntelliSense immediately."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "Source Generator Code Generation — Corvus.Text.Json"
+  Title: "Source Generator Code Generation - Corvus.Text.Json"
   Description: "Generate strongly-typed C# from JSON Schema at build time with the Roslyn incremental source generator. Annotate a partial struct, register your schema, and get full IntelliSense immediately."
   Image:
 ContentBlocks:

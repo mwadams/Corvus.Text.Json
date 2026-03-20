@@ -14,6 +14,9 @@ string? nsDescriptionsDir = null;
 string? apiBaseUrl = null;
 string? sidebarPartialName = null;
 string? layoutPath = null;
+string? versionLabel = null;
+string? altVersionLabel = null;
+string? altVersionUrl = null;
 
 for (int i = 0; i < args.Length - 1; i++)
 {
@@ -69,6 +72,15 @@ for (int i = 0; i < args.Length - 1; i++)
             break;
         case "--layout-path":
             layoutPath = args[++i];
+            break;
+        case "--version-label":
+            versionLabel = args[++i];
+            break;
+        case "--alt-version-label":
+            altVersionLabel = args[++i];
+            break;
+        case "--alt-version-url":
+            altVersionUrl = args[++i];
             break;
     }
 }
@@ -355,7 +367,7 @@ if (apiViewsDir is not null)
 {
     Console.WriteLine($"Generating API views to: {apiViewsDir}");
     Directory.CreateDirectory(apiViewsDir);
-    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces, resolvedBaseUrl, resolvedSidebarName, resolvedLayoutPath, nsDescriptionsDir);
+    ApiViewGenerator.GenerateIndexView(apiViewsDir, namespaces, resolvedBaseUrl, resolvedSidebarName, resolvedLayoutPath, nsDescriptionsDir, versionLabel, altVersionLabel, altVersionUrl);
 }
 
 if (sharedViewsDir is not null)

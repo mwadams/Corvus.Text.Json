@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "String Enumerations and Pattern Matching — Corvus.Text.Json Examples"
+  Title: "String Enumerations and Pattern Matching - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
   Keywords: ["recipe", "JSON Schema", "C#", "string", "enumerations", "pattern", "matching", "enum", "Match", "EvaluateSchema"]
 OpenGraph:
-  Title: "String Enumerations and Pattern Matching — Corvus.Text.Json Examples"
+  Title: "String Enumerations and Pattern Matching - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema `enum` keyword with string values to create type-safe enumerations with pattern matching support."
   Image:
 ContentBlocks:

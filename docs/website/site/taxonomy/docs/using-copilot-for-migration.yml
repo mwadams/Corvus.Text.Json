@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Copilot Migration — Corvus.Text.Json"
+  Title: "Copilot Migration - Corvus.Text.Json"
   Description: "This guide shows you how to use GitHub Copilot (in VS Code, Visual Studio, or the CLI) to assist with migrating code from Corvus.Json (V4) to Corvus.Text.Json (V5)."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "Copilot Migration — Corvus.Text.Json"
+  Title: "Copilot Migration - Corvus.Text.Json"
   Description: "This guide shows you how to use GitHub Copilot (in VS Code, Visual Studio, or the CLI) to assist with migrating code from Corvus.Json (V4) to Corvus.Text.Json (V5)."
   Image:
 ContentBlocks:

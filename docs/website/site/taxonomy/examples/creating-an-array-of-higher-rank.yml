@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Multi-Dimensional Arrays — Corvus.Text.Json Examples"
+  Title: "Multi-Dimensional Arrays - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to define multi-dimensional (higher-rank) JSON arrays in .NET by nesting array schemas, giving you strongly-typed indexers and tensor operations for fixed-size numeric arrays."
   Keywords: ["recipe", "JSON Schema", "C#", "multidimensional", "arrays", "type", "items", "$ref", "minItems", "maxItems", "$defs", "format", "TryGetNumericValues", "Build"]
 OpenGraph:
-  Title: "Multi-Dimensional Arrays — Corvus.Text.Json Examples"
+  Title: "Multi-Dimensional Arrays - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to define multi-dimensional (higher-rank) JSON arrays in .NET by nesting array schemas, giving you strongly-typed indexers and tensor operations for fixed-size numeric arrays."
   Image:
 ContentBlocks:

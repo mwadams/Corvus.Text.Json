@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Building & Mutating JSON — Corvus.Text.Json"
+  Title: "Building & Mutating JSON - Corvus.Text.Json"
   Description: "Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json's JsonNode, designed for request/response cycles and data pipelines."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "Building & Mutating JSON — Corvus.Text.Json"
+  Title: "Building & Mutating JSON - Corvus.Text.Json"
   Description: "Create and modify JSON documents in-place with workspace-managed pooled memory. A builder-pattern alternative to System.Text.Json's JsonNode, designed for request/response cycles and data pipelines."
   Image:
 ContentBlocks:

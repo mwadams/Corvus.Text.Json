@@ -676,6 +676,46 @@ MigrationItemArray updated = v4.Insert(1, newItem);
 root.InsertItem(1, newItem);
 ```
 
+### Adding multiple items (range)
+
+```csharp
+// V4 — functional: returns new array with all items appended
+MigrationItemArray updated = v4.AddRange(newItems);
+
+// V5 — imperative: mutates in place, uses a builder delegate
+root.AddRange(static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem(item1);
+    b.AddItem(item2);
+});
+```
+
+### Inserting multiple items (range)
+
+```csharp
+// V4 — functional
+MigrationItemArray updated = v4.InsertRange(1, newItems);
+
+// V5 — imperative: inserts items at the specified index
+root.InsertRange(1, static (ref JsonElement.ArrayBuilder b) =>
+{
+    b.AddItem(item1);
+    b.AddItem(item2);
+});
+```
+
+> **Tip:** If the items to insert depend on external state, use the `TContext` overload to avoid closure allocations:
+>
+> ```csharp
+> root.AddRange(myItems, static (in MyItems ctx, ref JsonElement.ArrayBuilder b) =>
+> {
+>     foreach (var item in ctx)
+>     {
+>         b.AddItem(item);
+>     }
+> });
+> ```
+
 ### Replacing items
 
 ```csharp
@@ -1386,7 +1426,9 @@ string rgb = color.Match(
 | `v4.WithName("Bob")` (typed property) | `mutable.SetName("Bob")` (typed property, imperative) |
 | `v4.WithEmail(default)` (typed property) | `mutable.RemoveEmail()` (typed property) |
 | `v4.Add(item)` | `mutable.AddItem(item)` |
+| `v4.AddRange(items)` | `mutable.AddRange((ref b) => { b.AddItem(...); })` |
 | `v4.Insert(idx, item)` | `mutable.InsertItem(idx, item)` |
+| `v4.InsertRange(idx, items)` | `mutable.InsertRange(idx, (ref b) => { b.AddItem(...); })` |
 | `v4.SetItem(idx, item)` | `mutable.SetItem(idx, item)` |
 | N/A | `mutable.Replace(oldItem, newItem)` (V5 only — by value, first match) |
 | `v4.RemoveAt(idx)` | `mutable.RemoveAt(idx)` |

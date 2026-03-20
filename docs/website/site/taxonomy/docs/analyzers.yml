@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Analyzers — Corvus.Text.Json"
+  Title: "Analyzers - Corvus.Text.Json"
   Description: "Built-in Roslyn analyzers and code fixes for Corvus.Text.Json — CTJ001 (prefer UTF-8 literals), CTJ002 (unnecessary conversions), CTJ003 (static match lambdas), and CTJ-NAV (navigate to JSON Schema source)."
   Keywords: [documentation, Corvus.Text.Json]
 OpenGraph:
-  Title: "Analyzers — Corvus.Text.Json"
+  Title: "Analyzers - Corvus.Text.Json"
   Description: "Built-in Roslyn analyzers and code fixes for Corvus.Text.Json — CTJ001 (prefer UTF-8 literals), CTJ002 (unnecessary conversions), CTJ003 (static match lambdas), and CTJ-NAV (navigate to JSON Schema source)."
   Image:
 ContentBlocks:

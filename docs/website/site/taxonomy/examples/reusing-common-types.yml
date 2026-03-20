@@ -14,11 +14,11 @@ Navigation:
     Visible: False
     Link: False
 MetaData:
-  Title: "Reusing Common Types — Corvus.Text.Json Examples"
+  Title: "Reusing Common Types - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."
   Keywords: ["recipe", "JSON Schema", "C#", "reusing", "common", "types", "type", "required", "properties", "$ref", "format", "maximum", "$defs", "minLength", "maxLength", "CreateBuilder", "From"]
 OpenGraph:
-  Title: "Reusing Common Types — Corvus.Text.Json Examples"
+  Title: "Reusing Common Types - Corvus.Text.Json Examples"
   Description: "This recipe demonstrates how to use JSON Schema's `$ref` and `$defs` keywords to share type definitions across properties, reducing generated code size and enabling zero-allocation conversions between compatible property types."
   Image:
 ContentBlocks:
