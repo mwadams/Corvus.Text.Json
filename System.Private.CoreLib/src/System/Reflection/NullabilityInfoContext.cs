@@ -19,9 +19,9 @@ sealed class NullabilityInfoContext
 {
     private const string CompilerServicesNameSpace = "System.Runtime.CompilerServices";
 
-    private readonly Dictionary<Module, NotAnnotatedStatus> _publicOnlyModules = new();
+    private readonly Dictionary<Module, NotAnnotatedStatus> _publicOnlyModules = [];
 
-    private readonly Dictionary<MemberInfo, NullabilityState> _context = new();
+    private readonly Dictionary<MemberInfo, NullabilityState> _context = [];
 
     [Flags]
     private enum NotAnnotatedStatus

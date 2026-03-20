@@ -251,7 +251,7 @@ internal static partial class JsonTestHelper
         Func<TFirst, TSecond, TThird, TResult> resultSelector)
         => first.CrossJoin(second, third).Select(tuple => resultSelector(tuple.First, tuple.Second, tuple.Third));
 
-    private static readonly Regex s_stripWhitespace = new Regex(@"\s+", RegexOptions.Compiled);
+    private static readonly Regex s_stripWhitespace = new(@"\s+", RegexOptions.Compiled);
 
     public static string StripWhitespace(this string value)
         => s_stripWhitespace.Replace(value, string.Empty);

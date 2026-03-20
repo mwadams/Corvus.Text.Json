@@ -220,7 +220,7 @@ public class GeneratedTupleArrayTests
         using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         TupleWithAdditionalItems.Mutable root = builder.RootElement;
-        root.SetItem(3, default(JsonBoolean.Source));
+        root.SetItem(3, default);
         Assert.Equal(3, root.GetArrayLength());
     }
 
@@ -233,7 +233,7 @@ public class GeneratedTupleArrayTests
         using JsonDocumentBuilder<TupleWithAdditionalItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         TupleWithAdditionalItems.Mutable root = builder.RootElement;
-        root.InsertItem(3, default(JsonBoolean.Source));
+        root.InsertItem(3, default);
         Assert.Equal(3, root.GetArrayLength());
     }
 

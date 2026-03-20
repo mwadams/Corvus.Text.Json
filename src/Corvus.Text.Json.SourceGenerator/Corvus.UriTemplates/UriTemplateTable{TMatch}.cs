@@ -94,8 +94,8 @@ public sealed class UriTemplateTable<TMatch>
         /// </summary>
         internal Builder()
         {
-            this.parsers = new();
-            this.matches = new();
+            this.parsers = [];
+            this.matches = [];
         }
 
         /// <summary>

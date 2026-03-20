@@ -17,7 +17,7 @@ string personJson = """
     }
     """;
 
-using ParsedJsonDocument<Person> personDoc = ParsedJsonDocument<Person>.Parse(personJson);
+using var personDoc = ParsedJsonDocument<Person>.Parse(personJson);
 Person person = personDoc.RootElement;
 
 Console.WriteLine($"Person: {person.Name}, Age: {person.Age}");
@@ -55,7 +55,7 @@ string orderJson = """
     }
     """;
 
-using ParsedJsonDocument<Order> orderDoc = ParsedJsonDocument<Order>.Parse(orderJson);
+using var orderDoc = ParsedJsonDocument<Order>.Parse(orderJson);
 Order order = orderDoc.RootElement;
 
 Console.WriteLine($"\nOrder: {order.OrderId}");
@@ -73,24 +73,24 @@ string creditCardJson = """
     }
     """;
 
-using ParsedJsonDocument<Payment> paymentDoc = ParsedJsonDocument<Payment>.Parse(creditCardJson);
+using var paymentDoc = ParsedJsonDocument<Payment>.Parse(creditCardJson);
 Payment payment = paymentDoc.RootElement;
 
 // CTJ003 will fire here — lambdas are not static
 string description = payment.Match<string>(
-    (in Payment.CreditCard cc) => $"Credit card ending {cc.CardNumber.ToString()[^4..]}",
-    (in Payment.BankTransfer bt) => $"Bank transfer to {bt.AccountNumber}",
-    (in Payment p) => "Unknown payment type");
+    (in cc) => $"Credit card ending {cc.CardNumber.ToString()[^4..]}",
+    (in bt) => $"Bank transfer to {bt.AccountNumber}",
+    (in p) => "Unknown payment type");
 
 Console.WriteLine($"\nPayment: {description}");
 
 // Preferred form — static lambdas (no CTJ003 diagnostic)
 string descriptionStatic = payment.Match<string>(
-    static (in Payment.CreditCard cc) => $"Credit card ending {cc.CardNumber.ToString()[^4..]}",
-    static (in Payment.BankTransfer bt) => $"Bank transfer to {bt.AccountNumber}",
-    static (in Payment p) => "Unknown payment type");
+    static (in cc) => $"Credit card ending {cc.CardNumber.ToString()[^4..]}",
+    static (in bt) => $"Bank transfer to {bt.AccountNumber}",
+    static (in p) => "Unknown payment type");
 
 Console.WriteLine($"Payment (static): {descriptionStatic}");
 
-using JsonSchemaResultsCollector collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
+using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
 payment.EvaluateSchema(collector);

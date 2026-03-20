@@ -89,7 +89,7 @@ public static class UriTemplateParserFactory
     {
         string template = TemplateConversion.Replace(uriTemplate.ToString(), @"$+\?");
         ReadOnlySpan<char> templateSpan = template.AsSpan();
-        List<IUriTemplatePatternElement> elements = new();
+        List<IUriTemplatePatternElement> elements = [];
 
         int lastIndex = 0;
         foreach (Match match in FindParam.Matches(template).Cast<Match>())

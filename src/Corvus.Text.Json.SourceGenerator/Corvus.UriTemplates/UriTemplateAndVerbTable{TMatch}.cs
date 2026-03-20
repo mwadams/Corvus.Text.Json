@@ -90,8 +90,8 @@ public class UriTemplateAndVerbTable<TMatch>
         /// </summary>
         internal Builder()
         {
-            this.createdParsers = new();
-            this.parsersToVerbBuilders = new();
+            this.createdParsers = [];
+            this.parsersToVerbBuilders = [];
         }
 
         /// <summary>

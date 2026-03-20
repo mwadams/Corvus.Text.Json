@@ -57,21 +57,21 @@ public enum SampleEnumUInt16 : ushort
     Max = ushort.MaxValue
 }
 
-public enum SampleEnumInt32 : Int32
+public enum SampleEnumInt32 : int
 {
-    MinNegative = Int32.MinValue,
+    MinNegative = int.MinValue,
     Zero = 0,
     One = 1,
     Two = 2,
-    Max = Int32.MaxValue
+    Max = int.MaxValue
 }
 
-public enum SampleEnumUInt32 : UInt32
+public enum SampleEnumUInt32 : uint
 {
-    MinZero = UInt32.MinValue,
+    MinZero = uint.MinValue,
     One = 1,
     Two = 2,
-    Max = UInt32.MaxValue
+    Max = uint.MaxValue
 }
 
 public enum SampleEnumInt64 : long
@@ -149,14 +149,14 @@ public class TestClassWithInitializedProperties
     public int? MyInt { get; set; } = 1;
     public DateTime? MyDateTime { get; set; } = new DateTime(1995, 4, 16);
     public int[]? MyIntArray { get; set; } = new int[] { 1 };
-    public List<int>? MyIntList { get; set; } = new List<int> { 1 };
-    public List<int?>? MyNullableIntList { get; set; } = new List<int?> { 1 };
-    public List<object>? MyObjectList { get; set; } = new List<object> { 1 };
-    public List<List<object>>? MyListList { get; set; } = new List<List<object>> { new List<object> { 1 } };
+    public List<int>? MyIntList { get; set; } = [1];
+    public List<int?>? MyNullableIntList { get; set; } = [1];
+    public List<object>? MyObjectList { get; set; } = [1];
+    public List<List<object>>? MyListList { get; set; } = [new() { 1 }];
 
-    public List<Dictionary<string, string>>? MyDictionaryList { get; set; } = new List<Dictionary<string, string>> {
-        new Dictionary<string, string> { ["key"] = "value" }
-    };
+    public List<Dictionary<string, string>>? MyDictionaryList { get; set; } = [
+        new() { ["key"] = "value" }
+    ];
 
     public Dictionary<string, string>? MyStringDictionary { get; set; } = new Dictionary<string, string> { ["key"] = "value" };
     public Dictionary<string, DateTime?>? MyNullableDateTimeDictionary { get; set; } = new Dictionary<string, DateTime?> { ["key"] = new DateTime(1995, 04, 16) };
@@ -172,7 +172,7 @@ public class TestClassWithInitializedProperties
 
     public Dictionary<string, List<object>>? MyListDictionary { get; set; } = new Dictionary<string, List<object>>
     {
-        ["key"] = new List<object> { "value" }
+        ["key"] = ["value"]
     };
 
     public Dictionary<string, Dictionary<string, object>>? MyObjectDictionaryDictionary { get; set; } = new Dictionary<string, Dictionary<string, object>>
@@ -266,7 +266,7 @@ public class TestClassWithObjectList : ITestClass
 
     public void Initialize()
     {
-        MyData = new List<SimpleTestClass>();
+        MyData = [];
 
         {
             var obj = new SimpleTestClass();
@@ -374,7 +374,7 @@ public class TestClassWithObjectIListT : ITestClass
 
     public void Initialize()
     {
-        MyData = new List<SimpleTestClass>();
+        MyData = [];
 
         {
             var obj = new SimpleTestClass();
@@ -411,7 +411,7 @@ public class TestClassWithObjectICollectionT : ITestClass
 
     public void Initialize()
     {
-        MyData = new List<SimpleTestClass>();
+        MyData = [];
 
         {
             var obj = new SimpleTestClass();
@@ -760,11 +760,11 @@ public class TestClassWithGenericList : ITestClass
 
     public void Initialize()
     {
-        MyData = new List<string>
-        {
+        MyData =
+        [
             "Hello",
             "World"
-        };
+        ];
         Assert.Equal(2, MyData.Count);
     }
 
@@ -965,11 +965,11 @@ public class TestClassWithGenericIListT : ITestClass
 
     public void Initialize()
     {
-        MyData = new List<string>
-        {
+        MyData =
+        [
             "Hello",
             "World"
-        };
+        ];
         Assert.Equal(2, MyData.Count);
     }
 
@@ -995,11 +995,11 @@ public class TestClassWithGenericICollectionT : ITestClass
 
     public void Initialize()
     {
-        MyData = new List<string>
-        {
+        MyData =
+        [
             "Hello",
             "World"
-        };
+        ];
         Assert.Equal(2, MyData.Count);
     }
 
@@ -1348,7 +1348,7 @@ public class TestClassWithObjectIEnumerableConstructibleTypes : ITestClass
             MyQueue.Enqueue(obj);
         }
 
-        MyHashSet = new HashSet<SimpleTestClass>();
+        MyHashSet = [];
         {
             var obj = new SimpleTestClass();
             obj.Initialize();
@@ -1610,7 +1610,7 @@ public class SimpleDerivedTestClass : SimpleTestClass
 
 public class OverridePropertyNameRuntime_TestClass
 {
-    public Int16 MyInt16 { get; set; }
+    public short MyInt16 { get; set; }
 
     public static readonly byte[] s_data = Encoding.UTF8.GetBytes(
         @"{" +
@@ -1621,7 +1621,7 @@ public class OverridePropertyNameRuntime_TestClass
 
 public class LargeDataTestClass : ITestClass
 {
-    public List<LargeDataChildTestClass> Children { get; set; } = new List<LargeDataChildTestClass>();
+    public List<LargeDataChildTestClass> Children { get; set; } = [];
     public const int ChildrenCount = 10;
 
     public string MyString { get; set; }
@@ -1697,7 +1697,7 @@ public class BasicPerson : ITestClass
         age = 30;
         first = "John";
         last = "Smith";
-        phoneNumbers = new List<string> { "425-000-0000", "425-000-0001" };
+        phoneNumbers = ["425-000-0000", "425-000-0001"];
         address = new BasicJsonAddress
         {
             street = "1 Microsoft Way",
@@ -1774,21 +1774,19 @@ public class BasicCompany : ITestClass
     public void Initialize()
     {
         name = "Microsoft";
-        sites = new List<BasicJsonAddress>
-        {
-            new BasicJsonAddress
-            {
+        sites =
+        [
+            new() {
                 street = "1 Lone Tree Rd S",
                 city = "Fargo",
                 zip = 58104
             },
-            new BasicJsonAddress
-            {
+            new() {
                 street = "8055 Microsoft Way",
                 city = "Charlotte",
                 zip = 28273
             }
-        };
+        ];
 
         mainSite =
             new BasicJsonAddress
@@ -2182,7 +2180,7 @@ public class ClassWithComplexObjects : ITestClass
         Assert.True(property.NameEquals("NestedArray"));
         ValidateArray(property.Value);
 
-        void ValidateArray(JsonElement element)
+        static void ValidateArray(JsonElement element)
         {
             Assert.Equal(JsonValueKind.Array, element.ValueKind);
             JsonElement[] elements = element.EnumerateArray().ToArray();

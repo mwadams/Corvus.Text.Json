@@ -48,7 +48,7 @@ public class GeneratedNestedObjectMutationTests
         bool threw = false;
         try
         {
-            root.SetAddress(default(NestedObject.RequiredStreet.Source));
+            root.SetAddress(default);
         }
         catch (InvalidOperationException)
         {
@@ -66,7 +66,7 @@ public class GeneratedNestedObjectMutationTests
         using JsonDocumentBuilder<NestedObject.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         NestedObject.Mutable root = builder.RootElement;
-        root.SetNotes(default(JsonString.Source));
+        root.SetNotes(default);
         Assert.True(root.Notes.IsUndefined());
     }
 

@@ -302,7 +302,7 @@ public static partial class Utf8UriReferenceTests
     [Fact]
     public static void CreateUri_LargeUri_HandlesCorrectly()
     {
-        string largePathSegment = new string('a', 1000);
+        string largePathSegment = new('a', 1000);
         string largeUri = $"http://example.com/{largePathSegment}";
         byte[] uriBytes = Encoding.UTF8.GetBytes(largeUri);
 
@@ -615,7 +615,7 @@ public static partial class Utf8UriReferenceTests
     public static void CreateUri_VeryLongUri_HandlesCorrectly()
     {
         string baseUri = "http://example.com/";
-        string longPath = new string('a', 4000); // Very long path
+        string longPath = new('a', 4000); // Very long path
         string uri = baseUri + longPath;
         byte[] uriBytes = Encoding.UTF8.GetBytes(uri);
 

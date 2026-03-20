@@ -28,10 +28,10 @@ public static class ParsedJsonDocumentTests
     private static readonly byte[] Utf8Bom = { 0xEF, 0xBB, 0xBF };
 
     private static readonly Dictionary<TestCaseType, string> s_expectedConcat =
-        new Dictionary<TestCaseType, string>();
+        [];
 
     private static readonly Dictionary<TestCaseType, string> s_compactJson =
-        new Dictionary<TestCaseType, string>();
+        [];
 
     public static IEnumerable<object[]> BadBOMCases { get; } =
         new object[][]
@@ -4271,7 +4271,7 @@ public static class ParsedJsonDocumentTests
             CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(doc.RootElement);
         }
 
-        void CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(JsonElement elem)
+        static void CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(JsonElement elem)
         {
             if (elem.ValueKind == JsonValueKind.Object)
             {
@@ -4388,7 +4388,7 @@ public static class ParsedJsonDocumentTests
     [Fact]
     public static void ValueEquals_TestTextEqualsLargeMatch_True()
     {
-        string lookup = new string('a', 320);
+        string lookup = new('a', 320);
         string jsonString = "\"" + lookup + "\"";
         using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
         {

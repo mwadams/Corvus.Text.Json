@@ -108,7 +108,7 @@ public class BigNumberTryParseTests
 
         // Assert
         Assert.False(success);
-        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
+        Assert.Equal(default, result);
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public class BigNumberTryParseTests
 
         // Assert
         Assert.False(success);
-        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
+        Assert.Equal(default, result);
     }
 
     [Theory]

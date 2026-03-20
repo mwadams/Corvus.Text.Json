@@ -51,7 +51,7 @@ public class GeneratedObjectWithArrayPropertyTests
         bool threw = false;
         try
         {
-            root.SetTags(default(ObjectWithArrayProperty.JsonStringArray.Source));
+            root.SetTags(default);
         }
         catch (InvalidOperationException)
         {
@@ -69,7 +69,7 @@ public class GeneratedObjectWithArrayPropertyTests
         using JsonDocumentBuilder<ObjectWithArrayProperty.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithArrayProperty.Mutable root = builder.RootElement;
-        root.SetScores(default(ObjectWithArrayProperty.JsonDoubleArray.Source));
+        root.SetScores(default);
         Assert.True(root.Scores.IsUndefined());
     }
 

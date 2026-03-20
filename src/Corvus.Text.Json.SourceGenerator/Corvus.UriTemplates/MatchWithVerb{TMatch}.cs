@@ -68,7 +68,7 @@ public sealed class MatchWithVerb<TMatch>
         /// </summary>
         internal Builder()
         {
-            this.verbsToMatches = new Dictionary<string, TMatch>();
+            this.verbsToMatches = [];
         }
 
         /// <summary>

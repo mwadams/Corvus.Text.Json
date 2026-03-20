@@ -435,6 +435,15 @@ dotnet_diagnostic.IDE0071.severity = None
 
 # Additional rules suppressed for CodeGeneration project
 dotnet_diagnostic.IDE0150.severity = None
+# IDE0302/IDE0303/IDE0305/IDE0306: Collection expressions (not available on netstandard2.0/net481)
+dotnet_diagnostic.IDE0302.severity = None
+dotnet_diagnostic.IDE0303.severity = None
+dotnet_diagnostic.IDE0305.severity = None
+dotnet_diagnostic.IDE0306.severity = None
+# IDE0130: Namespace does not match folder structure (runtime-derived code uses different conventions)
+dotnet_diagnostic.IDE0130.severity = None
+# IDE0079: Remove unnecessary suppression (suppresses valid conditional suppressions)
+dotnet_diagnostic.IDE0079.severity = None
 dotnet_diagnostic.RCS1175.severity = None
 dotnet_diagnostic.RCS1259.severity = None
 dotnet_diagnostic.RCS1021.severity = None
@@ -483,6 +492,19 @@ dotnet_diagnostic.CA2231.severity = None
 
 # SA1406 - Debug.Fail without message is a runtime code pattern
 dotnet_diagnostic.SA1406.severity = None
+
+# External imported files - suppress IDE0009 (this. qualification) for runtime-derived code
+[src/Corvus.Text.Json/Corvus/Globalization/IdnMapping.*.cs]
+dotnet_diagnostic.IDE0009.severity = None
+
+# TestUtilities shared source - suppress platform-specific diagnostics
+[Common/tests/TestUtilities/**]
+dotnet_diagnostic.SYSLIB1054.severity = None
+dotnet_diagnostic.CA1806.severity = None
+
+# Benchmarks - suppress diagnostics not available on all TFMs
+[benchmarks/**]
+dotnet_diagnostic.CA1834.severity = None
 
 # C++ Files
 [*.{cpp,h,in}]

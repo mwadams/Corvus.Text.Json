@@ -39,7 +39,7 @@ public sealed class JsonDocumentBuilderWriteTests : JsonDomDocumentBuilderWriteT
 public abstract class JsonDomDocumentBuilderWriteTests
 {
     protected static readonly JsonDocumentOptions s_options =
-        new JsonDocumentOptions
+        new()
         {
             CommentHandling = JsonCommentHandling.Skip,
         };
@@ -741,7 +741,7 @@ null,
         char[] charArray = new char[300];
         charArray.AsSpan().Fill('a');
         charArray[0] = (char)0xEA;
-        string propertyName = new string(charArray);
+        string propertyName = new(charArray);
 
         WritePropertyValueBothForms(
             indented,

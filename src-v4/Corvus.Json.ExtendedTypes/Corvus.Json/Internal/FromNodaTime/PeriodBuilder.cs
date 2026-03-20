@@ -139,7 +139,7 @@ public struct PeriodBuilder
     /// Builds a period from the properties in this builder.
     /// </summary>
     /// <returns>The total number of nanoseconds in the period.</returns>
-    public readonly Period BuildPeriod() => new Period(this.Years, this.Months, this.Weeks, this.Days, this.Hours, this.Minutes, this.Seconds, this.Milliseconds, this.Ticks, this.Nanoseconds);
+    public readonly Period BuildPeriod() => new(this.Years, this.Months, this.Weeks, this.Days, this.Hours, this.Minutes, this.Seconds, this.Milliseconds, this.Ticks, this.Nanoseconds);
 }
 
 #endif

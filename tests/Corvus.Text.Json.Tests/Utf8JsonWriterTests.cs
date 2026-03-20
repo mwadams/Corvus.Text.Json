@@ -246,7 +246,7 @@ public partial class Utf8JsonWriterTests
             {
                 str[i] = (char)random.Next(97, 123);
             }
-            string baseStr = new string(str);
+            string baseStr = new(str);
             byte[] sourceUtf8 = Encoding.UTF8.GetBytes(baseStr);
 
             ReadOnlyMemory<byte> written = WriteStringHelper(writerOptions, baseStr);
@@ -259,7 +259,7 @@ public partial class Utf8JsonWriterTests
             {
                 char[] changed = baseStr.ToCharArray();
                 changed[i] = replacementChar;
-                string newStr = new string(changed);
+                string newStr = new(changed);
                 sourceUtf8 = Encoding.UTF8.GetBytes(newStr);
 
                 written = WriteStringHelper(writerOptions, newStr);
@@ -290,7 +290,7 @@ public partial class Utf8JsonWriterTests
             {
                 char[] changed = baseStr.ToCharArray();
                 changed.AsSpan().Fill(replacementChar);
-                string newStr = new string(changed);
+                string newStr = new(changed);
                 sourceUtf8 = Encoding.UTF8.GetBytes(newStr);
 
                 written = WriteStringHelper(writerOptions, newStr);
@@ -416,7 +416,7 @@ public partial class Utf8JsonWriterTests
             {
                 str[i] = (char)random.Next(0x2E9B, 0x2EF4); // CJK Radicals Supplement characters
             }
-            string baseStr = new string(str);
+            string baseStr = new(str);
             byte[] sourceUtf8 = Encoding.UTF8.GetBytes(baseStr);
 
             ReadOnlyMemory<byte> written = WriteStringHelper(writerOptions, baseStr);
@@ -527,7 +527,7 @@ public partial class Utf8JsonWriterTests
             {
                 str[i] = (char)random.Next(97, 123);
             }
-            string baseStr = new string(str);
+            string baseStr = new(str);
             byte[] sourceUtf8 = Encoding.UTF8.GetBytes(baseStr);
 
             ReadOnlyMemory<byte> written = WriteStringHelper(writerOptions, baseStr);
@@ -554,7 +554,7 @@ public partial class Utf8JsonWriterTests
                 char[] changed = baseStr.ToCharArray();
                 changed[i] = highSurrogate;
                 changed[i + 1] = lowSurrogate;
-                string newStr = new string(changed);
+                string newStr = new(changed);
                 sourceUtf8 = Encoding.UTF8.GetBytes(newStr);
 
                 written = WriteStringHelper(writerOptions, newStr);
@@ -590,7 +590,7 @@ public partial class Utf8JsonWriterTests
                     changed[i + 1] = lowSurrogate;
                 }
 
-                string newStr = new string(changed);
+                string newStr = new(changed);
                 sourceUtf8 = Encoding.UTF8.GetBytes(newStr);
 
                 written = WriteStringHelper(writerOptions, newStr);
@@ -647,14 +647,14 @@ public partial class Utf8JsonWriterTests
             {
                 str[i] = (char)random.Next(97, 123);
             }
-            string baseStr = new string(str);
+            string baseStr = new(str);
             byte[] baseStrUtf8 = Encoding.UTF8.GetBytes(baseStr);
 
             for (int i = 0; i < dataLength; i++)
             {
                 char[] changed = baseStr.ToCharArray();
                 changed[i] = replacementChar;
-                string source = new string(changed);
+                string source = new(changed);
                 byte[] sourceUtf8 = new byte[baseStrUtf8.Length];
                 baseStrUtf8.AsSpan().CopyTo(sourceUtf8);
                 sourceUtf8[i] = 0xC3;   // Invalid, first byte of a 2-byte utf-8 character
@@ -4890,8 +4890,8 @@ public partial class Utf8JsonWriterTests
             }
         }
 
-        string propertyName = new string(propertyArray);
-        string value = new string(propertyArray);
+        string propertyName = new(propertyArray);
+        string value = new(propertyArray);
 
         string expectedStr = GetEscapedExpectedString(options, propertyName, value, StringEscapeHandling.EscapeHtml);
 
@@ -4954,8 +4954,8 @@ public partial class Utf8JsonWriterTests
             }
         }
 
-        string propertyName = new string(propertyArray);
-        string value = new string(propertyArray);
+        string propertyName = new(propertyArray);
+        string value = new(propertyArray);
 
         string expectedStr = GetEscapedExpectedString(options, propertyName, value, StringEscapeHandling.EscapeNonAscii);
 
@@ -5009,8 +5009,8 @@ public partial class Utf8JsonWriterTests
     {
         char[] propertyArray = new char[10] { 'a', (char)0xD800, (char)0xDC00, (char)0xD803, (char)0xDE6D, (char)0xD834, (char)0xDD1E, (char)0xDBFF, (char)0xDFFF, 'a' };
 
-        string propertyName = new string(propertyArray);
-        string value = new string(propertyArray);
+        string propertyName = new(propertyArray);
+        string value = new(propertyArray);
 
         string expectedStr = GetEscapedExpectedString(options, propertyName, value, StringEscapeHandling.EscapeNonAscii);
 
@@ -5154,10 +5154,10 @@ public partial class Utf8JsonWriterTests
         JsonTestHelper.AssertContents("{" + ValidUtf8Expected + ":" + ValidUtf8Expected + "}", output);
     }
 
-    private static readonly string s_InvalidUtf16Input = new string(new char[2] { (char)0xD801, 'a' });
+    private static readonly string s_InvalidUtf16Input = new(new char[2] { (char)0xD801, 'a' });
     private const string InvalidUtf16Expected = "\"\\uFFFDa\"";
 
-    private static readonly string s_ValidUtf16Input = new string(new char[2] { (char)0xD801, (char)0xDC37 }); // 0x10437
+    private static readonly string s_ValidUtf16Input = new(new char[2] { (char)0xD801, (char)0xDC37 }); // 0x10437
     private const string ValidUtf16Expected = "\"\\uD801\\uDC37\"";
 
     [Theory]
@@ -5455,7 +5455,7 @@ public partial class Utf8JsonWriterTests
         {
             keyChars[i] = '<';
         }
-        string key = new string(keyChars);
+        string key = new(keyChars);
 
         string expectedStr = GetStartEndWithPropertyArrayExpectedString(key, options, escape: true);
 
@@ -5534,7 +5534,7 @@ public partial class Utf8JsonWriterTests
         {
             keyChars[i] = '<';
         }
-        string key = new string(keyChars);
+        string key = new(keyChars);
 
         string expectedStr = GetStartEndWithPropertyObjectExpectedString(key, options, escape: true);
 
@@ -6694,7 +6694,7 @@ public partial class Utf8JsonWriterTests
     public static void WriteStringValue_JsonEncodedText_Large(int stringLength)
     {
         {
-            string message = new string('a', stringLength);
+            string message = new('a', stringLength);
             var builder = new StringBuilder();
             builder.Append("\"");
             for (int i = 0; i < stringLength; i++)
@@ -6714,7 +6714,7 @@ public partial class Utf8JsonWriterTests
             JsonTestHelper.AssertContents(expectedMessage, output);
         }
         {
-            string message = new string('>', stringLength);
+            string message = new('>', stringLength);
             var builder = new StringBuilder();
             builder.Append("\"");
             for (int i = 0; i < stringLength; i++)
@@ -8244,7 +8244,7 @@ public partial class Utf8JsonWriterTests
 
         writer.WriteStartObject();
 
-        string longName = new string('a', 170_000_000);
+        string longName = new('a', 170_000_000);
 
         Assert.Throws<ArgumentException>(() => writer.WritePropertyName(longName.AsSpan()));
     }
@@ -8257,7 +8257,7 @@ public partial class Utf8JsonWriterTests
 
         writer.WriteStartArray();
 
-        string longValue = new string('a', 170_000_000);
+        string longValue = new('a', 170_000_000);
 
         Assert.Throws<ArgumentException>(() => writer.WriteStringValue(longValue.AsSpan()));
     }

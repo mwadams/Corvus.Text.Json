@@ -43,7 +43,7 @@ internal class JsonBase64TestData
         }
 
         charArray[charArray.Length - 1] = '"';
-        string jsonString = new string(charArray);
+        string jsonString = new(charArray);
         return jsonString;
     }
 
@@ -57,7 +57,7 @@ internal class JsonBase64TestData
             charArray[i] = (char)random.Next('A', 'Z'); // ASCII values (between 65 and 90) that constitute valid base 64 string.
         }
         charArray[charArray.Length - 1] = '"';
-        string jsonString = new string(charArray);
+        string jsonString = new(charArray);
         return jsonString;
     }
 }

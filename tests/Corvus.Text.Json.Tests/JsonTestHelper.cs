@@ -216,7 +216,7 @@ internal static partial class JsonTestHelper
     {
         var sequences = new List<ReadOnlySequence<byte>>
         {
-            new ReadOnlySequence<byte>(dataMemory)
+            new(dataMemory)
         };
 
         for (int i = 0; i < dataMemory.Length; i++)

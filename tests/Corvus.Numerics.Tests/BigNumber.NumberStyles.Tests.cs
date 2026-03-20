@@ -510,7 +510,7 @@ public class BigNumberNumberStylesTests
         bool success = BigNumber.TryParse(input, NumberStyles.None, null, out BigNumber result);
 
         success.ShouldBeFalse();
-        result.ShouldBe(default(BigNumber));
+        result.ShouldBe(default);
     }
 
     [Fact]

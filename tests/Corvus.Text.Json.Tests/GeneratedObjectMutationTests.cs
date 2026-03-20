@@ -85,7 +85,7 @@ public class GeneratedObjectMutationTests
         bool threw = false;
         try
         {
-            root.SetName(default(JsonString.Source));
+            root.SetName(default);
         }
         catch (InvalidOperationException)
         {
@@ -107,7 +107,7 @@ public class GeneratedObjectMutationTests
         bool threw = false;
         try
         {
-            root.SetAge(default(JsonInt32.Source));
+            root.SetAge(default);
         }
         catch (InvalidOperationException)
         {
@@ -129,7 +129,7 @@ public class GeneratedObjectMutationTests
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
-        root.SetEmail(default(JsonEmail.Source));
+        root.SetEmail(default);
         Assert.True(root.Email.IsUndefined());
     }
 
@@ -141,7 +141,7 @@ public class GeneratedObjectMutationTests
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
-        root.SetIsActive(default(JsonBoolean.Source));
+        root.SetIsActive(default);
         Assert.True(root.IsActive.IsUndefined());
     }
 
@@ -265,7 +265,7 @@ public class GeneratedObjectMutationTests
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
-        root.SetProperty("email", default(JsonElement.Source));
+        root.SetProperty("email", default);
         Assert.True(root.Email.IsUndefined());
     }
 

@@ -14,7 +14,7 @@ namespace Corvus.UriTemplates.TavisApi;
 /// </summary>
 internal static class DictionaryUriTemplateResolver
 {
-    private static readonly Dictionary<string, object?> EmptyDictionary = new();
+    private static readonly Dictionary<string, object?> EmptyDictionary = [];
     private static readonly DictionaryTemplateParameterProvider ParameterProvider = new();
 
     /// <summary>

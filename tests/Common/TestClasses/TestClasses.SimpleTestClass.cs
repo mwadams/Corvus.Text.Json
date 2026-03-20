@@ -227,10 +227,10 @@ public class SimpleTestClass : ITestClass
         MySingleArray = new float[] { 1.1f };
         MyDoubleArray = new double[] { 2.2d };
         MyDecimalArray = new decimal[] { 3.3m };
-        MyDateTimeArray = new DateTime[] { new DateTime(2019, 1, 30, 12, 1, 2, DateTimeKind.Utc) };
-        MyDateTimeOffsetArray = new DateTimeOffset[] { new DateTimeOffset(2019, 1, 30, 12, 1, 2, new TimeSpan(1, 0, 0)) };
-        MyGuidArray = new Guid[] { new Guid("1B33498A-7B7D-4DDA-9C13-F6AA4AB449A6") };
-        MyUriArray = new Uri[] { new Uri("https://github.com/dotnet/runtime") };
+        MyDateTimeArray = new DateTime[] { new(2019, 1, 30, 12, 1, 2, DateTimeKind.Utc) };
+        MyDateTimeOffsetArray = new DateTimeOffset[] { new(2019, 1, 30, 12, 1, 2, new TimeSpan(1, 0, 0)) };
+        MyGuidArray = new Guid[] { new("1B33498A-7B7D-4DDA-9C13-F6AA4AB449A6") };
+        MyUriArray = new Uri[] { new("https://github.com/dotnet/runtime") };
         MyEnumArray = new SampleEnum[] { SampleEnum.Two };
         MySimpleStruct = new SimpleStruct { One = 11, Two = 1.9999 };
         MySimpleTestStruct = new SimpleTestStruct { MyInt64 = 64, MyString = "Hello", MyInt32Array = new int[] { 32 } };
@@ -239,9 +239,7 @@ public class SimpleTestClass : ITestClass
         MyInt16TwoDimensionArray[0] = new int[] { 10, 11 };
         MyInt16TwoDimensionArray[1] = new int[] { 20, 21 };
 
-        MyInt16TwoDimensionList = new List<List<int>>();
-        MyInt16TwoDimensionList.Add(new List<int> { 10, 11 });
-        MyInt16TwoDimensionList.Add(new List<int> { 20, 21 });
+        MyInt16TwoDimensionList = [[10, 11], [20, 21]];
 
         MyInt16ThreeDimensionArray = new int[2][][];
         MyInt16ThreeDimensionArray[0] = new int[2][];
@@ -251,17 +249,17 @@ public class SimpleTestClass : ITestClass
         MyInt16ThreeDimensionArray[1][0] = new int[] { 21, 22 };
         MyInt16ThreeDimensionArray[1][1] = new int[] { 23, 24 };
 
-        MyInt16ThreeDimensionList = new List<List<List<int>>>();
+        MyInt16ThreeDimensionList = [];
         var list1 = new List<List<int>>();
         MyInt16ThreeDimensionList.Add(list1);
-        list1.Add(new List<int> { 11, 12 });
-        list1.Add(new List<int> { 13, 14 });
+        list1.Add([11, 12]);
+        list1.Add([13, 14]);
         var list2 = new List<List<int>>();
         MyInt16ThreeDimensionList.Add(list2);
-        list2.Add(new List<int> { 21, 22 });
-        list2.Add(new List<int> { 23, 24 });
+        list2.Add([21, 22]);
+        list2.Add([23, 24]);
 
-        MyStringList = new List<string>() { "Hello" };
+        MyStringList = ["Hello"];
 
         MyStringIEnumerable = new string[] { "Hello" };
         MyStringIList = new string[] { "Hello" };
@@ -301,7 +299,7 @@ public class SimpleTestClass : ITestClass
         MyStringImmutablQueueT = ImmutableQueue.CreateRange(new List<string> { "Hello" });
         MyStringImmutableSortedSetT = ImmutableSortedSet.CreateRange(new List<string> { "Hello" });
 
-        MyListOfNullString = new List<string> { null };
+        MyListOfNullString = [null];
     }
 
     public void Verify()

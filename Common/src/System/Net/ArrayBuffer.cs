@@ -87,11 +87,11 @@ internal struct ArrayBuffer : IDisposable
 
     public int ActiveLength => _availableStart - _activeStart;
 
-    public Span<byte> ActiveSpan => new Span<byte>(_bytes, _activeStart, _availableStart - _activeStart);
+    public Span<byte> ActiveSpan => new(_bytes, _activeStart, _availableStart - _activeStart);
 
-    public ReadOnlySpan<byte> ActiveReadOnlySpan => new ReadOnlySpan<byte>(_bytes, _activeStart, _availableStart - _activeStart);
+    public ReadOnlySpan<byte> ActiveReadOnlySpan => new(_bytes, _activeStart, _availableStart - _activeStart);
 
-    public Memory<byte> ActiveMemory => new Memory<byte>(_bytes, _activeStart, _availableStart - _activeStart);
+    public Memory<byte> ActiveMemory => new(_bytes, _activeStart, _availableStart - _activeStart);
 
     public int AvailableLength => _bytes.Length - _availableStart;
 
@@ -99,7 +99,7 @@ internal struct ArrayBuffer : IDisposable
 
     public Memory<byte> AvailableMemory => _bytes.AsMemory(_availableStart);
 
-    public Memory<byte> AvailableMemorySliced(int length) => new Memory<byte>(_bytes, _availableStart, length);
+    public Memory<byte> AvailableMemorySliced(int length) => new(_bytes, _availableStart, length);
 
     public int Capacity => _bytes.Length;
 

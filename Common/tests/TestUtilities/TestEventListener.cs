@@ -46,7 +46,7 @@ public sealed class TestEventListener : EventListener
     private readonly bool _enableActivityId;
 
     // Until https:// github.com/dotnet/runtime/issues/63979 is solved.
-    private List<EventSource> _eventSources = new List<EventSource>();
+    private List<EventSource> _eventSources = [];
 
     public TestEventListener(TextWriter output, params string[] sourceNames)
         : this(output.WriteLine, sourceNames)

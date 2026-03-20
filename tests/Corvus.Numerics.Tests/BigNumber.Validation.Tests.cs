@@ -72,7 +72,7 @@ public class BigNumberValidationTests
     public void Parse_VeryLongInput_ReturnsFalse()
     {
         // Create a string longer than MaxInputLength (10,000 characters)
-        string veryLongInput = new string('1', 10_001);
+        string veryLongInput = new('1', 10_001);
         bool result = BigNumber.TryParse(veryLongInput, out _);
 
         result.ShouldBeFalse();
@@ -82,7 +82,7 @@ public class BigNumberValidationTests
     public void Parse_ExactlyMaxLength_Succeeds()
     {
         // Create a string exactly at MaxInputLength
-        string maxInput = new string('9', 10_000);
+        string maxInput = new('9', 10_000);
 
         bool result = BigNumber.TryParse(maxInput, out BigNumber parsed);
 
@@ -95,7 +95,7 @@ public class BigNumberValidationTests
     [Fact]
     public void Parse_JustUnderMaxLength_Succeeds()
     {
-        string input = new string('7', 9_999);
+        string input = new('7', 9_999);
         bool result = BigNumber.TryParse(input, out _);
 
         result.ShouldBeTrue();

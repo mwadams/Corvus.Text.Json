@@ -48,7 +48,7 @@ internal sealed class PooledByteBufferWriter : PipeWriter, IByteBufferWriter
         _buffer.EnsureAvailableSpace(initialCapacity);
     }
 
-    public static PooledByteBufferWriter CreateEmptyInstanceForCaching() => new PooledByteBufferWriter(initialCapacity: 0);
+    public static PooledByteBufferWriter CreateEmptyInstanceForCaching() => new(initialCapacity: 0);
 
     public override void Advance(int count) => _buffer.Commit(count);
 

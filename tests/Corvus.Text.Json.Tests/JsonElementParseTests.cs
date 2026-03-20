@@ -213,7 +213,7 @@ public static class JsonElementParseTests
         Validate(JsonElement.ParseValue(Json.AsSpan(), options));
         Validate(JsonElement.ParseValue(Encoding.UTF8.GetBytes(Json).AsSpan(), options));
 
-        void Validate(JsonElement element)
+        static void Validate(JsonElement element)
         {
             Assert.Equal(JsonValueKind.Object, element.ValueKind);
             Assert.Equal(JsonValueKind.String, element.GetProperty("someProp").ValueKind);

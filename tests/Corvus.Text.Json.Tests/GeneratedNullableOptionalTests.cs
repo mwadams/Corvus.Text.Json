@@ -91,7 +91,7 @@ public class GeneratedNullableOptionalTests
         using JsonDocumentBuilder<ObjectWithMixedProperties.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ObjectWithMixedProperties.Mutable root = builder.RootElement;
-        root.SetIsActive(default(JsonBoolean.Source));
+        root.SetIsActive(default);
         Assert.Null(root.IsActive);
     }
 

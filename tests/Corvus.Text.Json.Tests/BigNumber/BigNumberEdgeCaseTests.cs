@@ -131,14 +131,14 @@ public class BigNumberEdgeCaseTests
         // Assert
         Assert.False(success);
         _ = result.ToString();
-        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
+        Assert.Equal(default, result);
     }
 
     [Fact]
     public void TryParse_WithExtremelyLongInvalidString_ShouldReturnFalse()
     {
         // Arrange
-        string invalidLongString = new string('X', 10000); // Very long invalid input
+        string invalidLongString = new('X', 10000); // Very long invalid input
         ReadOnlySpan<byte> input = Encoding.UTF8.GetBytes(invalidLongString);
 
         // Act
@@ -146,7 +146,7 @@ public class BigNumberEdgeCaseTests
 
         // Assert
         Assert.False(success);
-        Assert.Equal(default(Corvus.Numerics.BigNumber), result);
+        Assert.Equal(default, result);
     }
 
     [Fact]
@@ -339,7 +339,7 @@ public class BigNumberEdgeCaseTests
         Assert.NotNull(stringResult);
 
         BigNumber normalizedResult = bigNumber.Normalize();
-        Assert.NotEqual(default(Corvus.Numerics.BigNumber), normalizedResult);
+        Assert.NotEqual(default, normalizedResult);
 
         int hashCode = bigNumber.GetHashCode();
         Assert.NotEqual(0, hashCode); // Very unlikely to be zero for such a large number

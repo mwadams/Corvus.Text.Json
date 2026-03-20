@@ -105,7 +105,7 @@ public class BigNumberParsingTests
         bool success = BigNumber.TryParse("not a number", out BigNumber result);
 
         success.ShouldBeFalse();
-        result.ShouldBe(default(BigNumber));
+        result.ShouldBe(default);
     }
 
     [Fact]

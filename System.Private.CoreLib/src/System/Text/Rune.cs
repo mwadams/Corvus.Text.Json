@@ -146,12 +146,12 @@ readonly struct Rune : IComparable, IComparable<Rune>, IEquatable<Rune>
     public static bool operator >=(Rune left, Rune right) => left._value >= right._value;
 
     // Operators below are explicit because they may throw.
-    public static explicit operator Rune(char ch) => new Rune(ch);
+    public static explicit operator Rune(char ch) => new(ch);
 
     [CLSCompliant(false)]
-    public static explicit operator Rune(uint value) => new Rune(value);
+    public static explicit operator Rune(uint value) => new(value);
 
-    public static explicit operator Rune(int value) => new Rune(value);
+    public static explicit operator Rune(int value) => new(value);
 
     // Displayed as "'<char>' (U+XXXX)"; e.g., "'e' (U+0065)"
     private string DebuggerDisplay =>
@@ -1141,7 +1141,7 @@ readonly struct Rune : IComparable, IComparable<Rune>, IEquatable<Rune>
     /// Creates a <see cref="Rune"/> without performing validation on the input.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static Rune UnsafeCreate(uint scalarValue) => new Rune(scalarValue, false);
+    internal static Rune UnsafeCreate(uint scalarValue) => new(scalarValue, false);
 
     // These are analogs of APIs on System.Char
     public static double GetNumericValue(Rune value)

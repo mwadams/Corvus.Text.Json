@@ -354,7 +354,7 @@ public partial class Utf8JsonWriterTests
     {
         using MemoryStream ms = new();
         using Utf8JsonWriter writer = new(ms);
-        Assert.Throws<ArgumentNullException>(() => writer.WriteRawValue(json: default(string)));
+        Assert.Throws<ArgumentNullException>(() => writer.WriteRawValue(json: default));
         Assert.Throws<ArgumentException>(() => writer.WriteRawValue(json: ""));
         Assert.Throws<ArgumentException>(() => writer.WriteRawValue(json: default(ReadOnlySpan<char>)));
         Assert.Throws<ArgumentException>(() => writer.WriteRawValue(utf8Json: default(ReadOnlySpan<byte>)));

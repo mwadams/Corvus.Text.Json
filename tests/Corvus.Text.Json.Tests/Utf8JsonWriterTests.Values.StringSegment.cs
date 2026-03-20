@@ -375,7 +375,7 @@ public partial class Utf8JsonWriterTests
         TestFlushImpl<byte>([0], [0, 0], new(), "\"AAAA\"", StringValueEncodingType.Base64);
         TestFlushImpl<byte>([0, 0], [0], new(), "\"AAAA\"", StringValueEncodingType.Base64);
 
-        void TestFlushImpl<T>(ReadOnlySpan<T> unit1, ReadOnlySpan<T> unit2, JsonWriterOptions options, string expected, StringValueEncodingType encoding)
+        static void TestFlushImpl<T>(ReadOnlySpan<T> unit1, ReadOnlySpan<T> unit2, JsonWriterOptions options, string expected, StringValueEncodingType encoding)
             where T : struct
         {
             byte[] expectedBytes = Encoding.UTF8.GetBytes(expected);

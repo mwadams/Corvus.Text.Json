@@ -432,7 +432,7 @@ public class GeneratedComposedTupleTests
             doc.RootElement.CreateBuilder(workspace);
 
         RefTupleWithAdditionalItems.Mutable root = builderDoc.RootElement;
-        root.SetItem(3, default(JsonBoolean.Source));
+        root.SetItem(3, default);
 
         Assert.Equal(3, root.GetArrayLength());
     }

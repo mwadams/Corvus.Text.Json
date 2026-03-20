@@ -242,7 +242,7 @@ public static partial class JsonEncodedTextTests
     public static void GetUtf8BytesLargeTest(int stringLength)
     {
         {
-            string message = new string('a', stringLength);
+            string message = new('a', stringLength);
             byte[] expectedBytes = Encoding.UTF8.GetBytes(message);
 
             var text = JsonEncodedText.Encode(message);
@@ -259,7 +259,7 @@ public static partial class JsonEncodedTextTests
             Assert.Equal(text.GetHashCode(), textUtf8Span.GetHashCode());
         }
         {
-            string message = new string('>', stringLength);
+            string message = new('>', stringLength);
             var builder = new StringBuilder(stringLength);
             for (int i = 0; i < stringLength; i++)
             {
@@ -308,7 +308,7 @@ public static partial class JsonEncodedTextTests
     [InlineData(10_000)]
     public static void GetValueLargeEscapedTest(int stringLength)
     {
-        string message = new string('>', stringLength);
+        string message = new('>', stringLength);
         var builder = new StringBuilder(stringLength);
         for (int i = 0; i < stringLength; i++)
         {
@@ -331,8 +331,8 @@ public static partial class JsonEncodedTextTests
     [InlineData(10_000)]
     public static void GetValueLargeTest(int stringLength)
     {
-        string message = new string('a', stringLength);
-        string expectedMessage = new string('a', stringLength);
+        string message = new('a', stringLength);
+        string expectedMessage = new('a', stringLength);
 
         var text = JsonEncodedText.Encode(message);
         var textSpan = JsonEncodedText.Encode(message.AsSpan());
@@ -368,7 +368,7 @@ public static partial class JsonEncodedTextTests
     {
         try
         {
-            string largeValueString = new string('a', 400_000_000);
+            string largeValueString = new('a', 400_000_000);
             byte[] utf8Value = new byte[400_000_000];
             utf8Value.AsSpan().Fill((byte)'a');
 
@@ -445,8 +445,8 @@ public static partial class JsonEncodedTextTests
     public static void ToStringLargeTest(int stringLength)
     {
         {
-            string message = new string('a', stringLength);
-            string expectedMessage = new string('a', stringLength);
+            string message = new('a', stringLength);
+            string expectedMessage = new('a', stringLength);
 
             var text = JsonEncodedText.Encode(message);
             var textSpan = JsonEncodedText.Encode(message.AsSpan());
@@ -462,7 +462,7 @@ public static partial class JsonEncodedTextTests
             Assert.Equal(text.GetHashCode(), textUtf8Span.GetHashCode());
         }
         {
-            string message = new string('>', stringLength);
+            string message = new('>', stringLength);
             var builder = new StringBuilder(stringLength);
             for (int i = 0; i < stringLength; i++)
             {

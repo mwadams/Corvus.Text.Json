@@ -231,11 +231,11 @@ public class JsonUtf8FormattingBenchmarks
         string[] keys = { "value1", "value2", "value3", "value4", "value5" };
         BigNumber[] values =
         {
-            new BigNumber(1234, -3),
-            new BigNumber(-5678, 0),
-            new BigNumber(9012, 2),
+            new(1234, -3),
+            new(-5678, 0),
+            new(9012, 2),
             BigNumber.Zero,
-            new BigNumber(123, 0)
+            new(123, 0)
         };
 
         for (int i = 0; i < keys.Length; i++)

@@ -6,7 +6,7 @@ namespace System.IO;
 
 public static class PathGenerator
 {
-    private static Random _rand = new Random();
+    private static Random _rand = new();
 
     public static string GenerateTestFileName([CallerMemberName] string memberName = null, [CallerLineNumber] int lineNumber = 0)
         => GenerateTestFileName(null, memberName, lineNumber);
@@ -37,6 +37,6 @@ public static class PathGenerator
             chars[i] = AlphaNumeric[bytes[i] % AlphaNumeric.Length];
         }
 
-        return new String(chars);
+        return new string(chars);
     }
 }

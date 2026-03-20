@@ -7,7 +7,7 @@ namespace Corvus.Text.Json.Tests;
 
 public static partial class BitStackTests
 {
-    private static readonly Random s_random = new Random(42);
+    private static readonly Random s_random = new(42);
 
     [Theory]
     [InlineData(32)]

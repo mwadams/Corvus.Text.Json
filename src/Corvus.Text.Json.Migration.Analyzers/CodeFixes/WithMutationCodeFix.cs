@@ -493,7 +493,7 @@ public sealed class WithMutationCodeFix : CodeFixProvider
         }
 
         propertyPath = extractedProperty;
-        statementsToRemove = new List<StatementSyntax> { mutateStmt, extractStmt };
+        statementsToRemove = [mutateStmt, extractStmt];
         mutations = innerChain
             .Select(c => (c.SetName, c.Args.WithoutTrivia().ToFullString()))
             .ToList();

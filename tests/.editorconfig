@@ -109,3 +109,36 @@ dotnet_diagnostic.RCS1194.severity = None
 
 # Localize string constants - apps that want localization can turn this back on
 dotnet_diagnostic.CA1303.severity = None
+
+# Test-specific suppressions
+# xUnit rules that are too strict for our test patterns
+dotnet_diagnostic.xUnit2032.severity = None
+dotnet_diagnostic.xUnit2024.severity = None
+dotnet_diagnostic.xUnit1042.severity = None
+
+# SYSLIB1045: Use GeneratedRegexAttribute (not available on net481)
+dotnet_diagnostic.SYSLIB1045.severity = None
+
+# IDE0039: Use local function instead of lambda (test readability preference)
+dotnet_diagnostic.IDE0039.severity = None
+
+# IDE0009: Add this. qualification (test code uses runtime-derived patterns)
+dotnet_diagnostic.IDE0009.severity = None
+
+# CA1846: Prefer AsSpan over Substring (not available on net481)
+dotnet_diagnostic.CA1846.severity = None
+
+# CA1834: Use StringBuilder.Append(char) (not available on net481)
+dotnet_diagnostic.CA1834.severity = None
+
+# CA1816: Call GC.SuppressFinalize correctly (test infrastructure patterns)
+dotnet_diagnostic.CA1816.severity = None
+
+# CA1806: Do not ignore method results (intentional in test code)
+dotnet_diagnostic.CA1806.severity = None
+
+# CA1512: Use ArgumentOutOfRangeException throw helper (not available on net481)
+dotnet_diagnostic.CA1512.severity = None
+
+# CA2263: Prefer generic overload of Enum.GetValues (not available on net481)
+dotnet_diagnostic.CA2263.severity = None

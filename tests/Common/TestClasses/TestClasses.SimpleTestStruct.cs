@@ -150,11 +150,11 @@ public struct SimpleTestStruct : ITestClass
         MySingleArray = new float[] { 1.1f };
         MyDoubleArray = new double[] { 2.2d };
         MyDecimalArray = new decimal[] { 3.3m };
-        MyDateTimeArray = new DateTime[] { new DateTime(2019, 1, 30, 12, 1, 2, DateTimeKind.Utc) };
-        MyDateTimeOffsetArray = new DateTimeOffset[] { new DateTimeOffset(2019, 1, 30, 12, 1, 2, new TimeSpan(1, 0, 0)) };
+        MyDateTimeArray = new DateTime[] { new(2019, 1, 30, 12, 1, 2, DateTimeKind.Utc) };
+        MyDateTimeOffsetArray = new DateTimeOffset[] { new(2019, 1, 30, 12, 1, 2, new TimeSpan(1, 0, 0)) };
         MyEnumArray = new SampleEnum[] { SampleEnum.Two };
 
-        MyStringList = new List<string>() { "Hello" };
+        MyStringList = ["Hello"];
         MyStringIEnumerableT = new string[] { "Hello" };
         MyStringIListT = new string[] { "Hello" };
         MyStringICollectionT = new string[] { "Hello" };

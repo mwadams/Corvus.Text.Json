@@ -37,7 +37,7 @@ public static partial class Utf8JsonReaderTests
     public static void LargeLookupUTF16()
     {
         string jsonString = "\"hello\"";
-        string lookup = new string('a', 1_000);
+        string lookup = new('a', 1_000);
         byte[] utf8Data = Encoding.UTF8.GetBytes(jsonString);
 
         var json = new Utf8JsonReader(utf8Data, isFinalBlock: true, state: default);
@@ -438,7 +438,7 @@ public static partial class Utf8JsonReaderTests
     {
         byte[] utf8Data = Encoding.UTF8.GetBytes(jsonString);
 
-        string lookupString = new string('a', 13);
+        string lookupString = new('a', 13);
 
         bool found = false;
 
@@ -494,7 +494,7 @@ public static partial class Utf8JsonReaderTests
         {
             if (json.TokenType == JsonTokenType.String)
             {
-                if (json.ValueTextEquals(new byte[] { (byte)'a' }) ||
+                if (json.ValueTextEquals("a"u8) ||
                     json.ValueTextEquals(new char[] { 'a' }) ||
                     json.ValueTextEquals("a"))
                 {
@@ -514,7 +514,7 @@ public static partial class Utf8JsonReaderTests
         {
             if (json.TokenType == JsonTokenType.String)
             {
-                if (json.ValueTextEquals(new byte[] { (byte)'a' }) ||
+                if (json.ValueTextEquals("a"u8) ||
                     json.ValueTextEquals(new char[] { 'a' }) ||
                     json.ValueTextEquals("a"))
                 {

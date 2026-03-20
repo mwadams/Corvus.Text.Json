@@ -251,7 +251,7 @@ public static partial class Utf8IriTests
     [Fact]
     public static void CreateIri_LargeIri_HandlesCorrectly()
     {
-        string largePathSegment = new string('a', 1000);
+        string largePathSegment = new('a', 1000);
         string largeIri = $"http://example.com/{largePathSegment}";
         byte[] iriBytes = Encoding.UTF8.GetBytes(largeIri);
 

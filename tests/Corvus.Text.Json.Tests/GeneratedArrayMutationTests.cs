@@ -61,7 +61,7 @@ public class GeneratedArrayMutationTests
         using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ArrayOfItems.Mutable root = builder.RootElement;
-        root.SetItem(1, default(ArrayOfItems.RequiredId.Source));
+        root.SetItem(1, default);
         Assert.Equal(2, root.GetArrayLength());
         Assert.Equal(1, (int)root[0].Id);
         Assert.Equal(3, (int)root[1].Id);
@@ -97,7 +97,7 @@ public class GeneratedArrayMutationTests
         using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ArrayOfItems.Mutable root = builder.RootElement;
-        root.InsertItem(1, default(ArrayOfItems.RequiredId.Source));
+        root.InsertItem(1, default);
         Assert.Equal(3, root.GetArrayLength());
     }
 
@@ -149,7 +149,7 @@ public class GeneratedArrayMutationTests
         using JsonDocumentBuilder<ArrayOfItems.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
 
         ArrayOfItems.Mutable root = builder.RootElement;
-        root.AddItem(default(ArrayOfItems.RequiredId.Source));
+        root.AddItem(default);
         Assert.Equal(3, root.GetArrayLength());
     }
 
@@ -251,7 +251,7 @@ public class GeneratedArrayMutationTests
 
         using var oldDoc = ParsedJsonDocument<ArrayOfItems.RequiredId>.Parse("""{"id":2,"label":"second"}""");
         ArrayOfItems.RequiredId oldItem = oldDoc.RootElement;
-        bool replaced = root.Replace(oldItem, default(ArrayOfItems.RequiredId.Source));
+        bool replaced = root.Replace(oldItem, default);
 
         Assert.True(replaced);
         Assert.Equal(2, root.GetArrayLength());

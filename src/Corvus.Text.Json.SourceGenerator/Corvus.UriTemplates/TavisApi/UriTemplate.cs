@@ -31,7 +31,7 @@ public class UriTemplate
         this.template = template;
         this.parameters = caseInsensitiveParameterNames
             ? new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
-            : new Dictionary<string, object?>();
+            : [];
     }
 
     /// <summary>
@@ -115,7 +115,7 @@ public class UriTemplate
     /// <returns>The parameters in the template.</returns>
     public IEnumerable<string> GetParameterNames()
     {
-        List<string> builder = new();
+        List<string> builder = [];
 
         DictionaryUriTemplateResolver.TryGetParameterNames(this.template.AsSpan(), AccumulateParameterNames, ref builder);
         return builder;
@@ -276,7 +276,7 @@ public class UriTemplate
     /// <returns>The parameters in the template.</returns>
     internal HashSet<string> GetParameterNamesHashSet()
     {
-        HashSet<string> builder = new();
+        HashSet<string> builder = [];
 
         DictionaryUriTemplateResolver.TryGetParameterNames(this.template.AsSpan(), AccumulateParameterNames, ref builder);
         return builder;

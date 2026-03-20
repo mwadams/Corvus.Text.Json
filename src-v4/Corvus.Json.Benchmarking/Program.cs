@@ -9,6 +9,8 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using Perfolizer.Mathematics.OutlierDetection;
 
+namespace Corvus.Json.Benchmarking;
+
 internal class Program
 {
     private static void Main(string[] args)

@@ -204,9 +204,7 @@ public readonly partial struct JsonElementA : IJsonElement<JsonElementA>
         JsonTokenType type = TokenType;
 
         return
-            type == JsonTokenType.True ? true :
-            type == JsonTokenType.False ? false :
-            ThrowJsonElementWrongTypeException(type);
+            type == JsonTokenType.True || type != JsonTokenType.False && ThrowJsonElementWrongTypeException(type);
 
         static bool ThrowJsonElementWrongTypeException(JsonTokenType actualType)
         {
@@ -1306,7 +1304,7 @@ public readonly partial struct JsonElementA : IJsonElement<JsonElementA>
     public bool EvaluateSchema(IJsonSchemaResultsCollector? resultsCollector = null) => true;
 
 #if NET
-    public static JsonElementA CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new JsonElementA(parentDocument, parentDocumentIndex);
+    public static JsonElementA CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]

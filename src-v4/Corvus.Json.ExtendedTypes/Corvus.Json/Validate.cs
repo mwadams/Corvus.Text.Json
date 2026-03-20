@@ -3419,7 +3419,7 @@ public static partial class Validate
         else if (level == ValidationLevel.Verbose)
         {
             return result
-                .WithResult(isValid: true, $"Validation contentEncoding - was 'base64'.", "contentEncoding")
+                .WithResult(isValid: true, "Validation contentEncoding - was 'base64'.", "contentEncoding")
                 .WithResult(isValid: true, $"Validation {typeKeyword ?? "type"} - was 'string'.", typeKeyword ?? "type");
         }
 

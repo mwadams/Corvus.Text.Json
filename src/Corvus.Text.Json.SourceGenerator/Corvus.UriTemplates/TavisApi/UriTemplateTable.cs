@@ -9,7 +9,7 @@ namespace Corvus.UriTemplates.TavisApi;
 /// </summary>
 public class UriTemplateTable
 {
-    private readonly Dictionary<string, UriTemplate> templates = new();
+    private readonly Dictionary<string, UriTemplate> templates = [];
 
     /// <summary>
     /// Get the URI template with the specified key.

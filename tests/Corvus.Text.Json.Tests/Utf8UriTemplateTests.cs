@@ -464,12 +464,12 @@ public class Utf8UriTemplateTests
     public void Validate_PathologicalCases_Invalid()
     {
         // Many opening braces
-        string template1 = new string('{', 100);
+        string template1 = new('{', 100);
         bool result1 = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template1));
         Assert.False(result1);
 
         // Many closing braces
-        string template2 = new string('}', 100);
+        string template2 = new('}', 100);
         bool result2 = Utf8UriTemplate.Validate(Encoding.UTF8.GetBytes(template2));
         Assert.False(result2);
 

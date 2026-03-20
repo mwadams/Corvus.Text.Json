@@ -234,7 +234,7 @@ public static partial class Utf8UriTests
     [Fact]
     public static void CreateUri_LargeUri_HandlesCorrectly()
     {
-        string largePathSegment = new string('a', 1000);
+        string largePathSegment = new('a', 1000);
         string largeUri = $"http://example.com/{largePathSegment}";
         byte[] uriBytes = Encoding.UTF8.GetBytes(largeUri);
 

@@ -148,7 +148,7 @@ public class BigNumberTryParseJsonUtf8Tests
     public void TryParseJsonUtf8_VeryLargeNumber_ReturnsTrue()
     {
         // 300-digit number (triggers ArrayPool path)
-        string largeNumber = new string('9', 300);
+        string largeNumber = new('9', 300);
         byte[] utf8Bytes = Encoding.UTF8.GetBytes(largeNumber);
 
         bool success = BigNumber.TryParseJsonUtf8(utf8Bytes, out BigNumber result);

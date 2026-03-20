@@ -302,7 +302,7 @@ public static partial class Utf8IriReferenceTests
     [Fact]
     public static void CreateIri_LargeUri_HandlesCorrectly()
     {
-        string largePathSegment = new string('a', 1000);
+        string largePathSegment = new('a', 1000);
         string largeUri = $"http://example.com/{largePathSegment}";
         byte[] iriBytes = Encoding.UTF8.GetBytes(largeUri);
 
@@ -615,7 +615,7 @@ public static partial class Utf8IriReferenceTests
     public static void CreateIri_VeryLongUri_HandlesCorrectly()
     {
         string baseUri = "http://example.com/";
-        string longPath = new string('a', 4000); // Very long path
+        string longPath = new('a', 4000); // Very long path
         string iri = baseUri + longPath;
         byte[] iriBytes = Encoding.UTF8.GetBytes(iri);
 

@@ -2129,7 +2129,7 @@ public static partial class Utf8JsonReaderTests
     [Fact]
     public static void JsonContainingOnlyWhitespaceIsInvalid()
     {
-        byte[] dataUtf8 = new byte[] { 0x20 };
+        byte[] dataUtf8 = " "u8.ToArray();
         var json = new Utf8JsonReader(dataUtf8, isFinalBlock: true, state: default);
 
         try
@@ -3180,7 +3180,7 @@ public static partial class Utf8JsonReaderTests
         Assert.Equal(default, json.Position);
         Assert.False(json.HasValueSequence);
         Assert.False(json.ValueIsEscaped);
-        Assert.True(json.ValueSpan.SequenceEqual(new byte[] { (byte)'1' }));
+        Assert.True(json.ValueSpan.SequenceEqual("1"u8));
         Assert.True(json.ValueSequence.IsEmpty);
 
         Assert.Equal(64, json.CurrentState.Options.MaxDepth);

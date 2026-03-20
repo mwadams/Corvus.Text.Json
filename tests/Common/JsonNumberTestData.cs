@@ -54,23 +54,23 @@ internal class JsonNumberTestData
 
         #region generate bytes and sbytes
 
-        Bytes = new List<byte>
-        {
+        Bytes =
+        [
             byte.MinValue,
             byte.MaxValue,
             64,
             128,
             144
-        };
+        ];
 
-        SBytes = new List<sbyte>
-        {
+        SBytes =
+        [
             0,
             64,
             -64,
             sbyte.MinValue,
             sbyte.MaxValue
-        };
+        ];
 
         byte[] byteArr = new byte[numberOfItems];
         random.NextBytes(byteArr);
@@ -86,14 +86,14 @@ internal class JsonNumberTestData
 
         #region generate shorts
 
-        Shorts = new List<short>
-        {
+        Shorts =
+        [
             0,
             20123,
             -20123,
             short.MaxValue,
             short.MinValue
-        };
+        ];
         byte[] b16 = new byte[2 * numberOfItems];
         random.NextBytes(b16);
         for (int i = 0; i < numberOfItems; i++)
@@ -105,14 +105,14 @@ internal class JsonNumberTestData
 
         #region generate ints
 
-        Ints = new List<int>
-        {
+        Ints =
+        [
             0,
             12345,
             -12345,
             int.MaxValue,
             int.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems; i++)
         {
             int value = random.Next(int.MinValue, int.MaxValue);
@@ -123,14 +123,14 @@ internal class JsonNumberTestData
 
         #region generate longs
 
-        Longs = new List<long>
-        {
+        Longs =
+        [
             0,
             12345678901,
             -12345678901,
             long.MaxValue,
             long.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems; i++)
         {
             long value = random.Next(int.MinValue, int.MaxValue);
@@ -145,14 +145,14 @@ internal class JsonNumberTestData
 
         #region generate ushorts
 
-        UShorts = new List<ushort>
-        {
+        UShorts =
+        [
             ushort.MaxValue,
             ushort.MinValue,
             12345,
             34567,
             64321
-        };
+        ];
         byte[] ub16 = new byte[2 * numberOfItems];
         random.NextBytes(ub16);
         for (int i = 0; i < numberOfItems; i++)
@@ -164,15 +164,15 @@ internal class JsonNumberTestData
 
         #region generate uints
 
-        UInts = new List<uint>
-        {
+        UInts =
+        [
             uint.MinValue,
             uint.MaxValue,
             12345,
             // next two values are just to satisfy requirement of having 5 values in the list
             67890,
             98989
-        };
+        ];
         byte[] b32 = new byte[4];
         for (int i = 0; i < numberOfItems; i++)
         {
@@ -184,15 +184,15 @@ internal class JsonNumberTestData
 
         #region generate ulongs
 
-        ULongs = new List<ulong>
-        {
+        ULongs =
+        [
             ulong.MinValue,
             ulong.MaxValue,
             12345,
             // next two values are just to satisfy requirement of having 5 values in the list
             67890,
             98989
-        };
+        ];
         byte[] b64 = new byte[8];
         for (int i = 0; i < numberOfItems; i++)
         {
@@ -204,14 +204,14 @@ internal class JsonNumberTestData
 
         #region generate doubles
 
-        Doubles = new List<double>
-        {
+        Doubles =
+        [
             0.000,
             1.1234e1,
             -1.1234e1,
             double.MaxValue,
             double.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems / 2; i++)
         {
             double value = JsonTestHelper.NextDouble(random, double.MinValue / 10, double.MaxValue / 10);
@@ -227,14 +227,14 @@ internal class JsonNumberTestData
 
         #region generate floats
 
-        Floats = new List<float>
-        {
+        Floats =
+        [
             0.000f,
             1.1234e1f,
             -1.1234e1f,
             float.MaxValue,
             float.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems; i++)
         {
             float value = JsonTestHelper.NextFloat(random);
@@ -245,14 +245,14 @@ internal class JsonNumberTestData
 
         #region generate decimals
 
-        Decimals = new List<decimal>
-        {
+        Decimals =
+        [
             (decimal)0.000,
             (decimal)1.1234e1,
             (decimal)-1.1234e1,
             decimal.MaxValue,
             decimal.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems / 2; i++)
         {
             decimal value = JsonTestHelper.NextDecimal(random, 78E14, -78E14);
@@ -270,14 +270,14 @@ internal class JsonNumberTestData
 
         #region generate Int128s
 
-        Int128s = new List<Int128>
-        {
+        Int128s =
+        [
             0,
             (Int128)long.MaxValue + 1,
             (Int128)long.MinValue - 1,
             Int128.MaxValue,
             Int128.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems; i++)
         {
             Int128 value = random.Next(int.MinValue, int.MaxValue);
@@ -292,12 +292,12 @@ internal class JsonNumberTestData
 
         #region generate UInt128s
 
-        UInt128s = new List<UInt128>
-        {
+        UInt128s =
+        [
             (UInt128)ulong.MaxValue + 1,
             UInt128.MaxValue,
             UInt128.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems; i++)
         {
             var value = (UInt128)random.Next(int.MinValue, int.MaxValue);
@@ -308,14 +308,14 @@ internal class JsonNumberTestData
 
         #region generate Halfs
 
-        Halfs = new List<Half>
-        {
+        Halfs =
+        [
             (Half)0.000,
             (Half)1.1234e1,
             (Half)(-1.1234e1),
             Half.MaxValue,
             Half.MinValue
-        };
+        ];
         for (int i = 0; i < numberOfItems; i++)
         {
             Half value = JsonTestHelper.NextHalf(random);

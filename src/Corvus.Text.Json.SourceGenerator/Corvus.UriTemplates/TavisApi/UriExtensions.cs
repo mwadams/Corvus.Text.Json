@@ -67,7 +67,7 @@ public static partial class UriExtensions
     /// <returns>A map of the query string parameters.</returns>
     public static Dictionary<string, object> GetQueryStringParameters(this Uri target)
     {
-        Dictionary<string, object> parameters = new();
+        Dictionary<string, object> parameters = [];
 
         GetQueryStringParameters(target, AccumulateResults, ref parameters);
 

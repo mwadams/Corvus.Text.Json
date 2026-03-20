@@ -22,10 +22,10 @@ public static class JsonDocumentBuilderCreateDynamicTests
     private static readonly byte[] Utf8Bom = { 0xEF, 0xBB, 0xBF };
 
     private static readonly Dictionary<TestCaseType, string> s_expectedConcat =
-        new Dictionary<TestCaseType, string>();
+        [];
 
     private static readonly Dictionary<TestCaseType, string> s_compactJson =
-        new Dictionary<TestCaseType, string>();
+        [];
 
     public static IEnumerable<object[]> BadBOMCases { get; } =
         new object[][]
@@ -2737,7 +2737,7 @@ public static class JsonDocumentBuilderCreateDynamicTests
             CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(builderDoc.RootElement);
         }
 
-        void CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(JsonElement.Mutable elem)
+        static void CheckPropertyCountAndArrayLengthAgainstEnumerateMethods(JsonElement.Mutable elem)
         {
             if (elem.ValueKind == JsonValueKind.Object)
             {
@@ -2859,7 +2859,7 @@ public static class JsonDocumentBuilderCreateDynamicTests
     [Fact]
     public static void ValueEquals_TestTextEqualsLargeMatch_True()
     {
-        string lookup = new string('a', 320);
+        string lookup = new('a', 320);
         string jsonString = "\"" + lookup + "\"";
         using (var workspace = JsonWorkspace.Create())
         using (var doc = ParsedJsonDocument<JsonElement>.Parse(jsonString))
@@ -3858,7 +3858,7 @@ public static class JsonDocumentBuilderCreateDynamicTests
         Assert.Equal("foo\"bar", root[2].GetString());
 
         // Non-ASCII UTF-8 string: "héllo" (e with acute accent)
-        ReadOnlySpan<byte> nonAsciiUtf8 = new byte[] { (byte)'h', 0xC3, 0xA9, (byte)'l', (byte)'l', (byte)'o' };
+        ReadOnlySpan<byte> nonAsciiUtf8 = "héllo"u8;
         root.SetItem(3, nonAsciiUtf8);
         Assert.Equal("héllo", root[3].GetString());
 
