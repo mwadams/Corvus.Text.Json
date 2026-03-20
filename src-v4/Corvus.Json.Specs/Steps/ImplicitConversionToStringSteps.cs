@@ -1,10 +1,10 @@
-﻿// <copyright file="ImplicitConversionToStringSteps.cs" company="Endjin Limited">
+// <copyright file="ImplicitConversionToStringSteps.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
 using Corvus.Json;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 

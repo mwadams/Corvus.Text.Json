@@ -1,4 +1,4 @@
-﻿// <copyright file="JsonValueEqualitySteps.cs" company="Endjin Limited">
+// <copyright file="JsonValueEqualitySteps.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using Corvus.Json;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 

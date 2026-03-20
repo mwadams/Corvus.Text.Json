@@ -1,4 +1,4 @@
-﻿// <copyright file="JsonPatchSteps.cs" company="Endjin Limited">
+// <copyright file="JsonPatchSteps.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -6,7 +6,7 @@ using Corvus.Json;
 using Corvus.Json.Patch;
 using Corvus.Json.Patch.Model;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 

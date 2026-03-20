@@ -5,7 +5,7 @@
 using System.Text;
 using Corvus.Json;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 
@@ -133,7 +133,7 @@ public class ParseValueStepDefinitions
         this.scenarioContext.Set(jsonValue, ResultKey);
     }
 
-    [When("the utf8 span '([^']*)' is parsed with ParsedValue{T} into a (.*)")]
+    [When(@"the utf8 span '([^']*)' is parsed with ParsedValue\{T\} into a (.*)")]
     public void WhenTheUtfSpanIsParsedWithParsedValueOfT(string span, string typeName)
     {
         byte[] utf8bytes = Encoding.UTF8.GetBytes(span);
@@ -189,7 +189,7 @@ public class ParseValueStepDefinitions
         this.scenarioContext.Set(result, ResultKey);
     }
 
-    [When("the utf8 ReadOnlyMemory '([^']*)' is parsed with ParsedValue{T} into a (.*)")]
+    [When(@"the utf8 ReadOnlyMemory '([^']*)' is parsed with ParsedValue\{T\} into a (.*)")]
     public void WhenTheUtfReadOnlyMemoryIsParsedWithParsedValueOfT(string span, string typeName)
     {
         byte[] utf8bytes = Encoding.UTF8.GetBytes(span);
@@ -244,7 +244,7 @@ public class ParseValueStepDefinitions
         this.scenarioContext.Set(result, ResultKey);
     }
 
-    [When("the utf8 Stream '([^']*)' is parsed with ParsedValue{T} into a (.*)")]
+    [When(@"the utf8 Stream '([^']*)' is parsed with ParsedValue\{T\} into a (.*)")]
     public void WhenTheUtfStreamIsParsedWithParsedValueOfT(string span, string typeName)
     {
         byte[] utf8bytes = Encoding.UTF8.GetBytes(span);
@@ -301,7 +301,7 @@ public class ParseValueStepDefinitions
         this.scenarioContext.Set(result, ResultKey);
     }
 
-    [When("the char span '([^']*)' is parsed with ParsedValue{T} into a (.*)")]
+    [When(@"the char span '([^']*)' is parsed with ParsedValue\{T\} into a (.*)")]
     public void WhenTheCharSpanIsParsedParsedValueOfT(string span, string typeName)
     {
         IJsonValue jsonValue = typeName switch
@@ -355,7 +355,7 @@ public class ParseValueStepDefinitions
         this.scenarioContext.Set(jsonValue, ResultKey);
     }
 
-    [When("the char ReadOnlyMemory '([^']*)' is parsed with ParsedValue{T} into a (.*)")]
+    [When(@"the char ReadOnlyMemory '([^']*)' is parsed with ParsedValue\{T\} into a (.*)")]
     public void WhenTheCharReadOnlyMemoryIsParsedParsedValueOfT(string span, string typeName)
     {
         IJsonValue jsonValue = typeName switch

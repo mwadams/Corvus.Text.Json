@@ -1,4 +1,4 @@
-﻿// <copyright file="ContainerConfiguration.cs" company="Endjin Limited">
+// <copyright file="ContainerConfiguration.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -11,8 +11,8 @@ using Drivers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using SolidToken.SpecFlow.DependencyInjection;
-using TechTalk.SpecFlow;
+using Reqnroll;
+using Reqnroll.Microsoft.Extensions.DependencyInjection;
 
 namespace Hooks;
 
@@ -37,7 +37,7 @@ public static class ContainerConfiguration
         {
             ScenarioContext scenarioContext = serviceProvider.GetRequiredService<ScenarioContext>();
             string path;
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "openApi30"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "openApi30"))
             {
                 path = serviceProvider.GetRequiredService<IConfiguration>()["jsonSchemaBuilderOpenApi30DriverSettings:remotesBaseDirectory"]!;
             }
@@ -66,32 +66,32 @@ public static class ContainerConfiguration
         services.AddTransient(sp =>
         {
             ScenarioContext scenarioContext = sp.GetRequiredService<ScenarioContext>();
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "draft2020-12"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "draft2020-12"))
             {
                 return new JsonSchemaBuilderDriver(sp.GetRequiredService<IConfiguration>(), sp.GetRequiredService<JsonSchemaTypeBuilder>(), Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary, "jsonSchemaBuilder202012DriverSettings");
             }
 
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "draft2019-09"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "draft2019-09"))
             {
                 return new JsonSchemaBuilderDriver(sp.GetRequiredService<IConfiguration>(), sp.GetRequiredService<JsonSchemaTypeBuilder>(), Corvus.Json.CodeGeneration.Draft201909.VocabularyAnalyser.DefaultVocabulary, "jsonSchemaBuilder201909DriverSettings");
             }
 
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "draft7"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "draft7"))
             {
                 return new JsonSchemaBuilderDriver(sp.GetRequiredService<IConfiguration>(), sp.GetRequiredService<JsonSchemaTypeBuilder>(), Corvus.Json.CodeGeneration.Draft7.VocabularyAnalyser.DefaultVocabulary, "jsonSchemaBuilder7DriverSettings");
             }
 
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "draft6"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "draft6"))
             {
                 return new JsonSchemaBuilderDriver(sp.GetRequiredService<IConfiguration>(), sp.GetRequiredService<JsonSchemaTypeBuilder>(), Corvus.Json.CodeGeneration.Draft6.VocabularyAnalyser.DefaultVocabulary, "jsonSchemaBuilder6DriverSettings");
             }
 
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "draft4"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "draft4"))
             {
                 return new JsonSchemaBuilderDriver(sp.GetRequiredService<IConfiguration>(), sp.GetRequiredService<JsonSchemaTypeBuilder>(), Corvus.Json.CodeGeneration.Draft4.VocabularyAnalyser.DefaultVocabulary, "jsonSchemaBuilder4DriverSettings");
             }
 
-            if (scenarioContext.ScenarioInfo.ScenarioAndFeatureTags.Any(t => t == "openApi30"))
+            if (scenarioContext.ScenarioInfo.CombinedTags.Any(t => t == "openApi30"))
             {
                 return new JsonSchemaBuilderDriver(sp.GetRequiredService<IConfiguration>(), sp.GetRequiredService<JsonSchemaTypeBuilder>(), Corvus.Json.CodeGeneration.OpenApi30.VocabularyAnalyser.DefaultVocabulary, "jsonSchemaBuilderOpenApi30DriverSettings");
             }

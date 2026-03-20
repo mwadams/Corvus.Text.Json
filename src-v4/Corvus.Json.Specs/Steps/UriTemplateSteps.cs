@@ -1,4 +1,4 @@
-﻿// <copyright file="UriTemplateSteps.cs" company="Endjin Limited">
+// <copyright file="UriTemplateSteps.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
@@ -9,7 +9,7 @@ using Corvus.Json;
 using Corvus.Json.UriTemplates;
 using Corvus.UriTemplates;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 
@@ -144,7 +144,7 @@ public class UriTemplateSteps
     public void WhenIMakeATemplateForTheTargetUriWithTheParameters(Table table)
     {
         ImmutableDictionary<string, JsonAny>.Builder parameters = ImmutableDictionary.CreateBuilder<string, JsonAny>();
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             parameters.Add(row["name"], JsonAny.Parse(row["value"]));
         }
@@ -161,7 +161,7 @@ public class UriTemplateSteps
     {
         var parameters = new (string, JsonAny)[table.Rows.Count];
         int index = 0;
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             parameters[index] = (row["name"], JsonAny.Parse(row["value"]));
             index++;
@@ -179,7 +179,7 @@ public class UriTemplateSteps
     {
         var parameters = new (string, JsonAny)[table.RowCount];
         int index = 0;
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             parameters[index] = (row["name"], JsonAny.Parse(row["value"]));
             ++index;
@@ -238,7 +238,7 @@ public class UriTemplateSteps
     public void ThenTheResovledTemplateShouldBeOneOf(Table table)
     {
         string resolved = this.scenarioContext.Get<UriTemplate>(TemplateKey).Resolve();
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             if (row[0] == resolved)
             {
@@ -308,7 +308,7 @@ public class UriTemplateSteps
     public void ThenTheMatchesForShouldBe(string uri, Table table)
     {
         Match match = this.scenarioContext.Get<Regex>(RegexKey).Match(uri);
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             Assert.AreEqual(row["match"], match.Groups[row["group"]].Value);
         }
@@ -346,7 +346,7 @@ public class UriTemplateSteps
         if (this.scenarioContext.Get<UriTemplate>(TemplateKey).TryGetParameters(new Uri(uri, UriKind.RelativeOrAbsolute), out ImmutableDictionary<string, JsonAny>? actual))
         {
             Assert.AreEqual(parameters.RowCount, actual.Count);
-            foreach (TableRow row in parameters.Rows)
+            foreach (DataTableRow row in parameters.Rows)
             {
                 Assert.AreEqual(JsonAny.Parse(row["value"]), actual[row["name"]]);
             }
@@ -376,7 +376,7 @@ public class UriTemplateSteps
     {
         ImmutableDictionary<string, JsonAny>.Builder builder = ImmutableDictionary.CreateBuilder<string, JsonAny>();
 
-        foreach (TableRow row in table.Rows)
+        foreach (DataTableRow row in table.Rows)
         {
             builder.Add(row["name"], JsonAny.Parse(row["value"]));
         }

@@ -1,11 +1,11 @@
-﻿// <copyright file="TruncatePathNamesSteps.cs" company="Endjin Limited">
+// <copyright file="TruncatePathNamesSteps.cs" company="Endjin Limited">
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
 #if NET8_0_OR_GREATER
 using Corvus.Json.Internal;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 

@@ -6,7 +6,7 @@ using System.Text.Json;
 using Corvus.Json;
 using Corvus.Json.Visitor;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
+using Reqnroll;
 
 namespace Steps;
 

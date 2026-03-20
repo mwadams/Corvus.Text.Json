@@ -6,8 +6,8 @@ using System.Collections.Frozen;
 using Corvus.Json;
 using Corvus.Json.CodeGeneration.CSharp;
 using NUnit.Framework;
-using TechTalk.SpecFlow;
-using TechTalk.SpecFlow.Assist;
+using Reqnroll;
+using Reqnroll.Assist;
 
 namespace Corvus.Specs.Steps;
 
