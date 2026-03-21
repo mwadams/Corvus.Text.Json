@@ -106,12 +106,22 @@ root.SetEmail("michael@example.com"u8);
 root.Address.SetCity("London"u8);
 ```
 
-The root element is always live (it is at index 0 and is never relocated), so it never needs to be re-obtained. Intermediate child references, however, *will* be invalidated by sibling mutations — always navigate from the root to access different children:
+A root element is always live, so it never needs to be re-obtained. Intermediate child references, however, *will* be invalidated by sibling mutations — always navigate from the root to access different children:
 
 ```csharp
 Person.Mutable root = builder.RootElement;  // always live — cache freely
 root.RemoveEmail();              // structural change
 root.Address.SetCity("London"u8); // still valid — root is always live
+```
+
+To avoid expensive lookups, you can make multiple modifications to the *same* entity. Its own version is refreshed when it is modified.
+
+```csharp
+Person.Mutable root = builder.RootElement;  // always live — cache freely
+root.RemoveEmail();              // structural change
+Person.AddressEntity.Mutable address = root.Address;
+address.SetCity("London"u8); // still valid — root is always live
+address.SetZipCode("SE3"u8); // still valid — root is always live
 ```
 
 ## Removing properties
