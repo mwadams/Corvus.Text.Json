@@ -540,7 +540,7 @@ public readonly partial struct MigrationNested
                     throw new InvalidOperationException();
                 }
 
-                if (_documentVersion != _parent.Version)
+                if (_idx != 0 && _documentVersion != _parent.Version)
                 {
                     throw new InvalidOperationException();
                 }
@@ -1133,6 +1133,28 @@ public readonly partial struct MigrationNested
             var source = new Source<TContext>(context, value);
             source.AddAsItem(ref cvb);
             Debug.Assert(cvb.MemberCount == 1);
+            ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+            return documentBuilder;
+        }
+
+        /// <summary>
+        /// Creates and initializes a mutable document from the given property values.
+        /// </summary>
+        /// <param name="workspace">The JSON workspace.</param>
+        /// <param name="city">The value of the property.</param>
+        /// <param name="street">The value of the property.</param>
+        /// <param name="zipCode">The value of the property.</param>
+        /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+        /// <returns>An instance of a mutable document initialized with the given property values.</returns>
+        public static JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonString.Source city, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonString.Source street, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationNested.RequiredCityAndStreet.ZipCodeEntity.Source zipCode = default, int initialCapacity = 30)
+        {
+            JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+            cvb.StartObject();
+            Builder ovb = new(cvb);
+            ovb.Create(city, street, zipCode);
+            cvb = ovb._builder;
+            cvb.EndObject();
             ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
             return documentBuilder;
         }

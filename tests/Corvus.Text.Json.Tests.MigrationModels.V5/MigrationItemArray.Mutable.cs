@@ -286,7 +286,7 @@ public readonly partial struct MigrationItemArray
                 throw new InvalidOperationException();
             }
 
-            if (_documentVersion != _parent.Version)
+            if (_idx != 0 && _documentVersion != _parent.Version)
             {
                 throw new InvalidOperationException();
             }
@@ -399,6 +399,114 @@ public readonly partial struct MigrationItemArray
         public void AddItem(in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationItemArray.RequiredId.Source value)
         {
             InsertItem(GetArrayLength(), in value);
+        }
+        /// <summary>
+        ///   Inserts multiple items into the array at the specified index,
+        ///   using an <see cref="JsonElement.ArrayBuilder"/> delegate to build the items.
+        /// </summary>
+        /// <param name="itemIndex">The zero-based index at which to insert the items.</param>
+        /// <param name="rangeBuilder">A delegate that adds items to an <see cref="JsonElement.ArrayBuilder"/>.</param>
+        /// <param name="estimatedMemberCount">The estimated total number of elements for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Only the items built by the delegate are inserted — no array wrapper is added.
+        ///   </para>
+        /// </remarks>
+        public void InsertRange(int itemIndex, JsonElement.ArrayBuilder.Build rangeBuilder, int estimatedMemberCount = 30)
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            JsonElement.ArrayBuilder.BuildItems(rangeBuilder, ref cvb);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+
+        /// <summary>
+        ///   Inserts multiple items into the array at the specified index,
+        ///   using an <see cref="JsonElement.ArrayBuilder"/> delegate with a context parameter.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="itemIndex">The zero-based index at which to insert the items.</param>
+        /// <param name="context">The context to pass to the builder delegate.</param>
+        /// <param name="rangeBuilder">A delegate that adds items to an <see cref="JsonElement.ArrayBuilder"/>.</param>
+        /// <param name="estimatedMemberCount">The estimated total number of elements for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///   <paramref name="itemIndex"/> is negative or greater than the array length.
+        /// </exception>
+        /// <remarks>
+        ///   <para>
+        ///     Only the items built by the delegate are inserted — no array wrapper is added.
+        ///   </para>
+        /// </remarks>
+        public void InsertRange<TContext>(int itemIndex, in TContext context, JsonElement.ArrayBuilder.Build<TContext> rangeBuilder, int estimatedMemberCount = 30)
+        #if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+        #endif
+        {
+            CheckValidInstance();
+            ComplexValueBuilder cvb = ComplexValueBuilder.Create(_parent, estimatedMemberCount);
+            JsonElement.ArrayBuilder.BuildItems(context, rangeBuilder, ref cvb);
+            _parent.InsertAndDispose(_idx, _parent.GetArrayInsertionIndex(_idx, itemIndex), ref cvb);
+            _documentVersion = _parent.Version;
+        }
+        /// <summary>
+        ///   Appends multiple items to the end of the array,
+        ///   using an <see cref="JsonElement.ArrayBuilder"/> delegate to build the items.
+        /// </summary>
+        /// <param name="rangeBuilder">A delegate that adds items to an <see cref="JsonElement.ArrayBuilder"/>.</param>
+        /// <param name="estimatedMemberCount">The estimated total number of elements for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddRange(JsonElement.ArrayBuilder.Build rangeBuilder, int estimatedMemberCount = 30)
+        {
+            InsertRange(GetArrayLength(), rangeBuilder, estimatedMemberCount);
+        }
+
+        /// <summary>
+        ///   Appends multiple items to the end of the array,
+        ///   using an <see cref="JsonElement.ArrayBuilder"/> delegate with a context parameter.
+        /// </summary>
+        /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+        /// <param name="context">The context to pass to the builder delegate.</param>
+        /// <param name="rangeBuilder">A delegate that adds items to an <see cref="JsonElement.ArrayBuilder"/>.</param>
+        /// <param name="estimatedMemberCount">The estimated total number of elements for capacity optimization.</param>
+        /// <exception cref="InvalidOperationException">
+        ///   This element's <see cref="ValueKind"/> is not <see cref="JsonValueKind.Array"/>,
+        ///   or the element reference is stale due to document mutations.
+        /// </exception>
+        /// <exception cref="ObjectDisposedException">
+        ///   The parent <see cref="JsonDocument"/> has been disposed.
+        /// </exception>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void AddRange<TContext>(in TContext context, JsonElement.ArrayBuilder.Build<TContext> rangeBuilder, int estimatedMemberCount = 30)
+        #if NET9_0_OR_GREATER
+            where TContext : allows ref struct
+        #endif
+        {
+            InsertRange(GetArrayLength(), context, rangeBuilder, estimatedMemberCount);
         }
 
         /// <summary>

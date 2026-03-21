@@ -656,7 +656,7 @@ public readonly partial struct MigrationPerson
                 throw new InvalidOperationException();
             }
 
-            if (_documentVersion != _parent.Version)
+            if (_idx != 0 && _documentVersion != _parent.Version)
             {
                 throw new InvalidOperationException();
             }
@@ -1255,6 +1255,30 @@ public readonly partial struct MigrationPerson
         var source = new Source<TContext>(context, value);
         source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from the given property values.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="age">The value of the property.</param>
+    /// <param name="name">The value of the property.</param>
+    /// <param name="dateOfBirth">The value of the property.</param>
+    /// <param name="email">The value of the property.</param>
+    /// <param name="isActive">The value of the property.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given property values.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationPerson.AgeEntity.Source age, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationPerson.NameEntity.Source name, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonDate.Source dateOfBirth = default, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonEmail.Source email = default, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonBoolean.Source isActive = default, int initialCapacity = 30)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        cvb.StartObject();
+        Builder ovb = new(cvb);
+        ovb.Create(age, name, dateOfBirth, email, isActive);
+        cvb = ovb._builder;
+        cvb.EndObject();
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }

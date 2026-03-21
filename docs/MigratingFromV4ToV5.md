@@ -607,6 +607,18 @@ The standard mutation workflow is:
 4. Call `Set*()` methods on the mutable element
 5. Serialize via `root.WriteTo(writer)` or convert to immutable via `.Clone()`
 
+> **Tip — Root element caching:** The root element (`builder.RootElement`) is always live because it is at index 0 and is never relocated by mutations. You can cache it once and use it as your navigation hub for multiple mutations:
+>
+> ```csharp
+> MigrationPerson.Mutable root = builder.RootElement;
+> root.SetName("Alice");
+> root.SetAge(25);
+> root.SetEmail("alice@example.com");
+> // All three mutations work because root is always live
+> ```
+>
+> See [Version Tracking and Element Invalidation](JsonDocumentBuilder.md#version-tracking-and-element-invalidation) for the full version tracking rules, including limitations on intermediate child references.
+
 ---
 
 ## Removing Properties

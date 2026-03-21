@@ -143,6 +143,7 @@ public readonly partial struct MigrationUnion
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

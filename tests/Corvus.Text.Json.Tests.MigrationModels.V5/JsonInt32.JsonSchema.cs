@@ -93,6 +93,7 @@ public readonly partial struct JsonInt32
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

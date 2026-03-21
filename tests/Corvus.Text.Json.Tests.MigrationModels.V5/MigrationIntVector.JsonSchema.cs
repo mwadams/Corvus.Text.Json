@@ -134,6 +134,7 @@ public readonly partial struct MigrationIntVector
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

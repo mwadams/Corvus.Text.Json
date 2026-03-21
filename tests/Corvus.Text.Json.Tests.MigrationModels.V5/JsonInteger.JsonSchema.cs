@@ -88,6 +88,7 @@ public readonly partial struct JsonInteger
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

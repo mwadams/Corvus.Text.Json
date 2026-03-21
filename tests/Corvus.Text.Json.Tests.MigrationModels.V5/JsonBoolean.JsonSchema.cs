@@ -85,6 +85,7 @@ public readonly partial struct JsonBoolean
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

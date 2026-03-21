@@ -406,6 +406,22 @@ catch (InvalidOperationException ex)
     Console.WriteLine($"Caught expected exception: {ex.Message}");
 }
 
+// --- Root element caching demo ---
+// The root element is always live (index 0, never relocated),
+// so a cached root reference survives mutations to children.
+Console.WriteLine();
+Console.WriteLine("--- Root element caching demo ---");
+using var rootCachingDoc = ParsedJsonDocument<JsonElement>.Parse(json);
+using JsonDocumentBuilder<JsonElement.Mutable> rootCachingBuilder = rootCachingDoc.RootElement.CreateBuilder(workspace);
+JsonElement.Mutable cachedRoot = rootCachingBuilder.RootElement;
+
+// Navigate from root to "name" child and mutate a property.
+cachedRoot.GetProperty("name"u8).SetProperty("firstName"u8, "RootCached"u8);
+// Root is still live — navigate to "name" again and mutate another property.
+cachedRoot.GetProperty("name"u8).SetProperty("lastName"u8, "StillWorks"u8);
+
+Console.WriteLine($"After root caching: {cachedRoot}");
+
 bool result = person == lastName;
 
 JsonDocumentBuilder<NameComponent.Mutable> nameComponentBuilder = NameComponent.CreateBuilder(workspace, "foo"u8);

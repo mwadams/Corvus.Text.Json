@@ -316,7 +316,7 @@ public readonly partial struct JsonString
                 throw new InvalidOperationException();
             }
 
-            if (_documentVersion != _parent.Version)
+            if (_idx != 0 && _documentVersion != _parent.Version)
             {
                 throw new InvalidOperationException();
             }

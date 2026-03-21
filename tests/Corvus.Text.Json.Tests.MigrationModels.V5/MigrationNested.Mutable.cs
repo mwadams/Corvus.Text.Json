@@ -507,7 +507,7 @@ public readonly partial struct MigrationNested
                 throw new InvalidOperationException();
             }
 
-            if (_documentVersion != _parent.Version)
+            if (_idx != 0 && _documentVersion != _parent.Version)
             {
                 throw new InvalidOperationException();
             }
@@ -1125,6 +1125,53 @@ public readonly partial struct MigrationNested
         var source = new Source<TContext>(context, value);
         source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from the given property values.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="address">The value of the property.</param>
+    /// <param name="name">The value of the property.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given property values.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationNested.RequiredCityAndStreet.Source address, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonString.Source name, int initialCapacity = 30)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        cvb.StartObject();
+        Builder ovb = new(cvb);
+        ovb.Create(address, name);
+        cvb = ovb._builder;
+        cvb.EndObject();
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from the given property values.
+    /// </summary>
+    /// <typeparam name="TContext">The type of the context to pass to the builder.</typeparam>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="context">The value of the property.</param>
+    /// <param name="address">The value of the property.</param>
+    /// <param name="name">The value of the property.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given property values.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder<TContext>(JsonWorkspace workspace, in TContext context, in Corvus.Text.Json.Tests.MigrationModels.V5.MigrationNested.RequiredCityAndStreet.Source<TContext> address, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonString.Source name, int initialCapacity = 30)
+        #if NET9_0_OR_GREATER
+        where TContext : allows ref struct
+        #endif
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        cvb.StartObject();
+        Builder ovb = new(cvb);
+        ovb.Create(context, address, name);
+        cvb = ovb._builder;
+        cvb.EndObject();
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }

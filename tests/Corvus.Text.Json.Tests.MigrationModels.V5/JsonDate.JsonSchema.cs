@@ -91,6 +91,7 @@ public readonly partial struct JsonDate
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

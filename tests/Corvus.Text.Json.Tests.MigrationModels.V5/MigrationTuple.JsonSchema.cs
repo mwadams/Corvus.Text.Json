@@ -215,6 +215,7 @@ public readonly partial struct MigrationTuple
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

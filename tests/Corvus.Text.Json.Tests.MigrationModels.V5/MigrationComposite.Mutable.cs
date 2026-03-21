@@ -658,7 +658,7 @@ public readonly partial struct MigrationComposite
                 throw new InvalidOperationException();
             }
 
-            if (_documentVersion != _parent.Version)
+            if (_idx != 0 && _documentVersion != _parent.Version)
             {
                 throw new InvalidOperationException();
             }
@@ -1306,6 +1306,23 @@ public readonly partial struct MigrationComposite
     }
 
     /// <summary>
+    /// Creates an empty mutable document builder.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An empty mutable document builder.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(
+        JsonWorkspace workspace, int initialCapacity = 30)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        cvb.StartObject();
+        cvb.EndObject();
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
     /// Creates and initializes a mutable document from a value.
     /// </summary>
     /// <param name="workspace">The JSON workspace.</param>
@@ -1346,6 +1363,29 @@ public readonly partial struct MigrationComposite
         var source = new Source<TContext>(context, value);
         source.AddAsItem(ref cvb);
         Debug.Assert(cvb.MemberCount == 1);
+        ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
+        return documentBuilder;
+    }
+
+    /// <summary>
+    /// Creates and initializes a mutable document from the given property values.
+    /// </summary>
+    /// <param name="workspace">The JSON workspace.</param>
+    /// <param name="budget">The value of the property.</param>
+    /// <param name="count">The value of the property.</param>
+    /// <param name="name">The value of the property.</param>
+    /// <param name="description">The value of the property.</param>
+    /// <param name="initialCapacity">The (optional) estimate of the capacity to reserve for the document.</param>
+    /// <returns>An instance of a mutable document initialized with the given property values.</returns>
+    public static JsonDocumentBuilder<Mutable> CreateBuilder(JsonWorkspace workspace, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonNumber.Source budget, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonInteger.Source count, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonString.Source name, in Corvus.Text.Json.Tests.MigrationModels.V5.JsonString.Source description = default, int initialCapacity = 30)
+    {
+        JsonDocumentBuilder<Mutable> documentBuilder = workspace.CreateBuilder<Mutable>(-1);
+        ComplexValueBuilder cvb = ComplexValueBuilder.Create(documentBuilder, initialCapacity);
+        cvb.StartObject();
+        Builder ovb = new(cvb);
+        ovb.Create(budget, count, name, description);
+        cvb = ovb._builder;
+        cvb.EndObject();
         ((IMutableJsonDocument)documentBuilder).SetAndDispose(ref cvb);
         return documentBuilder;
     }

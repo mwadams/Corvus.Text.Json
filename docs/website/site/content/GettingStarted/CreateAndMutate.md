@@ -50,9 +50,9 @@ using var builder = Person.CreateBuilder(
         (ref nb) => nb.Create(familyName: "Oldroyd"u8, givenName: "Michael"u8)),
     hobbies: Person.HobbiesEntity.Build((ref hb) =>
     {
-        hb.Add("reading"u8);
-        hb.Add("hiking"u8);
-        hb.Add("coding"u8);
+        hb.AddItem("reading"u8);
+        hb.AddItem("hiking"u8);
+        hb.AddItem("coding"u8);
     }));
 ```
 
@@ -106,12 +106,12 @@ root.SetEmail("michael@example.com"u8);
 root.Address.SetCity("London"u8);
 ```
 
-If a structural change invalidates your reference, re-obtain it from `builder.RootElement`:
+The root element is always live (it is at index 0 and is never relocated), so it never needs to be re-obtained. Intermediate child references, however, *will* be invalidated by sibling mutations — always navigate from the root to access different children:
 
 ```csharp
-Person.Mutable root = builder.RootElement;
+Person.Mutable root = builder.RootElement;  // always live — cache freely
 root.RemoveEmail();              // structural change
-root = builder.RootElement;      // re-obtain root after structural change
+root.Address.SetCity("London"u8); // still valid — root is always live
 ```
 
 ## Removing properties

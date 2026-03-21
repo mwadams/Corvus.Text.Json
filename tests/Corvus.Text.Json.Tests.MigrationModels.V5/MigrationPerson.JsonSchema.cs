@@ -274,6 +274,7 @@ public readonly partial struct MigrationPerson
             try
             {
                 Evaluate(parentDocument, parentIndex, ref context);
+                context.EndContext();
                 return context.IsMatch;
             }
             finally

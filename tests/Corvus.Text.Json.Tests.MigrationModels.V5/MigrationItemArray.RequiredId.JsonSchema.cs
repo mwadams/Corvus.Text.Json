@@ -206,6 +206,7 @@ public readonly partial struct MigrationItemArray
                 try
                 {
                     Evaluate(parentDocument, parentIndex, ref context);
+                    context.EndContext();
                     return context.IsMatch;
                 }
                 finally

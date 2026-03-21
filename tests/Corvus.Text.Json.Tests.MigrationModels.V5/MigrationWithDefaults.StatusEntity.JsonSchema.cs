@@ -101,6 +101,7 @@ public readonly partial struct MigrationWithDefaults
                 try
                 {
                     Evaluate(parentDocument, parentIndex, ref context);
+                    context.EndContext();
                     return context.IsMatch;
                 }
                 finally

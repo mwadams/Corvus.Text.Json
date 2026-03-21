@@ -1,4 +1,4 @@
-﻿---
+---
 ContentType: "application/vnd.endjin.ssg.content+md"
 PublicationStatus: Published
 Date: 2026-03-15T00:00:00.0+00:00
@@ -76,8 +76,8 @@ using var builder = JsonElement.BuildDocument(
     new JsonElement.Source((ref objectBuilder) =>
     {
         // Using data from sourceDoc
-        objectBuilder.Add("original"u8, sourceDoc.RootElement.GetProperty("value"));
-        objectBuilder.Add("modified"u8, 100);
+        objectBuilder.AddProperty("original"u8, sourceDoc.RootElement.GetProperty("value"));
+        objectBuilder.AddProperty("modified"u8, 100);
     }));
 ```
 
@@ -140,10 +140,10 @@ using var personDoc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("name"u8, "John Smith"u8);
-        objectBuilder.Add("age"u8, 30);
-        objectBuilder.Add("isActive"u8, true);
-        objectBuilder.Add("email"u8, "john@example.com"u8);
+        objectBuilder.AddProperty("name"u8, "John Smith"u8);
+        objectBuilder.AddProperty("age"u8, 30);
+        objectBuilder.AddProperty("isActive"u8, true);
+        objectBuilder.AddProperty("email"u8, "john@example.com"u8);
     }));
 
 Console.WriteLine(personDoc.RootElement.ToString());
@@ -162,20 +162,20 @@ using var doc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("user"u8, static (ref userBuilder) =>
+        objectBuilder.AddProperty("user"u8, static (ref userBuilder) =>
         {
-            userBuilder.Add("id"u8, 1);
+            userBuilder.AddProperty("id"u8, 1);
 
             // Nested profile object within user
-            userBuilder.Add("profile"u8, static (ref profileBuilder) =>
+            userBuilder.AddProperty("profile"u8, static (ref profileBuilder) =>
             {
-                profileBuilder.Add("firstName"u8, "Jane"u8);
-                profileBuilder.Add("lastName"u8, "Doe"u8);
-                profileBuilder.Add("age"u8, 28);
+                profileBuilder.AddProperty("firstName"u8, "Jane"u8);
+                profileBuilder.AddProperty("lastName"u8, "Doe"u8);
+                profileBuilder.AddProperty("age"u8, 28);
             });
         });
 
-        objectBuilder.Add("timestamp"u8, "2026-02-24T11:00:00Z"u8);
+        objectBuilder.AddProperty("timestamp"u8, "2026-02-24T11:00:00Z"u8);
     }));
 
 // Navigate through nested structure to access values
@@ -201,11 +201,11 @@ using var arrayDoc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref arrayBuilder) =>
     {
-        arrayBuilder.Add(1);
-        arrayBuilder.Add(2);
-        arrayBuilder.Add(3);
-        arrayBuilder.Add(4);
-        arrayBuilder.Add(5);
+        arrayBuilder.AddItem(1);
+        arrayBuilder.AddItem(2);
+        arrayBuilder.AddItem(3);
+        arrayBuilder.AddItem(4);
+        arrayBuilder.AddItem(5);
     }));
 
 Console.WriteLine(arrayDoc.RootElement.ToString());
@@ -222,9 +222,9 @@ using var namesDoc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref arrayBuilder) =>
     {
-        arrayBuilder.Add("Alice"u8);
-        arrayBuilder.Add("Bob"u8);
-        arrayBuilder.Add("Charlie"u8);
+        arrayBuilder.AddItem("Alice"u8);
+        arrayBuilder.AddItem("Bob"u8);
+        arrayBuilder.AddItem("Charlie"u8);
     }));
 
 // Iterate through it
@@ -246,22 +246,22 @@ using var usersDoc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref arrayBuilder) =>
     {
-        arrayBuilder.Add(static (ref userBuilder) =>
+        arrayBuilder.AddItem(static (ref userBuilder) =>
         {
-            userBuilder.Add("id"u8, 1);
-            userBuilder.Add("name"u8, "Alice"u8);
+            userBuilder.AddProperty("id"u8, 1);
+            userBuilder.AddProperty("name"u8, "Alice"u8);
         });
 
-        arrayBuilder.Add(static (ref userBuilder) =>
+        arrayBuilder.AddItem(static (ref userBuilder) =>
         {
-            userBuilder.Add("id"u8, 2);
-            userBuilder.Add("name"u8, "Bob"u8);
+            userBuilder.AddProperty("id"u8, 2);
+            userBuilder.AddProperty("name"u8, "Bob"u8);
         });
 
-        arrayBuilder.Add(static (ref userBuilder) =>
+        arrayBuilder.AddItem(static (ref userBuilder) =>
         {
-            userBuilder.Add("id"u8, 3);
-            userBuilder.Add("name"u8, "Charlie"u8);
+            userBuilder.AddProperty("id"u8, 3);
+            userBuilder.AddProperty("name"u8, "Charlie"u8);
         });
     }));
 
@@ -343,37 +343,37 @@ using var doc = JsonElement.BuildDocument(
     new JsonElement.Source((ref objectBuilder) =>
     {
         // Static structure with runtime values
-        objectBuilder.Add("id"u8, Guid.NewGuid());
+        objectBuilder.AddProperty("id"u8, Guid.NewGuid());
 
-        objectBuilder.Add("profile"u8, static (ref profileBuilder) =>
+        objectBuilder.AddProperty("profile"u8, static (ref profileBuilder) =>
         {
-            profileBuilder.Add("username"u8, "john.doe"u8);
-            profileBuilder.Add("created"u8, DateTime.UtcNow);
+            profileBuilder.AddProperty("username"u8, "john.doe"u8);
+            profileBuilder.AddProperty("created"u8, DateTime.UtcNow);
         });
 
         // Dynamically add array from runtime collection
         // Note: Cannot use 'static' when capturing variables
-        objectBuilder.Add("tags"u8, (ref tagsBuilder) =>
+        objectBuilder.AddProperty("tags"u8, (ref tagsBuilder) =>
         {
             foreach (string tag in tags)
             {
-                tagsBuilder.Add(tag);
+                tagsBuilder.AddProperty(tag);
             }
         });
 
         // Another dynamic array from collection
-        objectBuilder.Add("activeYears"u8, (ref yearsBuilder) =>
+        objectBuilder.AddProperty("activeYears"u8, (ref yearsBuilder) =>
         {
             foreach (int year in years)
             {
-                yearsBuilder.Add(year);
+                yearsBuilder.AddProperty(year);
             }
         });
 
-        objectBuilder.Add("metadata"u8, static (ref metaBuilder) =>
+        objectBuilder.AddProperty("metadata"u8, static (ref metaBuilder) =>
         {
-            metaBuilder.Add("version"u8, "1.0"u8);
-            metaBuilder.Add("revision"u8, 42);
+            metaBuilder.AddProperty("version"u8, "1.0"u8);
+            metaBuilder.AddProperty("revision"u8, 42);
         });
     }));
 
@@ -401,8 +401,8 @@ using var doc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("name"u8, "Initial"u8);
-        objectBuilder.Add("count"u8, 0);
+        objectBuilder.AddProperty("name"u8, "Initial"u8);
+        objectBuilder.AddProperty("count"u8, 0);
     }));
 
 JsonElement.Mutable root = doc.RootElement;
@@ -426,10 +426,10 @@ using var doc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("items"u8, static (ref arrayBuilder) =>
+        objectBuilder.AddProperty("items"u8, static (ref arrayBuilder) =>
         {
-            arrayBuilder.Add("item1"u8);
-            arrayBuilder.Add("item2"u8);
+            arrayBuilder.AddItem("item1"u8);
+            arrayBuilder.AddItem("item2"u8);
         });
     }));
 
@@ -509,8 +509,8 @@ using var doc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("message"u8, "Hello"u8);
-        objectBuilder.Add("status"u8, 200);
+        objectBuilder.AddProperty("message"u8, "Hello"u8);
+        objectBuilder.AddProperty("status"u8, 200);
     }));
 
 // Write to a memory stream (could be any stream - file, network, etc.)
@@ -550,9 +550,9 @@ using var doc = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("message"u8, "Hello, World!"u8);
-        objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
-        objectBuilder.Add("status"u8, 200);
+        objectBuilder.AddProperty("message"u8, "Hello, World!"u8);
+        objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
+        objectBuilder.AddProperty("status"u8, 200);
     }));
 
 // Rent writer + buffer
@@ -598,9 +598,9 @@ public async Task WriteApiResponse(HttpContext context)
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
-                objectBuilder.Add("success"u8, true);
-                objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
-                objectBuilder.Add("data"u8, Encoding.UTF8.GetBytes(userData));
+                objectBuilder.AddProperty("success"u8, true);
+                objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
+                objectBuilder.AddProperty("data"u8, Encoding.UTF8.GetBytes(userData));
             }));
 
         // Rent writer for the response body writer
@@ -664,12 +664,12 @@ using var response = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("success"u8, true);
-        objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
-        objectBuilder.Add("data"u8, static (ref dataBuilder) =>
+        objectBuilder.AddProperty("success"u8, true);
+        objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
+        objectBuilder.AddProperty("data"u8, static (ref dataBuilder) =>
         {
-            dataBuilder.Add("id"u8, 12345);
-            dataBuilder.Add("status"u8, "completed"u8);
+            dataBuilder.AddProperty("id"u8, 12345);
+            dataBuilder.AddProperty("status"u8, "completed"u8);
         });
     }));
 
@@ -706,22 +706,22 @@ using var enrichedDoc = JsonElement.BuildDocument(
     new JsonElement.Source((ref objectBuilder) =>
     {
         // Original API data
-        objectBuilder.Add("userId"u8, apiRoot.GetProperty("id"));
-        objectBuilder.Add("username"u8, apiRoot.GetProperty("username"));
+        objectBuilder.AddProperty("userId"u8, apiRoot.GetProperty("id"));
+        objectBuilder.AddProperty("username"u8, apiRoot.GetProperty("username"));
 
         // Augmented data
-        objectBuilder.Add("permissions"u8, (ref permBuilder) =>
+        objectBuilder.AddProperty("permissions"u8, (ref permBuilder) =>
         {
             foreach (string perm in permissions)
             {
-                permBuilder.Add(perm);
+                permBuilder.AddProperty(perm);
             }
         });
 
-        objectBuilder.Add("preferences"u8, (ref prefBuilder) =>
+        objectBuilder.AddProperty("preferences"u8, (ref prefBuilder) =>
         {
-            prefBuilder.Add("theme"u8, preferences.Theme);
-            prefBuilder.Add("notifications"u8, preferences.NotificationsEnabled);
+            prefBuilder.AddProperty("theme"u8, preferences.Theme);
+            prefBuilder.AddProperty("notifications"u8, preferences.NotificationsEnabled);
         });
     }));
 ```
@@ -764,36 +764,36 @@ public async Task<string> GetUserProfileAsync(int userId)
             {
                 // User info from first API
                 JsonElement user = userDoc.RootElement;
-                objectBuilder.Add("userId"u8, user.GetProperty("id"));
-                objectBuilder.Add("username"u8, user.GetProperty("username"));
-                objectBuilder.Add("email"u8, user.GetProperty("email"));
+                objectBuilder.AddProperty("userId"u8, user.GetProperty("id"));
+                objectBuilder.AddProperty("username"u8, user.GetProperty("username"));
+                objectBuilder.AddProperty("email"u8, user.GetProperty("email"));
 
                 // Posts from second API
-                objectBuilder.Add("recentPosts"u8, (ref postsBuilder) =>
+                objectBuilder.AddProperty("recentPosts"u8, (ref postsBuilder) =>
                 {
                     JsonElement posts = postsDoc.RootElement.GetProperty("posts");
                     foreach (JsonElement post in posts.EnumerateArray())
                     {
-                        postsBuilder.Add((ref postBuilder) =>
+                        postsBuilder.AddProperty((ref postBuilder) =>
                         {
-                            postBuilder.Add("id"u8, post.GetProperty("id"));
-                            postBuilder.Add("title"u8, post.GetProperty("title"));
-                            postBuilder.Add("publishedAt"u8, post.GetProperty("publishedAt"));
+                            postBuilder.AddProperty("id"u8, post.GetProperty("id"));
+                            postBuilder.AddProperty("title"u8, post.GetProperty("title"));
+                            postBuilder.AddProperty("publishedAt"u8, post.GetProperty("publishedAt"));
                         });
                     }
                 });
 
                 // Analytics from third API
-                objectBuilder.Add("stats"u8, (ref statsBuilder) =>
+                objectBuilder.AddProperty("stats"u8, (ref statsBuilder) =>
                 {
                     JsonElement analytics = analyticsDoc.RootElement;
-                    statsBuilder.Add("totalViews"u8, analytics.GetProperty("totalViews"));
-                    statsBuilder.Add("totalLikes"u8, analytics.GetProperty("totalLikes"));
-                    statsBuilder.Add("followerCount"u8, analytics.GetProperty("followerCount"));
+                    statsBuilder.AddProperty("totalViews"u8, analytics.GetProperty("totalViews"));
+                    statsBuilder.AddProperty("totalLikes"u8, analytics.GetProperty("totalLikes"));
+                    statsBuilder.AddProperty("followerCount"u8, analytics.GetProperty("followerCount"));
                 });
 
                 // Computed fields
-                objectBuilder.Add("isActive"u8,
+                objectBuilder.AddProperty("isActive"u8,
                     userDoc.RootElement.GetProperty("lastLoginAt").GetDateTime() > DateTime.UtcNow.AddDays(-30));
             }));
 
@@ -863,8 +863,8 @@ public async Task<JsonElement> BuildReportAsync()
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
-                objectBuilder.Add("initialData"u8, initialDoc.RootElement.GetProperty("value"));
-                objectBuilder.Add("timestamp"u8, DateTime.UtcNow);
+                objectBuilder.AddProperty("initialData"u8, initialDoc.RootElement.GetProperty("value"));
+                objectBuilder.AddProperty("timestamp"u8, DateTime.UtcNow);
             }));
 
         // Make an async call - workspace survives the await because it's unrented
@@ -915,23 +915,23 @@ using var transformedDoc = JsonElement.BuildDocument(
     new JsonElement.Source((ref objectBuilder) =>
     {
         // Map old fields to new structure
-        objectBuilder.Add("id"u8, legacyRoot.GetProperty("user_id").GetInt32());
+        objectBuilder.AddProperty("id"u8, legacyRoot.GetProperty("user_id").GetInt32());
 
-        objectBuilder.Add("account"u8, (ref accountBuilder) =>
+        objectBuilder.AddProperty("account"u8, (ref accountBuilder) =>
         {
-            accountBuilder.Add("username"u8,
+            accountBuilder.AddProperty("username"u8,
                 Encoding.UTF8.GetBytes(legacyRoot.GetProperty("user_name").GetString()!));
         });
 
-        objectBuilder.Add("authorization"u8, (ref authBuilder) =>
+        objectBuilder.AddProperty("authorization"u8, (ref authBuilder) =>
         {
             string role = legacyRoot.GetProperty("user_role").GetString()!;
-            authBuilder.Add("role"u8, Encoding.UTF8.GetBytes(role));
-            authBuilder.Add("isAdmin"u8, role == "admin");
+            authBuilder.AddProperty("role"u8, Encoding.UTF8.GetBytes(role));
+            authBuilder.AddProperty("isAdmin"u8, role == "admin");
         });
 
         // Add modern metadata
-        objectBuilder.Add("apiVersion"u8, "v2"u8);
+        objectBuilder.AddProperty("apiVersion"u8, "v2"u8);
     }));
 ```
 
@@ -944,21 +944,21 @@ using var config = JsonElement.BuildDocument(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("appName"u8, "MyApp"u8);
-        objectBuilder.Add("version"u8, "1.0.0"u8);
+        objectBuilder.AddProperty("appName"u8, "MyApp"u8);
+        objectBuilder.AddProperty("version"u8, "1.0.0"u8);
 
-        objectBuilder.Add("database"u8, static (ref dbBuilder) =>
+        objectBuilder.AddProperty("database"u8, static (ref dbBuilder) =>
         {
-            dbBuilder.Add("host"u8, "localhost"u8);
-            dbBuilder.Add("port"u8, 5432);
-            dbBuilder.Add("name"u8, "mydb"u8);
+            dbBuilder.AddProperty("host"u8, "localhost"u8);
+            dbBuilder.AddProperty("port"u8, 5432);
+            dbBuilder.AddProperty("name"u8, "mydb"u8);
         });
 
-        objectBuilder.Add("features"u8, static (ref featuresBuilder) =>
+        objectBuilder.AddProperty("features"u8, static (ref featuresBuilder) =>
         {
-            featuresBuilder.Add("logging"u8, true);
-            featuresBuilder.Add("caching"u8, true);
-            featuresBuilder.Add("compression"u8, false);
+            featuresBuilder.AddProperty("logging"u8, true);
+            featuresBuilder.AddProperty("caching"u8, true);
+            featuresBuilder.AddProperty("compression"u8, false);
         });
     }));
 
@@ -971,84 +971,117 @@ The `JsonElement.Mutable` type includes **version tracking** to detect when refe
 
 ### Understanding Version Tracking
 
-When you modify a mutable JSON document (by adding, removing, or changing elements), the document's internal version is incremented. Any `JsonElement.Mutable` references you obtained **before** the modification will detect this version change and throw an `InvalidOperationException` if you try to use them.
+When you modify a mutable JSON document (by adding, removing, or changing elements), the document's internal version is incremented. Any `JsonElement.Mutable` references you obtained **before** the modification will detect this version change and throw an `InvalidOperationException` if you try to use them — with one important exception: the **root element** is always live.
 
-### Example of Version Tracking
+### The Root Element Is Always Live
+
+The root element of a `JsonDocumentBuilder` (obtained via `doc.RootElement`) is always at index 0 in the document and is never relocated by mutations. This means a cached root reference remains valid across any number of child mutations. You can navigate from the root to different children and mutate them without refreshing the root reference.
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
-        objectBuilder.Add("numbers"u8, static (ref arrayBuilder) =>
+        objectBuilder.Add("person"u8, static (ref personBuilder) =>
         {
-            arrayBuilder.Add(10);
-            arrayBuilder.Add(20);
-            arrayBuilder.Add(30);
+            personBuilder.Add("name"u8, "Alice"u8);
         });
-
-        objectBuilder.Add("tags"u8, static (ref arrayBuilder) =>
+        objectBuilder.Add("location"u8, static (ref locBuilder) =>
         {
-            arrayBuilder.Add("alpha"u8);
-            arrayBuilder.Add("beta"u8);
+            locBuilder.Add("city"u8, "London"u8);
         });
     }));
 
 JsonElement.Mutable root = doc.RootElement;
-JsonElement.Mutable numbers = root.GetProperty("numbers");
-JsonElement.Mutable tags = root.GetProperty("tags");
 
-// Modify the numbers array
-numbers.SetItem(0, 100);
+// ✅ Navigate from root, mutate child, then navigate to another child.
+// Root is always live, so this works even though the first mutation bumped the version.
+root.GetProperty("person"u8).SetProperty("name"u8, "Bob"u8);
+root.GetProperty("location"u8).SetProperty("city"u8, "NYC"u8);
+```
 
-// ❌ BAD: Trying to use 'tags' reference after modifying 'numbers'
-// This will throw InvalidOperationException because the version changed
+This also works when you cache intermediate children, provided you re-navigate from the root between mutations to different children:
+
+```csharp
+JsonElement.Mutable root = doc.RootElement;
+
+// Cache a child and perform multiple operations on it
+JsonElement.Mutable person = root.GetProperty("person"u8);
+person.SetProperty("name"u8, "Bob"u8);
+person.SetProperty("email"u8, "bob@example.com"u8);  // Same element — version is updated in-place
+
+// Then navigate from root to a different child
+JsonElement.Mutable location = root.GetProperty("location"u8);  // Root is still live
+location.SetProperty("city"u8, "NYC"u8);
+```
+
+### Intermediate References Are Still Invalidated
+
+While the root element is always live, intermediate child references behave as before: they are invalidated when a different element is mutated.
+
+```csharp
+JsonElement.Mutable root = doc.RootElement;
+
+// Cache two intermediate children
+JsonElement.Mutable person = root.GetProperty("person"u8);
+JsonElement.Mutable location = root.GetProperty("location"u8);
+
+// Mutate through 'person'
+person.SetProperty("name"u8, "Bob"u8);
+
+// ❌ BAD: 'location' was obtained before the mutation and is now stale
 try
 {
-    tags.SetItem(0, "MODIFIED");  // Throws!
+    location.SetProperty("city"u8, "NYC"u8);  // Throws InvalidOperationException!
 }
-catch (InvalidOperationException ex)
+catch (InvalidOperationException)
 {
-    Console.WriteLine("Reference became invalid after modification");
+    // The cached 'location' reference is invalid — re-navigate from root
+    location = root.GetProperty("location"u8);  // Root is always live
+    location.SetProperty("city"u8, "NYC"u8);    // Now it works
 }
-
-// ✅ GOOD: Re-get the reference after modification
-root = doc.RootElement;  // Refresh root
-tags = root.GetProperty("tags");  // Get fresh reference
-tags.SetItem(0, "MODIFIED");  // Now it works
 ```
+
+### Three Patterns for Working with Mutable Elements
+
+| Pattern | Valid? | Description |
+|---------|--------|-------------|
+| Navigate from cached root to different children | ✅ | Root is always live (index 0, never relocated) |
+| Multiple mutations on the same element | ✅ | Each mutation updates the element's version in-place |
+| Reuse a cached intermediate child after sibling mutation | ❌ | Intermediate references are invalidated by any other mutation |
 
 ### Best Practices for Version Tracking
 
-1. **Re-get references after modifications**
+1. **Use the root element as your navigation hub**
    ```csharp
-   numbers.Remove(0);
+   JsonElement.Mutable root = doc.RootElement;
 
-   // Re-get root and other references
-   root = doc.RootElement;
-   colors = root.GetProperty("colors");
+   // Navigate from root for each mutation — root is always live
+   root.GetProperty("field1"u8).SetProperty("value"u8, "a"u8);
+   root.GetProperty("field2"u8).SetProperty("value"u8, "b"u8);
    ```
 
-2. **Perform all operations on one element before moving to another**
+2. **Perform all operations on one child before moving to another**
    ```csharp
-   // ✅ Good - finish with numbers before getting colors
-   JsonElement.Mutable numbers = root.GetProperty("numbers");
-   numbers.Remove(0);
-   numbers.Remove(numbers.GetArrayLength() - 1);
+   JsonElement.Mutable numbers = root.GetProperty("numbers"u8);
+   numbers.SetItem(0, 100);
+   numbers.SetItem(1, 200);
 
-   // Now refresh and get colors
-   root = doc.RootElement;
-   JsonElement.Mutable colors = root.GetProperty("colors");
-   colors.RemoveRange(0, 2);
+   // Re-navigate from root (always live) to get a fresh child reference
+   JsonElement.Mutable tags = root.GetProperty("tags"u8);
+   tags.SetItem(0, "updated"u8);
    ```
 
-3. **Use the root element as your source of truth**
+3. **Re-navigate from root if you need a child reference after a mutation**
    ```csharp
-   // Always access through doc.RootElement for fresh references
-   doc.RootElement.GetProperty("field1").SetItem(0, value1);
-   doc.RootElement.GetProperty("field2").SetItem(0, value2);
+   JsonElement.Mutable child = root.GetProperty("child"u8);
+   child.SetProperty("x"u8, "value"u8);
+
+   // 'otherChild' obtained before this point would be stale.
+   // Re-navigate from root instead:
+   JsonElement.Mutable otherChild = root.GetProperty("otherChild"u8);
    ```
 
 ### Why Version Tracking Exists
@@ -1058,35 +1091,8 @@ Version tracking is a **safety feature** that prevents bugs caused by:
 - Accessing elements at incorrect indices after array modifications
 - Reading properties that may have been removed or reordered
 
-Without version tracking, you could silently access incorrect data or crash with memory corruption. The `InvalidOperationException` is intentional and helps you write correct code.
-
-### Working with Version Tracking
-
-The key principle is: **after any modification, assume all previously obtained references are invalid**.
-
-```csharp
-using JsonWorkspace workspace = JsonWorkspace.Create();
-using var doc = JsonElement.BuildDocument(workspace, /* ... */);
-
-// Pattern 1: Single modification
-JsonElement.Mutable array1 = doc.RootElement.GetProperty("array1");
-array1.Remove(0);
-
-// Pattern 2: Multiple modifications on same element
-JsonElement.Mutable array2 = doc.RootElement.GetProperty("array2");
-array2.Remove(0);
-array2.Remove(0);  // OK - same element, hasn't been refreshed yet
-array2.SetItem(0, newValue);  // OK - still the same element
-
-// Pattern 3: Access different properties
-JsonElement.Mutable prop1 = doc.RootElement.GetProperty("prop1");
-prop1.SetItem(0, value1);
-
-JsonElement.Mutable prop2 = doc.RootElement.GetProperty("prop2");
-prop2.SetItem(0, value2);
-```
-
-## Comparison with System.Text.Json.Nodes
+Without version tracking, you could silently access incorrect data or crash with memory corruption. The `InvalidOperationException` is intentional and helps you write correct code. The root element exemption is safe because the root is always at index 0 and is never relocated.
+\n## Comparison with System.Text.Json.Nodes
 
 ### Similar Capabilities
 

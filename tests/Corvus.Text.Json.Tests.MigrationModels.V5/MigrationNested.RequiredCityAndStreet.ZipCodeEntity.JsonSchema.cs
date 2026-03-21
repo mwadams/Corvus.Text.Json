@@ -108,6 +108,7 @@ public readonly partial struct MigrationNested
                     try
                     {
                         Evaluate(parentDocument, parentIndex, ref context);
+                        context.EndContext();
                         return context.IsMatch;
                     }
                     finally

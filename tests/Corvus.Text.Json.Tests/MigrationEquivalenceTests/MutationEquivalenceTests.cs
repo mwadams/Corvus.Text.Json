@@ -3,6 +3,7 @@
 
 namespace Corvus.Text.Json.Tests.MigrationEquivalenceTests;
 
+using Corvus.Text.Json.Tests.MigrationModels.V5;
 using Xunit;
 
 using V4 = MigrationModels.V4;
@@ -618,5 +619,33 @@ public class MutationEquivalenceTests
 
         Assert.Equal((string)v4[0].Label, (string)root[0].Label);
         Assert.Equal((string)v4[1].Label, (string)root[1].Label);
+    }
+
+    /// <summary>
+    /// Verifies that a cached V5 root element remains valid across mutations to different
+    /// child properties. The root element is always live (index 0, never relocated).
+    /// </summary>
+    [Fact]
+    public void V5_CachedRootElement_MultiplePropertyMutations()
+    {
+        using var workspace = Corvus.Text.Json.JsonWorkspace.Create();
+        using var doc = Corvus.Text.Json.ParsedJsonDocument<V5.MigrationNested>.Parse(NestedJson);
+        using JsonDocumentBuilder<MigrationNested.Mutable> builder = doc.RootElement.CreateBuilder(workspace);
+
+        V5.MigrationNested.Mutable root = builder.RootElement;
+
+        // Navigate from root to the nested Address child and mutate.
+        root.Address.SetCity("NYC");
+
+        // Root is always live — we can still navigate from it.
+        root.SetName("Bob");
+
+        // Navigate from root to Address again and mutate another property.
+        root.Address.SetStreet("456 Broadway");
+
+        // Verify all changes.
+        Assert.Equal("Bob", (string)root.Name);
+        Assert.Equal("NYC", (string)root.Address.City);
+        Assert.Equal("456 Broadway", (string)root.Address.Street);
     }
 }
