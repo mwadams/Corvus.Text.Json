@@ -202,7 +202,6 @@ internal enum JsonRegexOpCode
     /// <summary>Push a null marker into the grouping stack for quantifiers with a minimum of zero when no explicit counter is needed.</summary>
     /// <remarks>
     /// This opcode is similar to <see cref="Nullcount"/> but is used in cases where the quantified construct does not require counting;
-
     /// it pushes a marker value (-1) onto the grouping stack to record the starting position. On backtracking, the marker is simply removed.
     /// </remarks>
     Nullmark = 30,

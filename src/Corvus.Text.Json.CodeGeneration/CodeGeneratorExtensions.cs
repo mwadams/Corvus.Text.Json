@@ -1452,7 +1452,7 @@ internal static partial class CodeGeneratorExtensions
                 .PushIndent()
                 .AppendBlockIndent(
                     """
-                    if (_documentVersion != _parent.Version)
+                    if (_idx != 0 && _documentVersion != _parent.Version)
                     {
                         throw new InvalidOperationException();
                     }

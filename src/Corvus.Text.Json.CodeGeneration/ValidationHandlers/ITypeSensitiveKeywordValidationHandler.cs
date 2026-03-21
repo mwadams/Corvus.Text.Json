@@ -39,7 +39,6 @@ internal interface ITypeInsensitiveKeywordValidationHandler : IKeywordValidation
     /// </summary>
     /// <param name="generator">The code generator.</param>
     /// <param name="typeDeclaration">The type declaration containing the keyword.</param>
-    /// the wrapper to check the type of the outer element, the validation code, and the ignore code should be emitted.</param>
     /// <returns>The code generator, after the operation has completed.</returns>
     CodeGenerator AppendValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration);
 }

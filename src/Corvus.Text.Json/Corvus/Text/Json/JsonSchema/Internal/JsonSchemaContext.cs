@@ -504,21 +504,16 @@ public struct JsonSchemaContext
     /// <code>
     /// // After validation with child context
     /// bool childIsValid = ValidateWithChild(ref childContext);
-
     /// bool parentIsValid = parentContext.IsMatch &amp;&amp; childIsValid;
-
     ///
     /// // Commit the child results
     /// parentContext.CommitChildContext(parentIsValid, ref childContext, contextData, messageProvider);
-
     ///
     /// // Optionally merge evaluated tracking
     /// if (needsEvaluatedTracking)
     /// {
-    /// parentContext.ApplyEvaluated(ref childContext);
-
+    ///     parentContext.ApplyEvaluated(ref childContext);
     /// }
-
     /// </code>
     /// </para>
     /// </remarks>

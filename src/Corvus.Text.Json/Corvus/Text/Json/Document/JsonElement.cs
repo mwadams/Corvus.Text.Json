@@ -236,7 +236,7 @@ public readonly partial struct JsonElement
     }
 
     /// <summary>
-    /// Create an instance of a <see cref="JsonElement/> from a <see cref="IJsonElement"/>.
+    /// Create an instance of a <see cref="JsonElement"/> from a <see cref="IJsonElement"/>.
     /// </summary>
     /// <typeparam name="T">The type of the source element.</typeparam>
     /// <param name="instance">The instance of the source element.</param>

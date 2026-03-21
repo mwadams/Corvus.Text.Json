@@ -24,7 +24,7 @@ public readonly struct SimpleTypeAndFormatterAndKind
     /// </summary>
     /// <remarks>
     /// The expression will be called in the context where the value is provided via and identifier
-    /// <c>v</c>, the output <see cref="Span{byte}"/> will be <c>buffer</c>, and the <see langword="out"/> parameter
+    /// <c>v</c>, the output <see cref="Span{T}"/> will be <c>buffer</c>, and the <see langword="out"/> parameter
     /// <c>written</c> will receive the number of bytes written. e.g. <c>Utf8Formatter.TryFormat(v, buffer, out written)</c>
     /// </remarks>
     public readonly string FormatterExpression;

@@ -869,8 +869,7 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <example>
     /// <code>
     /// // Recommended using pattern
-    /// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
-
+    /// using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic)
     ///
     /// // Validation operations...
     ///
@@ -881,17 +880,14 @@ public sealed class JsonSchemaResultsCollector : IJsonSchemaResultsCollector
     /// <code>
     /// // Manual disposal when using pattern is not available
     /// var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Basic);
-
     /// try
     /// {
     /// // Validation operations...
     /// }
-
     /// finally
     /// {
     /// collector.Dispose(); // Essential for proper resource management
     /// }
-
     /// </code>
     /// </example>
     public void Dispose()

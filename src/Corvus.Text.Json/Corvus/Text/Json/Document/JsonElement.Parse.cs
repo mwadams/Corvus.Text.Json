@@ -104,7 +104,6 @@ public readonly partial struct JsonElement
     /// <param name="element">Receives the parsed element.</param>
     /// <returns>
     /// <see langword="true"/> if a value was read and parsed into a JsonElement;
-
     /// <see langword="false"/> if the reader ran out of data while parsing.
     /// All other situations result in an exception being thrown.
     /// </returns>
@@ -115,13 +114,11 @@ public readonly partial struct JsonElement
     /// reader will be advanced by one call to <see cref="Utf8JsonReader.Read"/> to determine
     /// the start of the value.
     /// </para>
-    ///
     /// <para>
     /// Upon completion of this method, <paramref name="reader"/> will be positioned at the
     /// final token in the JSON value.  If an exception is thrown, or <see langword="false"/>
     /// is returned, the reader is reset to the state it was in when the method was called.
     /// </para>
-    ///
     /// <para>
     /// This method makes a copy of the data the reader acted on, so there is no caller
     /// requirement to maintain data integrity beyond the return of this method.

@@ -78,7 +78,6 @@ public ref partial struct Utf8JsonReader
     /// <summary>
     /// Gets the value of the last processed token as a ReadOnlySpan&lt;byte&gt; slice
     /// of the input payload. If the JSON is provided within a ReadOnlySequence&lt;byte&gt;
-
     /// and the slice that represents the token value fits in a single segment, then
     /// <see cref="ValueSpan"/> will contain the sliced value since it can be represented as a span.
     /// Otherwise, the <see cref="ValueSequence"/> will contain the token value.

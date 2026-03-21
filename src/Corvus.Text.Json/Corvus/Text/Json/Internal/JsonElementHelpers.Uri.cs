@@ -23,7 +23,6 @@ public static partial class JsonElementHelpers
     /// <param name="uri">The URI to format.</param>
     /// <param name="isDisplay">
     /// <see langword="true"/> to produce the display form with percent-encoded sequences decoded;
-
     /// <see langword="false"/> to produce the canonical form with all required characters percent-encoded.
     /// </param>
     /// <param name="result">The formatted string, or <see langword="null"/> if formatting failed.</param>

@@ -158,7 +158,7 @@ internal ref partial struct Utf8ValueStringBuilder
     {
         if (start > _pos)
         {
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(start));
         }
 
         _bytes = _bytes.Slice(start);
@@ -174,7 +174,7 @@ internal ref partial struct Utf8ValueStringBuilder
     {
         if (start + length > _pos)
         {
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(start));
         }
 
         _bytes = _bytes.Slice(start);
@@ -209,7 +209,7 @@ internal ref partial struct Utf8ValueStringBuilder
     /// <returns>The value as a <see cref="ReadOnlyMemory{byte}"/></returns>
     public ReadOnlyMemory<byte> AsMemory()
     {
-        this.EnsureRented();
+        EnsureRented();
         return _arrayToReturnToPool.AsMemory(0, _pos);
     }
 
@@ -221,7 +221,7 @@ internal ref partial struct Utf8ValueStringBuilder
     /// <returns>The value as a <see cref="ReadOnlyMemory{byte}"/></returns>
     public ReadOnlyMemory<byte> AsMemory(int start)
     {
-        this.EnsureRented();
+        EnsureRented();
         return _arrayToReturnToPool.AsMemory(start, _pos - start);
     }
 
@@ -234,7 +234,7 @@ internal ref partial struct Utf8ValueStringBuilder
     /// <returns>The value as a <see cref="ReadOnlyMemory{byte}"/></returns>
     public ReadOnlyMemory<byte> AsMemory(int start, int length)
     {
-        this.EnsureRented();
+        EnsureRented();
         return _arrayToReturnToPool.AsMemory(start, length);
     }
 

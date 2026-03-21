@@ -14,11 +14,8 @@ namespace System;
 /// Range is used by the C# compiler to support the range syntax.
 /// <code>
 /// int[] someArray = new int[5] { 1, 2, 3, 4, 5 };
-
 /// int[] subArray1 = someArray[0..2]; // { 1, 2 }
-
 /// int[] subArray2 = someArray[1..^0]; // { 2, 3, 4, 5 }
-
 /// </code>
 /// </remarks>
 #if SYSTEM_PRIVATE_CORELIB || MICROSOFT_BCL_MEMORY

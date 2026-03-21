@@ -247,7 +247,6 @@ public readonly partial struct JsonElementForBooleanFalseSchema : IJsonElement<J
     /// <param name="element">Receives the parsed element.</param>
     /// <returns>
     /// <see langword="true"/> if a value was read and parsed into a JsonElement;
-
     /// <see langword="false"/> if the reader ran out of data while parsing.
     /// All other situations result in an exception being thrown.
     /// </returns>
