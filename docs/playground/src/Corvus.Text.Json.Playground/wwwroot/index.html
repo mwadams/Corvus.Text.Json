@@ -6,6 +6,7 @@
     <title>Corvus.Text.Json Playground</title>
     <base href="/" />
     <link href="css/app.css" rel="stylesheet" />
+    <link rel="icon" type="image/png" href="favicon.png" />
 </head>
 <body>
     <div id="app">
@@ -14,6 +15,15 @@
         </div>
     </div>
 
+    <script src="_content/BlazorMonaco/lib/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { 'vs': '_content/BlazorMonaco/lib/monaco-editor/min/vs' } });
+        require(['vs/editor/editor.main'], function () {
+            console.log('Monaco editor loaded');
+        });
+    </script>
+    <script src="_content/BlazorMonaco/jsInterop.js"></script>
+    <script src="js/intellisense.js"></script>
     <script src="_framework/blazor.webassembly.js"></script>
 </body>
 </html>

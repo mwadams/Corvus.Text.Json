@@ -11,7 +11,7 @@
             @foreach (var entry in TypeMap)
             {
                 <li>
-                    <div class="type-map-entry @(selectedEntry == entry ? "selected" : "")"
+                    <div class="type-map-entry @GetEntryClass(entry)"
                          @onclick="() => SelectType(entry)">
                         <span class="type-name">@entry.TypeName</span>
                         <span class="type-kind">(@entry.Kind)</span>
@@ -22,8 +22,9 @@
                             @foreach (var prop in entry.Properties)
                             {
                                 <li>
-                                    <div class="type-map-entry">
-                                        <span class="prop-name">@prop.Name</span>
+                                    <div class="type-map-entry @GetPropertyClass(prop)"
+                                         @onclick="() => SelectProperty(prop)">
+                                        <span class="prop-name">@prop.DotnetPropertyName</span>
                                         <span class="prop-type">: @prop.TypeName</span>
                                         @if (prop.IsRequired)
                                         {
@@ -45,13 +46,47 @@
     public IReadOnlyList<TypeMapEntry> TypeMap { get; set; } = [];
 
     [Parameter]
-    public EventCallback<TypeMapEntry> OnTypeSelected { get; set; }
+    public EventCallback<string?> OnSchemaPointerSelected { get; set; }
 
-    private TypeMapEntry? selectedEntry;
+    private string? selectedItemKey;
+    private string? relatedFullTypeName;
 
     private async Task SelectType(TypeMapEntry entry)
     {
-        selectedEntry = entry;
-        await OnTypeSelected.InvokeAsync(entry);
+        selectedItemKey = $"type:{entry.FullTypeName}";
+        relatedFullTypeName = null;
+        await OnSchemaPointerSelected.InvokeAsync(entry.SchemaPointer);
+    }
+
+    private async Task SelectProperty(TypeMapProperty prop)
+    {
+        selectedItemKey = $"prop:{prop.Name}:{prop.FullTypeName}";
+        relatedFullTypeName = prop.FullTypeName;
+        await OnSchemaPointerSelected.InvokeAsync(prop.SchemaPointer);
+    }
+
+    private string GetEntryClass(TypeMapEntry entry)
+    {
+        if (selectedItemKey == $"type:{entry.FullTypeName}")
+        {
+            return "selected";
+        }
+
+        if (relatedFullTypeName is not null && entry.FullTypeName == relatedFullTypeName)
+        {
+            return "related";
+        }
+
+        return "";
+    }
+
+    private string GetPropertyClass(TypeMapProperty prop)
+    {
+        if (selectedItemKey == $"prop:{prop.Name}:{prop.FullTypeName}")
+        {
+            return "selected";
+        }
+
+        return "";
     }
 }

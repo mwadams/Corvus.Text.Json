@@ -1,8 +1,9 @@
-using System.Text.Json;
+using System.Collections.Immutable;
 using Corvus.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.DocumentResolvers;
 using Corvus.Text.Json.Playground.Models;
+using PropertyDeclarationExtensions = Corvus.Text.Json.CodeGeneration.PropertyDeclarationExtensions;
 
 namespace Corvus.Text.Json.Playground.Services;
 
@@ -12,39 +13,60 @@ namespace Corvus.Text.Json.Playground.Services;
 /// </summary>
 public class CodeGenerationService
 {
-    private const string UserSchemaUri = "schema://playground/user-schema.json";
+    private const string SchemaBaseUri = "schema://playground/";
+
+    // Match V5 SourceGenerator defaults
+    private static readonly ImmutableArray<string> DefaultDisabledNamingHeuristics =
+        ["DocumentationNameHeuristic"];
 
     /// <summary>
-    /// Generate C# types from a JSON Schema string.
+    /// Generate C# types from multiple JSON Schema files.
     /// </summary>
     public async Task<GenerationResult> GenerateAsync(
-        string schemaJson,
+        IReadOnlyList<SchemaFile> schemaFiles,
         string rootNamespace = "Playground",
         CancellationToken cancellationToken = default)
     {
         try
         {
-            // Parse the user's schema
-            JsonDocument schemaDoc;
-            try
-            {
-                schemaDoc = JsonDocument.Parse(schemaJson);
-            }
-            catch (JsonException ex)
-            {
-                return new GenerationResult
-                {
-                    Success = false,
-                    ErrorMessage = $"Invalid JSON: {ex.Message}",
-                };
-            }
-
             // Create a prepopulated document resolver (no file I/O, WASM-safe)
             using PrepopulatedDocumentResolver documentResolver = new();
             documentResolver.AddMetaschema();
-            documentResolver.AddDocument(UserSchemaUri, schemaDoc);
 
-            // Register vocabulary analyzers (same as GenerationDriverV5)
+            // Parse and register all schema documents (mimics V5 SourceGenerator pattern)
+            var parsedSchemas = new List<(SchemaFile File, string Uri)>();
+            foreach (SchemaFile schemaFile in schemaFiles)
+            {
+                System.Text.Json.JsonDocument schemaDoc;
+                try
+                {
+                    schemaDoc = System.Text.Json.JsonDocument.Parse(schemaFile.Content);
+                }
+                catch (System.Text.Json.JsonException ex)
+                {
+                    return new GenerationResult
+                    {
+                        Success = false,
+                        ErrorMessage = $"Invalid JSON in '{schemaFile.Name}': {ex.Message}",
+                    };
+                }
+
+                // Registration 1: By playground URI derived from filename
+                string uri = SchemaBaseUri + schemaFile.Name;
+                documentResolver.AddDocument(uri, schemaDoc);
+
+                // Registration 2: By $id if present (critical for $ref resolution)
+                if (schemaDoc.RootElement.TryGetProperty("$id", out System.Text.Json.JsonElement idElement) &&
+                    idElement.ValueKind == System.Text.Json.JsonValueKind.String &&
+                    idElement.GetString() is string id)
+                {
+                    documentResolver.AddDocument(id, schemaDoc);
+                }
+
+                parsedSchemas.Add((schemaFile, uri));
+            }
+
+            // Register vocabulary analyzers (same as V5 SourceGenerator)
             VocabularyRegistry vocabularyRegistry = new();
             Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.RegisterAnalyser(documentResolver, vocabularyRegistry);
             Corvus.Json.CodeGeneration.Draft201909.VocabularyAnalyser.RegisterAnalyser(documentResolver, vocabularyRegistry);
@@ -58,28 +80,52 @@ public class CodeGenerationService
             IVocabulary defaultVocabulary =
                 Corvus.Json.CodeGeneration.Draft202012.VocabularyAnalyser.DefaultVocabulary;
 
-            // Build type declarations
+            // Build type declarations — one AddTypeDeclarations call per root type
             JsonSchemaTypeBuilder typeBuilder = new(documentResolver, vocabularyRegistry);
-            JsonReference reference = new(UserSchemaUri);
-            TypeDeclaration rootType = await typeBuilder
-                .AddTypeDeclarationsAsync(reference, defaultVocabulary, rebaseAsRoot: false);
+            var rootTypes = new List<TypeDeclaration>();
 
-            // Configure the C# language provider
+            foreach (var (file, uri) in parsedSchemas)
+            {
+                if (!file.IsRootType)
+                {
+                    continue;
+                }
+
+                JsonReference reference = new(uri);
+                TypeDeclaration rootType = await typeBuilder
+                    .AddTypeDeclarationsAsync(reference, defaultVocabulary, rebaseAsRoot: false);
+                rootTypes.Add(rootType);
+            }
+
+            if (rootTypes.Count == 0)
+            {
+                return new GenerationResult
+                {
+                    Success = false,
+                    ErrorMessage = "No root types selected for generation. Mark at least one schema as a root type.",
+                };
+            }
+
+            // Configure the C# language provider to match V5 SourceGenerator defaults
             var options = new CodeGeneration.CSharpLanguageProvider.Options(
                 rootNamespace,
-                addExplicitUsings: true);
+                addExplicitUsings: true,
+                useImplicitOperatorString: true,
+                useOptionalNameHeuristics: true,
+                alwaysAssertFormat: true,
+                disabledNamingHeuristics: [.. DefaultDisabledNamingHeuristics]);
 
             var languageProvider = CodeGeneration.CSharpLanguageProvider.DefaultWithOptions(options);
 
-            // Generate code
+            // Single GenerateCodeUsing call with all root types
             IReadOnlyCollection<GeneratedCodeFile> generatedCode =
                 typeBuilder.GenerateCodeUsing(
                     languageProvider,
-                    [rootType],
+                    rootTypes,
                     cancellationToken);
 
-            // Build the type map from TypeDeclaration metadata
-            var typeMap = BuildTypeMap(rootType, generatedCode);
+            // Build the type map from all root TypeDeclarations
+            var typeMap = BuildTypeMap(rootTypes, generatedCode);
 
             return new GenerationResult
             {
@@ -98,19 +144,48 @@ public class CodeGenerationService
         }
     }
 
+    /// <summary>
+    /// Single-schema convenience overload (backwards compatible).
+    /// </summary>
+    public Task<GenerationResult> GenerateAsync(
+        string schemaJson,
+        string rootNamespace = "Playground",
+        CancellationToken cancellationToken = default)
+    {
+        var schemaFile = new SchemaFile
+        {
+            Name = "user-schema.json",
+            Content = schemaJson,
+            IsRootType = true,
+        };
+
+        return this.GenerateAsync([schemaFile], rootNamespace, cancellationToken);
+    }
+
     private static List<TypeMapEntry> BuildTypeMap(
-        TypeDeclaration rootType,
+        IReadOnlyList<TypeDeclaration> rootTypes,
         IReadOnlyCollection<GeneratedCodeFile> generatedFiles)
     {
         var entries = new List<TypeMapEntry>();
         var visited = new HashSet<TypeDeclaration>();
-        CollectTypeMapEntries(rootType, generatedFiles, entries, visited);
+
+        // Build a set of all TypeDeclarations that were actually generated
+        var generatedTypes = new HashSet<TypeDeclaration>(
+            generatedFiles
+                .Where(f => f.TypeDeclaration is not null)
+                .Select(f => f.TypeDeclaration!));
+
+        foreach (TypeDeclaration rootType in rootTypes)
+        {
+            CollectTypeMapEntries(rootType, generatedTypes, entries, visited);
+        }
+
         return entries;
     }
 
     private static void CollectTypeMapEntries(
         TypeDeclaration typeDecl,
-        IReadOnlyCollection<GeneratedCodeFile> generatedFiles,
+        HashSet<TypeDeclaration> generatedTypes,
         List<TypeMapEntry> entries,
         HashSet<TypeDeclaration> visited)
     {
@@ -120,44 +195,41 @@ public class CodeGenerationService
             return;
         }
 
-        string? fullName = generatedFiles
-            .Where(f => f.TypeDeclaration == reduced)
-            .Select(f => CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(f))
-            .FirstOrDefault();
-
-        if (fullName is null)
+        // Only include types that were actually generated (have their own file or are in the global file)
+        if (!generatedTypes.Contains(reduced))
         {
             return;
         }
 
+        // Get the fully qualified .NET type name directly from the TypeDeclaration metadata
+        string fullName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(reduced);
         string shortName = fullName.Contains('.')
             ? fullName[(fullName.LastIndexOf('.') + 1)..]
             : fullName;
 
         string kind = InferKind(reduced);
-        string? pointer = reduced.LocatedSchema.Location.ToString();
+        string? pointer = GetSchemaPointer(reduced);
 
         var properties = new List<TypeMapProperty>();
         foreach (PropertyDeclaration prop in reduced.PropertyDeclarations)
         {
-            string propTypeName = "unknown";
             TypeDeclaration propReduced = prop.ReducedPropertyType.ReducedTypeDeclaration().ReducedType;
-            string? propFullName = generatedFiles
-                .Where(f => f.TypeDeclaration == propReduced)
-                .Select(f => CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(f))
-                .FirstOrDefault();
 
-            if (propFullName is not null)
-            {
-                propTypeName = propFullName.Contains('.')
-                    ? propFullName[(propFullName.LastIndexOf('.') + 1)..]
-                    : propFullName;
-            }
+            // Get the property's .NET type name directly from metadata
+            string propFullName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(propReduced);
+            string propTypeName = propFullName.Contains('.')
+                ? propFullName[(propFullName.LastIndexOf('.') + 1)..]
+                : propFullName;
+
+            // Get the .NET property accessor name
+            string dotnetPropName = PropertyDeclarationExtensions.DotnetPropertyName(prop);
 
             properties.Add(new TypeMapProperty(
                 prop.JsonPropertyName,
+                dotnetPropName,
                 propTypeName,
-                prop.ReducedPropertyType.LocatedSchema.Location.ToString(),
+                propFullName,
+                GetSchemaPointer(prop.ReducedPropertyType),
                 prop.RequiredOrOptional == RequiredOrOptional.Required ||
                     prop.RequiredOrOptional == RequiredOrOptional.ComposedRequired));
         }
@@ -167,8 +239,44 @@ public class CodeGenerationService
         // Recurse into property types
         foreach (PropertyDeclaration prop in reduced.PropertyDeclarations)
         {
-            CollectTypeMapEntries(prop.ReducedPropertyType, generatedFiles, entries, visited);
+            CollectTypeMapEntries(prop.ReducedPropertyType, generatedTypes, entries, visited);
         }
+
+        // Recurse into array item types
+        if (reduced.ArrayItemsType() is ArrayItemsTypeDeclaration arrayItems)
+        {
+            CollectTypeMapEntries(arrayItems.ReducedType, generatedTypes, entries, visited);
+        }
+
+        // Recurse into tuple item types
+        if (reduced.TupleType() is TupleTypeDeclaration tupleType)
+        {
+            foreach (ReducedTypeDeclaration tupleItem in tupleType.ItemsTypes)
+            {
+                CollectTypeMapEntries(tupleItem.ReducedType, generatedTypes, entries, visited);
+            }
+        }
+    }
+
+    private static string? GetSchemaPointer(TypeDeclaration typeDecl)
+    {
+        string location = typeDecl.LocatedSchema.Location.ToString();
+
+        // Extract the fragment (JSON pointer) from the full URI
+        // e.g. "schema://playground/person.json#/properties/address" → "#/properties/address"
+        int hashIndex = location.IndexOf('#');
+        if (hashIndex >= 0)
+        {
+            return location[hashIndex..];
+        }
+
+        // Root schema has no fragment — use "#"
+        if (location.StartsWith(SchemaBaseUri, StringComparison.Ordinal))
+        {
+            return "#";
+        }
+
+        return location;
     }
 
     private static string InferKind(TypeDeclaration typeDecl)
@@ -182,6 +290,16 @@ public class CodeGenerationService
 
         if (coreTypes.HasFlag(CoreTypes.Array))
         {
+            if (typeDecl.TupleType() is not null)
+            {
+                return "tuple";
+            }
+
+            if (typeDecl.IsNumericArray())
+            {
+                return "numeric array";
+            }
+
             return "array";
         }
 

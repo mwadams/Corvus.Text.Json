@@ -117,6 +117,39 @@ html, body {
     gap: 8px;
 }
 
+.panel-header .spacer {
+    flex: 1;
+}
+
+.panel-maximize-btn, .panel-copy-btn {
+    background: none;
+    border: none;
+    color: #808080;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.panel-maximize-btn:hover, .panel-copy-btn:hover {
+    color: #e0e0e0;
+}
+
+/* Maximized panel takes the full grid area */
+.playground-grid.has-maximized {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+}
+
+.playground-panel.maximized {
+    grid-column: 1 / -1;
+    grid-row: 1 / -1;
+}
+
+.playground-panel.hidden {
+    display: none;
+}
+
 .panel-header .badge {
     font-size: 10px;
     padding: 1px 6px;
@@ -130,6 +163,16 @@ html, body {
     flex: 1;
     overflow: hidden;
     position: relative;
+    min-height: 0;
+}
+
+/* BlazorMonaco editor containers must fill their parent */
+.panel-content .monaco-editor-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 /* Type map tree */
@@ -163,6 +206,11 @@ html, body {
 
 .type-map-entry.selected {
     background-color: #094771;
+}
+
+.type-map-entry.related {
+    background-color: #1e3a4f;
+    border-left: 2px solid #4ec9b0;
 }
 
 .type-name {

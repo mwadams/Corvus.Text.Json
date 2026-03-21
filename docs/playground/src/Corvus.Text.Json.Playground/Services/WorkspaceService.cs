@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -32,6 +31,8 @@ public class WorkspaceService
         "System.Buffers",
         "System.Memory",
         "System.ComponentModel",
+        "System.Numerics.Vectors",
+        "System.Runtime.Numerics",
         "netstandard",
 
         // JSON support
@@ -40,6 +41,9 @@ public class WorkspaceService
 
         // Corvus.Text.Json runtime (what generated types reference)
         "Corvus.Text.Json",
+
+        // NodaTime (used by date/time format types)
+        "NodaTime",
     ];
 
     /// <summary>
@@ -50,7 +54,6 @@ public class WorkspaceService
         global using System;
         global using System.Collections.Generic;
         global using System.Linq;
-        global using System.Text.Json;
         global using Corvus.Text.Json;
         """;
 
@@ -119,7 +122,8 @@ public class WorkspaceService
     /// </summary>
     public CSharpCompilation CreateCompilation(IEnumerable<string> generatedSources, string userCode)
     {
-        CSharpParseOptions parseOptions = new(LanguageVersion.Latest);
+        CSharpParseOptions parseOptions = new CSharpParseOptions(LanguageVersion.Latest)
+            .WithPreprocessorSymbols("NET", "NET10_0", "NET10_0_OR_GREATER", "NET9_0_OR_GREATER", "NET8_0_OR_GREATER", "NET7_0_OR_GREATER");
 
         var syntaxTrees = new List<SyntaxTree>();
 
@@ -167,17 +171,17 @@ public class WorkspaceService
             }
 
             string json = await response.Content.ReadAsStringAsync();
-            using JsonDocument doc = JsonDocument.Parse(json);
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
 
-            if (!doc.RootElement.TryGetProperty("Endpoints", out JsonElement endpoints))
+            if (!doc.RootElement.TryGetProperty("Endpoints", out System.Text.Json.JsonElement endpoints))
             {
                 return;
             }
 
-            foreach (JsonElement endpoint in endpoints.EnumerateArray())
+            foreach (System.Text.Json.JsonElement endpoint in endpoints.EnumerateArray())
             {
-                if (!endpoint.TryGetProperty("Route", out JsonElement routeEl) ||
-                    !endpoint.TryGetProperty("AssetFile", out JsonElement assetEl))
+                if (!endpoint.TryGetProperty("Route", out System.Text.Json.JsonElement routeEl) ||
+                    !endpoint.TryGetProperty("AssetFile", out System.Text.Json.JsonElement assetEl))
                 {
                     continue;
                 }

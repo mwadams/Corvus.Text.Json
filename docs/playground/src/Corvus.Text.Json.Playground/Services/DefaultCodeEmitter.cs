@@ -22,7 +22,6 @@ public static class DefaultCodeEmitter
         TypeMapEntry rootType = typeMap[0];
         var sb = new StringBuilder();
 
-        sb.AppendLine("using System.Text.Json;");
         sb.AppendLine();
 
         // Build a sample JSON instance from the type map
@@ -33,25 +32,11 @@ public static class DefaultCodeEmitter
         sb.AppendLine($"    {sampleJson}");
         sb.AppendLine("    \"\"\";");
         sb.AppendLine();
-        sb.AppendLine("using var document = JsonDocument.Parse(json);");
-        sb.AppendLine($"var value = {rootType.FullTypeName}.FromJson(document.RootElement);");
+        sb.AppendLine($"using var parsedDoc = ParsedJsonDocument<{rootType.FullTypeName}>.Parse(json);");
+        sb.AppendLine($"{rootType.FullTypeName} value = parsedDoc.RootElement;");
         sb.AppendLine();
-
-        // Print properties
-        if (rootType.Properties.Count > 0)
-        {
-            sb.AppendLine("// Access properties");
-            foreach (TypeMapProperty prop in rootType.Properties)
-            {
-                string accessor = ToPascalCase(prop.Name);
-                sb.AppendLine($"Console.WriteLine($\"{prop.Name}: {{value.{accessor}}}\");");
-            }
-
-            sb.AppendLine();
-        }
-
-        sb.AppendLine("// Serialize back to JSON");
-        sb.AppendLine("Console.WriteLine(value.Serialize());");
+        sb.AppendLine("// Print the value");
+        sb.AppendLine("Console.WriteLine(value.ToString());");
 
         return sb.ToString();
     }
@@ -94,13 +79,4 @@ public static class DefaultCodeEmitter
         };
     }
 
-    private static string ToPascalCase(string name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            return name;
-        }
-
-        return char.ToUpperInvariant(name[0]) + name[1..];
-    }
 }

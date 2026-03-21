@@ -3,6 +3,8 @@
 @inject CodeGenerationService CodeGenService
 @inject CompilationService CompilationSvc
 @inject ExecutionService ExecutionSvc
+@inject IntelliSenseService IntelliSenseSvc
+@inject IJSRuntime JSRuntime
 
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
@@ -19,10 +21,16 @@
     </button>
 </div>
 
-<div class="playground-grid">
+<div class="playground-grid @(maximizedPanel is not null ? "has-maximized" : "")">
     @* Top-left: Schema editor *@
-    <div class="playground-panel">
-        <div class="panel-header">JSON Schema</div>
+    <div class="playground-panel @(GetPanelClass("schema"))">
+        <div class="panel-header">
+            JSON Schema
+            <div class="spacer"></div>
+            <button class="panel-maximize-btn" @onclick='() => ToggleMaximize("schema")' title="@(maximizedPanel == "schema" ? "Restore" : "Maximize")">
+                @(maximizedPanel == "schema" ? "⊟" : "⊞")
+            </button>
+        </div>
         <div class="panel-content">
             <StandaloneCodeEditor @ref="schemaEditor"
                 Id="schema-editor"
@@ -32,7 +40,7 @@
     </div>
 
     @* Top-right: Type map *@
-    <div class="playground-panel">
+    <div class="playground-panel @(GetPanelClass("typemap"))">
         <div class="panel-header">
             Type Map
             @if (generationResult?.TypeMap.Count > 0)
@@ -42,13 +50,20 @@
         </div>
         <div class="panel-content">
             <TypeMapPanel TypeMap="@(generationResult?.TypeMap ?? [])"
-                          OnTypeSelected="OnTypeSelected" />
+                          OnSchemaPointerSelected="OnSchemaPointerSelected" />
         </div>
     </div>
 
     @* Bottom-left: User code editor *@
-    <div class="playground-panel">
-        <div class="panel-header">User Code (C#)</div>
+    <div class="playground-panel @(GetPanelClass("usercode"))">
+        <div class="panel-header">
+            User Code (C#)
+            <div class="spacer"></div>
+            <button class="panel-copy-btn" @onclick="CopyUserCode" title="Copy code">📋</button>
+            <button class="panel-maximize-btn" @onclick='() => ToggleMaximize("usercode")' title="@(maximizedPanel == "usercode" ? "Restore" : "Maximize")">
+                @(maximizedPanel == "usercode" ? "⊟" : "⊞")
+            </button>
+        </div>
         <div class="panel-content">
             <StandaloneCodeEditor @ref="userCodeEditor"
                 Id="user-code-editor"
@@ -58,8 +73,15 @@
     </div>
 
     @* Bottom-right: Console output *@
-    <div class="playground-panel">
-        <div class="panel-header">Console Output</div>
+    <div class="playground-panel @(GetPanelClass("console"))">
+        <div class="panel-header">
+            Console Output
+            <div class="spacer"></div>
+            <button class="panel-copy-btn" @onclick="CopyConsoleOutput" title="Copy output">📋</button>
+            <button class="panel-maximize-btn" @onclick='() => ToggleMaximize("console")' title="@(maximizedPanel == "console" ? "Restore" : "Maximize")">
+                @(maximizedPanel == "console" ? "⊟" : "⊞")
+            </button>
+        </div>
         <div class="panel-content">
             <div class="console-output" @ref="consoleDiv">
                 @foreach (var line in consoleLines)
@@ -85,6 +107,7 @@
     private string statusText = "Ready";
     private bool statusError;
     private List<ConsoleLine> consoleLines = [];
+    private string? maximizedPanel;
 
     private string defaultSchema = "";
 
@@ -127,9 +150,73 @@
         // Editor is ready
     }
 
+    private DotNetObjectReference<MainLayout>? intelliSenseRef;
+
     private async Task OnUserCodeEditorInit()
     {
-        // Editor is ready
+        await RegisterCompletionProvider();
+    }
+
+    private async Task RegisterCompletionProvider()
+    {
+        this.intelliSenseRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("registerCSharpCompletionProvider", this.intelliSenseRef);
+    }
+
+    [JSInvokable]
+    public async Task<List<object>> GetCompletionsForJs(string code, int line, int column)
+    {
+        var items = await IntelliSenseSvc.GetCompletionsAsync(code, line, column);
+
+        return items.Select(item => (object)new
+        {
+            label = item.Label,
+            kind = MapMonacoKind(item.Kind),
+            detail = item.Detail,
+            insertText = item.Label,
+            sortText = item.SortText,
+            filterText = item.FilterText,
+        }).ToList();
+    }
+
+    private static int MapMonacoKind(string kind)
+    {
+        // Monaco CompletionItemKind integer values
+        return kind switch
+        {
+            "Method" => 0,
+            "Function" => 1,
+            "Field" => 3,
+            "Variable" => 4,
+            "Class" => 5,
+            "Struct" => 6,
+            "Interface" => 7,
+            "Module" => 8,
+            "Property" => 9,
+            "Event" => 10,
+            "Constant" => 14,
+            "Enum" => 15,
+            "EnumMember" => 16,
+            "Keyword" => 17,
+            "Snippet" => 27,
+            "TypeParameter" => 24,
+            _ => 18, // Text
+        };
+    }
+
+    private async Task CopyUserCode()
+    {
+        if (userCodeEditor is not null)
+        {
+            string code = await userCodeEditor.GetValue();
+            await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", code);
+        }
+    }
+
+    private async Task CopyConsoleOutput()
+    {
+        string text = string.Join("\n", consoleLines.Select(l => l.Text));
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
     }
 
     private async Task OnSampleChanged(ChangeEventArgs e)
@@ -162,6 +249,9 @@
             if (generationResult.Success)
             {
                 statusText = $"Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
+
+                // Update IntelliSense with the generated code
+                IntelliSenseSvc.UpdateGeneratedCode(generationResult.GeneratedFiles);
 
                 // Emit default user code if editor is empty or has only the placeholder
                 if (userCodeEditor is not null)
@@ -206,7 +296,7 @@
 
         isRunning = true;
         consoleLines.Clear();
-        statusText = "Compiling…";
+        statusText = "Loading assemblies…";
         statusError = false;
         StateHasChanged();
 
@@ -215,11 +305,17 @@
             runCts?.Cancel();
             runCts = new CancellationTokenSource();
 
+            // Clear previous error markers
+            await ClearEditorMarkers();
+
             string userCode = await userCodeEditor.GetValue();
 
             // Step 1: Compile generated code + user code
-            statusText = "Compiling user code…";
+            statusText = "Building…";
             StateHasChanged();
+
+            // Allow UI to update before blocking compilation
+            await Task.Delay(50);
 
             CompilationResult compilationResult = await CompilationSvc.CompileAsync(
                 generationResult.GeneratedFiles,
@@ -227,8 +323,11 @@
 
             if (!compilationResult.Success)
             {
-                statusText = "Compilation failed";
+                statusText = $"Build failed — {compilationResult.Diagnostics.Count} error(s)";
                 statusError = true;
+
+                await SetEditorMarkers(compilationResult.Diagnostics);
+
                 foreach (var diagnostic in compilationResult.Diagnostics)
                 {
                     string location = diagnostic.Location.IsInSource
@@ -242,7 +341,7 @@
 
             if (compilationResult.Assembly is null)
             {
-                statusText = "Compilation produced no output";
+                statusText = "Build produced no output";
                 statusError = true;
                 return;
             }
@@ -293,16 +392,126 @@
         }
     }
 
-    private void OnTypeSelected(TypeMapEntry entry)
+    private async Task SetEditorMarkers(List<Microsoft.CodeAnalysis.Diagnostic> diagnostics)
     {
-        // Highlight the schema location for the selected type
-        if (schemaEditor is not null && entry.SchemaPointer is not null)
+        if (userCodeEditor is null)
         {
-            // For now, just update the status bar
-            statusText = $"Selected: {entry.FullTypeName} — {entry.SchemaPointer}";
-            statusError = false;
-            StateHasChanged();
+            return;
         }
+
+        var model = await userCodeEditor.GetModel();
+        if (model is null)
+        {
+            return;
+        }
+
+        var markers = new List<MarkerData>();
+        foreach (var diagnostic in diagnostics)
+        {
+            // Only show markers for user code (Program.cs), not generated files
+            if (!diagnostic.Location.IsInSource)
+            {
+                continue;
+            }
+
+            var lineSpan = diagnostic.Location.GetLineSpan();
+            if (lineSpan.Path != "Program.cs")
+            {
+                continue;
+            }
+
+            var start = lineSpan.StartLinePosition;
+            var end = lineSpan.EndLinePosition;
+
+            markers.Add(new MarkerData
+            {
+                Message = diagnostic.GetMessage(),
+                Severity = diagnostic.Severity == Microsoft.CodeAnalysis.DiagnosticSeverity.Error
+                    ? MarkerSeverity.Error
+                    : MarkerSeverity.Warning,
+                StartLineNumber = start.Line + 1,
+                StartColumn = start.Character + 1,
+                EndLineNumber = end.Line + 1,
+                EndColumn = end.Character + 1,
+            });
+        }
+
+        await BlazorMonaco.Editor.Global.SetModelMarkers(JSRuntime, model, "playground", markers);
+    }
+
+    private async Task ClearEditorMarkers()
+    {
+        if (userCodeEditor is null)
+        {
+            return;
+        }
+
+        var model = await userCodeEditor.GetModel();
+        if (model is not null)
+        {
+            await BlazorMonaco.Editor.Global.SetModelMarkers(JSRuntime, model, "playground", []);
+        }
+    }
+
+    private async Task OnSchemaPointerSelected(string? pointer)
+    {
+        if (schemaEditor is null || pointer is null)
+        {
+            return;
+        }
+
+        // Find the line in the schema editor that corresponds to this JSON pointer
+        string schemaText = await schemaEditor.GetValue();
+        int line = FindLineForJsonPointer(schemaText, pointer);
+        if (line > 0)
+        {
+            await schemaEditor.RevealLineInCenter(line);
+            await schemaEditor.SetPosition(new Position { LineNumber = line, Column = 1 }, "");
+        }
+    }
+
+    /// <summary>
+    /// Finds the 1-based line number in a JSON string that corresponds to a JSON pointer.
+    /// E.g. "#/properties/address" finds the line containing "address" under "properties".
+    /// </summary>
+    private static int FindLineForJsonPointer(string json, string pointer)
+    {
+        // Strip leading "#" or "#/"
+        string path = pointer.TrimStart('#').TrimStart('/');
+        if (string.IsNullOrEmpty(path))
+        {
+            return 1;
+        }
+
+        string[] segments = path.Split('/');
+        string[] lines = json.Split('\n');
+
+        // Walk through segments, finding each key in order
+        int currentLine = 0;
+        foreach (string segment in segments)
+        {
+            // Unescape JSON Pointer encoding
+            string key = segment.Replace("~1", "/").Replace("~0", "~");
+            string searchPattern = $"\"{key}\"";
+
+            bool found = false;
+            for (int i = currentLine; i < lines.Length; i++)
+            {
+                if (lines[i].Contains(searchPattern))
+                {
+                    currentLine = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                return currentLine + 1; // Return best match so far (1-based)
+            }
+        }
+
+        return currentLine + 1; // Convert to 1-based
     }
 
     private void WriteConsole(string text, string cssClass = "")
@@ -321,6 +530,21 @@
 
         using var reader = new StreamReader(stream);
         return reader.ReadToEnd();
+    }
+
+    private void ToggleMaximize(string panelName)
+    {
+        maximizedPanel = maximizedPanel == panelName ? null : panelName;
+    }
+
+    private string GetPanelClass(string panelName)
+    {
+        if (maximizedPanel is null)
+        {
+            return "";
+        }
+
+        return maximizedPanel == panelName ? "maximized" : "hidden";
     }
 
     private record ConsoleLine(string Text, string CssClass);

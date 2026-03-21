@@ -18,12 +18,16 @@ public record TypeMapEntry(
 /// <summary>
 /// Represents a property within a generated type.
 /// </summary>
-/// <param name="Name">Property name in C# (e.g. "Name").</param>
-/// <param name="TypeName">Property type name (e.g. "JsonString").</param>
+/// <param name="Name">JSON property name (e.g. "firstName").</param>
+/// <param name="DotnetPropertyName">C# property accessor name (e.g. "FirstName").</param>
+/// <param name="TypeName">Property type short name (e.g. "JsonString").</param>
+/// <param name="FullTypeName">Property type fully qualified name (e.g. "Playground.JsonString").</param>
 /// <param name="SchemaPointer">JSON Pointer for this property in the schema.</param>
 /// <param name="IsRequired">Whether the property is required by the schema.</param>
 public record TypeMapProperty(
     string Name,
+    string DotnetPropertyName,
     string TypeName,
+    string FullTypeName,
     string? SchemaPointer,
     bool IsRequired);
