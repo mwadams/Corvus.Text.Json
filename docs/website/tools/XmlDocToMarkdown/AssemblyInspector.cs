@@ -26,6 +26,7 @@ public sealed class TypeInfo
     public List<(string DisplayName, string? FullName)> InterfacesWithFullNames { get; set; } = [];
     public List<(string DisplayName, string? FullName)> ImplementedBy { get; set; } = [];
     public List<string> GenericParameters { get; set; } = [];
+    public List<GenericConstraintInfo> GenericConstraints { get; set; } = [];
     public DocMember? Documentation { get; set; }
     public List<MemberInfo> Constructors { get; set; } = [];
     public List<MemberInfo> Properties { get; set; } = [];
@@ -105,6 +106,15 @@ public sealed class ImplementsInfo
 
     /// <summary>Name of the member on the interface.</summary>
     public string MemberName { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Generic constraint information for a type parameter.
+/// </summary>
+public sealed class GenericConstraintInfo
+{
+    public string ParameterName { get; set; } = string.Empty;
+    public List<string> Constraints { get; set; } = [];
 }
 
 /// <summary>
@@ -329,13 +339,16 @@ public sealed class AssemblyInspector(string assemblyPath)
         xmlDocs.TryGetValue(xmlKey, out DocMember? typeDocs);
         typeInfo.Documentation = typeDocs;
 
-        // Generic parameters
+        // Generic parameters and constraints
         if (type.IsGenericType)
         {
-            foreach (Type gp in type.GetGenericArguments())
+            Type[] genericArgs = type.GetGenericArguments();
+            foreach (Type gp in genericArgs)
             {
                 typeInfo.GenericParameters.Add(gp.Name);
             }
+
+            typeInfo.GenericConstraints = ExtractGenericConstraints(genericArgs);
         }
 
         // Interfaces
@@ -564,10 +577,17 @@ public sealed class AssemblyInspector(string assemblyPath)
         string paramList = string.Join(", ", parameters.Select(p => $"{FormatTypeName(p.ParameterType)} {p.Name}"));
 
         string genericSuffix = "";
+        string genericConstraints = "";
         if (method.IsGenericMethod)
         {
             Type[] genericArgs = method.GetGenericArguments();
             genericSuffix = $"<{string.Join(", ", genericArgs.Select(g => g.Name))}>";
+            List<GenericConstraintInfo> constraints = ExtractGenericConstraints(genericArgs);
+            if (constraints.Count > 0)
+            {
+                genericConstraints = string.Join("", constraints.Select(c =>
+                    $"\n    where {c.ParameterName} : {string.Join(", ", c.Constraints)}"));
+            }
         }
 
         // Walk the base type chain to detect overrides (GetBaseDefinition() is not
@@ -588,7 +608,7 @@ public sealed class AssemblyInspector(string assemblyPath)
         {
             Name = method.Name,
             GroupKey = method.Name,
-            Signature = $"{modifiers} {FormatTypeName(method.ReturnType)} {method.Name}{genericSuffix}({paramList})",
+            Signature = $"{modifiers} {FormatTypeName(method.ReturnType)} {method.Name}{genericSuffix}({paramList}){genericConstraints}",
             ReturnType = FormatTypeName(method.ReturnType),
             ReturnTypeFullName = GetTypeFullName(method.ReturnType),
             Parameters = parameters.Select(p => new ParameterInfo
@@ -1039,6 +1059,74 @@ public sealed class AssemblyInspector(string assemblyPath)
         }
 
         return FormatTypeName(type.BaseType);
+    }
+
+    private static List<GenericConstraintInfo> ExtractGenericConstraints(Type[] genericArgs)
+    {
+        List<GenericConstraintInfo> constraints = [];
+
+        foreach (Type gp in genericArgs)
+        {
+            if (!gp.IsGenericParameter)
+            {
+                continue;
+            }
+
+            List<string> parts = [];
+            GenericParameterAttributes attrs = gp.GenericParameterAttributes & GenericParameterAttributes.SpecialConstraintMask;
+
+            // class/struct/unmanaged constraints
+            if ((attrs & GenericParameterAttributes.NotNullableValueTypeConstraint) != 0)
+            {
+                // Check for unmanaged constraint (struct + System.ValueType constraint type that is unmanaged)
+                Type[] typeConstraints = gp.GetGenericParameterConstraints();
+                bool isUnmanaged = typeConstraints.Any(c => c.FullName == "System.ValueType") &&
+                                   (attrs & GenericParameterAttributes.NotNullableValueTypeConstraint) != 0 &&
+                                   gp.CustomAttributes.Any(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.IsUnmanagedAttribute");
+                parts.Add(isUnmanaged ? "unmanaged" : "struct");
+            }
+            else if ((attrs & GenericParameterAttributes.ReferenceTypeConstraint) != 0)
+            {
+                parts.Add("class");
+            }
+
+            // Type constraints (base class, interfaces)
+            foreach (Type constraint in gp.GetGenericParameterConstraints())
+            {
+                if (constraint.FullName == "System.ValueType")
+                {
+                    continue; // Already handled by struct/unmanaged
+                }
+
+                parts.Add(FormatTypeName(constraint));
+            }
+
+            // notnull constraint
+            if ((attrs & GenericParameterAttributes.NotNullableValueTypeConstraint) == 0 &&
+                (attrs & GenericParameterAttributes.ReferenceTypeConstraint) == 0 &&
+                gp.CustomAttributes.Any(a => a.AttributeType.FullName == "System.Runtime.CompilerServices.NullableAttribute"))
+            {
+                // This may indicate notnull in some contexts, but it's complex to detect reliably
+            }
+
+            // new() constraint
+            if ((attrs & GenericParameterAttributes.DefaultConstructorConstraint) != 0 &&
+                (attrs & GenericParameterAttributes.NotNullableValueTypeConstraint) == 0)
+            {
+                parts.Add("new()");
+            }
+
+            if (parts.Count > 0)
+            {
+                constraints.Add(new GenericConstraintInfo
+                {
+                    ParameterName = gp.Name,
+                    Constraints = parts,
+                });
+            }
+        }
+
+        return constraints;
     }
 
     /// <summary>

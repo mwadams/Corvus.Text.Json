@@ -759,6 +759,13 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             sb.Append(string.Join(", ", baseList));
         }
 
+        // Generic constraints
+        foreach (GenericConstraintInfo constraint in type.GenericConstraints)
+        {
+            sb.AppendLine();
+            sb.Append($"    where {constraint.ParameterName} : {string.Join(", ", constraint.Constraints)}");
+        }
+
         return sb.ToString();
     }
 
