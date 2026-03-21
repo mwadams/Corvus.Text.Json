@@ -217,6 +217,7 @@ The documentation site lives in `docs/website/`. See `docs/website/DEVELOPMENT.m
 - **Source** → `docs/website/site/` contains content markdown, taxonomy YAML, theme (Razor views, SCSS, JS), and tools.
 - **Build** → `docs/website/build.ps1` runs a 10-step pipeline that compiles everything into `docs/website/.output/`.
 - **Serving** → The local dev server (`build.ps1 -ServeOnly` or `preview.ps1`) serves static files from `.output/`, **not** from the source theme directory. Editing source files (views, SCSS, JS) has no effect until the relevant build step is re-run.
+- **IMPORTANT: Stop the server before rebuilding.** The build script deletes and recreates `.output/`. On Windows, the Node file server holds file locks that prevent deletion, causing the build to hang indefinitely. Always stop the serving process (`Stop-Process -Id <PID>`) before running `build.ps1`.
 
 ### Generated vs hand-authored files
 
