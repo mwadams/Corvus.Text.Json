@@ -25,8 +25,8 @@ Built on top of `Corvus.Text.Json`, which is derived from `System.Text.Json`, `P
 | Feature | System.Text.Json (`JsonDocument`) | Corvus.Text.Json (`ParsedJsonDocument<T>`) |
 |---------|-----------------------------------|-------------------------------------------|
 | **Generic Support** | Fixed to `JsonElement` | Generic over `IJsonElement<T>` for extensibility |
-| **Property Access** | Sequential searc-based property lookup | Optionally uses a property map with O(1) performance for repeated access |
-| **Additional Types** | Standard .NET types | Includes `BigNumber`, `BigInteger`, NodaTime types (`LocalDate`, `OffsetDateTime`, `Period`) |
+| **Property Access** | Sequential search-based property lookup | Optionally uses a property map with O(1) performance for repeated access |
+| **Additional Types** | Standard .NET types | Includes `BigNumber`, `BigInteger`, NodaTime types (`LocalDate`, `OffsetTime`, `OffsetDate`, `OffsetDateTime`, `Period`) |
 | **Mutability** | Read-only | Read-only by default, with mutable variant (`JsonElement.Mutable`) available via `JsonDocumentBuilder` |
 | **UTF-8 Support** | Good | Enhanced with direct UTF-8 property access methods |
 
@@ -53,8 +53,8 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
 JsonElement root = doc.RootElement;
-string name = root.GetProperty("name").GetString();
-int age = root.GetProperty("age").GetInt32();
+string name = root.GetProperty("name"u8).GetString();
+int age = root.GetProperty("age"u8).GetInt32();
 
 Console.WriteLine($"Name: {name}, Age: {age}");
 ```
@@ -70,7 +70,7 @@ ReadOnlySpan<byte> utf8Json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(utf8Json.ToArray().AsMemory());
 
 JsonElement root = doc.RootElement;
-string message = root.GetProperty("message").GetString();
+string message = root.GetProperty("message"u8).GetString();
 
 Console.WriteLine(message); // Output: Hello, World!
 ```
@@ -109,7 +109,7 @@ using var stream = new MemoryStream(utf8Json.ToArray());
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(stream);
 
 JsonElement root = doc.RootElement;
-string message = root.GetProperty("message").GetString();
+string message = root.GetProperty("message"u8).GetString();
 ```
 
 ## Working with JSON Arrays
@@ -163,12 +163,12 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 
 JsonElement root = doc.RootElement;
-JsonElement person = root.GetProperty("person");
-JsonElement address = person.GetProperty("address");
+JsonElement person = root.GetProperty("person"u8);
+JsonElement address = person.GetProperty("address"u8);
 
-string name = person.GetProperty("name").GetString();
-string city = address.GetProperty("city").GetString();
-string zip = address.GetProperty("zip").GetString();
+string name = person.GetProperty("name"u8).GetString();
+string city = address.GetProperty("city"u8).GetString();
+string zip = address.GetProperty("zip"u8).GetString();
 
 Console.WriteLine($"{name} lives in {city}, {zip}");
 ```
@@ -200,19 +200,19 @@ using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Pars
 JsonElement root = doc.RootElement;
 
 // Integer types
-byte byteVal = root.GetProperty("byteValue").GetByte();
-sbyte sbyteVal = root.GetProperty("sbyteValue").GetSByte();
-short shortVal = root.GetProperty("shortValue").GetInt16();
-ushort ushortVal = root.GetProperty("ushortValue").GetUInt16();
-int intVal = root.GetProperty("intValue").GetInt32();
-uint uintVal = root.GetProperty("uintValue").GetUInt32();
-long longVal = root.GetProperty("longValue").GetInt64();
-ulong ulongVal = root.GetProperty("ulongValue").GetUInt64();
+byte byteVal = root.GetProperty("byteValue"u8).GetByte();
+sbyte sbyteVal = root.GetProperty("sbyteValue"u8).GetSByte();
+short shortVal = root.GetProperty("shortValue"u8).GetInt16();
+ushort ushortVal = root.GetProperty("ushortValue"u8).GetUInt16();
+int intVal = root.GetProperty("intValue"u8).GetInt32();
+uint uintVal = root.GetProperty("uintValue"u8).GetUInt32();
+long longVal = root.GetProperty("longValue"u8).GetInt64();
+ulong ulongVal = root.GetProperty("ulongValue"u8).GetUInt64();
 
 // Floating-point types
-float floatVal = root.GetProperty("floatValue").GetSingle();
-double doubleVal = root.GetProperty("doubleValue").GetDouble();
-decimal decimalVal = root.GetProperty("decimalValue").GetDecimal();
+float floatVal = root.GetProperty("floatValue"u8).GetSingle();
+double doubleVal = root.GetProperty("doubleValue"u8).GetDouble();
+decimal decimalVal = root.GetProperty("decimalValue"u8).GetDecimal();
 ```
 
 ### Boolean Values
@@ -228,8 +228,8 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 JsonElement root = doc.RootElement;
 
-bool isActive = root.GetProperty("isActive").GetBoolean();
-bool isDeleted = root.GetProperty("isDeleted").GetBoolean();
+bool isActive = root.GetProperty("isActive"u8).GetBoolean();
+bool isDeleted = root.GetProperty("isDeleted"u8).GetBoolean();
 ```
 
 ### String Values
@@ -246,9 +246,9 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 JsonElement root = doc.RootElement;
 
-string? name = root.GetProperty("name").GetString();
-string? email = root.GetProperty("email").GetString();
-string? description = root.GetProperty("description").GetString(); // Returns null
+string? name = root.GetProperty("name"u8).GetString();
+string? email = root.GetProperty("email"u8).GetString();
+string? description = root.GetProperty("description"u8).GetString(); // Returns null
 ```
 
 ### Date and Time Values
@@ -266,11 +266,11 @@ using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Pars
 JsonElement root = doc.RootElement;
 
 // DateTime values
-DateTime createdAt = root.GetProperty("createdAt").GetDateTime();
+DateTime createdAt = root.GetProperty("createdAt"u8).GetDateTime();
 
 // DateTimeOffset values (preserves timezone information)
-DateTimeOffset updatedAt = root.GetProperty("updatedAt").GetDateTimeOffset();
-DateTimeOffset timestamp = root.GetProperty("timestamp").GetDateTimeOffset();
+DateTimeOffset updatedAt = root.GetProperty("updatedAt"u8).GetDateTimeOffset();
+DateTimeOffset timestamp = root.GetProperty("timestamp"u8).GetDateTimeOffset();
 ```
 
 ### Guid Values
@@ -286,8 +286,8 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 JsonElement root = doc.RootElement;
 
-Guid userId = root.GetProperty("userId").GetGuid();
-Guid sessionId = root.GetProperty("sessionId").GetGuid();
+Guid userId = root.GetProperty("userId"u8).GetGuid();
+Guid sessionId = root.GetProperty("sessionId"u8).GetGuid();
 ```
 
 ### Binary Data (Base64)
@@ -304,8 +304,8 @@ using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Pars
 JsonElement root = doc.RootElement;
 
 // Decode base64 strings to byte arrays
-byte[] data = root.GetProperty("data").GetBytesFromBase64();
-byte[] signature = root.GetProperty("signature").GetBytesFromBase64();
+byte[] data = root.GetProperty("data"u8).GetBytesFromBase64();
+byte[] signature = root.GetProperty("signature"u8).GetBytesFromBase64();
 
 // data contains: "Hello World!" as bytes
 // signature contains: [1, 2, 3, 4]
@@ -356,11 +356,11 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 JsonElement root = doc.RootElement;
 
-LocalDate localDate = root.GetProperty("localDate").GetLocalDate();
-OffsetTime offsetTime = root.GetProperty("offsetTime").GetOffsetTime();
-OffsetDate offsetDate = root.GetProperty("offsetDate").GetOffsetDate();
-OffsetDateTime offsetDateTime = root.GetProperty("offsetDateTime").GetOffsetDateTime();
-Period period = root.GetProperty("period").GetPeriod();
+LocalDate localDate = root.GetProperty("localDate"u8).GetLocalDate();
+OffsetTime offsetTime = root.GetProperty("offsetTime"u8).GetOffsetTime();
+OffsetDate offsetDate = root.GetProperty("offsetDate"u8).GetOffsetDate();
+OffsetDateTime offsetDateTime = root.GetProperty("offsetDateTime"u8).GetOffsetDateTime();
+Period period = root.GetProperty("period"u8).GetPeriod();
 ```
 
 ### Type Checking and Safe Conversion
@@ -378,7 +378,7 @@ string json = """
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 JsonElement root = doc.RootElement;
 
-JsonElement maybeNumber = root.GetProperty("maybeNumber");
+JsonElement maybeNumber = root.GetProperty("maybeNumber"u8);
 if (maybeNumber.ValueKind == JsonValueKind.Number)
 {
     int value = maybeNumber.GetInt32(); // Safe
@@ -389,7 +389,7 @@ else
 }
 
 // Use TryGet methods for safer conversion
-if (root.GetProperty("actualNumber").TryGetInt32(out int actualValue))
+if (root.GetProperty("actualNumber"u8).TryGetInt32(out int actualValue))
 {
     Console.WriteLine($"Value: {actualValue}"); // This will execute
 }

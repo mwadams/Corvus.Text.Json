@@ -170,10 +170,10 @@ using var workspace = JsonWorkspace.Create();
 
 ```csharp
 // Before — CTJ006 fires
-var builder = doc.RootElement.BuildDocument(workspace);
+var builder = doc.RootElement.CreateBuilder(workspace);
 
 // After — code fix applied
-using var builder = doc.RootElement.BuildDocument(workspace);
+using var builder = doc.RootElement.CreateBuilder(workspace);
 ```
 
 ---
