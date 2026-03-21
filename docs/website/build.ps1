@@ -44,6 +44,7 @@ $outputDir = Join-Path $here ".output"
 # Paths used by multiple steps
 $toolProject = Join-Path $here "tools\XmlDocToMarkdown"
 $sharedViewsDir = Join-Path $siteDir "theme\corvus\views\Shared"
+$canonicalRepoUrl = "https://github.com/corvus-dotnet/Corvus.Text.Json"
 
 # V5 paths
 $v5XmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
@@ -192,6 +193,7 @@ $sw = [System.Diagnostics.Stopwatch]::StartNew()
     --ns-descriptions $v5NsDescriptionsDir `
     --type-examples $v5TypeExamplesDir `
     --api-base-url /api/v5 `
+    --repo-url $canonicalRepoUrl `
     --sidebar-partial-name _ApiSidebarV5 `
     --layout-path "../../Shared/_Layout.cshtml" `
     --version-label "V5 Engine" `
@@ -227,6 +229,7 @@ foreach ($proj in $v4Projects) {
     --api-views-dir $v4ApiViewsDir `
     --shared-views-dir $sharedViewsDir `
     --api-base-url /api/v4 `
+    --repo-url $canonicalRepoUrl `
     --sidebar-partial-name _ApiSidebarV4 `
     --layout-path "../../Shared/_Layout.cshtml" `
     --version-label "V4 Engine" `
