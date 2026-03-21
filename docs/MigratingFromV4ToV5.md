@@ -1333,7 +1333,7 @@ string familyName = person.FamilyName;  // Generated type, supports formatting
 double height = person.Height;  // Implicit conversion where supported
 
 // ❌ Avoid unnecessary extraction
-string familyName = person.FamilyName.GetString();  // Unnecessary when not doing string operations
+string familyName = (string)person.FamilyName;  // Unnecessary when not doing string operations
 ```
 
 Extract to primitives only when you need to:
@@ -1341,9 +1341,9 @@ Extract to primitives only when you need to:
 - Manipulate strings: `name.TryGetValue(out string? str); str.ToUpperInvariant()`
 - Map between different schemas (see below)
 
-### Cross-schema mapping requires value extraction
+### Cross-schema mapping does not requires value extraction for compatible types
 
-When mapping between generated types from **different schemas**, entity types don't implicitly convert. Extract values using `TryGetValue()` and pass them to the target builder:
+When mapping between generated types from **different schemas**, entity types don't necessarily implicitly convert, but they can still b be compatible. Use `TargetType.From(sourceInstance)` and pass them to the builder:
 
 ```csharp
 // SourceType and TargetType are from different schemas
@@ -1353,16 +1353,11 @@ SourceType source = sourceDoc.RootElement;
 using JsonWorkspace workspace = JsonWorkspace.Create();
 using var targetBuilder = TargetType.CreateBuilder(workspace, (ref TargetType.Builder b) =>
 {
-    // Extract primitives from source, then pass to target builder
-    if (source.Id.TryGetValue(out long idValue) && 
-        source.Name.TryGetValue(out string? nameValue))
-    {
-        b.Create(nameValue, idValue);
-    }
+    b.Create(nameValue, TargetType.IdentifierEntity.From(idValue));
 });
 ```
 
-This extraction is **necessary** because `SourceType.IdEntity` and `TargetType.IdentifierEntity` are different types even though they both represent integers.
+While `SourceType.IdEntity` and `TargetType.IdentifierEntity` are different types they both represent integers with compatible constraints, so you can safely convert between them, without having to convert to an intermediate .NET value type.
 
 ### Pattern matching uses named parameters
 
@@ -1378,11 +1373,11 @@ string desc = color.Match(
 
 // Discriminated union matching (named by required properties)
 string result = shape.Match(
-    matchRequiredRadiusAndType: static (in Shape.RequiredRadiusAndType circle) => 
+    matchRequiredRadiusAndType: static (in circle) =>
         $"Circle r={circle.Radius}",
-    matchRequiredHeightAndTypeAndWidth: static (in Shape.RequiredHeightAndTypeAndWidth rect) => 
+    matchRequiredHeightAndTypeAndWidth: static (in rect) =>
         $"Rectangle {rect.Width}x{rect.Height}",
-    defaultMatch: static (in Shape unknown) => "Unknown shape");
+    defaultMatch: static (in unknown) => "Unknown shape");
 ```
 
 The parameter names (`matchRed`, `matchRequiredRadiusAndType`) are generated from the schema and can be found in IntelliSense.
@@ -1409,6 +1404,8 @@ string rgb = color.Match(
     matchBlue: () => $"RGB(0, 0, {(int)(255 * brightness)})",
     defaultMatch: () => "RGB(0, 0, 0)");
 ```
+
+Note that on .NET 9.0 and later, you can pass a `ref struct` as your context.
 
 ---
 
