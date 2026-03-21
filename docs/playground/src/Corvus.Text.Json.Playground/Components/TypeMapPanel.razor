@@ -1,0 +1,57 @@
+@namespace Corvus.Text.Json.Playground.Components
+
+<div class="type-map-tree">
+    @if (TypeMap.Count == 0)
+    {
+        <p style="color:#808080;padding:16px;">Click <strong>Generate</strong> to create types from the schema.</p>
+    }
+    else
+    {
+        <ul>
+            @foreach (var entry in TypeMap)
+            {
+                <li>
+                    <div class="type-map-entry @(selectedEntry == entry ? "selected" : "")"
+                         @onclick="() => SelectType(entry)">
+                        <span class="type-name">@entry.TypeName</span>
+                        <span class="type-kind">(@entry.Kind)</span>
+                    </div>
+                    @if (entry.Properties.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var prop in entry.Properties)
+                            {
+                                <li>
+                                    <div class="type-map-entry">
+                                        <span class="prop-name">@prop.Name</span>
+                                        <span class="prop-type">: @prop.TypeName</span>
+                                        @if (prop.IsRequired)
+                                        {
+                                            <span class="prop-required">required</span>
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IReadOnlyList<TypeMapEntry> TypeMap { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<TypeMapEntry> OnTypeSelected { get; set; }
+
+    private TypeMapEntry? selectedEntry;
+
+    private async Task SelectType(TypeMapEntry entry)
+    {
+        selectedEntry = entry;
+        await OnTypeSelected.InvokeAsync(entry);
+    }
+}

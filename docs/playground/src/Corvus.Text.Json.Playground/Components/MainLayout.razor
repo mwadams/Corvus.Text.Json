@@ -1,0 +1,236 @@
+@inherits LayoutComponentBase
+@page "/"
+@inject CodeGenerationService CodeGenService
+
+<div class="playground-toolbar">
+    <h1>Corvus.Text.Json Playground</h1>
+    <select class="toolbar-select" @onchange="OnSampleChanged">
+        <option value="">— Select a sample —</option>
+        <option value="SimpleObject" selected>Person (simple object)</option>
+    </select>
+    <div class="spacer"></div>
+    <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@isGenerating">
+        @(isGenerating ? "Generating…" : "Generate")
+    </button>
+    <button class="toolbar-btn primary" @onclick="RunAsync" disabled="@(generationResult is null || isRunning)">
+        @(isRunning ? "Running…" : "Run")
+    </button>
+</div>
+
+<div class="playground-grid">
+    @* Top-left: Schema editor *@
+    <div class="playground-panel">
+        <div class="panel-header">JSON Schema</div>
+        <div class="panel-content">
+            <StandaloneCodeEditor @ref="schemaEditor"
+                Id="schema-editor"
+                ConstructionOptions="SchemaEditorOptions"
+                OnDidInit="OnSchemaEditorInit" />
+        </div>
+    </div>
+
+    @* Top-right: Type map *@
+    <div class="playground-panel">
+        <div class="panel-header">
+            Type Map
+            @if (generationResult?.TypeMap.Count > 0)
+            {
+                <span class="badge">@generationResult.TypeMap.Count types</span>
+            }
+        </div>
+        <div class="panel-content">
+            <TypeMapPanel TypeMap="@(generationResult?.TypeMap ?? [])"
+                          OnTypeSelected="OnTypeSelected" />
+        </div>
+    </div>
+
+    @* Bottom-left: User code editor *@
+    <div class="playground-panel">
+        <div class="panel-header">User Code (C#)</div>
+        <div class="panel-content">
+            <StandaloneCodeEditor @ref="userCodeEditor"
+                Id="user-code-editor"
+                ConstructionOptions="UserCodeEditorOptions"
+                OnDidInit="OnUserCodeEditorInit" />
+        </div>
+    </div>
+
+    @* Bottom-right: Console output *@
+    <div class="playground-panel">
+        <div class="panel-header">Console Output</div>
+        <div class="panel-content">
+            <div class="console-output" @ref="consoleDiv">
+                @foreach (var line in consoleLines)
+                {
+                    <span class="@line.CssClass">@line.Text</span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="status-bar @(statusError ? "error" : "")">
+    <span class="status-item">@statusText</span>
+</div>
+
+@code {
+    private StandaloneCodeEditor? schemaEditor;
+    private StandaloneCodeEditor? userCodeEditor;
+    private ElementReference consoleDiv;
+    private GenerationResult? generationResult;
+    private bool isGenerating;
+    private bool isRunning;
+    private string statusText = "Ready";
+    private bool statusError;
+    private List<ConsoleLine> consoleLines = [];
+
+    private string defaultSchema = "";
+
+    private StandaloneEditorConstructionOptions SchemaEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "json",
+            Theme = "vs-dark",
+            Value = defaultSchema,
+            FontSize = 13,
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false,
+        };
+    }
+
+    private StandaloneEditorConstructionOptions UserCodeEditorOptions(StandaloneCodeEditor editor)
+    {
+        return new StandaloneEditorConstructionOptions
+        {
+            AutomaticLayout = true,
+            Language = "csharp",
+            Theme = "vs-dark",
+            Value = "// Generate types first, then write code here\n",
+            FontSize = 13,
+            Minimap = new EditorMinimapOptions { Enabled = false },
+            ScrollBeyondLastLine = false,
+        };
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load the default sample schema
+        defaultSchema = LoadEmbeddedSample("SimpleObject");
+    }
+
+    private async Task OnSchemaEditorInit()
+    {
+        // Editor is ready
+    }
+
+    private async Task OnUserCodeEditorInit()
+    {
+        // Editor is ready
+    }
+
+    private async Task OnSampleChanged(ChangeEventArgs e)
+    {
+        string? sampleName = e.Value?.ToString();
+        if (!string.IsNullOrEmpty(sampleName) && schemaEditor is not null)
+        {
+            string content = LoadEmbeddedSample(sampleName);
+            await schemaEditor.SetValue(content);
+        }
+    }
+
+    private async Task GenerateAsync()
+    {
+        if (schemaEditor is null)
+        {
+            return;
+        }
+
+        isGenerating = true;
+        statusText = "Generating types…";
+        statusError = false;
+        StateHasChanged();
+
+        try
+        {
+            string schemaJson = await schemaEditor.GetValue();
+            generationResult = await CodeGenService.GenerateAsync(schemaJson);
+
+            if (generationResult.Success)
+            {
+                statusText = $"Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
+
+                // Emit default user code if editor is empty or has only the placeholder
+                if (userCodeEditor is not null)
+                {
+                    string currentCode = await userCodeEditor.GetValue();
+                    if (string.IsNullOrWhiteSpace(currentCode) ||
+                        currentCode.StartsWith("// Generate types first"))
+                    {
+                        string defaultCode = DefaultCodeEmitter.Emit(generationResult.TypeMap);
+                        await userCodeEditor.SetValue(defaultCode);
+                    }
+                }
+            }
+            else
+            {
+                statusText = generationResult.ErrorMessage ?? "Generation failed";
+                statusError = true;
+                WriteConsole(generationResult.ErrorMessage ?? "Generation failed", "error");
+            }
+        }
+        catch (Exception ex)
+        {
+            statusText = $"Error: {ex.Message}";
+            statusError = true;
+            WriteConsole($"Error: {ex.Message}", "error");
+        }
+        finally
+        {
+            isGenerating = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RunAsync()
+    {
+        // Phase 2: compilation + execution
+        consoleLines.Clear();
+        WriteConsole("Compilation and execution are not yet implemented (Phase 2).", "info");
+        WriteConsole("Generated code is available — the type map shows the types that were created.", "info");
+        StateHasChanged();
+    }
+
+    private void OnTypeSelected(TypeMapEntry entry)
+    {
+        // Highlight the schema location for the selected type
+        if (schemaEditor is not null && entry.SchemaPointer is not null)
+        {
+            // For now, just update the status bar
+            statusText = $"Selected: {entry.FullTypeName} — {entry.SchemaPointer}";
+            statusError = false;
+            StateHasChanged();
+        }
+    }
+
+    private void WriteConsole(string text, string cssClass = "")
+    {
+        consoleLines.Add(new ConsoleLine(text + "\n", cssClass));
+    }
+
+    private static string LoadEmbeddedSample(string name)
+    {
+        var assembly = typeof(MainLayout).Assembly;
+        using var stream = assembly.GetManifestResourceStream($"Sample.{name}");
+        if (stream is null)
+        {
+            return $"// Sample '{name}' not found";
+        }
+
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd();
+    }
+
+    private record ConsoleLine(string Text, string CssClass);
+}
