@@ -113,8 +113,8 @@ In the [next recipe (013-PolymorphismWithDiscriminators)](../013-PolymorphismWit
 
 The code generator produces:
 - **`DiscriminatedUnionByType`** - the union type with a `Match()` method
-- **`DiscriminatedUnionByType.OneOf0Entity`** - wrapper for string variant
-- **`DiscriminatedUnionByType.OneOf1Entity`** - wrapper for int32 variant
+- **`JsonString`** - global type used for the string variant (simple types are reduced to global types)
+- **`JsonInt32`** - global type used for the int32 variant
 - **`PersonOpen`** - the object type
 - **`DiscriminatedUnionByType.People`** - the array type
 
@@ -128,8 +128,8 @@ string ProcessDiscriminatedUnion(in DiscriminatedUnionByType value)
     // Pattern matching requires you to deal with all known types 
     // and the fallback (failure) case
     return value.Match(
-        static (in DiscriminatedUnionByType.OneOf0Entity value) => $"It was a string: {value}",
-        static (in DiscriminatedUnionByType.OneOf1Entity value) => $"It was an int32: {value}",
+        static (in JsonString value) => $"It was a string: {value}",
+        static (in JsonInt32 value) => $"It was an int32: {value}",
         static (in PersonOpen value) => $"It was a person. {value.FamilyName}, {value.GivenName}",
         static (in DiscriminatedUnionByType.People value) => $"It was an array of people. {value.GetArrayLength()}",
         static (in DiscriminatedUnionByType unknownValue) => throw new InvalidOperationException($"Unexpected instance {unknownValue}"));

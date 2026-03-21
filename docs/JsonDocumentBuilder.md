@@ -67,7 +67,7 @@ When you dispose a workspace, it returns any resources it consumed to the pool.
 using ParsedJsonDocument<JsonElement> sourceDoc = ParsedJsonDocument<JsonElement>.Parse("""{"value": 42}""");
 
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var builder = JsonElement.BuildDocument(
+using var builder = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source((ref objectBuilder) =>
     {
@@ -91,28 +91,28 @@ Sometimes you just need to wrap a single value in a JSON document - perhaps for 
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // Create from integers - useful for IDs, counts, status codes
-using var intDoc = JsonElement.BuildDocument(workspace, 42);
+using var intDoc = JsonElement.CreateBuilder(workspace, 42);
 Console.WriteLine(intDoc.RootElement.GetInt32()); // 42
 
 // Create from doubles - measurements, prices, coordinates
-using var doubleDoc = JsonElement.BuildDocument(workspace, 3.14159);
+using var doubleDoc = JsonElement.CreateBuilder(workspace, 3.14159);
 Console.WriteLine(doubleDoc.RootElement.GetDouble()); // 3.14159
 
 // Create from strings
-using var stringDoc = JsonElement.BuildDocument(workspace, "Hello, World!"u8);
+using var stringDoc = JsonElement.CreateBuilder(workspace, "Hello, World!"u8);
 Console.WriteLine(stringDoc.RootElement.GetString()); // Hello, World!
 
 // Create from UTF-8 byte spans
 // This is faster! No encoding conversion needed - straight UTF-8 bytes
-using var utf8Doc = JsonElement.BuildDocument(workspace, "Hello"u8);
+using var utf8Doc = JsonElement.CreateBuilder(workspace, "Hello"u8);
 Console.WriteLine(utf8Doc.RootElement.GetString()); // Hello
 
 // Create from booleans - flags, feature toggles, status indicators
-using var boolDoc = JsonElement.BuildDocument(workspace, true);
+using var boolDoc = JsonElement.CreateBuilder(workspace, true);
 Console.WriteLine(boolDoc.RootElement.GetBoolean()); // True
 
 // Create null value - for optional fields or explicit null responses
-using var nullDoc = JsonElement.BuildDocument(
+using var nullDoc = JsonElement.CreateBuilder(
     workspace,
     JsonElement.Source.Null());
 Console.WriteLine(nullDoc.RootElement.ValueKind); // Null
@@ -132,7 +132,7 @@ Builder delegates provide a fluent, type-safe way to construct JSON objects. The
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // Build a person object - common pattern for entity representation
-using var personDoc = JsonElement.BuildDocument(
+using var personDoc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -154,7 +154,7 @@ Nested objects are essential for representing hierarchical data structures like 
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // Build a hierarchical user structure - common in REST APIs
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -193,7 +193,7 @@ Arrays are ubiquitous in JSON - lists of search results, collections of entities
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // A numeric array - IDs, scores, measurements, counts
-using var arrayDoc = JsonElement.BuildDocument(
+using var arrayDoc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref arrayBuilder) =>
     {
@@ -214,7 +214,7 @@ Console.WriteLine(arrayDoc.RootElement.ToString());
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // String arrays - tags, categories, permissions, you name it
-using var namesDoc = JsonElement.BuildDocument(
+using var namesDoc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref arrayBuilder) =>
     {
@@ -238,7 +238,7 @@ This is the pattern you see everywhere in REST APIs - collections of entities.
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
 // Users array - standard API list response
-using var usersDoc = JsonElement.BuildDocument(
+using var usersDoc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref arrayBuilder) =>
     {
@@ -287,7 +287,7 @@ using ParsedJsonDocument<JsonElement> sourceDoc =
 
 // Make it mutable - copies data into the workspace
 using JsonDocumentBuilder<JsonElement.Mutable> builder =
-    sourceDoc.RootElement.BuildDocument(workspace);
+    sourceDoc.RootElement.CreateBuilder(workspace);
 
 // Now you can modify it (more on that below)
 JsonElement.Mutable root = builder.RootElement;
@@ -312,7 +312,7 @@ using ParsedJsonDocument<JsonElement> original =
     ParsedJsonDocument<JsonElement>.Parse(originalJson);
 
 using JsonDocumentBuilder<JsonElement.Mutable> modified =
-    original.RootElement.BuildDocument(workspace);
+    original.RootElement.CreateBuilder(workspace);
 
 // Make your changes
 JsonElement.Mutable root = modified.RootElement;
@@ -334,7 +334,7 @@ using JsonWorkspace workspace = JsonWorkspace.Create();
 string[] tags = ["admin", "user", "active"];
 int[] years = [2020, 2021, 2022, 2023, 2024];
 
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source((ref objectBuilder) =>
     {
@@ -393,7 +393,7 @@ After creating a document, you often need to update values based on business log
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -418,7 +418,7 @@ Console.WriteLine(root.ToString());
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -474,7 +474,7 @@ The same indexers work on mutable elements:
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var builder = doc.RootElement.BuildDocument(workspace);
+using var builder = doc.RootElement.CreateBuilder(workspace);
 
 JsonElement.Mutable root = builder.RootElement;
 JsonElement.Mutable nameEl = root["name"u8];
@@ -501,7 +501,7 @@ The simplest approach - create your own writer and write to it:
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -542,7 +542,7 @@ var writerOptions = new JsonWriterOptions { Indented = false };
 using JsonWorkspace workspace = JsonWorkspace.Create(options: writerOptions);
 
 // Build your document
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -590,7 +590,7 @@ public async Task WriteApiResponse(HttpContext context)
         options: new JsonWriterOptions { Indented = false }))
     {
         // Build the document
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
@@ -656,7 +656,7 @@ Standard web API response - success flag, timestamp, data payload:
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var response = JsonElement.BuildDocument(
+using var response = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -697,7 +697,7 @@ var preferences = GetUserPreferences(userId);
 
 // Build enriched document combining external and internal data
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var enrichedDoc = JsonElement.BuildDocument(
+using var enrichedDoc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source((ref objectBuilder) =>
     {
@@ -754,7 +754,7 @@ public async Task<string> GetUserProfileAsync(int userId)
     string result;
     using (JsonWorkspace workspace = JsonWorkspace.Create())
     {
-        using var profileDoc = JsonElement.BuildDocument(
+        using var profileDoc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
@@ -855,7 +855,7 @@ public async Task<JsonElement> BuildReportAsync()
     using (JsonWorkspace workspace = JsonWorkspace.CreateUnrented())
     {
         // Start building the document
-        using var doc = JsonElement.BuildDocument(
+        using var doc = JsonElement.CreateBuilder(
             workspace,
             new JsonElement.Source((ref objectBuilder) =>
             {
@@ -906,7 +906,7 @@ JsonElement legacyRoot = legacyDoc.RootElement;
 
 // Transform to modern format
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var transformedDoc = JsonElement.BuildDocument(
+using var transformedDoc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source((ref objectBuilder) =>
     {
@@ -936,7 +936,7 @@ using var transformedDoc = JsonElement.BuildDocument(
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var config = JsonElement.BuildDocument(
+using var config = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -974,7 +974,7 @@ When you modify a mutable JSON document (by adding, removing, or changing elemen
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
 
-using var doc = JsonElement.BuildDocument(
+using var doc = JsonElement.CreateBuilder(
     workspace,
     new JsonElement.Source(static (ref objectBuilder) =>
     {
@@ -1062,7 +1062,7 @@ The key principle is: **after any modification, assume all previously obtained r
 
 ```csharp
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using var doc = JsonElement.BuildDocument(workspace, /* ... */);
+using var doc = JsonElement.CreateBuilder(workspace, /* ... */);
 
 // Pattern 1: Single modification
 JsonElement.Mutable array1 = doc.RootElement.GetProperty("array1");
@@ -1127,7 +1127,7 @@ string result = nameObj.ToJsonString();
 // Parse and modify with JsonDocumentBuilder - pooled resources
 using ParsedJsonDocument<JsonElement> doc = ParsedJsonDocument<JsonElement>.Parse(json);
 using JsonWorkspace workspace = JsonWorkspace.Create();
-using JsonDocumentBuilder<JsonElement.Mutable> builder = doc.RootElement.GetProperty("name").BuildDocument(workspace);
+using JsonDocumentBuilder<JsonElement.Mutable> builder = doc.RootElement.GetProperty("name").CreateBuilder(workspace);
 builder.RootElement.SetProperty("firstName", "Matthew");
 string result = builder.RootElement.ToString();
 ```

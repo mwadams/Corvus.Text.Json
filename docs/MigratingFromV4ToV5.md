@@ -4,7 +4,7 @@ This guide helps you migrate code written against the V4 code generator (`Corvus
 
 V5 is a ground-up rewrite. The generated types are still readonly structs backed by JSON Schema, but the underlying architecture — memory management, mutation, and code generation — is fundamentally different. Most V4 patterns have a direct V5 equivalent, but some require rethinking.
 
-> **Tip:** Install the [`Corvus.Text.Json.Migration.Analyzers`](migration-analyzers.md) NuGet package to get Roslyn diagnostics that detect V4 patterns in your code and offer automatic code fixes. See the [Migration Analyzers Reference](migration-analyzers.md) for the complete list of diagnostics.
+> **Tip:** Install the [`Corvus.Text.Json.Migration.Analyzers`](MigrationAnalyzers.md) NuGet package to get Roslyn diagnostics that detect V4 patterns in your code and offer automatic code fixes. See the [Migration Analyzers Reference](MigrationAnalyzers.md) for the complete list of diagnostics.
 
 ## Table of Contents
 
