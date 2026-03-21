@@ -11,6 +11,7 @@ string? apiViewsDir = null;
 string? sharedViewsDir = null;
 string? repoUrl = null;
 string? nsDescriptionsDir = null;
+string? typeExamplesDir = null;
 string? apiBaseUrl = null;
 string? sidebarPartialName = null;
 string? layoutPath = null;
@@ -51,6 +52,9 @@ for (int i = 0; i < args.Length - 1; i++)
             break;
         case "--ns-descriptions":
             nsDescriptionsDir = args[++i];
+            break;
+        case "--type-examples":
+            typeExamplesDir = args[++i];
             break;
         case "--ns20-assembly":
             // Apply to the most recent --xml pair
@@ -102,6 +106,7 @@ if (xmlPaths.Count == 0 || assemblyPaths.Count == 0)
     Console.Error.WriteLine("  --shared-views-dir     (Optional) Directory for generated shared Razor partials");
     Console.Error.WriteLine("  --repo-url             (Optional) GitHub repository URL for source links (auto-detected from git if omitted)");
     Console.Error.WriteLine("  --ns-descriptions      (Optional) Directory containing {Namespace}.md files with namespace descriptions");
+    Console.Error.WriteLine("  --type-examples        (Optional) Directory containing {slug}.md files with hand-authored examples for types and members");
     Console.Error.WriteLine("  --api-base-url         (Optional) Base URL path for API pages (default: /api)");
     Console.Error.WriteLine("  --sidebar-partial-name (Optional) Name for the sidebar Razor partial (default: _ApiSidebar)");
     Console.Error.WriteLine("  --layout-path          (Optional) Relative path to Layout.cshtml from the views dir (default: ../Shared/_Layout.cshtml)");
@@ -323,7 +328,7 @@ if (outputPath is not null)
     Directory.CreateDirectory(outputPath);
 
     Console.WriteLine($"Generating markdown to: {outputPath}");
-    MarkdownGenerator markdownGen = new(outputPath, resolvedBaseUrl, nsDescriptionsDir, sourceResolver);
+    MarkdownGenerator markdownGen = new(outputPath, resolvedBaseUrl, nsDescriptionsDir, sourceResolver, typeExamplesDir);
 
     Console.Write("  Namespace pages...");
     markdownGen.Generate(namespaces);

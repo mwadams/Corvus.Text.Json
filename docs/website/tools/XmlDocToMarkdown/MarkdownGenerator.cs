@@ -5,7 +5,7 @@ namespace XmlDocToMarkdown;
 /// <summary>
 /// Generates one Vellum markdown file per namespace containing all public types.
 /// </summary>
-public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? namespaceDescriptionsDir = null, SourceLinkResolver? sourceResolver = null)
+public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? namespaceDescriptionsDir = null, SourceLinkResolver? sourceResolver = null, string? typeExamplesDir = null)
 {
     private const string FrontmatterDate = "2026-03-15T00:00:00.0+00:00";
 
@@ -53,9 +53,11 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
                 string fileName = $"{nsSlug}-{typeSlug}.md";
                 string filePath = Path.Combine(outputDir, fileName);
 
+                string? typeExample = LoadExampleMarkdown($"{nsSlug}-{typeSlug}");
+
                 StringBuilder sb = new();
                 WriteFrontmatter(sb, $"{type.Name} \u2014 {ns}");
-                WriteTypeBody(sb, type, ns, baseUrl, nsSlug, typeSlug, sourceResolver?.GetTypeSourceUrl(type.FullName));
+                WriteTypeBody(sb, type, ns, baseUrl, nsSlug, typeSlug, sourceResolver?.GetTypeSourceUrl(type.FullName), typeExample);
 
                 File.WriteAllText(filePath, sb.ToString());
             }
@@ -148,9 +150,11 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         string fileBase = GetMemberPageFileBase(nsSlug, typeSlug, memberSlug);
         string filePath = Path.Combine(outputDir, fileBase + ".md");
 
+        string? memberExample = LoadExampleMarkdown(fileBase);
+
         StringBuilder sb = new();
         WriteFrontmatter(sb, $"{pageTitle} \u2014 {ns}");
-        WriteMemberPageBody(sb, ns, nsSlug, type, typeSlug, memberDisplayName, memberCategory, members, sourceResolver);
+        WriteMemberPageBody(sb, ns, nsSlug, type, typeSlug, memberDisplayName, memberCategory, members, sourceResolver, memberExample);
 
         File.WriteAllText(filePath, sb.ToString());
     }
@@ -184,10 +188,30 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
     }
 
     /// <summary>
+    /// Loads a hand-authored example markdown file for a type or member.
+    /// Files are named {slug}.md in the typeExamplesDir directory.
+    /// </summary>
+    private string? LoadExampleMarkdown(string slug)
+    {
+        if (typeExamplesDir is null)
+        {
+            return null;
+        }
+
+        string examplePath = Path.Combine(typeExamplesDir, slug + ".md");
+        if (File.Exists(examplePath))
+        {
+            return File.ReadAllText(examplePath).TrimEnd();
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Writes the body of a type summary page — declaration, summary, inheritance,
     /// and summary tables for each member category linking to dedicated member pages.
     /// </summary>
-    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string ns, string baseUrl, string? nsSlug = null, string? typeSlug = null, string? sourceUrl = null)
+    internal static void WriteTypeBody(StringBuilder sb, TypeInfo type, string ns, string baseUrl, string? nsSlug = null, string? typeSlug = null, string? sourceUrl = null, string? typeExampleMarkdown = null)
     {
         // Definition metadata — Namespace, Assembly, Source grouped together
         sb.AppendLine("## Definition");
@@ -473,6 +497,15 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             sb.AppendLine();
         }
 
+        // Hand-authored examples (from file)
+        if (!string.IsNullOrEmpty(typeExampleMarkdown))
+        {
+            sb.AppendLine("## Examples");
+            sb.AppendLine();
+            sb.AppendLine(typeExampleMarkdown);
+            sb.AppendLine();
+        }
+
         if (!string.IsNullOrEmpty(type.Documentation?.Example))
         {
             sb.AppendLine("## Example");
@@ -513,7 +546,8 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         string memberDisplayName,
         string memberCategory,
         List<MemberInfo> members,
-        SourceLinkResolver? sourceResolver = null)
+        SourceLinkResolver? sourceResolver = null,
+        string? memberExampleMarkdown = null)
     {
         // Definition metadata — Namespace, Assembly, Source grouped together
         sb.AppendLine("## Definition");
@@ -537,7 +571,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
         // For single members, show the detail directly
         if (members.Count == 1)
         {
-            WriteMemberDetail(sb, members[0], 2);
+            WriteMemberDetail(sb, members[0], 2, memberExampleMarkdown: memberExampleMarkdown);
 
             WriteAppliesTo(sb, members[0].AvailableOnNetStandard20);
             return;
@@ -567,6 +601,15 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
             sb.AppendLine("---");
             sb.AppendLine();
         }
+
+        // Hand-authored examples (from file) — shown once for the whole member group
+        if (!string.IsNullOrEmpty(memberExampleMarkdown))
+        {
+            sb.AppendLine("## Examples");
+            sb.AppendLine();
+            sb.AppendLine(memberExampleMarkdown);
+            sb.AppendLine();
+        }
     }
 
     /// <summary>
@@ -589,7 +632,7 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
     /// <summary>
     /// Writes the detail for a single member (one overload of a method, a property, etc.).
     /// </summary>
-    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel, bool useSignatureHeading = false, string? sourceUrl = null)
+    private static void WriteMemberDetail(StringBuilder sb, MemberInfo member, int headingLevel, bool useSignatureHeading = false, string? sourceUrl = null, string? memberExampleMarkdown = null)
     {
         string heading = new('#', headingLevel);
 
@@ -701,6 +744,15 @@ public sealed class MarkdownGenerator(string outputDir, string baseUrl, string? 
                 sb.AppendLine(memberLink);
                 sb.AppendLine();
             }
+        }
+
+        // Hand-authored examples (from file)
+        if (!string.IsNullOrEmpty(memberExampleMarkdown))
+        {
+            sb.AppendLine($"{heading}# Examples");
+            sb.AppendLine();
+            sb.AppendLine(memberExampleMarkdown);
+            sb.AppendLine();
         }
 
         // Remarks

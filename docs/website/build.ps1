@@ -53,6 +53,7 @@ $v5ApiContentDir = Join-Path $siteDir "content\Api-v5"
 $v5ApiTaxonomyDir = Join-Path $siteDir "taxonomy\api-v5"
 $v5ApiViewsDir = Join-Path $siteDir "theme\corvus\views\api\v5"
 $v5NsDescriptionsDir = Join-Path $siteDir "content\Api-v5\namespaces"
+$v5TypeExamplesDir = Join-Path $siteDir "content\Api-v5\examples"
 
 # V4 paths
 $v4SrcDir = Join-Path $repoRoot "src-v4"
@@ -171,6 +172,7 @@ $sw = [System.Diagnostics.Stopwatch]::StartNew()
     --api-views-dir $v5ApiViewsDir `
     --shared-views-dir $sharedViewsDir `
     --ns-descriptions $v5NsDescriptionsDir `
+    --type-examples $v5TypeExamplesDir `
     --api-base-url /api/v5 `
     --sidebar-partial-name _ApiSidebarV5 `
     --layout-path "../../Shared/_Layout.cshtml" `

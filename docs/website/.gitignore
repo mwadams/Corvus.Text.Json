@@ -9,6 +9,7 @@ site/taxonomy/api-v5/*
 !site/taxonomy/api-v5/index.yml
 site/content/Api-v5/*
 !site/content/Api-v5/namespaces/
+!site/content/Api-v5/examples/
 site/theme/corvus/views/api/v5/index.cshtml
 site/theme/corvus/views/Shared/_ApiSidebarV5.cshtml
 # V4 API docs
