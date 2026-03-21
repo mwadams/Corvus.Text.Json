@@ -47,6 +47,12 @@ internal static class ApiViewGenerator
             sb.AppendLine($"                    <a href=\"{altVersionUrl}\" class=\"api-version-switcher__alt\" data-api-version-switch>Switch to {altVersionLabel}</a>");
             sb.AppendLine("                </div>");
             sb.AppendLine("            </div>");
+            sb.AppendLine("            <script>");
+            sb.AppendLine("            (function(){var s=document.querySelector('.api-version-switcher');if(!s)return;");
+            sb.AppendLine("            s.querySelector('.api-version-switcher__current').addEventListener('click',function(){s.classList.toggle('is-open');});");
+            sb.AppendLine("            document.addEventListener('click',function(e){if(!e.target.closest('.api-version-switcher'))s.classList.remove('is-open');});");
+            sb.AppendLine("            })();");
+            sb.AppendLine("            </script>");
         }
         else
         {

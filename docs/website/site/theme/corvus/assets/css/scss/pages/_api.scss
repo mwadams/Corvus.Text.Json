@@ -15,28 +15,78 @@
 }
 
 .api-version-switcher {
-  display: flex;
-  align-items: center;
-  gap: var(--space-sm);
+  position: relative;
+  display: inline-flex;
   font-size: var(--font-size-sm);
   white-space: nowrap;
 
   &__current {
-    display: inline-block;
-    padding: 0.2em 0.6em;
-    border-radius: 4px;
-    background: var(--color-brand);
-    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.35em 0.75em;
+    border-radius: var(--radius-md);
+    background: var(--color-bg-raised, #23242a);
+    border: 1px solid var(--color-border);
+    color: var(--color-white);
     font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), background var(--transition-fast);
+
+    &:hover {
+      border-color: var(--color-border-active);
+      background: var(--color-border);
+    }
+
+    &::after {
+      content: '';
+      display: inline-block;
+      width: 0.45em;
+      height: 0.45em;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(45deg);
+      margin-top: -0.15em;
+      opacity: 0.6;
+      transition: transform var(--transition-fast);
+    }
   }
 
   &__alt {
-    color: var(--color-text-muted, #6b7280);
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    display: none;
+    padding: 0.4em 0.85em;
+    border-radius: var(--radius-md);
+    background: var(--color-bg-raised, #23242a);
+    border: 1px solid var(--color-border);
+    color: var(--color-text-muted, #9ca3af);
     text-decoration: none;
-    border-bottom: 1px dashed currentColor;
+    font-weight: var(--font-weight-medium);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.3);
+    z-index: 100;
+    transition: color var(--transition-fast), background var(--transition-fast);
 
     &:hover {
-      color: var(--color-brand);
+      color: var(--color-white);
+      background: var(--color-border);
+    }
+  }
+
+  // Show dropdown when open
+  &.is-open {
+    .api-version-switcher__current {
+      border-color: var(--color-border-active);
+
+      &::after {
+        transform: rotate(-135deg);
+        margin-top: 0.15em;
+      }
+    }
+
+    .api-version-switcher__alt {
+      display: block;
     }
   }
 }
