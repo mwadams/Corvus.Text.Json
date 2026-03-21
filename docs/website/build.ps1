@@ -131,6 +131,24 @@ http.createServer((req, res) => {
     return
 }
 
+# -- Step 0: Copy hand-authored source files ----------------------------------
+Write-Host "`n[0/10] Copying hand-authored source files..." -ForegroundColor Cyan
+$sourceDir = Join-Path $siteDir "source"
+# Copy content overviews
+Copy-Item (Join-Path $sourceDir "content\Docs\Overview.md") (Join-Path $siteDir "content\Docs\Overview.md") -Force
+Copy-Item (Join-Path $sourceDir "content\Examples\Overview.md") (Join-Path $siteDir "content\Examples\Overview.md") -Force
+# Copy taxonomy index files
+foreach ($sub in @("docs", "examples", "api", "api-v5", "api-v4")) {
+    $src = Join-Path $sourceDir "taxonomy\$sub\index.yml"
+    $dst = Join-Path $siteDir "taxonomy\$sub\index.yml"
+    if (Test-Path $src) {
+        $dstDir = Split-Path $dst -Parent
+        if (!(Test-Path $dstDir)) { New-Item -ItemType Directory -Path $dstDir -Force | Out-Null }
+        Copy-Item $src $dst -Force
+    }
+}
+Write-Host "  Copied source files to site tree." -ForegroundColor Green
+
 # -- Step 1a: Build Corvus.Text.Json (V5) ------------------------------------
 Write-Host "`n[1a/10] Building Corvus.Text.Json (V5)..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()
@@ -225,7 +243,7 @@ $recipesSourceDir = Join-Path $repoRoot "docs\ExampleRecipes"
 $recipesContentDir = Join-Path $siteDir "content\Examples"
 $recipesTaxonomyDir = Join-Path $siteDir "taxonomy\examples"
 
-# Clean old generated recipe files (preserve Overview.md and index.*)
+# Clean old generated recipe files (hand-authored files are in source/ and copied in step 0)
 Get-ChildItem $recipesContentDir -Filter "*.md" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "Overview.md" } | Remove-Item -Force
 Get-ChildItem $recipesTaxonomyDir -Filter "*.yml" -ErrorAction SilentlyContinue |
@@ -375,7 +393,7 @@ $docsContentDir = Join-Path $siteDir "content\Docs"
 $docsTaxonomyDir = Join-Path $siteDir "taxonomy\docs"
 $descriptorsDir = Join-Path $here "doc-descriptors"
 
-# Clean old generated doc files (preserve Overview.md and index.*)
+# Clean old generated doc files (hand-authored files are in source/ and copied in step 0)
 Get-ChildItem $docsContentDir -Filter "*.md" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "Overview.md" } | Remove-Item -Force
 Get-ChildItem $docsTaxonomyDir -Filter "*.yml" -ErrorAction SilentlyContinue |
