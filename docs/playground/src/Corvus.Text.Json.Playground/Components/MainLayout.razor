@@ -9,7 +9,7 @@
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
     <select class="toolbar-select" @onchange="OnSampleChanged">
-        <option value="">— Select a sample —</option>
+        <option value="new" selected="@(activeSampleId == "new")">New Project</option>
         @foreach (var sample in availableSamples)
         {
             <option value="@sample.Id" selected="@(sample.Id == activeSampleId)">@sample.DisplayName</option>
@@ -166,6 +166,10 @@
     private ElementReference renameInputRef;
     private bool focusRenameInput;
 
+    private const string EmptySchemaContent = "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\"\n}";
+    private const string NewProjectUserCode = "using Corvus.Text.Json;\nusing Playground;\n";
+    private const string NewProjectId = "new";
+
     private StandaloneEditorConstructionOptions SchemaEditorOptions(StandaloneCodeEditor editor)
     {
         string initialContent = schemaFiles.Count > 0
@@ -203,26 +207,13 @@
         // Load all recipe samples
         availableSamples = SampleRegistry.LoadAll();
 
-        // Default to the first sample (001 - Data Object)
-        if (availableSamples.Count > 0)
-        {
-            LoadSample(availableSamples[0]);
-        }
-        else
-        {
-            // Fallback if no samples found
-            schemaFiles.Add(new SchemaFile
-            {
-                Name = "schema.json",
-                Content = "{\n  \"type\": \"object\"\n}",
-                IsRootType = true,
-            });
-        }
+        // Default to a blank "New Project"
+        LoadNewProject();
     }
 
     private string GetInitialUserCode()
     {
-        if (activeSampleId is not null)
+        if (activeSampleId is not null && activeSampleId != NewProjectId)
         {
             PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == activeSampleId);
             if (sample is not null)
@@ -231,7 +222,7 @@
             }
         }
 
-        return "// Select a sample and click Generate, then write code here\n";
+        return NewProjectUserCode;
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -332,6 +323,28 @@
             return;
         }
 
+        if (sampleId == NewProjectId)
+        {
+            LoadNewProject();
+
+            if (schemaEditor is not null)
+            {
+                await schemaEditor.SetValue(schemaFiles[0].Content);
+            }
+
+            if (userCodeEditor is not null)
+            {
+                await userCodeEditor.SetValue(NewProjectUserCode);
+            }
+
+            generationResult = null;
+            await ClearEditorMarkers();
+            await ClearSchemaEditorMarkers();
+            statusText = "Ready";
+            statusError = false;
+            return;
+        }
+
         PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == sampleId);
         if (sample is null || schemaEditor is null)
         {
@@ -355,6 +368,19 @@
         await ClearSchemaEditorMarkers();
         statusText = "Ready — sample loaded";
         statusError = false;
+    }
+
+    private void LoadNewProject()
+    {
+        activeSampleId = NewProjectId;
+        schemaFiles.Clear();
+        schemaFiles.Add(new SchemaFile
+        {
+            Name = "schema.json",
+            Content = EmptySchemaContent,
+            IsRootType = true,
+        });
+        activeSchemaIndex = 0;
     }
 
     private void LoadSample(PlaygroundSample sample)
@@ -465,7 +491,7 @@
         schemaFiles.Add(new SchemaFile
         {
             Name = $"schema{number}.json",
-            Content = "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"properties\": {\n  }\n}",
+            Content = EmptySchemaContent,
             IsRootType = false,
         });
 
