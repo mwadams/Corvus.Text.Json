@@ -19,4 +19,10 @@ public class SchemaFile
     /// Gets or sets a value indicating whether this schema should be generated as a root type.
     /// </summary>
     public bool IsRootType { get; set; }
+
+    /// <summary>
+    /// Gets or sets the explicit .NET type name to use for this schema.
+    /// When set, overrides the name derived from the schema content or filename.
+    /// </summary>
+    public string? TypeName { get; set; }
 }

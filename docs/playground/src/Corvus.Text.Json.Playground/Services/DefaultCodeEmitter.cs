@@ -41,24 +41,38 @@ public static class DefaultCodeEmitter
         return sb.ToString();
     }
 
-    private static string BuildSampleJson(TypeMapEntry type, IReadOnlyList<TypeMapEntry> allTypes)
+    private static string BuildSampleJson(
+        TypeMapEntry type,
+        IReadOnlyList<TypeMapEntry> allTypes,
+        HashSet<string>? visited = null)
     {
         if (type.Kind != "object" || type.Properties.Count == 0)
         {
             return "{}";
         }
 
+        visited ??= [];
+        if (!visited.Add(type.FullTypeName))
+        {
+            // Circular reference — emit empty object to break the cycle
+            return "{}";
+        }
+
         var parts = new List<string>();
         foreach (TypeMapProperty prop in type.Properties)
         {
-            string sampleValue = GetSampleValue(prop, allTypes);
+            string sampleValue = GetSampleValue(prop, allTypes, visited);
             parts.Add($"\"{prop.Name}\": {sampleValue}");
         }
 
+        visited.Remove(type.FullTypeName);
         return "{ " + string.Join(", ", parts) + " }";
     }
 
-    private static string GetSampleValue(TypeMapProperty prop, IReadOnlyList<TypeMapEntry> allTypes)
+    private static string GetSampleValue(
+        TypeMapProperty prop,
+        IReadOnlyList<TypeMapEntry> allTypes,
+        HashSet<string>? visited = null)
     {
         // Check if property type is a known complex type in the map
         TypeMapEntry? complexType = allTypes
@@ -66,7 +80,7 @@ public static class DefaultCodeEmitter
 
         if (complexType is not null && complexType.Kind == "object")
         {
-            return BuildSampleJson(complexType, allTypes);
+            return BuildSampleJson(complexType, allTypes, visited);
         }
 
         return prop.TypeName.ToLowerInvariant() switch

@@ -35,6 +35,8 @@ public class CodeGenerationService
 
             // Parse and register all schema documents (mimics V5 SourceGenerator pattern)
             var parsedSchemas = new List<(SchemaFile File, string Uri)>();
+            var schemaErrors = new List<SchemaError>();
+
             foreach (SchemaFile schemaFile in schemaFiles)
             {
                 System.Text.Json.JsonDocument schemaDoc;
@@ -44,11 +46,12 @@ public class CodeGenerationService
                 }
                 catch (System.Text.Json.JsonException ex)
                 {
-                    return new GenerationResult
-                    {
-                        Success = false,
-                        ErrorMessage = $"Invalid JSON in '{schemaFile.Name}': {ex.Message}",
-                    };
+                    schemaErrors.Add(new SchemaError(
+                        schemaFile.Name,
+                        ex.Message,
+                        ex.LineNumber,
+                        ex.BytePositionInLine));
+                    continue;
                 }
 
                 // Registration 1: By playground URI derived from filename
@@ -64,6 +67,16 @@ public class CodeGenerationService
                 }
 
                 parsedSchemas.Add((schemaFile, uri));
+            }
+
+            if (schemaErrors.Count > 0)
+            {
+                return new GenerationResult
+                {
+                    Success = false,
+                    ErrorMessage = $"JSON parse errors in {schemaErrors.Count} schema file(s)",
+                    SchemaErrors = schemaErrors,
+                };
             }
 
             // Register vocabulary analyzers (same as V5 SourceGenerator)
@@ -106,9 +119,18 @@ public class CodeGenerationService
                 };
             }
 
+            // Build explicit type name overrides from schemas that specify a TypeName
+            var namedTypes = parsedSchemas
+                .Where(s => s.File.IsRootType && !string.IsNullOrEmpty(s.File.TypeName))
+                .Select(s => new CodeGeneration.CSharpLanguageProvider.NamedType(
+                    new JsonReference(s.Uri),
+                    s.File.TypeName!))
+                .ToArray();
+
             // Configure the C# language provider to match V5 SourceGenerator defaults
             var options = new CodeGeneration.CSharpLanguageProvider.Options(
                 rootNamespace,
+                namedTypes: namedTypes.Length > 0 ? namedTypes : null,
                 addExplicitUsings: true,
                 useImplicitOperatorString: true,
                 useOptionalNameHeuristics: true,
@@ -136,10 +158,21 @@ public class CodeGenerationService
         }
         catch (Exception ex)
         {
+            // Try to associate the error with root schema files
+            var rootSchemaNames = schemaFiles
+                .Where(f => f.IsRootType)
+                .Select(f => f.Name)
+                .ToList();
+
+            var errors = rootSchemaNames.Count > 0
+                ? rootSchemaNames.Select(n => new SchemaError(n, ex.Message, null, null)).ToList()
+                : [new SchemaError(schemaFiles[0].Name, ex.Message, null, null)];
+
             return new GenerationResult
             {
                 Success = false,
                 ErrorMessage = $"Code generation failed: {ex.Message}",
+                SchemaErrors = errors,
             };
         }
     }
@@ -209,6 +242,7 @@ public class CodeGenerationService
 
         string kind = InferKind(reduced);
         string? pointer = GetSchemaPointer(reduced);
+        string? sourceName = GetSourceSchemaName(reduced);
 
         var properties = new List<TypeMapProperty>();
         foreach (PropertyDeclaration prop in reduced.PropertyDeclarations)
@@ -230,11 +264,12 @@ public class CodeGenerationService
                 propTypeName,
                 propFullName,
                 GetSchemaPointer(prop.ReducedPropertyType),
+                GetSourceSchemaName(prop.ReducedPropertyType),
                 prop.RequiredOrOptional == RequiredOrOptional.Required ||
                     prop.RequiredOrOptional == RequiredOrOptional.ComposedRequired));
         }
 
-        entries.Add(new TypeMapEntry(shortName, fullName, kind, pointer, properties));
+        entries.Add(new TypeMapEntry(shortName, fullName, kind, pointer, sourceName, properties));
 
         // Recurse into property types
         foreach (PropertyDeclaration prop in reduced.PropertyDeclarations)
@@ -277,6 +312,22 @@ public class CodeGenerationService
         }
 
         return location;
+    }
+
+    private static string? GetSourceSchemaName(TypeDeclaration typeDecl)
+    {
+        string location = typeDecl.LocatedSchema.Location.ToString();
+
+        // Extract filename from "schema://playground/person.json" or
+        // "schema://playground/person.json#/properties/address"
+        if (location.StartsWith(SchemaBaseUri, StringComparison.Ordinal))
+        {
+            string rest = location[SchemaBaseUri.Length..];
+            int hashIndex = rest.IndexOf('#');
+            return hashIndex >= 0 ? rest[..hashIndex] : rest;
+        }
+
+        return null;
     }
 
     private static string InferKind(TypeDeclaration typeDecl)

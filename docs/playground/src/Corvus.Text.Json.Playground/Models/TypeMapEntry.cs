@@ -7,12 +7,14 @@ namespace Corvus.Text.Json.Playground.Models;
 /// <param name="FullTypeName">Fully qualified type name (e.g. "MyNamespace.Person").</param>
 /// <param name="Kind">Schema type kind: object, array, string, number, integer, boolean, enum, oneOf, anyOf, allOf, or unknown.</param>
 /// <param name="SchemaPointer">JSON Pointer into the source schema (e.g. "#/properties/name").</param>
+/// <param name="SourceSchemaName">The schema filename this type originates from (e.g. "person.json").</param>
 /// <param name="Properties">Child properties/members for object types.</param>
 public record TypeMapEntry(
     string TypeName,
     string FullTypeName,
     string Kind,
     string? SchemaPointer,
+    string? SourceSchemaName,
     IReadOnlyList<TypeMapProperty> Properties);
 
 /// <summary>
@@ -23,6 +25,7 @@ public record TypeMapEntry(
 /// <param name="TypeName">Property type short name (e.g. "JsonString").</param>
 /// <param name="FullTypeName">Property type fully qualified name (e.g. "Playground.JsonString").</param>
 /// <param name="SchemaPointer">JSON Pointer for this property in the schema.</param>
+/// <param name="SourceSchemaName">The schema filename this property's type originates from.</param>
 /// <param name="IsRequired">Whether the property is required by the schema.</param>
 public record TypeMapProperty(
     string Name,
@@ -30,4 +33,5 @@ public record TypeMapProperty(
     string TypeName,
     string FullTypeName,
     string? SchemaPointer,
+    string? SourceSchemaName,
     bool IsRequired);

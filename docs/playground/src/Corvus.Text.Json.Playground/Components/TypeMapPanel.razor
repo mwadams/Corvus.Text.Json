@@ -46,7 +46,7 @@
     public IReadOnlyList<TypeMapEntry> TypeMap { get; set; } = [];
 
     [Parameter]
-    public EventCallback<string?> OnSchemaPointerSelected { get; set; }
+    public EventCallback<SchemaNavigation> OnSchemaPointerSelected { get; set; }
 
     private string? selectedItemKey;
     private string? relatedFullTypeName;
@@ -55,14 +55,16 @@
     {
         selectedItemKey = $"type:{entry.FullTypeName}";
         relatedFullTypeName = null;
-        await OnSchemaPointerSelected.InvokeAsync(entry.SchemaPointer);
+        await OnSchemaPointerSelected.InvokeAsync(
+            new SchemaNavigation(entry.SchemaPointer, entry.SourceSchemaName));
     }
 
     private async Task SelectProperty(TypeMapProperty prop)
     {
         selectedItemKey = $"prop:{prop.Name}:{prop.FullTypeName}";
         relatedFullTypeName = prop.FullTypeName;
-        await OnSchemaPointerSelected.InvokeAsync(prop.SchemaPointer);
+        await OnSchemaPointerSelected.InvokeAsync(
+            new SchemaNavigation(prop.SchemaPointer, prop.SourceSchemaName));
     }
 
     private string GetEntryClass(TypeMapEntry entry)
@@ -89,4 +91,6 @@
 
         return "";
     }
+
+    public record SchemaNavigation(string? Pointer, string? SchemaName);
 }

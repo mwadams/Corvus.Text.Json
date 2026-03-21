@@ -10,7 +10,10 @@
     <h1>Corvus.Text.Json Playground</h1>
     <select class="toolbar-select" @onchange="OnSampleChanged">
         <option value="">— Select a sample —</option>
-        <option value="SimpleObject" selected>Person (simple object)</option>
+        @foreach (var sample in availableSamples)
+        {
+            <option value="@sample.Id" selected="@(sample.Id == activeSampleId)">@sample.DisplayName</option>
+        }
     </select>
     <div class="spacer"></div>
     <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@isGenerating">
@@ -22,7 +25,7 @@
 </div>
 
 <div class="playground-grid @(maximizedPanel is not null ? "has-maximized" : "")">
-    @* Top-left: Schema editor *@
+    @* Top-left: Schema editor with tabs *@
     <div class="playground-panel @(GetPanelClass("schema"))">
         <div class="panel-header">
             JSON Schema
@@ -30,6 +33,48 @@
             <button class="panel-maximize-btn" @onclick='() => ToggleMaximize("schema")' title="@(maximizedPanel == "schema" ? "Restore" : "Maximize")">
                 @(maximizedPanel == "schema" ? "⊟" : "⊞")
             </button>
+        </div>
+        <div class="schema-tabs">
+            @for (int i = 0; i < schemaFiles.Count; i++)
+            {
+                int index = i;
+                var file = schemaFiles[index];
+                <div class="schema-tab @(index == activeSchemaIndex ? "active" : "") @(file.IsRootType ? "root-type" : "")"
+                     @onclick="() => SelectSchemaTab(index)">
+                    @if (renamingTabIndex == index)
+                    {
+                        <input @ref="renameInputRef"
+                               class="schema-tab-rename-input"
+                               @bind="renameValue"
+                               @bind:event="oninput"
+                               @onclick:stopPropagation="true"
+                               @onkeydown="OnRenameKeyDown"
+                               @onblur="CommitRename" />
+                    }
+                    else
+                    {
+                        <span class="schema-tab-name">@file.Name</span>
+                        <button class="schema-tab-rename-btn"
+                                @onclick:stopPropagation="true"
+                                @onclick="() => StartRename(index)"
+                                title="Rename">✎</button>
+                    }
+                    <button class="schema-tab-root-badge @(file.IsRootType ? "is-root" : "")"
+                            @onclick:stopPropagation="true"
+                            @onclick="() => ToggleRootType(index)"
+                            title="@(file.IsRootType ? "This schema will be generated (click to unmark)" : "Click to generate types from this schema")">
+                        @(file.IsRootType ? "GENERATE" : "REFERENCE")
+                    </button>
+                    @if (schemaFiles.Count > 1)
+                    {
+                        <button class="schema-tab-close"
+                                @onclick:stopPropagation="true"
+                                @onclick="() => RemoveSchemaTab(index)"
+                                title="Remove">×</button>
+                    }
+                </div>
+            }
+            <button class="schema-tab-add" @onclick="AddSchemaTab" title="Add schema file">+</button>
         </div>
         <div class="panel-content">
             <StandaloneCodeEditor @ref="schemaEditor"
@@ -109,16 +154,30 @@
     private List<ConsoleLine> consoleLines = [];
     private string? maximizedPanel;
 
-    private string defaultSchema = "";
+    // Sample registry state
+    private IReadOnlyList<PlaygroundSample> availableSamples = [];
+    private string? activeSampleId;
+
+    // Multi-schema state
+    private List<SchemaFile> schemaFiles = [];
+    private int activeSchemaIndex;
+    private int renamingTabIndex = -1;
+    private string renameValue = "";
+    private ElementReference renameInputRef;
+    private bool focusRenameInput;
 
     private StandaloneEditorConstructionOptions SchemaEditorOptions(StandaloneCodeEditor editor)
     {
+        string initialContent = schemaFiles.Count > 0
+            ? schemaFiles[activeSchemaIndex].Content
+            : "{\n  \"type\": \"object\"\n}";
+
         return new StandaloneEditorConstructionOptions
         {
             AutomaticLayout = true,
             Language = "json",
             Theme = "vs-dark",
-            Value = defaultSchema,
+            Value = initialContent,
             FontSize = 13,
             Minimap = new EditorMinimapOptions { Enabled = false },
             ScrollBeyondLastLine = false,
@@ -132,17 +191,63 @@
             AutomaticLayout = true,
             Language = "csharp",
             Theme = "vs-dark",
-            Value = "// Generate types first, then write code here\n",
+            Value = GetInitialUserCode(),
             FontSize = 13,
             Minimap = new EditorMinimapOptions { Enabled = false },
             ScrollBeyondLastLine = false,
         };
     }
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        // Load the default sample schema
-        defaultSchema = LoadEmbeddedSample("SimpleObject");
+        // Load all recipe samples
+        availableSamples = SampleRegistry.LoadAll();
+
+        // Default to the first sample (001 - Data Object)
+        if (availableSamples.Count > 0)
+        {
+            LoadSample(availableSamples[0]);
+        }
+        else
+        {
+            // Fallback if no samples found
+            schemaFiles.Add(new SchemaFile
+            {
+                Name = "schema.json",
+                Content = "{\n  \"type\": \"object\"\n}",
+                IsRootType = true,
+            });
+        }
+    }
+
+    private string GetInitialUserCode()
+    {
+        if (activeSampleId is not null)
+        {
+            PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == activeSampleId);
+            if (sample is not null)
+            {
+                return sample.UserCode;
+            }
+        }
+
+        return "// Select a sample and click Generate, then write code here\n";
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (focusRenameInput)
+        {
+            focusRenameInput = false;
+            try
+            {
+                await renameInputRef.FocusAsync();
+            }
+            catch
+            {
+                // Element may not yet be in DOM; ignore
+            }
+        }
     }
 
     private async Task OnSchemaEditorInit()
@@ -221,11 +326,178 @@
 
     private async Task OnSampleChanged(ChangeEventArgs e)
     {
-        string? sampleName = e.Value?.ToString();
-        if (!string.IsNullOrEmpty(sampleName) && schemaEditor is not null)
+        string? sampleId = e.Value?.ToString();
+        if (string.IsNullOrEmpty(sampleId))
         {
-            string content = LoadEmbeddedSample(sampleName);
-            await schemaEditor.SetValue(content);
+            return;
+        }
+
+        PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == sampleId);
+        if (sample is null || schemaEditor is null)
+        {
+            return;
+        }
+
+        LoadSample(sample);
+
+        // Update editors
+        activeSchemaIndex = 0;
+        await schemaEditor.SetValue(schemaFiles[0].Content);
+
+        if (userCodeEditor is not null)
+        {
+            await userCodeEditor.SetValue(sample.UserCode);
+        }
+
+        // Reset generation state
+        generationResult = null;
+        await ClearEditorMarkers();
+        await ClearSchemaEditorMarkers();
+        statusText = "Ready — sample loaded";
+        statusError = false;
+    }
+
+    private void LoadSample(PlaygroundSample sample)
+    {
+        activeSampleId = sample.Id;
+
+        schemaFiles.Clear();
+        foreach (SampleSchemaFile schema in sample.Schemas)
+        {
+            schemaFiles.Add(new SchemaFile
+            {
+                Name = schema.Name,
+                Content = schema.Content,
+                IsRootType = schema.IsRootType,
+                TypeName = schema.TypeName,
+            });
+        }
+
+        activeSchemaIndex = 0;
+    }
+
+    private async Task SelectSchemaTab(int index)
+    {
+        if (index == activeSchemaIndex || schemaEditor is null)
+        {
+            return;
+        }
+
+        // Save current tab content
+        schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+
+        // Switch to new tab
+        activeSchemaIndex = index;
+        await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
+    }
+
+    private void ToggleRootType(int index)
+    {
+        schemaFiles[index].IsRootType = !schemaFiles[index].IsRootType;
+    }
+
+    private void StartRename(int index)
+    {
+        renamingTabIndex = index;
+        // Strip .json for editing, user edits only the stem
+        string name = schemaFiles[index].Name;
+        renameValue = name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+            ? name[..^5]
+            : name;
+        focusRenameInput = true;
+    }
+
+    private void OnRenameKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            CommitRename();
+        }
+        else if (e.Key == "Escape")
+        {
+            renamingTabIndex = -1;
+        }
+    }
+
+    private void CommitRename()
+    {
+        if (renamingTabIndex < 0 || renamingTabIndex >= schemaFiles.Count)
+        {
+            renamingTabIndex = -1;
+            return;
+        }
+
+        string stem = renameValue.Trim();
+
+        // Validate: must not be empty, must not contain invalid chars
+        if (string.IsNullOrWhiteSpace(stem) ||
+            stem.IndexOfAny(['.', '/', '\\', ' ']) >= 0)
+        {
+            // Revert — keep existing name
+            renamingTabIndex = -1;
+            return;
+        }
+
+        string newName = stem + ".json";
+
+        // Check for duplicates (case-insensitive, excluding current tab)
+        bool isDuplicate = schemaFiles
+            .Where((f, i) => i != renamingTabIndex)
+            .Any(f => string.Equals(f.Name, newName, StringComparison.OrdinalIgnoreCase));
+
+        if (!isDuplicate)
+        {
+            schemaFiles[renamingTabIndex].Name = newName;
+        }
+
+        renamingTabIndex = -1;
+    }
+
+    private async Task AddSchemaTab()
+    {
+        // Save current tab content before switching
+        if (schemaEditor is not null)
+        {
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        }
+
+        int number = schemaFiles.Count + 1;
+        schemaFiles.Add(new SchemaFile
+        {
+            Name = $"schema{number}.json",
+            Content = "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"type\": \"object\",\n  \"properties\": {\n  }\n}",
+            IsRootType = false,
+        });
+
+        activeSchemaIndex = schemaFiles.Count - 1;
+
+        if (schemaEditor is not null)
+        {
+            await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
+        }
+    }
+
+    private async Task RemoveSchemaTab(int index)
+    {
+        if (schemaFiles.Count <= 1)
+        {
+            return;
+        }
+
+        schemaFiles.RemoveAt(index);
+
+        if (activeSchemaIndex >= schemaFiles.Count)
+        {
+            activeSchemaIndex = schemaFiles.Count - 1;
+        }
+        else if (index < activeSchemaIndex)
+        {
+            activeSchemaIndex--;
+        }
+
+        if (schemaEditor is not null)
+        {
+            await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
         }
     }
 
@@ -243,33 +515,33 @@
 
         try
         {
-            string schemaJson = await schemaEditor.GetValue();
-            generationResult = await CodeGenService.GenerateAsync(schemaJson);
+            // Save current editor content to active tab
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+
+            // Generate from all schema files
+            generationResult = await CodeGenService.GenerateAsync(schemaFiles);
 
             if (generationResult.Success)
             {
                 statusText = $"Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
+                await ClearSchemaEditorMarkers();
 
                 // Update IntelliSense with the generated code
                 IntelliSenseSvc.UpdateGeneratedCode(generationResult.GeneratedFiles);
-
-                // Emit default user code if editor is empty or has only the placeholder
-                if (userCodeEditor is not null)
-                {
-                    string currentCode = await userCodeEditor.GetValue();
-                    if (string.IsNullOrWhiteSpace(currentCode) ||
-                        currentCode.StartsWith("// Generate types first"))
-                    {
-                        string defaultCode = DefaultCodeEmitter.Emit(generationResult.TypeMap);
-                        await userCodeEditor.SetValue(defaultCode);
-                    }
-                }
             }
             else
             {
                 statusText = generationResult.ErrorMessage ?? "Generation failed";
                 statusError = true;
-                WriteConsole(generationResult.ErrorMessage ?? "Generation failed", "error");
+
+                if (generationResult.SchemaErrors.Count > 0)
+                {
+                    await SetSchemaEditorMarkers(generationResult.SchemaErrors);
+                }
+                else
+                {
+                    WriteConsole(generationResult.ErrorMessage ?? "Generation failed", "error");
+                }
             }
         }
         catch (Exception ex)
@@ -453,16 +725,105 @@
         }
     }
 
-    private async Task OnSchemaPointerSelected(string? pointer)
+    private async Task SetSchemaEditorMarkers(IReadOnlyList<SchemaError> errors)
     {
-        if (schemaEditor is null || pointer is null)
+        if (schemaEditor is null || errors.Count == 0)
         {
             return;
         }
 
+        // Switch to the first schema tab that has an error
+        var firstError = errors[0];
+        int errorTabIndex = schemaFiles.FindIndex(f =>
+            string.Equals(f.Name, firstError.SchemaName, StringComparison.OrdinalIgnoreCase));
+        if (errorTabIndex >= 0 && errorTabIndex != activeSchemaIndex)
+        {
+            await SelectSchemaTab(errorTabIndex);
+            StateHasChanged();
+        }
+
+        // Build markers for errors in the currently visible schema
+        string currentSchemaName = schemaFiles[activeSchemaIndex].Name;
+        var markers = new List<MarkerData>();
+        foreach (var error in errors.Where(e =>
+            string.Equals(e.SchemaName, currentSchemaName, StringComparison.OrdinalIgnoreCase)))
+        {
+            int line = (int)(error.LineNumber ?? 0) + 1;
+            int col = (int)(error.Column ?? 0) + 1;
+
+            markers.Add(new MarkerData
+            {
+                Message = error.Message,
+                Severity = MarkerSeverity.Error,
+                StartLineNumber = line,
+                StartColumn = col,
+                EndLineNumber = line,
+                EndColumn = col + 1,
+            });
+
+            WriteConsole($"{error.SchemaName}({line},{col}): {error.Message}", "error");
+        }
+
+        // Also show errors for other schema files in the console
+        foreach (var error in errors.Where(e =>
+            !string.Equals(e.SchemaName, currentSchemaName, StringComparison.OrdinalIgnoreCase)))
+        {
+            int line = (int)(error.LineNumber ?? 0) + 1;
+            int col = (int)(error.Column ?? 0) + 1;
+            WriteConsole($"{error.SchemaName}({line},{col}): {error.Message}", "error");
+        }
+
+        var model = await schemaEditor.GetModel();
+        if (model is not null)
+        {
+            await BlazorMonaco.Editor.Global.SetModelMarkers(JSRuntime, model, "schema-errors", markers);
+        }
+
+        // Navigate to the first error location
+        if (firstError.LineNumber.HasValue)
+        {
+            int navLine = (int)firstError.LineNumber.Value + 1;
+            await schemaEditor.RevealLineInCenter(navLine);
+            await schemaEditor.SetPosition(new Position { LineNumber = navLine, Column = 1 }, "");
+        }
+    }
+
+    private async Task ClearSchemaEditorMarkers()
+    {
+        if (schemaEditor is null)
+        {
+            return;
+        }
+
+        var model = await schemaEditor.GetModel();
+        if (model is not null)
+        {
+            await BlazorMonaco.Editor.Global.SetModelMarkers(JSRuntime, model, "schema-errors", []);
+        }
+    }
+
+    private async Task OnSchemaPointerSelected(TypeMapPanel.SchemaNavigation nav)
+    {
+        if (schemaEditor is null || nav.Pointer is null)
+        {
+            return;
+        }
+
+        // Switch to the correct schema tab if the type comes from a different file
+        if (nav.SchemaName is not null)
+        {
+            int tabIndex = schemaFiles.FindIndex(f =>
+                string.Equals(f.Name, nav.SchemaName, StringComparison.OrdinalIgnoreCase));
+            if (tabIndex >= 0 && tabIndex != activeSchemaIndex)
+            {
+                await SelectSchemaTab(tabIndex);
+                StateHasChanged();
+            }
+        }
+
         // Find the line in the schema editor that corresponds to this JSON pointer
         string schemaText = await schemaEditor.GetValue();
-        int line = FindLineForJsonPointer(schemaText, pointer);
+        int line = FindLineForJsonPointer(schemaText, nav.Pointer);
         if (line > 0)
         {
             await schemaEditor.RevealLineInCenter(line);
@@ -517,19 +878,6 @@
     private void WriteConsole(string text, string cssClass = "")
     {
         consoleLines.Add(new ConsoleLine(text + "\n", cssClass));
-    }
-
-    private static string LoadEmbeddedSample(string name)
-    {
-        var assembly = typeof(MainLayout).Assembly;
-        using var stream = assembly.GetManifestResourceStream($"Sample.{name}");
-        if (stream is null)
-        {
-            return $"// Sample '{name}' not found";
-        }
-
-        using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
     }
 
     private void ToggleMaximize(string panelName)

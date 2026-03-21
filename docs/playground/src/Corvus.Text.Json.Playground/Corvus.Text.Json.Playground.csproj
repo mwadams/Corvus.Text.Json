@@ -57,6 +57,15 @@
     <EmbeddedResource Include="Samples\*.json" LogicalName="Sample.%(Filename)" />
   </ItemGroup>
 
+  <!-- Embed recipe files for playground samples -->
+  <ItemGroup>
+    <RecipeContent Include="..\..\..\ExampleRecipes\**\*.json"
+                   Exclude="..\..\..\ExampleRecipes\**\bin\**;..\..\..\ExampleRecipes\**\obj\**;..\..\..\ExampleRecipes\.vs\**" />
+    <RecipeContent Include="..\..\..\ExampleRecipes\**\Program.cs"
+                   Exclude="..\..\..\ExampleRecipes\**\bin\**;..\..\..\ExampleRecipes\**\obj\**" />
+    <EmbeddedResource Include="@(RecipeContent)" Link="Recipes\%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
   <!-- Preserve assemblies from trimming for dynamic Roslyn compilation (Phase 2) -->
   <ItemGroup>
     <TrimmerRootAssembly Include="System.Private.CoreLib" />
