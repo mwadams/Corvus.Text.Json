@@ -75,7 +75,7 @@ internal static class ApiViewGenerator
             string description = GetNamespaceDescription(ns, nsDescriptionsDir);
 
             sb.AppendLine($"                <a class=\"card card--link\" href=\"{baseUrl}/{nsSlug}.html\">");
-            sb.AppendLine($"                    <h3 class=\"card__title\">{HttpUtility.HtmlEncode(ns)}</h3>");
+            sb.AppendLine($"                    <h3 class=\"card__title\">{HttpUtility.HtmlEncode(ns).Replace(".", ".&#8203;")}</h3>");
             sb.AppendLine($"                    <p class=\"card__body\">{HttpUtility.HtmlEncode(description)}</p>");
             sb.AppendLine($"                    <div class=\"card__meta\"><span class=\"card__tag\">{typeCount} type{(typeCount == 1 ? "" : "s")}</span></div>");
             sb.AppendLine("                </a>");

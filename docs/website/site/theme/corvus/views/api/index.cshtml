@@ -2,23 +2,24 @@
 @{
     Layout = "../Shared/_Layout.cshtml";
 }
+<script>
+(function() {
+    var version = localStorage.getItem('corvus-api-version') || 'v5';
+    if (version !== 'v4' && version !== 'v5') version = 'v5';
+    window.location.replace('/api/' + version + '/index.html');
+})();
+</script>
+<noscript>
 <div class="layout-docs container">
     <main id="main-content" class="layout-docs__main" style="max-width:800px; margin:0 auto;">
         <div class="doc__content">
             <h1>API Reference</h1>
-            <p>Corvus.Text.Json provides two engine generations. Choose the version that matches your project:</p>
-            <div class="card-grid" style="margin-top:var(--space-lg)">
-                <a class="card card--link" href="/api/v5/index.html">
-                    <h3 class="card__title">V5 Engine</h3>
-                    <p class="card__body">The current generation &mdash; a unified <code>Corvus.Text.Json</code> library with code-generated types, high-performance JSON handling, and full JSON Schema support.</p>
-                    <div class="card__meta"><span class="card__tag">Recommended</span></div>
-                </a>
-                <a class="card card--link" href="/api/v4/index.html">
-                    <h3 class="card__title">V4 Engine</h3>
-                    <p class="card__body">The previous generation &mdash; a modular library suite including <code>Corvus.Json.ExtendedTypes</code>, <code>Corvus.Json.Patch</code>, <code>Corvus.Json.Validator</code>, and JSON Schema dialect packages.</p>
-                    <div class="card__meta"><span class="card__tag">Legacy</span></div>
-                </a>
-            </div>
+            <p>Choose an API version:</p>
+            <ul>
+                <li><a href="/api/v5/index.html">V5 Engine</a> (Recommended)</li>
+                <li><a href="/api/v4/index.html">V4 Engine</a> (Legacy)</li>
+            </ul>
         </div>
     </main>
 </div>
+</noscript>

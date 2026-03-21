@@ -546,6 +546,21 @@ $cssOutputPath = Join-Path $outputDir "main.css"
 if ($LASTEXITCODE -ne 0) { throw "SCSS compilation failed" }
 Write-StepDuration "SCSS compilation" $sw
 
+# -- Step 7b: Copy per-version API search indices ----------------------------
+Write-Host "`n[7b/10] Copying API search indices..." -ForegroundColor Cyan
+$v5SearchSrc = Join-Path $v5ApiContentDir "search-index.json"
+$v4SearchSrc = Join-Path $v4ApiContentDir "search-index.json"
+$v5SearchDst = Join-Path $outputDir "api\v5\search-index.json"
+$v4SearchDst = Join-Path $outputDir "api\v4\search-index.json"
+if (Test-Path $v5SearchSrc) {
+    Copy-Item $v5SearchSrc $v5SearchDst -Force
+    Write-Host "  V5: $([math]::Round((Get-Item $v5SearchDst).Length/1024,1)) KB"
+} else { Write-Warning "  V5 search index not found at $v5SearchSrc" }
+if (Test-Path $v4SearchSrc) {
+    Copy-Item $v4SearchSrc $v4SearchDst -Force
+    Write-Host "  V4: $([math]::Round((Get-Item $v4SearchDst).Length/1024,1)) KB"
+} else { Write-Warning "  V4 search index not found at $v4SearchSrc" }
+
 # -- Step 8: Build search index ----------------------------------------------
 Write-Host "`n[8/10] Building search index..." -ForegroundColor Cyan
 $sw = [System.Diagnostics.Stopwatch]::StartNew()

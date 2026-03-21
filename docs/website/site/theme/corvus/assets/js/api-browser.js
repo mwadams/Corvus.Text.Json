@@ -35,10 +35,21 @@
     if (apiEntries || indexLoading) return;
     indexLoading = true;
     try {
-      var resp = await fetch('/search-index.json');
+      var searchIndexUrl = input ? input.getAttribute('data-search-index') : null;
+      if (!searchIndexUrl) searchIndexUrl = '/search-index.json';
+      var resp = await fetch(searchIndexUrl);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       var data = await resp.json();
-      apiEntries = data.filter(function (d) { return d.url && d.url.startsWith('/api/'); });
+      apiEntries = data
+        .map(function (d) {
+          return {
+            url: d.url || d.Url || '',
+            title: d.title || d.Title || '',
+            description: d.description || d.Description || '',
+            keywords: d.keywords || d.Keywords || '',
+          };
+        })
+        .filter(function (d) { return d.url && d.url.startsWith('/api/'); });
     } catch (e) {
       console.warn('[api-browser] Failed to load search index:', e);
     } finally {
@@ -95,19 +106,32 @@
    */
   function matchesTitle(title, lowerQuery) {
     var lowerTitle = title.toLowerCase();
-    var startIdx = 0;
+    var queryParts = lowerQuery.split('.');
+    var titleParts = lowerTitle.split('.');
 
-    while (startIdx <= lowerTitle.length) {
-      if (lowerTitle.startsWith(lowerQuery, startIdx)) {
-        var nextCharIdx = startIdx + lowerQuery.length;
-        // Dot-boundary rule: reject if the next char is a dot
-        if (nextCharIdx >= lowerTitle.length || lowerTitle[nextCharIdx] !== '.') {
+    // Try matching query segments against consecutive title segments
+    // starting at each possible title segment position
+    for (var start = 0; start <= titleParts.length - queryParts.length; start++) {
+      var match = true;
+      for (var j = 0; j < queryParts.length; j++) {
+        if (!titleParts[start + j].startsWith(queryParts[j])) {
+          match = false;
+          break;
+        }
+      }
+      if (match) {
+        var lastQueryPart = queryParts[queryParts.length - 1];
+        var lastTitlePart = titleParts[start + queryParts.length - 1];
+        // Dot-boundary rule: if the last query segment exactly matches
+        // a full title segment and there are more segments after, reject
+        // (user must type past the dot to see members)
+        if (lastQueryPart.length < lastTitlePart.length) {
+          return true;
+        }
+        if (start + queryParts.length >= titleParts.length) {
           return true;
         }
       }
-      var dotIdx = lowerTitle.indexOf('.', startIdx);
-      if (dotIdx === -1) break;
-      startIdx = dotIdx + 1;
     }
 
     return false;

@@ -6,13 +6,7 @@
     @await Html.PartialAsync("_ApiSidebarV4").ConfigureAwait(false)
     <main id="main-content" class="layout-docs__main">
         <div class="doc__content api-ref">
-            <div class="api-version-bar">
-                <h1>@Model.PageContext.Title</h1>
-                <div class="api-version-switcher">
-                    <span class="api-version-switcher__current">V4 Engine</span>
-                    <a href="/api/v5/index.html" class="api-version-switcher__alt">Switch to V5</a>
-                </div>
-            </div>
+            <h1>@Model.PageContext.Title</h1>
             @foreach (var contentFragment in Model.PageContext.GetAllMarkdownContent())
             {
                 @Html.Raw(contentFragment.Body)

@@ -24,10 +24,24 @@
     if (apiEntries || indexLoading) return;
     indexLoading = true;
     try {
-      var resp = await fetch('/search-index.json');
+      // Determine versioned search index from current URL path
+      var searchUrl = '/search-index.json';
+      var loc = window.location.pathname;
+      if (loc.indexOf('/api/v5/') === 0) searchUrl = '/api/v5/search-index.json';
+      else if (loc.indexOf('/api/v4/') === 0) searchUrl = '/api/v4/search-index.json';
+      var resp = await fetch(searchUrl);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
       var data = await resp.json();
-      apiEntries = data.filter(function (d) { return d.url && d.url.startsWith('/api/'); });
+      apiEntries = data
+        .map(function (d) {
+          return {
+            url: d.url || d.Url || '',
+            title: d.title || d.Title || '',
+            description: d.description || d.Description || '',
+            keywords: d.keywords || d.Keywords || '',
+          };
+        })
+        .filter(function (d) { return d.url && d.url.startsWith('/api/'); });
     } catch (e) {
       console.warn('[sidebar-search] Failed to load search index:', e);
     } finally {
@@ -61,18 +75,27 @@
 
   function matchesTitle(title, lowerQuery) {
     var lowerTitle = title.toLowerCase();
-    var startIdx = 0;
+    var queryParts = lowerQuery.split('.');
+    var titleParts = lowerTitle.split('.');
 
-    while (startIdx <= lowerTitle.length) {
-      if (lowerTitle.startsWith(lowerQuery, startIdx)) {
-        var nextCharIdx = startIdx + lowerQuery.length;
-        if (nextCharIdx >= lowerTitle.length || lowerTitle[nextCharIdx] !== '.') {
+    for (var start = 0; start <= titleParts.length - queryParts.length; start++) {
+      var match = true;
+      for (var j = 0; j < queryParts.length; j++) {
+        if (!titleParts[start + j].startsWith(queryParts[j])) {
+          match = false;
+          break;
+        }
+      }
+      if (match) {
+        var lastQueryPart = queryParts[queryParts.length - 1];
+        var lastTitlePart = titleParts[start + queryParts.length - 1];
+        if (lastQueryPart.length < lastTitlePart.length) {
+          return true;
+        }
+        if (start + queryParts.length >= titleParts.length) {
           return true;
         }
       }
-      var dotIdx = lowerTitle.indexOf('.', startIdx);
-      if (dotIdx === -1) break;
-      startIdx = dotIdx + 1;
     }
 
     return false;
