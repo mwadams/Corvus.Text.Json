@@ -11,6 +11,9 @@ var httpClient = new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.
 builder.Services.AddScoped(sp => httpClient);
 
 builder.Services.AddSingleton<CodeGenerationService>();
+builder.Services.AddSingleton<WorkspaceService>();
+builder.Services.AddSingleton<CompilationService>();
+builder.Services.AddSingleton<ExecutionService>();
 builder.Services.AddScoped<UrlStateService>();
 
 await builder.Build().RunAsync();

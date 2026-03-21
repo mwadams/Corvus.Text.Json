@@ -1,6 +1,8 @@
 @inherits LayoutComponentBase
 @page "/"
 @inject CodeGenerationService CodeGenService
+@inject CompilationService CompilationSvc
+@inject ExecutionService ExecutionSvc
 
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
@@ -193,13 +195,102 @@
         }
     }
 
+    private CancellationTokenSource? runCts;
+
     private async Task RunAsync()
     {
-        // Phase 2: compilation + execution
+        if (generationResult is null || !generationResult.Success || userCodeEditor is null)
+        {
+            return;
+        }
+
+        isRunning = true;
         consoleLines.Clear();
-        WriteConsole("Compilation and execution are not yet implemented (Phase 2).", "info");
-        WriteConsole("Generated code is available — the type map shows the types that were created.", "info");
+        statusText = "Compiling…";
+        statusError = false;
         StateHasChanged();
+
+        try
+        {
+            runCts?.Cancel();
+            runCts = new CancellationTokenSource();
+
+            string userCode = await userCodeEditor.GetValue();
+
+            // Step 1: Compile generated code + user code
+            statusText = "Compiling user code…";
+            StateHasChanged();
+
+            CompilationResult compilationResult = await CompilationSvc.CompileAsync(
+                generationResult.GeneratedFiles,
+                userCode);
+
+            if (!compilationResult.Success)
+            {
+                statusText = "Compilation failed";
+                statusError = true;
+                foreach (var diagnostic in compilationResult.Diagnostics)
+                {
+                    string location = diagnostic.Location.IsInSource
+                        ? $" (line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1})"
+                        : string.Empty;
+                    WriteConsole($"{diagnostic.Severity}: {diagnostic.GetMessage()}{location}", "error");
+                }
+
+                return;
+            }
+
+            if (compilationResult.Assembly is null)
+            {
+                statusText = "Compilation produced no output";
+                statusError = true;
+                return;
+            }
+
+            // Step 2: Execute the compiled assembly
+            statusText = "Running…";
+            StateHasChanged();
+
+            ExecutionResult executionResult = await ExecutionSvc.ExecuteAsync(
+                compilationResult.Assembly,
+                runCts.Token);
+
+            if (!string.IsNullOrEmpty(executionResult.Output))
+            {
+                foreach (string line in executionResult.Output.Split('\n'))
+                {
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        WriteConsole(line.TrimEnd('\r'));
+                    }
+                }
+            }
+
+            if (executionResult.Success)
+            {
+                statusText = "Execution complete";
+            }
+            else
+            {
+                statusText = "Execution failed";
+                statusError = true;
+                if (executionResult.ErrorMessage is not null)
+                {
+                    WriteConsole(executionResult.ErrorMessage, "error");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            statusText = $"Error: {ex.Message}";
+            statusError = true;
+            WriteConsole($"Error: {ex.Message}", "error");
+        }
+        finally
+        {
+            isRunning = false;
+            StateHasChanged();
+        }
     }
 
     private void OnTypeSelected(TypeMapEntry entry)

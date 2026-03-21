@@ -58,5 +58,30 @@
     <TrimmerRootAssembly Include="System.Collections" />
     <TrimmerRootAssembly Include="System.Linq" />
     <TrimmerRootAssembly Include="System.Text.Json" />
+    <TrimmerRootAssembly Include="System.Text.Encodings.Web" />
+    <TrimmerRootAssembly Include="System.Buffers" />
+    <TrimmerRootAssembly Include="System.Memory" />
+    <TrimmerRootAssembly Include="System.Threading" />
+    <TrimmerRootAssembly Include="System.Threading.Tasks" />
+    <TrimmerRootAssembly Include="System.Diagnostics.Debug" />
+    <TrimmerRootAssembly Include="System.ComponentModel" />
+    <TrimmerRootAssembly Include="System.Runtime.InteropServices" />
+    <TrimmerRootAssembly Include="netstandard" />
+    <TrimmerRootAssembly Include="Corvus.Text.Json" />
   </ItemGroup>
+
+  <!-- Copy static web assets manifest to wwwroot for Roslyn assembly resolution -->
+  <Target Name="CopyAssetManifestBuild" AfterTargets="Build">
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).staticwebassets.endpoints.json"
+          DestinationFiles="$(OutputPath)wwwroot/_framework/asset-manifest.json"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(OutputPath)$(AssemblyName).staticwebassets.endpoints.json')" />
+  </Target>
+
+  <Target Name="CopyAssetManifestPublish" AfterTargets="Publish">
+    <Copy SourceFiles="$(PublishDir)$(AssemblyName).staticwebassets.endpoints.json"
+          DestinationFiles="$(PublishDir)wwwroot/_framework/asset-manifest.json"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(PublishDir)$(AssemblyName).staticwebassets.endpoints.json')" />
+  </Target>
 </Project>
