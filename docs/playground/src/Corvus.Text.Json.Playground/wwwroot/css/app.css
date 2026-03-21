@@ -136,15 +136,42 @@ html, body {
 }
 
 /* Schema file tabs */
-.schema-tabs {
+.schema-tabs-wrapper {
+    display: flex;
+    align-items: center;
+    background: #1a1a2e;
+    border-bottom: 1px solid #333;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.schema-tabs-scroll {
     display: flex;
     align-items: center;
     gap: 0;
+    overflow: hidden;
+    flex: 1;
+    padding: 0 2px;
+    scroll-behavior: smooth;
+}
+
+.schema-tabs-scroll-btn {
     background: #1a1a2e;
-    border-bottom: 1px solid #333;
-    padding: 0 4px;
-    overflow-x: auto;
+    border: none;
+    color: #606080;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 2px 6px;
+    line-height: 1;
     flex-shrink: 0;
+    z-index: 1;
+    transition: color 0.15s, background 0.15s;
+}
+
+.schema-tabs-scroll-btn:hover {
+    color: #e0e0e0;
+    background: #252540;
 }
 
 .schema-tab {
@@ -421,4 +448,60 @@ html, body {
 
 .status-bar .status-item {
     white-space: nowrap;
+}
+
+/* Dirty confirmation modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-dialog {
+    background: #1e1e2e;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 24px;
+    max-width: 420px;
+    width: 90%;
+    color: #e0e0e0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.modal-dialog h3 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #f0c040;
+}
+
+.modal-dialog p {
+    margin: 0 0 10px;
+    font-size: 13px;
+    color: #b0b0c0;
+}
+
+.dirty-file-list {
+    margin: 8px 0 16px;
+    padding-left: 20px;
+    font-size: 13px;
+    color: #e0e0e0;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+}
+
+.dirty-file-list li {
+    margin: 4px 0;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 16px;
 }

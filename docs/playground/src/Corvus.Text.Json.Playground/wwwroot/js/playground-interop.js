@@ -49,3 +49,45 @@ window.registerCSharpCompletionProvider = function (dotNetHelper) {
         }
     });
 };
+
+// Triggers a browser file download from a byte array.
+window.downloadFileFromBytes = function (filename, contentType, bytes) {
+    const blob = new Blob([bytes], { type: contentType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+};
+
+// Opens a file picker and returns the selected file as a byte array.
+window.pickFileAsBytes = function (accept) {
+    return new Promise(function (resolve) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = accept || '.zip';
+        input.style.display = 'none';
+        input.onchange = function () {
+            if (input.files && input.files.length > 0) {
+                const reader = new FileReader();
+                reader.onload = function () {
+                    resolve(new Uint8Array(reader.result));
+                };
+                reader.readAsArrayBuffer(input.files[0]);
+            } else {
+                resolve(null);
+            }
+            document.body.removeChild(input);
+        };
+        // Handle cancel — listen for focus returning without a file selection
+        input.oncancel = function () {
+            resolve(null);
+            document.body.removeChild(input);
+        };
+        document.body.appendChild(input);
+        input.click();
+    });
+};

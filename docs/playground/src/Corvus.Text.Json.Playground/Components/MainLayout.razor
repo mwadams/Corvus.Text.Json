@@ -15,6 +15,8 @@
             <option value="@sample.Id" selected="@(sample.Id == activeSampleId)">@sample.DisplayName</option>
         }
     </select>
+    <button class="toolbar-btn secondary" @onclick="SaveProjectAsync" title="Save project as ZIP">💾 Save</button>
+    <button class="toolbar-btn secondary" @onclick="LoadProjectAsync" title="Load a saved project">📂 Open</button>
     <div class="spacer"></div>
     <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@isGenerating">
         @(isGenerating ? "Generating…" : "Generate")
@@ -34,53 +36,58 @@
                 @(maximizedPanel == "schema" ? "⊟" : "⊞")
             </button>
         </div>
-        <div class="schema-tabs">
-            @for (int i = 0; i < schemaFiles.Count; i++)
-            {
-                int index = i;
-                var file = schemaFiles[index];
-                <div class="schema-tab @(index == activeSchemaIndex ? "active" : "") @(file.IsRootType ? "root-type" : "")"
-                     @onclick="() => SelectSchemaTab(index)">
-                    @if (renamingTabIndex == index)
-                    {
-                        <input @ref="renameInputRef"
-                               class="schema-tab-rename-input"
-                               @bind="renameValue"
-                               @bind:event="oninput"
-                               @onclick:stopPropagation="true"
-                               @onkeydown="OnRenameKeyDown"
-                               @onblur="CommitRename" />
-                    }
-                    else
-                    {
-                        <span class="schema-tab-name">@file.Name</span>
-                        <button class="schema-tab-rename-btn"
+        <div class="schema-tabs-wrapper">
+            <button class="schema-tabs-scroll-btn scroll-left" @onclick="ScrollTabsLeft" title="Scroll left">‹</button>
+            <div class="schema-tabs-scroll" @ref="schemaTabsScrollRef">
+                @for (int i = 0; i < schemaFiles.Count; i++)
+                {
+                    int index = i;
+                    var file = schemaFiles[index];
+                    <div class="schema-tab @(index == activeSchemaIndex ? "active" : "") @(file.IsRootType ? "root-type" : "")"
+                         @onclick="() => SelectSchemaTab(index)">
+                        @if (renamingTabIndex == index)
+                        {
+                            <input @ref="renameInputRef"
+                                   class="schema-tab-rename-input"
+                                   @bind="renameValue"
+                                   @bind:event="oninput"
+                                   @onclick:stopPropagation="true"
+                                   @onkeydown="OnRenameKeyDown"
+                                   @onblur="CommitRename" />
+                        }
+                        else
+                        {
+                            <span class="schema-tab-name">@file.Name</span>
+                            <button class="schema-tab-rename-btn"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => StartRename(index)"
+                                    title="Rename">✎</button>
+                        }
+                        <button class="schema-tab-root-badge @(file.IsRootType ? "is-root" : "")"
                                 @onclick:stopPropagation="true"
-                                @onclick="() => StartRename(index)"
-                                title="Rename">✎</button>
-                    }
-                    <button class="schema-tab-root-badge @(file.IsRootType ? "is-root" : "")"
-                            @onclick:stopPropagation="true"
-                            @onclick="() => ToggleRootType(index)"
-                            title="@(file.IsRootType ? "This schema will be generated (click to unmark)" : "Click to generate types from this schema")">
-                        @(file.IsRootType ? "GENERATE" : "REFERENCE")
-                    </button>
-                    @if (schemaFiles.Count > 1)
-                    {
-                        <button class="schema-tab-close"
-                                @onclick:stopPropagation="true"
-                                @onclick="() => RemoveSchemaTab(index)"
-                                title="Remove">×</button>
-                    }
-                </div>
-            }
-            <button class="schema-tab-add" @onclick="AddSchemaTab" title="Add schema file">+</button>
+                                @onclick="() => ToggleRootType(index)"
+                                title="@(file.IsRootType ? "This schema will be generated (click to unmark)" : "Click to generate types from this schema")">
+                            @(file.IsRootType ? "GENERATE" : "REFERENCE")
+                        </button>
+                        @if (schemaFiles.Count > 1)
+                        {
+                            <button class="schema-tab-close"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => RemoveSchemaTab(index)"
+                                    title="Remove">×</button>
+                        }
+                    </div>
+                }
+                <button class="schema-tab-add" @onclick="AddSchemaTab" title="Add schema file">+</button>
+            </div>
+            <button class="schema-tabs-scroll-btn scroll-right" @onclick="ScrollTabsRight" title="Scroll right">›</button>
         </div>
         <div class="panel-content">
             <StandaloneCodeEditor @ref="schemaEditor"
                 Id="schema-editor"
                 ConstructionOptions="SchemaEditorOptions"
-                OnDidInit="OnSchemaEditorInit" />
+                OnDidInit="OnSchemaEditorInit"
+                OnDidChangeModelContent="OnSchemaContentChanged" />
         </div>
     </div>
 
@@ -113,7 +120,8 @@
             <StandaloneCodeEditor @ref="userCodeEditor"
                 Id="user-code-editor"
                 ConstructionOptions="UserCodeEditorOptions"
-                OnDidInit="OnUserCodeEditorInit" />
+                OnDidInit="OnUserCodeEditorInit"
+                OnDidChangeModelContent="OnUserCodeContentChanged" />
         </div>
     </div>
 
@@ -142,6 +150,27 @@
     <span class="status-item">@statusText</span>
 </div>
 
+@if (showDirtyConfirmation)
+{
+    <div class="modal-overlay" @onclick="CancelDirtyConfirmation">
+        <div class="modal-dialog" @onclick:stopPropagation="true">
+            <h3>Unsaved Changes</h3>
+            <p>The following files have unsaved changes:</p>
+            <ul class="dirty-file-list">
+                @foreach (string name in GetDirtyFileNames())
+                {
+                    <li>@name</li>
+                }
+            </ul>
+            <p>Do you want to discard these changes?</p>
+            <div class="modal-actions">
+                <button class="toolbar-btn secondary" @onclick="CancelDirtyConfirmation">Cancel</button>
+                <button class="toolbar-btn primary" @onclick="ConfirmDirtyAction">Discard Changes</button>
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private StandaloneCodeEditor? schemaEditor;
     private StandaloneCodeEditor? userCodeEditor;
@@ -164,11 +193,17 @@
     private int renamingTabIndex = -1;
     private string renameValue = "";
     private ElementReference renameInputRef;
+    private ElementReference schemaTabsScrollRef;
     private bool focusRenameInput;
 
     private const string EmptySchemaContent = "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\"\n}";
     private const string NewProjectUserCode = "using Corvus.Text.Json;\nusing Playground;\n";
     private const string NewProjectId = "new";
+
+    // Dirty tracking state
+    private string userCodeCleanContent = "";
+    private bool showDirtyConfirmation;
+    private Func<Task>? pendingDirtyAction;
 
     private StandaloneEditorConstructionOptions SchemaEditorOptions(StandaloneCodeEditor editor)
     {
@@ -243,7 +278,177 @@
 
     private async Task OnSchemaEditorInit()
     {
-        // Editor is ready
+        // Sync clean state from actual Monaco content after initial render
+        if (schemaEditor is not null && schemaFiles.Count > 0)
+        {
+            string editorContent = await schemaEditor.GetValue();
+            schemaFiles[activeSchemaIndex].Content = editorContent;
+            schemaFiles[activeSchemaIndex].MarkClean();
+        }
+    }
+
+    private async Task OnSchemaContentChanged(ModelContentChangedEvent e)
+    {
+        // Sync editor content back to the schema file model for dirty tracking
+        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+        {
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        }
+    }
+
+    private async Task OnUserCodeContentChanged(ModelContentChangedEvent e)
+    {
+        // Nothing extra needed — we read current content when checking dirty state
+    }
+
+    private async Task<bool> HasUnsavedChanges()
+    {
+        // Sync current editor content before checking
+        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+        {
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        }
+
+        // Check schema files
+        if (schemaFiles.Any(f => f.IsDirty || f.IsNew))
+        {
+            return true;
+        }
+
+        // Check user code
+        if (userCodeEditor is not null)
+        {
+            string currentCode = await userCodeEditor.GetValue();
+            return currentCode != userCodeCleanContent;
+        }
+
+        return false;
+    }
+
+    private async Task<List<string>> GetDirtyFileNamesAsync()
+    {
+        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+        {
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        }
+
+        var names = new List<string>();
+
+        foreach (SchemaFile f in schemaFiles)
+        {
+            if (f.IsNew)
+            {
+                names.Add($"{f.Name} (new)");
+            }
+            else if (f.IsDirty)
+            {
+                names.Add(f.Name);
+            }
+        }
+
+        if (userCodeEditor is not null)
+        {
+            string currentCode = await userCodeEditor.GetValue();
+            if (currentCode != userCodeCleanContent)
+            {
+                names.Add("Program.cs");
+            }
+        }
+
+        return names;
+    }
+
+    private List<string> GetDirtyFileNames()
+    {
+        // Synchronous version for rendering — uses already-synced content
+        var names = new List<string>();
+
+        foreach (SchemaFile f in schemaFiles)
+        {
+            if (f.IsNew)
+            {
+                names.Add($"{f.Name} (new)");
+            }
+            else if (f.IsDirty)
+            {
+                names.Add(f.Name);
+            }
+        }
+
+        // Check user code against clean snapshot
+        // (Content was synced when the modal was triggered)
+        if (userCodeCleanContent != _lastUserCodeSnapshot)
+        {
+            names.Add("Program.cs");
+        }
+
+        return names;
+    }
+
+    private string _lastUserCodeSnapshot = "";
+
+    private async Task<bool> CheckDirtyAndConfirm(Func<Task> action)
+    {
+        if (!await HasUnsavedChanges())
+        {
+            await action();
+            return true;
+        }
+
+        // Snapshot user code for synchronous rendering in the modal
+        _lastUserCodeSnapshot = userCodeEditor is not null
+            ? await userCodeEditor.GetValue()
+            : userCodeCleanContent;
+
+        pendingDirtyAction = action;
+        showDirtyConfirmation = true;
+        StateHasChanged();
+        return false;
+    }
+
+    private async Task ConfirmDirtyAction()
+    {
+        showDirtyConfirmation = false;
+        if (pendingDirtyAction is not null)
+        {
+            await pendingDirtyAction();
+            pendingDirtyAction = null;
+        }
+    }
+
+    private void CancelDirtyConfirmation()
+    {
+        showDirtyConfirmation = false;
+        pendingDirtyAction = null;
+    }
+
+    private void MarkAllClean()
+    {
+        foreach (SchemaFile f in schemaFiles)
+        {
+            f.MarkClean();
+            f.IsNew = false;
+        }
+    }
+
+    /// <summary>
+    /// Reads actual editor content (which Monaco may have normalized) and
+    /// uses it as the clean baseline. Call after every load/SetValue sequence.
+    /// </summary>
+    private async Task SyncCleanStateFromEditors()
+    {
+        if (schemaEditor is not null && schemaFiles.Count > 0)
+        {
+            string editorContent = await schemaEditor.GetValue();
+            schemaFiles[activeSchemaIndex].Content = editorContent;
+        }
+
+        MarkAllClean();
+
+        if (userCodeEditor is not null)
+        {
+            userCodeCleanContent = await userCodeEditor.GetValue();
+        }
     }
 
     private DotNetObjectReference<MainLayout>? intelliSenseRef;
@@ -251,6 +456,12 @@
     private async Task OnUserCodeEditorInit()
     {
         await RegisterCompletionProvider();
+
+        // Sync clean state from actual Monaco content after initial render
+        if (userCodeEditor is not null)
+        {
+            userCodeCleanContent = await userCodeEditor.GetValue();
+        }
     }
 
     private async Task RegisterCompletionProvider()
@@ -323,64 +534,160 @@
             return;
         }
 
-        if (sampleId == NewProjectId)
-        {
-            LoadNewProject();
+        // Capture the selected ID for use in the deferred action
+        string capturedId = sampleId;
 
-            if (schemaEditor is not null)
+        await CheckDirtyAndConfirm(async () =>
+        {
+            if (capturedId == NewProjectId)
             {
-                await schemaEditor.SetValue(schemaFiles[0].Content);
+                LoadNewProject();
+
+                if (schemaEditor is not null)
+                {
+                    await schemaEditor.SetValue(schemaFiles[0].Content);
+                }
+
+                if (userCodeEditor is not null)
+                {
+                    await userCodeEditor.SetValue(NewProjectUserCode);
+                }
+
+                await SyncCleanStateFromEditors();
+
+                generationResult = null;
+                await ClearEditorMarkers();
+                await ClearSchemaEditorMarkers();
+                statusText = "Ready";
+                statusError = false;
+                return;
             }
+
+            PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == capturedId);
+            if (sample is null || schemaEditor is null)
+            {
+                return;
+            }
+
+            LoadSample(sample);
+
+            // Update editors
+            activeSchemaIndex = 0;
+            await schemaEditor.SetValue(schemaFiles[0].Content);
 
             if (userCodeEditor is not null)
             {
-                await userCodeEditor.SetValue(NewProjectUserCode);
+                await userCodeEditor.SetValue(sample.UserCode);
             }
 
+            await SyncCleanStateFromEditors();
+
+            // Reset generation state
             generationResult = null;
             await ClearEditorMarkers();
             await ClearSchemaEditorMarkers();
-            statusText = "Ready";
+            statusText = "Ready — sample loaded";
             statusError = false;
-            return;
-        }
-
-        PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == sampleId);
-        if (sample is null || schemaEditor is null)
-        {
-            return;
-        }
-
-        LoadSample(sample);
-
-        // Update editors
-        activeSchemaIndex = 0;
-        await schemaEditor.SetValue(schemaFiles[0].Content);
-
-        if (userCodeEditor is not null)
-        {
-            await userCodeEditor.SetValue(sample.UserCode);
-        }
-
-        // Reset generation state
-        generationResult = null;
-        await ClearEditorMarkers();
-        await ClearSchemaEditorMarkers();
-        statusText = "Ready — sample loaded";
-        statusError = false;
+        });
     }
 
     private void LoadNewProject()
     {
         activeSampleId = NewProjectId;
         schemaFiles.Clear();
-        schemaFiles.Add(new SchemaFile
+        var schema = new SchemaFile
         {
             Name = "schema.json",
             Content = EmptySchemaContent,
             IsRootType = true,
-        });
+        };
+        schema.MarkClean();
+        schemaFiles.Add(schema);
         activeSchemaIndex = 0;
+        userCodeCleanContent = NewProjectUserCode;
+    }
+
+    private async Task SaveProjectAsync()
+    {
+        // Ensure current editor content is captured
+        if (schemaEditor is not null)
+        {
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        }
+
+        string userCode = userCodeEditor is not null
+            ? await userCodeEditor.GetValue()
+            : NewProjectUserCode;
+
+        byte[] zipBytes = ProjectExporter.Export(schemaFiles, userCode);
+        await JSRuntime.InvokeVoidAsync("downloadFileFromBytes",
+            "playground-project.zip", "application/zip", zipBytes);
+
+        // Mark everything clean after save
+        MarkAllClean();
+        userCodeCleanContent = userCode;
+
+        statusText = "Project saved";
+        statusError = false;
+    }
+
+    private async Task LoadProjectAsync()
+    {
+        await CheckDirtyAndConfirm(async () =>
+        {
+            byte[]? zipBytes = await JSRuntime.InvokeAsync<byte[]?>("pickFileAsBytes", ".zip");
+            if (zipBytes is null || zipBytes.Length == 0)
+            {
+                return;
+            }
+
+            try
+            {
+                ProjectImporter.ImportResult result = ProjectImporter.Import(zipBytes);
+
+                schemaFiles.Clear();
+                schemaFiles.AddRange(result.SchemaFiles);
+
+                if (schemaFiles.Count == 0)
+                {
+                    schemaFiles.Add(new SchemaFile
+                    {
+                        Name = "schema.json",
+                        Content = EmptySchemaContent,
+                        IsRootType = true,
+                    });
+                }
+
+                activeSampleId = NewProjectId;
+                activeSchemaIndex = 0;
+
+                if (schemaEditor is not null)
+                {
+                    await schemaEditor.SetValue(schemaFiles[0].Content);
+                }
+
+                if (userCodeEditor is not null)
+                {
+                    await userCodeEditor.SetValue(result.UserCode);
+                }
+
+                // Sync clean state from actual editor content (Monaco may normalize)
+                await SyncCleanStateFromEditors();
+
+                generationResult = null;
+                await ClearEditorMarkers();
+                await ClearSchemaEditorMarkers();
+                statusText = "Project loaded";
+                statusError = false;
+            }
+            catch (Exception ex)
+            {
+                statusText = $"Failed to load project: {ex.Message}";
+                statusError = true;
+            }
+
+            StateHasChanged();
+        });
     }
 
     private void LoadSample(PlaygroundSample sample)
@@ -390,13 +697,15 @@
         schemaFiles.Clear();
         foreach (SampleSchemaFile schema in sample.Schemas)
         {
-            schemaFiles.Add(new SchemaFile
+            var file = new SchemaFile
             {
                 Name = schema.Name,
                 Content = schema.Content,
                 IsRootType = schema.IsRootType,
                 TypeName = schema.TypeName,
-            });
+            };
+            file.MarkClean();
+            schemaFiles.Add(file);
         }
 
         activeSchemaIndex = 0;
@@ -479,6 +788,18 @@
         renamingTabIndex = -1;
     }
 
+    private async Task ScrollTabsLeft()
+    {
+        await JSRuntime.InvokeVoidAsync("eval",
+            "document.querySelector('.schema-tabs-scroll')?.scrollBy({left: -150, behavior: 'smooth'})");
+    }
+
+    private async Task ScrollTabsRight()
+    {
+        await JSRuntime.InvokeVoidAsync("eval",
+            "document.querySelector('.schema-tabs-scroll')?.scrollBy({left: 150, behavior: 'smooth'})");
+    }
+
     private async Task AddSchemaTab()
     {
         // Save current tab content before switching
@@ -493,6 +814,7 @@
             Name = $"schema{number}.json",
             Content = EmptySchemaContent,
             IsRootType = false,
+            IsNew = true,
         });
 
         activeSchemaIndex = schemaFiles.Count - 1;

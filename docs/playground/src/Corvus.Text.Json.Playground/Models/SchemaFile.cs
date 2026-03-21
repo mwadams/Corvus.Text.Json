@@ -25,4 +25,24 @@ public class SchemaFile
     /// When set, overrides the name derived from the schema content or filename.
     /// </summary>
     public string? TypeName { get; set; }
+
+    /// <summary>
+    /// Gets or sets the clean content snapshot (set on load/save). Used for dirty tracking.
+    /// </summary>
+    public string CleanContent { get; set; } = "";
+
+    /// <summary>
+    /// Gets a value indicating whether the content has been modified since last load/save.
+    /// </summary>
+    public bool IsDirty => Content != CleanContent;
+
+    /// <summary>
+    /// Marks the current content as clean (e.g. after load or save).
+    /// </summary>
+    public void MarkClean() => CleanContent = Content;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether this is a newly added file (not yet saved).
+    /// </summary>
+    public bool IsNew { get; set; }
 }
