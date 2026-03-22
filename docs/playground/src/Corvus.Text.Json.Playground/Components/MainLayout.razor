@@ -18,6 +18,7 @@
     <button class="toolbar-btn secondary" @onclick="SaveProjectAsync" title="Save project as ZIP">💾 Save</button>
     <button class="toolbar-btn secondary" @onclick="LoadProjectAsync" title="Load a saved project">📂 Open</button>
     <div class="spacer"></div>
+    <button class="theme-toggle-btn" @onclick="CycleTheme" title="@themeTooltip">@themeIcon</button>
     <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@isGenerating">
         @(isGenerating ? "Generating…" : "Generate")
     </button>
@@ -130,6 +131,7 @@
         <div class="panel-header">
             Console Output
             <div class="spacer"></div>
+            <button class="panel-clear-btn" @onclick="ClearConsole" title="Clear console">🗑️</button>
             <button class="panel-copy-btn" @onclick="CopyConsoleOutput" title="Copy output">📋</button>
             <button class="panel-maximize-btn" @onclick='() => ToggleMaximize("console")' title="@(maximizedPanel == "console" ? "Restore" : "Maximize")">
                 @(maximizedPanel == "console" ? "⊟" : "⊞")
@@ -205,6 +207,23 @@
     private bool showDirtyConfirmation;
     private Func<Task>? pendingDirtyAction;
 
+    // Theme state: "auto", "light", or "dark"
+    private string themePreference = "auto";
+    private string resolvedTheme = "dark";
+    private string currentMonacoTheme => resolvedTheme == "light" ? "vs" : "vs-dark";
+    private string themeIcon => themePreference switch
+    {
+        "light" => "☀️",
+        "dark" => "🌙",
+        _ => "🔄"
+    };
+    private string themeTooltip => themePreference switch
+    {
+        "light" => "Theme: Light (click for Dark)",
+        "dark" => "Theme: Dark (click for Auto)",
+        _ => "Theme: Auto (click for Light)"
+    };
+
     private StandaloneEditorConstructionOptions SchemaEditorOptions(StandaloneCodeEditor editor)
     {
         string initialContent = schemaFiles.Count > 0
@@ -215,7 +234,7 @@
         {
             AutomaticLayout = true,
             Language = "json",
-            Theme = "vs-dark",
+            Theme = currentMonacoTheme,
             Value = initialContent,
             FontSize = 13,
             Minimap = new EditorMinimapOptions { Enabled = false },
@@ -229,7 +248,7 @@
         {
             AutomaticLayout = true,
             Language = "csharp",
-            Theme = "vs-dark",
+            Theme = currentMonacoTheme,
             Value = GetInitialUserCode(),
             FontSize = 13,
             Minimap = new EditorMinimapOptions { Enabled = false },
@@ -262,6 +281,11 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (firstRender)
+        {
+            await InitializeThemeAsync();
+        }
+
         if (focusRenameInput)
         {
             focusRenameInput = false;
@@ -524,6 +548,86 @@
     {
         string text = string.Join("\n", consoleLines.Select(l => l.Text));
         await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", text);
+    }
+
+    private void ClearConsole()
+    {
+        consoleLines.Clear();
+    }
+
+    // ── Theme management ──
+
+    private async Task InitializeThemeAsync()
+    {
+        // Read stored preference from localStorage
+        string? stored = null;
+        try
+        {
+            stored = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", "playground-theme");
+        }
+        catch
+        {
+            // localStorage may not be available
+        }
+
+        themePreference = stored switch
+        {
+            "light" or "dark" => stored,
+            _ => "auto"
+        };
+
+        // Resolve the effective theme
+        if (themePreference == "auto")
+        {
+            resolvedTheme = await JSRuntime.InvokeAsync<string>("getSystemTheme");
+        }
+        else
+        {
+            resolvedTheme = themePreference;
+        }
+
+        // Apply theme to DOM and Monaco
+        await JSRuntime.InvokeVoidAsync("applyTheme", resolvedTheme);
+
+        // Listen for system theme changes (relevant when preference is "auto")
+        var objRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("onSystemThemeChange", objRef);
+
+        StateHasChanged();
+    }
+
+    private async Task CycleTheme()
+    {
+        themePreference = themePreference switch
+        {
+            "auto" => "light",
+            "light" => "dark",
+            "dark" => "auto",
+            _ => "auto"
+        };
+
+        if (themePreference == "auto")
+        {
+            resolvedTheme = await JSRuntime.InvokeAsync<string>("getSystemTheme");
+        }
+        else
+        {
+            resolvedTheme = themePreference;
+        }
+
+        await JSRuntime.InvokeVoidAsync("applyTheme", resolvedTheme);
+        await JSRuntime.InvokeVoidAsync("localStorage.setItem", "playground-theme", themePreference);
+    }
+
+    [JSInvokable]
+    public async Task OnSystemThemeChanged(string newTheme)
+    {
+        if (themePreference == "auto")
+        {
+            resolvedTheme = newTheme;
+            await JSRuntime.InvokeVoidAsync("applyTheme", resolvedTheme);
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private async Task OnSampleChanged(ChangeEventArgs e)

@@ -91,3 +91,26 @@ window.pickFileAsBytes = function (accept) {
         input.click();
     });
 };
+
+// ── Theme management ──
+
+// Returns the current system color scheme preference ("dark" or "light").
+window.getSystemTheme = function () {
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+};
+
+// Listens for system color scheme changes and invokes the .NET callback.
+window.onSystemThemeChange = function (dotNetHelper) {
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    mq.addEventListener('change', function (e) {
+        dotNetHelper.invokeMethodAsync('OnSystemThemeChanged', e.matches ? 'light' : 'dark');
+    });
+};
+
+// Applies the theme to the document and Monaco editors.
+window.applyTheme = function (theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (typeof monaco !== 'undefined' && monaco.editor) {
+        monaco.editor.setTheme(theme === 'light' ? 'vs' : 'vs-dark');
+    }
+};
