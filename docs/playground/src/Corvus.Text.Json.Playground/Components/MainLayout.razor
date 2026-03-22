@@ -336,34 +336,6 @@
             await RegisterKeyboardShortcuts();
         }
 
-        // Push restored auto-save content into editors once they exist.
-        // This runs after RestoreAutoSavedState completes and a re-render
-        // makes the editors available.
-        if (hasRestoredState && schemaEditor is not null)
-        {
-            hasRestoredState = false;
-            isLoadingContent = true;
-            try
-            {
-                if (activeSchemaIndex < schemaFiles.Count)
-                {
-                    await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
-                }
-
-                if (userCodeEditor is not null && restoredUserCode is not null)
-                {
-                    await userCodeEditor.SetValue(restoredUserCode);
-                    restoredUserCode = null;
-                }
-
-                await SyncCleanStateFromEditors();
-            }
-            finally
-            {
-                isLoadingContent = false;
-            }
-        }
-
         if (focusRenameInput)
         {
             focusRenameInput = false;
@@ -380,9 +352,29 @@
 
     private async Task OnSchemaEditorInit()
     {
-        // Sync clean state from actual Monaco content after initial render,
-        // but skip if we're about to push restored content over it.
-        if (schemaEditor is not null && schemaFiles.Count > 0 && !hasRestoredState)
+        if (schemaEditor is null || schemaFiles.Count == 0)
+        {
+            return;
+        }
+
+        // If auto-save restored different content, push it into the editor now
+        // that Monaco is ready. Otherwise sync the editor's initial content
+        // back to the model for clean-state tracking.
+        if (hasRestoredState)
+        {
+            isLoadingContent = true;
+            try
+            {
+                await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
+                await SyncCleanStateFromEditors();
+            }
+            finally
+            {
+                isLoadingContent = false;
+                hasRestoredState = false;
+            }
+        }
+        else
         {
             string editorContent = await schemaEditor.GetValue();
             schemaFiles[activeSchemaIndex].Content = editorContent;
@@ -621,11 +613,28 @@
     {
         await RegisterCompletionProvider();
 
-        // Sync clean state from actual Monaco content after initial render
-        if (userCodeEditor is not null)
+        if (userCodeEditor is null)
         {
-            userCodeCleanContent = await userCodeEditor.GetValue();
+            return;
         }
+
+        // If auto-save restored user code, push it into the editor now
+        if (restoredUserCode is not null)
+        {
+            isLoadingContent = true;
+            try
+            {
+                await userCodeEditor.SetValue(restoredUserCode);
+                restoredUserCode = null;
+            }
+            finally
+            {
+                isLoadingContent = false;
+            }
+        }
+
+        // Sync clean state from actual Monaco content
+        userCodeCleanContent = await userCodeEditor.GetValue();
     }
 
     private async Task RegisterCompletionProvider()
