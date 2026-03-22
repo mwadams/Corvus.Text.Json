@@ -9,6 +9,7 @@
 
 using System.Collections.Immutable;
 using System.Composition;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -130,12 +131,24 @@ public sealed class ValidateCodeFix : CodeFixProvider
         MemberAccessExpressionSyntax newMemberAccess = memberAccess
             .WithName(SyntaxFactory.IdentifierName("EvaluateSchema"));
 
+        var annotation = new SyntaxAnnotation("CVJ003_NewInvocation");
+
         InvocationExpressionSyntax newInvocation = invocation
             .WithExpression(newMemberAccess)
             .WithArgumentList(SyntaxFactory.ArgumentList())
-            .WithTriviaFrom(invocation);
+            .WithTriviaFrom(invocation)
+            .WithAdditionalAnnotations(annotation);
 
         SyntaxNode newRoot = root.ReplaceNode(invocation, newInvocation);
+
+        // EvaluateSchema() returns bool, so fix up any explicit declaration type.
+        InvocationExpressionSyntax? tracked = newRoot.GetAnnotatedNodes(annotation)
+            .OfType<InvocationExpressionSyntax>().FirstOrDefault();
+        if (tracked is not null)
+        {
+            newRoot = ReplaceDeclarationTypeWithBool(newRoot, tracked);
+        }
+
         return document.WithSyntaxRoot(newRoot);
     }
 
@@ -179,11 +192,58 @@ public sealed class ValidateCodeFix : CodeFixProvider
         // Replace the invocation within the containing statement.
         StatementSyntax newStatement = containingStatement.ReplaceNode(invocation, newInvocation);
 
+        // EvaluateSchema() returns bool, so fix up any explicit declaration type.
+        newStatement = ReplaceDeclarationTypeWithBool(newStatement);
+
         // Insert the collector statement before the modified statement.
         SyntaxNode newRoot = root.ReplaceNode(
             containingStatement,
             new SyntaxNode[] { collectorStatement, newStatement });
 
         return document.WithSyntaxRoot(newRoot);
+    }
+
+    /// <summary>
+    /// If the invocation sits inside a local variable declaration with an explicit
+    /// (non-<c>var</c>) type, replaces that type with <c>bool</c> because
+    /// <c>EvaluateSchema()</c> returns <see langword="bool"/> instead of
+    /// <c>ValidationContext</c>.
+    /// </summary>
+    private static SyntaxNode ReplaceDeclarationTypeWithBool(
+        SyntaxNode root,
+        InvocationExpressionSyntax newInvocation)
+    {
+        StatementSyntax? stmt = newInvocation.FirstAncestorOrSelf<StatementSyntax>();
+        if (stmt is LocalDeclarationStatementSyntax localDecl &&
+            !localDecl.Declaration.Type.IsVar)
+        {
+            TypeSyntax boolType = SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword))
+                .WithTriviaFrom(localDecl.Declaration.Type);
+
+            LocalDeclarationStatementSyntax newDecl = localDecl
+                .WithDeclaration(localDecl.Declaration.WithType(boolType));
+
+            return root.ReplaceNode(localDecl, newDecl);
+        }
+
+        return root;
+    }
+
+    /// <summary>
+    /// Overload that operates on a single statement (used before the statement is
+    /// inserted into the tree).
+    /// </summary>
+    private static StatementSyntax ReplaceDeclarationTypeWithBool(StatementSyntax statement)
+    {
+        if (statement is LocalDeclarationStatementSyntax localDecl &&
+            !localDecl.Declaration.Type.IsVar)
+        {
+            TypeSyntax boolType = SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.BoolKeyword))
+                .WithTriviaFrom(localDecl.Declaration.Type);
+
+            return localDecl.WithDeclaration(localDecl.Declaration.WithType(boolType));
+        }
+
+        return statement;
     }
 }

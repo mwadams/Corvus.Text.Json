@@ -196,4 +196,179 @@ namespace TestApp
 
         await Verify.VerifyAnalyzerAsync(testCode);
     }
+
+    [Fact]
+    public async Task IsValidCall_WithExplicitType_ReplacesTypeWithBool()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class ValidationContext
+    {
+        public bool IsValid => true;
+    }
+
+    class MyJsonType : Corvus.Json.IJsonValue
+    {
+        public ValidationContext IsValid() => new();
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            ValidationContext result = {|#0:x.IsValid()|};
+        }
+    }
+}",
+            FixedCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class ValidationContext
+    {
+        public bool IsValid => true;
+    }
+
+    class MyJsonType : Corvus.Json.IJsonValue
+    {
+        public ValidationContext IsValid() => new();
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            bool result = x.EvaluateSchema();
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("Replace '.IsValid()' with '.EvaluateSchema()'"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task ValidateCall_WithExplicitType_AndCollector_ReplacesTypeWithBool()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    enum ValidationLevel { Flag, Basic, Detailed, Verbose }
+
+    class ValidationContext
+    {
+        public static ValidationContext ValidContext => new();
+    }
+
+    class MyJsonType : Corvus.Json.IJsonValue
+    {
+        public ValidationContext Validate(ValidationContext ctx, ValidationLevel level) => ctx;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            ValidationContext result = {|#0:x.Validate(ValidationContext.ValidContext, ValidationLevel.Detailed)|};
+        }
+    }
+}",
+            FixedCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    enum ValidationLevel { Flag, Basic, Detailed, Verbose }
+
+    class ValidationContext
+    {
+        public static ValidationContext ValidContext => new();
+    }
+
+    class MyJsonType : Corvus.Json.IJsonValue
+    {
+        public ValidationContext Validate(ValidationContext ctx, ValidationLevel level) => ctx;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed);
+            bool result = x.EvaluateSchema(collector);
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("Replace '.Validate(...)' with 'using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Detailed); value.EvaluateSchema(collector);'"));
+
+        await test.RunAsync();
+    }
+
+    [Fact]
+    public async Task IsValidCall_WithVar_LeavesVarAlone()
+    {
+        var test = new CodeFixTest
+        {
+            TestCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class MyJsonType : Corvus.Json.IJsonValue
+    {
+        public bool IsValid() => true;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            var result = {|#0:x.IsValid()|};
+        }
+    }
+}",
+            FixedCode = V4InterfaceStubs + @"
+namespace TestApp
+{
+    class MyJsonType : Corvus.Json.IJsonValue
+    {
+        public bool IsValid() => true;
+    }
+
+    class Test
+    {
+        void M()
+        {
+            var x = new MyJsonType();
+            var result = x.EvaluateSchema();
+        }
+    }
+}",
+            CompilerDiagnostics = CompilerDiagnostics.None,
+        };
+
+        test.ExpectedDiagnostics.Add(
+            Verify.Diagnostic()
+                .WithLocation(0)
+                .WithArguments("Replace '.IsValid()' with '.EvaluateSchema()'"));
+
+        await test.RunAsync();
+    }
 }
