@@ -9,14 +9,14 @@
 
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
-    <select class="toolbar-select" @onchange="OnSampleChanged">
+    <select class="toolbar-select" value="@(activeSampleId ?? "")" @onchange="OnSampleChanged">
         @if (activeSampleId is null)
         {
-            <option value="" selected disabled>— Custom project —</option>
+            <option value="" disabled>— Custom project —</option>
         }
         @foreach (var sample in availableSamples)
         {
-            <option value="@sample.Id" selected="@(sample.Id == activeSampleId)">@sample.DisplayName</option>
+            <option value="@sample.Id">@sample.DisplayName</option>
         }
     </select>
     <button class="toolbar-btn secondary" @onclick="NewProjectAsync" title="New blank project">📄 New</button>
