@@ -41,13 +41,15 @@ jobs:
         working-directory: docs/website
         run: npm ci
 
-      - name: Create local NuGet feed directory
-        run: New-Item -ItemType Directory -Path D:\source\local-nuget-feed -Force
+      - name: Remove local NuGet feed source
+        run: dotnet nuget remove source local
         shell: pwsh
 
       - name: Build documentation site
         working-directory: docs/website
         run: pwsh -File build.ps1
+        env:
+          GH_TOKEN: ${{ secrets.ENDJIN_PACKAGES_TOKEN }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
