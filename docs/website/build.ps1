@@ -14,6 +14,7 @@
       7. Compile SCSS to CSS
       8. Build Lunr search index
       9. Build and publish Playground (Blazor WASM)
+     10. Rewrite root-relative paths for subpath hosting (when -BasePathPrefix is set)
 .PARAMETER Preview
     Launches a local preview server after building.
 .PARAMETER ServeOnly
@@ -31,7 +32,10 @@ param (
     [switch] $ServeOnly,
 
     [Parameter()]
-    [switch] $Watch
+    [switch] $Watch,
+
+    [Parameter()]
+    [string] $BasePathPrefix = ""
 )
 
 $ErrorActionPreference = 'Stop'
@@ -619,13 +623,13 @@ if (!(Test-Path $playgroundWwwroot)) {
 }
 Copy-Item -Path $playgroundWwwroot -Destination $playgroundOutputDir -Recurse -Force
 
-# Rewrite <base href="/"> to <base href="/playground/"> for subpath hosting
+# Rewrite <base href="/"> for subpath hosting
 $playgroundIndex = Join-Path $playgroundOutputDir "index.html"
 if (Test-Path $playgroundIndex) {
     $indexContent = [System.IO.File]::ReadAllText($playgroundIndex)
-    $indexContent = $indexContent -replace '<base href="/" />', '<base href="/playground/" />'
+    $indexContent = $indexContent -replace '<base href="/" />', "<base href=`"$BasePathPrefix/playground/`" />"
     [System.IO.File]::WriteAllText($playgroundIndex, $indexContent)
-    Write-Host "  Updated base href to /playground/" -ForegroundColor Gray
+    Write-Host "  Updated base href to $BasePathPrefix/playground/" -ForegroundColor Gray
 }
 
 # Clean up the intermediate publish directory
@@ -634,6 +638,53 @@ Remove-Item $playgroundPublishDir -Recurse -Force -ErrorAction SilentlyContinue
 $playgroundSize = (Get-ChildItem $playgroundOutputDir -Recurse -File | Measure-Object -Property Length -Sum).Sum
 Write-Host "  Playground: $([math]::Round($playgroundSize/1MB, 1)) MB" -ForegroundColor Gray
 Write-StepDuration "Playground build" $sw
+
+# -- Step 10: Rewrite root-relative paths for subpath hosting -----------------
+if ($BasePathPrefix) {
+    Write-Host "`n[10/10] Rewriting paths for base prefix '$BasePathPrefix'..." -ForegroundColor Cyan
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+
+    # Rewrite HTML files (excluding playground which uses <base href>)
+    $htmlFiles = Get-ChildItem $outputDir -Filter "*.html" -Recurse -File |
+        Where-Object { $_.FullName -notlike "*\playground\*" }
+    $rewriteCount = 0
+    foreach ($htmlFile in $htmlFiles) {
+        $content = [System.IO.File]::ReadAllText($htmlFile.FullName)
+        $original = $content
+
+        # Rewrite href="/..." and src="/..." and content="/..." (but not protocol-relative "//" URLs)
+        $content = $content -replace '(href|src|content)="(/(?!/))', "`$1=`"$BasePathPrefix`$2"
+
+        if ($content -ne $original) {
+            [System.IO.File]::WriteAllText($htmlFile.FullName, $content)
+            $rewriteCount++
+        }
+    }
+    Write-Host "  Rewrote paths in $rewriteCount of $($htmlFiles.Count) HTML files." -ForegroundColor Gray
+
+    # Rewrite JS files that contain root-relative fetch URLs
+    $jsFiles = Get-ChildItem (Join-Path $outputDir "assets\js") -Filter "*.js" -File -ErrorAction SilentlyContinue
+    $jsRewriteCount = 0
+    foreach ($jsFile in $jsFiles) {
+        $content = [System.IO.File]::ReadAllText($jsFile.FullName)
+        $original = $content
+
+        # Rewrite string literals containing root-relative paths: '/api/', '/search-index.json', etc.
+        $content = $content -replace "(['""])(/(?!/)(?:api|search|docs|examples|getting-started|assets|playground))", "`$1$BasePathPrefix`$2"
+
+        if ($content -ne $original) {
+            [System.IO.File]::WriteAllText($jsFile.FullName, $content)
+            $jsRewriteCount++
+        }
+    }
+    if ($jsRewriteCount -gt 0) {
+        Write-Host "  Rewrote paths in $jsRewriteCount JS files." -ForegroundColor Gray
+    }
+
+    Write-StepDuration "Path rewriting" $sw
+} else {
+    Write-Host "`n[10/10] No base path prefix - skipping path rewriting." -ForegroundColor DarkGray
+}
 
 Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green
 
