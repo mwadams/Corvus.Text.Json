@@ -198,6 +198,12 @@
     private IReadOnlyList<PlaygroundSample> availableSamples = [];
     private string? activeSampleId;
 
+    /// <summary>
+    /// Guard flag: suppresses DetachFromSample during programmatic editor updates
+    /// (loading a sample, new project, opening a file, or restoring auto-saved state).
+    /// </summary>
+    private bool isLoadingContent;
+
     // Multi-schema state
     private List<SchemaFile> schemaFiles = [];
     private int activeSchemaIndex;
@@ -209,7 +215,6 @@
 
     private const string EmptySchemaContent = "{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\"\n}";
     private const string NewProjectUserCode = "using Corvus.Text.Json;\nusing Playground;\n";
-    private const string NewProjectId = "new";
 
     // Dirty tracking state
     private string userCodeCleanContent = "";
@@ -306,7 +311,7 @@
             return code;
         }
 
-        if (activeSampleId is not null && activeSampleId != NewProjectId)
+        if (activeSampleId is not null)
         {
             PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == activeSampleId);
             if (sample is not null)
@@ -799,26 +804,34 @@
                 return;
             }
 
-            LoadSample(sample);
-
-            // Update editors
-            activeSchemaIndex = 0;
-            await schemaEditor.SetValue(schemaFiles[0].Content);
-
-            if (userCodeEditor is not null)
+            isLoadingContent = true;
+            try
             {
-                await userCodeEditor.SetValue(sample.UserCode);
+                LoadSample(sample);
+
+                // Update editors
+                activeSchemaIndex = 0;
+                await schemaEditor.SetValue(schemaFiles[0].Content);
+
+                if (userCodeEditor is not null)
+                {
+                    await userCodeEditor.SetValue(sample.UserCode);
+                }
+
+                await SyncCleanStateFromEditors();
+
+                // Reset generation state
+                generationResult = null;
+                await ClearEditorMarkers();
+                await ClearSchemaEditorMarkers();
+                statusText = "Ready — sample loaded";
+                statusError = false;
+                ScheduleAutoSave();
             }
-
-            await SyncCleanStateFromEditors();
-
-            // Reset generation state
-            generationResult = null;
-            await ClearEditorMarkers();
-            await ClearSchemaEditorMarkers();
-            statusText = "Ready — sample loaded";
-            statusError = false;
-            ScheduleAutoSave();
+            finally
+            {
+                isLoadingContent = false;
+            }
         });
     }
 
@@ -826,26 +839,34 @@
     {
         await CheckDirtyAndConfirm(async () =>
         {
-            LoadNewProject();
-
-            if (schemaEditor is not null)
+            isLoadingContent = true;
+            try
             {
-                await schemaEditor.SetValue(schemaFiles[0].Content);
-            }
+                LoadNewProject();
 
-            if (userCodeEditor is not null)
+                if (schemaEditor is not null)
+                {
+                    await schemaEditor.SetValue(schemaFiles[0].Content);
+                }
+
+                if (userCodeEditor is not null)
+                {
+                    await userCodeEditor.SetValue(NewProjectUserCode);
+                }
+
+                await SyncCleanStateFromEditors();
+
+                generationResult = null;
+                await ClearEditorMarkers();
+                await ClearSchemaEditorMarkers();
+                statusText = "Ready";
+                statusError = false;
+                ScheduleAutoSave();
+            }
+            finally
             {
-                await userCodeEditor.SetValue(NewProjectUserCode);
+                isLoadingContent = false;
             }
-
-            await SyncCleanStateFromEditors();
-
-            generationResult = null;
-            await ClearEditorMarkers();
-            await ClearSchemaEditorMarkers();
-            statusText = "Ready";
-            statusError = false;
-            ScheduleAutoSave();
         });
     }
 
@@ -855,7 +876,12 @@
     /// </summary>
     private void DetachFromSample()
     {
-        if (activeSampleId is not null && activeSampleId != NewProjectId)
+        if (isLoadingContent)
+        {
+            return;
+        }
+
+        if (activeSampleId is not null)
         {
             activeSampleId = null;
         }
@@ -863,7 +889,7 @@
 
     private void LoadNewProject()
     {
-        activeSampleId = NewProjectId;
+        activeSampleId = null;
         schemaFiles.Clear();
         var schema = new SchemaFile
         {
@@ -911,6 +937,7 @@
                 return;
             }
 
+            isLoadingContent = true;
             try
             {
                 ProjectImporter.ImportResult result = ProjectImporter.Import(zipBytes);
@@ -928,7 +955,7 @@
                     });
                 }
 
-                activeSampleId = NewProjectId;
+                activeSampleId = null;
                 activeSchemaIndex = 0;
 
                 if (schemaEditor is not null)
@@ -955,6 +982,10 @@
             {
                 statusText = $"Failed to load project: {ex.Message}";
                 statusError = true;
+            }
+            finally
+            {
+                isLoadingContent = false;
             }
 
             StateHasChanged();

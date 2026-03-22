@@ -78,11 +78,15 @@ window.registerCSharpSignatureHelpProvider = function (dotNetHelper) {
                         signatures: result.signatures.map(function (sig) {
                             return {
                                 label: sig.label,
-                                documentation: sig.documentation || undefined,
+                                documentation: sig.documentation
+                                    ? { value: sig.documentation, isTrusted: true }
+                                    : undefined,
                                 parameters: (sig.parameters || []).map(function (p) {
                                     return {
                                         label: p.label,
-                                        documentation: p.documentation || undefined
+                                        documentation: p.documentation
+                                            ? { value: p.documentation, isTrusted: true }
+                                            : undefined
                                     };
                                 })
                             };

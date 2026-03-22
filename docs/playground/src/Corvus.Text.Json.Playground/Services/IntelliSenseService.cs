@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Xml.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.CSharp;
@@ -246,11 +247,11 @@ public class IntelliSenseService
                 var parameters = m.Parameters.Select(p =>
                     new SignatureParameterInfo(
                         $"{p.Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} {p.Name}",
-                        p.GetDocumentationCommentXml() ?? string.Empty))
+                        ExtractParameterDoc(m.GetDocumentationCommentXml(), p.Name)))
                     .ToList();
 
                 string label = m.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
-                string doc = m.GetDocumentationCommentXml() ?? string.Empty;
+                string doc = FormatXmlDoc(m.GetDocumentationCommentXml());
 
                 signatures.Add(new SignatureInfo(label, doc, parameters));
 
@@ -386,6 +387,137 @@ public class IntelliSenseService
             "TypeParameter" => "TypeParameter",
             _ => "Text",
         };
+    }
+
+    /// <summary>
+    /// Extracts human-readable text from a Roslyn XML documentation comment.
+    /// Parses summary, returns, and remarks elements into clean text.
+    /// </summary>
+    internal static string FormatXmlDoc(string? xml)
+    {
+        if (string.IsNullOrWhiteSpace(xml))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            XDocument doc = XDocument.Parse(xml);
+            var parts = new List<string>();
+
+            string? summary = GetElementText(doc, "summary");
+            if (!string.IsNullOrWhiteSpace(summary))
+            {
+                parts.Add(summary);
+            }
+
+            string? returns = GetElementText(doc, "returns");
+            if (!string.IsNullOrWhiteSpace(returns))
+            {
+                parts.Add($"**Returns:** {returns}");
+            }
+
+            string? remarks = GetElementText(doc, "remarks");
+            if (!string.IsNullOrWhiteSpace(remarks))
+            {
+                parts.Add($"*{remarks}*");
+            }
+
+            return string.Join("\n\n", parts);
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    /// <summary>
+    /// Extracts the documentation text for a specific parameter from an XML doc comment.
+    /// </summary>
+    internal static string ExtractParameterDoc(string? xml, string parameterName)
+    {
+        if (string.IsNullOrWhiteSpace(xml))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            XDocument doc = XDocument.Parse(xml);
+            XElement? paramElement = doc.Descendants("param")
+                .FirstOrDefault(e => e.Attribute("name")?.Value == parameterName);
+
+            if (paramElement is null)
+            {
+                return string.Empty;
+            }
+
+            return NormalizeText(GetInnerText(paramElement));
+        }
+        catch
+        {
+            return string.Empty;
+        }
+    }
+
+    private static string? GetElementText(XDocument doc, string elementName)
+    {
+        XElement? element = doc.Descendants(elementName).FirstOrDefault();
+        if (element is null)
+        {
+            return null;
+        }
+
+        return NormalizeText(GetInnerText(element));
+    }
+
+    private static string GetInnerText(XElement element)
+    {
+        // Process child nodes to handle <see>, <paramref>, <typeparamref>, <c> etc.
+        var sb = new System.Text.StringBuilder();
+
+        foreach (XNode node in element.Nodes())
+        {
+            if (node is XText text)
+            {
+                sb.Append(text.Value);
+            }
+            else if (node is XElement child)
+            {
+                switch (child.Name.LocalName)
+                {
+                    case "see":
+                    case "seealso":
+                        sb.Append(child.Attribute("cref")?.Value?.Split('.').Last()
+                            ?? child.Attribute("langword")?.Value
+                            ?? child.Value);
+                        break;
+                    case "paramref":
+                    case "typeparamref":
+                        sb.Append(child.Attribute("name")?.Value ?? child.Value);
+                        break;
+                    case "c":
+                        sb.Append($"`{child.Value}`");
+                        break;
+                    case "para":
+                        sb.Append($"\n\n{GetInnerText(child)}");
+                        break;
+                    default:
+                        sb.Append(child.Value);
+                        break;
+                }
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private static string NormalizeText(string text)
+    {
+        // Collapse whitespace and trim
+        string[] lines = text.Split('\n');
+        var trimmed = lines.Select(l => l.Trim()).Where(l => l.Length > 0);
+        return string.Join(" ", trimmed);
     }
 }
 
