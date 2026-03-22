@@ -6,7 +6,7 @@
 @inject ExecutionService ExecutionSvc
 @inject IntelliSenseService IntelliSenseSvc
 @inject IJSRuntime JSRuntime
-
+
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
     <select class="toolbar-select" value="@(activeSampleId ?? "")" @onchange="OnSampleChanged">
@@ -1231,9 +1231,9 @@
 
         isRunning = true;
         consoleLines.Clear();
-        statusText = "Loading assemblies…";
+        statusText = "Building…";
         statusError = false;
-        WriteConsole("▶ Loading assemblies…", "console-progress");
+        WriteConsole("▶ Compiling…", "console-progress");
         StateHasChanged();
 
         try

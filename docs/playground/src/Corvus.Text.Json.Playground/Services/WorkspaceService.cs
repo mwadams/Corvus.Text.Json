@@ -70,7 +70,9 @@ public class WorkspaceService
     /// <summary>
     /// Ensures assemblies are loaded and ready for compilation.
     /// </summary>
-    public async Task EnsureInitializedAsync()
+    /// <param name="onProgress">Optional callback invoked as each assembly loads.
+    /// Parameters: (current index, total count, assembly name).</param>
+    public async Task EnsureInitializedAsync(Action<int, int, string>? onProgress = null)
     {
         if (this.referencesLoaded)
         {
@@ -85,10 +87,16 @@ public class WorkspaceService
                 return;
             }
 
+            int total = RequiredAssemblies.Length;
+
+            onProgress?.Invoke(0, total + 1, "asset manifest");
             await this.LoadAssetMappingsAsync();
 
-            foreach (string assemblyName in RequiredAssemblies)
+            for (int i = 0; i < RequiredAssemblies.Length; i++)
             {
+                string assemblyName = RequiredAssemblies[i];
+                onProgress?.Invoke(i + 1, total + 1, assemblyName);
+
                 try
                 {
                     byte[]? bytes = await this.TryLoadAssemblyBytesAsync(assemblyName);
@@ -96,7 +104,6 @@ public class WorkspaceService
                     {
                         MetadataReference reference = MetadataReference.CreateFromImage(bytes);
                         this.references.Add(reference);
-                        Console.WriteLine($"Loaded assembly {assemblyName} ({bytes.Length} bytes)");
                     }
                     else
                     {

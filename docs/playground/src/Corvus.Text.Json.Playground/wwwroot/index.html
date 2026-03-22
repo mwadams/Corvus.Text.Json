@@ -23,8 +23,13 @@
 </head>
 <body>
     <div id="app">
-        <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;">
-            <p>Loading Corvus.Text.Json Playground&hellip;</p>
+        <div id="boot-progress" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;font-family:system-ui;gap:12px;">
+            <h2 style="margin:0;font-size:1.25rem;font-weight:600;">Corvus.Text.Json Playground</h2>
+            <p id="boot-status" style="margin:0;font-size:0.85rem;opacity:0.7;">Initializing&hellip;</p>
+            <div style="width:260px;height:6px;border-radius:3px;background:rgba(128,128,128,0.2);overflow:hidden;">
+                <div id="boot-bar" style="width:0%;height:100%;border-radius:3px;background:var(--accent-color,#0078d4);transition:width 0.15s ease;"></div>
+            </div>
+            <p id="boot-counter" style="margin:0;font-size:0.75rem;opacity:0.5;">0 / 0</p>
         </div>
     </div>
 
@@ -44,7 +49,41 @@
     <script src="_framework/blazor.webassembly.js" autostart="false"></script>
     <script>
         window.monacoReady.then(function () {
-            Blazor.start();
+            var loaded = 0;
+            var total = 0;
+            var counted = false;
+            var statusEl = document.getElementById('boot-status');
+            var barEl = document.getElementById('boot-bar');
+            var counterEl = document.getElementById('boot-counter');
+
+            Blazor.start({
+                loadBootResource: function (type, name, defaultUri, integrity) {
+                    // Count all resources on first pass
+                    if (!counted) {
+                        counted = true;
+                        // We'll count as they arrive; set total from first knowledge
+                    }
+                    total++;
+                    if (counterEl) counterEl.textContent = loaded + ' / ' + total;
+
+                    // Show the resource name being loaded
+                    var displayName = name;
+                    if (name.endsWith('.dll') || name.endsWith('.wasm')) {
+                        displayName = name.replace(/\.[a-z0-9]{8,12}\.(dll|wasm)$/, '.$1');
+                    }
+                    if (statusEl) statusEl.textContent = 'Loading ' + displayName + '…';
+
+                    // Fetch with progress tracking
+                    return fetch(defaultUri, { integrity: integrity, cache: 'default' }).then(function (response) {
+                        loaded++;
+                        var pct = total > 0 ? Math.round(100 * loaded / total) : 0;
+                        if (barEl) barEl.style.width = pct + '%';
+                        if (counterEl) counterEl.textContent = loaded + ' / ' + total;
+                        if (statusEl && loaded === total) statusEl.textContent = 'Starting…';
+                        return response;
+                    });
+                }
+            });
         });
     </script>
 </body>
