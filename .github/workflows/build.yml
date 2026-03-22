@@ -1,13 +1,14 @@
 name: build
 on:
-  push:
-    branches:
-    - main
-    tags:
-    - '*'
-  pull_request:
-    branches:
-    - main
+  # NOTE: push and pull_request triggers temporarily disabled while docs pipeline is being stabilised
+  # push:
+  #   branches:
+  #   - main
+  #   tags:
+  #   - '*'
+  # pull_request:
+  #   branches:
+  #   - main
   workflow_dispatch:
     inputs:
       forcePublish:
