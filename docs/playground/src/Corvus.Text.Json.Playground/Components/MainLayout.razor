@@ -300,6 +300,34 @@
     protected override async Task OnInitializedAsync()
     {
         await RestoreAutoSavedState();
+
+        // If state was restored, the editors already rendered with defaults
+        // from OnInitialized (the first await in RestoreAutoSavedState yields
+        // to the renderer). Push the correct restored content into them now.
+        if (hasRestoredState)
+        {
+            hasRestoredState = false;
+            isLoadingContent = true;
+            try
+            {
+                if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+                {
+                    await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
+                }
+
+                if (userCodeEditor is not null && restoredUserCode is not null)
+                {
+                    await userCodeEditor.SetValue(restoredUserCode);
+                    restoredUserCode = null;
+                }
+
+                await SyncCleanStateFromEditors();
+            }
+            finally
+            {
+                isLoadingContent = false;
+            }
+        }
     }
 
     private string GetInitialUserCode()
@@ -330,33 +358,6 @@
         {
             await InitializeThemeAsync();
             await RegisterKeyboardShortcuts();
-
-            // If auto-save state was restored after the editors rendered with
-            // defaults, push the restored content into the Monaco editors now.
-            if (hasRestoredState)
-            {
-                hasRestoredState = false;
-                isLoadingContent = true;
-                try
-                {
-                    if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
-                    {
-                        await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
-                    }
-
-                    if (userCodeEditor is not null && restoredUserCode is not null)
-                    {
-                        await userCodeEditor.SetValue(restoredUserCode);
-                        restoredUserCode = null;
-                    }
-
-                    await SyncCleanStateFromEditors();
-                }
-                finally
-                {
-                    isLoadingContent = false;
-                }
-            }
         }
 
         if (focusRenameInput)
@@ -375,8 +376,9 @@
 
     private async Task OnSchemaEditorInit()
     {
-        // Sync clean state from actual Monaco content after initial render
-        if (schemaEditor is not null && schemaFiles.Count > 0)
+        // Sync clean state from actual Monaco content after initial render,
+        // but skip if we're about to push restored content over it.
+        if (schemaEditor is not null && schemaFiles.Count > 0 && !hasRestoredState)
         {
             string editorContent = await schemaEditor.GetValue();
             schemaFiles[activeSchemaIndex].Content = editorContent;
