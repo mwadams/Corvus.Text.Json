@@ -136,6 +136,11 @@ http.createServer((req, res) => {
 # -- Step 0: Copy hand-authored source files ----------------------------------
 Write-Host "`n[0/10] Copying hand-authored source files..." -ForegroundColor Cyan
 $sourceDir = Join-Path $siteDir "source"
+# Ensure destination directories exist (they are generated, not in source control)
+foreach ($dir in @("content\Docs", "content\Examples")) {
+    $dst = Join-Path $siteDir $dir
+    if (!(Test-Path $dst)) { New-Item -ItemType Directory -Path $dst -Force | Out-Null }
+}
 # Copy content overviews
 Copy-Item (Join-Path $sourceDir "content\Docs\Overview.md") (Join-Path $siteDir "content\Docs\Overview.md") -Force
 Copy-Item (Join-Path $sourceDir "content\Examples\Overview.md") (Join-Path $siteDir "content\Examples\Overview.md") -Force
