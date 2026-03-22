@@ -686,6 +686,14 @@ if ($BasePathPrefix) {
     Write-Host "`n[10/10] No base path prefix - skipping path rewriting." -ForegroundColor DarkGray
 }
 
+# Write robots.txt to prevent indexing of preview/staging deployments
+$robotsTxt = @"
+User-agent: *
+Disallow: /
+"@
+[System.IO.File]::WriteAllText((Join-Path $outputDir "robots.txt"), $robotsTxt)
+Write-Host "  Created robots.txt (noindex)." -ForegroundColor Gray
+
 Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green
 
 if ($Preview) {
