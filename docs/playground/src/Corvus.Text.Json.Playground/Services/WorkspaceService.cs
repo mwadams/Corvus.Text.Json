@@ -70,9 +70,7 @@ public class WorkspaceService
     /// <summary>
     /// Ensures assemblies are loaded and ready for compilation.
     /// </summary>
-    /// <param name="onProgress">Optional callback invoked as each assembly loads.
-    /// Parameters: (current index, total count, assembly name).</param>
-    public async Task EnsureInitializedAsync(Action<int, int, string>? onProgress = null)
+    public async Task EnsureInitializedAsync()
     {
         if (this.referencesLoaded)
         {
@@ -87,16 +85,10 @@ public class WorkspaceService
                 return;
             }
 
-            int total = RequiredAssemblies.Length;
-
-            onProgress?.Invoke(0, total + 1, "asset manifest");
             await this.LoadAssetMappingsAsync();
 
-            for (int i = 0; i < RequiredAssemblies.Length; i++)
+            foreach (string assemblyName in RequiredAssemblies)
             {
-                string assemblyName = RequiredAssemblies[i];
-                onProgress?.Invoke(i + 1, total + 1, assemblyName);
-
                 try
                 {
                     byte[]? bytes = await this.TryLoadAssemblyBytesAsync(assemblyName);
@@ -105,14 +97,11 @@ public class WorkspaceService
                         MetadataReference reference = MetadataReference.CreateFromImage(bytes);
                         this.references.Add(reference);
                     }
-                    else
-                    {
-                        Console.WriteLine($"Assembly {assemblyName} not found");
-                    }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Console.WriteLine($"Failed to load assembly {assemblyName}: {ex.Message}");
+                    // Assembly load failures are non-fatal; compilation will
+                    // report missing type errors if the assembly was needed.
                 }
             }
 
@@ -173,7 +162,6 @@ public class WorkspaceService
             HttpResponseMessage response = await this.httpClient.GetAsync("_framework/asset-manifest.json");
             if (!response.IsSuccessStatusCode)
             {
-                Console.WriteLine("Asset manifest not found, falling back to direct paths");
                 return;
             }
 
@@ -227,12 +215,10 @@ public class WorkspaceService
 
                 this.assetMappings[route] = assetFile;
             }
-
-            Console.WriteLine($"Loaded {this.assetMappings.Count} asset mappings");
         }
-        catch (Exception ex)
+        catch
         {
-            Console.WriteLine($"Failed to load asset mappings: {ex.Message}");
+            // Asset mapping failures are non-fatal; fall back to direct paths.
         }
     }
 

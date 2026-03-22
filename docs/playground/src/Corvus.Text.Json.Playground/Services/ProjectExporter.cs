@@ -156,7 +156,7 @@ public static partial class ProjectExporter
 /// <summary>
 /// The ctjplayground.config file format.
 /// </summary>
-public class PlaygroundConfig
+internal class PlaygroundConfig
 {
     [JsonPropertyName("schemas")]
     public List<PlaygroundConfigSchema> Schemas { get; set; } = [];
@@ -165,7 +165,7 @@ public class PlaygroundConfig
 /// <summary>
 /// A schema entry in the playground config.
 /// </summary>
-public class PlaygroundConfigSchema
+internal class PlaygroundConfigSchema
 {
     [JsonPropertyName("name")]
     public string Name { get; set; } = "";

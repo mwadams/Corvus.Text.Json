@@ -351,21 +351,16 @@
     private async Task OnSchemaEditorInit()
     {
         // Sync clean state from actual Monaco content after initial render
-        if (schemaEditor is not null && schemaFiles.Count > 0)
+        await SyncSchemaFromEditor();
+        if (schemaFiles.Count > 0)
         {
-            string editorContent = await schemaEditor.GetValue();
-            schemaFiles[activeSchemaIndex].Content = editorContent;
             schemaFiles[activeSchemaIndex].MarkClean();
         }
     }
 
     private async Task OnSchemaContentChanged(ModelContentChangedEvent e)
     {
-        // Sync editor content back to the schema file model for dirty tracking
-        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
-        {
-            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
-        }
+        await SyncSchemaFromEditor();
 
         DetachFromSample();
         ScheduleAutoSave();
@@ -436,10 +431,7 @@
     private async Task<bool> HasUnsavedChanges()
     {
         // Sync current editor content before checking
-        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
-        {
-            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
-        }
+        await SyncSchemaFromEditor();
 
         // Check schema files
         if (schemaFiles.Any(f => f.IsDirty || f.IsNew))
@@ -459,10 +451,7 @@
 
     private async Task<List<string>> GetDirtyFileNamesAsync()
     {
-        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
-        {
-            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
-        }
+        await SyncSchemaFromEditor();
 
         var names = new List<string>();
 
@@ -492,7 +481,7 @@
 
     private List<string> GetDirtyFileNames()
     {
-        // Synchronous version for rendering — uses already-synced content
+        // Synchronous version for rendering — uses content synced when the modal opened
         var names = new List<string>();
 
         foreach (SchemaFile f in schemaFiles)
@@ -507,9 +496,7 @@
             }
         }
 
-        // Check user code against clean snapshot
-        // (Content was synced when the modal was triggered)
-        if (userCodeCleanContent != _lastUserCodeSnapshot)
+        if (userCodeCurrentSnapshot != userCodeCleanContent)
         {
             names.Add("Program.cs");
         }
@@ -517,7 +504,7 @@
         return names;
     }
 
-    private string _lastUserCodeSnapshot = "";
+    private string userCodeCurrentSnapshot = "";
 
     private async Task<bool> CheckDirtyAndConfirm(Func<Task> action)
     {
@@ -527,8 +514,8 @@
             return true;
         }
 
-        // Snapshot user code for synchronous rendering in the modal
-        _lastUserCodeSnapshot = userCodeEditor is not null
+        // Snapshot current editor content for synchronous rendering in the modal
+        userCodeCurrentSnapshot = userCodeEditor is not null
             ? await userCodeEditor.GetValue()
             : userCodeCleanContent;
 
@@ -564,17 +551,24 @@
     }
 
     /// <summary>
+    /// Syncs the current schema editor content back to the active schema file model.
+    /// No-op if the editor is null or the index is out of range.
+    /// </summary>
+    private async Task SyncSchemaFromEditor()
+    {
+        if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+        {
+            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        }
+    }
+
+    /// <summary>
     /// Reads actual editor content (which Monaco may have normalized) and
     /// uses it as the clean baseline. Call after every load/SetValue sequence.
     /// </summary>
     private async Task SyncCleanStateFromEditors()
     {
-        if (schemaEditor is not null && schemaFiles.Count > 0)
-        {
-            string editorContent = await schemaEditor.GetValue();
-            schemaFiles[activeSchemaIndex].Content = editorContent;
-        }
-
+        await SyncSchemaFromEditor();
         MarkAllClean();
 
         if (userCodeEditor is not null)
@@ -585,6 +579,7 @@
 
     private DotNetObjectReference<MainLayout>? intelliSenseRef;
     private DotNetObjectReference<MainLayout>? shortcutRef;
+    private DotNetObjectReference<MainLayout>? themeChangeRef;
 
     private async Task OnUserCodeEditorInit()
     {
@@ -748,8 +743,8 @@
         await JSRuntime.InvokeVoidAsync("applyTheme", resolvedTheme);
 
         // Listen for system theme changes (relevant when preference is "auto")
-        var objRef = DotNetObjectReference.Create(this);
-        await JSRuntime.InvokeVoidAsync("onSystemThemeChange", objRef);
+        this.themeChangeRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("onSystemThemeChange", this.themeChangeRef);
 
         StateHasChanged();
     }
@@ -884,10 +879,7 @@
             return;
         }
 
-        if (activeSampleId is not null)
-        {
-            activeSampleId = null;
-        }
+        activeSampleId = null;
     }
 
     private void LoadNewProject()
@@ -909,10 +901,7 @@
     private async Task SaveProjectAsync()
     {
         // Ensure current editor content is captured
-        if (schemaEditor is not null)
-        {
-            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
-        }
+        await SyncSchemaFromEditor();
 
         string userCode = userCodeEditor is not null
             ? await userCodeEditor.GetValue()
@@ -1025,7 +1014,7 @@
         }
 
         // Save current tab content
-        schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+        await SyncSchemaFromEditor();
 
         // Switch to new tab
         activeSchemaIndex = index;
@@ -1111,10 +1100,7 @@
     private async Task AddSchemaTab()
     {
         // Save current tab content before switching
-        if (schemaEditor is not null)
-        {
-            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
-        }
+        await SyncSchemaFromEditor();
 
         int number = schemaFiles.Count + 1;
         schemaFiles.Add(new SchemaFile
@@ -1178,7 +1164,7 @@
         try
         {
             // Snapshot current editor content
-            schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+            await SyncSchemaFromEditor();
 
             // Yield to let the browser render the "Generating…" status before
             // the synchronous codegen work blocks the single WASM thread.
@@ -1189,9 +1175,8 @@
 
             if (generationResult.Success)
             {
-                string msg = $"✓ Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
-                statusText = msg[2..]; // strip the checkmark for status bar
-                WriteConsole(msg, "console-success");
+                statusText = $"Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
+                WriteConsole($"✓ {statusText}", "console-success");
                 await ClearSchemaEditorMarkers();
 
                 // Update IntelliSense with the generated code
@@ -1595,10 +1580,7 @@
                 ? await userCodeEditor.GetValue()
                 : restoredUserCode ?? NewProjectUserCode;
 
-            if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
-            {
-                schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
-            }
+            await SyncSchemaFromEditor();
 
             var state = new
             {
@@ -1710,5 +1692,6 @@
         autoSaveTimer?.Dispose();
         intelliSenseRef?.Dispose();
         shortcutRef?.Dispose();
+        themeChangeRef?.Dispose();
     }
 }
