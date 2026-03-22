@@ -1,4 +1,5 @@
 name: docs
+# Builds documentation site and deploys to GitHub Pages
 
 on:
   push:
