@@ -10,6 +10,10 @@
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
     <select class="toolbar-select" @onchange="OnSampleChanged">
+        @if (activeSampleId is null)
+        {
+            <option value="" selected disabled>— Custom project —</option>
+        }
         @foreach (var sample in availableSamples)
         {
             <option value="@sample.Id" selected="@(sample.Id == activeSampleId)">@sample.DisplayName</option>
@@ -355,11 +359,13 @@
             schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
         }
 
+        DetachFromSample();
         ScheduleAutoSave();
     }
 
     private async Task OnUserCodeContentChanged(ModelContentChangedEvent e)
     {
+        DetachFromSample();
         ScheduleAutoSave();
 
         // Trigger debounced live diagnostics if we have generated code
@@ -838,6 +844,18 @@
             statusError = false;
             ScheduleAutoSave();
         });
+    }
+
+    /// <summary>
+    /// Clears the sample association when the user edits content,
+    /// so the dropdown deselects and it becomes a custom project.
+    /// </summary>
+    private void DetachFromSample()
+    {
+        if (activeSampleId is not null && activeSampleId != NewProjectId)
+        {
+            activeSampleId = null;
+        }
     }
 
     private void LoadNewProject()
