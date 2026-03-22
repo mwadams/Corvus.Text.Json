@@ -216,6 +216,12 @@
     private CancellationTokenSource? diagnosticsCts;
     private System.Threading.Timer? diagnosticsDebounceTimer;
 
+    // Auto-save state
+    private System.Threading.Timer? autoSaveTimer;
+    private string? restoredUserCode;
+    private const string AutoSaveKey = "playground-state";
+    private const int AutoSaveVersion = 1;
+
     // Theme state: "auto", "light", or "dark"
     private string themePreference = "auto";
     private string resolvedTheme = "dark";
@@ -270,7 +276,7 @@
         // Load all recipe samples
         availableSamples = SampleRegistry.LoadAll();
 
-        // Default to the first example
+        // Default to the first example (may be overridden by auto-save restore)
         if (availableSamples.Count > 0)
         {
             LoadSample(availableSamples[0]);
@@ -281,8 +287,21 @@
         }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await RestoreAutoSavedState();
+    }
+
     private string GetInitialUserCode()
     {
+        // If we restored user code from auto-save, use that
+        if (restoredUserCode is not null)
+        {
+            string code = restoredUserCode;
+            restoredUserCode = null; // consume it once
+            return code;
+        }
+
         if (activeSampleId is not null && activeSampleId != NewProjectId)
         {
             PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == activeSampleId);
@@ -335,10 +354,14 @@
         {
             schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
         }
+
+        ScheduleAutoSave();
     }
 
     private async Task OnUserCodeContentChanged(ModelContentChangedEvent e)
     {
+        ScheduleAutoSave();
+
         // Trigger debounced live diagnostics if we have generated code
         if (generationResult is not null && generationResult.Success && !isRunning)
         {
@@ -786,6 +809,7 @@
             await ClearSchemaEditorMarkers();
             statusText = "Ready — sample loaded";
             statusError = false;
+            ScheduleAutoSave();
         });
     }
 
@@ -812,6 +836,7 @@
             await ClearSchemaEditorMarkers();
             statusText = "Ready";
             statusError = false;
+            ScheduleAutoSave();
         });
     }
 
@@ -903,6 +928,7 @@
                 await ClearSchemaEditorMarkers();
                 statusText = "Project loaded";
                 statusError = false;
+                ScheduleAutoSave();
             }
             catch (Exception ex)
             {
@@ -954,6 +980,7 @@
     private void ToggleRootType(int index)
     {
         schemaFiles[index].IsRootType = !schemaFiles[index].IsRootType;
+        ScheduleAutoSave();
     }
 
     private void StartRename(int index)
@@ -1011,6 +1038,7 @@
         }
 
         renamingTabIndex = -1;
+        ScheduleAutoSave();
     }
 
     private async Task ScrollTabsLeft()
@@ -1048,6 +1076,8 @@
         {
             await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
         }
+
+        ScheduleAutoSave();
     }
 
     private async Task RemoveSchemaTab(int index)
@@ -1072,6 +1102,8 @@
         {
             await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
         }
+
+        ScheduleAutoSave();
     }
 
     private async Task GenerateAsync()
@@ -1484,11 +1516,131 @@
 
     private record ConsoleLine(string Text, string CssClass);
 
+    // ── Auto-save to localStorage ──
+
+    private void ScheduleAutoSave()
+    {
+        autoSaveTimer?.Dispose();
+        autoSaveTimer = new System.Threading.Timer(
+            _ => InvokeAsync(AutoSaveAsync),
+            null,
+            2000,
+            Timeout.Infinite);
+    }
+
+    private async Task AutoSaveAsync()
+    {
+        try
+        {
+            // Read current editor content
+            string userCode = userCodeEditor is not null
+                ? await userCodeEditor.GetValue()
+                : restoredUserCode ?? NewProjectUserCode;
+
+            if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+            {
+                schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+            }
+
+            var state = new
+            {
+                version = AutoSaveVersion,
+                activeSampleId,
+                activeSchemaIndex,
+                userCode,
+                schemaFiles = schemaFiles.Select(f => new
+                {
+                    name = f.Name,
+                    content = f.Content,
+                    isRootType = f.IsRootType,
+                    typeName = f.TypeName,
+                }).ToArray(),
+            };
+
+            string json = System.Text.Json.JsonSerializer.Serialize(state);
+            await JSRuntime.InvokeVoidAsync("localStorage.setItem", AutoSaveKey, json);
+        }
+        catch
+        {
+            // Silently ignore — auto-save is best-effort
+        }
+    }
+
+    private async Task RestoreAutoSavedState()
+    {
+        try
+        {
+            string? json = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", AutoSaveKey);
+            if (string.IsNullOrEmpty(json))
+            {
+                return;
+            }
+
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            // Version check
+            if (!root.TryGetProperty("version", out var versionEl) || versionEl.GetInt32() != AutoSaveVersion)
+            {
+                return;
+            }
+
+            // Restore schema files
+            if (root.TryGetProperty("schemaFiles", out var schemasEl) && schemasEl.GetArrayLength() > 0)
+            {
+                schemaFiles.Clear();
+                foreach (var s in schemasEl.EnumerateArray())
+                {
+                    var file = new SchemaFile
+                    {
+                        Name = s.GetProperty("name").GetString() ?? "schema.json",
+                        Content = s.GetProperty("content").GetString() ?? EmptySchemaContent,
+                        IsRootType = s.TryGetProperty("isRootType", out var rt) && rt.GetBoolean(),
+                        TypeName = s.TryGetProperty("typeName", out var tn) && tn.ValueKind != System.Text.Json.JsonValueKind.Null
+                            ? tn.GetString() : null,
+                    };
+                    file.MarkClean();
+                    schemaFiles.Add(file);
+                }
+            }
+
+            // Restore active schema index
+            if (root.TryGetProperty("activeSchemaIndex", out var idxEl))
+            {
+                int idx = idxEl.GetInt32();
+                if (idx >= 0 && idx < schemaFiles.Count)
+                {
+                    activeSchemaIndex = idx;
+                }
+            }
+
+            // Restore active sample ID (may be "new" or null for a new project)
+            if (root.TryGetProperty("activeSampleId", out var sampleEl))
+            {
+                activeSampleId = sampleEl.ValueKind == System.Text.Json.JsonValueKind.Null
+                    ? null
+                    : sampleEl.GetString();
+            }
+
+            // Restore user code — consumed by GetInitialUserCode() on first render
+            if (root.TryGetProperty("userCode", out var codeEl))
+            {
+                restoredUserCode = codeEl.GetString();
+                userCodeCleanContent = restoredUserCode ?? NewProjectUserCode;
+            }
+        }
+        catch
+        {
+            // If restore fails, fall through to defaults
+        }
+    }
+
     public void Dispose()
     {
         diagnosticsDebounceTimer?.Dispose();
         diagnosticsCts?.Cancel();
         diagnosticsCts?.Dispose();
+        autoSaveTimer?.Dispose();
         intelliSenseRef?.Dispose();
         shortcutRef?.Dispose();
     }
