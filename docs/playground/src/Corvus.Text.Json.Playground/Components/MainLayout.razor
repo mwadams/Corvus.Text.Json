@@ -224,13 +224,13 @@
     {
         "light" => "☀️",
         "dark" => "🌙",
-        _ => "🔄"
+        _ => "🖥️"
     };
     private string themeTooltip => themePreference switch
     {
         "light" => "Theme: Light (click for Dark)",
-        "dark" => "Theme: Dark (click for Auto)",
-        _ => "Theme: Auto (click for Light)"
+        "dark" => "Theme: Dark (click for System)",
+        _ => "Theme: System (click for Light)"
     };
 
     private StandaloneEditorConstructionOptions SchemaEditorOptions(StandaloneCodeEditor editor)
