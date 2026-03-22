@@ -2,6 +2,7 @@ using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 
@@ -108,6 +109,163 @@ public class IntelliSenseService
         catch (Exception)
         {
             return [];
+        }
+    }
+
+    /// <summary>
+    /// Get signature help at the given position in the user code.
+    /// Uses the Roslyn semantic model to find method overloads and parameter info.
+    /// </summary>
+    public async Task<SignatureHelpResult?> GetSignatureHelpAsync(
+        string userCode,
+        int lineNumber,
+        int column)
+    {
+        try
+        {
+            await this.workspaceService.EnsureInitializedAsync();
+            Document document = this.EnsureDocument(userCode);
+
+            SourceText sourceText = await document.GetTextAsync();
+            int userCodeStartLine = this.GetUserCodeStartLine(sourceText);
+
+            int absoluteLine = userCodeStartLine + lineNumber - 1;
+            if (absoluteLine < 0 || absoluteLine >= sourceText.Lines.Count)
+            {
+                return null;
+            }
+
+            int position = sourceText.Lines[absoluteLine].Start + column - 1;
+            if (position < 0 || position > sourceText.Length)
+            {
+                return null;
+            }
+
+            SemanticModel? semanticModel = await document.GetSemanticModelAsync();
+            SyntaxTree? syntaxTree = await document.GetSyntaxTreeAsync();
+            if (semanticModel is null || syntaxTree is null)
+            {
+                return null;
+            }
+
+            SyntaxNode root = await syntaxTree.GetRootAsync();
+            SyntaxToken token = root.FindToken(position);
+            SyntaxNode? node = token.Parent;
+
+            // Walk up to find the ArgumentList and its parent invocation
+            ArgumentListSyntax? argList = null;
+            SyntaxNode? invocation = null;
+
+            for (SyntaxNode? current = node; current is not null; current = current.Parent)
+            {
+                if (current is ArgumentListSyntax als)
+                {
+                    argList = als;
+                    invocation = als.Parent;
+                    break;
+                }
+
+                if (current is BracketedArgumentListSyntax)
+                {
+                    // Indexer — not supported for now
+                    return null;
+                }
+            }
+
+            if (argList is null || invocation is null)
+            {
+                return null;
+            }
+
+            // Determine which parameter index the cursor is at
+            int activeParameter = 0;
+            foreach (SyntaxToken separator in argList.Arguments.GetSeparators())
+            {
+                if (position > separator.SpanStart)
+                {
+                    activeParameter++;
+                }
+            }
+
+            // Get the method symbol(s)
+            SymbolInfo symbolInfo = semanticModel.GetSymbolInfo(invocation);
+            var candidateSymbols = new List<IMethodSymbol>();
+
+            if (symbolInfo.Symbol is IMethodSymbol method)
+            {
+                candidateSymbols.Add(method);
+            }
+
+            foreach (ISymbol candidate in symbolInfo.CandidateSymbols)
+            {
+                if (candidate is IMethodSymbol candidateMethod)
+                {
+                    candidateSymbols.Add(candidateMethod);
+                }
+            }
+
+            // Also look for overloads via the method group
+            if (invocation is InvocationExpressionSyntax invExpr)
+            {
+                var memberGroup = semanticModel.GetMemberGroup(invExpr.Expression);
+                foreach (ISymbol member in memberGroup)
+                {
+                    if (member is IMethodSymbol overload && !candidateSymbols.Contains(overload, SymbolEqualityComparer.Default))
+                    {
+                        candidateSymbols.Add(overload);
+                    }
+                }
+            }
+            else if (invocation is ObjectCreationExpressionSyntax objCreation)
+            {
+                Microsoft.CodeAnalysis.TypeInfo typeInfo = semanticModel.GetTypeInfo(objCreation);
+                if (typeInfo.Type is INamedTypeSymbol namedType)
+                {
+                    foreach (IMethodSymbol ctor in namedType.Constructors)
+                    {
+                        if (!ctor.IsImplicitlyDeclared && !candidateSymbols.Contains(ctor, SymbolEqualityComparer.Default))
+                        {
+                            candidateSymbols.Add(ctor);
+                        }
+                    }
+                }
+            }
+
+            if (candidateSymbols.Count == 0)
+            {
+                return null;
+            }
+
+            var signatures = new List<SignatureInfo>();
+            int activeSignature = 0;
+
+            for (int i = 0; i < candidateSymbols.Count; i++)
+            {
+                IMethodSymbol m = candidateSymbols[i];
+
+                var parameters = m.Parameters.Select(p =>
+                    new SignatureParameterInfo(
+                        $"{p.Type.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat)} {p.Name}",
+                        p.GetDocumentationCommentXml() ?? string.Empty))
+                    .ToList();
+
+                string label = m.ToDisplayString(SymbolDisplayFormat.MinimallyQualifiedFormat);
+                string doc = m.GetDocumentationCommentXml() ?? string.Empty;
+
+                signatures.Add(new SignatureInfo(label, doc, parameters));
+
+                // Mark the best match as active
+                if (SymbolEqualityComparer.Default.Equals(m, symbolInfo.Symbol))
+                {
+                    activeSignature = i;
+                }
+            }
+
+            return new SignatureHelpResult(signatures, activeSignature, activeParameter);
+        }
+        catch
+        {
+            return null;
         }
     }
 
@@ -240,3 +398,26 @@ public record CompletionItemInfo(
     string SortText,
     string FilterText,
     string Kind);
+
+/// <summary>
+/// Signature help result to be sent to the Monaco editor.
+/// </summary>
+public record SignatureHelpResult(
+    IReadOnlyList<SignatureInfo> Signatures,
+    int ActiveSignature,
+    int ActiveParameter);
+
+/// <summary>
+/// A single method signature.
+/// </summary>
+public record SignatureInfo(
+    string Label,
+    string Documentation,
+    IReadOnlyList<SignatureParameterInfo> Parameters);
+
+/// <summary>
+/// A single method parameter in a signature.
+/// </summary>
+public record SignatureParameterInfo(
+    string Label,
+    string Documentation);

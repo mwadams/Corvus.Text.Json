@@ -50,6 +50,56 @@ window.registerCSharpCompletionProvider = function (dotNetHelper) {
     });
 };
 
+// Registers a Roslyn-backed signature help provider for the C# Monaco editor.
+// Triggers on '(' and ',' to show method parameter info.
+window.registerCSharpSignatureHelpProvider = function (dotNetHelper) {
+    monaco.languages.registerSignatureHelpProvider('csharp', {
+        signatureHelpTriggerCharacters: ['(', ','],
+        signatureHelpRetriggerCharacters: [','],
+        provideSignatureHelp: async function (model, position) {
+            const code = model.getValue();
+            const line = position.lineNumber;
+            const column = position.column;
+
+            try {
+                const result = await dotNetHelper.invokeMethodAsync(
+                    'GetSignatureHelpForJs',
+                    code,
+                    line,
+                    column
+                );
+
+                if (!result || !result.signatures || result.signatures.length === 0) {
+                    return null;
+                }
+
+                return {
+                    value: {
+                        signatures: result.signatures.map(function (sig) {
+                            return {
+                                label: sig.label,
+                                documentation: sig.documentation || undefined,
+                                parameters: (sig.parameters || []).map(function (p) {
+                                    return {
+                                        label: p.label,
+                                        documentation: p.documentation || undefined
+                                    };
+                                })
+                            };
+                        }),
+                        activeSignature: result.activeSignature || 0,
+                        activeParameter: result.activeParameter || 0
+                    },
+                    dispose: function () { }
+                };
+            } catch (e) {
+                console.error('Signature help provider error:', e);
+                return null;
+            }
+        }
+    });
+};
+
 // Triggers a browser file download from a byte array.
 window.downloadFileFromBytes = function (filename, contentType, bytes) {
     const blob = new Blob([bytes], { type: contentType });

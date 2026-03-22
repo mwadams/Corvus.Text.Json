@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@implements IDisposable
 @page "/"
 @inject CodeGenerationService CodeGenService
 @inject CompilationService CompilationSvc
@@ -9,20 +10,20 @@
 <div class="playground-toolbar">
     <h1>Corvus.Text.Json Playground</h1>
     <select class="toolbar-select" @onchange="OnSampleChanged">
-        <option value="new" selected="@(activeSampleId == "new")">New Project</option>
         @foreach (var sample in availableSamples)
         {
             <option value="@sample.Id" selected="@(sample.Id == activeSampleId)">@sample.DisplayName</option>
         }
     </select>
+    <button class="toolbar-btn secondary" @onclick="NewProjectAsync" title="New blank project">📄 New</button>
     <button class="toolbar-btn secondary" @onclick="SaveProjectAsync" title="Save project as ZIP">💾 Save</button>
     <button class="toolbar-btn secondary" @onclick="LoadProjectAsync" title="Load a saved project">📂 Open</button>
     <div class="spacer"></div>
     <button class="theme-toggle-btn" @onclick="CycleTheme" title="@themeTooltip">@themeIcon</button>
-    <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@isGenerating">
+    <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@(isGenerating || isRunning)">
         @(isGenerating ? "Generating…" : "Generate")
     </button>
-    <button class="toolbar-btn primary" @onclick="RunAsync" disabled="@(generationResult is null || isRunning)">
+    <button class="toolbar-btn primary" @onclick="RunAsync" disabled="@(generationResult is null || isGenerating || isRunning)">
         @(isRunning ? "Running…" : "Run")
     </button>
 </div>
@@ -149,6 +150,10 @@
 </div>
 
 <div class="status-bar @(statusError ? "error" : "")">
+    @if (isGenerating || isRunning)
+    {
+        <span class="status-spinner"></span>
+    }
     <span class="status-item">@statusText</span>
 </div>
 
@@ -207,6 +212,10 @@
     private bool showDirtyConfirmation;
     private Func<Task>? pendingDirtyAction;
 
+    // Live diagnostics state
+    private CancellationTokenSource? diagnosticsCts;
+    private System.Threading.Timer? diagnosticsDebounceTimer;
+
     // Theme state: "auto", "light", or "dark"
     private string themePreference = "auto";
     private string resolvedTheme = "dark";
@@ -261,8 +270,15 @@
         // Load all recipe samples
         availableSamples = SampleRegistry.LoadAll();
 
-        // Default to a blank "New Project"
-        LoadNewProject();
+        // Default to the first example
+        if (availableSamples.Count > 0)
+        {
+            LoadSample(availableSamples[0]);
+        }
+        else
+        {
+            LoadNewProject();
+        }
     }
 
     private string GetInitialUserCode()
@@ -322,7 +338,58 @@
 
     private async Task OnUserCodeContentChanged(ModelContentChangedEvent e)
     {
-        // Nothing extra needed — we read current content when checking dirty state
+        // Trigger debounced live diagnostics if we have generated code
+        if (generationResult is not null && generationResult.Success && !isRunning)
+        {
+            diagnosticsCts?.Cancel();
+            diagnosticsDebounceTimer?.Dispose();
+            diagnosticsDebounceTimer = new System.Threading.Timer(
+                _ => InvokeAsync(RunLiveDiagnosticsAsync),
+                null,
+                800,
+                Timeout.Infinite);
+        }
+    }
+
+    private async Task RunLiveDiagnosticsAsync()
+    {
+        if (generationResult is null || !generationResult.Success || userCodeEditor is null || isRunning)
+        {
+            return;
+        }
+
+        diagnosticsCts?.Cancel();
+        diagnosticsCts = new CancellationTokenSource();
+        var token = diagnosticsCts.Token;
+
+        try
+        {
+            string userCode = await userCodeEditor.GetValue();
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            CompilationResult result = await CompilationSvc.CompileAsync(
+                generationResult.GeneratedFiles,
+                userCode);
+
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+
+            await SetEditorMarkers(result.Diagnostics);
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected when cancelled by newer keystroke
+        }
+        catch
+        {
+            // Silently ignore diagnostic failures — they're advisory
+        }
     }
 
     private async Task<bool> HasUnsavedChanges()
@@ -492,6 +559,7 @@
     {
         this.intelliSenseRef = DotNetObjectReference.Create(this);
         await JSRuntime.InvokeVoidAsync("registerCSharpCompletionProvider", this.intelliSenseRef);
+        await JSRuntime.InvokeVoidAsync("registerCSharpSignatureHelpProvider", this.intelliSenseRef);
     }
 
     [JSInvokable]
@@ -508,6 +576,32 @@
             sortText = item.SortText,
             filterText = item.FilterText,
         }).ToList();
+    }
+
+    [JSInvokable]
+    public async Task<object?> GetSignatureHelpForJs(string code, int line, int column)
+    {
+        var result = await IntelliSenseSvc.GetSignatureHelpAsync(code, line, column);
+        if (result is null)
+        {
+            return null;
+        }
+
+        return new
+        {
+            signatures = result.Signatures.Select(sig => new
+            {
+                label = sig.Label,
+                documentation = sig.Documentation,
+                parameters = sig.Parameters.Select(p => new
+                {
+                    label = p.Label,
+                    documentation = p.Documentation,
+                }).ToArray(),
+            }).ToArray(),
+            activeSignature = result.ActiveSignature,
+            activeParameter = result.ActiveParameter,
+        };
     }
 
     private static int MapMonacoKind(string kind)
@@ -647,30 +741,6 @@
 
         await CheckDirtyAndConfirm(async () =>
         {
-            if (capturedId == NewProjectId)
-            {
-                LoadNewProject();
-
-                if (schemaEditor is not null)
-                {
-                    await schemaEditor.SetValue(schemaFiles[0].Content);
-                }
-
-                if (userCodeEditor is not null)
-                {
-                    await userCodeEditor.SetValue(NewProjectUserCode);
-                }
-
-                await SyncCleanStateFromEditors();
-
-                generationResult = null;
-                await ClearEditorMarkers();
-                await ClearSchemaEditorMarkers();
-                statusText = "Ready";
-                statusError = false;
-                return;
-            }
-
             PlaygroundSample? sample = availableSamples.FirstOrDefault(s => s.Id == capturedId);
             if (sample is null || schemaEditor is null)
             {
@@ -695,6 +765,32 @@
             await ClearEditorMarkers();
             await ClearSchemaEditorMarkers();
             statusText = "Ready — sample loaded";
+            statusError = false;
+        });
+    }
+
+    private async Task NewProjectAsync()
+    {
+        await CheckDirtyAndConfirm(async () =>
+        {
+            LoadNewProject();
+
+            if (schemaEditor is not null)
+            {
+                await schemaEditor.SetValue(schemaFiles[0].Content);
+            }
+
+            if (userCodeEditor is not null)
+            {
+                await userCodeEditor.SetValue(NewProjectUserCode);
+            }
+
+            await SyncCleanStateFromEditors();
+
+            generationResult = null;
+            await ClearEditorMarkers();
+            await ClearSchemaEditorMarkers();
+            statusText = "Ready";
             statusError = false;
         });
     }
@@ -817,6 +913,7 @@
         }
 
         activeSchemaIndex = 0;
+        userCodeCleanContent = sample.UserCode;
     }
 
     private async Task SelectSchemaTab(int index)
@@ -967,19 +1064,26 @@
         isGenerating = true;
         statusText = "Generating types…";
         statusError = false;
+        consoleLines.Clear();
+        WriteConsole("▶ Generating types…", "console-progress");
         StateHasChanged();
 
         try
         {
-            // Save current editor content to active tab
+            // Snapshot current editor content
             schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
+
+            // Allow UI to update before potentially blocking work
+            await Task.Delay(50);
 
             // Generate from all schema files
             generationResult = await CodeGenService.GenerateAsync(schemaFiles);
 
             if (generationResult.Success)
             {
-                statusText = $"Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
+                string msg = $"✓ Generated {generationResult.TypeMap.Count} types, {generationResult.GeneratedFiles.Count} files";
+                statusText = msg[2..]; // strip the checkmark for status bar
+                WriteConsole(msg, "console-success");
                 await ClearSchemaEditorMarkers();
 
                 // Update IntelliSense with the generated code
@@ -987,16 +1091,14 @@
             }
             else
             {
-                statusText = generationResult.ErrorMessage ?? "Generation failed";
+                string errMsg = generationResult.ErrorMessage ?? "Generation failed";
+                statusText = errMsg;
                 statusError = true;
+                WriteConsole($"✗ {errMsg}", "error");
 
                 if (generationResult.SchemaErrors.Count > 0)
                 {
                     await SetSchemaEditorMarkers(generationResult.SchemaErrors);
-                }
-                else
-                {
-                    WriteConsole(generationResult.ErrorMessage ?? "Generation failed", "error");
                 }
             }
         }
@@ -1004,7 +1106,7 @@
         {
             statusText = $"Error: {ex.Message}";
             statusError = true;
-            WriteConsole($"Error: {ex.Message}", "error");
+            WriteConsole($"✗ Error: {ex.Message}", "error");
         }
         finally
         {
@@ -1026,6 +1128,7 @@
         consoleLines.Clear();
         statusText = "Loading assemblies…";
         statusError = false;
+        WriteConsole("▶ Loading assemblies…", "console-progress");
         StateHasChanged();
 
         try
@@ -1036,10 +1139,12 @@
             // Clear previous error markers
             await ClearEditorMarkers();
 
+            // Snapshot user code so editors can be re-enabled
             string userCode = await userCodeEditor.GetValue();
 
             // Step 1: Compile generated code + user code
             statusText = "Building…";
+            WriteConsole("▶ Compiling…", "console-progress");
             StateHasChanged();
 
             // Allow UI to update before blocking compilation
@@ -1053,6 +1158,7 @@
             {
                 statusText = $"Build failed — {compilationResult.Diagnostics.Count} error(s)";
                 statusError = true;
+                WriteConsole($"✗ Build failed — {compilationResult.Diagnostics.Count} error(s)", "error");
 
                 await SetEditorMarkers(compilationResult.Diagnostics);
 
@@ -1061,7 +1167,7 @@
                     string location = diagnostic.Location.IsInSource
                         ? $" (line {diagnostic.Location.GetLineSpan().StartLinePosition.Line + 1})"
                         : string.Empty;
-                    WriteConsole($"{diagnostic.Severity}: {diagnostic.GetMessage()}{location}", "error");
+                    WriteConsole($"  {diagnostic.Severity}: {diagnostic.GetMessage()}{location}", "error");
                 }
 
                 return;
@@ -1071,11 +1177,15 @@
             {
                 statusText = "Build produced no output";
                 statusError = true;
+                WriteConsole("✗ Build produced no output", "error");
                 return;
             }
 
+            WriteConsole("✓ Build succeeded", "console-success");
+
             // Step 2: Execute the compiled assembly
             statusText = "Running…";
+            WriteConsole("▶ Running…", "console-progress");
             StateHasChanged();
 
             ExecutionResult executionResult = await ExecutionSvc.ExecuteAsync(
@@ -1096,6 +1206,7 @@
             if (executionResult.Success)
             {
                 statusText = "Execution complete";
+                WriteConsole("✓ Execution complete", "console-success");
             }
             else
             {
@@ -1103,7 +1214,7 @@
                 statusError = true;
                 if (executionResult.ErrorMessage is not null)
                 {
-                    WriteConsole(executionResult.ErrorMessage, "error");
+                    WriteConsole($"✗ {executionResult.ErrorMessage}", "error");
                 }
             }
         }
@@ -1111,7 +1222,7 @@
         {
             statusText = $"Error: {ex.Message}";
             statusError = true;
-            WriteConsole($"Error: {ex.Message}", "error");
+            WriteConsole($"✗ Error: {ex.Message}", "error");
         }
         finally
         {
@@ -1352,4 +1463,11 @@
     }
 
     private record ConsoleLine(string Text, string CssClass);
+
+    public void Dispose()
+    {
+        diagnosticsDebounceTimer?.Dispose();
+        diagnosticsCts?.Cancel();
+        diagnosticsCts?.Dispose();
+    }
 }

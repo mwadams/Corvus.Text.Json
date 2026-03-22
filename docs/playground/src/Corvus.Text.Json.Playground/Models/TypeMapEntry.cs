@@ -12,6 +12,7 @@ namespace Corvus.Text.Json.Playground.Models;
 /// <param name="CompositionGroups">Composition groups (allOf, anyOf, oneOf) for this type.</param>
 /// <param name="ArrayItemType">For array types, the item type info.</param>
 /// <param name="TupleItems">For tuple types, the ordered list of item type info.</param>
+/// <param name="PrefixItems">For non-pure-tuple arrays with prefixItems, the ordered list of prefix item types.</param>
 /// <param name="EnumValues">For enum types, the list of allowed values.</param>
 /// <param name="ConstValue">For const types, the constant value.</param>
 public record TypeMapEntry(
@@ -24,6 +25,7 @@ public record TypeMapEntry(
     IReadOnlyList<TypeMapCompositionGroup> CompositionGroups,
     TypeMapArrayItemType? ArrayItemType = null,
     IReadOnlyList<TypeMapTupleItem>? TupleItems = null,
+    IReadOnlyList<TypeMapTupleItem>? PrefixItems = null,
     IReadOnlyList<string>? EnumValues = null,
     string? ConstValue = null);
 

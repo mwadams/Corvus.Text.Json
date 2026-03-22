@@ -27,6 +27,7 @@
                 bool hasChildren = entry.CompositionGroups.Count > 0
                     || entry.EnumValues is { Count: > 0 }
                     || entry.TupleItems is { Count: > 0 }
+                    || entry.PrefixItems is { Count: > 0 }
                     || entry.ArrayItemType is not null
                     || entry.Properties.Count > 0;
                 bool isExpanded = IsExpanded(entry.FullTypeName);
@@ -111,6 +112,26 @@
                                                 <div class="type-map-entry tuple-item @GetTupleItemClass(item)"
                                                      @onclick="() => SelectTupleItem(item)">
                                                     <span class="prop-name">Item@(item.Index)</span>
+                                                    <span class="prop-type">: @item.TypeName</span>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        }
+                        @if (entry.PrefixItems is { Count: > 0 })
+                        {
+                            <ul>
+                                <li>
+                                    <div class="type-map-composition-header">prefixItems</div>
+                                    <ul>
+                                        @foreach (var item in entry.PrefixItems)
+                                        {
+                                            <li>
+                                                <div class="type-map-entry tuple-item @GetTupleItemClass(item)"
+                                                     @onclick="() => SelectTupleItem(item)">
+                                                    <span class="prop-name">[@(item.Index - 1)]</span>
                                                     <span class="prop-type">: @item.TypeName</span>
                                                 </div>
                                             </li>
@@ -226,6 +247,28 @@
             foreach (var value in entry.EnumValues)
             {
                 if (value.Contains(searchFilter, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (entry.TupleItems is not null)
+        {
+            foreach (var item in entry.TupleItems)
+            {
+                if (item.TypeName.Contains(searchFilter, StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+        }
+
+        if (entry.PrefixItems is not null)
+        {
+            foreach (var item in entry.PrefixItems)
+            {
+                if (item.TypeName.Contains(searchFilter, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

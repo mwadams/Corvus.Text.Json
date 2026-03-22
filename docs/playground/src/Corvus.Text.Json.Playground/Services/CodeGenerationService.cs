@@ -315,6 +315,29 @@ public class CodeGenerationService
             }
         }
 
+        // Prefix items for non-pure-tuple arrays (has prefixItems but also allows additional items)
+        List<TypeMapTupleItem>? prefixItems = null;
+        if (tupleItems is null)
+        {
+            TupleTypeDeclaration? prefixTupleType = reduced.ExplicitTupleType() ?? reduced.ImplicitTupleType();
+            if (prefixTupleType is not null)
+            {
+                prefixItems = [];
+                for (int i = 0; i < prefixTupleType.ItemsTypes.Length; i++)
+                {
+                    TypeDeclaration itemReduced = prefixTupleType.ItemsTypes[i].ReducedType.ReducedTypeDeclaration().ReducedType;
+                    string itemFullName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(itemReduced);
+                    string itemShortName = itemFullName.Contains('.')
+                        ? itemFullName[(itemFullName.LastIndexOf('.') + 1)..]
+                        : itemFullName;
+                    prefixItems.Add(new TypeMapTupleItem(
+                        i + 1, itemShortName, itemFullName,
+                        GetSchemaPointer(itemReduced),
+                        GetSourceSchemaName(itemReduced)));
+                }
+            }
+        }
+
         // Enum values (from the "enum" keyword)
         List<string>? enumValues = null;
         var anyOfConstants = reduced.AnyOfConstantValues();
@@ -340,7 +363,7 @@ public class CodeGenerationService
 
         entries.Add(new TypeMapEntry(
             shortName, fullName, kind, pointer, sourceName, properties,
-            compositionGroups, arrayItemType, tupleItems,
+            compositionGroups, arrayItemType, tupleItems, prefixItems,
             enumValues, constValue));
 
         // Recurse into property types
@@ -361,6 +384,18 @@ public class CodeGenerationService
             foreach (ReducedTypeDeclaration tupleItem in tupleType.ItemsTypes)
             {
                 CollectTypeMapEntries(tupleItem.ReducedType, generatedTypes, entries, visited);
+            }
+        }
+        else
+        {
+            // Recurse into prefix item types for non-pure tuples
+            TupleTypeDeclaration? prefixTupleForRecurse = reduced.ExplicitTupleType() ?? reduced.ImplicitTupleType();
+            if (prefixTupleForRecurse is not null)
+            {
+                foreach (ReducedTypeDeclaration prefixItem in prefixTupleForRecurse.ItemsTypes)
+                {
+                    CollectTypeMapEntries(prefixItem.ReducedType, generatedTypes, entries, visited);
+                }
             }
         }
 
