@@ -81,9 +81,17 @@
                     var fetchOpts = { cache: 'default' };
                     if (integrity) fetchOpts.integrity = integrity;
 
+                    // Read the full body before counting as complete,
+                    // then return a new Response so Blazor can consume it.
                     return fetch(defaultUri, fetchOpts).then(function (r) {
-                        updateProgress();
-                        return r;
+                        return r.arrayBuffer().then(function (buf) {
+                            updateProgress();
+                            return new Response(buf, {
+                                status: r.status,
+                                statusText: r.statusText,
+                                headers: r.headers
+                            });
+                        });
                     });
                 }
             });
