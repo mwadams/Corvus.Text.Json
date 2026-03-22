@@ -559,6 +559,10 @@
 
     private async Task InitializeThemeAsync()
     {
+        // Immediately sync with the theme the anti-flash inline script resolved,
+        // so Monaco editors match the CSS before we do any further processing.
+        resolvedTheme = await JSRuntime.InvokeAsync<string>("getInitialTheme");
+
         // Read stored preference from localStorage
         string? stored = null;
         try
@@ -586,7 +590,7 @@
             resolvedTheme = themePreference;
         }
 
-        // Apply theme to DOM and Monaco
+        // Apply theme to DOM and Monaco (with retry if Monaco still loading)
         await JSRuntime.InvokeVoidAsync("applyTheme", resolvedTheme);
 
         // Listen for system theme changes (relevant when preference is "auto")

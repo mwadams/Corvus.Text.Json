@@ -99,6 +99,11 @@ window.getSystemTheme = function () {
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
 };
 
+// Returns the theme resolved by the anti-flash inline script.
+window.getInitialTheme = function () {
+    return window.__playgroundResolvedTheme || 'dark';
+};
+
 // Listens for system color scheme changes and invokes the .NET callback.
 window.onSystemThemeChange = function (dotNetHelper) {
     const mq = window.matchMedia('(prefers-color-scheme: light)');
@@ -108,9 +113,23 @@ window.onSystemThemeChange = function (dotNetHelper) {
 };
 
 // Applies the theme to the document and Monaco editors.
+// Retries Monaco theme if the editor hasn't loaded yet.
 window.applyTheme = function (theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    window.__playgroundResolvedTheme = theme;
+    var monacoTheme = theme === 'light' ? 'vs' : 'vs-dark';
     if (typeof monaco !== 'undefined' && monaco.editor) {
-        monaco.editor.setTheme(theme === 'light' ? 'vs' : 'vs-dark');
+        monaco.editor.setTheme(monacoTheme);
+    } else {
+        // Monaco may still be loading; poll until available
+        var attempts = 0;
+        var interval = setInterval(function () {
+            if (typeof monaco !== 'undefined' && monaco.editor) {
+                monaco.editor.setTheme(monacoTheme);
+                clearInterval(interval);
+            } else if (++attempts > 50) {
+                clearInterval(interval);
+            }
+        }, 100);
     }
 };
