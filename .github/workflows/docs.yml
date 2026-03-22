@@ -8,6 +8,7 @@ on:
       - 'src/Corvus.Text.Json/**'
       - 'src/Corvus.Json.CodeGenerator/**'
       - 'src-v4/**'
+      - '.github/workflows/docs.yml'
   workflow_dispatch:
 
 concurrency:
