@@ -228,7 +228,6 @@
     // Auto-save state
     private System.Threading.Timer? autoSaveTimer;
     private string? restoredUserCode;
-    private bool hasRestoredState;
     private const string AutoSaveKey = "playground-state";
     private const int AutoSaveVersion = 1;
 
@@ -286,24 +285,23 @@
         // Load all recipe samples
         availableSamples = SampleRegistry.LoadAll();
 
-        // Default to the first example (may be overridden by auto-save restore)
-        if (availableSamples.Count > 0)
-        {
-            LoadSample(availableSamples[0]);
-        }
-        else
-        {
-            LoadNewProject();
-        }
-    }
+        // Try synchronous restore from localStorage BEFORE first render.
+        // In Blazor WASM, IJSRuntime is IJSInProcessRuntime so we can call
+        // Invoke<T> synchronously — no race with editor initialization.
+        bool restored = RestoreAutoSavedStateSync();
 
-    protected override async Task OnInitializedAsync()
-    {
-        await RestoreAutoSavedState();
-
-        // If state was restored, the model (schemaFiles, activeSampleId) is now
-        // correct but the editors may not exist yet. StateHasChanged will trigger
-        // a re-render; OnAfterRenderAsync will push content into the editors.
+        if (!restored)
+        {
+            // No saved state — default to the first example
+            if (availableSamples.Count > 0)
+            {
+                LoadSample(availableSamples[0]);
+            }
+            else
+            {
+                LoadNewProject();
+            }
+        }
     }
 
     private string GetInitialUserCode()
@@ -352,29 +350,8 @@
 
     private async Task OnSchemaEditorInit()
     {
-        if (schemaEditor is null || schemaFiles.Count == 0)
-        {
-            return;
-        }
-
-        // If auto-save restored different content, push it into the editor now
-        // that Monaco is ready. Otherwise sync the editor's initial content
-        // back to the model for clean-state tracking.
-        if (hasRestoredState)
-        {
-            isLoadingContent = true;
-            try
-            {
-                await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
-                await SyncCleanStateFromEditors();
-            }
-            finally
-            {
-                isLoadingContent = false;
-                hasRestoredState = false;
-            }
-        }
-        else
+        // Sync clean state from actual Monaco content after initial render
+        if (schemaEditor is not null && schemaFiles.Count > 0)
         {
             string editorContent = await schemaEditor.GetValue();
             schemaFiles[activeSchemaIndex].Content = editorContent;
@@ -613,28 +590,11 @@
     {
         await RegisterCompletionProvider();
 
-        if (userCodeEditor is null)
+        // Sync clean state from actual Monaco content after initial render
+        if (userCodeEditor is not null)
         {
-            return;
+            userCodeCleanContent = await userCodeEditor.GetValue();
         }
-
-        // If auto-save restored user code, push it into the editor now
-        if (restoredUserCode is not null)
-        {
-            isLoadingContent = true;
-            try
-            {
-                await userCodeEditor.SetValue(restoredUserCode);
-                restoredUserCode = null;
-            }
-            finally
-            {
-                isLoadingContent = false;
-            }
-        }
-
-        // Sync clean state from actual Monaco content
-        userCodeCleanContent = await userCodeEditor.GetValue();
     }
 
     private async Task RegisterCompletionProvider()
@@ -1664,14 +1624,20 @@
         }
     }
 
-    private async Task RestoreAutoSavedState()
+    /// <summary>
+    /// Synchronously restores auto-saved state from localStorage.
+    /// Uses IJSInProcessRuntime (available in Blazor WASM) so the state
+    /// is fully resolved before the first render — no race conditions.
+    /// </summary>
+    private bool RestoreAutoSavedStateSync()
     {
         try
         {
-            string? json = await JSRuntime.InvokeAsync<string?>("localStorage.getItem", AutoSaveKey);
+            var jsInProcess = (Microsoft.JSInterop.IJSInProcessRuntime)JSRuntime;
+            string? json = jsInProcess.Invoke<string?>("localStorage.getItem", AutoSaveKey);
             if (string.IsNullOrEmpty(json))
             {
-                return;
+                return false;
             }
 
             using var doc = System.Text.Json.JsonDocument.Parse(json);
@@ -1680,7 +1646,7 @@
             // Version check
             if (!root.TryGetProperty("version", out var versionEl) || versionEl.GetInt32() != AutoSaveVersion)
             {
-                return;
+                return false;
             }
 
             // Restore schema files
@@ -1712,7 +1678,7 @@
                 }
             }
 
-            // Restore active sample ID (may be "new" or null for a new project)
+            // Restore active sample ID (may be null for a custom project)
             if (root.TryGetProperty("activeSampleId", out var sampleEl))
             {
                 activeSampleId = sampleEl.ValueKind == System.Text.Json.JsonValueKind.Null
@@ -1727,11 +1693,12 @@
                 userCodeCleanContent = restoredUserCode ?? NewProjectUserCode;
             }
 
-            hasRestoredState = true;
+            return true;
         }
         catch
         {
             // If restore fails, fall through to defaults
+            return false;
         }
     }
 
