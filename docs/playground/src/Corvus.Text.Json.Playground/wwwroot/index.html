@@ -51,36 +51,39 @@
         window.monacoReady.then(function () {
             var loaded = 0;
             var total = 0;
-            var counted = false;
             var statusEl = document.getElementById('boot-status');
             var barEl = document.getElementById('boot-bar');
             var counterEl = document.getElementById('boot-counter');
 
+            function updateProgress() {
+                loaded++;
+                var pct = total > 0 ? Math.round(100 * loaded / total) : 0;
+                if (barEl) barEl.style.width = pct + '%';
+                if (counterEl) counterEl.textContent = loaded + ' / ' + total;
+                if (loaded >= total && statusEl) statusEl.textContent = 'Starting\u2026';
+            }
+
             Blazor.start({
                 loadBootResource: function (type, name, defaultUri, integrity) {
-                    // Count all resources on first pass
-                    if (!counted) {
-                        counted = true;
-                        // We'll count as they arrive; set total from first knowledge
+                    // Only track assembly and dotnetwasm downloads;
+                    // return null for dotnetjs/manifest/etc so Blazor handles them natively.
+                    if (type !== 'assembly' && type !== 'dotnetwasm') {
+                        return null;
                     }
+
                     total++;
                     if (counterEl) counterEl.textContent = loaded + ' / ' + total;
 
-                    // Show the resource name being loaded
-                    var displayName = name;
-                    if (name.endsWith('.dll') || name.endsWith('.wasm')) {
-                        displayName = name.replace(/\.[a-z0-9]{8,12}\.(dll|wasm)$/, '.$1');
-                    }
-                    if (statusEl) statusEl.textContent = 'Loading ' + displayName + '…';
+                    // Strip fingerprint hash from display name
+                    var displayName = name.replace(/\.[a-z0-9]{8,12}\.(dll|wasm)$/, '.$1');
+                    if (statusEl) statusEl.textContent = 'Loading ' + displayName + '\u2026';
 
-                    // Fetch with progress tracking
-                    return fetch(defaultUri, { integrity: integrity, cache: 'default' }).then(function (response) {
-                        loaded++;
-                        var pct = total > 0 ? Math.round(100 * loaded / total) : 0;
-                        if (barEl) barEl.style.width = pct + '%';
-                        if (counterEl) counterEl.textContent = loaded + ' / ' + total;
-                        if (statusEl && loaded === total) statusEl.textContent = 'Starting…';
-                        return response;
+                    var fetchOpts = { cache: 'default' };
+                    if (integrity) fetchOpts.integrity = integrity;
+
+                    return fetch(defaultUri, fetchOpts).then(function (r) {
+                        updateProgress();
+                        return r;
                     });
                 }
             });
