@@ -26,6 +26,9 @@
                        @(isActive ? "aria-current=page" : "")>@child.Title</a>
                 }
             }
+            <a href="/playground/"
+               class="site-header__link"
+               title="Interactive JSON Schema playground">Playground</a>
             <a href="@ViewBag.GitHubUrl"
                class="site-header__link" target="_blank" rel="noopener noreferrer"
                aria-label="View on GitHub">
@@ -49,6 +52,7 @@
             <a href="@child.Url" class="site-header__link">@child.Title</a>
         }
     }
+    <a href="/playground/" class="site-header__link">Playground</a>
     <a href="@ViewBag.GitHubUrl"
        class="site-header__link" target="_blank" rel="noopener noreferrer">GitHub</a>
 </nav>

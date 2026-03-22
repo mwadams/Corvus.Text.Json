@@ -13,6 +13,7 @@
       6. Run Vellum to render the core site
       7. Compile SCSS to CSS
       8. Build Lunr search index
+      9. Build and publish Playground (Blazor WASM)
 .PARAMETER Preview
     Launches a local preview server after building.
 .PARAMETER ServeOnly
@@ -594,6 +595,40 @@ if ($LASTEXITCODE -ne 0) {
 } else {
     Write-StepDuration "Search index" $sw
 }
+
+# -- Step 9: Build Playground (Blazor WASM) ----------------------------------
+Write-Host "`n[9/10] Building Playground..." -ForegroundColor Cyan
+$sw = [System.Diagnostics.Stopwatch]::StartNew()
+$playgroundProject = Join-Path $repoRoot "docs\playground\src\Corvus.Text.Json.Playground\Corvus.Text.Json.Playground.csproj"
+$playgroundPublishDir = Join-Path $here ".playground-publish"
+$playgroundOutputDir = Join-Path $outputDir "playground"
+
+# Publish the Blazor WASM app
+& dotnet publish $playgroundProject -c Release -o $playgroundPublishDir --nologo
+if ($LASTEXITCODE -ne 0) { throw "Playground publish failed" }
+
+# Copy the wwwroot output (the deployable Blazor app) to .output/playground/
+$playgroundWwwroot = Join-Path $playgroundPublishDir "wwwroot"
+if (!(Test-Path $playgroundWwwroot)) {
+    throw "Playground wwwroot not found at $playgroundWwwroot"
+}
+Copy-Item -Path $playgroundWwwroot -Destination $playgroundOutputDir -Recurse -Force
+
+# Rewrite <base href="/"> to <base href="/playground/"> for subpath hosting
+$playgroundIndex = Join-Path $playgroundOutputDir "index.html"
+if (Test-Path $playgroundIndex) {
+    $indexContent = [System.IO.File]::ReadAllText($playgroundIndex)
+    $indexContent = $indexContent -replace '<base href="/" />', '<base href="/playground/" />'
+    [System.IO.File]::WriteAllText($playgroundIndex, $indexContent)
+    Write-Host "  Updated base href to /playground/" -ForegroundColor Gray
+}
+
+# Clean up the intermediate publish directory
+Remove-Item $playgroundPublishDir -Recurse -Force -ErrorAction SilentlyContinue
+
+$playgroundSize = (Get-ChildItem $playgroundOutputDir -Recurse -File | Measure-Object -Property Length -Sum).Sum
+Write-Host "  Playground: $([math]::Round($playgroundSize/1MB, 1)) MB" -ForegroundColor Gray
+Write-StepDuration "Playground build" $sw
 
 Write-Host "`nBuild complete! Output: $outputDir" -ForegroundColor Green
 
