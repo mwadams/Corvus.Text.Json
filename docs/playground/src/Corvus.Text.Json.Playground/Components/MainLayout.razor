@@ -23,8 +23,8 @@
     <button class="toolbar-btn primary" @onclick="GenerateAsync" disabled="@(isGenerating || isRunning)">
         @(isGenerating ? "Generating…" : "Generate")
     </button>
-    <button class="toolbar-btn primary" @onclick="RunAsync" disabled="@(generationResult is null || isGenerating || isRunning)">
-        @(isRunning ? "Running…" : "Run")
+    <button class="toolbar-btn primary" @onclick="RunAsync" disabled="@(generationResult is null || isGenerating || isRunning)" title="Run (F5)">
+        @(isRunning ? "Running…" : "▶ Run")
     </button>
 </div>
 
@@ -300,6 +300,7 @@
         if (firstRender)
         {
             await InitializeThemeAsync();
+            await RegisterKeyboardShortcuts();
         }
 
         if (focusRenameInput)
@@ -543,6 +544,7 @@
     }
 
     private DotNetObjectReference<MainLayout>? intelliSenseRef;
+    private DotNetObjectReference<MainLayout>? shortcutRef;
 
     private async Task OnUserCodeEditorInit()
     {
@@ -560,6 +562,24 @@
         this.intelliSenseRef = DotNetObjectReference.Create(this);
         await JSRuntime.InvokeVoidAsync("registerCSharpCompletionProvider", this.intelliSenseRef);
         await JSRuntime.InvokeVoidAsync("registerCSharpSignatureHelpProvider", this.intelliSenseRef);
+    }
+
+    private async Task RegisterKeyboardShortcuts()
+    {
+        this.shortcutRef = DotNetObjectReference.Create(this);
+        await JSRuntime.InvokeVoidAsync("registerPlaygroundShortcuts", this.shortcutRef);
+    }
+
+    [JSInvokable]
+    public async Task OnF5Pressed()
+    {
+        if (generationResult is null || !generationResult.Success || isGenerating || isRunning)
+        {
+            return;
+        }
+
+        await RunAsync();
+        StateHasChanged();
     }
 
     [JSInvokable]
@@ -1469,5 +1489,7 @@
         diagnosticsDebounceTimer?.Dispose();
         diagnosticsCts?.Cancel();
         diagnosticsCts?.Dispose();
+        intelliSenseRef?.Dispose();
+        shortcutRef?.Dispose();
     }
 }

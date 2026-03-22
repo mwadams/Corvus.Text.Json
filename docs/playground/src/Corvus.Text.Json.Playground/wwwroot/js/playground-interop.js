@@ -100,6 +100,17 @@ window.registerCSharpSignatureHelpProvider = function (dotNetHelper) {
     });
 };
 
+// Registers global keyboard shortcuts for the playground.
+// F5 triggers Run via .NET callback.
+window.registerPlaygroundShortcuts = function (dotNetHelper) {
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'F5') {
+            e.preventDefault();
+            dotNetHelper.invokeMethodAsync('OnF5Pressed');
+        }
+    });
+};
+
 // Triggers a browser file download from a byte array.
 window.downloadFileFromBytes = function (filename, contentType, bytes) {
     const blob = new Blob([bytes], { type: contentType });
