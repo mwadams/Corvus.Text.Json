@@ -10,8 +10,7 @@ namespace Corvus.Text.Json.Playground.Models;
 /// <param name="SourceSchemaName">The schema filename this type originates from (e.g. "person.json").</param>
 /// <param name="Properties">Child properties/members for object types.</param>
 /// <param name="CompositionGroups">Composition groups (allOf, anyOf, oneOf) for this type.</param>
-/// <param name="ArrayItemTypeName">For array types, the short name of the item type.</param>
-/// <param name="ArrayItemFullTypeName">For array types, the fully qualified name of the item type.</param>
+/// <param name="ArrayItemType">For array types, the item type info.</param>
 /// <param name="TupleItems">For tuple types, the ordered list of item type info.</param>
 /// <param name="EnumValues">For enum types, the list of allowed values.</param>
 /// <param name="ConstValue">For const types, the constant value.</param>
@@ -23,8 +22,7 @@ public record TypeMapEntry(
     string? SourceSchemaName,
     IReadOnlyList<TypeMapProperty> Properties,
     IReadOnlyList<TypeMapCompositionGroup> CompositionGroups,
-    string? ArrayItemTypeName = null,
-    string? ArrayItemFullTypeName = null,
+    TypeMapArrayItemType? ArrayItemType = null,
     IReadOnlyList<TypeMapTupleItem>? TupleItems = null,
     IReadOnlyList<string>? EnumValues = null,
     string? ConstValue = null);
@@ -75,12 +73,29 @@ public record TypeMapCompositionMember(
     string? ConstValue = null);
 
 /// <summary>
-/// A single item in a tuple type.
+/// A single item in a tuple type (prefixItems).
 /// </summary>
 /// <param name="Index">The 1-based index (Item1, Item2, etc.).</param>
 /// <param name="TypeName">Short type name of this tuple item.</param>
 /// <param name="FullTypeName">Fully qualified type name.</param>
+/// <param name="SchemaPointer">JSON Pointer into the source schema.</param>
+/// <param name="SourceSchemaName">The schema filename this type originates from.</param>
 public record TypeMapTupleItem(
     int Index,
     string TypeName,
-    string FullTypeName);
+    string FullTypeName,
+    string? SchemaPointer,
+    string? SourceSchemaName);
+
+/// <summary>
+/// The items type for an array (non-tuple).
+/// </summary>
+/// <param name="TypeName">Short type name of the array item type.</param>
+/// <param name="FullTypeName">Fully qualified type name.</param>
+/// <param name="SchemaPointer">JSON Pointer into the source schema.</param>
+/// <param name="SourceSchemaName">The schema filename this type originates from.</param>
+public record TypeMapArrayItemType(
+    string TypeName,
+    string FullTypeName,
+    string? SchemaPointer,
+    string? SourceSchemaName);

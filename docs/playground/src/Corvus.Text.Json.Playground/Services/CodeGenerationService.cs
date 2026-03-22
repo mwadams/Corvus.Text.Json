@@ -281,15 +281,19 @@ public class CodeGenerationService
         CollectCompositionGroup(reduced, "oneOf", reduced.OneOfCompositionTypes(), compositionGroups);
 
         // Array item type
-        string? arrayItemTypeName = null;
-        string? arrayItemFullTypeName = null;
+        TypeMapArrayItemType? arrayItemType = null;
         if (reduced.ArrayItemsType() is ArrayItemsTypeDeclaration arrayItemsForEntry)
         {
             TypeDeclaration itemReduced = arrayItemsForEntry.ReducedType.ReducedTypeDeclaration().ReducedType;
-            arrayItemFullTypeName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(itemReduced);
-            arrayItemTypeName = arrayItemFullTypeName.Contains('.')
-                ? arrayItemFullTypeName[(arrayItemFullTypeName.LastIndexOf('.') + 1)..]
-                : arrayItemFullTypeName;
+            string itemFullName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(itemReduced);
+            string itemShortName = itemFullName.Contains('.')
+                ? itemFullName[(itemFullName.LastIndexOf('.') + 1)..]
+                : itemFullName;
+            arrayItemType = new TypeMapArrayItemType(
+                itemShortName,
+                itemFullName,
+                GetSchemaPointer(itemReduced),
+                GetSourceSchemaName(itemReduced));
         }
 
         // Tuple item types
@@ -304,7 +308,10 @@ public class CodeGenerationService
                 string itemShortName = itemFullName.Contains('.')
                     ? itemFullName[(itemFullName.LastIndexOf('.') + 1)..]
                     : itemFullName;
-                tupleItems.Add(new TypeMapTupleItem(i + 1, itemShortName, itemFullName));
+                tupleItems.Add(new TypeMapTupleItem(
+                    i + 1, itemShortName, itemFullName,
+                    GetSchemaPointer(itemReduced),
+                    GetSourceSchemaName(itemReduced)));
             }
         }
 
@@ -333,7 +340,7 @@ public class CodeGenerationService
 
         entries.Add(new TypeMapEntry(
             shortName, fullName, kind, pointer, sourceName, properties,
-            compositionGroups, arrayItemTypeName, arrayItemFullTypeName, tupleItems,
+            compositionGroups, arrayItemType, tupleItems,
             enumValues, constValue));
 
         // Recurse into property types

@@ -27,6 +27,7 @@
                 bool hasChildren = entry.CompositionGroups.Count > 0
                     || entry.EnumValues is { Count: > 0 }
                     || entry.TupleItems is { Count: > 0 }
+                    || entry.ArrayItemType is not null
                     || entry.Properties.Count > 0;
                 bool isExpanded = IsExpanded(entry.FullTypeName);
                 bool isFiltering = !string.IsNullOrEmpty(searchFilter);
@@ -46,10 +47,6 @@
                         <span class="type-map-entry-content" @onclick="() => SelectType(entry)">
                             <span class="type-name">@entry.TypeName</span>
                             <span class="type-kind">(@entry.Kind)</span>
-                            @if (entry.ArrayItemTypeName is not null)
-                            {
-                                <span class="type-array-item">[@entry.ArrayItemTypeName]</span>
-                            }
                             @if (entry.ConstValue is not null)
                             {
                                 <span class="type-const-value">= @entry.ConstValue</span>
@@ -105,15 +102,37 @@
                         @if (entry.TupleItems is { Count: > 0 })
                         {
                             <ul>
-                                @foreach (var item in entry.TupleItems)
-                                {
-                                    <li>
-                                        <div class="type-map-entry tuple-item @GetTupleItemClass(item)">
-                                            <span class="prop-name">Item@(item.Index)</span>
-                                            <span class="prop-type">: @item.TypeName</span>
-                                        </div>
-                                    </li>
-                                }
+                                <li>
+                                    <div class="type-map-composition-header">prefixItems</div>
+                                    <ul>
+                                        @foreach (var item in entry.TupleItems)
+                                        {
+                                            <li>
+                                                <div class="type-map-entry tuple-item @GetTupleItemClass(item)"
+                                                     @onclick="() => SelectTupleItem(item)">
+                                                    <span class="prop-name">Item@(item.Index)</span>
+                                                    <span class="prop-type">: @item.TypeName</span>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                        }
+                        @if (entry.ArrayItemType is not null)
+                        {
+                            <ul>
+                                <li>
+                                    <div class="type-map-composition-header">items</div>
+                                    <ul>
+                                        <li>
+                                            <div class="type-map-entry @GetArrayItemClass(entry.ArrayItemType)"
+                                                 @onclick="() => SelectArrayItem(entry.ArrayItemType)">
+                                                <span class="type-name">@entry.ArrayItemType.TypeName</span>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
                             </ul>
                         }
                         @if (entry.Properties.Count > 0)
@@ -286,6 +305,42 @@
 
     private string GetTupleItemClass(TypeMapTupleItem item)
     {
+        if (selectedItemKey == $"tuple:{item.Index}:{item.FullTypeName}")
+        {
+            return "selected";
+        }
+
+        if (relatedFullTypeName is not null && item.FullTypeName == relatedFullTypeName)
+        {
+            return "related";
+        }
+
+        return "";
+    }
+
+    private async Task SelectTupleItem(TypeMapTupleItem item)
+    {
+        selectedItemKey = $"tuple:{item.Index}:{item.FullTypeName}";
+        relatedFullTypeName = item.FullTypeName;
+        await OnSchemaPointerSelected.InvokeAsync(
+            new SchemaNavigation(item.SchemaPointer, item.SourceSchemaName));
+    }
+
+    private async Task SelectArrayItem(TypeMapArrayItemType item)
+    {
+        selectedItemKey = $"items:{item.FullTypeName}";
+        relatedFullTypeName = item.FullTypeName;
+        await OnSchemaPointerSelected.InvokeAsync(
+            new SchemaNavigation(item.SchemaPointer, item.SourceSchemaName));
+    }
+
+    private string GetArrayItemClass(TypeMapArrayItemType item)
+    {
+        if (selectedItemKey == $"items:{item.FullTypeName}")
+        {
+            return "selected";
+        }
+
         if (relatedFullTypeName is not null && item.FullTypeName == relatedFullTypeName)
         {
             return "related";
