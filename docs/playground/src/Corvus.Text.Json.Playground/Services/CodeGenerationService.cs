@@ -4,6 +4,8 @@ using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.DocumentResolvers;
 using Corvus.Text.Json.Playground.Models;
 using PropertyDeclarationExtensions = Corvus.Text.Json.CodeGeneration.PropertyDeclarationExtensions;
+using SysJsonElement = System.Text.Json.JsonElement;
+using SysJsonValueKind = System.Text.Json.JsonValueKind;
 
 namespace Corvus.Text.Json.Playground.Services;
 
@@ -306,9 +308,33 @@ public class CodeGenerationService
             }
         }
 
+        // Enum values (from the "enum" keyword)
+        List<string>? enumValues = null;
+        var anyOfConstants = reduced.AnyOfConstantValues();
+        if (anyOfConstants is not null)
+        {
+            enumValues = [];
+            foreach (var kvp in anyOfConstants)
+            {
+                foreach (SysJsonElement el in kvp.Value)
+                {
+                    enumValues.Add(FormatJsonElement(el));
+                }
+            }
+        }
+
+        // Const value (from the "const" keyword)
+        string? constValue = null;
+        SysJsonElement explicitConst = reduced.ExplicitSingleConstantValue();
+        if (explicitConst.ValueKind != SysJsonValueKind.Undefined)
+        {
+            constValue = FormatJsonElement(explicitConst);
+        }
+
         entries.Add(new TypeMapEntry(
             shortName, fullName, kind, pointer, sourceName, properties,
-            compositionGroups, arrayItemTypeName, arrayItemFullTypeName, tupleItems));
+            compositionGroups, arrayItemTypeName, arrayItemFullTypeName, tupleItems,
+            enumValues, constValue));
 
         // Recurse into property types
         foreach (PropertyDeclaration prop in reduced.PropertyDeclarations)
@@ -330,6 +356,11 @@ public class CodeGenerationService
                 CollectTypeMapEntries(tupleItem.ReducedType, generatedTypes, entries, visited);
             }
         }
+
+        // Recurse into composition member types (oneOf, anyOf, allOf)
+        RecurseCompositionTypes(reduced.AllOfCompositionTypes(), generatedTypes, entries, visited);
+        RecurseCompositionTypes(reduced.AnyOfCompositionTypes(), generatedTypes, entries, visited);
+        RecurseCompositionTypes(reduced.OneOfCompositionTypes(), generatedTypes, entries, visited);
     }
 
     private static void CollectCompositionGroup<TKeyword>(
@@ -353,10 +384,20 @@ public class CodeGenerationService
                 string composedShortName = composedFullName.Contains('.')
                     ? composedFullName[(composedFullName.LastIndexOf('.') + 1)..]
                     : composedFullName;
+
+                // Check if this composition member has a const value
+                string? memberConstValue = null;
+                SysJsonElement memberConst = composedReduced.ExplicitSingleConstantValue();
+                if (memberConst.ValueKind != SysJsonValueKind.Undefined)
+                {
+                    memberConstValue = FormatJsonElement(memberConst);
+                }
+
                 members.Add(new TypeMapCompositionMember(
                     composedShortName, composedFullName,
                     GetSchemaPointer(composedReduced),
-                    GetSourceSchemaName(composedReduced)));
+                    GetSourceSchemaName(composedReduced),
+                    memberConstValue));
             }
         }
 
@@ -364,6 +405,39 @@ public class CodeGenerationService
         {
             groups.Add(new TypeMapCompositionGroup(keyword, members));
         }
+    }
+
+    private static void RecurseCompositionTypes<TKeyword>(
+        IReadOnlyDictionary<TKeyword, IReadOnlyCollection<TypeDeclaration>>? compositionTypes,
+        HashSet<TypeDeclaration> generatedTypes,
+        List<TypeMapEntry> entries,
+        HashSet<TypeDeclaration> visited)
+    {
+        if (compositionTypes is null)
+        {
+            return;
+        }
+
+        foreach (var kvp in compositionTypes)
+        {
+            foreach (TypeDeclaration composedType in kvp.Value)
+            {
+                CollectTypeMapEntries(composedType, generatedTypes, entries, visited);
+            }
+        }
+    }
+
+    private static string FormatJsonElement(SysJsonElement element)
+    {
+        return element.ValueKind switch
+        {
+            SysJsonValueKind.String => $"\"{element.GetString()}\"",
+            SysJsonValueKind.Number => element.GetRawText(),
+            SysJsonValueKind.True => "true",
+            SysJsonValueKind.False => "false",
+            SysJsonValueKind.Null => "null",
+            _ => element.GetRawText(),
+        };
     }
 
     private static string? GetSchemaPointer(TypeDeclaration typeDecl)
@@ -405,6 +479,20 @@ public class CodeGenerationService
 
     private static string InferKind(TypeDeclaration typeDecl)
     {
+        // Check for const value first (most specific)
+        SysJsonElement explicitConst = typeDecl.ExplicitSingleConstantValue();
+        if (explicitConst.ValueKind != SysJsonValueKind.Undefined)
+        {
+            return "const";
+        }
+
+        // Check for enum values
+        var anyOfConstants = typeDecl.AnyOfConstantValues();
+        if (anyOfConstants is not null && anyOfConstants.Count > 0)
+        {
+            return "enum";
+        }
+
         CoreTypes coreTypes = typeDecl.ImpliedCoreTypes();
 
         if (coreTypes.HasFlag(CoreTypes.Object))

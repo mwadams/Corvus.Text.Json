@@ -13,6 +13,8 @@ namespace Corvus.Text.Json.Playground.Models;
 /// <param name="ArrayItemTypeName">For array types, the short name of the item type.</param>
 /// <param name="ArrayItemFullTypeName">For array types, the fully qualified name of the item type.</param>
 /// <param name="TupleItems">For tuple types, the ordered list of item type info.</param>
+/// <param name="EnumValues">For enum types, the list of allowed values.</param>
+/// <param name="ConstValue">For const types, the constant value.</param>
 public record TypeMapEntry(
     string TypeName,
     string FullTypeName,
@@ -23,7 +25,9 @@ public record TypeMapEntry(
     IReadOnlyList<TypeMapCompositionGroup> CompositionGroups,
     string? ArrayItemTypeName = null,
     string? ArrayItemFullTypeName = null,
-    IReadOnlyList<TypeMapTupleItem>? TupleItems = null);
+    IReadOnlyList<TypeMapTupleItem>? TupleItems = null,
+    IReadOnlyList<string>? EnumValues = null,
+    string? ConstValue = null);
 
 /// <summary>
 /// Represents a property within a generated type.
@@ -62,11 +66,13 @@ public record TypeMapCompositionGroup(
 /// <param name="FullTypeName">Fully qualified type name.</param>
 /// <param name="SchemaPointer">JSON Pointer into the source schema.</param>
 /// <param name="SourceSchemaName">The schema filename this type originates from.</param>
+/// <param name="ConstValue">For const members, the constant value.</param>
 public record TypeMapCompositionMember(
     string TypeName,
     string FullTypeName,
     string? SchemaPointer,
-    string? SourceSchemaName);
+    string? SourceSchemaName,
+    string? ConstValue = null);
 
 /// <summary>
 /// A single item in a tuple type.
