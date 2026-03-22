@@ -401,6 +401,9 @@
                 return;
             }
 
+            // Yield so the live diagnostics compilation doesn't block the UI thread
+            await Task.Yield();
+
             CompilationResult result = await CompilationSvc.CompileAsync(
                 generationResult.GeneratedFiles,
                 userCode);
@@ -1143,8 +1146,9 @@
             // Snapshot current editor content
             schemaFiles[activeSchemaIndex].Content = await schemaEditor.GetValue();
 
-            // Allow UI to update before potentially blocking work
-            await Task.Delay(50);
+            // Yield to let the browser render the "Generating…" status before
+            // the synchronous codegen work blocks the single WASM thread.
+            await Task.Yield();
 
             // Generate from all schema files
             generationResult = await CodeGenService.GenerateAsync(schemaFiles);
@@ -1217,8 +1221,9 @@
             WriteConsole("▶ Compiling…", "console-progress");
             StateHasChanged();
 
-            // Allow UI to update before blocking compilation
-            await Task.Delay(50);
+            // Yield to let the browser render the "Compiling…" status before
+            // the synchronous Roslyn Emit() blocks the single WASM thread.
+            await Task.Yield();
 
             CompilationResult compilationResult = await CompilationSvc.CompileAsync(
                 generationResult.GeneratedFiles,
@@ -1257,6 +1262,9 @@
             statusText = "Running…";
             WriteConsole("▶ Running…", "console-progress");
             StateHasChanged();
+
+            // Yield to let the browser render the "Running…" status
+            await Task.Yield();
 
             ExecutionResult executionResult = await ExecutionSvc.ExecuteAsync(
                 compilationResult.Assembly,

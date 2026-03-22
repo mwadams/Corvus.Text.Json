@@ -31,6 +31,10 @@ public class CompilationService
         Microsoft.CodeAnalysis.CSharp.CSharpCompilation compilation =
             this.workspaceService.CreateCompilation(generatedSources, userCode);
 
+        // Yield before the heavy Emit() call so the browser can process
+        // pending UI updates (Blazor WASM is single-threaded).
+        await Task.Yield();
+
         using var ms = new MemoryStream();
         Microsoft.CodeAnalysis.Emit.EmitResult result = compilation.Emit(ms);
 
