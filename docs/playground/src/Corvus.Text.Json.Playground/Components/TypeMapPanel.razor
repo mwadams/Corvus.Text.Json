@@ -15,7 +15,47 @@
                          @onclick="() => SelectType(entry)">
                         <span class="type-name">@entry.TypeName</span>
                         <span class="type-kind">(@entry.Kind)</span>
+                        @if (entry.ArrayItemTypeName is not null)
+                        {
+                            <span class="type-array-item">[@entry.ArrayItemTypeName]</span>
+                        }
                     </div>
+                    @if (entry.CompositionGroups.Count > 0)
+                    {
+                        <ul>
+                            @foreach (var group in entry.CompositionGroups)
+                            {
+                                <li>
+                                    <div class="type-map-composition-header">@group.Keyword</div>
+                                    <ul>
+                                        @foreach (var member in group.Types)
+                                        {
+                                            <li>
+                                                <div class="type-map-entry composition-member @GetCompositionClass(member)"
+                                                     @onclick="() => SelectCompositionMember(member)">
+                                                    <span class="type-name">@member.TypeName</span>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    @if (entry.TupleItems is { Count: > 0 })
+                    {
+                        <ul>
+                            @foreach (var item in entry.TupleItems)
+                            {
+                                <li>
+                                    <div class="type-map-entry tuple-item @GetTupleItemClass(item)">
+                                        <span class="prop-name">Item@(item.Index)</span>
+                                        <span class="prop-type">: @item.TypeName</span>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
                     @if (entry.Properties.Count > 0)
                     {
                         <ul>
@@ -29,6 +69,10 @@
                                         @if (prop.IsRequired)
                                         {
                                             <span class="prop-required">required</span>
+                                        }
+                                        @if (prop.IsComposed)
+                                        {
+                                            <span class="prop-composed">composed</span>
                                         }
                                     </div>
                                 </li>
@@ -67,6 +111,14 @@
             new SchemaNavigation(prop.SchemaPointer, prop.SourceSchemaName));
     }
 
+    private async Task SelectCompositionMember(TypeMapCompositionMember member)
+    {
+        selectedItemKey = $"comp:{member.FullTypeName}";
+        relatedFullTypeName = member.FullTypeName;
+        await OnSchemaPointerSelected.InvokeAsync(
+            new SchemaNavigation(member.SchemaPointer, member.SourceSchemaName));
+    }
+
     private string GetEntryClass(TypeMapEntry entry)
     {
         if (selectedItemKey == $"type:{entry.FullTypeName}")
@@ -87,6 +139,31 @@
         if (selectedItemKey == $"prop:{prop.Name}:{prop.FullTypeName}")
         {
             return "selected";
+        }
+
+        return "";
+    }
+
+    private string GetCompositionClass(TypeMapCompositionMember member)
+    {
+        if (selectedItemKey == $"comp:{member.FullTypeName}")
+        {
+            return "selected";
+        }
+
+        if (relatedFullTypeName is not null && member.FullTypeName == relatedFullTypeName)
+        {
+            return "related";
+        }
+
+        return "";
+    }
+
+    private string GetTupleItemClass(TypeMapTupleItem item)
+    {
+        if (relatedFullTypeName is not null && item.FullTypeName == relatedFullTypeName)
+        {
+            return "related";
         }
 
         return "";

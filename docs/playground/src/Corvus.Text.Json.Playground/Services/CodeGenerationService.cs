@@ -258,6 +258,8 @@ public class CodeGenerationService
             // Get the .NET property accessor name
             string dotnetPropName = PropertyDeclarationExtensions.DotnetPropertyName(prop);
 
+            bool isComposed = prop.LocalOrComposed == LocalOrComposed.Composed;
+
             properties.Add(new TypeMapProperty(
                 prop.JsonPropertyName,
                 dotnetPropName,
@@ -266,10 +268,47 @@ public class CodeGenerationService
                 GetSchemaPointer(prop.ReducedPropertyType),
                 GetSourceSchemaName(prop.ReducedPropertyType),
                 prop.RequiredOrOptional == RequiredOrOptional.Required ||
-                    prop.RequiredOrOptional == RequiredOrOptional.ComposedRequired));
+                    prop.RequiredOrOptional == RequiredOrOptional.ComposedRequired,
+                isComposed));
         }
 
-        entries.Add(new TypeMapEntry(shortName, fullName, kind, pointer, sourceName, properties));
+        // Collect composition groups (allOf, anyOf, oneOf)
+        var compositionGroups = new List<TypeMapCompositionGroup>();
+        CollectCompositionGroup(reduced, "allOf", reduced.AllOfCompositionTypes(), compositionGroups);
+        CollectCompositionGroup(reduced, "anyOf", reduced.AnyOfCompositionTypes(), compositionGroups);
+        CollectCompositionGroup(reduced, "oneOf", reduced.OneOfCompositionTypes(), compositionGroups);
+
+        // Array item type
+        string? arrayItemTypeName = null;
+        string? arrayItemFullTypeName = null;
+        if (reduced.ArrayItemsType() is ArrayItemsTypeDeclaration arrayItemsForEntry)
+        {
+            TypeDeclaration itemReduced = arrayItemsForEntry.ReducedType.ReducedTypeDeclaration().ReducedType;
+            arrayItemFullTypeName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(itemReduced);
+            arrayItemTypeName = arrayItemFullTypeName.Contains('.')
+                ? arrayItemFullTypeName[(arrayItemFullTypeName.LastIndexOf('.') + 1)..]
+                : arrayItemFullTypeName;
+        }
+
+        // Tuple item types
+        List<TypeMapTupleItem>? tupleItems = null;
+        if (reduced.TupleType() is TupleTypeDeclaration tupleTypeForEntry)
+        {
+            tupleItems = [];
+            for (int i = 0; i < tupleTypeForEntry.ItemsTypes.Length; i++)
+            {
+                TypeDeclaration itemReduced = tupleTypeForEntry.ItemsTypes[i].ReducedType.ReducedTypeDeclaration().ReducedType;
+                string itemFullName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(itemReduced);
+                string itemShortName = itemFullName.Contains('.')
+                    ? itemFullName[(itemFullName.LastIndexOf('.') + 1)..]
+                    : itemFullName;
+                tupleItems.Add(new TypeMapTupleItem(i + 1, itemShortName, itemFullName));
+            }
+        }
+
+        entries.Add(new TypeMapEntry(
+            shortName, fullName, kind, pointer, sourceName, properties,
+            compositionGroups, arrayItemTypeName, arrayItemFullTypeName, tupleItems));
 
         // Recurse into property types
         foreach (PropertyDeclaration prop in reduced.PropertyDeclarations)
@@ -290,6 +329,40 @@ public class CodeGenerationService
             {
                 CollectTypeMapEntries(tupleItem.ReducedType, generatedTypes, entries, visited);
             }
+        }
+    }
+
+    private static void CollectCompositionGroup<TKeyword>(
+        TypeDeclaration typeDecl,
+        string keyword,
+        IReadOnlyDictionary<TKeyword, IReadOnlyCollection<TypeDeclaration>>? compositionTypes,
+        List<TypeMapCompositionGroup> groups)
+    {
+        if (compositionTypes is null)
+        {
+            return;
+        }
+
+        var members = new List<TypeMapCompositionMember>();
+        foreach (var kvp in compositionTypes)
+        {
+            foreach (TypeDeclaration composedType in kvp.Value)
+            {
+                TypeDeclaration composedReduced = composedType.ReducedTypeDeclaration().ReducedType;
+                string composedFullName = CodeGeneration.CSharpLanguageProvider.GetFullyQualifiedDotnetTypeName(composedReduced);
+                string composedShortName = composedFullName.Contains('.')
+                    ? composedFullName[(composedFullName.LastIndexOf('.') + 1)..]
+                    : composedFullName;
+                members.Add(new TypeMapCompositionMember(
+                    composedShortName, composedFullName,
+                    GetSchemaPointer(composedReduced),
+                    GetSourceSchemaName(composedReduced)));
+            }
+        }
+
+        if (members.Count > 0)
+        {
+            groups.Add(new TypeMapCompositionGroup(keyword, members));
         }
     }
 
@@ -346,12 +419,15 @@ public class CodeGenerationService
                 return "tuple";
             }
 
-            if (typeDecl.IsNumericArray())
+            int rank = typeDecl.ArrayRank() ?? 1;
+            bool isNumeric = typeDecl.IsNumericArray();
+
+            if (rank > 1)
             {
-                return "numeric array";
+                return isNumeric ? "numeric tensor" : "tensor";
             }
 
-            return "array";
+            return isNumeric ? "numeric array" : "array";
         }
 
         if (coreTypes.HasFlag(CoreTypes.String))
