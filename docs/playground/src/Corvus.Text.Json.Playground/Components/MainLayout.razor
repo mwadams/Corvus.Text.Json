@@ -301,33 +301,9 @@
     {
         await RestoreAutoSavedState();
 
-        // If state was restored, the editors already rendered with defaults
-        // from OnInitialized (the first await in RestoreAutoSavedState yields
-        // to the renderer). Push the correct restored content into them now.
-        if (hasRestoredState)
-        {
-            hasRestoredState = false;
-            isLoadingContent = true;
-            try
-            {
-                if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
-                {
-                    await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
-                }
-
-                if (userCodeEditor is not null && restoredUserCode is not null)
-                {
-                    await userCodeEditor.SetValue(restoredUserCode);
-                    restoredUserCode = null;
-                }
-
-                await SyncCleanStateFromEditors();
-            }
-            finally
-            {
-                isLoadingContent = false;
-            }
-        }
+        // If state was restored, the model (schemaFiles, activeSampleId) is now
+        // correct but the editors may not exist yet. StateHasChanged will trigger
+        // a re-render; OnAfterRenderAsync will push content into the editors.
     }
 
     private string GetInitialUserCode()
@@ -358,6 +334,34 @@
         {
             await InitializeThemeAsync();
             await RegisterKeyboardShortcuts();
+        }
+
+        // Push restored auto-save content into editors once they exist.
+        // This runs after RestoreAutoSavedState completes and a re-render
+        // makes the editors available.
+        if (hasRestoredState && schemaEditor is not null)
+        {
+            hasRestoredState = false;
+            isLoadingContent = true;
+            try
+            {
+                if (activeSchemaIndex < schemaFiles.Count)
+                {
+                    await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
+                }
+
+                if (userCodeEditor is not null && restoredUserCode is not null)
+                {
+                    await userCodeEditor.SetValue(restoredUserCode);
+                    restoredUserCode = null;
+                }
+
+                await SyncCleanStateFromEditors();
+            }
+            finally
+            {
+                isLoadingContent = false;
+            }
         }
 
         if (focusRenameInput)
