@@ -228,6 +228,7 @@
     // Auto-save state
     private System.Threading.Timer? autoSaveTimer;
     private string? restoredUserCode;
+    private bool hasRestoredState;
     private const string AutoSaveKey = "playground-state";
     private const int AutoSaveVersion = 1;
 
@@ -329,6 +330,33 @@
         {
             await InitializeThemeAsync();
             await RegisterKeyboardShortcuts();
+
+            // If auto-save state was restored after the editors rendered with
+            // defaults, push the restored content into the Monaco editors now.
+            if (hasRestoredState)
+            {
+                hasRestoredState = false;
+                isLoadingContent = true;
+                try
+                {
+                    if (schemaEditor is not null && activeSchemaIndex < schemaFiles.Count)
+                    {
+                        await schemaEditor.SetValue(schemaFiles[activeSchemaIndex].Content);
+                    }
+
+                    if (userCodeEditor is not null && restoredUserCode is not null)
+                    {
+                        await userCodeEditor.SetValue(restoredUserCode);
+                        restoredUserCode = null;
+                    }
+
+                    await SyncCleanStateFromEditors();
+                }
+                finally
+                {
+                    isLoadingContent = false;
+                }
+            }
         }
 
         if (focusRenameInput)
@@ -1231,9 +1259,7 @@
 
         isRunning = true;
         consoleLines.Clear();
-        statusText = "Building…";
         statusError = false;
-        WriteConsole("▶ Compiling…", "console-progress");
         StateHasChanged();
 
         try
@@ -1685,6 +1711,8 @@
                 restoredUserCode = codeEl.GetString();
                 userCodeCleanContent = restoredUserCode ?? NewProjectUserCode;
             }
+
+            hasRestoredState = true;
         }
         catch
         {
