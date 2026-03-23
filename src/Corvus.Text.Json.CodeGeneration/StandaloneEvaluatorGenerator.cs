@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.Keywords;
+using Corvus.Text.Json.CodeGeneration.Internal;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration;
@@ -605,27 +606,461 @@ internal static partial class StandaloneEvaluatorGenerator
 
     private static void EmitConstValidation(GenerationContext ctx, TypeDeclaration typeDeclaration)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Const.cs
+        ISingleConstantValidationKeyword? constKw = typeDeclaration.Keywords().OfType<ISingleConstantValidationKeyword>().FirstOrDefault();
+        if (constKw is null || !constKw.TryGetConstantValue(typeDeclaration, out JsonElement constantValue))
+        {
+            return;
+        }
+
+        string formattedKeyword = FormatUtf8Literal(constKw.Keyword);
+
+        ctx.AppendLine();
+
+        switch (constantValue.ValueKind)
+        {
+            case JsonValueKind.String:
+                EmitStringConstValidation(ctx, constKw, constantValue, formattedKeyword);
+                break;
+            case JsonValueKind.Number:
+                EmitNumberConstValidation(ctx, constantValue, formattedKeyword);
+                break;
+            case JsonValueKind.True:
+                EmitBooleanConstValidation(ctx, true, formattedKeyword);
+                break;
+            case JsonValueKind.False:
+                EmitBooleanConstValidation(ctx, false, formattedKeyword);
+                break;
+            case JsonValueKind.Null:
+                EmitNullConstValidation(ctx, formattedKeyword);
+                break;
+            case JsonValueKind.Object:
+            case JsonValueKind.Array:
+                EmitComplexConstValidation(ctx, constantValue, formattedKeyword);
+                break;
+        }
+    }
+
+    private static void EmitStringConstValidation(GenerationContext ctx, ISingleConstantValidationKeyword constKw, JsonElement constantValue, string formattedKeyword)
+    {
+        string quotedValue = SymbolDisplay.FormatLiteral(constantValue.GetString()!, true);
+
+        ctx.AppendLine("if (tokenType == JsonTokenType.String)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("using UnescapedUtf8JsonString constUnescaped = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
+        ctx.AppendLine($"JsonSchemaEvaluation.MatchStringConstantValue(constUnescaped.Span, {quotedValue}u8, {quotedValue}, {formattedKeyword}, ref context);");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, {quotedValue}, messageProvider: JsonSchemaEvaluation.ExpectedStringEquals, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitNumberConstValidation(GenerationContext ctx, JsonElement constantValue, string formattedKeyword)
+    {
+        string rawText = constantValue.GetRawText();
+        JsonElementHelpers.ParseNumber(System.Text.Encoding.UTF8.GetBytes(rawText), out bool isNeg, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exp);
+
+        string isNegStr = BoolLiteral(isNeg);
+        string integralStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(integral.ToArray()), true);
+        string fractionalStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(fractional.ToArray()), true);
+        string expStr = exp.ToString();
+        string rawValueStr = SymbolDisplay.FormatLiteral(rawText, true);
+
+        ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("ReadOnlyMemory<byte> constRawValue = parentDocument.GetRawSimpleValue(parentIndex);");
+        ctx.AppendLine("JsonElementHelpers.TryParseNumber(constRawValue.Span, out bool constIsNeg, out ReadOnlySpan<byte> constIntegral, out ReadOnlySpan<byte> constFractional, out int constExponent);");
+        ctx.AppendLine($"JsonSchemaEvaluation.MatchEquals(constIsNeg, constIntegral, constFractional, constExponent, {isNegStr}, {integralStr}u8, {fractionalStr}u8, {expStr}, {rawValueStr}, {formattedKeyword}, ref context);");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, {rawValueStr}, messageProvider: JsonSchemaEvaluation.ExpectedEquals, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitBooleanConstValidation(GenerationContext ctx, bool expectation, string formattedKeyword)
+    {
+        string tokenName = expectation ? "True" : "False";
+        ctx.AppendLine($"if (tokenType == JsonTokenType.{tokenName})");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedBoolean{tokenName}, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedBoolean{tokenName}, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitNullConstValidation(GenerationContext ctx, string formattedKeyword)
+    {
+        ctx.AppendLine("if (tokenType == JsonTokenType.Null)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedNull, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedNull, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitComplexConstValidation(GenerationContext ctx, JsonElement constantValue, string formattedKeyword)
+    {
+        string quotedRawText = SymbolDisplay.FormatLiteral(constantValue.GetRawText(), true);
+
+        ctx.AppendLine($"if (JsonElementHelpers.DeepEqualsNoParentDocumentCheck({quotedRawText}, tokenType, parentDocument, parentIndex))");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(true, {quotedRawText}, messageProvider: JsonSchemaEvaluation.ExpectedConstant, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, {quotedRawText}, messageProvider: JsonSchemaEvaluation.ExpectedConstant, {formattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
     }
 
     private static void EmitEnumValidation(GenerationContext ctx, TypeDeclaration typeDeclaration)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Const.cs
+        IAnyOfConstantValidationKeyword? enumKw = typeDeclaration.Keywords().OfType<IAnyOfConstantValidationKeyword>().FirstOrDefault();
+        if (enumKw is null || !enumKw.TryGetValidationConstants(typeDeclaration, out JsonElement[]? constants))
+        {
+            return;
+        }
+
+        string formattedKeyword = FormatUtf8Literal(enumKw.Keyword);
+
+        ctx.AppendLine();
+
+        bool hasStringValues = constants.Any(c => c.ValueKind == JsonValueKind.String);
+        bool hasNumberValues = constants.Any(c => c.ValueKind == JsonValueKind.Number);
+        bool hasBoolValues = constants.Any(c => c.ValueKind is JsonValueKind.True or JsonValueKind.False);
+        bool hasNullValues = constants.Any(c => c.ValueKind == JsonValueKind.Null);
+        bool hasComplexValues = constants.Any(c => c.ValueKind is JsonValueKind.Object or JsonValueKind.Array);
+
+        if (hasStringValues)
+        {
+            ctx.AppendLine("if (tokenType == JsonTokenType.String)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("using UnescapedUtf8JsonString enumUnescaped = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
+            ctx.AppendLine();
+            foreach (JsonElement c in constants.Where(c => c.ValueKind == JsonValueKind.String))
+            {
+                string val = SymbolDisplay.FormatLiteral(c.GetString()!, true);
+                ctx.AppendLine($"if (enumUnescaped.Span.SequenceEqual({val}u8))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("goto enumShortCircuitSuccess;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine();
+            }
+
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if (hasNumberValues)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("ReadOnlyMemory<byte> enumRaw = parentDocument.GetRawSimpleValue(parentIndex);");
+            ctx.AppendLine("JsonElementHelpers.TryParseNumber(enumRaw.Span, out bool enumIsNeg, out ReadOnlySpan<byte> enumIntegral, out ReadOnlySpan<byte> enumFractional, out int enumExponent);");
+            ctx.AppendLine();
+            foreach (JsonElement c in constants.Where(c => c.ValueKind == JsonValueKind.Number))
+            {
+                string rawText = c.GetRawText();
+                byte[] rawBytes = System.Text.Encoding.UTF8.GetBytes(rawText);
+                JsonElementHelpers.ParseNumber(rawBytes, out bool isNeg, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exp);
+                string isNegStr = BoolLiteral(isNeg);
+                string integralStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(integral.ToArray()), true);
+                string fractionalStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(fractional.ToArray()), true);
+                string expStr = exp.ToString();
+
+                ctx.AppendLine($"if (JsonElementHelpers.CompareNormalizedJsonNumbers(enumIsNeg, enumIntegral, enumFractional, enumExponent, {isNegStr}, {integralStr}u8, {fractionalStr}u8, {expStr}) == 0)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("goto enumShortCircuitSuccess;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine();
+            }
+
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if (hasBoolValues)
+        {
+            foreach (JsonElement c in constants.Where(c => c.ValueKind is JsonValueKind.True or JsonValueKind.False))
+            {
+                string tokenName = c.ValueKind == JsonValueKind.True ? "True" : "False";
+                ctx.AppendLine();
+                ctx.AppendLine($"if (tokenType == JsonTokenType.{tokenName})");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("goto enumShortCircuitSuccess;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+
+        if (hasNullValues)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.Null)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("goto enumShortCircuitSuccess;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if (hasComplexValues)
+        {
+            foreach (JsonElement c in constants.Where(c => c.ValueKind is JsonValueKind.Object or JsonValueKind.Array))
+            {
+                string quotedRaw = SymbolDisplay.FormatLiteral(c.GetRawText(), true);
+                ctx.AppendLine();
+                ctx.AppendLine($"if (JsonElementHelpers.DeepEqualsNoParentDocumentCheck({quotedRaw}, tokenType, parentDocument, parentIndex))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("goto enumShortCircuitSuccess;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+
+        ctx.AppendLine();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, {formattedKeyword});");
+        ctx.AppendLine();
+        ctx.AppendLine("if (!context.HasCollector)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("return;");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine();
+        ctx.AppendLine("goto enumAfterFailure;");
+        ctx.AppendLine();
+        ctx.AppendLine("enumShortCircuitSuccess:");
+        ctx.AppendLine($"context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, {formattedKeyword});");
+        ctx.AppendLine();
+        ctx.AppendLine("enumAfterFailure:;");
     }
 
     private static void EmitStringValidation(GenerationContext ctx, TypeDeclaration typeDeclaration)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.String.cs
+        var lengthKeywords = typeDeclaration.Keywords().OfType<IStringLengthConstantValidationKeyword>().ToList();
+        var regexKeywords = typeDeclaration.Keywords().OfType<IStringRegexValidationProviderKeyword>().ToList();
+
+        if (lengthKeywords.Count == 0 && regexKeywords.Count == 0)
+        {
+            return;
+        }
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (tokenType == JsonTokenType.String)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        if (lengthKeywords.Count > 0)
+        {
+            ctx.AppendLine("int stringLength = parentDocument.GetStringLength(parentIndex);");
+
+            foreach (IStringLengthConstantValidationKeyword keyword in lengthKeywords)
+            {
+                if (!keyword.TryGetOperator(typeDeclaration, out Operator op) || op == Operator.None)
+                {
+                    continue;
+                }
+
+                if (!keyword.TryGetValidationConstants(typeDeclaration, out JsonElement[]? constants) || constants.Length == 0)
+                {
+                    continue;
+                }
+
+                int expected = (int)constants[0].GetDecimal();
+                string opFunc = GetStringLengthOperatorFunction(op);
+
+                ctx.AppendLine($"{opFunc}({expected}, stringLength, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+
+        if (regexKeywords.Count > 0)
+        {
+            ctx.AppendLine("using UnescapedUtf8JsonString patternUnescaped = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
+
+            foreach (IStringRegexValidationProviderKeyword keyword in regexKeywords)
+            {
+                if (!keyword.TryGetValidationRegularExpressions(typeDeclaration, out IReadOnlyList<string>? expressions) || expressions.Count == 0)
+                {
+                    continue;
+                }
+
+                string regex = SymbolDisplay.FormatLiteral(expressions[0], true);
+                string fieldName = "PatternRegex_" + MakeSafeIdentifier(keyword.Keyword);
+
+                ctx.AppendLine($"JsonSchemaEvaluation.MatchRegularExpression(patternUnescaped.Span, {fieldName}, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static string GetStringLengthOperatorFunction(Operator op)
+    {
+        return op switch
+        {
+            Operator.Equals => "JsonSchemaEvaluation.MatchLengthEquals",
+            Operator.NotEquals => "JsonSchemaEvaluation.MatchLengthNotEquals",
+            Operator.LessThan => "JsonSchemaEvaluation.MatchLengthLessThan",
+            Operator.LessThanOrEquals => "JsonSchemaEvaluation.MatchLengthLessThanOrEquals",
+            Operator.GreaterThan => "JsonSchemaEvaluation.MatchLengthGreaterThan",
+            Operator.GreaterThanOrEquals => "JsonSchemaEvaluation.MatchLengthGreaterThanOrEquals",
+            _ => throw new System.InvalidOperationException($"Unsupported string length operator: {op}"),
+        };
     }
 
     private static void EmitNumberValidation(GenerationContext ctx, TypeDeclaration typeDeclaration)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Number.cs
+        var numberKeywords = typeDeclaration.Keywords().OfType<INumberConstantValidationKeyword>().ToList();
+        if (numberKeywords.Count == 0)
+        {
+            return;
+        }
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("ReadOnlyMemory<byte> numRawValue = parentDocument.GetRawSimpleValue(parentIndex);");
+        ctx.AppendLine("JsonElementHelpers.TryParseNumber(numRawValue.Span, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);");
+
+        foreach (INumberConstantValidationKeyword keyword in numberKeywords)
+        {
+            if (!keyword.TryGetOperator(typeDeclaration, out Operator op) || op == Operator.None)
+            {
+                continue;
+            }
+
+            if (!keyword.TryGetValidationConstants(typeDeclaration, out JsonElement[]? constants) || constants.Length == 0)
+            {
+                continue;
+            }
+
+            ctx.AppendLine();
+
+            string rawText = constants[0].GetRawText();
+            byte[] rawBytes = System.Text.Encoding.UTF8.GetBytes(rawText);
+            JsonElementHelpers.ParseNumber(rawBytes, out bool isNeg, out ReadOnlySpan<byte> intPart, out ReadOnlySpan<byte> fracPart, out int expVal);
+
+            string isNegStr = BoolLiteral(isNeg);
+            string integralStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(intPart.ToArray()), true);
+            string fractionalStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(fracPart.ToArray()), true);
+            string expStr = expVal.ToString();
+            string rawValueStr = SymbolDisplay.FormatLiteral(rawText, true);
+
+            if (op == Operator.MultipleOf)
+            {
+                string divisor = System.Text.Encoding.UTF8.GetString(intPart.ToArray()) + System.Text.Encoding.UTF8.GetString(fracPart.ToArray());
+                ctx.AppendLine($"JsonSchemaEvaluation.MatchMultipleOf(integral, fractional, exponent, {divisor}, {expStr}, {rawValueStr}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+            }
+            else
+            {
+                string opFunc = GetNumberOperatorFunction(op);
+                ctx.AppendLine($"{opFunc}(isNegative, integral, fractional, exponent, {isNegStr}, {integralStr}u8, {fractionalStr}u8, {expStr}, {rawValueStr}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+            }
+
+            ctx.AppendLine();
+            ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static string GetNumberOperatorFunction(Operator op)
+    {
+        return op switch
+        {
+            Operator.Equals => "JsonSchemaEvaluation.MatchEquals",
+            Operator.NotEquals => "JsonSchemaEvaluation.MatchNotEquals",
+            Operator.LessThan => "JsonSchemaEvaluation.MatchLessThan",
+            Operator.LessThanOrEquals => "JsonSchemaEvaluation.MatchLessThanOrEquals",
+            Operator.GreaterThan => "JsonSchemaEvaluation.MatchGreaterThan",
+            Operator.GreaterThanOrEquals => "JsonSchemaEvaluation.MatchGreaterThanOrEquals",
+            _ => throw new System.InvalidOperationException($"Unsupported number operator: {op}"),
+        };
     }
 
     private static void EmitFormatValidation(GenerationContext ctx, TypeDeclaration typeDeclaration)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Format.cs
+        IFormatProviderKeyword? formatKw = typeDeclaration.Keywords().OfType<IFormatProviderKeyword>().FirstOrDefault();
+        if (formatKw is null)
+        {
+            return;
+        }
+
+        // Format is emitted as an annotation via EmitAnnotations when not asserted.
+        // When asserted (IFormatValidationKeyword), it validates the format.
+        if (formatKw is not IFormatValidationKeyword)
+        {
+            return;
+        }
+
+        // Format assertion: delegated to the existing format validation.
+        // The standalone evaluator emits a format check using the format name.
+        if (!formatKw.TryGetFormat(typeDeclaration, out string? formatName))
+        {
+            return;
+        }
+
+        string formattedKeyword = FormatUtf8Literal(formatKw.Keyword);
+        string quotedFormat = SymbolDisplay.FormatLiteral(formatName, true);
+
+        ctx.AppendLine();
+        ctx.AppendLine($"JsonSchemaEvaluation.ValidateFormat(parentDocument, parentIndex, tokenType, {quotedFormat}, {formattedKeyword}, ref context);");
     }
 
     private static void EmitCompositionValidation(
