@@ -260,6 +260,7 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaEvaluation.Number.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonSchemaResultsCollectorCache.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\NormalizedJsonNumber.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaAnnotationProducer.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsCollector.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\JsonSchemaResultsLevel.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Matcher.cs" />
