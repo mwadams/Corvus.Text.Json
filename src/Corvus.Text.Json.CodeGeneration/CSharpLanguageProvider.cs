@@ -162,15 +162,21 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     /// <inheritdoc/>
     public IReadOnlyCollection<GeneratedCodeFile> GenerateCodeFor(IEnumerable<TypeDeclaration> typeDeclarations, CancellationToken cancellationToken)
     {
+        bool generateTypes = options.CodeGenerationMode is CodeGenerationMode.TypeGeneration or CodeGenerationMode.Both;
+        bool generateEvaluator = options.CodeGenerationMode is CodeGenerationMode.SchemaEvaluationOnly or CodeGenerationMode.Both;
+
 #if DEBUG
         Dictionary<string, TypeDeclaration> namesSeen = new(StringComparer.Ordinal);
 #endif
         CodeGenerator generator = new(this, cancellationToken, lineEndSequence: options.LineEndSequence);
 
+        // Collect root types for evaluator generation (top-level types with no parent).
+        List<TypeDeclaration>? evaluatorRootTypes = generateEvaluator ? new() : null;
+
         // Generate global simple types first. These have DoNotGenerate=true (so
         // ShouldGenerate returns false and the framework sets their parent to null),
         // but the first-seen instance for each canonical name needs to be generated.
-        if (simpleCoreTypeHeuristic is { } heuristic)
+        if (generateTypes && simpleCoreTypeHeuristic is { } heuristic)
         {
             foreach (TypeDeclaration globalType in heuristic.GetFirstSeenTypes())
             {
@@ -221,44 +227,73 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
                 return [];
             }
 
+            // Track root types for evaluator generation.
+            if (generateEvaluator && typeDeclaration.Parent() is null)
+            {
+                evaluatorRootTypes!.Add(typeDeclaration);
+            }
+
+            if (generateTypes)
+            {
 #if DEBUG
-            if (namesSeen.ContainsKey(typeDeclaration.FullyQualifiedDotnetTypeName()))
-            {
-                System.Diagnostics.Debug.Fail($"Skipped: {typeDeclaration.LocatedSchema.Location}");
-                continue;
-            }
-            else
-            {
-                namesSeen[typeDeclaration.FullyQualifiedDotnetTypeName()] = typeDeclaration;
-            }
-#endif
-            if (generator.TryBeginTypeDeclaration(typeDeclaration))
-            {
-                foreach (ICodeFileBuilder codeFileBuilder in codeFileBuilderRegistry.RegisteredBuilders)
+                if (namesSeen.ContainsKey(typeDeclaration.FullyQualifiedDotnetTypeName()))
                 {
+                    System.Diagnostics.Debug.Fail($"Skipped: {typeDeclaration.LocatedSchema.Location}");
+                    continue;
+                }
+                else
+                {
+                    namesSeen[typeDeclaration.FullyQualifiedDotnetTypeName()] = typeDeclaration;
+                }
+#endif
+                if (generator.TryBeginTypeDeclaration(typeDeclaration))
+                {
+                    foreach (ICodeFileBuilder codeFileBuilder in codeFileBuilderRegistry.RegisteredBuilders)
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return [];
+                        }
+
+                        codeFileBuilder.EmitFile(generator, typeDeclaration);
+                    }
+
                     if (cancellationToken.IsCancellationRequested)
                     {
                         return [];
                     }
 
-                    codeFileBuilder.EmitFile(generator, typeDeclaration);
+                    generator.EndTypeDeclaration(typeDeclaration);
                 }
-
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return [];
-                }
-
-                generator.EndTypeDeclaration(typeDeclaration);
             }
         }
 
-        return rootNamespaceGenerator is not null
-            ? [
-                .. generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), options.FileExtension)),
-                new GeneratedCodeFile($"{Formatting.GlobalDeclarationsFileName}{options.FileExtension}", rootNamespaceGenerator.ToString())
-              ]
-            : generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), options.FileExtension));
+        List<GeneratedCodeFile> result = [];
+
+        if (generateTypes)
+        {
+            result.AddRange(generator.GetGeneratedCodeFiles(t => new(t.DotnetTypeNameWithoutNamespace(), options.FileExtension)));
+
+            if (rootNamespaceGenerator is not null)
+            {
+                result.Add(new GeneratedCodeFile($"{Formatting.GlobalDeclarationsFileName}{options.FileExtension}", rootNamespaceGenerator.ToString()));
+            }
+        }
+
+        if (generateEvaluator && evaluatorRootTypes is not null)
+        {
+            foreach (TypeDeclaration rootType in evaluatorRootTypes)
+            {
+                GeneratedCodeFile? evaluatorFile = StandaloneEvaluatorGenerator.Generate(
+                    rootType, options, options.LineEndSequence);
+                if (evaluatorFile is not null)
+                {
+                    result.Add(evaluatorFile);
+                }
+            }
+        }
+
+        return result;
     }
 
     /// <inheritdoc/>
