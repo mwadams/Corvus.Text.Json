@@ -1079,7 +1079,124 @@ internal static partial class StandaloneEvaluatorGenerator
         TypeDeclaration typeDeclaration,
         Dictionary<string, SubschemaInfo> subschemas)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Conditional.cs
+        SingleSubschemaKeywordTypeDeclaration? ifType = typeDeclaration.IfSubschemaType();
+        if (ifType is null)
+        {
+            return;
+        }
+
+        SingleSubschemaKeywordTypeDeclaration? thenType = typeDeclaration.ThenSubschemaType();
+        SingleSubschemaKeywordTypeDeclaration? elseType = typeDeclaration.ElseSubschemaType();
+
+        string ifLoc = ifType.UnreducedType.LocatedSchema.Location.ToString();
+        if (!subschemas.TryGetValue(ifLoc, out SubschemaInfo? ifInfo))
+        {
+            return;
+        }
+
+        string ifPathField = ifInfo.PathFieldName ?? "null";
+        string ifFormattedKeyword = FormatUtf8Literal(ifType.Keyword.Keyword);
+
+        ctx.AppendLine();
+        ctx.AppendLine("JsonSchemaContext ifContext =");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.PushChildContext(parentDocument, parentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, evaluationPath: {ifPathField});");
+        ctx.PopIndent();
+        ctx.AppendLine($"{ifInfo.MethodName}(parentDocument, parentIndex, ref ifContext);");
+        ctx.AppendLine();
+        ctx.AppendLine("if (ifContext.IsMatch)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("context.ApplyEvaluated(ref ifContext);");
+
+        if (thenType is not null)
+        {
+            string thenLoc = thenType.UnreducedType.LocatedSchema.Location.ToString();
+            if (subschemas.TryGetValue(thenLoc, out SubschemaInfo? thenInfo))
+            {
+                string thenPathField = thenInfo.PathFieldName ?? "null";
+                string thenFormattedKeyword = FormatUtf8Literal(thenType.Keyword.Keyword);
+
+                ctx.AppendLine();
+                ctx.AppendLine("JsonSchemaContext thenContext =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContext(parentDocument, parentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, evaluationPath: {thenPathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{thenInfo.MethodName}(parentDocument, parentIndex, ref thenContext);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (thenContext.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.ApplyEvaluated(ref thenContext);");
+                ctx.AppendLine("context.CommitChildContext(true, ref thenContext);");
+                ctx.AppendLine("context.CommitChildContext(true, ref ifContext);");
+                ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedThen, {thenFormattedKeyword});");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine("else");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.CommitChildContext(false, ref thenContext);");
+                ctx.AppendLine("context.CommitChildContext(false, ref ifContext);");
+                ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.DidNotMatchThen, {thenFormattedKeyword});");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+        else
+        {
+            ctx.AppendLine("context.CommitChildContext(true, ref ifContext);");
+        }
+
+        ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedIfForThen, {ifFormattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        if (elseType is not null)
+        {
+            string elseLoc = elseType.UnreducedType.LocatedSchema.Location.ToString();
+            if (subschemas.TryGetValue(elseLoc, out SubschemaInfo? elseInfo))
+            {
+                string elsePathField = elseInfo.PathFieldName ?? "null";
+                string elseFormattedKeyword = FormatUtf8Literal(elseType.Keyword.Keyword);
+
+                ctx.AppendLine();
+                ctx.AppendLine("JsonSchemaContext elseContext =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContext(parentDocument, parentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, evaluationPath: {elsePathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{elseInfo.MethodName}(parentDocument, parentIndex, ref elseContext);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (elseContext.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.ApplyEvaluated(ref elseContext);");
+                ctx.AppendLine("context.CommitChildContext(true, ref elseContext);");
+                ctx.AppendLine("context.CommitChildContext(true, ref ifContext);");
+                ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedElse, {elseFormattedKeyword});");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine("else");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.CommitChildContext(false, ref elseContext);");
+                ctx.AppendLine("context.CommitChildContext(false, ref ifContext);");
+                ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.DidNotMatchElse, {elseFormattedKeyword});");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+        else
+        {
+            ctx.AppendLine("context.CommitChildContext(true, ref ifContext);");
+        }
+
+        ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedIfForElse, {ifFormattedKeyword});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
     }
 
     private static void EmitObjectValidation(
@@ -1087,7 +1204,275 @@ internal static partial class StandaloneEvaluatorGenerator
         TypeDeclaration typeDeclaration,
         Dictionary<string, SubschemaInfo> subschemas)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Object.cs
+        // Collect local named properties with subschema validation.
+        var properties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
+        foreach (PropertyDeclaration prop in typeDeclaration.PropertyDeclarations)
+        {
+            if (prop.LocalOrComposed == LocalOrComposed.Local && prop.Keyword is IObjectPropertyValidationKeyword)
+            {
+                string subLoc = prop.ReducedPropertyType.LocatedSchema.Location.ToString();
+                if (subschemas.TryGetValue(subLoc, out SubschemaInfo? info))
+                {
+                    properties.Add((prop, info));
+                }
+            }
+        }
+
+        // Collect property count keywords.
+        var propCountKeywords = typeDeclaration.Keywords().OfType<IPropertyCountConstantValidationKeyword>().ToList();
+
+        // Collect required properties (only from our named properties list).
+        var requiredProperties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
+        foreach (var entry in properties)
+        {
+            if (entry.Property.RequiredOrOptional == RequiredOrOptional.Required)
+            {
+                requiredProperties.Add(entry);
+            }
+        }
+
+        // Collect additionalProperties fallback.
+        SubschemaInfo? additionalPropertiesInfo = null;
+        foreach (IFallbackObjectPropertyTypeProviderKeyword keyword in typeDeclaration.Keywords().OfType<IFallbackObjectPropertyTypeProviderKeyword>())
+        {
+            if (keyword is ILocalEvaluatedPropertyValidationKeyword)
+            {
+                continue;
+            }
+
+            if (keyword.TryGetFallbackObjectPropertyType(typeDeclaration, out FallbackObjectPropertyType? fallbackType) &&
+                fallbackType is FallbackObjectPropertyType fallback)
+            {
+                string subLoc = fallback.ReducedType.LocatedSchema.Location.ToString();
+                subschemas.TryGetValue(subLoc, out additionalPropertiesInfo);
+            }
+        }
+
+        // Collect propertyNames subschema.
+        SubschemaInfo? propertyNamesInfo = null;
+        foreach (IObjectPropertyNameSubschemaValidationKeyword keyword in typeDeclaration.Keywords().OfType<IObjectPropertyNameSubschemaValidationKeyword>())
+        {
+            if (keyword.TryGetPropertyNameDeclaration(typeDeclaration, out TypeDeclaration? propertyNamesType) &&
+                propertyNamesType is not null)
+            {
+                string subLoc = propertyNamesType.LocatedSchema.Location.ToString();
+                subschemas.TryGetValue(subLoc, out propertyNamesInfo);
+            }
+        }
+
+        bool needsEnumeration = properties.Count > 0 || additionalPropertiesInfo is not null || propertyNamesInfo is not null;
+        bool needsPropertyCount = needsEnumeration || propCountKeywords.Count > 0 || typeDeclaration.RequiresPropertyCount();
+
+        if (!needsEnumeration && propCountKeywords.Count == 0 && requiredProperties.Count == 0)
+        {
+            return;
+        }
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (tokenType == JsonTokenType.StartObject)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        if (needsPropertyCount)
+        {
+            if (needsEnumeration)
+            {
+                ctx.AppendLine("int propertyCount = 0;");
+            }
+            else
+            {
+                ctx.AppendLine("int propertyCount = parentDocument.GetPropertyCount(parentIndex);");
+            }
+        }
+
+        // Required property bitmask.
+        int requiredIntCount = requiredProperties.Count > 0 ? (int)System.Math.Ceiling(requiredProperties.Count / 32.0) : 0;
+        if (requiredProperties.Count > 0)
+        {
+            ctx.AppendLine($"Span<uint> requiredBits = stackalloc uint[{requiredIntCount}];");
+        }
+
+        if (needsEnumeration)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("var enumerator = new ObjectEnumerator(parentDocument, parentIndex);");
+            ctx.AppendLine("while (enumerator.MoveNext())");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("int currentIndex = enumerator.CurrentIndex;");
+            ctx.AppendLine("using UnescapedUtf8JsonString unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(currentIndex);");
+
+            bool firstProperty = true;
+            for (int i = 0; i < properties.Count; i++)
+            {
+                PropertyDeclaration prop = properties[i].Property;
+                SubschemaInfo info = properties[i].Info;
+                string quotedPropName = SymbolDisplay.FormatLiteral(prop.JsonPropertyName, true);
+                string pathField = info.PathFieldName ?? "null";
+                string propCtxVar = $"propCtx_{i}";
+
+                ctx.AppendLine();
+                if (firstProperty)
+                {
+                    ctx.AppendLine($"if (unescapedPropertyName.Span.SequenceEqual({quotedPropName}u8))");
+                    firstProperty = false;
+                }
+                else
+                {
+                    ctx.AppendLine($"else if (unescapedPropertyName.Span.SequenceEqual({quotedPropName}u8))");
+                }
+
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
+                ctx.AppendLine($"JsonSchemaContext {propCtxVar} =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unescapedPropertyName.Span, evaluationPath: {pathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{info.MethodName}(parentDocument, currentIndex, ref {propCtxVar});");
+                ctx.AppendLine($"context.CommitChildContext({propCtxVar}.IsMatch, ref {propCtxVar});");
+
+                // Track required bit.
+                int requiredIndex = requiredProperties.FindIndex(r => r.Property == prop);
+                if (requiredIndex >= 0)
+                {
+                    int offset = requiredIndex / 32;
+                    int bit = requiredIndex % 32;
+                    ctx.AppendLine($"requiredBits[{offset}] |= 0x{(1u << bit):X8};");
+                }
+
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            // additionalProperties fallback.
+            if (additionalPropertiesInfo is not null)
+            {
+                string apPathField = additionalPropertiesInfo.PathFieldName ?? "null";
+
+                ctx.AppendLine();
+                if (properties.Count > 0)
+                {
+                    ctx.AppendLine("else");
+                }
+
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
+                ctx.AppendLine("JsonSchemaContext additionalCtx =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unescapedPropertyName.Span, evaluationPath: {apPathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{additionalPropertiesInfo.MethodName}(parentDocument, currentIndex, ref additionalCtx);");
+                ctx.AppendLine("context.CommitChildContext(additionalCtx.IsMatch, ref additionalCtx);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            // propertyNames validation.
+            if (propertyNamesInfo is not null)
+            {
+                string pnPathField = propertyNamesInfo.PathFieldName ?? "null";
+
+                ctx.AppendLine();
+                ctx.AppendLine("JsonSchemaContext propertyNameCtx =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, evaluationPath: {pnPathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{propertyNamesInfo.MethodName}(parentDocument, currentIndex, ref propertyNameCtx);");
+                ctx.AppendLine("context.CommitChildContext(propertyNameCtx.IsMatch, ref propertyNameCtx);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            ctx.AppendLine();
+            ctx.AppendLine("propertyCount++;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        // Property count validation.
+        foreach (IPropertyCountConstantValidationKeyword keyword in propCountKeywords)
+        {
+            if (!keyword.TryGetOperator(typeDeclaration, out Operator op) || op == Operator.None)
+            {
+                continue;
+            }
+
+            if (!keyword.TryGetValidationConstants(typeDeclaration, out JsonElement[]? constants) || constants.Length == 0)
+            {
+                continue;
+            }
+
+            int rawValue = (int)constants[0].GetDecimal();
+            string expected = rawValue.ToString();
+            string opFunc = GetPropertyCountOperatorFunction(op);
+
+            ctx.AppendLine();
+            ctx.AppendLine($"{opFunc}({expected}, propertyCount, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+            ctx.AppendLine();
+            ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        // Required property validation.
+        for (int i = 0; i < requiredProperties.Count; i++)
+        {
+            PropertyDeclaration prop = requiredProperties[i].Property;
+            int offset = i / 32;
+            int bit = i % 32;
+            string mask = $"0x{(1u << bit):X8}";
+            string quotedPropName = SymbolDisplay.FormatLiteral(prop.JsonPropertyName, true);
+            string keywordLiteral = prop.RequiredKeyword is IKeyword reqKw ? FormatUtf8Literal(reqKw.Keyword) : FormatUtf8Literal("required");
+
+            ctx.AppendLine();
+            ctx.AppendLine($"if ((requiredBits[{offset}] & {mask}) == 0)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.EvaluatedKeywordForProperty(false, messageProvider: null, {quotedPropName}u8, {keywordLiteral});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static string GetPropertyCountOperatorFunction(Operator op)
+    {
+        return op switch
+        {
+            Operator.Equals => "JsonSchemaEvaluation.MatchPropertyCountEquals",
+            Operator.NotEquals => "JsonSchemaEvaluation.MatchPropertyCountNotEquals",
+            Operator.LessThan => "JsonSchemaEvaluation.MatchPropertyCountLessThan",
+            Operator.LessThanOrEquals => "JsonSchemaEvaluation.MatchPropertyCountLessThanOrEquals",
+            Operator.GreaterThan => "JsonSchemaEvaluation.MatchPropertyCountGreaterThan",
+            Operator.GreaterThanOrEquals => "JsonSchemaEvaluation.MatchPropertyCountGreaterThanOrEquals",
+            _ => throw new System.InvalidOperationException($"Unsupported property count operator: {op}"),
+        };
     }
 
     private static void EmitArrayValidation(
@@ -1095,7 +1480,389 @@ internal static partial class StandaloneEvaluatorGenerator
         TypeDeclaration typeDeclaration,
         Dictionary<string, SubschemaInfo> subschemas)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Array.cs
+        // Collect tuple items (prefixItems).
+        var tupleItems = new List<(ReducedTypeDeclaration Item, SubschemaInfo Info, int Index)>();
+        string? tupleKeywordName = null;
+        foreach (ITupleTypeProviderKeyword keyword in typeDeclaration.Keywords().OfType<ITupleTypeProviderKeyword>())
+        {
+            if (keyword.TryGetTupleType(typeDeclaration, out TupleTypeDeclaration? tupleType) &&
+                tupleType is TupleTypeDeclaration tuple)
+            {
+                tupleKeywordName = ((IKeyword)keyword).Keyword;
+                int index = 0;
+                foreach (ReducedTypeDeclaration item in tuple.ItemsTypes)
+                {
+                    string subLoc = item.ReducedType.LocatedSchema.Location.ToString();
+                    if (subschemas.TryGetValue(subLoc, out SubschemaInfo? info))
+                    {
+                        tupleItems.Add((item, info, index));
+                    }
+
+                    index++;
+                }
+            }
+        }
+
+        // Collect non-tuple items.
+        SubschemaInfo? itemsInfo = null;
+        foreach (IArrayItemsTypeProviderKeyword keyword in typeDeclaration.Keywords().OfType<IArrayItemsTypeProviderKeyword>())
+        {
+            if (keyword is IKeyword kw && kw.Keyword == "unevaluatedItems")
+            {
+                continue;
+            }
+
+            if (keyword.TryGetArrayItemsType(typeDeclaration, out ArrayItemsTypeDeclaration? itemsType) &&
+                itemsType is ArrayItemsTypeDeclaration items)
+            {
+                string subLoc = items.ReducedType.LocatedSchema.Location.ToString();
+                subschemas.TryGetValue(subLoc, out itemsInfo);
+            }
+        }
+
+        // Collect contains.
+        SubschemaInfo? containsInfo = null;
+        string? containsKeywordName = null;
+        var containsOperators = new List<(int Value, Operator Op, string Keyword)>();
+        foreach (IArrayContainsValidationKeyword keyword in typeDeclaration.Keywords().OfType<IArrayContainsValidationKeyword>())
+        {
+            containsKeywordName = keyword.Keyword;
+            if (keyword.TryGetContainsItemType(typeDeclaration, out ArrayItemsTypeDeclaration? containsType) &&
+                containsType is ArrayItemsTypeDeclaration contains)
+            {
+                string subLoc = contains.ReducedType.LocatedSchema.Location.ToString();
+                subschemas.TryGetValue(subLoc, out containsInfo);
+            }
+        }
+
+        // Collect contains count operators (minContains/maxContains).
+        foreach (IArrayContainsCountConstantValidationKeyword keyword in typeDeclaration.Keywords().OfType<IArrayContainsCountConstantValidationKeyword>())
+        {
+            if (keyword.TryGetOperator(typeDeclaration, out Operator op) &&
+                keyword.TryGetValidationConstants(typeDeclaration, out JsonElement[]? constants) &&
+                constants is { Length: > 0 })
+            {
+                int value = (int)constants[0].GetDecimal();
+                containsOperators.Add((value, op, keyword.Keyword));
+            }
+        }
+
+        // If contains is present but no explicit GreaterThan/GreaterThanOrEquals, add default > 0.
+        if (containsInfo is not null &&
+            !containsOperators.Any(c => c.Op is Operator.GreaterThan or Operator.GreaterThanOrEquals))
+        {
+            containsOperators.Add((0, Operator.GreaterThan, containsKeywordName ?? "contains"));
+        }
+
+        // Collect uniqueItems.
+        bool requiresUniqueItems = typeDeclaration.Keywords().OfType<IUniqueItemsArrayValidationKeyword>()
+            .Any(k => k.RequiresUniqueItems(typeDeclaration));
+        string? uniqueItemsKeyword = requiresUniqueItems
+            ? typeDeclaration.Keywords().OfType<IUniqueItemsArrayValidationKeyword>().First(k => k.RequiresUniqueItems(typeDeclaration)).Keyword
+            : null;
+
+        // Collect item count keywords (minItems/maxItems).
+        var itemCountKeywords = typeDeclaration.Keywords().OfType<IArrayLengthConstantValidationKeyword>().ToList();
+
+        bool needsEnumeration = tupleItems.Count > 0 || itemsInfo is not null || containsInfo is not null || requiresUniqueItems;
+        bool needsItemCount = needsEnumeration || itemCountKeywords.Count > 0 || typeDeclaration.RequiresArrayLength();
+
+        if (!needsEnumeration && itemCountKeywords.Count == 0)
+        {
+            return;
+        }
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (tokenType == JsonTokenType.StartArray)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        if (needsItemCount)
+        {
+            if (needsEnumeration)
+            {
+                ctx.AppendLine("int itemCount = 0;");
+            }
+            else
+            {
+                ctx.AppendLine("int itemCount = parentDocument.GetArrayLength(parentIndex);");
+            }
+        }
+
+        if (containsInfo is not null)
+        {
+            ctx.AppendLine("int containsCount = 0;");
+        }
+
+        if (requiresUniqueItems)
+        {
+            ctx.AppendLine("bool hasUniqueItems = true;");
+            ctx.AppendLine("using UniqueItemsHashSet uniqueItemsHashSet = new UniqueItemsHashSet(parentDocument, parentDocument.GetArrayLength(parentIndex), stackalloc int[UniqueItemsHashSet.StackAllocBucketSize], stackalloc byte[UniqueItemsHashSet.StackAllocEntrySize]);");
+        }
+
+        if (needsEnumeration)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("var enumerator = new ArrayEnumerator(parentDocument, parentIndex);");
+            ctx.AppendLine("while (enumerator.MoveNext())");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("int currentIndex = enumerator.CurrentIndex;");
+
+            // Contains validation (before tuple/items so it evaluates every item).
+            if (containsInfo is not null)
+            {
+                string containsPathField = containsInfo.PathFieldName ?? "null";
+
+                ctx.AppendLine();
+                ctx.AppendLine("JsonSchemaContext containsCtx =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {containsPathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{containsInfo.MethodName}(parentDocument, currentIndex, ref containsCtx);");
+                ctx.AppendLine("if (containsCtx.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("containsCount++;");
+                ctx.AppendLine("context.CommitChildContext(true, ref containsCtx);");
+                ctx.AppendLine("context.AddLocalEvaluatedItem(itemCount);");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine("else");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.CommitChildContext(true, ref containsCtx);");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            // UniqueItems check per item.
+            if (requiresUniqueItems)
+            {
+                ctx.AppendLine();
+                ctx.AppendLine("if (hasUniqueItems && !uniqueItemsHashSet.AddItemIfNotExists(currentIndex))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("hasUniqueItems = false;");
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            // Tuple items and/or non-tuple items.
+            if (tupleItems.Count > 0)
+            {
+                ctx.AppendLine();
+                ctx.AppendLine("switch (itemCount)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+
+                foreach (var (item, info, tupleIndex) in tupleItems)
+                {
+                    string pathField = info.PathFieldName ?? "null";
+                    string caseCtxVar = $"tupleCtx_{tupleIndex}";
+
+                    ctx.AppendLine($"case {tupleIndex}:");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"JsonSchemaContext {caseCtxVar} =");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {pathField});");
+                    ctx.PopIndent();
+                    ctx.AppendLine($"{info.MethodName}(parentDocument, currentIndex, ref {caseCtxVar});");
+                    ctx.AppendLine($"if (!{caseCtxVar}.IsMatch)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"context.CommitChildContext(false, ref {caseCtxVar});");
+                    ctx.AppendLine();
+                    ctx.AppendLine("if (!context.HasCollector)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("return;");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine("else");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"context.CommitChildContext(true, ref {caseCtxVar});");
+                    ctx.AppendLine("context.AddLocalEvaluatedItem(itemCount);");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine();
+                    ctx.AppendLine("break;");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                }
+
+                // Default case for non-tuple items (items after prefixItems).
+                if (itemsInfo is not null)
+                {
+                    string itemsPathField = itemsInfo.PathFieldName ?? "null";
+
+                    ctx.AppendLine("default:");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("JsonSchemaContext nonTupleCtx =");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {itemsPathField});");
+                    ctx.PopIndent();
+                    ctx.AppendLine($"{itemsInfo.MethodName}(parentDocument, currentIndex, ref nonTupleCtx);");
+                    ctx.AppendLine("if (!nonTupleCtx.IsMatch)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("context.CommitChildContext(false, ref nonTupleCtx);");
+                    ctx.AppendLine();
+                    ctx.AppendLine("if (!context.HasCollector)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("return;");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine("else");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("context.CommitChildContext(true, ref nonTupleCtx);");
+                    ctx.AppendLine("context.AddLocalEvaluatedItem(itemCount);");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine();
+                    ctx.AppendLine("break;");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                }
+
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+            else if (itemsInfo is not null)
+            {
+                // No tuple, just items applied to every element.
+                string itemsPathField = itemsInfo.PathFieldName ?? "null";
+
+                ctx.AppendLine();
+                ctx.AppendLine("JsonSchemaContext itemCtx =");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {itemsPathField});");
+                ctx.PopIndent();
+                ctx.AppendLine($"{itemsInfo.MethodName}(parentDocument, currentIndex, ref itemCtx);");
+                ctx.AppendLine("if (!itemCtx.IsMatch)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.CommitChildContext(false, ref itemCtx);");
+                ctx.AppendLine();
+                ctx.AppendLine("if (!context.HasCollector)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine("else");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("context.CommitChildContext(true, ref itemCtx);");
+                ctx.AppendLine("context.AddLocalEvaluatedItem(itemCount);");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            ctx.AppendLine();
+            ctx.AppendLine("itemCount++;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        // Item count validation (minItems/maxItems).
+        foreach (IArrayLengthConstantValidationKeyword keyword in itemCountKeywords)
+        {
+            if (!keyword.TryGetOperator(typeDeclaration, out Operator op) || op == Operator.None)
+            {
+                continue;
+            }
+
+            if (!keyword.TryGetValidationConstants(typeDeclaration, out JsonElement[]? constants) || constants.Length == 0)
+            {
+                continue;
+            }
+
+            int rawValue = (int)constants[0].GetDecimal();
+            string expected = rawValue.ToString();
+            string opFunc = GetItemCountOperatorFunction(op);
+
+            ctx.AppendLine();
+            ctx.AppendLine($"{opFunc}({expected}, itemCount, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+            ctx.AppendLine();
+            ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        // Contains count validation.
+        foreach (var (value, op, keyword) in containsOperators)
+        {
+            string opFunc = GetContainsCountOperatorFunction(op);
+            ctx.AppendLine();
+            ctx.AppendLine($"{opFunc}({value}, containsCount, {FormatUtf8Literal(keyword)}, ref context);");
+            ctx.AppendLine();
+            ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        // UniqueItems final evaluation.
+        if (requiresUniqueItems && uniqueItemsKeyword is not null)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine($"context.EvaluatedKeyword(hasUniqueItems, messageProvider: JsonSchemaEvaluation.ExpectedUniqueItems, {FormatUtf8Literal(uniqueItemsKeyword)});");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static string GetItemCountOperatorFunction(Operator op)
+    {
+        return op switch
+        {
+            Operator.Equals => "JsonSchemaEvaluation.MatchItemCountEquals",
+            Operator.NotEquals => "JsonSchemaEvaluation.MatchItemCountNotEquals",
+            Operator.LessThan => "JsonSchemaEvaluation.MatchItemCountLessThan",
+            Operator.LessThanOrEquals => "JsonSchemaEvaluation.MatchItemCountLessThanOrEquals",
+            Operator.GreaterThan => "JsonSchemaEvaluation.MatchItemCountGreaterThan",
+            Operator.GreaterThanOrEquals => "JsonSchemaEvaluation.MatchItemCountGreaterThanOrEquals",
+            _ => throw new System.InvalidOperationException($"Unsupported item count operator: {op}"),
+        };
+    }
+
+    private static string GetContainsCountOperatorFunction(Operator op)
+    {
+        return op switch
+        {
+            Operator.Equals => "JsonSchemaEvaluation.MatchContainsCountEquals",
+            Operator.NotEquals => "JsonSchemaEvaluation.MatchContainsCountNotEquals",
+            Operator.LessThan => "JsonSchemaEvaluation.MatchContainsCountLessThan",
+            Operator.LessThanOrEquals => "JsonSchemaEvaluation.MatchContainsCountLessThanOrEquals",
+            Operator.GreaterThan => "JsonSchemaEvaluation.MatchContainsCountGreaterThan",
+            Operator.GreaterThanOrEquals => "JsonSchemaEvaluation.MatchContainsCountGreaterThanOrEquals",
+            _ => throw new System.InvalidOperationException($"Unsupported contains count operator: {op}"),
+        };
     }
 
     private static void EmitUnevaluatedValidation(
@@ -1103,7 +1870,154 @@ internal static partial class StandaloneEvaluatorGenerator
         TypeDeclaration typeDeclaration,
         Dictionary<string, SubschemaInfo> subschemas)
     {
-        // Stub: will be implemented in StandaloneEvaluatorGenerator.Unevaluated.cs
+        EmitUnevaluatedProperties(ctx, typeDeclaration, subschemas);
+        EmitUnevaluatedItems(ctx, typeDeclaration, subschemas);
+    }
+
+    private static void EmitUnevaluatedProperties(
+        GenerationContext ctx,
+        TypeDeclaration typeDeclaration,
+        Dictionary<string, SubschemaInfo> subschemas)
+    {
+        // Local-only evaluated property check.
+        if (typeDeclaration.LocalEvaluatedPropertyType() is FallbackObjectPropertyType localEvalProp)
+        {
+            EmitUnevaluatedPropertyLoop(ctx, typeDeclaration, subschemas, localEvalProp, "HasLocalEvaluatedProperty");
+        }
+
+        // Local + applied evaluated property check (from composition applicators).
+        if (typeDeclaration.LocalAndAppliedEvaluatedPropertyType() is FallbackObjectPropertyType localAndAppliedEvalProp)
+        {
+            EmitUnevaluatedPropertyLoop(ctx, typeDeclaration, subschemas, localAndAppliedEvalProp, "HasLocalOrAppliedEvaluatedProperty");
+        }
+    }
+
+    private static void EmitUnevaluatedPropertyLoop(
+        GenerationContext ctx,
+        TypeDeclaration typeDeclaration,
+        Dictionary<string, SubschemaInfo> subschemas,
+        FallbackObjectPropertyType fallbackProperty,
+        string checkMethodName)
+    {
+        string subLoc = fallbackProperty.ReducedType.LocatedSchema.Location.ToString();
+        if (!subschemas.TryGetValue(subLoc, out SubschemaInfo? info))
+        {
+            return;
+        }
+
+        string pathField = info.PathFieldName ?? "null";
+        string keywordLiteral = FormatUtf8Literal(fallbackProperty.Keyword.Keyword);
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (tokenType == JsonTokenType.StartObject)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("int unevalPropCount = 0;");
+        ctx.AppendLine("var unevalPropEnumerator = new ObjectEnumerator(parentDocument, parentIndex);");
+        ctx.AppendLine("while (unevalPropEnumerator.MoveNext())");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"if (!context.{checkMethodName}(unevalPropCount))");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("int unevalCurrentIndex = unevalPropEnumerator.CurrentIndex;");
+        ctx.AppendLine("using UnescapedUtf8JsonString unevalPropertyName = parentDocument.GetPropertyNameUnescaped(unevalCurrentIndex);");
+        ctx.AppendLine("JsonSchemaContext unevalPropCtx =");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, unevalCurrentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unevalPropertyName.Span, evaluationPath: {pathField});");
+        ctx.PopIndent();
+        ctx.AppendLine($"{info.MethodName}(parentDocument, unevalCurrentIndex, ref unevalPropCtx);");
+        ctx.AppendLine("if (!unevalPropCtx.IsMatch)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("context.CommitChildContext(false, ref unevalPropCtx);");
+        ctx.AppendLine($"context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, {keywordLiteral});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("context.CommitChildContext(true, ref unevalPropCtx);");
+        ctx.AppendLine("context.AddLocalEvaluatedProperty(unevalPropCount);");
+        ctx.AppendLine($"context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, {keywordLiteral});");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine();
+        ctx.AppendLine("unevalPropCount++;");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitUnevaluatedItems(
+        GenerationContext ctx,
+        TypeDeclaration typeDeclaration,
+        Dictionary<string, SubschemaInfo> subschemas)
+    {
+        ArrayItemsTypeDeclaration? unevalItemsType = typeDeclaration.ExplicitUnevaluatedItemsType();
+        if (unevalItemsType is null)
+        {
+            return;
+        }
+
+        string subLoc = unevalItemsType.ReducedType.LocatedSchema.Location.ToString();
+        if (!subschemas.TryGetValue(subLoc, out SubschemaInfo? info))
+        {
+            return;
+        }
+
+        string pathField = info.PathFieldName ?? "null";
+        string keywordLiteral = FormatUtf8Literal(((IKeyword)unevalItemsType.Keyword).Keyword);
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (tokenType == JsonTokenType.StartArray)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("int unevalItemCount = 0;");
+        ctx.AppendLine("var unevalItemEnumerator = new ArrayEnumerator(parentDocument, parentIndex);");
+        ctx.AppendLine("while (unevalItemEnumerator.MoveNext())");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("if (!context.HasLocalOrAppliedEvaluatedItem(unevalItemCount))");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("int unevalCurrentIndex = unevalItemEnumerator.CurrentIndex;");
+        ctx.AppendLine("JsonSchemaContext unevalItemCtx =");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.PushChildContext(parentDocument, unevalCurrentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unevalItemCount, evaluationPath: {pathField});");
+        ctx.PopIndent();
+        ctx.AppendLine($"{info.MethodName}(parentDocument, unevalCurrentIndex, ref unevalItemCtx);");
+        ctx.AppendLine("if (!unevalItemCtx.IsMatch)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("context.CommitChildContext(false, ref unevalItemCtx);");
+        ctx.AppendLine();
+        ctx.AppendLine("if (!context.HasCollector)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("return;");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine("else");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("context.CommitChildContext(true, ref unevalItemCtx);");
+        ctx.AppendLine("context.AddLocalEvaluatedItem(unevalItemCount);");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.AppendLine();
+        ctx.AppendLine("unevalItemCount++;");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
     }
 
     private static void EmitAnnotations(GenerationContext ctx, TypeDeclaration typeDeclaration)
