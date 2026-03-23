@@ -9,7 +9,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// <summary>
 /// The readOnly keyword.
 /// </summary>
-public sealed class ReadOnlyKeyword : INonStructuralKeyword
+public sealed class ReadOnlyKeyword : INonStructuralKeyword, IAnnotationProducingKeyword
 {
     private ReadOnlyKeyword()
     {
@@ -31,4 +31,23 @@ public sealed class ReadOnlyKeyword : INonStructuralKeyword
 
     /// <inheritdoc />
     public bool CanReduce(in JsonElement schemaValue) => true;
+
+    /// <inheritdoc/>
+    public bool TryGetAnnotationJsonValue(TypeDeclaration typeDeclaration, out string rawJsonValue)
+    {
+        if (typeDeclaration.TryGetKeyword(this, out JsonElement value))
+        {
+            rawJsonValue = value.GetRawText();
+            return true;
+        }
+
+        rawJsonValue = string.Empty;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public CoreTypes AnnotationAppliesToCoreTypes(TypeDeclaration typeDeclaration) => CoreTypes.None;
+
+    /// <inheritdoc/>
+    public bool AnnotationPreconditionsMet(TypeDeclaration typeDeclaration) => true;
 }

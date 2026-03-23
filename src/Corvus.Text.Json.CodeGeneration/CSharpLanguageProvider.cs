@@ -815,7 +815,8 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         bool useImplicitOperatorString = false,
         string lineEndSequence = "\r\n",
         bool addExplicitUsings = false,
-        GeneratedTypeAccessibility defaultAccessibility = GeneratedTypeAccessibility.Public)
+        GeneratedTypeAccessibility defaultAccessibility = GeneratedTypeAccessibility.Public,
+        CodeGenerationMode codeGenerationMode = CodeGenerationMode.TypeGeneration)
     {
         private readonly FrozenDictionary<string, NamedType> namedTypeMap = namedTypes?.ToFrozenDictionary(kvp => kvp.Reference, kvp => kvp) ?? FrozenDictionary<string, NamedType>.Empty;
         private readonly FrozenDictionary<string, string> namespaceMap = namespaces?.ToFrozenDictionary(kvp => kvp.BaseUri, kvp => kvp.DotnetNamespace) ?? FrozenDictionary<string, string>.Empty;
@@ -877,6 +878,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
         /// Gets the default accessibility of the generated types.
         /// </summary>
         internal GeneratedTypeAccessibility DefaultAccessibility { get; } = defaultAccessibility;
+
+        /// <summary>
+        /// Gets the code generation mode, determining whether to generate types,
+        /// a standalone schema evaluator, or both.
+        /// </summary>
+        internal CodeGenerationMode CodeGenerationMode { get; } = codeGenerationMode;
 
         /// <summary>
         /// Gets the namespace for the base URI.

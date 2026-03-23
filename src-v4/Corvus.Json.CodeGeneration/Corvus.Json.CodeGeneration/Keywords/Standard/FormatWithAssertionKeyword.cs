@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// <summary>
 /// The format keyword.
 /// </summary>
-public sealed class FormatWithAssertionKeyword : IFormatValidationKeyword
+public sealed class FormatWithAssertionKeyword : IFormatValidationKeyword, IAnnotationProducingKeyword
 {
     private FormatWithAssertionKeyword()
     {
@@ -53,4 +53,23 @@ public sealed class FormatWithAssertionKeyword : IFormatValidationKeyword
 
         return format != null;
     }
+
+    /// <inheritdoc/>
+    public bool TryGetAnnotationJsonValue(TypeDeclaration typeDeclaration, out string rawJsonValue)
+    {
+        if (typeDeclaration.TryGetKeyword(this, out JsonElement value))
+        {
+            rawJsonValue = value.GetRawText();
+            return true;
+        }
+
+        rawJsonValue = string.Empty;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public CoreTypes AnnotationAppliesToCoreTypes(TypeDeclaration typeDeclaration) => CoreTypes.None;
+
+    /// <inheritdoc/>
+    public bool AnnotationPreconditionsMet(TypeDeclaration typeDeclaration) => true;
 }

@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// <summary>
 /// The example keyword.
 /// </summary>
-public sealed class ExampleKeyword : IExamplesProviderKeyword, INonStructuralKeyword
+public sealed class ExampleKeyword : IExamplesProviderKeyword, INonStructuralKeyword, IAnnotationProducingKeyword
 {
     private ExampleKeyword()
     {
@@ -53,4 +53,23 @@ public sealed class ExampleKeyword : IExamplesProviderKeyword, INonStructuralKey
         example = null;
         return false;
     }
+
+    /// <inheritdoc/>
+    public bool TryGetAnnotationJsonValue(TypeDeclaration typeDeclaration, out string rawJsonValue)
+    {
+        if (typeDeclaration.TryGetKeyword(this, out JsonElement value))
+        {
+            rawJsonValue = value.GetRawText();
+            return true;
+        }
+
+        rawJsonValue = string.Empty;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public CoreTypes AnnotationAppliesToCoreTypes(TypeDeclaration typeDeclaration) => CoreTypes.None;
+
+    /// <inheritdoc/>
+    public bool AnnotationPreconditionsMet(TypeDeclaration typeDeclaration) => true;
 }

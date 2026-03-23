@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// <summary>
 /// The default keyword.
 /// </summary>
-public sealed class DefaultKeyword : IDefaultValueProviderKeyword
+public sealed class DefaultKeyword : IDefaultValueProviderKeyword, IAnnotationProducingKeyword
 {
     private DefaultKeyword()
     {
@@ -55,4 +55,23 @@ public sealed class DefaultKeyword : IDefaultValueProviderKeyword
     {
         return typeDeclaration.TryGetKeyword(this, out defaultValue);
     }
+
+    /// <inheritdoc/>
+    public bool TryGetAnnotationJsonValue(TypeDeclaration typeDeclaration, out string rawJsonValue)
+    {
+        if (typeDeclaration.TryGetKeyword(this, out JsonElement value))
+        {
+            rawJsonValue = value.GetRawText();
+            return true;
+        }
+
+        rawJsonValue = string.Empty;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public CoreTypes AnnotationAppliesToCoreTypes(TypeDeclaration typeDeclaration) => CoreTypes.None;
+
+    /// <inheritdoc/>
+    public bool AnnotationPreconditionsMet(TypeDeclaration typeDeclaration) => true;
 }

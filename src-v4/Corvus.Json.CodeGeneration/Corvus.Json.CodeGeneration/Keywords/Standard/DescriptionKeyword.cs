@@ -10,7 +10,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// <summary>
 /// The description keyword.
 /// </summary>
-public sealed class DescriptionKeyword : ILongDocumentationProviderKeyword, INonStructuralKeyword
+public sealed class DescriptionKeyword : ILongDocumentationProviderKeyword, INonStructuralKeyword, IAnnotationProducingKeyword
 {
     private DescriptionKeyword()
     {
@@ -46,4 +46,23 @@ public sealed class DescriptionKeyword : ILongDocumentationProviderKeyword, INon
         documentation = null;
         return false;
     }
+
+    /// <inheritdoc/>
+    public bool TryGetAnnotationJsonValue(TypeDeclaration typeDeclaration, out string rawJsonValue)
+    {
+        if (typeDeclaration.TryGetKeyword(this, out JsonElement value))
+        {
+            rawJsonValue = value.GetRawText();
+            return true;
+        }
+
+        rawJsonValue = string.Empty;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public CoreTypes AnnotationAppliesToCoreTypes(TypeDeclaration typeDeclaration) => CoreTypes.None;
+
+    /// <inheritdoc/>
+    public bool AnnotationPreconditionsMet(TypeDeclaration typeDeclaration) => true;
 }
