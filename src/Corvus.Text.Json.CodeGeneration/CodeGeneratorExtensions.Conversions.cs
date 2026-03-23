@@ -316,7 +316,7 @@ internal static partial class CodeGeneratorExtensions
     /// based on the core type and format.
     /// </summary>
     /// <param name="generator">The code generator.</param>
-    /// <param name"typeDeclaration">The type declaration which is the basis of the conversions.</param>
+    /// <param name="typeDeclaration">The type declaration which is the basis of the conversions.</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendCoreTypeAndFormatValueGetters(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
@@ -545,7 +545,7 @@ internal static partial class CodeGeneratorExtensions
     /// to the composition types.
     /// </summary>
     /// <param name="generator">The code generator.</param>
-    /// <param name"rootDeclaration">The type declaration which is the basis of the conversions.</param>
+    /// <param name="rootDeclaration">The type declaration which is the basis of the conversions.</param>
     /// <param name="forMutable">If <see langword="true"/>, the code should be emitted for a mutable type.</param>
     /// <returns>A reference to the generator having completed the operation.</returns>
     public static CodeGenerator AppendConversionToCompositionTypes(

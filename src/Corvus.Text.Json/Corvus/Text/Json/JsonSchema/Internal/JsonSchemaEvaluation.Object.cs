@@ -187,7 +187,7 @@ public static partial class JsonSchemaEvaluation
     /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>
-    /// <param name"value">The expected property count.</param>
+    /// <param name="value">The expected property count.</param>
     /// <param name="buffer">The buffer to write the message to.</param>
     /// <param name="written">The number of bytes written to the buffer.</param>
     /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
@@ -205,7 +205,7 @@ public static partial class JsonSchemaEvaluation
     /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>
-    /// <param name"value">The expected property count.</param>
+    /// <param name="value">The expected property count.</param>
     /// <param name="buffer">The buffer to write the message to.</param>
     /// <param name="written">The number of bytes written to the buffer.</param>
     /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
@@ -223,7 +223,7 @@ public static partial class JsonSchemaEvaluation
     /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>
-    /// <param name"value">The expected property count.</param>
+    /// <param name="value">The expected property count.</param>
     /// <param name="buffer">The buffer to write the message to.</param>
     /// <param name="written">The number of bytes written to the buffer.</param>
     /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
@@ -241,7 +241,7 @@ public static partial class JsonSchemaEvaluation
     /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>
-    /// <param name"value">The expected property count.</param>
+    /// <param name="value">The expected property count.</param>
     /// <param name="buffer">The buffer to write the message to.</param>
     /// <param name="written">The number of bytes written to the buffer.</param>
     /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
@@ -277,7 +277,7 @@ public static partial class JsonSchemaEvaluation
     /// <summary>
     /// Tries to write a message indicating the expected value for a property count.
     /// </summary>
-    /// <param name"value">The expected property count.</param>
+    /// <param name="value">The expected property count.</param>
     /// <param name="buffer">The buffer to write the message to.</param>
     /// <param name="written">The number of bytes written to the buffer.</param>
     /// <returns><see langword="true"/> if the operation succeeded; otherwise, <see langword="false"/>.</returns>
