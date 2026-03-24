@@ -1843,6 +1843,9 @@ internal static partial class StandaloneEvaluatorGenerator
             "corvus-base64-content-pre201909" => "MatchBase64Content",
             "corvus-base64-string-pre201909" => "MatchBase64String",
             "corvus-json-content-pre201909" => "MatchJsonContent",
+            "corvus-base64-content" => "MatchBase64Content",
+            "corvus-base64-string" => "MatchBase64String",
+            "corvus-json-content" => "MatchJsonContent",
 
             // Number formats
             "byte" => "MatchByte",
@@ -3347,15 +3350,20 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine("{");
                 ctx.PushIndent();
                 ctx.AppendLine($"context.ApplyEvaluated(ref {contextVar});");
+                ctx.AppendLine($"context.CommitChildContext(true, ref {contextVar});");
                 ctx.PopIndent();
                 ctx.AppendLine("}");
-                ctx.AppendLine();
-                ctx.AppendLine($"context.CommitChildContext(true, ref {contextVar});");
+                ctx.AppendLine("else");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.PopChildContext(ref {contextVar});");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
 
                 if (needsLabel && i < entries.Count - 1)
                 {
                     ctx.AppendLine();
-                    ctx.AppendLine($"if (!context.HasCollector && {composedVar})");
+                    ctx.AppendLine($"if (!context.RequiresEvaluationTracking && !context.HasCollector && {composedVar})");
                     ctx.AppendLine("{");
                     ctx.PushIndent();
                     ctx.AppendLine($"goto {endLabel};");
@@ -3440,7 +3448,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 if (needsLabel && i < entries.Count - 1)
                 {
                     ctx.AppendLine();
-                    ctx.AppendLine($"if (!context.HasCollector && {countVar} > 1)");
+                    ctx.AppendLine($"if (!context.RequiresEvaluationTracking && !context.HasCollector && {countVar} > 1)");
                     ctx.AppendLine("{");
                     ctx.PushIndent();
                     ctx.AppendLine($"goto {endLabel};");
