@@ -739,7 +739,7 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
         ctx.AppendLine("JsonSchemaContext propCtx =");
         ctx.PushIndent();
-        ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, {utf8Field}, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+        ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(entry.Info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(entry.Info.UseEvaluatedProperties)}, {utf8Field}, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
         ctx.PopIndent();
         ctx.AppendLine($"{entry.Info.MethodName}(parentDocument, currentIndex, ref propCtx);");
         ctx.AppendLine("context.CommitChildContext(propCtx.IsMatch, ref propCtx);");
@@ -2279,7 +2279,7 @@ internal static partial class StandaloneEvaluatorGenerator
                     ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
                     ctx.AppendLine($"JsonSchemaContext {patternCtxVar} =");
                     ctx.PushIndent();
-                    ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unescapedPropertyName.Span, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+                    ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(info.UseEvaluatedProperties)}, unescapedPropertyName.Span, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
                     ctx.PopIndent();
                     ctx.AppendLine($"{info.MethodName}(parentDocument, currentIndex, ref {patternCtxVar});");
                     ctx.AppendLine($"context.CommitChildContext({patternCtxVar}.IsMatch, ref {patternCtxVar});");
@@ -2314,7 +2314,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
                 ctx.AppendLine("JsonSchemaContext additionalCtx =");
                 ctx.PushIndent();
-                ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unescapedPropertyName.Span, evaluationPath: {apPathField}, schemaEvaluationPath: {apSchemaPathField});");
+                ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(additionalPropertiesInfo.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(additionalPropertiesInfo.UseEvaluatedProperties)}, unescapedPropertyName.Span, evaluationPath: {apPathField}, schemaEvaluationPath: {apSchemaPathField});");
                 ctx.PopIndent();
                 ctx.AppendLine($"{additionalPropertiesInfo.MethodName}(parentDocument, currentIndex, ref additionalCtx);");
                 ctx.AppendLine("context.CommitChildContext(additionalCtx.IsMatch, ref additionalCtx);");
@@ -2730,7 +2730,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine();
                 ctx.AppendLine("JsonSchemaContext containsCtx =");
                 ctx.PushIndent();
-                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {containsPathField}, schemaEvaluationPath: {containsSchemaPathField});");
+                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(containsInfo.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(containsInfo.UseEvaluatedProperties)}, itemCount, evaluationPath: {containsPathField}, schemaEvaluationPath: {containsSchemaPathField});");
                 ctx.PopIndent();
                 ctx.AppendLine($"{containsInfo.MethodName}(parentDocument, currentIndex, ref containsCtx);");
                 ctx.AppendLine("if (containsCtx.IsMatch)");
@@ -2788,7 +2788,7 @@ internal static partial class StandaloneEvaluatorGenerator
                     ctx.PushIndent();
                     ctx.AppendLine($"JsonSchemaContext {caseCtxVar} =");
                     ctx.PushIndent();
-                    ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+                    ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(info.UseEvaluatedProperties)}, itemCount, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
                     ctx.PopIndent();
                     ctx.AppendLine($"{info.MethodName}(parentDocument, currentIndex, ref {caseCtxVar});");
                     ctx.AppendLine($"if (!{caseCtxVar}.IsMatch)");
@@ -2828,7 +2828,7 @@ internal static partial class StandaloneEvaluatorGenerator
                     ctx.PushIndent();
                     ctx.AppendLine("JsonSchemaContext nonTupleCtx =");
                     ctx.PushIndent();
-                    ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {itemsPathField}, schemaEvaluationPath: {itemsSchemaPathField});");
+                    ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(itemsInfo.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(itemsInfo.UseEvaluatedProperties)}, itemCount, evaluationPath: {itemsPathField}, schemaEvaluationPath: {itemsSchemaPathField});");
                     ctx.PopIndent();
                     ctx.AppendLine($"{itemsInfo.MethodName}(parentDocument, currentIndex, ref nonTupleCtx);");
                     ctx.AppendLine("if (!nonTupleCtx.IsMatch)");
@@ -2869,7 +2869,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine();
                 ctx.AppendLine("JsonSchemaContext itemCtx =");
                 ctx.PushIndent();
-                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, itemCount, evaluationPath: {itemsPathField}, schemaEvaluationPath: {itemsSchemaPathField});");
+                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: {BoolLiteral(itemsInfo.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(itemsInfo.UseEvaluatedProperties)}, itemCount, evaluationPath: {itemsPathField}, schemaEvaluationPath: {itemsSchemaPathField});");
                 ctx.PopIndent();
                 ctx.AppendLine($"{itemsInfo.MethodName}(parentDocument, currentIndex, ref itemCtx);");
                 ctx.AppendLine("if (!itemCtx.IsMatch)");
@@ -3042,7 +3042,7 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("using UnescapedUtf8JsonString unevalPropertyName = parentDocument.GetPropertyNameUnescaped(unevalCurrentIndex);");
         ctx.AppendLine("JsonSchemaContext unevalPropCtx =");
         ctx.PushIndent();
-        ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, unevalCurrentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unevalPropertyName.Span, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+        ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, unevalCurrentIndex, useEvaluatedItems: {BoolLiteral(info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(info.UseEvaluatedProperties)}, unevalPropertyName.Span, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
         ctx.PopIndent();
         ctx.AppendLine($"{info.MethodName}(parentDocument, unevalCurrentIndex, ref unevalPropCtx);");
         ctx.AppendLine("if (!unevalPropCtx.IsMatch)");
@@ -3106,7 +3106,7 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("int unevalCurrentIndex = unevalItemEnumerator.CurrentIndex;");
         ctx.AppendLine("JsonSchemaContext unevalItemCtx =");
         ctx.PushIndent();
-        ctx.AppendLine($"context.PushChildContext(parentDocument, unevalCurrentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unevalItemCount, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+        ctx.AppendLine($"context.PushChildContext(parentDocument, unevalCurrentIndex, useEvaluatedItems: {BoolLiteral(info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(info.UseEvaluatedProperties)}, unevalItemCount, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
         ctx.PopIndent();
         ctx.AppendLine($"{info.MethodName}(parentDocument, unevalCurrentIndex, ref unevalItemCtx);");
         ctx.AppendLine("if (!unevalItemCtx.IsMatch)");
