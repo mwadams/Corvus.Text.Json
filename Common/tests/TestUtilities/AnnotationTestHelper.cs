@@ -2,7 +2,6 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using System.Buffers;
 using Corvus.Text.Json;
 using Xunit;
 
@@ -42,7 +41,7 @@ public static class AnnotationTestHelper
         evaluator.Evaluate(instance, collector);
 
         // Write the annotations to a buffer using the Utf8JsonWriter API.
-        var buffer = new ArrayBufferWriter<byte>(4096);
+        using var buffer = new MemoryStream();
         using (var writer = new Utf8JsonWriter(buffer, default))
         {
             JsonSchemaAnnotationProducer.WriteAnnotationsTo(collector, writer);
@@ -50,7 +49,7 @@ public static class AnnotationTestHelper
 
         // Parse the produced annotations as a CTJ JsonElement.
         using ParsedJsonDocument<Corvus.Text.Json.JsonElement> producedDoc =
-            ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(buffer.WrittenMemory);
+            ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(buffer.ToArray());
         Corvus.Text.Json.JsonElement producedRoot = producedDoc.RootElement;
 
         // Parse the expected JSON as a CTJ JsonElement.
