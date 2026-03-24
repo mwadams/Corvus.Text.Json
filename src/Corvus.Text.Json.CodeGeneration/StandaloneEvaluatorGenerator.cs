@@ -558,14 +558,14 @@ internal static partial class StandaloneEvaluatorGenerator
     private static Dictionary<string, PropertyMatcherInfo> CollectPropertyMatcherInfo(
         Dictionary<string, SubschemaInfo> subschemas)
     {
-        var result = new Dictionary<string, PropertyMatcherInfo>();
+        Dictionary<string, PropertyMatcherInfo> result = [];
 
         foreach (KeyValuePair<string, SubschemaInfo> kvp in subschemas)
         {
             TypeDeclaration typeDeclaration = kvp.Value.TypeDeclaration;
 
             // Collect local named properties with subschema validation.
-            var properties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
+            List<(PropertyDeclaration Property, SubschemaInfo Info)> properties = [];
             foreach (PropertyDeclaration prop in typeDeclaration.PropertyDeclarations)
             {
                 if (prop.LocalOrComposed == LocalOrComposed.Local && prop.Keyword is IObjectPropertyValidationKeyword)
@@ -584,26 +584,23 @@ internal static partial class StandaloneEvaluatorGenerator
             }
 
             // Collect required properties from this list.
-            var requiredProperties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
-            foreach (var entry in properties)
+            List<(PropertyDeclaration Property, SubschemaInfo Info)> requiredProperties = [];
+            foreach ((PropertyDeclaration property, SubschemaInfo info) in properties)
             {
-                if (entry.Property.RequiredOrOptional == RequiredOrOptional.Required)
+                if (property.RequiredOrOptional == RequiredOrOptional.Required)
                 {
-                    requiredProperties.Add(entry);
+                    requiredProperties.Add((property, info));
                 }
             }
 
-            var matcherInfo = new PropertyMatcherInfo(kvp.Value.MethodName)
-            {
-                RequiredPropertyCount = requiredProperties.Count,
-            };
+            var matcherInfo = new PropertyMatcherInfo(kvp.Value.MethodName);
 
-            foreach (var entry in properties)
+            foreach ((PropertyDeclaration property, SubschemaInfo info) in properties)
             {
-                int requiredIndex = requiredProperties.FindIndex(r => r.Property == entry.Property);
+                int requiredIndex = requiredProperties.FindIndex(r => r.Property == property);
                 matcherInfo.Properties.Add(new PropertyMatcherEntry(
-                    entry.Property.JsonPropertyName,
-                    entry.Info,
+                    property.JsonPropertyName,
+                    info,
                     requiredIndex));
             }
 
@@ -3191,7 +3188,7 @@ internal static partial class StandaloneEvaluatorGenerator
         /// <param name="methodName">The evaluation method name for the schema.</param>
         public PropertyMatcherInfo(string methodName)
         {
-            this.MethodName = methodName;
+            MethodName = methodName;
         }
 
         /// <summary>
@@ -3202,28 +3199,23 @@ internal static partial class StandaloneEvaluatorGenerator
         /// <summary>
         /// Gets the list of named property entries.
         /// </summary>
-        public List<PropertyMatcherEntry> Properties { get; } = new();
-
-        /// <summary>
-        /// Gets or sets the number of required properties.
-        /// </summary>
-        public int RequiredPropertyCount { get; set; }
+        public List<PropertyMatcherEntry> Properties { get; } = [];
 
         /// <summary>
         /// Gets a value indicating whether to use a hash-based <see cref="PropertySchemaMatchers{T}"/>
         /// map (true for &gt;1 properties) or a simple if/SequenceEqual chain.
         /// </summary>
-        public bool UseMap => this.Properties.Count > 1;
+        public bool UseMap => Properties.Count > 1;
 
         /// <summary>
         /// Gets the delegate type name for this schema's property validators.
         /// </summary>
-        public string DelegateTypeName => $"NamedPropertyValidator_{this.MethodName}";
+        public string DelegateTypeName => $"NamedPropertyValidator_{MethodName}";
 
         /// <summary>
         /// Gets the TryGetNamedMatcher method name for this schema.
         /// </summary>
-        public string TryGetMethodName => $"TryGetNamedMatcher_{this.MethodName}";
+        public string TryGetMethodName => $"TryGetNamedMatcher_{MethodName}";
     }
 
     /// <summary>
@@ -3239,9 +3231,9 @@ internal static partial class StandaloneEvaluatorGenerator
         /// <param name="requiredIndex">The index in the required property list, or -1 if not required.</param>
         public PropertyMatcherEntry(string jsonPropertyName, SubschemaInfo info, int requiredIndex)
         {
-            this.JsonPropertyName = jsonPropertyName;
-            this.Info = info;
-            this.RequiredIndex = requiredIndex;
+            JsonPropertyName = jsonPropertyName;
+            Info = info;
+            RequiredIndex = requiredIndex;
         }
 
         /// <summary>
@@ -3262,17 +3254,17 @@ internal static partial class StandaloneEvaluatorGenerator
         /// <summary>
         /// Gets the safe identifier name derived from the property name.
         /// </summary>
-        public string SafeIdentifier => MakeSafeIdentifier(this.JsonPropertyName);
+        public string SafeIdentifier => MakeSafeIdentifier(JsonPropertyName);
 
         /// <summary>
         /// Gets the UTF-8 constant field name.
         /// </summary>
-        public string Utf8FieldName(string methodName) => $"PropNameUtf8_{methodName}_{this.SafeIdentifier}";
+        public string Utf8FieldName(string methodName) => $"PropNameUtf8_{methodName}_{SafeIdentifier}";
 
         /// <summary>
         /// Gets the per-property matcher method name.
         /// </summary>
-        public string MatchMethodName(string methodName) => $"MatchProperty_{methodName}_{this.SafeIdentifier}";
+        public string MatchMethodName(string methodName) => $"MatchProperty_{methodName}_{SafeIdentifier}";
     }
 
     /// <summary>
