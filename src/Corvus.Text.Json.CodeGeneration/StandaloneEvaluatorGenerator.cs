@@ -1748,11 +1748,9 @@ internal static partial class StandaloneEvaluatorGenerator
             return;
         }
 
-        if (!(typeDeclaration.IsFormatAssertion() || typeDeclaration.AlwaysAssertFormat()))
+        if (!typeDeclaration.AlwaysAssertFormat())
         {
-            // Format is not asserted — emit ignored annotation.
-            ctx.AppendLine();
-            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredFormatNotAsserted, {formatKeywordLiteral});");
+            // Format is not asserted — the annotation value is emitted by EmitAnnotations.
             return;
         }
 
