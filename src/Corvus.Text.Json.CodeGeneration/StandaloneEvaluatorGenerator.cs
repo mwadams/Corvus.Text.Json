@@ -51,6 +51,11 @@ internal static partial class StandaloneEvaluatorGenerator
         EmitPathProviderFields(ctx, subschemas);
         EmitPatternRegexFields(ctx, rootType);
 
+        // Collect and emit property matcher infrastructure (delegate types, UTF-8 constants,
+        // per-property methods, PropertySchemaMatchers hash maps, TryGetNamedMatcher wrappers).
+        Dictionary<string, PropertyMatcherInfo> propertyMatchers = CollectPropertyMatcherInfo(subschemas);
+        EmitPropertyMatcherInfrastructure(ctx, propertyMatchers);
+
         // Emit public Evaluate<TElement> entry point.
         EmitPublicEvaluateMethod(ctx, rootType);
 
@@ -58,7 +63,7 @@ internal static partial class StandaloneEvaluatorGenerator
         foreach (KeyValuePair<string, SubschemaInfo> kvp in subschemas)
         {
             ctx.AppendLine();
-            EmitSchemaEvaluationMethod(ctx, kvp.Value.TypeDeclaration, kvp.Value.MethodName, subschemas);
+            EmitSchemaEvaluationMethod(ctx, kvp.Value.TypeDeclaration, kvp.Value.MethodName, subschemas, propertyMatchers);
         }
 
         EmitClassClose(ctx);
@@ -550,6 +555,234 @@ internal static partial class StandaloneEvaluatorGenerator
         return string.Empty;
     }
 
+    private static Dictionary<string, PropertyMatcherInfo> CollectPropertyMatcherInfo(
+        Dictionary<string, SubschemaInfo> subschemas)
+    {
+        var result = new Dictionary<string, PropertyMatcherInfo>();
+
+        foreach (KeyValuePair<string, SubschemaInfo> kvp in subschemas)
+        {
+            TypeDeclaration typeDeclaration = kvp.Value.TypeDeclaration;
+
+            // Collect local named properties with subschema validation.
+            var properties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
+            foreach (PropertyDeclaration prop in typeDeclaration.PropertyDeclarations)
+            {
+                if (prop.LocalOrComposed == LocalOrComposed.Local && prop.Keyword is IObjectPropertyValidationKeyword)
+                {
+                    string subLoc = prop.UnreducedPropertyType.LocatedSchema.Location.ToString();
+                    if (subschemas.TryGetValue(subLoc, out SubschemaInfo? info))
+                    {
+                        properties.Add((prop, info));
+                    }
+                }
+            }
+
+            if (properties.Count == 0)
+            {
+                continue;
+            }
+
+            // Collect required properties from this list.
+            var requiredProperties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
+            foreach (var entry in properties)
+            {
+                if (entry.Property.RequiredOrOptional == RequiredOrOptional.Required)
+                {
+                    requiredProperties.Add(entry);
+                }
+            }
+
+            var matcherInfo = new PropertyMatcherInfo(kvp.Value.MethodName)
+            {
+                RequiredPropertyCount = requiredProperties.Count,
+            };
+
+            foreach (var entry in properties)
+            {
+                int requiredIndex = requiredProperties.FindIndex(r => r.Property == entry.Property);
+                matcherInfo.Properties.Add(new PropertyMatcherEntry(
+                    entry.Property.JsonPropertyName,
+                    entry.Info,
+                    requiredIndex));
+            }
+
+            result[kvp.Key] = matcherInfo;
+        }
+
+        return result;
+    }
+
+    private static void EmitPropertyMatcherInfrastructure(
+        GenerationContext ctx,
+        Dictionary<string, PropertyMatcherInfo> propertyMatchers)
+    {
+        foreach (KeyValuePair<string, PropertyMatcherInfo> kvp in propertyMatchers)
+        {
+            PropertyMatcherInfo matcherInfo = kvp.Value;
+
+            // Emit UTF-8 property name constants.
+            ctx.AppendLine();
+            foreach (PropertyMatcherEntry entry in matcherInfo.Properties)
+            {
+                string quotedName = SymbolDisplay.FormatLiteral(entry.JsonPropertyName, true);
+                ctx.AppendLine($"private static ReadOnlySpan<byte> {entry.Utf8FieldName(matcherInfo.MethodName)} => {quotedName}u8;");
+            }
+
+            // Emit delegate type.
+            ctx.AppendLine();
+            ctx.AppendLine($"private delegate void {matcherInfo.DelegateTypeName}(");
+            ctx.PushIndent();
+            ctx.AppendLine("IJsonDocument parentDocument,");
+            ctx.AppendLine("int currentIndex,");
+            ctx.AppendLine("int propertyCount,");
+            ctx.AppendLine("ref JsonSchemaContext context,");
+            ctx.AppendLine("Span<uint> requiredBits);");
+            ctx.PopIndent();
+
+            // Emit per-property validator methods.
+            foreach (PropertyMatcherEntry entry in matcherInfo.Properties)
+            {
+                EmitPerPropertyMethod(ctx, matcherInfo, entry);
+            }
+
+            // Emit matchers / TryGetNamedMatcher.
+            if (matcherInfo.UseMap)
+            {
+                EmitMatchersMap(ctx, matcherInfo);
+            }
+
+            EmitTryGetNamedMatcher(ctx, matcherInfo);
+        }
+    }
+
+    private static void EmitPerPropertyMethod(
+        GenerationContext ctx,
+        PropertyMatcherInfo matcherInfo,
+        PropertyMatcherEntry entry)
+    {
+        string methodName = entry.MatchMethodName(matcherInfo.MethodName);
+        string utf8Field = entry.Utf8FieldName(matcherInfo.MethodName);
+        string pathField = entry.Info.PathFieldName ?? "null";
+        string schemaPathField = entry.Info.SchemaPathFieldName ?? "null";
+
+        ctx.AppendLine();
+        ctx.AppendLine($"private static void {methodName}(");
+        ctx.PushIndent();
+        ctx.AppendLine("IJsonDocument parentDocument,");
+        ctx.AppendLine("int currentIndex,");
+        ctx.AppendLine("int propertyCount,");
+        ctx.AppendLine("ref JsonSchemaContext context,");
+        ctx.AppendLine("Span<uint> requiredBits)");
+        ctx.PopIndent();
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
+        ctx.AppendLine("JsonSchemaContext propCtx =");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, {utf8Field}, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+        ctx.PopIndent();
+        ctx.AppendLine($"{entry.Info.MethodName}(parentDocument, currentIndex, ref propCtx);");
+        ctx.AppendLine("context.CommitChildContext(propCtx.IsMatch, ref propCtx);");
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("return;");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+
+        // Set required bit if this property is required.
+        if (entry.RequiredIndex >= 0)
+        {
+            int offset = entry.RequiredIndex / 32;
+            int bit = entry.RequiredIndex % 32;
+            ctx.AppendLine();
+            ctx.AppendLine($"requiredBits[{offset}] |= 0x{(1u << bit):X8};");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitMatchersMap(
+        GenerationContext ctx,
+        PropertyMatcherInfo matcherInfo)
+    {
+        string delegateName = matcherInfo.DelegateTypeName;
+        string builderName = $"MatchersBuilder_{matcherInfo.MethodName}";
+        string matchersName = $"Matchers_{matcherInfo.MethodName}";
+
+        ctx.AppendLine();
+        ctx.AppendLine($"private static PropertySchemaMatchers<{delegateName}> {builderName}()");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"return new PropertySchemaMatchers<{delegateName}>([");
+        ctx.PushIndent();
+
+        foreach (PropertyMatcherEntry entry in matcherInfo.Properties)
+        {
+            ctx.AppendLine($"(static () => {entry.Utf8FieldName(matcherInfo.MethodName)}, {entry.MatchMethodName(matcherInfo.MethodName)}),");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("]);");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+
+        ctx.AppendLine();
+        ctx.AppendLine($"private static PropertySchemaMatchers<{delegateName}> {matchersName} {{ get; }} = {builderName}();");
+    }
+
+    private static void EmitTryGetNamedMatcher(
+        GenerationContext ctx,
+        PropertyMatcherInfo matcherInfo)
+    {
+        string delegateName = matcherInfo.DelegateTypeName;
+        string tryGetName = matcherInfo.TryGetMethodName;
+
+        ctx.AppendLine();
+        ctx.AppendLine($"private static bool {tryGetName}(");
+        ctx.PushIndent();
+        ctx.AppendLine("ReadOnlySpan<byte> span,");
+        ctx.AppendLine("#if NET");
+        ctx.AppendLine("[NotNullWhen(true)]");
+        ctx.AppendLine("#endif");
+        ctx.AppendLine($"out {delegateName}? matcher)");
+        ctx.PopIndent();
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        if (matcherInfo.UseMap)
+        {
+            // Use the PropertySchemaMatchers hash map.
+            string matchersName = $"Matchers_{matcherInfo.MethodName}";
+            ctx.AppendLine($"return {matchersName}.TryGetNamedMatcher(span, out matcher);");
+        }
+        else
+        {
+            // Single property: use simple SequenceEqual.
+            foreach (PropertyMatcherEntry entry in matcherInfo.Properties)
+            {
+                ctx.AppendLine($"if (span.SequenceEqual({entry.Utf8FieldName(matcherInfo.MethodName)}))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"matcher = {entry.MatchMethodName(matcherInfo.MethodName)};");
+                ctx.AppendLine("return true;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                ctx.AppendLine();
+            }
+
+            ctx.AppendLine("matcher = default;");
+            ctx.AppendLine("return false;");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
     private static void EmitPublicEvaluateMethod(GenerationContext ctx, TypeDeclaration rootType)
     {
         bool useEvaluatedItems = rootType.RequiresItemsEvaluationTracking();
@@ -605,7 +838,8 @@ internal static partial class StandaloneEvaluatorGenerator
         GenerationContext ctx,
         TypeDeclaration typeDeclaration,
         string methodName,
-        Dictionary<string, SubschemaInfo> subschemas)
+        Dictionary<string, SubschemaInfo> subschemas,
+        Dictionary<string, PropertyMatcherInfo> propertyMatchers)
     {
         if (typeDeclaration.LocatedSchema.IsBooleanSchema)
         {
@@ -665,7 +899,9 @@ internal static partial class StandaloneEvaluatorGenerator
         EmitShortCircuit(ctx);
 
         // Priority: AfterComposition (~2^31+2000) — object, array
-        EmitObjectValidation(ctx, typeDeclaration, subschemas);
+        string location = typeDeclaration.LocatedSchema.Location.ToString();
+        propertyMatchers.TryGetValue(location, out PropertyMatcherInfo? matcherInfo);
+        EmitObjectValidation(ctx, typeDeclaration, subschemas, matcherInfo);
         EmitArrayValidation(ctx, typeDeclaration, subschemas);
         EmitShortCircuit(ctx);
 
@@ -1395,7 +1631,8 @@ internal static partial class StandaloneEvaluatorGenerator
     private static void EmitObjectValidation(
         GenerationContext ctx,
         TypeDeclaration typeDeclaration,
-        Dictionary<string, SubschemaInfo> subschemas)
+        Dictionary<string, SubschemaInfo> subschemas,
+        PropertyMatcherInfo? matcherInfo)
     {
         // Collect local named properties with subschema validation.
         var properties = new List<(PropertyDeclaration Property, SubschemaInfo Info)>();
@@ -1520,6 +1757,12 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             ctx.AppendLine($"Span<uint> requiredBits = stackalloc uint[{requiredIntCount}];");
         }
+        else if (matcherInfo is not null)
+        {
+            // The property matcher delegate always receives requiredBits; declare an empty span
+            // when there are no required properties.
+            ctx.AppendLine("Span<uint> requiredBits = default;");
+        }
 
         // DependentSchemas property tracking bitmask.
         if (dependentSchemas.Count > 0)
@@ -1538,46 +1781,17 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.AppendLine("int currentIndex = enumerator.CurrentIndex;");
             ctx.AppendLine("using UnescapedUtf8JsonString unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(currentIndex);");
 
-            bool firstProperty = true;
-            for (int i = 0; i < properties.Count; i++)
+            // Named property matching via hash-based PropertySchemaMatchers or SequenceEqual fallback.
+            if (matcherInfo is not null)
             {
-                PropertyDeclaration prop = properties[i].Property;
-                SubschemaInfo info = properties[i].Info;
-                string quotedPropName = SymbolDisplay.FormatLiteral(prop.JsonPropertyName, true);
-                string pathField = info.PathFieldName ?? "null";
-                string schemaPathField = info.SchemaPathFieldName ?? "null";
-                string propCtxVar = $"propCtx_{i}";
+                string delegateName = matcherInfo.DelegateTypeName;
+                string tryGetMethod = matcherInfo.TryGetMethodName;
 
                 ctx.AppendLine();
-                if (firstProperty)
-                {
-                    ctx.AppendLine($"if (unescapedPropertyName.Span.SequenceEqual({quotedPropName}u8))");
-                    firstProperty = false;
-                }
-                else
-                {
-                    ctx.AppendLine($"else if (unescapedPropertyName.Span.SequenceEqual({quotedPropName}u8))");
-                }
-
+                ctx.AppendLine($"if ({tryGetMethod}(unescapedPropertyName.Span, out {delegateName}? validator))");
                 ctx.AppendLine("{");
                 ctx.PushIndent();
-                ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
-                ctx.AppendLine($"JsonSchemaContext {propCtxVar} =");
-                ctx.PushIndent();
-                ctx.AppendLine($"context.PushChildContextUnescaped(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, unescapedPropertyName.Span, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
-                ctx.PopIndent();
-                ctx.AppendLine($"{info.MethodName}(parentDocument, currentIndex, ref {propCtxVar});");
-                ctx.AppendLine($"context.CommitChildContext({propCtxVar}.IsMatch, ref {propCtxVar});");
-
-                // Track required bit.
-                int requiredIndex = requiredProperties.FindIndex(r => r.Property == prop);
-                if (requiredIndex >= 0)
-                {
-                    int offset = requiredIndex / 32;
-                    int bit = requiredIndex % 32;
-                    ctx.AppendLine($"requiredBits[{offset}] |= 0x{(1u << bit):X8};");
-                }
-
+                ctx.AppendLine("validator!(parentDocument, currentIndex, propertyCount, ref context, requiredBits);");
                 ctx.AppendLine();
                 ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
                 ctx.AppendLine("{");
@@ -2964,6 +3178,101 @@ internal static partial class StandaloneEvaluatorGenerator
     {
         ctx.PopIndent();
         ctx.AppendLine("}");
+    }
+
+    /// <summary>
+    /// Tracks property matcher information for a schema that has named properties.
+    /// </summary>
+    internal sealed class PropertyMatcherInfo
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyMatcherInfo"/> class.
+        /// </summary>
+        /// <param name="methodName">The evaluation method name for the schema.</param>
+        public PropertyMatcherInfo(string methodName)
+        {
+            this.MethodName = methodName;
+        }
+
+        /// <summary>
+        /// Gets the evaluation method name (e.g. "EvaluateRoot").
+        /// </summary>
+        public string MethodName { get; }
+
+        /// <summary>
+        /// Gets the list of named property entries.
+        /// </summary>
+        public List<PropertyMatcherEntry> Properties { get; } = new();
+
+        /// <summary>
+        /// Gets or sets the number of required properties.
+        /// </summary>
+        public int RequiredPropertyCount { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether to use a hash-based <see cref="PropertySchemaMatchers{T}"/>
+        /// map (true for &gt;1 properties) or a simple if/SequenceEqual chain.
+        /// </summary>
+        public bool UseMap => this.Properties.Count > 1;
+
+        /// <summary>
+        /// Gets the delegate type name for this schema's property validators.
+        /// </summary>
+        public string DelegateTypeName => $"NamedPropertyValidator_{this.MethodName}";
+
+        /// <summary>
+        /// Gets the TryGetNamedMatcher method name for this schema.
+        /// </summary>
+        public string TryGetMethodName => $"TryGetNamedMatcher_{this.MethodName}";
+    }
+
+    /// <summary>
+    /// Tracks information about a single named property in a property matcher.
+    /// </summary>
+    internal sealed class PropertyMatcherEntry
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyMatcherEntry"/> class.
+        /// </summary>
+        /// <param name="jsonPropertyName">The JSON property name.</param>
+        /// <param name="info">The subschema info for the property type.</param>
+        /// <param name="requiredIndex">The index in the required property list, or -1 if not required.</param>
+        public PropertyMatcherEntry(string jsonPropertyName, SubschemaInfo info, int requiredIndex)
+        {
+            this.JsonPropertyName = jsonPropertyName;
+            this.Info = info;
+            this.RequiredIndex = requiredIndex;
+        }
+
+        /// <summary>
+        /// Gets the JSON property name (e.g. "name").
+        /// </summary>
+        public string JsonPropertyName { get; }
+
+        /// <summary>
+        /// Gets the subschema info for the property type.
+        /// </summary>
+        public SubschemaInfo Info { get; }
+
+        /// <summary>
+        /// Gets the index in the required property list, or -1 if not required.
+        /// </summary>
+        public int RequiredIndex { get; }
+
+        /// <summary>
+        /// Gets the safe identifier name derived from the property name.
+        /// </summary>
+        public string SafeIdentifier => MakeSafeIdentifier(this.JsonPropertyName);
+
+        /// <summary>
+        /// Gets the UTF-8 constant field name.
+        /// </summary>
+        public string Utf8FieldName(string methodName) => $"PropNameUtf8_{methodName}_{this.SafeIdentifier}";
+
+        /// <summary>
+        /// Gets the per-property matcher method name.
+        /// </summary>
+        public string MatchMethodName(string methodName) => $"MatchProperty_{methodName}_{this.SafeIdentifier}";
     }
 
     /// <summary>
