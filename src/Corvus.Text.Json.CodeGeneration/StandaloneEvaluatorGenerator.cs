@@ -49,7 +49,7 @@ internal static partial class StandaloneEvaluatorGenerator
         EmitClassOpen(ctx, evaluatorClassName);
 
         EmitPathProviderFields(ctx, subschemas);
-        EmitPatternRegexFields(ctx, rootType);
+        EmitPatternRegexFields(ctx, subschemas);
 
         // Collect and emit property matcher infrastructure (delegate types, UTF-8 constants,
         // per-property methods, PropertySchemaMatchers hash maps, TryGetNamedMatcher wrappers).
@@ -66,6 +66,7 @@ internal static partial class StandaloneEvaluatorGenerator
             EmitSchemaEvaluationMethod(ctx, kvp.Value.TypeDeclaration, kvp.Value.MethodName, subschemas, propertyMatchers);
         }
 
+        EmitDeferredConstantFields(ctx);
         EmitClassClose(ctx);
 
         string content = ctx.ToString();
@@ -86,6 +87,9 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             return;
         }
+
+        // Ensure method name is unique across all subschemas.
+        methodName = MakeUniqueMethodName(methodName, subschemas);
 
         subschemas[location] = new SubschemaInfo(
             methodName,
@@ -294,8 +298,7 @@ internal static partial class StandaloneEvaluatorGenerator
             {
                 string pathMod = StripFragmentPrefix(propKw.GetPathModifier(prop));
                 string path = $"{schemaPath}/{pathMod}";
-                string safeName = MakeSafeIdentifier(prop.JsonPropertyName);
-                CollectSubschemas(prop.UnreducedPropertyType, subschemas, path, MakeMethodName($"Prop{safeName}", schemaPath));
+                CollectSubschemas(prop.UnreducedPropertyType, subschemas, path, MakeMethodName(SanitizeForIdentifier(pathMod), schemaPath));
             }
         }
 
@@ -319,8 +322,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 {
                     string pathMod = StripFragmentPrefix(patternProp.Keyword.GetPathModifier(patternProp.Pattern, patternProp.UnreducedPatternPropertyType.ReducedTypeDeclaration()));
                     string path = $"{schemaPath}/{pathMod}";
-                    string safeName = MakeSafeIdentifier(patternProp.Pattern);
-                    CollectSubschemas(patternProp.UnreducedPatternPropertyType, subschemas, path, MakeMethodName($"PatternProp{safeName}", schemaPath));
+                    CollectSubschemas(patternProp.UnreducedPatternPropertyType, subschemas, path, MakeMethodName(SanitizeForIdentifier(pathMod), schemaPath));
                 }
             }
         }
@@ -334,8 +336,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 {
                     string pathMod = StripFragmentPrefix(depSchema.KeywordPathModifier);
                     string path = $"{schemaPath}/{pathMod}";
-                    string safeName = MakeSafeIdentifier(depSchema.JsonPropertyName);
-                    CollectSubschemas(depSchema.UnreducedDepdendentSchemaType, subschemas, path, MakeMethodName($"DepSchema{safeName}", schemaPath));
+                    CollectSubschemas(depSchema.UnreducedDepdendentSchemaType, subschemas, path, MakeMethodName(SanitizeForIdentifier(pathMod), schemaPath));
                 }
             }
         }
@@ -450,6 +451,48 @@ internal static partial class StandaloneEvaluatorGenerator
         return $"Evaluate{sanitized}{suffix}";
     }
 
+    private static string MakeUniqueMethodName(string methodName, Dictionary<string, SubschemaInfo> subschemas)
+    {
+        // Check if any existing subschema already uses this method name.
+        bool collision = false;
+        foreach (KeyValuePair<string, SubschemaInfo> kvp in subschemas)
+        {
+            if (kvp.Value.MethodName == methodName)
+            {
+                collision = true;
+                break;
+            }
+        }
+
+        if (!collision)
+        {
+            return methodName;
+        }
+
+        // Append a numeric suffix to make it unique.
+        int suffix = 1;
+        while (true)
+        {
+            string candidate = $"{methodName}_{suffix}";
+            bool found = false;
+            foreach (KeyValuePair<string, SubschemaInfo> kvp in subschemas)
+            {
+                if (kvp.Value.MethodName == candidate)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                return candidate;
+            }
+
+            suffix++;
+        }
+    }
+
     private static string SanitizeForIdentifier(string path)
     {
         // Convert a JSON Pointer path like "properties/foo" into a PascalCase identifier part like "PropertiesFoo".
@@ -506,13 +549,16 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine();
     }
 
-    private static void EmitPatternRegexFields(GenerationContext ctx, TypeDeclaration typeDeclaration)
+    private static void EmitPatternRegexFields(GenerationContext ctx, Dictionary<string, SubschemaInfo> subschemas)
     {
         var emittedPatterns = new HashSet<string>();
-        EmitPatternRegexFieldsRecursive(ctx, typeDeclaration, emittedPatterns);
+        foreach (SubschemaInfo info in subschemas.Values)
+        {
+            EmitPatternRegexFieldsForType(ctx, info.TypeDeclaration, emittedPatterns);
+        }
     }
 
-    private static void EmitPatternRegexFieldsRecursive(GenerationContext ctx, TypeDeclaration typeDeclaration, HashSet<string> emittedPatterns)
+    private static void EmitPatternRegexFieldsForType(GenerationContext ctx, TypeDeclaration typeDeclaration, HashSet<string> emittedPatterns)
     {
         if (typeDeclaration.PatternProperties() is { } patternPropsDict)
         {
@@ -526,6 +572,20 @@ internal static partial class StandaloneEvaluatorGenerator
                         string quotedPattern = SymbolDisplay.FormatLiteral(patternProp.Pattern, true);
                         ctx.AppendLine($"private static readonly System.Text.RegularExpressions.Regex {fieldName} = new({quotedPattern}, System.Text.RegularExpressions.RegexOptions.Compiled);");
                     }
+                }
+            }
+        }
+
+        // String regex validation keywords (e.g., "pattern" keyword).
+        foreach (IStringRegexValidationProviderKeyword keyword in typeDeclaration.Keywords().OfType<IStringRegexValidationProviderKeyword>())
+        {
+            if (keyword.TryGetValidationRegularExpressions(typeDeclaration, out IReadOnlyList<string>? expressions) && expressions.Count > 0)
+            {
+                string fieldName = "PatternRegex_" + MakeSafeIdentifier(keyword.Keyword);
+                if (emittedPatterns.Add(fieldName))
+                {
+                    string quotedPattern = SymbolDisplay.FormatLiteral(expressions[0], true);
+                    ctx.AppendLine($"private static readonly System.Text.RegularExpressions.Regex {fieldName} = new({quotedPattern}, System.Text.RegularExpressions.RegexOptions.Compiled);");
                 }
             }
         }
@@ -1160,9 +1220,11 @@ internal static partial class StandaloneEvaluatorGenerator
 
     private static void EmitComplexConstValidation(GenerationContext ctx, JsonElement constantValue, string formattedKeyword)
     {
-        string quotedRawText = SymbolDisplay.FormatLiteral(constantValue.GetRawText(), true);
+        string rawText = constantValue.GetRawText();
+        string quotedRawText = SymbolDisplay.FormatLiteral(rawText, true);
+        string constField = GetOrCreateConstantField(ctx, rawText);
 
-        ctx.AppendLine($"if (JsonElementHelpers.DeepEqualsNoParentDocumentCheck({quotedRawText}, tokenType, parentDocument, parentIndex))");
+        ctx.AppendLine($"if (JsonElementHelpers.DeepEqualsNoParentDocumentCheck({constField}, 0, parentDocument, parentIndex))");
         ctx.AppendLine("{");
         ctx.PushIndent();
         ctx.AppendLine($"context.EvaluatedKeyword(true, {quotedRawText}, messageProvider: JsonSchemaEvaluation.ExpectedConstant, {formattedKeyword});");
@@ -1279,9 +1341,10 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             foreach (JsonElement c in constants.Where(c => c.ValueKind is JsonValueKind.Object or JsonValueKind.Array))
             {
-                string quotedRaw = SymbolDisplay.FormatLiteral(c.GetRawText(), true);
+                string rawText = c.GetRawText();
+                string constField = GetOrCreateConstantField(ctx, rawText);
                 ctx.AppendLine();
-                ctx.AppendLine($"if (JsonElementHelpers.DeepEqualsNoParentDocumentCheck({quotedRaw}, tokenType, parentDocument, parentIndex))");
+                ctx.AppendLine($"if (JsonElementHelpers.DeepEqualsNoParentDocumentCheck({constField}, 0, parentDocument, parentIndex))");
                 ctx.AppendLine("{");
                 ctx.PushIndent();
                 ctx.AppendLine("goto enumShortCircuitSuccess;");
@@ -1323,9 +1386,12 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("{");
         ctx.PushIndent();
 
+        // Get unescaped string once for both length and regex validation.
+        ctx.AppendLine("using UnescapedUtf8JsonString unescapedString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
+
         if (lengthKeywords.Count > 0)
         {
-            ctx.AppendLine("int stringLength = parentDocument.GetStringLength(parentIndex);");
+            ctx.AppendLine("int stringLength = JsonElementHelpers.CountRunes(unescapedString.Span);");
 
             foreach (IStringLengthConstantValidationKeyword keyword in lengthKeywords)
             {
@@ -1355,8 +1421,6 @@ internal static partial class StandaloneEvaluatorGenerator
 
         if (regexKeywords.Count > 0)
         {
-            ctx.AppendLine("using UnescapedUtf8JsonString patternUnescaped = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
-
             foreach (IStringRegexValidationProviderKeyword keyword in regexKeywords)
             {
                 if (!keyword.TryGetValidationRegularExpressions(typeDeclaration, out IReadOnlyList<string>? expressions) || expressions.Count == 0)
@@ -1367,7 +1431,7 @@ internal static partial class StandaloneEvaluatorGenerator
                 string regex = SymbolDisplay.FormatLiteral(expressions[0], true);
                 string fieldName = "PatternRegex_" + MakeSafeIdentifier(keyword.Keyword);
 
-                ctx.AppendLine($"JsonSchemaEvaluation.MatchRegularExpression(patternUnescaped.Span, {fieldName}, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                ctx.AppendLine($"JsonSchemaEvaluation.MatchRegularExpression(unescapedString.Span, {fieldName}, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
                 ctx.AppendLine();
                 ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
                 ctx.AppendLine("{");
@@ -3177,6 +3241,33 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("}");
     }
 
+    private static string GetOrCreateConstantField(GenerationContext ctx, string rawJsonText)
+    {
+        if (ctx.DeferredConstantFields.TryGetValue(rawJsonText, out string? existingName))
+        {
+            return existingName;
+        }
+
+        string fieldName = $"ConstDoc_{ctx.DeferredConstantFields.Count}";
+        ctx.DeferredConstantFields[rawJsonText] = fieldName;
+        return fieldName;
+    }
+
+    private static void EmitDeferredConstantFields(GenerationContext ctx)
+    {
+        if (ctx.DeferredConstantFields.Count == 0)
+        {
+            return;
+        }
+
+        ctx.AppendLine();
+        foreach (KeyValuePair<string, string> kvp in ctx.DeferredConstantFields)
+        {
+            string quotedRawText = SymbolDisplay.FormatLiteral(kvp.Key, true);
+            ctx.AppendLine($"private static readonly ParsedJsonDocument<JsonElement> {kvp.Value} = ParsedJsonDocument<JsonElement>.Parse({quotedRawText});");
+        }
+    }
+
     /// <summary>
     /// Tracks property matcher information for a schema that has named properties.
     /// </summary>
@@ -3348,6 +3439,11 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             this.lineEnd = lineEnd;
         }
+
+        /// <summary>
+        /// Gets the deferred constant document fields. Maps raw JSON text to field name.
+        /// </summary>
+        public Dictionary<string, string> DeferredConstantFields { get; } = [];
 
         /// <summary>
         /// Increases the indentation level by one.
