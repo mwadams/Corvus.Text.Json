@@ -7,6 +7,7 @@ using System.Text;
 using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.DocumentResolvers;
 using Corvus.Json.SourceGenerator;
+using Corvus.Text.Json.CodeGeneration;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 
@@ -53,6 +54,7 @@ public static class SourceGeneratorHelpers
         }
 
         List<TypeDeclaration> typeDeclarationsToGenerate = [];
+        List<TypeDeclaration>? evaluatorRootTypes = null;
         JsonSchemaTypeBuilder typeBuilder = new(typesToGenerate.DocumentResolver, vocabularyRegistry);
 
         string? defaultNamespace = null;
@@ -85,6 +87,12 @@ public static class SourceGeneratorHelpers
 
             typeDeclarationsToGenerate.Add(rootType);
 
+            if (spec.EmitEvaluator)
+            {
+                evaluatorRootTypes ??= [];
+                evaluatorRootTypes.Add(rootType);
+            }
+
             defaultNamespace ??= spec.Namespace;
 
             // Only add the named type if the spec.TypeName is not null or empty.
@@ -98,7 +106,20 @@ public static class SourceGeneratorHelpers
             }
         }
 
+        // If any specs request evaluator generation, configure the options before creating the language provider.
+        if (evaluatorRootTypes is not null)
+        {
+            typesToGenerate.GlobalOptions.SetEmitEvaluator();
+        }
+
         ILanguageProvider languageProvider = typesToGenerate.GlobalOptions.CreateLanguageProvider(defaultNamespace);
+
+        // Set the evaluator root types on the language provider so the evaluator generator
+        // can access the unreduced type declarations.
+        if (evaluatorRootTypes is not null && languageProvider is CSharpLanguageProvider csharpProvider)
+        {
+            csharpProvider.SetEvaluatorRootTypes([.. evaluatorRootTypes]);
+        }
 
         IReadOnlyCollection<GeneratedCodeFile> generatedCode;
 
@@ -248,7 +269,8 @@ public static class SourceGeneratorHelpers
     /// <param name="rebaseToRootPath">Indicates whether to rebase the schema as a document root.</param>
     /// <param name="typeName">The .NET name of the type. If null, the type name will be inferred.</param>
     /// <param name="accessibility">The accessibility of the type. The default is <see cref="GeneratedTypeAccessibility.Public"/>.</param>
-    public readonly struct GenerationSpecification(string ns, string location, bool rebaseToRootPath, string? typeName = null, GeneratedTypeAccessibility accessibility = GeneratedTypeAccessibility.Public)
+    /// <param name="emitEvaluator">Indicates whether to emit a standalone evaluator.</param>
+    public readonly struct GenerationSpecification(string ns, string location, bool rebaseToRootPath, string? typeName = null, GeneratedTypeAccessibility accessibility = GeneratedTypeAccessibility.Public, bool emitEvaluator = false)
     {
         /// <summary>
         /// Gets the .NET name of the type.
@@ -274,6 +296,11 @@ public static class SourceGeneratorHelpers
         /// Gets the accessibility for the generated type.
         /// </summary>
         public GeneratedTypeAccessibility Accessibility { get; } = accessibility;
+
+        /// <summary>
+        /// Gets a value indicating whether to emit a standalone evaluator.
+        /// </summary>
+        public bool EmitEvaluator { get; } = emitEvaluator;
     }
 
     /// <summary>

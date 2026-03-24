@@ -3659,6 +3659,14 @@ internal static partial class StandaloneEvaluatorGenerator
             return typeName + "Evaluator";
         }
 
+        // The unreduced root may not have a user-specified name (it's set on the reduced type).
+        // Fall back to the reduced type's name if available.
+        TypeDeclaration reduced = rootType.ReducedTypeDeclaration().ReducedType;
+        if (reduced != rootType && reduced.TryGetDotnetTypeName(out typeName))
+        {
+            return typeName + "Evaluator";
+        }
+
         string location = rootType.LocatedSchema.Location.ToString();
         string safeName = MakeSafeIdentifier(location);
         return safeName + "Evaluator";

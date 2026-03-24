@@ -26,6 +26,11 @@ public interface IGlobalOptions
     void AddNamedType(JsonReference reference, string dotnetTypeName, string? dotnetNamespace = null, GeneratedTypeAccessibility? accessibility = null);
 
     /// <summary>
+    /// Signals that at least one generation specification requested evaluator emission.
+    /// </summary>
+    void SetEmitEvaluator();
+
+    /// <summary>
     /// Creates a language provider from the Global Options.
     /// </summary>
     /// <param name="defaultNamespace">The default namespace to use for the language provider, or <see langword="null"/> if no language provider is specified.</param>

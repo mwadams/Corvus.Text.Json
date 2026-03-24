@@ -82,7 +82,16 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
 
         bool rebaseToRootPath = attribute.ConstructorArguments[0].Value as bool? ?? false;
 
-        return new(context.TargetSymbol.ContainingNamespace.ToDisplayString(), location, rebaseToRootPath, context.TargetSymbol.Name, GetAccessibility(context.TargetSymbol.DeclaredAccessibility));
+        bool emitEvaluator = false;
+        foreach (KeyValuePair<string, TypedConstant> namedArg in attribute.NamedArguments)
+        {
+            if (namedArg.Key == "EmitEvaluator" && namedArg.Value.Value is bool b)
+            {
+                emitEvaluator = b;
+            }
+        }
+
+        return new(context.TargetSymbol.ContainingNamespace.ToDisplayString(), location, rebaseToRootPath, context.TargetSymbol.Name, GetAccessibility(context.TargetSymbol.DeclaredAccessibility), emitEvaluator);
     }
 
     private static SourceGeneratorTools.GeneratedTypeAccessibility GetAccessibility(Accessibility accessibility)
@@ -227,6 +236,12 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
                         /// Gets a value indicating whether to rebase to the root path.
                         /// </summary>
                         public bool RebaseToRootPath { get; }
+
+                        /// <summary>
+                        /// Gets or sets a value indicating whether to emit a standalone
+                        /// schema evaluator in addition to (or instead of) the generated types.
+                        /// </summary>
+                        public bool EmitEvaluator { get; set; }
                     }
                     """,
                     Encoding.UTF8));
@@ -271,6 +286,13 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
 
         public bool UseImplicitOperatorString { get; } = useImplicitOperatorString;
 
+        public bool EmitEvaluator { get; set; }
+
+        public void SetEmitEvaluator()
+        {
+            EmitEvaluator = true;
+        }
+
         public void AddNamedType(JsonReference schemaLocation, string typeName, string? ns, SourceGeneratorTools.GeneratedTypeAccessibility? accessibility)
         {
             _namedTypes.Add(new CSharpLanguageProvider.NamedType(schemaLocation, typeName, ns, GetAccessibility(accessibility)));
@@ -302,7 +324,8 @@ public class IncrementalSourceGenerator : IIncrementalGenerator
                 optionalAsNullable: OptionalAsNullable,
                 disabledNamingHeuristics: [.. DisabledNamingHeuristics],
                 fileExtension: ".g.cs",
-                defaultAccessibility: DefaultAccessibility);
+                defaultAccessibility: DefaultAccessibility,
+                codeGenerationMode: EmitEvaluator ? CodeGenerationMode.Both : CodeGenerationMode.TypeGeneration);
 
             return options;
         }

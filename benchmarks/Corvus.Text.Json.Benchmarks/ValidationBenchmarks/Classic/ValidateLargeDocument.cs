@@ -108,12 +108,22 @@ public class ValidateLargeDocument
     }
 
     /// <summary>
-    /// Validates using the Corvus V4 types.
+    /// Validates using the Corvus V5 types.
     /// </summary>
     [Benchmark]
     public bool ValidateLargeArrayCorvusTextJson()
     {
         return documentB1!.RootElement.EvaluateSchema();
+    }
+
+    /// <summary>
+    /// Validates using the Corvus V5 standalone evaluator (validation only).
+    /// </summary>
+    [Benchmark]
+    public bool ValidateLargeArrayCorvusTextJsonEvaluator()
+    {
+        var root = documentB1!.RootElement;
+        return ClassicBenchmarkModels.PersonArrayEvaluator.Evaluate(in root);
     }
 
     /// <summary>

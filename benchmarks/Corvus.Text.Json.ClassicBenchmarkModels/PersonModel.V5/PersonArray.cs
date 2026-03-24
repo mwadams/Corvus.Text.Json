@@ -5,5 +5,5 @@ using Corvus.Text.Json;
 
 namespace Corvus.ClassicBenchmarkModels;
 
-[JsonSchemaTypeGenerator("../person-array-schema.json#/$defs/PersonArray")]
+[JsonSchemaTypeGenerator("../person-array-schema.json#/$defs/PersonArray", EmitEvaluator = true)]
 public readonly partial struct PersonArray;
