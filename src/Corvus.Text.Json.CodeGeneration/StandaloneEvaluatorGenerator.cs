@@ -939,10 +939,11 @@ internal static partial class StandaloneEvaluatorGenerator
         }
 
         // Emit keyword handlers in priority order.
+        int shortCircuitPos = ctx.Length;
 
         // Priority: CoreType (1000) — type validation
         EmitTypeValidation(ctx, typeDeclaration);
-        EmitShortCircuit(ctx);
+        EmitShortCircuit(ctx, ref shortCircuitPos);
 
         // Priority: Default (~2^31) — const, enum, string, number, format
         EmitConstValidation(ctx, typeDeclaration);
@@ -950,19 +951,19 @@ internal static partial class StandaloneEvaluatorGenerator
         EmitStringValidation(ctx, typeDeclaration);
         EmitNumberValidation(ctx, typeDeclaration);
         EmitFormatValidation(ctx, typeDeclaration);
-        EmitShortCircuit(ctx);
+        EmitShortCircuit(ctx, ref shortCircuitPos);
 
         // Priority: Composition (~2^31+1000) — allOf, anyOf, oneOf, not, if/then/else
         EmitCompositionValidation(ctx, typeDeclaration, subschemas);
         EmitIfThenElseValidation(ctx, typeDeclaration, subschemas);
-        EmitShortCircuit(ctx);
+        EmitShortCircuit(ctx, ref shortCircuitPos);
 
         // Priority: AfterComposition (~2^31+2000) — object, array
         string location = typeDeclaration.LocatedSchema.Location.ToString();
         propertyMatchers.TryGetValue(location, out PropertyMatcherInfo? matcherInfo);
         EmitObjectValidation(ctx, typeDeclaration, subschemas, matcherInfo);
         EmitArrayValidation(ctx, typeDeclaration, subschemas);
-        EmitShortCircuit(ctx);
+        EmitShortCircuit(ctx, ref shortCircuitPos);
 
         // Priority: Last — unevaluated
         EmitUnevaluatedValidation(ctx, typeDeclaration, subschemas);
@@ -1022,8 +1023,14 @@ internal static partial class StandaloneEvaluatorGenerator
         }
     }
 
-    private static void EmitShortCircuit(GenerationContext ctx)
+    private static void EmitShortCircuit(GenerationContext ctx, ref int lastShortCircuitPosition)
     {
+        if (ctx.Length == lastShortCircuitPosition)
+        {
+            // Nothing was emitted since the last short-circuit; skip duplicate.
+            return;
+        }
+
         ctx.AppendLine();
         ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
         ctx.AppendLine("{");
@@ -1031,6 +1038,8 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("return;");
         ctx.PopIndent();
         ctx.AppendLine("}");
+
+        lastShortCircuitPosition = ctx.Length;
     }
 
     private static bool RequiresTokenType(TypeDeclaration typeDeclaration)
@@ -4021,6 +4030,11 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             this.builder.Append(text);
         }
+
+        /// <summary>
+        /// Gets the current length of the generated output.
+        /// </summary>
+        public int Length => this.builder.Length;
 
         /// <inheritdoc/>
         public override string ToString()
