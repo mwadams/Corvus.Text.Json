@@ -78,6 +78,16 @@ public static class JsonSchemaAnnotationProducer
                 continue;
             }
 
+            // IgnoredKeyword pushes the keyword to EvaluationLocation but NOT to
+            // SchemaEvaluationLocation. EvaluatedKeyword pushes to both. We only
+            // want annotations (IgnoredKeyword), so skip results where the two
+            // locations are equal — those are validation results.
+            System.ReadOnlySpan<byte> schemaEvaluationLocation = result.SchemaEvaluationLocation;
+            if (evaluationLocation.SequenceEqual(schemaEvaluationLocation))
+            {
+                continue;
+            }
+
             System.ReadOnlySpan<byte> keywordBytes = evaluationLocation[(lastSlash + 1)..];
             if (keywordBytes.Length == 0)
             {

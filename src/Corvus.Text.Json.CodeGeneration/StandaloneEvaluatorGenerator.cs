@@ -1750,7 +1750,18 @@ internal static partial class StandaloneEvaluatorGenerator
             return;
         }
 
-        if (!typeDeclaration.AlwaysAssertFormat())
+        // Content keywords (contentEncoding, contentMediaType) are always assertion keywords
+        // in pre-2019-09 drafts, even when AlwaysAssertFormat is false (validateFormat: false).
+        // In Draft 2019-09+, content keywords are annotation-only and should not assert.
+        // IContentSemanticsKeyword (on contentEncoding keywords) tells us the draft directly.
+        // IContentMediaTypeValidationKeyword doesn't carry ContentSemantics, so we check the
+        // format name suffix or the presence of a pre-2019-09 contentEncoding sibling keyword.
+        bool isContentFormat =
+            formatKw is IContentSemanticsKeyword { ContentSemantics: ContentEncodingSemantics.PreDraft201909 } ||
+            (formatKw is IContentMediaTypeValidationKeyword &&
+             (format.EndsWith("-pre201909", System.StringComparison.Ordinal) ||
+              typeDeclaration.Keywords().OfType<IContentSemanticsKeyword>().Any(k => k.ContentSemantics == ContentEncodingSemantics.PreDraft201909)));
+        if (!isContentFormat && !typeDeclaration.AlwaysAssertFormat())
         {
             // Format is not asserted — the annotation value is emitted by EmitAnnotations.
             return;
@@ -1783,12 +1794,19 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.AppendLine("}");
             ctx.PopIndent();
             ctx.AppendLine("}");
-            ctx.AppendLine("else");
-            ctx.AppendLine("{");
-            ctx.PushIndent();
-            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeString, {formatKeywordLiteral});");
-            ctx.PopIndent();
-            ctx.AppendLine("}");
+
+            if (!isContentFormat)
+            {
+                // For content keywords, the "else" IgnoredKeyword would be incorrectly
+                // treated as an annotation by the annotation producer. Content annotations
+                // are already gated by CoreTypes.String in EmitAnnotations.
+                ctx.AppendLine("else");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeString, {formatKeywordLiteral});");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
         }
         else if (expectedTokenType == JsonTokenType.Number)
         {
