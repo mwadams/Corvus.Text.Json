@@ -49,9 +49,9 @@ public class SuiteMaximumValidation : IClassFixture<SuiteMaximumValidation.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maximum.json",
                 "{\"maximum\": 3.0}",
                 "StandaloneEvaluatorTestSuite.Draft4.Maximum",
@@ -59,7 +59,6 @@ public class SuiteMaximumValidation : IClassFixture<SuiteMaximumValidation.Fixtu
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteMaximumValidationWithUnsignedInteger : IClassFixture<SuiteMaxi
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maximum.json",
                 "{\"maximum\": 300}",
                 "StandaloneEvaluatorTestSuite.Draft4.Maximum",
@@ -117,7 +116,6 @@ public class SuiteMaximumValidationWithUnsignedInteger : IClassFixture<SuiteMaxi
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -165,9 +163,9 @@ public class SuiteMaximumValidationExplicitFalseExclusivity : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maximum.json",
                 "{\"maximum\": 3.0, \"exclusiveMaximum\": false}",
                 "StandaloneEvaluatorTestSuite.Draft4.Maximum",
@@ -175,7 +173,6 @@ public class SuiteMaximumValidationExplicitFalseExclusivity : IClassFixture<Suit
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -209,9 +206,9 @@ public class SuiteExclusiveMaximumValidation : IClassFixture<SuiteExclusiveMaxim
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maximum.json",
                 "{\r\n            \"maximum\": 3.0,\r\n            \"exclusiveMaximum\": true\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Maximum",
@@ -219,7 +216,6 @@ public class SuiteExclusiveMaximumValidation : IClassFixture<SuiteExclusiveMaxim
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

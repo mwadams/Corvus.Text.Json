@@ -35,9 +35,9 @@ public class SuiteMinContainsWithoutContainsIsIgnored : IClassFixture<SuiteMinCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"minContains\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -45,7 +45,6 @@ public class SuiteMinContainsWithoutContainsIsIgnored : IClassFixture<SuiteMinCo
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -100,9 +99,9 @@ public class SuiteMinContains1WithContains : IClassFixture<SuiteMinContains1With
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"minContains\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -110,7 +109,6 @@ public class SuiteMinContains1WithContains : IClassFixture<SuiteMinContains1With
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -172,9 +170,9 @@ public class SuiteMinContains2WithContains : IClassFixture<SuiteMinContains2With
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"minContains\": 2\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -182,7 +180,6 @@ public class SuiteMinContains2WithContains : IClassFixture<SuiteMinContains2With
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -216,9 +213,9 @@ public class SuiteMinContains2WithContainsWithADecimalValue : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"minContains\": 2.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -226,7 +223,6 @@ public class SuiteMinContains2WithContainsWithADecimalValue : IClassFixture<Suit
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -274,9 +270,9 @@ public class SuiteMaxContainsMinContains : IClassFixture<SuiteMaxContainsMinCont
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"maxContains\": 2,\r\n            \"minContains\": 2\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -284,7 +280,6 @@ public class SuiteMaxContainsMinContains : IClassFixture<SuiteMaxContainsMinCont
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -332,9 +327,9 @@ public class SuiteMaxContainsMinContains1 : IClassFixture<SuiteMaxContainsMinCon
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"maxContains\": 1,\r\n            \"minContains\": 3\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -342,7 +337,6 @@ public class SuiteMaxContainsMinContains1 : IClassFixture<SuiteMaxContainsMinCon
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -376,9 +370,9 @@ public class SuiteMinContains0WithNoMaxContains : IClassFixture<SuiteMinContains
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"minContains\": 0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -386,7 +380,6 @@ public class SuiteMinContains0WithNoMaxContains : IClassFixture<SuiteMinContains
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -427,9 +420,9 @@ public class SuiteMinContains0WithMaxContains : IClassFixture<SuiteMinContains0W
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"minContains\": 0,\r\n            \"maxContains\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinContains",
@@ -437,7 +430,6 @@ public class SuiteMinContains0WithMaxContains : IClassFixture<SuiteMinContains0W
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

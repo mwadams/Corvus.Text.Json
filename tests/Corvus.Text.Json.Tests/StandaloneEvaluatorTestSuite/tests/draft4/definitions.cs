@@ -35,9 +35,9 @@ public class SuiteValidateDefinitionAgainstMetaschema : IClassFixture<SuiteValid
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\definitions.json",
                 "{\"$ref\": \"http://json-schema.org/draft-04/schema#\"}",
                 "StandaloneEvaluatorTestSuite.Draft4.Definitions",
@@ -45,7 +45,6 @@ public class SuiteValidateDefinitionAgainstMetaschema : IClassFixture<SuiteValid
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

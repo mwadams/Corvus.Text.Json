@@ -49,9 +49,9 @@ public class SuiteASchemaGivenForItems : IClassFixture<SuiteASchemaGivenForItems
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\items.json",
                 "{\r\n            \"items\": {\"type\": \"integer\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Items",
@@ -59,7 +59,6 @@ public class SuiteASchemaGivenForItems : IClassFixture<SuiteASchemaGivenForItems
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -121,9 +120,9 @@ public class SuiteAnArrayOfSchemasForItems : IClassFixture<SuiteAnArrayOfSchemas
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\items.json",
                 "{\r\n            \"items\": [\r\n                {\"type\": \"integer\"},\r\n                {\"type\": \"string\"}\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Items",
@@ -131,7 +130,6 @@ public class SuiteAnArrayOfSchemasForItems : IClassFixture<SuiteAnArrayOfSchemas
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -193,9 +191,9 @@ public class SuiteItemsAndSubitems : IClassFixture<SuiteItemsAndSubitems.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\items.json",
                 "{\r\n            \"definitions\": {\r\n                \"item\": {\r\n                    \"type\": \"array\",\r\n                    \"additionalItems\": false,\r\n                    \"items\": [\r\n                        { \"$ref\": \"#/definitions/sub-item\" },\r\n                        { \"$ref\": \"#/definitions/sub-item\" }\r\n                    ]\r\n                },\r\n                \"sub-item\": {\r\n                    \"type\": \"object\",\r\n                    \"required\": [\"foo\"]\r\n                }\r\n            },\r\n            \"type\": \"array\",\r\n            \"additionalItems\": false,\r\n            \"items\": [\r\n                { \"$ref\": \"#/definitions/item\" },\r\n                { \"$ref\": \"#/definitions/item\" },\r\n                { \"$ref\": \"#/definitions/item\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Items",
@@ -203,7 +201,6 @@ public class SuiteItemsAndSubitems : IClassFixture<SuiteItemsAndSubitems.Fixture
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -244,9 +241,9 @@ public class SuiteNestedItems : IClassFixture<SuiteNestedItems.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\items.json",
                 "{\r\n            \"type\": \"array\",\r\n            \"items\": {\r\n                \"type\": \"array\",\r\n                \"items\": {\r\n                    \"type\": \"array\",\r\n                    \"items\": {\r\n                        \"type\": \"array\",\r\n                        \"items\": {\r\n                            \"type\": \"number\"\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Items",
@@ -254,7 +251,6 @@ public class SuiteNestedItems : IClassFixture<SuiteNestedItems.Fixture>
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -281,9 +277,9 @@ public class SuiteItemsWithNullInstanceElements : IClassFixture<SuiteItemsWithNu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\items.json",
                 "{\r\n            \"items\": {\r\n                \"type\": \"null\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Items",
@@ -291,7 +287,6 @@ public class SuiteItemsWithNullInstanceElements : IClassFixture<SuiteItemsWithNu
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -318,9 +313,9 @@ public class SuiteArrayFormItemsWithNullInstanceElements : IClassFixture<SuiteAr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\items.json",
                 "{\r\n            \"items\": [\r\n                {\r\n                    \"type\": \"null\"\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Items",
@@ -328,7 +323,6 @@ public class SuiteArrayFormItemsWithNullInstanceElements : IClassFixture<SuiteAr
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

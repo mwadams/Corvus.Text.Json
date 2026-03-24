@@ -70,9 +70,9 @@ public class SuiteRequiredValidation : IClassFixture<SuiteRequiredValidation.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\required.json",
                 "{\r\n            \"properties\": {\r\n                \"foo\": {},\r\n                \"bar\": {}\r\n            },\r\n            \"required\": [\"foo\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Required",
@@ -80,7 +80,6 @@ public class SuiteRequiredValidation : IClassFixture<SuiteRequiredValidation.Fix
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteRequiredDefaultValidation : IClassFixture<SuiteRequiredDefault
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\required.json",
                 "{\r\n            \"properties\": {\r\n                \"foo\": {}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Required",
@@ -117,7 +116,6 @@ public class SuiteRequiredDefaultValidation : IClassFixture<SuiteRequiredDefault
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -144,9 +142,9 @@ public class SuiteRequiredWithEmptyArray : IClassFixture<SuiteRequiredWithEmptyA
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\required.json",
                 "{\r\n            \"properties\": {\r\n                \"foo\": {}\r\n            },\r\n            \"required\": []\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Required",
@@ -154,7 +152,6 @@ public class SuiteRequiredWithEmptyArray : IClassFixture<SuiteRequiredWithEmptyA
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -188,9 +185,9 @@ public class SuiteRequiredWithEscapedCharacters : IClassFixture<SuiteRequiredWit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\required.json",
                 "{\r\n            \"required\": [\r\n                \"foo\\nbar\",\r\n                \"foo\\\"bar\",\r\n                \"foo\\\\bar\",\r\n                \"foo\\rbar\",\r\n                \"foo\\tbar\",\r\n                \"foo\\fbar\"\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Required",
@@ -198,7 +195,6 @@ public class SuiteRequiredWithEscapedCharacters : IClassFixture<SuiteRequiredWit
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -267,9 +263,9 @@ public class SuiteRequiredPropertiesWhoseNamesAreJavascriptObjectPropertyNames :
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\required.json",
                 "{ \"required\": [\"__proto__\", \"toString\", \"constructor\"] }",
                 "StandaloneEvaluatorTestSuite.Draft7.Required",
@@ -277,7 +273,6 @@ public class SuiteRequiredPropertiesWhoseNamesAreJavascriptObjectPropertyNames :
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

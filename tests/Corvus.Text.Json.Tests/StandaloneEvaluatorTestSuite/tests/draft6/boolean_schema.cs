@@ -84,9 +84,9 @@ public class SuiteBooleanSchemaTrue : IClassFixture<SuiteBooleanSchemaTrue.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\boolean_schema.json",
                 "true",
                 "StandaloneEvaluatorTestSuite.Draft6.BooleanSchema",
@@ -94,7 +94,6 @@ public class SuiteBooleanSchemaTrue : IClassFixture<SuiteBooleanSchemaTrue.Fixtu
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -177,9 +176,9 @@ public class SuiteBooleanSchemaFalse : IClassFixture<SuiteBooleanSchemaFalse.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\boolean_schema.json",
                 "false",
                 "StandaloneEvaluatorTestSuite.Draft6.BooleanSchema",
@@ -187,7 +186,6 @@ public class SuiteBooleanSchemaFalse : IClassFixture<SuiteBooleanSchemaFalse.Fix
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

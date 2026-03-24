@@ -35,9 +35,9 @@ public class SuiteValidateDefinitionAgainstMetaschema : IClassFixture<SuiteValid
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\defs.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"https://json-schema.org/draft/2020-12/schema\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Defs",
@@ -45,7 +45,6 @@ public class SuiteValidateDefinitionAgainstMetaschema : IClassFixture<SuiteValid
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

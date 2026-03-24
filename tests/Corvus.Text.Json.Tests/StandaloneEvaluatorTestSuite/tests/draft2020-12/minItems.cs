@@ -49,9 +49,9 @@ public class SuiteMinItemsValidation : IClassFixture<SuiteMinItemsValidation.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\minItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"minItems\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MinItems",
@@ -59,7 +59,6 @@ public class SuiteMinItemsValidation : IClassFixture<SuiteMinItemsValidation.Fix
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -93,9 +92,9 @@ public class SuiteMinItemsValidationWithADecimal : IClassFixture<SuiteMinItemsVa
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\minItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"minItems\": 1.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MinItems",
@@ -103,7 +102,6 @@ public class SuiteMinItemsValidationWithADecimal : IClassFixture<SuiteMinItemsVa
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

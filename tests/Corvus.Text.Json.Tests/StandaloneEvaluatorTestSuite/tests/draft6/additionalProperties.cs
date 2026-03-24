@@ -63,9 +63,9 @@ public class SuiteAdditionalPropertiesBeingFalseDoesNotAllowOtherProperties : IC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\r\n            \"properties\": {\"foo\": {}, \"bar\": {}},\r\n            \"patternProperties\": { \"^v\": {} },\r\n            \"additionalProperties\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -73,7 +73,6 @@ public class SuiteAdditionalPropertiesBeingFalseDoesNotAllowOtherProperties : IC
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteNonAsciiPatternWithAdditionalProperties : IClassFixture<SuiteN
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\r\n            \"patternProperties\": {\"^á\": {}},\r\n            \"additionalProperties\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -117,7 +116,6 @@ public class SuiteNonAsciiPatternWithAdditionalProperties : IClassFixture<SuiteN
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -158,9 +156,9 @@ public class SuiteAdditionalPropertiesWithSchema : IClassFixture<SuiteAdditional
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\r\n            \"properties\": {\"foo\": {}, \"bar\": {}},\r\n            \"additionalProperties\": {\"type\": \"boolean\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -168,7 +166,6 @@ public class SuiteAdditionalPropertiesWithSchema : IClassFixture<SuiteAdditional
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -202,9 +199,9 @@ public class SuiteAdditionalPropertiesCanExistByItself : IClassFixture<SuiteAddi
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\r\n            \"additionalProperties\": {\"type\": \"boolean\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -212,7 +209,6 @@ public class SuiteAdditionalPropertiesCanExistByItself : IClassFixture<SuiteAddi
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -239,9 +235,9 @@ public class SuiteAdditionalPropertiesAreAllowedByDefault : IClassFixture<SuiteA
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\"properties\": {\"foo\": {}, \"bar\": {}}}",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -249,7 +245,6 @@ public class SuiteAdditionalPropertiesAreAllowedByDefault : IClassFixture<SuiteA
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -276,9 +271,9 @@ public class SuiteAdditionalPropertiesDoesNotLookInApplicators : IClassFixture<S
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\r\n            \"allOf\": [\r\n                {\"properties\": {\"foo\": {}}}\r\n            ],\r\n            \"additionalProperties\": {\"type\": \"boolean\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -286,7 +281,6 @@ public class SuiteAdditionalPropertiesDoesNotLookInApplicators : IClassFixture<S
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -313,9 +307,9 @@ public class SuiteAdditionalPropertiesWithNullValuedInstanceProperties : IClassF
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\additionalProperties.json",
                 "{\r\n            \"additionalProperties\": {\r\n                \"type\": \"null\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.AdditionalProperties",
@@ -323,7 +317,6 @@ public class SuiteAdditionalPropertiesWithNullValuedInstanceProperties : IClassF
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -77,9 +77,9 @@ public class SuiteSingleDependency : IClassFixture<SuiteSingleDependency.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\dependentSchemas.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"dependentSchemas\": {\r\n                \"bar\": {\r\n                    \"properties\": {\r\n                        \"foo\": {\"type\": \"integer\"},\r\n                        \"bar\": {\"type\": \"integer\"}\r\n                    }\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.DependentSchemas",
@@ -87,7 +87,6 @@ public class SuiteSingleDependency : IClassFixture<SuiteSingleDependency.Fixture
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -135,9 +134,9 @@ public class SuiteBooleanSubschemas : IClassFixture<SuiteBooleanSubschemas.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\dependentSchemas.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"dependentSchemas\": {\r\n                \"foo\": true,\r\n                \"bar\": false\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.DependentSchemas",
@@ -145,7 +144,6 @@ public class SuiteBooleanSubschemas : IClassFixture<SuiteBooleanSubschemas.Fixtu
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -193,9 +191,9 @@ public class SuiteDependenciesWithEscapedCharacters : IClassFixture<SuiteDepende
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\dependentSchemas.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"dependentSchemas\": {\r\n                \"foo\\tbar\": {\"minProperties\": 4},\r\n                \"foo'bar\": {\"required\": [\"foo\\\"bar\"]}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.DependentSchemas",
@@ -203,7 +201,6 @@ public class SuiteDependenciesWithEscapedCharacters : IClassFixture<SuiteDepende
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -251,9 +248,9 @@ public class SuiteDependentSubschemaIncompatibleWithRoot : IClassFixture<SuiteDe
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\dependentSchemas.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"properties\": {\r\n                \"foo\": {}\r\n            },\r\n            \"dependentSchemas\": {\r\n                \"foo\": {\r\n                    \"properties\": {\r\n                        \"bar\": {}\r\n                    },\r\n                    \"additionalProperties\": false\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.DependentSchemas",
@@ -261,7 +258,6 @@ public class SuiteDependentSubschemaIncompatibleWithRoot : IClassFixture<SuiteDe
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

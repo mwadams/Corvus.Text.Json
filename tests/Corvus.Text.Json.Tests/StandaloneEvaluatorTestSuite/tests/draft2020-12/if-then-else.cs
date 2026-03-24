@@ -35,9 +35,9 @@ public class SuiteIgnoreIfWithoutThenOrElse : IClassFixture<SuiteIgnoreIfWithout
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": {\r\n                \"const\": 0\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -45,7 +45,6 @@ public class SuiteIgnoreIfWithoutThenOrElse : IClassFixture<SuiteIgnoreIfWithout
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteIgnoreThenWithoutIf : IClassFixture<SuiteIgnoreThenWithoutIf.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"then\": {\r\n                \"const\": 0\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -89,7 +88,6 @@ public class SuiteIgnoreThenWithoutIf : IClassFixture<SuiteIgnoreThenWithoutIf.F
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -123,9 +121,9 @@ public class SuiteIgnoreElseWithoutIf : IClassFixture<SuiteIgnoreElseWithoutIf.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"else\": {\r\n                \"const\": 0\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -133,7 +131,6 @@ public class SuiteIgnoreElseWithoutIf : IClassFixture<SuiteIgnoreElseWithoutIf.F
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -174,9 +171,9 @@ public class SuiteIfAndThenWithoutElse : IClassFixture<SuiteIfAndThenWithoutElse
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": {\r\n                \"exclusiveMaximum\": 0\r\n            },\r\n            \"then\": {\r\n                \"minimum\": -10\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -184,7 +181,6 @@ public class SuiteIfAndThenWithoutElse : IClassFixture<SuiteIfAndThenWithoutElse
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -225,9 +221,9 @@ public class SuiteIfAndElseWithoutThen : IClassFixture<SuiteIfAndElseWithoutThen
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": {\r\n                \"exclusiveMaximum\": 0\r\n            },\r\n            \"else\": {\r\n                \"multipleOf\": 2\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -235,7 +231,6 @@ public class SuiteIfAndElseWithoutThen : IClassFixture<SuiteIfAndElseWithoutThen
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -283,9 +278,9 @@ public class SuiteValidateAgainstCorrectBranchThenVsElse : IClassFixture<SuiteVa
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": {\r\n                \"exclusiveMaximum\": 0\r\n            },\r\n            \"then\": {\r\n                \"minimum\": -10\r\n            },\r\n            \"else\": {\r\n                \"multipleOf\": 2\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -293,7 +288,6 @@ public class SuiteValidateAgainstCorrectBranchThenVsElse : IClassFixture<SuiteVa
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -327,9 +321,9 @@ public class SuiteNonInterferenceAcrossCombinedSchemas : IClassFixture<SuiteNonI
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [\r\n                {\r\n                    \"if\": {\r\n                        \"exclusiveMaximum\": 0\r\n                    }\r\n                },\r\n                {\r\n                    \"then\": {\r\n                        \"minimum\": -10\r\n                    }\r\n                },\r\n                {\r\n                    \"else\": {\r\n                        \"multipleOf\": 2\r\n                    }\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -337,7 +331,6 @@ public class SuiteNonInterferenceAcrossCombinedSchemas : IClassFixture<SuiteNonI
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -371,9 +364,9 @@ public class SuiteIfWithBooleanSchemaTrue : IClassFixture<SuiteIfWithBooleanSche
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": true,\r\n            \"then\": { \"const\": \"then\" },\r\n            \"else\": { \"const\": \"else\" }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -381,7 +374,6 @@ public class SuiteIfWithBooleanSchemaTrue : IClassFixture<SuiteIfWithBooleanSche
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -415,9 +407,9 @@ public class SuiteIfWithBooleanSchemaFalse : IClassFixture<SuiteIfWithBooleanSch
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": false,\r\n            \"then\": { \"const\": \"then\" },\r\n            \"else\": { \"const\": \"else\" }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -425,7 +417,6 @@ public class SuiteIfWithBooleanSchemaFalse : IClassFixture<SuiteIfWithBooleanSch
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -473,9 +464,9 @@ public class SuiteIfAppearsAtTheEndWhenSerializedKeywordProcessingSequence : ICl
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"then\": { \"const\": \"yes\" },\r\n            \"else\": { \"const\": \"other\" },\r\n            \"if\": { \"maxLength\": 4 }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -483,7 +474,6 @@ public class SuiteIfAppearsAtTheEndWhenSerializedKeywordProcessingSequence : ICl
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -517,9 +507,9 @@ public class SuiteThenFalseFailsWhenConditionMatches : IClassFixture<SuiteThenFa
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"if\": { \"const\": 1 },\r\n            \"then\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -527,7 +517,6 @@ public class SuiteThenFalseFailsWhenConditionMatches : IClassFixture<SuiteThenFa
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -561,9 +550,9 @@ public class SuiteElseFalseFailsWhenConditionDoesNotMatch : IClassFixture<SuiteE
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\if-then-else.json",
                 "{\r\n            \"if\": { \"const\": 1 },\r\n            \"else\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.IfThenElse",
@@ -571,7 +560,6 @@ public class SuiteElseFalseFailsWhenConditionDoesNotMatch : IClassFixture<SuiteE
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

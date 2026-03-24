@@ -49,9 +49,9 @@ public class SuiteExclusiveMaximumValidation : IClassFixture<SuiteExclusiveMaxim
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\exclusiveMaximum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"exclusiveMaximum\": 3.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.ExclusiveMaximum",
@@ -59,7 +59,6 @@ public class SuiteExclusiveMaximumValidation : IClassFixture<SuiteExclusiveMaxim
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

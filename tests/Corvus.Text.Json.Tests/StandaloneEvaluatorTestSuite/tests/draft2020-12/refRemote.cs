@@ -35,9 +35,9 @@ public class SuiteRemoteRef : IClassFixture<SuiteRemoteRef.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/integer.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -45,7 +45,6 @@ public class SuiteRemoteRef : IClassFixture<SuiteRemoteRef.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteFragmentWithinRemoteRef : IClassFixture<SuiteFragmentWithinRem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/subSchemas.json#/$defs/integer\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -89,7 +88,6 @@ public class SuiteFragmentWithinRemoteRef : IClassFixture<SuiteFragmentWithinRem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -123,9 +121,9 @@ public class SuiteAnchorWithinRemoteRef : IClassFixture<SuiteAnchorWithinRemoteR
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/locationIndependentIdentifier.json#foo\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -133,7 +131,6 @@ public class SuiteAnchorWithinRemoteRef : IClassFixture<SuiteAnchorWithinRemoteR
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -167,9 +164,9 @@ public class SuiteRefWithinRemoteRef : IClassFixture<SuiteRefWithinRemoteRef.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/subSchemas.json#/$defs/refToInteger\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -177,7 +174,6 @@ public class SuiteRefWithinRemoteRef : IClassFixture<SuiteRefWithinRemoteRef.Fix
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -211,9 +207,9 @@ public class SuiteBaseUriChange : IClassFixture<SuiteBaseUriChange.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"http://localhost:1234/draft2020-12/\",\r\n            \"items\": {\r\n                \"$id\": \"baseUriChange/\",\r\n                \"items\": {\"$ref\": \"folderInteger.json\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -221,7 +217,6 @@ public class SuiteBaseUriChange : IClassFixture<SuiteBaseUriChange.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -255,9 +250,9 @@ public class SuiteBaseUriChangeChangeFolder : IClassFixture<SuiteBaseUriChangeCh
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"http://localhost:1234/draft2020-12/scope_change_defs1.json\",\r\n            \"type\" : \"object\",\r\n            \"properties\": {\"list\": {\"$ref\": \"baseUriChangeFolder/\"}},\r\n            \"$defs\": {\r\n                \"baz\": {\r\n                    \"$id\": \"baseUriChangeFolder/\",\r\n                    \"type\": \"array\",\r\n                    \"items\": {\"$ref\": \"folderInteger.json\"}\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -265,7 +260,6 @@ public class SuiteBaseUriChangeChangeFolder : IClassFixture<SuiteBaseUriChangeCh
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -299,9 +293,9 @@ public class SuiteBaseUriChangeChangeFolderInSubschema : IClassFixture<SuiteBase
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"http://localhost:1234/draft2020-12/scope_change_defs2.json\",\r\n            \"type\" : \"object\",\r\n            \"properties\": {\"list\": {\"$ref\": \"baseUriChangeFolderInSubschema/#/$defs/bar\"}},\r\n            \"$defs\": {\r\n                \"baz\": {\r\n                    \"$id\": \"baseUriChangeFolderInSubschema/\",\r\n                    \"$defs\": {\r\n                        \"bar\": {\r\n                            \"type\": \"array\",\r\n                            \"items\": {\"$ref\": \"folderInteger.json\"}\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -309,7 +303,6 @@ public class SuiteBaseUriChangeChangeFolderInSubschema : IClassFixture<SuiteBase
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -350,9 +343,9 @@ public class SuiteRootRefInRemoteRef : IClassFixture<SuiteRootRefInRemoteRef.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"http://localhost:1234/draft2020-12/object\",\r\n            \"type\": \"object\",\r\n            \"properties\": {\r\n                \"name\": {\"$ref\": \"name-defs.json#/$defs/orNull\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -360,7 +353,6 @@ public class SuiteRootRefInRemoteRef : IClassFixture<SuiteRootRefInRemoteRef.Fix
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -394,9 +386,9 @@ public class SuiteRemoteRefWithRefToDefs : IClassFixture<SuiteRemoteRefWithRefTo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"http://localhost:1234/draft2020-12/schema-remote-ref-ref-defs1.json\",\r\n            \"$ref\": \"ref-and-defs.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -404,7 +396,6 @@ public class SuiteRemoteRefWithRefToDefs : IClassFixture<SuiteRemoteRefWithRefTo
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -438,9 +429,9 @@ public class SuiteLocationIndependentIdentifierInRemoteRef : IClassFixture<Suite
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/locationIndependentIdentifier.json#/$defs/refToInteger\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -448,7 +439,6 @@ public class SuiteLocationIndependentIdentifierInRemoteRef : IClassFixture<Suite
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -482,9 +472,9 @@ public class SuiteRetrievedNestedRefsResolveRelativeToTheirUriNotId : IClassFixt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"http://localhost:1234/draft2020-12/some-id\",\r\n            \"properties\": {\r\n                \"name\": {\"$ref\": \"nested/foo-ref-string.json\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -492,7 +482,6 @@ public class SuiteRetrievedNestedRefsResolveRelativeToTheirUriNotId : IClassFixt
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -526,9 +515,9 @@ public class SuiteRemoteHttpRefWithDifferentId : IClassFixture<SuiteRemoteHttpRe
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/different-id-ref-string.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -536,7 +525,6 @@ public class SuiteRemoteHttpRefWithDifferentId : IClassFixture<SuiteRemoteHttpRe
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -570,9 +558,9 @@ public class SuiteRemoteHttpRefWithDifferentUrnId : IClassFixture<SuiteRemoteHtt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/urn-ref-string.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -580,7 +568,6 @@ public class SuiteRemoteHttpRefWithDifferentUrnId : IClassFixture<SuiteRemoteHtt
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -614,9 +601,9 @@ public class SuiteRemoteHttpRefWithNestedAbsoluteRef : IClassFixture<SuiteRemote
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/nested-absolute-ref-to-string.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -624,7 +611,6 @@ public class SuiteRemoteHttpRefWithNestedAbsoluteRef : IClassFixture<SuiteRemote
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -658,9 +644,9 @@ public class SuiteRefToRefFindsDetachedAnchor : IClassFixture<SuiteRefToRefFinds
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\refRemote.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/detached-ref.json#/$defs/foo\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.RefRemote",
@@ -668,7 +654,6 @@ public class SuiteRefToRefFindsDetachedAnchor : IClassFixture<SuiteRefToRefFinds
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

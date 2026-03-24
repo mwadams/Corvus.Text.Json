@@ -77,9 +77,9 @@ public class SuiteValidationOfRegularExpressions : IClassFixture<SuiteValidation
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\regex.json",
                 "{ \"format\": \"regex\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.Regex",
@@ -87,7 +87,6 @@ public class SuiteValidationOfRegularExpressions : IClassFixture<SuiteValidation
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

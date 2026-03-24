@@ -42,9 +42,9 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithWithNoValidationVocabulary :
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\vocabulary.json",
                 "{\r\n            \"$id\": \"https://schema/using/no/validation\",\r\n            \"$schema\": \"http://localhost:1234/draft2020-12/metaschema-no-validation.json\",\r\n            \"properties\": {\r\n                \"badProperty\": false,\r\n                \"numberProperty\": {\r\n                    \"minimum\": 10\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Vocabulary",
@@ -52,7 +52,6 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithWithNoValidationVocabulary :
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -86,9 +85,9 @@ public class SuiteIgnoreUnrecognizedOptionalVocabulary : IClassFixture<SuiteIgno
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\vocabulary.json",
                 "{\r\n            \"$schema\": \"http://localhost:1234/draft2020-12/metaschema-optional-vocabulary.json\",\r\n            \"type\": \"number\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Vocabulary",
@@ -96,7 +95,6 @@ public class SuiteIgnoreUnrecognizedOptionalVocabulary : IClassFixture<SuiteIgno
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

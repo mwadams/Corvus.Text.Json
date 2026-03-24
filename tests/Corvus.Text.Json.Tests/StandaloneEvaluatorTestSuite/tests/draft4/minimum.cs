@@ -49,9 +49,9 @@ public class SuiteMinimumValidation : IClassFixture<SuiteMinimumValidation.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\minimum.json",
                 "{\"minimum\": 1.1}",
                 "StandaloneEvaluatorTestSuite.Draft4.Minimum",
@@ -59,7 +59,6 @@ public class SuiteMinimumValidation : IClassFixture<SuiteMinimumValidation.Fixtu
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteMinimumValidationExplicitFalseExclusivity : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\minimum.json",
                 "{\"minimum\": 1.1, \"exclusiveMinimum\": false}",
                 "StandaloneEvaluatorTestSuite.Draft4.Minimum",
@@ -117,7 +116,6 @@ public class SuiteMinimumValidationExplicitFalseExclusivity : IClassFixture<Suit
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -151,9 +149,9 @@ public class SuiteExclusiveMinimumValidation : IClassFixture<SuiteExclusiveMinim
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\minimum.json",
                 "{\r\n            \"minimum\": 1.1,\r\n            \"exclusiveMinimum\": true\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.Minimum",
@@ -161,7 +159,6 @@ public class SuiteExclusiveMinimumValidation : IClassFixture<SuiteExclusiveMinim
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -230,9 +227,9 @@ public class SuiteMinimumValidationWithSignedInteger : IClassFixture<SuiteMinimu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\minimum.json",
                 "{\"minimum\": -2}",
                 "StandaloneEvaluatorTestSuite.Draft4.Minimum",
@@ -240,7 +237,6 @@ public class SuiteMinimumValidationWithSignedInteger : IClassFixture<SuiteMinimu
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

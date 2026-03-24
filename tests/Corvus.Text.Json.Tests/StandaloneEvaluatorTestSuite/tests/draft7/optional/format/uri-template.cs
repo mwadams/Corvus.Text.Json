@@ -91,9 +91,9 @@ public class SuiteFormatUriTemplate : IClassFixture<SuiteFormatUriTemplate.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\uri-template.json",
                 "{ \"format\": \"uri-template\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.UriTemplate",
@@ -101,7 +101,6 @@ public class SuiteFormatUriTemplate : IClassFixture<SuiteFormatUriTemplate.Fixtu
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

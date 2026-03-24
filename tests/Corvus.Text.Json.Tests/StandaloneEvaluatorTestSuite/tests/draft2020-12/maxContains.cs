@@ -35,9 +35,9 @@ public class SuiteMaxContainsWithoutContainsIsIgnored : IClassFixture<SuiteMaxCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maxContains\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxContains",
@@ -45,7 +45,6 @@ public class SuiteMaxContainsWithoutContainsIsIgnored : IClassFixture<SuiteMaxCo
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -100,9 +99,9 @@ public class SuiteMaxContainsWithContains : IClassFixture<SuiteMaxContainsWithCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"maxContains\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxContains",
@@ -110,7 +109,6 @@ public class SuiteMaxContainsWithContains : IClassFixture<SuiteMaxContainsWithCo
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -144,9 +142,9 @@ public class SuiteMaxContainsWithContainsValueWithADecimal : IClassFixture<Suite
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"maxContains\": 1.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxContains",
@@ -154,7 +152,6 @@ public class SuiteMaxContainsWithContainsValueWithADecimal : IClassFixture<Suite
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -195,9 +192,9 @@ public class SuiteMinContainsMaxContains : IClassFixture<SuiteMinContainsMaxCont
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxContains.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contains\": {\"const\": 1},\r\n            \"minContains\": 1,\r\n            \"maxContains\": 3\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxContains",
@@ -205,7 +202,6 @@ public class SuiteMinContainsMaxContains : IClassFixture<SuiteMinContainsMaxCont
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

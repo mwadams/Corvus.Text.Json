@@ -49,9 +49,9 @@ public class SuiteMinItemsValidation : IClassFixture<SuiteMinItemsValidation.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\minItems.json",
                 "{\"minItems\": 1}",
                 "StandaloneEvaluatorTestSuite.Draft4.MinItems",
@@ -59,7 +59,6 @@ public class SuiteMinItemsValidation : IClassFixture<SuiteMinItemsValidation.Fix
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

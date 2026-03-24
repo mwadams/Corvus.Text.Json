@@ -44,9 +44,9 @@ public class SuiteUnevaluatedPropertiesAlone : IClassFixture<SuiteUnevaluatedPro
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -54,7 +54,6 @@ public class SuiteUnevaluatedPropertiesAlone : IClassFixture<SuiteUnevaluatedPro
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -96,9 +95,9 @@ public class SuiteUnevaluatedPropertiesWithProperties : IClassFixture<SuiteUneva
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"properties\": {\r\n          \"foo\": { \"title\": \"Evaluated\" }\r\n        },\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -106,7 +105,6 @@ public class SuiteUnevaluatedPropertiesWithProperties : IClassFixture<SuiteUneva
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -148,9 +146,9 @@ public class SuiteUnevaluatedPropertiesWithPatternProperties : IClassFixture<Sui
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"patternProperties\": {\r\n          \"^a\": { \"title\": \"Evaluated\" }\r\n        },\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -158,7 +156,6 @@ public class SuiteUnevaluatedPropertiesWithPatternProperties : IClassFixture<Sui
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -200,9 +197,9 @@ public class SuiteUnevaluatedPropertiesWithAdditionalProperties : IClassFixture<
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"additionalProperties\": { \"title\": \"Evaluated\" },\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -210,7 +207,6 @@ public class SuiteUnevaluatedPropertiesWithAdditionalProperties : IClassFixture<
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -252,9 +248,9 @@ public class SuiteUnevaluatedPropertiesWithDependentSchemas : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"dependentSchemas\": {\r\n          \"foo\": {\r\n            \"properties\": {\r\n              \"bar\": { \"title\": \"Evaluated\" }\r\n            }\r\n          }\r\n        },\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -262,7 +258,6 @@ public class SuiteUnevaluatedPropertiesWithDependentSchemas : IClassFixture<Suit
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -326,9 +321,9 @@ public class SuiteUnevaluatedPropertiesWithIfThenAndElse : IClassFixture<SuiteUn
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"if\": {\r\n          \"properties\": {\r\n            \"foo\": {\r\n              \"type\": \"string\",\r\n              \"title\": \"If\"\r\n            }\r\n          }\r\n        },\r\n        \"then\": {\r\n          \"properties\": {\r\n            \"foo\": { \"title\": \"Then\" }\r\n          }\r\n        },\r\n        \"else\": {\r\n          \"properties\": {\r\n            \"foo\": { \"title\": \"Else\" }\r\n          }\r\n        },\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -336,7 +331,6 @@ public class SuiteUnevaluatedPropertiesWithIfThenAndElse : IClassFixture<SuiteUn
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -378,9 +372,9 @@ public class SuiteUnevaluatedPropertiesWithAllOf : IClassFixture<SuiteUnevaluate
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"allOf\": [\r\n          {\r\n            \"properties\": {\r\n              \"foo\": { \"title\": \"Evaluated\" }\r\n            }\r\n          }\r\n        ],\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -388,7 +382,6 @@ public class SuiteUnevaluatedPropertiesWithAllOf : IClassFixture<SuiteUnevaluate
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -430,9 +423,9 @@ public class SuiteUnevaluatedPropertiesWithAnyOf : IClassFixture<SuiteUnevaluate
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"anyOf\": [\r\n          {\r\n            \"properties\": {\r\n              \"foo\": { \"title\": \"Evaluated\" }\r\n            }\r\n          }\r\n        ],\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -440,7 +433,6 @@ public class SuiteUnevaluatedPropertiesWithAnyOf : IClassFixture<SuiteUnevaluate
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -482,9 +474,9 @@ public class SuiteUnevaluatedPropertiesWithOneOf : IClassFixture<SuiteUnevaluate
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"oneOf\": [\r\n          {\r\n            \"properties\": {\r\n              \"foo\": { \"title\": \"Evaluated\" }\r\n            }\r\n          }\r\n        ],\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -492,7 +484,6 @@ public class SuiteUnevaluatedPropertiesWithOneOf : IClassFixture<SuiteUnevaluate
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -534,9 +525,9 @@ public class SuiteUnevaluatedPropertiesWithNot : IClassFixture<SuiteUnevaluatedP
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"not\": {\r\n          \"not\": {\r\n            \"properties\": {\r\n              \"foo\": { \"title\": \"Evaluated\" }\r\n            }\r\n          }\r\n        },\r\n        \"unevaluatedProperties\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -544,7 +535,6 @@ public class SuiteUnevaluatedPropertiesWithNot : IClassFixture<SuiteUnevaluatedP
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -586,9 +576,9 @@ public class SuiteUnevaluatedItemsAlone : IClassFixture<SuiteUnevaluatedItemsAlo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -596,7 +586,6 @@ public class SuiteUnevaluatedItemsAlone : IClassFixture<SuiteUnevaluatedItemsAlo
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -638,9 +627,9 @@ public class SuiteUnevaluatedItemsWithPrefixItems : IClassFixture<SuiteUnevaluat
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"prefixItems\": [{ \"title\": \"Evaluated\" }],\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -648,7 +637,6 @@ public class SuiteUnevaluatedItemsWithPrefixItems : IClassFixture<SuiteUnevaluat
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -690,9 +678,9 @@ public class SuiteUnevaluatedItemsWithContains : IClassFixture<SuiteUnevaluatedI
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"contains\": {\r\n          \"type\": \"string\",\r\n          \"title\": \"Evaluated\"\r\n        },\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -700,7 +688,6 @@ public class SuiteUnevaluatedItemsWithContains : IClassFixture<SuiteUnevaluatedI
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -764,9 +751,9 @@ public class SuiteUnevaluatedItemsWithIfThenAndElse : IClassFixture<SuiteUnevalu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"if\": {\r\n          \"prefixItems\": [\r\n            {\r\n              \"type\": \"string\",\r\n              \"title\": \"If\"\r\n            }\r\n          ]\r\n        },\r\n        \"then\": {\r\n          \"prefixItems\": [\r\n            { \"title\": \"Then\" }\r\n          ]\r\n        },\r\n        \"else\": {\r\n          \"prefixItems\": [\r\n            { \"title\": \"Else\" }\r\n          ]\r\n        },\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -774,7 +761,6 @@ public class SuiteUnevaluatedItemsWithIfThenAndElse : IClassFixture<SuiteUnevalu
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -816,9 +802,9 @@ public class SuiteUnevaluatedItemsWithAllOf : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"allOf\": [\r\n          {\r\n            \"prefixItems\": [\r\n              { \"title\": \"Evaluated\" }\r\n            ]\r\n          }\r\n        ],\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -826,7 +812,6 @@ public class SuiteUnevaluatedItemsWithAllOf : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -868,9 +853,9 @@ public class SuiteUnevaluatedItemsWithAnyOf : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"anyOf\": [\r\n          {\r\n            \"prefixItems\": [\r\n              { \"title\": \"Evaluated\" }\r\n            ]\r\n          }\r\n        ],\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -878,7 +863,6 @@ public class SuiteUnevaluatedItemsWithAnyOf : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -920,9 +904,9 @@ public class SuiteUnevaluatedItemsWithOneOf : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"oneOf\": [\r\n          {\r\n            \"prefixItems\": [\r\n              { \"title\": \"Evaluated\" }\r\n            ]\r\n          }\r\n        ],\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -930,7 +914,6 @@ public class SuiteUnevaluatedItemsWithOneOf : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -972,9 +955,9 @@ public class SuiteUnevaluatedItemsWithNot : IClassFixture<SuiteUnevaluatedItemsW
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/unevaluated.json",
                 "{\r\n        \"not\": {\r\n          \"not\": {\r\n            \"prefixItems\": [\r\n              { \"title\": \"Evaluated\" }\r\n            ]\r\n          }\r\n        },\r\n        \"unevaluatedItems\": { \"title\": \"Unevaluated\" }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Unevaluated",
@@ -982,7 +965,6 @@ public class SuiteUnevaluatedItemsWithNot : IClassFixture<SuiteUnevaluatedItemsW
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

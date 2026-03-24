@@ -56,9 +56,9 @@ public class SuiteMinLengthValidation : IClassFixture<SuiteMinLengthValidation.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\minLength.json",
                 "{\"minLength\": 2}",
                 "StandaloneEvaluatorTestSuite.Draft4.MinLength",
@@ -66,7 +66,6 @@ public class SuiteMinLengthValidation : IClassFixture<SuiteMinLengthValidation.F
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

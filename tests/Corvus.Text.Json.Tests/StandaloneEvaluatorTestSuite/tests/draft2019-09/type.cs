@@ -84,9 +84,9 @@ public class SuiteIntegerTypeMatchesIntegers : IClassFixture<SuiteIntegerTypeMat
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"integer\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -94,7 +94,6 @@ public class SuiteIntegerTypeMatchesIntegers : IClassFixture<SuiteIntegerTypeMat
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -177,9 +176,9 @@ public class SuiteNumberTypeMatchesNumbers : IClassFixture<SuiteNumberTypeMatche
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"number\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -187,7 +186,6 @@ public class SuiteNumberTypeMatchesNumbers : IClassFixture<SuiteNumberTypeMatche
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -270,9 +268,9 @@ public class SuiteStringTypeMatchesStrings : IClassFixture<SuiteStringTypeMatche
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"string\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -280,7 +278,6 @@ public class SuiteStringTypeMatchesStrings : IClassFixture<SuiteStringTypeMatche
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -349,9 +346,9 @@ public class SuiteObjectTypeMatchesObjects : IClassFixture<SuiteObjectTypeMatche
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"object\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -359,7 +356,6 @@ public class SuiteObjectTypeMatchesObjects : IClassFixture<SuiteObjectTypeMatche
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -428,9 +424,9 @@ public class SuiteArrayTypeMatchesArrays : IClassFixture<SuiteArrayTypeMatchesAr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"array\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -438,7 +434,6 @@ public class SuiteArrayTypeMatchesArrays : IClassFixture<SuiteArrayTypeMatchesAr
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -528,9 +523,9 @@ public class SuiteBooleanTypeMatchesBooleans : IClassFixture<SuiteBooleanTypeMat
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"boolean\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -538,7 +533,6 @@ public class SuiteBooleanTypeMatchesBooleans : IClassFixture<SuiteBooleanTypeMat
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -628,9 +622,9 @@ public class SuiteNullTypeMatchesOnlyTheNullObject : IClassFixture<SuiteNullType
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"null\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -638,7 +632,6 @@ public class SuiteNullTypeMatchesOnlyTheNullObject : IClassFixture<SuiteNullType
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -707,9 +700,9 @@ public class SuiteMultipleTypesCanBeSpecifiedInAnArray : IClassFixture<SuiteMult
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": [\"integer\", \"string\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -717,7 +710,6 @@ public class SuiteMultipleTypesCanBeSpecifiedInAnArray : IClassFixture<SuiteMult
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -751,9 +743,9 @@ public class SuiteTypeAsArrayWithOneItem : IClassFixture<SuiteTypeAsArrayWithOne
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": [\"string\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -761,7 +753,6 @@ public class SuiteTypeAsArrayWithOneItem : IClassFixture<SuiteTypeAsArrayWithOne
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -816,9 +807,9 @@ public class SuiteTypeArrayOrObject : IClassFixture<SuiteTypeArrayOrObject.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": [\"array\", \"object\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -826,7 +817,6 @@ public class SuiteTypeArrayOrObject : IClassFixture<SuiteTypeArrayOrObject.Fixtu
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -881,9 +871,9 @@ public class SuiteTypeArrayObjectOrNull : IClassFixture<SuiteTypeArrayObjectOrNu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\type.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": [\"array\", \"object\", \"null\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Type",
@@ -891,7 +881,6 @@ public class SuiteTypeArrayObjectOrNull : IClassFixture<SuiteTypeArrayObjectOrNu
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

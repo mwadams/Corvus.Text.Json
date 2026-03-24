@@ -35,9 +35,9 @@ public class SuiteSimpleEnumValidation : IClassFixture<SuiteSimpleEnumValidation
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [1, 2, 3]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -45,7 +45,6 @@ public class SuiteSimpleEnumValidation : IClassFixture<SuiteSimpleEnumValidation
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -100,9 +99,9 @@ public class SuiteHeterogeneousEnumValidation : IClassFixture<SuiteHeterogeneous
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [6, \"foo\", [], true, {\"foo\": 12}]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -110,7 +109,6 @@ public class SuiteHeterogeneousEnumValidation : IClassFixture<SuiteHeterogeneous
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -151,9 +149,9 @@ public class SuiteHeterogeneousEnumWithNullValidation : IClassFixture<SuiteHeter
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{ \"enum\": [6, null] }",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -161,7 +159,6 @@ public class SuiteHeterogeneousEnumWithNullValidation : IClassFixture<SuiteHeter
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -223,9 +220,9 @@ public class SuiteEnumsInProperties : IClassFixture<SuiteEnumsInProperties.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\r\n            \"type\":\"object\",\r\n            \"properties\": {\r\n                \"foo\": {\"enum\":[\"foo\"]},\r\n                \"bar\": {\"enum\":[\"bar\"]}\r\n            },\r\n            \"required\": [\"bar\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -233,7 +230,6 @@ public class SuiteEnumsInProperties : IClassFixture<SuiteEnumsInProperties.Fixtu
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -274,9 +270,9 @@ public class SuiteEnumWithEscapedCharacters : IClassFixture<SuiteEnumWithEscaped
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\r\n            \"enum\": [\"foo\\nbar\", \"foo\\rbar\"]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -284,7 +280,6 @@ public class SuiteEnumWithEscapedCharacters : IClassFixture<SuiteEnumWithEscaped
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -325,9 +320,9 @@ public class SuiteEnumWithFalseDoesNotMatch0 : IClassFixture<SuiteEnumWithFalseD
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [false]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -335,7 +330,6 @@ public class SuiteEnumWithFalseDoesNotMatch0 : IClassFixture<SuiteEnumWithFalseD
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -376,9 +370,9 @@ public class SuiteEnumWithFalseDoesNotMatch01 : IClassFixture<SuiteEnumWithFalse
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [[false]]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -386,7 +380,6 @@ public class SuiteEnumWithFalseDoesNotMatch01 : IClassFixture<SuiteEnumWithFalse
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -427,9 +420,9 @@ public class SuiteEnumWithTrueDoesNotMatch1 : IClassFixture<SuiteEnumWithTrueDoe
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [true]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -437,7 +430,6 @@ public class SuiteEnumWithTrueDoesNotMatch1 : IClassFixture<SuiteEnumWithTrueDoe
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -478,9 +470,9 @@ public class SuiteEnumWithTrueDoesNotMatch11 : IClassFixture<SuiteEnumWithTrueDo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [[true]]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -488,7 +480,6 @@ public class SuiteEnumWithTrueDoesNotMatch11 : IClassFixture<SuiteEnumWithTrueDo
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -529,9 +520,9 @@ public class SuiteEnumWith0DoesNotMatchFalse : IClassFixture<SuiteEnumWith0DoesN
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [0]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -539,7 +530,6 @@ public class SuiteEnumWith0DoesNotMatchFalse : IClassFixture<SuiteEnumWith0DoesN
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -580,9 +570,9 @@ public class SuiteEnumWith0DoesNotMatchFalse1 : IClassFixture<SuiteEnumWith0Does
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [[0]]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -590,7 +580,6 @@ public class SuiteEnumWith0DoesNotMatchFalse1 : IClassFixture<SuiteEnumWith0Does
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -631,9 +620,9 @@ public class SuiteEnumWith1DoesNotMatchTrue : IClassFixture<SuiteEnumWith1DoesNo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [1]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -641,7 +630,6 @@ public class SuiteEnumWith1DoesNotMatchTrue : IClassFixture<SuiteEnumWith1DoesNo
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -682,9 +670,9 @@ public class SuiteEnumWith1DoesNotMatchTrue1 : IClassFixture<SuiteEnumWith1DoesN
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{\"enum\": [[1]]}",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -692,7 +680,6 @@ public class SuiteEnumWith1DoesNotMatchTrue1 : IClassFixture<SuiteEnumWith1DoesN
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -726,9 +713,9 @@ public class SuiteNulCharactersInStrings : IClassFixture<SuiteNulCharactersInStr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\enum.json",
                 "{ \"enum\": [ \"hello\\u0000there\" ] }",
                 "StandaloneEvaluatorTestSuite.Draft6.Enum",
@@ -736,7 +723,6 @@ public class SuiteNulCharactersInStrings : IClassFixture<SuiteNulCharactersInStr
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -189,9 +189,9 @@ public class SuiteValidationOfHostNames : IClassFixture<SuiteValidationOfHostNam
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\hostname.json",
                 "{ \"format\": \"hostname\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.Hostname",
@@ -199,7 +199,6 @@ public class SuiteValidationOfHostNames : IClassFixture<SuiteValidationOfHostNam
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -478,9 +477,9 @@ public class SuiteValidationOfALabelPunycodeHostNames : IClassFixture<SuiteValid
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\hostname.json",
                 "{ \"format\": \"hostname\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.Hostname",
@@ -488,7 +487,6 @@ public class SuiteValidationOfALabelPunycodeHostNames : IClassFixture<SuiteValid
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -357,9 +357,9 @@ public class SuiteValidationOfDateStrings : IClassFixture<SuiteValidationOfDateS
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\format\\date.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"date\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Format.Date",
@@ -367,7 +367,6 @@ public class SuiteValidationOfDateStrings : IClassFixture<SuiteValidationOfDateS
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -63,9 +63,9 @@ public class SuiteContainsKeywordValidation : IClassFixture<SuiteContainsKeyword
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\r\n            \"contains\": {\"minimum\": 5}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -73,7 +73,6 @@ public class SuiteContainsKeywordValidation : IClassFixture<SuiteContainsKeyword
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -114,9 +113,9 @@ public class SuiteContainsKeywordWithConstKeyword : IClassFixture<SuiteContainsK
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\r\n            \"contains\": { \"const\": 5 }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -124,7 +123,6 @@ public class SuiteContainsKeywordWithConstKeyword : IClassFixture<SuiteContainsK
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -158,9 +156,9 @@ public class SuiteContainsKeywordWithBooleanSchemaTrue : IClassFixture<SuiteCont
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\"contains\": true}",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -168,7 +166,6 @@ public class SuiteContainsKeywordWithBooleanSchemaTrue : IClassFixture<SuiteCont
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -209,9 +206,9 @@ public class SuiteContainsKeywordWithBooleanSchemaFalse : IClassFixture<SuiteCon
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\"contains\": false}",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -219,7 +216,6 @@ public class SuiteContainsKeywordWithBooleanSchemaFalse : IClassFixture<SuiteCon
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -267,9 +263,9 @@ public class SuiteItemsContains : IClassFixture<SuiteItemsContains.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\r\n            \"items\": { \"multipleOf\": 2 },\r\n            \"contains\": { \"multipleOf\": 3 }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -277,7 +273,6 @@ public class SuiteItemsContains : IClassFixture<SuiteItemsContains.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -311,9 +306,9 @@ public class SuiteContainsWithFalseIfSubschema : IClassFixture<SuiteContainsWith
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\r\n            \"contains\": {\r\n                \"if\": false,\r\n                \"else\": true\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -321,7 +316,6 @@ public class SuiteContainsWithFalseIfSubschema : IClassFixture<SuiteContainsWith
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -348,9 +342,9 @@ public class SuiteContainsWithNullInstanceElements : IClassFixture<SuiteContains
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\contains.json",
                 "{\r\n            \"contains\": {\r\n                \"type\": \"null\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Contains",
@@ -358,7 +352,6 @@ public class SuiteContainsWithNullInstanceElements : IClassFixture<SuiteContains
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

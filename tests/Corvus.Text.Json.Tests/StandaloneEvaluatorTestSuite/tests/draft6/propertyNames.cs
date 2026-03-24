@@ -63,9 +63,9 @@ public class SuitePropertyNamesValidation : IClassFixture<SuitePropertyNamesVali
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\propertyNames.json",
                 "{\r\n            \"propertyNames\": {\"maxLength\": 3}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PropertyNames",
@@ -73,7 +73,6 @@ public class SuitePropertyNamesValidation : IClassFixture<SuitePropertyNamesVali
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -114,9 +113,9 @@ public class SuitePropertyNamesValidationWithPattern : IClassFixture<SuiteProper
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\propertyNames.json",
                 "{\r\n            \"propertyNames\": { \"pattern\": \"^a+$\" }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PropertyNames",
@@ -124,7 +123,6 @@ public class SuitePropertyNamesValidationWithPattern : IClassFixture<SuiteProper
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -158,9 +156,9 @@ public class SuitePropertyNamesWithBooleanSchemaTrue : IClassFixture<SuiteProper
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\propertyNames.json",
                 "{\"propertyNames\": true}",
                 "StandaloneEvaluatorTestSuite.Draft6.PropertyNames",
@@ -168,7 +166,6 @@ public class SuitePropertyNamesWithBooleanSchemaTrue : IClassFixture<SuiteProper
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -202,9 +199,9 @@ public class SuitePropertyNamesWithBooleanSchemaFalse : IClassFixture<SuitePrope
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\propertyNames.json",
                 "{\"propertyNames\": false}",
                 "StandaloneEvaluatorTestSuite.Draft6.PropertyNames",
@@ -212,7 +209,6 @@ public class SuitePropertyNamesWithBooleanSchemaFalse : IClassFixture<SuitePrope
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -253,9 +249,9 @@ public class SuitePropertyNamesWithConst : IClassFixture<SuitePropertyNamesWithC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\propertyNames.json",
                 "{\"propertyNames\": {\"const\": \"foo\"}}",
                 "StandaloneEvaluatorTestSuite.Draft6.PropertyNames",
@@ -263,7 +259,6 @@ public class SuitePropertyNamesWithConst : IClassFixture<SuitePropertyNamesWithC
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -311,9 +306,9 @@ public class SuitePropertyNamesWithEnum : IClassFixture<SuitePropertyNamesWithEn
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\propertyNames.json",
                 "{\"propertyNames\": {\"enum\": [\"foo\", \"bar\"]}}",
                 "StandaloneEvaluatorTestSuite.Draft6.PropertyNames",
@@ -321,7 +316,6 @@ public class SuitePropertyNamesWithEnum : IClassFixture<SuitePropertyNamesWithEn
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -49,9 +49,9 @@ public class SuiteMaxItemsValidation : IClassFixture<SuiteMaxItemsValidation.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maxItems.json",
                 "{\"maxItems\": 2}",
                 "StandaloneEvaluatorTestSuite.Draft4.MaxItems",
@@ -59,7 +59,6 @@ public class SuiteMaxItemsValidation : IClassFixture<SuiteMaxItemsValidation.Fix
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

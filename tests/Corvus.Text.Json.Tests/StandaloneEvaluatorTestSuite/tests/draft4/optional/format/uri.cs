@@ -273,9 +273,9 @@ public class SuiteValidationOfUrIs : IClassFixture<SuiteValidationOfUrIs.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\optional\\format\\uri.json",
                 "{ \"format\": \"uri\" }",
                 "StandaloneEvaluatorTestSuite.Draft4.Optional.Format.Uri",
@@ -283,7 +283,6 @@ public class SuiteValidationOfUrIs : IClassFixture<SuiteValidationOfUrIs.Fixture
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

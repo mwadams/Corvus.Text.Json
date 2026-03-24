@@ -77,9 +77,9 @@ public class SuitePatternValidation : IClassFixture<SuitePatternValidation.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\pattern.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"pattern\": \"^a*$\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Pattern",
@@ -87,7 +87,6 @@ public class SuitePatternValidation : IClassFixture<SuitePatternValidation.Fixtu
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -114,9 +113,9 @@ public class SuitePatternIsNotAnchored : IClassFixture<SuitePatternIsNotAnchored
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\pattern.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"pattern\": \"a+\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Pattern",
@@ -124,7 +123,6 @@ public class SuitePatternIsNotAnchored : IClassFixture<SuitePatternIsNotAnchored
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

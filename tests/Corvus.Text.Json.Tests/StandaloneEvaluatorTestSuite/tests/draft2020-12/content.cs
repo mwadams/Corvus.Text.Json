@@ -42,9 +42,9 @@ public class SuiteValidationOfStringEncodedContentBasedOnMediaType : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\content.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contentMediaType\": \"application/json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Content",
@@ -52,7 +52,6 @@ public class SuiteValidationOfStringEncodedContentBasedOnMediaType : IClassFixtu
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -93,9 +92,9 @@ public class SuiteValidationOfBinaryStringEncoding : IClassFixture<SuiteValidati
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\content.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contentEncoding\": \"base64\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Content",
@@ -103,7 +102,6 @@ public class SuiteValidationOfBinaryStringEncoding : IClassFixture<SuiteValidati
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -151,9 +149,9 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocuments : IClassFixture<Su
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\content.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contentMediaType\": \"application/json\",\r\n            \"contentEncoding\": \"base64\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Content",
@@ -161,7 +159,6 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocuments : IClassFixture<Su
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -237,9 +234,9 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocumentsWithSchema : IClass
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\content.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contentMediaType\": \"application/json\",\r\n            \"contentEncoding\": \"base64\",\r\n            \"contentSchema\": { \"type\": \"object\", \"required\": [\"foo\"], \"properties\": { \"foo\": { \"type\": \"string\" } } }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Content",
@@ -247,7 +244,6 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocumentsWithSchema : IClass
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

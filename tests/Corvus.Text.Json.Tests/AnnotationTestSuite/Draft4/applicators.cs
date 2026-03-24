@@ -88,9 +88,9 @@ public class SuitePropertiesPatternPropertiesAndAdditionalProperties : IClassFix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"properties\": {\r\n          \"foo\": {\r\n            \"title\": \"Foo\"\r\n          }\r\n        },\r\n        \"patternProperties\": {\r\n          \"^a\": {\r\n            \"title\": \"Bar\"\r\n          }\r\n        },\r\n        \"additionalProperties\": {\r\n          \"title\": \"Baz\"\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft4.Applicators",
@@ -98,7 +98,6 @@ public class SuitePropertiesPatternPropertiesAndAdditionalProperties : IClassFix
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

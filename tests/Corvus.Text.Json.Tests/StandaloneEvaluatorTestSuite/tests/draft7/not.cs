@@ -35,9 +35,9 @@ public class SuiteNot : IClassFixture<SuiteNot.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{\r\n            \"not\": {\"type\": \"integer\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -45,7 +45,6 @@ public class SuiteNot : IClassFixture<SuiteNot.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -86,9 +85,9 @@ public class SuiteNotMultipleTypes : IClassFixture<SuiteNotMultipleTypes.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{\r\n            \"not\": {\"type\": [\"integer\", \"boolean\"]}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -96,7 +95,6 @@ public class SuiteNotMultipleTypes : IClassFixture<SuiteNotMultipleTypes.Fixture
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -137,9 +135,9 @@ public class SuiteNotMoreComplexSchema : IClassFixture<SuiteNotMoreComplexSchema
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{\r\n            \"not\": {\r\n                \"type\": \"object\",\r\n                \"properties\": {\r\n                    \"foo\": {\r\n                        \"type\": \"string\"\r\n                    }\r\n                }\r\n             }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -147,7 +145,6 @@ public class SuiteNotMoreComplexSchema : IClassFixture<SuiteNotMoreComplexSchema
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -181,9 +178,9 @@ public class SuiteForbiddenProperty : IClassFixture<SuiteForbiddenProperty.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{\r\n            \"properties\": {\r\n                \"foo\": { \r\n                    \"not\": {}\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -191,7 +188,6 @@ public class SuiteForbiddenProperty : IClassFixture<SuiteForbiddenProperty.Fixtu
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -274,9 +270,9 @@ public class SuiteForbidEverythingWithEmptySchema : IClassFixture<SuiteForbidEve
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{ \"not\": {} }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -284,7 +280,6 @@ public class SuiteForbidEverythingWithEmptySchema : IClassFixture<SuiteForbidEve
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -367,9 +362,9 @@ public class SuiteForbidEverythingWithBooleanSchemaTrue : IClassFixture<SuiteFor
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{ \"not\": true }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -377,7 +372,6 @@ public class SuiteForbidEverythingWithBooleanSchemaTrue : IClassFixture<SuiteFor
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -460,9 +454,9 @@ public class SuiteAllowEverythingWithBooleanSchemaFalse : IClassFixture<SuiteAll
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{ \"not\": false }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -470,7 +464,6 @@ public class SuiteAllowEverythingWithBooleanSchemaFalse : IClassFixture<SuiteAll
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -497,9 +490,9 @@ public class SuiteDoubleNegation : IClassFixture<SuiteDoubleNegation.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\not.json",
                 "{ \"not\": { \"not\": {} } }",
                 "StandaloneEvaluatorTestSuite.Draft7.Not",
@@ -507,7 +500,6 @@ public class SuiteDoubleNegation : IClassFixture<SuiteDoubleNegation.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

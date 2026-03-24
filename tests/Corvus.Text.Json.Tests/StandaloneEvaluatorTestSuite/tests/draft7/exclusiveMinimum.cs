@@ -49,9 +49,9 @@ public class SuiteExclusiveMinimumValidation : IClassFixture<SuiteExclusiveMinim
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\exclusiveMinimum.json",
                 "{\r\n            \"exclusiveMinimum\": 1.1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.ExclusiveMinimum",
@@ -59,7 +59,6 @@ public class SuiteExclusiveMinimumValidation : IClassFixture<SuiteExclusiveMinim
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -42,9 +42,9 @@ public class SuiteIdInsideAnUnknownKeywordIsNotARealIdentifier : IClassFixture<S
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\unknownKeyword.json",
                 "{\r\n            \"definitions\": {\r\n                \"id_in_unknown0\": {\r\n                    \"not\": {\r\n                        \"array_of_schemas\": [\r\n                            {\r\n                              \"$id\": \"https://localhost:1234/unknownKeyword/my_identifier.json\",\r\n                              \"type\": \"null\"\r\n                            }\r\n                        ]\r\n                    }\r\n                },\r\n                \"real_id_in_schema\": {\r\n                    \"$id\": \"https://localhost:1234/unknownKeyword/my_identifier.json\",\r\n                    \"type\": \"string\"\r\n                },\r\n                \"id_in_unknown1\": {\r\n                    \"not\": {\r\n                        \"object_of_schemas\": {\r\n                            \"foo\": {\r\n                              \"$id\": \"https://localhost:1234/unknownKeyword/my_identifier.json\",\r\n                              \"type\": \"integer\"\r\n                            }\r\n                        }\r\n                    }\r\n                }\r\n            },\r\n            \"anyOf\": [\r\n                { \"$ref\": \"#/definitions/id_in_unknown0\" },\r\n                { \"$ref\": \"#/definitions/id_in_unknown1\" },\r\n                { \"$ref\": \"https://localhost:1234/unknownKeyword/my_identifier.json\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.UnknownKeyword",
@@ -52,7 +52,6 @@ public class SuiteIdInsideAnUnknownKeywordIsNotARealIdentifier : IClassFixture<S
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

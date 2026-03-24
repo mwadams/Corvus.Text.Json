@@ -35,9 +35,9 @@ public class SuiteInteger : IClassFixture<SuiteInteger.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"type\": \"integer\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -45,7 +45,6 @@ public class SuiteInteger : IClassFixture<SuiteInteger.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteNumber : IClassFixture<SuiteNumber.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"type\": \"number\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -89,7 +88,6 @@ public class SuiteNumber : IClassFixture<SuiteNumber.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -116,9 +114,9 @@ public class SuiteString : IClassFixture<SuiteString.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"type\": \"string\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -126,7 +124,6 @@ public class SuiteString : IClassFixture<SuiteString.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -153,9 +150,9 @@ public class SuiteMaximumIntegerComparison : IClassFixture<SuiteMaximumIntegerCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maximum\": 18446744073709551615\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -163,7 +160,6 @@ public class SuiteMaximumIntegerComparison : IClassFixture<SuiteMaximumIntegerCo
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -190,9 +186,9 @@ public class SuiteFloatComparisonWithHighPrecision : IClassFixture<SuiteFloatCom
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"exclusiveMaximum\": 972783798187987123879878123.18878137\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -200,7 +196,6 @@ public class SuiteFloatComparisonWithHighPrecision : IClassFixture<SuiteFloatCom
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -227,9 +222,9 @@ public class SuiteMinimumIntegerComparison : IClassFixture<SuiteMinimumIntegerCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"minimum\": -18446744073709551615\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -237,7 +232,6 @@ public class SuiteMinimumIntegerComparison : IClassFixture<SuiteMinimumIntegerCo
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -264,9 +258,9 @@ public class SuiteFloatComparisonWithHighPrecisionOnNegativeNumbers : IClassFixt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\bignum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"exclusiveMinimum\": -972783798187987123879878123.18878137\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Bignum",
@@ -274,7 +268,6 @@ public class SuiteFloatComparisonWithHighPrecisionOnNegativeNumbers : IClassFixt
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

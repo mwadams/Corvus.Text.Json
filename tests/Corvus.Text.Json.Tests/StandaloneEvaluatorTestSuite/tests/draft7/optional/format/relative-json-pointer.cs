@@ -147,9 +147,9 @@ public class SuiteValidationOfRelativeJsonPointersRjp : IClassFixture<SuiteValid
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\relative-json-pointer.json",
                 "{ \"format\": \"relative-json-pointer\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.RelativeJsonPointer",
@@ -157,7 +157,6 @@ public class SuiteValidationOfRelativeJsonPointersRjp : IClassFixture<SuiteValid
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

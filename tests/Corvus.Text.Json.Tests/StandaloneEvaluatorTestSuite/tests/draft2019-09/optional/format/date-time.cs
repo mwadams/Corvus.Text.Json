@@ -168,9 +168,9 @@ public class SuiteValidationOfDateTimeStrings : IClassFixture<SuiteValidationOfD
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\format\\date-time.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"format\": \"date-time\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.Format.DateTime",
@@ -178,7 +178,6 @@ public class SuiteValidationOfDateTimeStrings : IClassFixture<SuiteValidationOfD
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

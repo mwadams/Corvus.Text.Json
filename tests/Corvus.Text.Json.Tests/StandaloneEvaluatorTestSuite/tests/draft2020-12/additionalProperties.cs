@@ -63,9 +63,9 @@ public class SuiteAdditionalPropertiesBeingFalseDoesNotAllowOtherProperties : IC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"properties\": {\"foo\": {}, \"bar\": {}},\r\n            \"patternProperties\": { \"^v\": {} },\r\n            \"additionalProperties\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -73,7 +73,6 @@ public class SuiteAdditionalPropertiesBeingFalseDoesNotAllowOtherProperties : IC
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteNonAsciiPatternWithAdditionalProperties : IClassFixture<SuiteN
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"patternProperties\": {\"^á\": {}},\r\n            \"additionalProperties\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -117,7 +116,6 @@ public class SuiteNonAsciiPatternWithAdditionalProperties : IClassFixture<SuiteN
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -158,9 +156,9 @@ public class SuiteAdditionalPropertiesWithSchema : IClassFixture<SuiteAdditional
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"properties\": {\"foo\": {}, \"bar\": {}},\r\n            \"additionalProperties\": {\"type\": \"boolean\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -168,7 +166,6 @@ public class SuiteAdditionalPropertiesWithSchema : IClassFixture<SuiteAdditional
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -202,9 +199,9 @@ public class SuiteAdditionalPropertiesCanExistByItself : IClassFixture<SuiteAddi
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"additionalProperties\": {\"type\": \"boolean\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -212,7 +209,6 @@ public class SuiteAdditionalPropertiesCanExistByItself : IClassFixture<SuiteAddi
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -239,9 +235,9 @@ public class SuiteAdditionalPropertiesAreAllowedByDefault : IClassFixture<SuiteA
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"properties\": {\"foo\": {}, \"bar\": {}}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -249,7 +245,6 @@ public class SuiteAdditionalPropertiesAreAllowedByDefault : IClassFixture<SuiteA
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -276,9 +271,9 @@ public class SuiteAdditionalPropertiesDoesNotLookInApplicators : IClassFixture<S
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [\r\n                {\"properties\": {\"foo\": {}}}\r\n            ],\r\n            \"additionalProperties\": {\"type\": \"boolean\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -286,7 +281,6 @@ public class SuiteAdditionalPropertiesDoesNotLookInApplicators : IClassFixture<S
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -313,9 +307,9 @@ public class SuiteAdditionalPropertiesWithNullValuedInstanceProperties : IClassF
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"additionalProperties\": {\r\n                \"type\": \"null\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -323,7 +317,6 @@ public class SuiteAdditionalPropertiesWithNullValuedInstanceProperties : IClassF
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -357,9 +350,9 @@ public class SuiteAdditionalPropertiesWithPropertyNames : IClassFixture<SuiteAdd
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"propertyNames\": {\r\n                \"maxLength\": 5\r\n            },\r\n            \"additionalProperties\": {\r\n                \"type\": \"number\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -367,7 +360,6 @@ public class SuiteAdditionalPropertiesWithPropertyNames : IClassFixture<SuiteAdd
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -408,9 +400,9 @@ public class SuiteDependentSchemasWithAdditionalProperties : IClassFixture<Suite
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\additionalProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"properties\": {\"foo2\": {}},\r\n            \"dependentSchemas\": {\r\n                \"foo\" : {},\r\n                \"foo2\": {\r\n                    \"properties\": {\r\n                        \"bar\": {}\r\n                    }\r\n                }\r\n            },\r\n            \"additionalProperties\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.AdditionalProperties",
@@ -418,7 +410,6 @@ public class SuiteDependentSchemasWithAdditionalProperties : IClassFixture<Suite
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

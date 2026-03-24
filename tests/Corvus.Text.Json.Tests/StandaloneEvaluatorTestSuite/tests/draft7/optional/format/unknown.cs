@@ -70,9 +70,9 @@ public class SuiteUnknownFormat : IClassFixture<SuiteUnknownFormat.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\unknown.json",
                 "{ \"format\": \"unknown\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.Unknown",
@@ -80,7 +80,6 @@ public class SuiteUnknownFormat : IClassFixture<SuiteUnknownFormat.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -49,9 +49,9 @@ public class SuiteAllOf : IClassFixture<SuiteAllOf.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                {\r\n                    \"properties\": {\r\n                        \"bar\": {\"type\": \"integer\"}\r\n                    },\r\n                    \"required\": [\"bar\"]\r\n                },\r\n                {\r\n                    \"properties\": {\r\n                        \"foo\": {\"type\": \"string\"}\r\n                    },\r\n                    \"required\": [\"foo\"]\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -59,7 +59,6 @@ public class SuiteAllOf : IClassFixture<SuiteAllOf.Fixture>
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -114,9 +113,9 @@ public class SuiteAllOfWithBaseSchema : IClassFixture<SuiteAllOfWithBaseSchema.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"properties\": {\"bar\": {\"type\": \"integer\"}},\r\n            \"required\": [\"bar\"],\r\n            \"allOf\" : [\r\n                {\r\n                    \"properties\": {\r\n                        \"foo\": {\"type\": \"string\"}\r\n                    },\r\n                    \"required\": [\"foo\"]\r\n                },\r\n                {\r\n                    \"properties\": {\r\n                        \"baz\": {\"type\": \"null\"}\r\n                    },\r\n                    \"required\": [\"baz\"]\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -124,7 +123,6 @@ public class SuiteAllOfWithBaseSchema : IClassFixture<SuiteAllOfWithBaseSchema.F
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -158,9 +156,9 @@ public class SuiteAllOfSimpleTypes : IClassFixture<SuiteAllOfSimpleTypes.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                {\"maximum\": 30},\r\n                {\"minimum\": 20}\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -168,7 +166,6 @@ public class SuiteAllOfSimpleTypes : IClassFixture<SuiteAllOfSimpleTypes.Fixture
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -195,9 +192,9 @@ public class SuiteAllOfWithOneEmptySchema : IClassFixture<SuiteAllOfWithOneEmpty
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                {}\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -205,7 +202,6 @@ public class SuiteAllOfWithOneEmptySchema : IClassFixture<SuiteAllOfWithOneEmpty
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -232,9 +228,9 @@ public class SuiteAllOfWithTwoEmptySchemas : IClassFixture<SuiteAllOfWithTwoEmpt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                {},\r\n                {}\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -242,7 +238,6 @@ public class SuiteAllOfWithTwoEmptySchemas : IClassFixture<SuiteAllOfWithTwoEmpt
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -276,9 +271,9 @@ public class SuiteAllOfWithTheFirstEmptySchema : IClassFixture<SuiteAllOfWithThe
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                {},\r\n                { \"type\": \"number\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -286,7 +281,6 @@ public class SuiteAllOfWithTheFirstEmptySchema : IClassFixture<SuiteAllOfWithThe
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -320,9 +314,9 @@ public class SuiteAllOfWithTheLastEmptySchema : IClassFixture<SuiteAllOfWithTheL
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                { \"type\": \"number\" },\r\n                {}\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -330,7 +324,6 @@ public class SuiteAllOfWithTheLastEmptySchema : IClassFixture<SuiteAllOfWithTheL
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -364,9 +357,9 @@ public class SuiteNestedAllOfToCheckValidationSemantics : IClassFixture<SuiteNes
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [\r\n                {\r\n                    \"allOf\": [\r\n                        {\r\n                            \"type\": \"null\"\r\n                        }\r\n                    ]\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -374,7 +367,6 @@ public class SuiteNestedAllOfToCheckValidationSemantics : IClassFixture<SuiteNes
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -450,9 +442,9 @@ public class SuiteAllOfCombinedWithAnyOfOneOf : IClassFixture<SuiteAllOfCombined
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\allOf.json",
                 "{\r\n            \"allOf\": [ { \"multipleOf\": 2 } ],\r\n            \"anyOf\": [ { \"multipleOf\": 3 } ],\r\n            \"oneOf\": [ { \"multipleOf\": 5 } ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft4.AllOf",
@@ -460,7 +452,6 @@ public class SuiteAllOfCombinedWithAnyOfOneOf : IClassFixture<SuiteAllOfCombined
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

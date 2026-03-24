@@ -112,9 +112,9 @@ public class SuiteValidationOfIriReferences : IClassFixture<SuiteValidationOfIri
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\iri-reference.json",
                 "{ \"format\": \"iri-reference\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.IriReference",
@@ -122,7 +122,6 @@ public class SuiteValidationOfIriReferences : IClassFixture<SuiteValidationOfIri
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

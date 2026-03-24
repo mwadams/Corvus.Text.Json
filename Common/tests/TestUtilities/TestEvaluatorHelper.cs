@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.IO;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using Corvus.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.DocumentResolvers;
@@ -87,7 +88,7 @@ public class TestEvaluatorHelper
     /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
     /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
     /// <returns>A <see cref="CompiledEvaluator"/> for the schema.</returns>
-    public static CompiledEvaluator GenerateEvaluatorForVirtualFile(
+    public static async ValueTask<CompiledEvaluator> GenerateEvaluatorForVirtualFileAsync(
         string virtualFilename,
         string schemaText,
         string defaultNamespace,
@@ -107,7 +108,7 @@ public class TestEvaluatorHelper
             defaultVocabulary: defaultVocabulary,
             validateFormat: validateFormat);
 
-        CompiledEvaluator result = helper.GenerateAndCompile(virtualFilename, schemaText, TestJsonSchemaCodeGenerator.ToPascalCase(defaultNamespace), hostAssembly);
+        CompiledEvaluator result = await helper.GenerateAndCompileAsync(virtualFilename, schemaText, TestJsonSchemaCodeGenerator.ToPascalCase(defaultNamespace), hostAssembly);
         return s_cache.GetOrAdd(key, _ => result);
     }
 
@@ -122,7 +123,7 @@ public class TestEvaluatorHelper
     /// <param name="validateFormat">Whether to enforce format validation rather than just evaluation.</param>
     /// <param name="hostAssembly">The host assembly with preserved compilation context.</param>
     /// <returns>A <see cref="CompiledEvaluator"/> for the schema.</returns>
-    public static CompiledEvaluator GenerateEvaluatorForVirtualFile(
+    public static async ValueTask<CompiledEvaluator> GenerateEvaluatorForVirtualFileAsync(
         string virtualFilename,
         string schemaText,
         string defaultNamespace,
@@ -142,7 +143,7 @@ public class TestEvaluatorHelper
             defaultVocabulary: defaultVocabulary,
             validateFormat: validateFormat);
 
-        CompiledEvaluator result = helper.GenerateAndCompile(virtualFilename, schemaText, TestJsonSchemaCodeGenerator.ToPascalCase(defaultNamespace), hostAssembly);
+        CompiledEvaluator result = await helper.GenerateAndCompileAsync(virtualFilename, schemaText, TestJsonSchemaCodeGenerator.ToPascalCase(defaultNamespace), hostAssembly);
         return s_cache.GetOrAdd(key, _ => result);
     }
 
@@ -156,7 +157,7 @@ public class TestEvaluatorHelper
         Corvus.Json.CodeGeneration.OpenApi30.VocabularyAnalyser.RegisterAnalyser(_vocabularyRegistry);
     }
 
-    private CompiledEvaluator GenerateAndCompile(string virtualFileName, string jsonSchema, string defaultNamespace, Assembly hostAssembly)
+    private async ValueTask<CompiledEvaluator> GenerateAndCompileAsync(string virtualFileName, string jsonSchema, string defaultNamespace, Assembly hostAssembly)
     {
         string path = Path.Combine(_remotesBaseDirectory!, virtualFileName);
         if (SchemaReferenceNormalization.TryNormalizeSchemaReference(path, out string? normalizedPath))
@@ -174,7 +175,7 @@ public class TestEvaluatorHelper
 
         CSharpLanguageProvider languageProvider = CSharpLanguageProvider.DefaultWithOptions(options);
 
-        TypeDeclaration rootType = _jsonSchemaTypeBuilder.AddTypeDeclarations(new JsonReference(path), _defaultVocabulary, true);
+        TypeDeclaration rootType = await _jsonSchemaTypeBuilder.AddTypeDeclarationsAsync(new JsonReference(path), _defaultVocabulary, true);
 
         // Store the original (unreduced) root type before the pipeline reduces it.
         // The pipeline's GetCandidateTypesToGenerate replaces annotation-only schemas

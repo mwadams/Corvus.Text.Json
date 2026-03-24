@@ -70,9 +70,9 @@ public class SuiteSingleDependency : IClassFixture<SuiteSingleDependency.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\"bar\": [\"foo\"]}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -80,7 +80,6 @@ public class SuiteSingleDependency : IClassFixture<SuiteSingleDependency.Fixture
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -121,9 +120,9 @@ public class SuiteEmptyDependents : IClassFixture<SuiteEmptyDependents.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\"bar\": []}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -131,7 +130,6 @@ public class SuiteEmptyDependents : IClassFixture<SuiteEmptyDependents.Fixture>
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -193,9 +191,9 @@ public class SuiteMultipleDependentsRequired : IClassFixture<SuiteMultipleDepend
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\"quux\": [\"foo\", \"bar\"]}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -203,7 +201,6 @@ public class SuiteMultipleDependentsRequired : IClassFixture<SuiteMultipleDepend
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -251,9 +248,9 @@ public class SuiteDependenciesWithEscapedCharacters : IClassFixture<SuiteDepende
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\r\n                \"foo\\nbar\": [\"foo\\rbar\"],\r\n                \"foo\\\"bar\": [\"foo'bar\"]\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -261,7 +258,6 @@ public class SuiteDependenciesWithEscapedCharacters : IClassFixture<SuiteDepende
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -337,9 +333,9 @@ public class SuiteSingleSchemaDependency : IClassFixture<SuiteSingleSchemaDepend
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\r\n                \"bar\": {\r\n                    \"properties\": {\r\n                        \"foo\": {\"type\": \"integer\"},\r\n                        \"bar\": {\"type\": \"integer\"}\r\n                    }\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -347,7 +343,6 @@ public class SuiteSingleSchemaDependency : IClassFixture<SuiteSingleSchemaDepend
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -395,9 +390,9 @@ public class SuiteBooleanSubschemas : IClassFixture<SuiteBooleanSubschemas.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\r\n                \"foo\": true,\r\n                \"bar\": false\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -405,7 +400,6 @@ public class SuiteBooleanSubschemas : IClassFixture<SuiteBooleanSubschemas.Fixtu
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -453,9 +447,9 @@ public class SuiteSchemaDependenciesWithEscapedCharacters : IClassFixture<SuiteS
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\dependencies-compatibility.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"dependencies\": {\r\n                \"foo\\tbar\": {\"minProperties\": 4},\r\n                \"foo'bar\": {\"required\": [\"foo\\\"bar\"]}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.DependenciesCompatibility",
@@ -463,7 +457,6 @@ public class SuiteSchemaDependenciesWithEscapedCharacters : IClassFixture<SuiteS
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

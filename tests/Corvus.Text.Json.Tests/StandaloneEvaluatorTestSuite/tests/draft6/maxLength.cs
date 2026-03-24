@@ -56,9 +56,9 @@ public class SuiteMaxLengthValidation : IClassFixture<SuiteMaxLengthValidation.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\maxLength.json",
                 "{\"maxLength\": 2}",
                 "StandaloneEvaluatorTestSuite.Draft6.MaxLength",
@@ -66,7 +66,6 @@ public class SuiteMaxLengthValidation : IClassFixture<SuiteMaxLengthValidation.F
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -100,9 +99,9 @@ public class SuiteMaxLengthValidationWithADecimal : IClassFixture<SuiteMaxLength
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\maxLength.json",
                 "{\"maxLength\": 2.0}",
                 "StandaloneEvaluatorTestSuite.Draft6.MaxLength",
@@ -110,7 +109,6 @@ public class SuiteMaxLengthValidationWithADecimal : IClassFixture<SuiteMaxLength
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -70,9 +70,9 @@ public class SuitePatternPropertiesValidatesPropertiesMatchingARegex : IClassFix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\patternProperties.json",
                 "{\r\n            \"patternProperties\": {\r\n                \"f.*o\": {\"type\": \"integer\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PatternProperties",
@@ -80,7 +80,6 @@ public class SuitePatternPropertiesValidatesPropertiesMatchingARegex : IClassFix
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -142,9 +141,9 @@ public class SuiteMultipleSimultaneousPatternPropertiesAreValidated : IClassFixt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\patternProperties.json",
                 "{\r\n            \"patternProperties\": {\r\n                \"a*\": {\"type\": \"integer\"},\r\n                \"aaa*\": {\"maximum\": 20}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PatternProperties",
@@ -152,7 +151,6 @@ public class SuiteMultipleSimultaneousPatternPropertiesAreValidated : IClassFixt
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -200,9 +198,9 @@ public class SuiteRegexesAreNotAnchoredByDefaultAndAreCaseSensitive : IClassFixt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\patternProperties.json",
                 "{\r\n            \"patternProperties\": {\r\n                \"[0-9]{2,}\": { \"type\": \"boolean\" },\r\n                \"X_\": { \"type\": \"string\" }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PatternProperties",
@@ -210,7 +208,6 @@ public class SuiteRegexesAreNotAnchoredByDefaultAndAreCaseSensitive : IClassFixt
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -265,9 +262,9 @@ public class SuitePatternPropertiesWithBooleanSchemas : IClassFixture<SuitePatte
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\patternProperties.json",
                 "{\r\n            \"patternProperties\": {\r\n                \"f.*\": true,\r\n                \"b.*\": false\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PatternProperties",
@@ -275,7 +272,6 @@ public class SuitePatternPropertiesWithBooleanSchemas : IClassFixture<SuitePatte
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -302,9 +298,9 @@ public class SuitePatternPropertiesWithNullValuedInstanceProperties : IClassFixt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\patternProperties.json",
                 "{\r\n            \"patternProperties\": {\r\n                \"^.*bar$\": {\"type\": \"null\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.PatternProperties",
@@ -312,7 +308,6 @@ public class SuitePatternPropertiesWithNullValuedInstanceProperties : IClassFixt
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

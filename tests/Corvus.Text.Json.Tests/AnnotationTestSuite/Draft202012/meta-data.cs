@@ -33,9 +33,9 @@ public class SuiteTitleIsAnAnnotation : IClassFixture<SuiteTitleIsAnAnnotation.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"title\": \"Foo\"\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -43,7 +43,6 @@ public class SuiteTitleIsAnAnnotation : IClassFixture<SuiteTitleIsAnAnnotation.F
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -74,9 +73,9 @@ public class SuiteDescriptionIsAnAnnotation : IClassFixture<SuiteDescriptionIsAn
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"description\": \"Foo\"\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -84,7 +83,6 @@ public class SuiteDescriptionIsAnAnnotation : IClassFixture<SuiteDescriptionIsAn
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -115,9 +113,9 @@ public class SuiteDefaultIsAnAnnotation : IClassFixture<SuiteDefaultIsAnAnnotati
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"default\": \"Foo\"\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -125,7 +123,6 @@ public class SuiteDefaultIsAnAnnotation : IClassFixture<SuiteDefaultIsAnAnnotati
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -156,9 +153,9 @@ public class SuiteDeprecatedIsAnAnnotation : IClassFixture<SuiteDeprecatedIsAnAn
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"deprecated\": true\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -166,7 +163,6 @@ public class SuiteDeprecatedIsAnAnnotation : IClassFixture<SuiteDeprecatedIsAnAn
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -197,9 +193,9 @@ public class SuiteReadOnlyIsAnAnnotation : IClassFixture<SuiteReadOnlyIsAnAnnota
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"readOnly\": true\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -207,7 +203,6 @@ public class SuiteReadOnlyIsAnAnnotation : IClassFixture<SuiteReadOnlyIsAnAnnota
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -238,9 +233,9 @@ public class SuiteWriteOnlyIsAnAnnotation : IClassFixture<SuiteWriteOnlyIsAnAnno
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"writeOnly\": true\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -248,7 +243,6 @@ public class SuiteWriteOnlyIsAnAnnotation : IClassFixture<SuiteWriteOnlyIsAnAnno
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -279,9 +273,9 @@ public class SuiteExamplesIsAnAnnotation : IClassFixture<SuiteExamplesIsAnAnnota
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"examples\": [\"Foo\", \"Bar\"]\r\n      }",
                 "AnnotationTestSuite.Draft202012.MetaData",
@@ -289,7 +283,6 @@ public class SuiteExamplesIsAnAnnotation : IClassFixture<SuiteExamplesIsAnAnnota
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

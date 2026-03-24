@@ -49,9 +49,9 @@ public class SuiteMaximumValidation : IClassFixture<SuiteMaximumValidation.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maximum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maximum\": 3.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Maximum",
@@ -59,7 +59,6 @@ public class SuiteMaximumValidation : IClassFixture<SuiteMaximumValidation.Fixtu
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteMaximumValidationWithUnsignedInteger : IClassFixture<SuiteMaxi
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maximum.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maximum\": 300\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Maximum",
@@ -117,7 +116,6 @@ public class SuiteMaximumValidationWithUnsignedInteger : IClassFixture<SuiteMaxi
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

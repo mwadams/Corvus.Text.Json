@@ -70,9 +70,9 @@ public class SuiteDependencies : IClassFixture<SuiteDependencies.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"dependencies\": {\"bar\": [\"foo\"]}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -80,7 +80,6 @@ public class SuiteDependencies : IClassFixture<SuiteDependencies.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -121,9 +120,9 @@ public class SuiteDependenciesWithEmptyArray : IClassFixture<SuiteDependenciesWi
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"dependencies\": {\"bar\": []}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -131,7 +130,6 @@ public class SuiteDependenciesWithEmptyArray : IClassFixture<SuiteDependenciesWi
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -193,9 +191,9 @@ public class SuiteMultipleDependencies : IClassFixture<SuiteMultipleDependencies
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"dependencies\": {\"quux\": [\"foo\", \"bar\"]}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -203,7 +201,6 @@ public class SuiteMultipleDependencies : IClassFixture<SuiteMultipleDependencies
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -258,9 +255,9 @@ public class SuiteMultipleDependenciesSubschema : IClassFixture<SuiteMultipleDep
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"dependencies\": {\r\n                \"bar\": {\r\n                    \"properties\": {\r\n                        \"foo\": {\"type\": \"integer\"},\r\n                        \"bar\": {\"type\": \"integer\"}\r\n                    }\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -268,7 +265,6 @@ public class SuiteMultipleDependenciesSubschema : IClassFixture<SuiteMultipleDep
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -316,9 +312,9 @@ public class SuiteDependenciesWithBooleanSubschemas : IClassFixture<SuiteDepende
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"dependencies\": {\r\n                \"foo\": true,\r\n                \"bar\": false\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -326,7 +322,6 @@ public class SuiteDependenciesWithBooleanSubschemas : IClassFixture<SuiteDepende
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -395,9 +390,9 @@ public class SuiteDependenciesWithEscapedCharacters : IClassFixture<SuiteDepende
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"dependencies\": {\r\n                \"foo\\nbar\": [\"foo\\rbar\"],\r\n                \"foo\\tbar\": {\r\n                    \"minProperties\": 4\r\n                },\r\n                \"foo'bar\": {\"required\": [\"foo\\\"bar\"]},\r\n                \"foo\\\"bar\": [\"foo'bar\"]\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -405,7 +400,6 @@ public class SuiteDependenciesWithEscapedCharacters : IClassFixture<SuiteDepende
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -453,9 +447,9 @@ public class SuiteDependentSubschemaIncompatibleWithRoot : IClassFixture<SuiteDe
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\dependencies.json",
                 "{\r\n            \"properties\": {\r\n                \"foo\": {}\r\n            },\r\n            \"dependencies\": {\r\n                \"foo\": {\r\n                    \"properties\": {\r\n                        \"bar\": {}\r\n                    },\r\n                    \"additionalProperties\": false\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Dependencies",
@@ -463,7 +457,6 @@ public class SuiteDependentSubschemaIncompatibleWithRoot : IClassFixture<SuiteDe
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

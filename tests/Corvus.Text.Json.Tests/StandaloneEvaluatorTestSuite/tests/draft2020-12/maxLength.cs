@@ -56,9 +56,9 @@ public class SuiteMaxLengthValidation : IClassFixture<SuiteMaxLengthValidation.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxLength.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maxLength\": 2\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxLength",
@@ -66,7 +66,6 @@ public class SuiteMaxLengthValidation : IClassFixture<SuiteMaxLengthValidation.F
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -100,9 +99,9 @@ public class SuiteMaxLengthValidationWithADecimal : IClassFixture<SuiteMaxLength
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxLength.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maxLength\": 2.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxLength",
@@ -110,7 +109,6 @@ public class SuiteMaxLengthValidationWithADecimal : IClassFixture<SuiteMaxLength
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

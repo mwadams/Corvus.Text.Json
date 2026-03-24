@@ -63,9 +63,9 @@ public class SuiteMinPropertiesValidation : IClassFixture<SuiteMinPropertiesVali
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\minProperties.json",
                 "{\"minProperties\": 1}",
                 "StandaloneEvaluatorTestSuite.Draft6.MinProperties",
@@ -73,7 +73,6 @@ public class SuiteMinPropertiesValidation : IClassFixture<SuiteMinPropertiesVali
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteMinPropertiesValidationWithADecimal : IClassFixture<SuiteMinPr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\minProperties.json",
                 "{\"minProperties\": 1.0}",
                 "StandaloneEvaluatorTestSuite.Draft6.MinProperties",
@@ -117,7 +116,6 @@ public class SuiteMinPropertiesValidationWithADecimal : IClassFixture<SuiteMinPr
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -28,9 +28,9 @@ public class SuiteRefsToHistoricDraftsAreProcessedAsHistoricDrafts : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\cross-draft.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"type\": \"array\",\r\n            \"$ref\": \"http://localhost:1234/draft2019-09/ignore-prefixItems.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.CrossDraft",
@@ -38,7 +38,6 @@ public class SuiteRefsToHistoricDraftsAreProcessedAsHistoricDrafts : IClassFixtu
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

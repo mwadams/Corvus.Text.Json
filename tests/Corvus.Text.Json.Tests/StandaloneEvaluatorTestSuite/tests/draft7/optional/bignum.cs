@@ -35,9 +35,9 @@ public class SuiteInteger : IClassFixture<SuiteInteger.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{ \"type\": \"integer\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -45,7 +45,6 @@ public class SuiteInteger : IClassFixture<SuiteInteger.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteNumber : IClassFixture<SuiteNumber.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{ \"type\": \"number\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -89,7 +88,6 @@ public class SuiteNumber : IClassFixture<SuiteNumber.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -116,9 +114,9 @@ public class SuiteString : IClassFixture<SuiteString.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{ \"type\": \"string\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -126,7 +124,6 @@ public class SuiteString : IClassFixture<SuiteString.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -153,9 +150,9 @@ public class SuiteMaximumIntegerComparison : IClassFixture<SuiteMaximumIntegerCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{ \"maximum\": 18446744073709551615 }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -163,7 +160,6 @@ public class SuiteMaximumIntegerComparison : IClassFixture<SuiteMaximumIntegerCo
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -190,9 +186,9 @@ public class SuiteFloatComparisonWithHighPrecision : IClassFixture<SuiteFloatCom
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{\r\n            \"exclusiveMaximum\": 972783798187987123879878123.18878137\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -200,7 +196,6 @@ public class SuiteFloatComparisonWithHighPrecision : IClassFixture<SuiteFloatCom
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -227,9 +222,9 @@ public class SuiteMinimumIntegerComparison : IClassFixture<SuiteMinimumIntegerCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{ \"minimum\": -18446744073709551615 }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -237,7 +232,6 @@ public class SuiteMinimumIntegerComparison : IClassFixture<SuiteMinimumIntegerCo
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -264,9 +258,9 @@ public class SuiteFloatComparisonWithHighPrecisionOnNegativeNumbers : IClassFixt
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\bignum.json",
                 "{\r\n            \"exclusiveMinimum\": -972783798187987123879878123.18878137\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Bignum",
@@ -274,7 +268,6 @@ public class SuiteFloatComparisonWithHighPrecisionOnNegativeNumbers : IClassFixt
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

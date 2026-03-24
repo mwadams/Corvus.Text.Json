@@ -133,9 +133,9 @@ public class SuiteValidationOfIpAddresses : IClassFixture<SuiteValidationOfIpAdd
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\format\\ipv4.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"format\": \"ipv4\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.Format.Ipv4",
@@ -143,7 +143,6 @@ public class SuiteValidationOfIpAddresses : IClassFixture<SuiteValidationOfIpAdd
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

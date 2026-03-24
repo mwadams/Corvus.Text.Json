@@ -33,9 +33,9 @@ public class SuiteTitleIsAnAnnotation : IClassFixture<SuiteTitleIsAnAnnotation.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"title\": \"Foo\"\r\n      }",
                 "AnnotationTestSuite.Draft4.MetaData",
@@ -43,7 +43,6 @@ public class SuiteTitleIsAnAnnotation : IClassFixture<SuiteTitleIsAnAnnotation.F
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -74,9 +73,9 @@ public class SuiteDescriptionIsAnAnnotation : IClassFixture<SuiteDescriptionIsAn
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"description\": \"Foo\"\r\n      }",
                 "AnnotationTestSuite.Draft4.MetaData",
@@ -84,7 +83,6 @@ public class SuiteDescriptionIsAnAnnotation : IClassFixture<SuiteDescriptionIsAn
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -115,9 +113,9 @@ public class SuiteDefaultIsAnAnnotation : IClassFixture<SuiteDefaultIsAnAnnotati
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/meta-data.json",
                 "{\r\n        \"default\": \"Foo\"\r\n      }",
                 "AnnotationTestSuite.Draft4.MetaData",
@@ -125,7 +123,6 @@ public class SuiteDefaultIsAnAnnotation : IClassFixture<SuiteDefaultIsAnAnnotati
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

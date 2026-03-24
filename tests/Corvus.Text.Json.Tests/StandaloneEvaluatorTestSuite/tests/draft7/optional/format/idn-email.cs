@@ -91,9 +91,9 @@ public class SuiteValidationOfAnInternationalizedEMailAddresses : IClassFixture<
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\idn-email.json",
                 "{ \"format\": \"idn-email\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.IdnEmail",
@@ -101,7 +101,6 @@ public class SuiteValidationOfAnInternationalizedEMailAddresses : IClassFixture<
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

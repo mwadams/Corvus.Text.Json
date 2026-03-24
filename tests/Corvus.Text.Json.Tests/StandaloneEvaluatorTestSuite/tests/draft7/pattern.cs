@@ -77,9 +77,9 @@ public class SuitePatternValidation : IClassFixture<SuitePatternValidation.Fixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\pattern.json",
                 "{\"pattern\": \"^a*$\"}",
                 "StandaloneEvaluatorTestSuite.Draft7.Pattern",
@@ -87,7 +87,6 @@ public class SuitePatternValidation : IClassFixture<SuitePatternValidation.Fixtu
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -114,9 +113,9 @@ public class SuitePatternIsNotAnchored : IClassFixture<SuitePatternIsNotAnchored
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\pattern.json",
                 "{\"pattern\": \"a+\"}",
                 "StandaloneEvaluatorTestSuite.Draft7.Pattern",
@@ -124,7 +123,6 @@ public class SuitePatternIsNotAnchored : IClassFixture<SuitePatternIsNotAnchored
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

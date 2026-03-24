@@ -231,9 +231,9 @@ public class SuiteValidationOfTimeStrings : IClassFixture<SuiteValidationOfTimeS
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\time.json",
                 "{ \"format\": \"time\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.Time",
@@ -241,7 +241,6 @@ public class SuiteValidationOfTimeStrings : IClassFixture<SuiteValidationOfTimeS
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

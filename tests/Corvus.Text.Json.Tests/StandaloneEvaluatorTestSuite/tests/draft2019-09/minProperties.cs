@@ -63,9 +63,9 @@ public class SuiteMinPropertiesValidation : IClassFixture<SuiteMinPropertiesVali
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"minProperties\": 1\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinProperties",
@@ -73,7 +73,6 @@ public class SuiteMinPropertiesValidation : IClassFixture<SuiteMinPropertiesVali
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteMinPropertiesValidationWithADecimal : IClassFixture<SuiteMinPr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\minProperties.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"minProperties\": 1.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MinProperties",
@@ -117,7 +116,6 @@ public class SuiteMinPropertiesValidationWithADecimal : IClassFixture<SuiteMinPr
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

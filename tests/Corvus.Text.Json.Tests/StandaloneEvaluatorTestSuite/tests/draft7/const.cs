@@ -42,9 +42,9 @@ public class SuiteConstValidation : IClassFixture<SuiteConstValidation.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": 2}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -52,7 +52,6 @@ public class SuiteConstValidation : IClassFixture<SuiteConstValidation.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -100,9 +99,9 @@ public class SuiteConstWithObject : IClassFixture<SuiteConstWithObject.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": {\"foo\": \"bar\", \"baz\": \"bax\"}}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -110,7 +109,6 @@ public class SuiteConstWithObject : IClassFixture<SuiteConstWithObject.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -151,9 +149,9 @@ public class SuiteConstWithArray : IClassFixture<SuiteConstWithArray.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": [{ \"foo\": \"bar\" }]}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -161,7 +159,6 @@ public class SuiteConstWithArray : IClassFixture<SuiteConstWithArray.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -195,9 +192,9 @@ public class SuiteConstWithNull : IClassFixture<SuiteConstWithNull.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": null}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -205,7 +202,6 @@ public class SuiteConstWithNull : IClassFixture<SuiteConstWithNull.Fixture>
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -246,9 +242,9 @@ public class SuiteConstWithFalseDoesNotMatch0 : IClassFixture<SuiteConstWithFals
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": false}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -256,7 +252,6 @@ public class SuiteConstWithFalseDoesNotMatch0 : IClassFixture<SuiteConstWithFals
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -297,9 +292,9 @@ public class SuiteConstWithTrueDoesNotMatch1 : IClassFixture<SuiteConstWithTrueD
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": true}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -307,7 +302,6 @@ public class SuiteConstWithTrueDoesNotMatch1 : IClassFixture<SuiteConstWithTrueD
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -348,9 +342,9 @@ public class SuiteConstWithFalseDoesNotMatch01 : IClassFixture<SuiteConstWithFal
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": [false]}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -358,7 +352,6 @@ public class SuiteConstWithFalseDoesNotMatch01 : IClassFixture<SuiteConstWithFal
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -399,9 +392,9 @@ public class SuiteConstWithTrueDoesNotMatch11 : IClassFixture<SuiteConstWithTrue
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": [true]}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -409,7 +402,6 @@ public class SuiteConstWithTrueDoesNotMatch11 : IClassFixture<SuiteConstWithTrue
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -450,9 +442,9 @@ public class SuiteConstWithAFalseDoesNotMatchA0 : IClassFixture<SuiteConstWithAF
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": {\"a\": false}}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -460,7 +452,6 @@ public class SuiteConstWithAFalseDoesNotMatchA0 : IClassFixture<SuiteConstWithAF
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -501,9 +492,9 @@ public class SuiteConstWithATrueDoesNotMatchA1 : IClassFixture<SuiteConstWithATr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": {\"a\": true}}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -511,7 +502,6 @@ public class SuiteConstWithATrueDoesNotMatchA1 : IClassFixture<SuiteConstWithATr
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -573,9 +563,9 @@ public class SuiteConstWith0DoesNotMatchOtherZeroLikeTypes : IClassFixture<Suite
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": 0}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -583,7 +573,6 @@ public class SuiteConstWith0DoesNotMatchOtherZeroLikeTypes : IClassFixture<Suite
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -624,9 +613,9 @@ public class SuiteConstWith1DoesNotMatchTrue : IClassFixture<SuiteConstWith1Does
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": 1}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -634,7 +623,6 @@ public class SuiteConstWith1DoesNotMatchTrue : IClassFixture<SuiteConstWith1Does
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -689,9 +677,9 @@ public class SuiteConstWith20MatchesIntegerAndFloatTypes : IClassFixture<SuiteCo
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": -2.0}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -699,7 +687,6 @@ public class SuiteConstWith20MatchesIntegerAndFloatTypes : IClassFixture<SuiteCo
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -747,9 +734,9 @@ public class SuiteFloatAndIntegersAreEqualUpTo64BitRepresentationLimits : IClass
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\"const\": 9007199254740992}",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -757,7 +744,6 @@ public class SuiteFloatAndIntegersAreEqualUpTo64BitRepresentationLimits : IClass
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -791,9 +777,9 @@ public class SuiteNulCharactersInStrings : IClassFixture<SuiteNulCharactersInStr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{ \"const\": \"hello\\u0000there\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -801,7 +787,6 @@ public class SuiteNulCharactersInStrings : IClassFixture<SuiteNulCharactersInStr
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -835,9 +820,9 @@ public class SuiteCharactersWithTheSameVisualRepresentationButDifferentCodepoint
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\r\n            \"const\": \"μ\",\r\n            \"$comment\": \"U+03BC\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -845,7 +830,6 @@ public class SuiteCharactersWithTheSameVisualRepresentationButDifferentCodepoint
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -879,9 +863,9 @@ public class SuiteCharactersWithTheSameVisualRepresentationButDifferentNumberOfC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\const.json",
                 "{\r\n            \"const\": \"ä\",\r\n            \"$comment\": \"U+00E4\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Const",
@@ -889,7 +873,6 @@ public class SuiteCharactersWithTheSameVisualRepresentationButDifferentNumberOfC
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

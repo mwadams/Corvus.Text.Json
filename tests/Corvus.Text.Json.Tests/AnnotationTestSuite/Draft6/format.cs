@@ -33,9 +33,9 @@ public class SuiteFormatIsAnAnnotation : IClassFixture<SuiteFormatIsAnAnnotation
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/format.json",
                 "{\r\n        \"format\": \"email\"\r\n      }",
                 "AnnotationTestSuite.Draft6.Format",
@@ -43,7 +43,6 @@ public class SuiteFormatIsAnAnnotation : IClassFixture<SuiteFormatIsAnAnnotation
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -88,9 +88,9 @@ public class SuitePropertiesPatternPropertiesAndAdditionalProperties : IClassFix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"properties\": {\r\n          \"foo\": {\r\n            \"title\": \"Foo\"\r\n          }\r\n        },\r\n        \"patternProperties\": {\r\n          \"^a\": {\r\n            \"title\": \"Bar\"\r\n          }\r\n        },\r\n        \"additionalProperties\": {\r\n          \"title\": \"Baz\"\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -98,7 +98,6 @@ public class SuitePropertiesPatternPropertiesAndAdditionalProperties : IClassFix
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -129,9 +128,9 @@ public class SuitePropertyNamesDoesnTAnnotatePropertyValues : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"propertyNames\": {\r\n          \"const\": \"foo\",\r\n          \"title\": \"Foo\"\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -139,7 +138,6 @@ public class SuitePropertyNamesDoesnTAnnotatePropertyValues : IClassFixture<Suit
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -192,9 +190,9 @@ public class SuitePrefixItemsAndItems : IClassFixture<SuitePrefixItemsAndItems.F
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"prefixItems\": [\r\n          {\r\n            \"title\": \"Foo\"\r\n          }\r\n        ],\r\n        \"items\": {\r\n          \"title\": \"Bar\"\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -202,7 +200,6 @@ public class SuitePrefixItemsAndItems : IClassFixture<SuitePrefixItemsAndItems.F
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -266,9 +263,9 @@ public class SuiteContains : IClassFixture<SuiteContains.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"contains\": {\r\n          \"type\": \"number\",\r\n          \"title\": \"Foo\"\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -276,7 +273,6 @@ public class SuiteContains : IClassFixture<SuiteContains.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -307,9 +303,9 @@ public class SuiteAllOf : IClassFixture<SuiteAllOf.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"allOf\": [\r\n          {\r\n            \"title\": \"Foo\"\r\n          },\r\n          {\r\n            \"title\": \"Bar\"\r\n          }\r\n        ]\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -317,7 +313,6 @@ public class SuiteAllOf : IClassFixture<SuiteAllOf.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -359,9 +354,9 @@ public class SuiteAnyOf : IClassFixture<SuiteAnyOf.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"anyOf\": [\r\n          {\r\n            \"type\": \"integer\",\r\n            \"title\": \"Foo\"\r\n          },\r\n          {\r\n            \"type\": \"number\",\r\n            \"title\": \"Bar\"\r\n          }\r\n        ]\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -369,7 +364,6 @@ public class SuiteAnyOf : IClassFixture<SuiteAnyOf.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -411,9 +405,9 @@ public class SuiteOneOf : IClassFixture<SuiteOneOf.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"oneOf\": [\r\n          {\r\n            \"type\": \"string\",\r\n            \"title\": \"Foo\"\r\n          },\r\n          {\r\n            \"type\": \"number\",\r\n            \"title\": \"Bar\"\r\n          }\r\n        ]\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -421,7 +415,6 @@ public class SuiteOneOf : IClassFixture<SuiteOneOf.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -452,9 +445,9 @@ public class SuiteNot : IClassFixture<SuiteNot.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"title\": \"Foo\",\r\n        \"not\": {\r\n          \"not\": {\r\n            \"title\": \"Bar\"\r\n          }\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -462,7 +455,6 @@ public class SuiteNot : IClassFixture<SuiteNot.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -504,9 +496,9 @@ public class SuiteDependentSchemas : IClassFixture<SuiteDependentSchemas.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"dependentSchemas\": {\r\n          \"foo\": {\r\n            \"title\": \"Foo\"\r\n          }\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -514,7 +506,6 @@ public class SuiteDependentSchemas : IClassFixture<SuiteDependentSchemas.Fixture
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -556,9 +547,9 @@ public class SuiteIfThenAndElse : IClassFixture<SuiteIfThenAndElse.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/applicators.json",
                 "{\r\n        \"if\": {\r\n          \"title\": \"If\",\r\n          \"type\": \"string\"\r\n        },\r\n        \"then\": {\r\n          \"title\": \"Then\"\r\n        },\r\n        \"else\": {\r\n          \"title\": \"Else\"\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Applicators",
@@ -566,7 +557,6 @@ public class SuiteIfThenAndElse : IClassFixture<SuiteIfThenAndElse.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

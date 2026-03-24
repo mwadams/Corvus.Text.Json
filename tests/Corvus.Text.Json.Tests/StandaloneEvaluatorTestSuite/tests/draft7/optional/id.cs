@@ -42,9 +42,9 @@ public class SuiteIdInsideAnEnumIsNotARealIdentifier : IClassFixture<SuiteIdInsi
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\id.json",
                 "{\r\n            \"definitions\": {\r\n                \"id_in_enum\": {\r\n                    \"enum\": [\r\n                        {\r\n                          \"$id\": \"https://localhost:1234/id/my_identifier.json\",\r\n                          \"type\": \"null\"\r\n                        }\r\n                    ]\r\n                },\r\n                \"real_id_in_schema\": {\r\n                    \"$id\": \"https://localhost:1234/id/my_identifier.json\",\r\n                    \"type\": \"string\"\r\n                },\r\n                \"zzz_id_in_const\": {\r\n                    \"const\": {\r\n                        \"$id\": \"https://localhost:1234/id/my_identifier.json\",\r\n                        \"type\": \"null\"\r\n                    }\r\n                }\r\n            },\r\n            \"anyOf\": [\r\n                { \"$ref\": \"#/definitions/id_in_enum\" },\r\n                { \"$ref\": \"https://localhost:1234/id/my_identifier.json\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Id",
@@ -52,7 +52,6 @@ public class SuiteIdInsideAnEnumIsNotARealIdentifier : IClassFixture<SuiteIdInsi
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -86,9 +85,9 @@ public class SuiteNonSchemaObjectContainingAPlainNameIdProperty : IClassFixture<
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\id.json",
                 "{\r\n            \"definitions\": {\r\n                \"const_not_anchor\": {\r\n                    \"const\": {\r\n                        \"$id\": \"#not_a_real_anchor\"\r\n                    }\r\n                }\r\n            },\r\n            \"if\": {\r\n                \"const\": \"skip not_a_real_anchor\"\r\n            },\r\n            \"then\": true,\r\n            \"else\" : {\r\n                \"$ref\": \"#/definitions/const_not_anchor\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Id",
@@ -96,7 +95,6 @@ public class SuiteNonSchemaObjectContainingAPlainNameIdProperty : IClassFixture<
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -130,9 +128,9 @@ public class SuiteNonSchemaObjectContainingAnIdProperty : IClassFixture<SuiteNon
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\id.json",
                 "{\r\n            \"definitions\": {\r\n                \"const_not_id\": {\r\n                    \"const\": {\r\n                        \"$id\": \"not_a_real_id\"\r\n                    }\r\n                }\r\n            },\r\n            \"if\": {\r\n                \"const\": \"skip not_a_real_id\"\r\n            },\r\n            \"then\": true,\r\n            \"else\" : {\r\n                \"$ref\": \"#/definitions/const_not_id\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Id",
@@ -140,7 +138,6 @@ public class SuiteNonSchemaObjectContainingAnIdProperty : IClassFixture<SuiteNon
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -49,9 +49,9 @@ public class SuiteRecursiveRefWithoutRecursiveAnchorWorksLikeRef : IClassFixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"properties\": {\r\n                \"foo\": { \"$recursiveRef\": \"#\" }\r\n            },\r\n            \"additionalProperties\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -59,7 +59,6 @@ public class SuiteRecursiveRefWithoutRecursiveAnchorWorksLikeRef : IClassFixture
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -114,9 +113,9 @@ public class SuiteRecursiveRefWithoutUsingNesting : IClassFixture<SuiteRecursive
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef2/schema.json\",\r\n            \"$defs\": {\r\n                \"myobject\": {\r\n                    \"$id\": \"myobject.json\",\r\n                    \"$recursiveAnchor\": true,\r\n                    \"anyOf\": [\r\n                        { \"type\": \"string\" },\r\n                        {\r\n                            \"type\": \"object\",\r\n                            \"additionalProperties\": { \"$recursiveRef\": \"#\" }\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"anyOf\": [\r\n                { \"type\": \"integer\" },\r\n                { \"$ref\": \"#/$defs/myobject\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -124,7 +123,6 @@ public class SuiteRecursiveRefWithoutUsingNesting : IClassFixture<SuiteRecursive
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -179,9 +177,9 @@ public class SuiteRecursiveRefWithNesting : IClassFixture<SuiteRecursiveRefWithN
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef3/schema.json\",\r\n            \"$recursiveAnchor\": true,\r\n            \"$defs\": {\r\n                \"myobject\": {\r\n                    \"$id\": \"myobject.json\",\r\n                    \"$recursiveAnchor\": true,\r\n                    \"anyOf\": [\r\n                        { \"type\": \"string\" },\r\n                        {\r\n                            \"type\": \"object\",\r\n                            \"additionalProperties\": { \"$recursiveRef\": \"#\" }\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"anyOf\": [\r\n                { \"type\": \"integer\" },\r\n                { \"$ref\": \"#/$defs/myobject\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -189,7 +187,6 @@ public class SuiteRecursiveRefWithNesting : IClassFixture<SuiteRecursiveRefWithN
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -244,9 +241,9 @@ public class SuiteRecursiveRefWithRecursiveAnchorFalseWorksLikeRef : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef4/schema.json\",\r\n            \"$recursiveAnchor\": false,\r\n            \"$defs\": {\r\n                \"myobject\": {\r\n                    \"$id\": \"myobject.json\",\r\n                    \"$recursiveAnchor\": false,\r\n                    \"anyOf\": [\r\n                        { \"type\": \"string\" },\r\n                        {\r\n                            \"type\": \"object\",\r\n                            \"additionalProperties\": { \"$recursiveRef\": \"#\" }\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"anyOf\": [\r\n                { \"type\": \"integer\" },\r\n                { \"$ref\": \"#/$defs/myobject\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -254,7 +251,6 @@ public class SuiteRecursiveRefWithRecursiveAnchorFalseWorksLikeRef : IClassFixtu
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -309,9 +305,9 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorWorksLikeRef : IClassFixture<
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef5/schema.json\",\r\n            \"$defs\": {\r\n                \"myobject\": {\r\n                    \"$id\": \"myobject.json\",\r\n                    \"$recursiveAnchor\": false,\r\n                    \"anyOf\": [\r\n                        { \"type\": \"string\" },\r\n                        {\r\n                            \"type\": \"object\",\r\n                            \"additionalProperties\": { \"$recursiveRef\": \"#\" }\r\n                        }\r\n                    ]\r\n                }\r\n            },\r\n            \"anyOf\": [\r\n                { \"type\": \"integer\" },\r\n                { \"$ref\": \"#/$defs/myobject\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -319,7 +315,6 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorWorksLikeRef : IClassFixture<
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -360,9 +355,9 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorInTheInitialTargetSchemaResou
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef6/base.json\",\r\n            \"$recursiveAnchor\": true,\r\n            \"anyOf\": [\r\n                { \"type\": \"boolean\" },\r\n                {\r\n                    \"type\": \"object\",\r\n                    \"additionalProperties\": {\r\n                        \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef6/inner.json\",\r\n                        \"$comment\": \"there is no $recursiveAnchor: true here, so we do NOT recurse to the base\",\r\n                        \"anyOf\": [\r\n                            { \"type\": \"integer\" },\r\n                            { \"type\": \"object\", \"additionalProperties\": { \"$recursiveRef\": \"#\" } }\r\n                        ]\r\n                    }\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -370,7 +365,6 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorInTheInitialTargetSchemaResou
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -411,9 +405,9 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorInTheOuterSchemaResource : IC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef7/base.json\",\r\n            \"anyOf\": [\r\n                { \"type\": \"boolean\" },\r\n                {\r\n                    \"type\": \"object\",\r\n                    \"additionalProperties\": {\r\n                        \"$id\": \"http://localhost:4242/draft2019-09/recursiveRef7/inner.json\",\r\n                        \"$recursiveAnchor\": true,\r\n                        \"anyOf\": [\r\n                            { \"type\": \"integer\" },\r\n                            { \"type\": \"object\", \"additionalProperties\": { \"$recursiveRef\": \"#\" } }\r\n                        ]\r\n                    }\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -421,7 +415,6 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorInTheOuterSchemaResource : IC
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -455,9 +448,9 @@ public class SuiteMultipleDynamicPathsToTheRecursiveRefKeyword : IClassFixture<S
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"https://example.com/recursiveRef8_main.json\",\r\n            \"$defs\": {\r\n                \"inner\": {\r\n                    \"$id\": \"recursiveRef8_inner.json\",\r\n                    \"$recursiveAnchor\": true,\r\n                    \"title\": \"inner\",\r\n                    \"additionalProperties\": {\r\n                        \"$recursiveRef\": \"#\"\r\n                    }\r\n                }\r\n            },\r\n            \"if\": {\r\n                \"propertyNames\": {\r\n                    \"pattern\": \"^[a-m]\"\r\n                }\r\n            },\r\n            \"then\": {\r\n                \"title\": \"any type of node\",\r\n                \"$id\": \"recursiveRef8_anyLeafNode.json\",\r\n                \"$recursiveAnchor\": true,\r\n                \"$ref\": \"recursiveRef8_inner.json\"\r\n            },\r\n            \"else\": {\r\n                \"title\": \"integer node\",\r\n                \"$id\": \"recursiveRef8_integerNode.json\",\r\n                \"$recursiveAnchor\": true,\r\n                \"type\": [ \"object\", \"integer\" ],\r\n                \"$ref\": \"recursiveRef8_inner.json\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -465,7 +458,6 @@ public class SuiteMultipleDynamicPathsToTheRecursiveRefKeyword : IClassFixture<S
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -499,9 +491,9 @@ public class SuiteDynamicRecursiveRefDestinationNotPredictableAtSchemaCompileTim
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\recursiveRef.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"https://example.com/main.json\",\r\n            \"$defs\": {\r\n                \"inner\": {\r\n                    \"$id\": \"inner.json\",\r\n                    \"$recursiveAnchor\": true,\r\n                    \"title\": \"inner\",\r\n                    \"additionalProperties\": {\r\n                        \"$recursiveRef\": \"#\"\r\n                    }\r\n                }\r\n\r\n            },\r\n            \"if\": { \"propertyNames\": { \"pattern\": \"^[a-m]\" } },\r\n            \"then\": {\r\n                \"title\": \"any type of node\",\r\n                \"$id\": \"anyLeafNode.json\",\r\n                \"$recursiveAnchor\": true,\r\n                \"$ref\": \"main.json#/$defs/inner\"\r\n            },\r\n            \"else\": {\r\n                \"title\": \"integer node\",\r\n                \"$id\": \"integerNode.json\",\r\n                \"$recursiveAnchor\": true,\r\n                \"type\": [ \"object\", \"integer\" ],\r\n                \"$ref\": \"main.json#/$defs/inner\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.RecursiveRef",
@@ -509,7 +501,6 @@ public class SuiteDynamicRecursiveRefDestinationNotPredictableAtSchemaCompileTim
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

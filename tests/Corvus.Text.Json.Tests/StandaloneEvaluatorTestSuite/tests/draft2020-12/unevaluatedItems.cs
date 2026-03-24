@@ -35,9 +35,9 @@ public class SuiteUnevaluatedItemsTrue : IClassFixture<SuiteUnevaluatedItemsTrue
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": true\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -45,7 +45,6 @@ public class SuiteUnevaluatedItemsTrue : IClassFixture<SuiteUnevaluatedItemsTrue
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteUnevaluatedItemsFalse : IClassFixture<SuiteUnevaluatedItemsFal
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -89,7 +88,6 @@ public class SuiteUnevaluatedItemsFalse : IClassFixture<SuiteUnevaluatedItemsFal
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -130,9 +128,9 @@ public class SuiteUnevaluatedItemsAsSchema : IClassFixture<SuiteUnevaluatedItems
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": { \"type\": \"string\" }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -140,7 +138,6 @@ public class SuiteUnevaluatedItemsAsSchema : IClassFixture<SuiteUnevaluatedItems
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -167,9 +164,9 @@ public class SuiteUnevaluatedItemsWithUniformItems : IClassFixture<SuiteUnevalua
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"items\": { \"type\": \"string\" },\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -177,7 +174,6 @@ public class SuiteUnevaluatedItemsWithUniformItems : IClassFixture<SuiteUnevalua
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -211,9 +207,9 @@ public class SuiteUnevaluatedItemsWithTuple : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"type\": \"string\" }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -221,7 +217,6 @@ public class SuiteUnevaluatedItemsWithTuple : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -248,9 +243,9 @@ public class SuiteUnevaluatedItemsWithItemsAndPrefixItems : IClassFixture<SuiteU
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"type\": \"string\" }\r\n            ],\r\n            \"items\": true,\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -258,7 +253,6 @@ public class SuiteUnevaluatedItemsWithItemsAndPrefixItems : IClassFixture<SuiteU
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -292,9 +286,9 @@ public class SuiteUnevaluatedItemsWithItems : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"items\": {\"type\": \"number\"},\r\n            \"unevaluatedItems\": {\"type\": \"string\"}\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -302,7 +296,6 @@ public class SuiteUnevaluatedItemsWithItems : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -336,9 +329,9 @@ public class SuiteUnevaluatedItemsWithNestedTuple : IClassFixture<SuiteUnevaluat
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"type\": \"string\" }\r\n            ],\r\n            \"allOf\": [\r\n                {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"type\": \"number\" }\r\n                    ]\r\n                }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -346,7 +339,6 @@ public class SuiteUnevaluatedItemsWithNestedTuple : IClassFixture<SuiteUnevaluat
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -387,9 +379,9 @@ public class SuiteUnevaluatedItemsWithNestedItems : IClassFixture<SuiteUnevaluat
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": {\"type\": \"boolean\"},\r\n            \"anyOf\": [\r\n                { \"items\": {\"type\": \"string\"} },\r\n                true\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -397,7 +389,6 @@ public class SuiteUnevaluatedItemsWithNestedItems : IClassFixture<SuiteUnevaluat
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -431,9 +422,9 @@ public class SuiteUnevaluatedItemsWithNestedPrefixItemsAndItems : IClassFixture<
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [\r\n                {\r\n                    \"prefixItems\": [\r\n                        { \"type\": \"string\" }\r\n                    ],\r\n                    \"items\": true\r\n                }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -441,7 +432,6 @@ public class SuiteUnevaluatedItemsWithNestedPrefixItemsAndItems : IClassFixture<
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -475,9 +465,9 @@ public class SuiteUnevaluatedItemsWithNestedUnevaluatedItems : IClassFixture<Sui
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [\r\n                {\r\n                    \"prefixItems\": [\r\n                        { \"type\": \"string\" }\r\n                    ]\r\n                },\r\n                { \"unevaluatedItems\": true }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -485,7 +475,6 @@ public class SuiteUnevaluatedItemsWithNestedUnevaluatedItems : IClassFixture<Sui
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -533,9 +522,9 @@ public class SuiteUnevaluatedItemsWithAnyOf : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"const\": \"foo\" }\r\n            ],\r\n            \"anyOf\": [\r\n                {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"const\": \"bar\" }\r\n                    ]\r\n                },\r\n                {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        true,\r\n                        { \"const\": \"baz\" }\r\n                    ]\r\n                }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -543,7 +532,6 @@ public class SuiteUnevaluatedItemsWithAnyOf : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -577,9 +565,9 @@ public class SuiteUnevaluatedItemsWithOneOf : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"const\": \"foo\" }\r\n            ],\r\n            \"oneOf\": [\r\n                {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"const\": \"bar\" }\r\n                    ]\r\n                },\r\n                {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"const\": \"baz\" }\r\n                    ]\r\n                }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -587,7 +575,6 @@ public class SuiteUnevaluatedItemsWithOneOf : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -614,9 +601,9 @@ public class SuiteUnevaluatedItemsWithNot : IClassFixture<SuiteUnevaluatedItemsW
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"const\": \"foo\" }\r\n            ],\r\n            \"not\": {\r\n                \"not\": {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"const\": \"bar\" }\r\n                    ]\r\n                }\r\n            },\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -624,7 +611,6 @@ public class SuiteUnevaluatedItemsWithNot : IClassFixture<SuiteUnevaluatedItemsW
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -672,9 +658,9 @@ public class SuiteUnevaluatedItemsWithIfThenElse : IClassFixture<SuiteUnevaluate
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                { \"const\": \"foo\" }\r\n            ],\r\n            \"if\": {\r\n                \"prefixItems\": [\r\n                    true,\r\n                    { \"const\": \"bar\" }\r\n                ]\r\n            },\r\n            \"then\": {\r\n                \"prefixItems\": [\r\n                    true,\r\n                    true,\r\n                    { \"const\": \"then\" }\r\n                ]\r\n            },\r\n            \"else\": {\r\n                \"prefixItems\": [\r\n                    true,\r\n                    true,\r\n                    true,\r\n                    { \"const\": \"else\" }\r\n                ]\r\n            },\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -682,7 +668,6 @@ public class SuiteUnevaluatedItemsWithIfThenElse : IClassFixture<SuiteUnevaluate
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -716,9 +701,9 @@ public class SuiteUnevaluatedItemsWithBooleanSchemas : IClassFixture<SuiteUneval
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [true],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -726,7 +711,6 @@ public class SuiteUnevaluatedItemsWithBooleanSchemas : IClassFixture<SuiteUneval
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -760,9 +744,9 @@ public class SuiteUnevaluatedItemsWithRef : IClassFixture<SuiteUnevaluatedItemsW
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$ref\": \"#/$defs/bar\",\r\n            \"prefixItems\": [\r\n                { \"type\": \"string\" }\r\n            ],\r\n            \"unevaluatedItems\": false,\r\n            \"$defs\": {\r\n              \"bar\": {\r\n                  \"prefixItems\": [\r\n                      true,\r\n                      { \"type\": \"string\" }\r\n                  ]\r\n              }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -770,7 +754,6 @@ public class SuiteUnevaluatedItemsWithRef : IClassFixture<SuiteUnevaluatedItemsW
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -804,9 +787,9 @@ public class SuiteUnevaluatedItemsBeforeRef : IClassFixture<SuiteUnevaluatedItem
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": false,\r\n            \"prefixItems\": [\r\n                { \"type\": \"string\" }\r\n            ],\r\n            \"$ref\": \"#/$defs/bar\",\r\n            \"$defs\": {\r\n              \"bar\": {\r\n                  \"prefixItems\": [\r\n                      true,\r\n                      { \"type\": \"string\" }\r\n                  ]\r\n              }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -814,7 +797,6 @@ public class SuiteUnevaluatedItemsBeforeRef : IClassFixture<SuiteUnevaluatedItem
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -848,9 +830,9 @@ public class SuiteUnevaluatedItemsWithDynamicRef : IClassFixture<SuiteUnevaluate
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"$id\": \"https://example.com/unevaluated-items-with-dynamic-ref/derived\",\r\n\r\n            \"$ref\": \"./baseSchema\",\r\n\r\n            \"$defs\": {\r\n                \"derived\": {\r\n                    \"$dynamicAnchor\": \"addons\",\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"type\": \"string\" }\r\n                    ]\r\n                },\r\n                \"baseSchema\": {\r\n                    \"$id\": \"./baseSchema\",\r\n\r\n                    \"$comment\": \"unevaluatedItems comes first so it's more likely to catch bugs with implementations that are sensitive to keyword ordering\",\r\n                    \"unevaluatedItems\": false,\r\n                    \"type\": \"array\",\r\n                    \"prefixItems\": [\r\n                        { \"type\": \"string\" }\r\n                    ],\r\n                    \"$dynamicRef\": \"#addons\",\r\n\r\n                    \"$defs\": {\r\n                        \"defaultAddons\": {\r\n                            \"$comment\": \"Needed to satisfy the bookending requirement\",\r\n                            \"$dynamicAnchor\": \"addons\"\r\n                        }\r\n                    }\r\n                }\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -858,7 +840,6 @@ public class SuiteUnevaluatedItemsWithDynamicRef : IClassFixture<SuiteUnevaluate
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -885,9 +866,9 @@ public class SuiteUnevaluatedItemsCanTSeeInsideCousins : IClassFixture<SuiteUnev
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [\r\n                {\r\n                    \"prefixItems\": [ true ]\r\n                },\r\n                { \"unevaluatedItems\": false }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -895,7 +876,6 @@ public class SuiteUnevaluatedItemsCanTSeeInsideCousins : IClassFixture<SuiteUnev
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -929,9 +909,9 @@ public class SuiteItemIsEvaluatedInAnUncleSchemaToUnevaluatedItems : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"properties\": {\r\n                \"foo\": {\r\n                    \"prefixItems\": [\r\n                        { \"type\": \"string\" }\r\n                    ],\r\n                    \"unevaluatedItems\": false\r\n                  }\r\n            },\r\n            \"anyOf\": [\r\n                {\r\n                    \"properties\": {\r\n                        \"foo\": {\r\n                            \"prefixItems\": [\r\n                                true,\r\n                                { \"type\": \"string\" }\r\n                            ]\r\n                        }\r\n                    }\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -939,7 +919,6 @@ public class SuiteItemIsEvaluatedInAnUncleSchemaToUnevaluatedItems : IClassFixtu
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -980,9 +959,9 @@ public class SuiteUnevaluatedItemsDependsOnAdjacentContains : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [true],\r\n            \"contains\": {\"type\": \"string\"},\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -990,7 +969,6 @@ public class SuiteUnevaluatedItemsDependsOnAdjacentContains : IClassFixture<Suit
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1024,9 +1002,9 @@ public class SuiteUnevaluatedItemsDependsOnMultipleNestedContains : IClassFixtur
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"allOf\": [\r\n                { \"contains\": { \"multipleOf\": 2 } },\r\n                { \"contains\": { \"multipleOf\": 3 } }\r\n            ],\r\n            \"unevaluatedItems\": { \"multipleOf\": 5 }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1034,7 +1012,6 @@ public class SuiteUnevaluatedItemsDependsOnMultipleNestedContains : IClassFixtur
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1110,9 +1087,9 @@ public class SuiteUnevaluatedItemsAndContainsInteractToControlItemDependencyRela
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": {\r\n                \"contains\": {\"const\": \"a\"}\r\n            },\r\n            \"then\": {\r\n                \"if\": {\r\n                    \"contains\": {\"const\": \"b\"}\r\n                },\r\n                \"then\": {\r\n                    \"if\": {\r\n                        \"contains\": {\"const\": \"c\"}\r\n                    }\r\n                }\r\n            },\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1120,7 +1097,6 @@ public class SuiteUnevaluatedItemsAndContainsInteractToControlItemDependencyRela
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1168,9 +1144,9 @@ public class SuiteUnevaluatedItemsWithMinContains0 : IClassFixture<SuiteUnevalua
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"contains\": {\"type\": \"string\"},\r\n            \"minContains\": 0,\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1178,7 +1154,6 @@ public class SuiteUnevaluatedItemsWithMinContains0 : IClassFixture<SuiteUnevalua
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1240,9 +1215,9 @@ public class SuiteNonArrayInstancesAreValid : IClassFixture<SuiteNonArrayInstanc
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1250,7 +1225,6 @@ public class SuiteNonArrayInstancesAreValid : IClassFixture<SuiteNonArrayInstanc
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1277,9 +1251,9 @@ public class SuiteUnevaluatedItemsWithNullInstanceElements : IClassFixture<Suite
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"unevaluatedItems\": {\r\n                \"type\": \"null\"\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1287,7 +1261,6 @@ public class SuiteUnevaluatedItemsWithNullInstanceElements : IClassFixture<Suite
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1321,9 +1294,9 @@ public class SuiteUnevaluatedItemsCanSeeAnnotationsFromIfWithoutThenAndElse : IC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"if\": {\r\n                \"prefixItems\": [{\"const\": \"a\"}]\r\n            },\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1331,7 +1304,6 @@ public class SuiteUnevaluatedItemsCanSeeAnnotationsFromIfWithoutThenAndElse : IC
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -1358,9 +1330,9 @@ public class SuiteEvaluatedItemsCollectionNeedsToConsiderInstanceLocation : ICla
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\unevaluatedItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"prefixItems\": [\r\n                {\r\n                    \"prefixItems\": [\r\n                        true,\r\n                        { \"type\": \"string\" }\r\n                    ]\r\n                }\r\n            ],\r\n            \"unevaluatedItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.UnevaluatedItems",
@@ -1368,7 +1340,6 @@ public class SuiteEvaluatedItemsCollectionNeedsToConsiderInstanceLocation : ICla
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

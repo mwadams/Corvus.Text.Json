@@ -301,9 +301,9 @@ public class SuiteValidationOfIPv6Addresses : IClassFixture<SuiteValidationOfIPv
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\format\\ipv6.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"format\": \"ipv6\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.Format.Ipv6",
@@ -311,7 +311,6 @@ public class SuiteValidationOfIPv6Addresses : IClassFixture<SuiteValidationOfIPv
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

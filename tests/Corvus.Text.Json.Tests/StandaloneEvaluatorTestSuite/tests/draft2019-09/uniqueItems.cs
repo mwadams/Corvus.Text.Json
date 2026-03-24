@@ -217,9 +217,9 @@ public class SuiteUniqueItemsValidation : IClassFixture<SuiteUniqueItemsValidati
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\uniqueItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"uniqueItems\": true\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.UniqueItems",
@@ -227,7 +227,6 @@ public class SuiteUniqueItemsValidation : IClassFixture<SuiteUniqueItemsValidati
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -303,9 +302,9 @@ public class SuiteUniqueItemsWithAnArrayOfItems : IClassFixture<SuiteUniqueItems
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\uniqueItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"items\": [{\"type\": \"boolean\"}, {\"type\": \"boolean\"}],\r\n            \"uniqueItems\": true\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.UniqueItems",
@@ -313,7 +312,6 @@ public class SuiteUniqueItemsWithAnArrayOfItems : IClassFixture<SuiteUniqueItems
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -368,9 +366,9 @@ public class SuiteUniqueItemsWithAnArrayOfItemsAndAdditionalItemsFalse : IClassF
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\uniqueItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"items\": [{\"type\": \"boolean\"}, {\"type\": \"boolean\"}],\r\n            \"uniqueItems\": true,\r\n            \"additionalItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.UniqueItems",
@@ -378,7 +376,6 @@ public class SuiteUniqueItemsWithAnArrayOfItemsAndAdditionalItemsFalse : IClassF
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -503,9 +500,9 @@ public class SuiteUniqueItemsFalseValidation : IClassFixture<SuiteUniqueItemsFal
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\uniqueItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"uniqueItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.UniqueItems",
@@ -513,7 +510,6 @@ public class SuiteUniqueItemsFalseValidation : IClassFixture<SuiteUniqueItemsFal
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -589,9 +585,9 @@ public class SuiteUniqueItemsFalseWithAnArrayOfItems : IClassFixture<SuiteUnique
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\uniqueItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"items\": [{\"type\": \"boolean\"}, {\"type\": \"boolean\"}],\r\n            \"uniqueItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.UniqueItems",
@@ -599,7 +595,6 @@ public class SuiteUniqueItemsFalseWithAnArrayOfItems : IClassFixture<SuiteUnique
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -654,9 +649,9 @@ public class SuiteUniqueItemsFalseWithAnArrayOfItemsAndAdditionalItemsFalse : IC
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\uniqueItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"items\": [{\"type\": \"boolean\"}, {\"type\": \"boolean\"}],\r\n            \"uniqueItems\": false,\r\n            \"additionalItems\": false\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.UniqueItems",
@@ -664,7 +659,6 @@ public class SuiteUniqueItemsFalseWithAnArrayOfItemsAndAdditionalItemsFalse : IC
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -33,9 +33,9 @@ public class SuiteRefAndDefs : IClassFixture<SuiteRefAndDefs.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/core.json",
                 "{\r\n        \"$ref\": \"#/$defs/foo\",\r\n        \"$defs\": {\r\n          \"foo\": { \"title\": \"Foo\" }\r\n        }\r\n      }",
                 "AnnotationTestSuite.Draft202012.Core",
@@ -43,7 +43,6 @@ public class SuiteRefAndDefs : IClassFixture<SuiteRefAndDefs.Fixture>
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

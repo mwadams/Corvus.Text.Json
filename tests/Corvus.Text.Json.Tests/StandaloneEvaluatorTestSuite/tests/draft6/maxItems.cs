@@ -49,9 +49,9 @@ public class SuiteMaxItemsValidation : IClassFixture<SuiteMaxItemsValidation.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\maxItems.json",
                 "{\"maxItems\": 2}",
                 "StandaloneEvaluatorTestSuite.Draft6.MaxItems",
@@ -59,7 +59,6 @@ public class SuiteMaxItemsValidation : IClassFixture<SuiteMaxItemsValidation.Fix
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -93,9 +92,9 @@ public class SuiteMaxItemsValidationWithADecimal : IClassFixture<SuiteMaxItemsVa
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\maxItems.json",
                 "{\"maxItems\": 2.0}",
                 "StandaloneEvaluatorTestSuite.Draft6.MaxItems",
@@ -103,7 +102,6 @@ public class SuiteMaxItemsValidationWithADecimal : IClassFixture<SuiteMaxItemsVa
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -35,9 +35,9 @@ public class SuiteEvaluatingTheSameSchemaLocationAgainstTheSameDataLocationTwice
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\infinite-loop-detection.json",
                 "{\r\n            \"definitions\": {\r\n                \"int\": { \"type\": \"integer\" }\r\n            },\r\n            \"allOf\": [\r\n                {\r\n                    \"properties\": {\r\n                        \"foo\": {\r\n                            \"$ref\": \"#/definitions/int\"\r\n                        }\r\n                    }\r\n                },\r\n                {\r\n                    \"additionalProperties\": {\r\n                        \"$ref\": \"#/definitions/int\"\r\n                    }\r\n                }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft6.InfiniteLoopDetection",
@@ -45,7 +45,6 @@ public class SuiteEvaluatingTheSameSchemaLocationAgainstTheSameDataLocationTwice
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

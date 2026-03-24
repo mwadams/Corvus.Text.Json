@@ -126,9 +126,9 @@ public class SuiteValidationOfUriReferences : IClassFixture<SuiteValidationOfUri
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft6\\optional\\format\\uri-reference.json",
                 "{ \"format\": \"uri-reference\" }",
                 "StandaloneEvaluatorTestSuite.Draft6.Optional.Format.UriReference",
@@ -136,7 +136,6 @@ public class SuiteValidationOfUriReferences : IClassFixture<SuiteValidationOfUri
                 "http://json-schema.org/draft-06/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

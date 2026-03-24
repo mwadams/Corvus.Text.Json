@@ -287,9 +287,9 @@ public class SuiteValidationOfJsonPointersJsonStringRepresentation : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\json-pointer.json",
                 "{ \"format\": \"json-pointer\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.JsonPointer",
@@ -297,7 +297,6 @@ public class SuiteValidationOfJsonPointersJsonStringRepresentation : IClassFixtu
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

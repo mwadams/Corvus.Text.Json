@@ -42,9 +42,9 @@ public class SuiteByInt : IClassFixture<SuiteByInt.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\multipleOf.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"multipleOf\": 2\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MultipleOf",
@@ -52,7 +52,6 @@ public class SuiteByInt : IClassFixture<SuiteByInt.Fixture>
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -93,9 +92,9 @@ public class SuiteByNumber : IClassFixture<SuiteByNumber.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\multipleOf.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"multipleOf\": 1.5\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MultipleOf",
@@ -103,7 +102,6 @@ public class SuiteByNumber : IClassFixture<SuiteByNumber.Fixture>
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -137,9 +135,9 @@ public class SuiteBySmallNumber : IClassFixture<SuiteBySmallNumber.Fixture>
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\multipleOf.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"multipleOf\": 0.0001\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MultipleOf",
@@ -147,7 +145,6 @@ public class SuiteBySmallNumber : IClassFixture<SuiteBySmallNumber.Fixture>
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -174,9 +171,9 @@ public class SuiteFloatDivisionInf : IClassFixture<SuiteFloatDivisionInf.Fixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\multipleOf.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"integer\", \"multipleOf\": 0.123456789\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MultipleOf",
@@ -184,7 +181,6 @@ public class SuiteFloatDivisionInf : IClassFixture<SuiteFloatDivisionInf.Fixture
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -211,9 +207,9 @@ public class SuiteSmallMultipleOfLargeInteger : IClassFixture<SuiteSmallMultiple
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\multipleOf.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"integer\", \"multipleOf\": 1e-8\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.MultipleOf",
@@ -221,7 +217,6 @@ public class SuiteSmallMultipleOfLargeInteger : IClassFixture<SuiteSmallMultiple
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

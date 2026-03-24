@@ -35,9 +35,9 @@ public class SuiteRefsToFutureDraftsAreProcessedAsFutureDrafts : IClassFixture<S
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\cross-draft.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"type\": \"array\",\r\n            \"$ref\": \"http://localhost:1234/draft2020-12/prefixItems.json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.CrossDraft",
@@ -45,7 +45,6 @@ public class SuiteRefsToFutureDraftsAreProcessedAsFutureDrafts : IClassFixture<S
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -72,9 +71,9 @@ public class SuiteRefsToHistoricDraftsAreProcessedAsHistoricDrafts : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\cross-draft.json",
                 "{\r\n            \"type\": \"object\",\r\n            \"allOf\": [\r\n                { \"properties\": { \"foo\": true } },\r\n                { \"$ref\": \"http://localhost:1234/draft7/ignore-dependentRequired.json\" }\r\n            ]\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.CrossDraft",
@@ -82,7 +81,6 @@ public class SuiteRefsToHistoricDraftsAreProcessedAsHistoricDrafts : IClassFixtu
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

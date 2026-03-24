@@ -49,9 +49,9 @@ public class SuiteMaxItemsValidation : IClassFixture<SuiteMaxItemsValidation.Fix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maxItems\": 2\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxItems",
@@ -59,7 +59,6 @@ public class SuiteMaxItemsValidation : IClassFixture<SuiteMaxItemsValidation.Fix
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -93,9 +92,9 @@ public class SuiteMaxItemsValidationWithADecimal : IClassFixture<SuiteMaxItemsVa
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\maxItems.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n            \"maxItems\": 2.0\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.MaxItems",
@@ -103,7 +102,6 @@ public class SuiteMaxItemsValidationWithADecimal : IClassFixture<SuiteMaxItemsVa
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

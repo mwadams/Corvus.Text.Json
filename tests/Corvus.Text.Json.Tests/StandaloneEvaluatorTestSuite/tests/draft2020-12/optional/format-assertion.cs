@@ -35,9 +35,9 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithFormatAssertionFalse : IClas
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\format-assertion.json",
                 "{\r\n            \"$id\": \"https://schema/using/format-assertion/false\",\r\n            \"$schema\": \"http://localhost:1234/draft2020-12/format-assertion-false.json\",\r\n            \"format\": \"ipv4\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.FormatAssertion",
@@ -45,7 +45,6 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithFormatAssertionFalse : IClas
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithFormatAssertionTrue : IClass
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2020-12\\optional\\format-assertion.json",
                 "{\r\n            \"$id\": \"https://schema/using/format-assertion/true\",\r\n            \"$schema\": \"http://localhost:1234/draft2020-12/format-assertion-true.json\",\r\n            \"format\": \"ipv4\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft202012.Optional.FormatAssertion",
@@ -89,7 +88,6 @@ public class SuiteSchemaThatUsesCustomMetaschemaWithFormatAssertionTrue : IClass
                 "https://json-schema.org/draft/2020-12/schema",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

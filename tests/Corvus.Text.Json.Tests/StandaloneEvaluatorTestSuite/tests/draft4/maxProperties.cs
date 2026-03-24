@@ -63,9 +63,9 @@ public class SuiteMaxPropertiesValidation : IClassFixture<SuiteMaxPropertiesVali
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maxProperties.json",
                 "{\"maxProperties\": 2}",
                 "StandaloneEvaluatorTestSuite.Draft4.MaxProperties",
@@ -73,7 +73,6 @@ public class SuiteMaxPropertiesValidation : IClassFixture<SuiteMaxPropertiesVali
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -107,9 +106,9 @@ public class SuiteMaxProperties0MeansTheObjectIsEmpty : IClassFixture<SuiteMaxPr
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\maxProperties.json",
                 "{ \"maxProperties\": 0 }",
                 "StandaloneEvaluatorTestSuite.Draft4.MaxProperties",
@@ -117,7 +116,6 @@ public class SuiteMaxProperties0MeansTheObjectIsEmpty : IClassFixture<SuiteMaxPr
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

@@ -28,9 +28,9 @@ public class SuiteAllIntegersAreMultiplesOf05IfOverflowIsHandled : IClassFixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft4\\optional\\float-overflow.json",
                 "{\"type\": \"number\", \"multipleOf\": 0.5}",
                 "StandaloneEvaluatorTestSuite.Draft4.Optional.FloatOverflow",
@@ -38,7 +38,6 @@ public class SuiteAllIntegersAreMultiplesOf05IfOverflowIsHandled : IClassFixture
                 "http://json-schema.org/draft-04/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

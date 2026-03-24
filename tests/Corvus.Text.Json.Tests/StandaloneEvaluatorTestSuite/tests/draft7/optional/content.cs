@@ -42,9 +42,9 @@ public class SuiteValidationOfStringEncodedContentBasedOnMediaType : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\content.json",
                 "{\r\n            \"contentMediaType\": \"application/json\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Content",
@@ -52,7 +52,6 @@ public class SuiteValidationOfStringEncodedContentBasedOnMediaType : IClassFixtu
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -93,9 +92,9 @@ public class SuiteValidationOfBinaryStringEncoding : IClassFixture<SuiteValidati
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\content.json",
                 "{\r\n            \"contentEncoding\": \"base64\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Content",
@@ -103,7 +102,6 @@ public class SuiteValidationOfBinaryStringEncoding : IClassFixture<SuiteValidati
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -151,9 +149,9 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocuments : IClassFixture<Su
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\content.json",
                 "{\r\n            \"contentMediaType\": \"application/json\",\r\n            \"contentEncoding\": \"base64\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Content",
@@ -161,7 +159,6 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocuments : IClassFixture<Su
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

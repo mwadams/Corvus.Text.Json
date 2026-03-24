@@ -413,9 +413,9 @@ public class SuiteValidationOfInternationalizedHostNames : IClassFixture<SuiteVa
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\idn-hostname.json",
                 "{ \"format\": \"idn-hostname\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.IdnHostname",
@@ -423,7 +423,6 @@ public class SuiteValidationOfInternationalizedHostNames : IClassFixture<SuiteVa
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -583,9 +582,9 @@ public class SuiteValidationOfSeparatorsInInternationalizedHostNames : IClassFix
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft7\\optional\\format\\idn-hostname.json",
                 "{ \"format\": \"idn-hostname\" }",
                 "StandaloneEvaluatorTestSuite.Draft7.Optional.Format.IdnHostname",
@@ -593,7 +592,6 @@ public class SuiteValidationOfSeparatorsInInternationalizedHostNames : IClassFix
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: true,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

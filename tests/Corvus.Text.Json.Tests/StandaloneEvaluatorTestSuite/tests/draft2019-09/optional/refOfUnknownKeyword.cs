@@ -35,9 +35,9 @@ public class SuiteReferenceOfARootArbitraryKeyword : IClassFixture<SuiteReferenc
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\refOfUnknownKeyword.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"unknown-keyword\": {\"type\": \"integer\"},\r\n            \"properties\": {\r\n                \"bar\": {\"$ref\": \"#/unknown-keyword\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.RefOfUnknownKeyword",
@@ -45,7 +45,6 @@ public class SuiteReferenceOfARootArbitraryKeyword : IClassFixture<SuiteReferenc
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -79,9 +78,9 @@ public class SuiteReferenceOfARootArbitraryKeywordWithEncodedRef : IClassFixture
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\refOfUnknownKeyword.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"unknown/keyword\": {\"type\": \"integer\"},\r\n            \"properties\": {\r\n                \"bar\": {\"$ref\": \"#/unknown~1keyword\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.RefOfUnknownKeyword",
@@ -89,7 +88,6 @@ public class SuiteReferenceOfARootArbitraryKeywordWithEncodedRef : IClassFixture
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -123,9 +121,9 @@ public class SuiteReferenceOfAnArbitraryKeywordOfASubSchema : IClassFixture<Suit
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\refOfUnknownKeyword.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"properties\": {\r\n                \"foo\": {\"unknown-keyword\": {\"type\": \"integer\"}},\r\n                \"bar\": {\"$ref\": \"#/properties/foo/unknown-keyword\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.RefOfUnknownKeyword",
@@ -133,7 +131,6 @@ public class SuiteReferenceOfAnArbitraryKeywordOfASubSchema : IClassFixture<Suit
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -167,9 +164,9 @@ public class SuiteReferenceInternalsOfKnownNonApplicator : IClassFixture<SuiteRe
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\refOfUnknownKeyword.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"$id\": \"/base\",\r\n            \"examples\": [\r\n              { \"type\": \"string\" }\r\n            ],\r\n            \"$ref\": \"#/examples/0\"\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.RefOfUnknownKeyword",
@@ -177,7 +174,6 @@ public class SuiteReferenceInternalsOfKnownNonApplicator : IClassFixture<SuiteRe
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -211,9 +207,9 @@ public class SuiteReferenceOfAnArbitraryKeywordOfASubSchemaWithEncodedRef : ICla
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "tests\\draft2019-09\\optional\\refOfUnknownKeyword.json",
                 "{\r\n            \"$schema\": \"https://json-schema.org/draft/2019-09/schema\",\r\n            \"properties\": {\r\n                \"foo\": {\"unknown/keyword\": {\"type\": \"integer\"}},\r\n                \"bar\": {\"$ref\": \"#/properties/foo/unknown~1keyword\"}\r\n            }\r\n        }",
                 "StandaloneEvaluatorTestSuite.Draft201909.Optional.RefOfUnknownKeyword",
@@ -221,7 +217,6 @@ public class SuiteReferenceOfAnArbitraryKeywordOfASubSchemaWithEncodedRef : ICla
                 "https://json-schema.org/draft/2019-09/schema",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }

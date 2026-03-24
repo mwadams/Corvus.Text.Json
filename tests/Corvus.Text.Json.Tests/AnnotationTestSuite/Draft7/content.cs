@@ -44,9 +44,9 @@ public class SuiteContentMediaTypeIsAnAnnotationForStringInstances : IClassFixtu
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/content.json",
                 "{\r\n        \"contentMediaType\": \"application/json\"\r\n      }",
                 "AnnotationTestSuite.Draft7.Content",
@@ -54,7 +54,6 @@ public class SuiteContentMediaTypeIsAnAnnotationForStringInstances : IClassFixtu
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
@@ -96,9 +95,9 @@ public class SuiteContentEncodingIsAnAnnotationForStringInstances : IClassFixtur
 
         public Task DisposeAsync() => Task.CompletedTask;
 
-        public Task InitializeAsync()
+        public async Task InitializeAsync()
         {
-            this.Evaluator = TestEvaluatorHelper.GenerateEvaluatorForVirtualFile(
+            this.Evaluator = await TestEvaluatorHelper.GenerateEvaluatorForVirtualFileAsync(
                 "annotations/content.json",
                 "{\r\n        \"contentEncoding\": \"base64\"\r\n      }",
                 "AnnotationTestSuite.Draft7.Content",
@@ -106,7 +105,6 @@ public class SuiteContentEncodingIsAnAnnotationForStringInstances : IClassFixtur
                 "http://json-schema.org/draft-07/schema#",
                 validateFormat: false,
                 Assembly.GetExecutingAssembly());
-            return Task.CompletedTask;
         }
     }
 }
