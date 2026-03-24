@@ -44,6 +44,7 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     private IReadOnlyList<IBuiltInTypeNameHeuristic>? cachedBuiltInTypeNameHeuristics;
     private IReadOnlyList<INameHeuristic>? cachedNameBeforeSubschemaHeuristics;
     private IReadOnlyList<INameHeuristic>? cachedNameAfterSubschemaHeuristics;
+    private TypeDeclaration[]? evaluatorRootTypes;
 
     private CSharpLanguageProvider(Options? options = null)
     {
@@ -63,6 +64,24 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
     public static CSharpLanguageProvider DefaultWithOptions(CSharpLanguageProvider.Options options)
     {
         return CreateDefaultCSharpLanguageProvider(options);
+    }
+
+    /// <summary>
+    /// Sets the original (unreduced) root type declarations for standalone evaluator generation.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// This must be called before <see cref="GenerateCodeFor"/> when the code generation mode
+    /// includes evaluator generation. The pipeline's <c>GetCandidateTypesToGenerate</c> replaces
+    /// reducible types (e.g., annotation-only schemas) with their reduced targets, losing the
+    /// original type information needed by the evaluator. By storing the original roots here,
+    /// the evaluator generator can access the full unreduced type tree.
+    /// </para>
+    /// </remarks>
+    /// <param name="rootTypes">The original root type declarations from <c>AddTypeDeclarations</c>.</param>
+    public void SetEvaluatorRootTypes(params TypeDeclaration[] rootTypes)
+    {
+        this.evaluatorRootTypes = rootTypes;
     }
 
     /// <summary>
@@ -170,9 +189,6 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
 #endif
         CodeGenerator generator = new(this, cancellationToken, lineEndSequence: options.LineEndSequence);
 
-        // Collect root types for evaluator generation (top-level types with no parent).
-        List<TypeDeclaration>? evaluatorRootTypes = generateEvaluator ? new() : null;
-
         // Generate global simple types first. These have DoNotGenerate=true (so
         // ShouldGenerate returns false and the framework sets their parent to null),
         // but the first-seen instance for each canonical name needs to be generated.
@@ -220,21 +236,15 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             }
         }
 
-        foreach (TypeDeclaration typeDeclaration in typeDeclarations)
+        if (generateTypes)
         {
-            if (cancellationToken.IsCancellationRequested)
+            foreach (TypeDeclaration typeDeclaration in typeDeclarations)
             {
-                return [];
-            }
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return [];
+                }
 
-            // Track root types for evaluator generation.
-            if (generateEvaluator && typeDeclaration.Parent() is null)
-            {
-                evaluatorRootTypes!.Add(typeDeclaration);
-            }
-
-            if (generateTypes)
-            {
 #if DEBUG
                 if (namesSeen.ContainsKey(typeDeclaration.FullyQualifiedDotnetTypeName()))
                 {
@@ -280,9 +290,12 @@ public class CSharpLanguageProvider : IHierarchicalLanguageProvider
             }
         }
 
-        if (generateEvaluator && evaluatorRootTypes is not null)
+        // Use the original (unreduced) root types stored via SetEvaluatorRootTypes,
+        // not the types from the filtered pipeline which may have been reduced
+        // (e.g., annotation-only schemas become JsonAny/boolean true).
+        if (generateEvaluator && this.evaluatorRootTypes is not null)
         {
-            foreach (TypeDeclaration rootType in evaluatorRootTypes)
+            foreach (TypeDeclaration rootType in this.evaluatorRootTypes)
             {
                 GeneratedCodeFile? evaluatorFile = StandaloneEvaluatorGenerator.Generate(
                     rootType, options, options.LineEndSequence);

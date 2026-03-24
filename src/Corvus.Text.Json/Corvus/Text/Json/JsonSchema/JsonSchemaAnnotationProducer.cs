@@ -86,7 +86,10 @@ public static class JsonSchemaAnnotationProducer
 
             string keyword = JsonReaderHelper.GetTextFromUtf8(keywordBytes);
             string instanceLocation = result.GetDocumentEvaluationLocationText();
-            string schemaLocation = result.GetSchemaEvaluationLocationText();
+
+            // The internal schema evaluation path is a JSON Pointer without the "#" prefix.
+            // For spec-conformant annotation output, prepend "#" to form a proper fragment.
+            string schemaLocation = "#" + result.GetSchemaEvaluationLocationText();
             string annotationValue = result.GetMessageText();
 
             if (!callback(instanceLocation, keyword, schemaLocation, annotationValue))

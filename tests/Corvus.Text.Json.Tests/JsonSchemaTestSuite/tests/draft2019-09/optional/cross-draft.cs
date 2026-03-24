@@ -18,14 +18,14 @@ public class SuiteRefsToFutureDraftsAreProcessedAsFutureDrafts : IClassFixture<S
     [Fact]
     public void TestFirstItemNotAStringIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFirstItemIsAStringIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"a string\", 1, 2, 3]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[\"a string\", 1, 2, 3]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,7 +64,7 @@ public class SuiteRefsToHistoricDraftsAreProcessedAsHistoricDrafts : IClassFixtu
     [Fact]
     public void TestMissingBarIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"any value\"}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": \"any value\"}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

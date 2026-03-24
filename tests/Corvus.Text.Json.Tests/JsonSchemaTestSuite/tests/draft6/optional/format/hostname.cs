@@ -18,189 +18,189 @@ public class SuiteValidationOfHostNames : IClassFixture<SuiteValidationOfHostNam
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidHostName()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"www.example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"www.example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidPunycodedIdnHostname()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"xn--4gbwdl.xn--wgbh1c\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"xn--4gbwdl.xn--wgbh1c\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAHostNameStartingWithAnIllegalCharacter()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"-a-host-name-that-starts-with--\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"-a-host-name-that-starts-with--\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAHostNameContainingIllegalCharacters()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"not_a_valid_host_name\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"not_a_valid_host_name\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAHostNameWithAComponentTooLong()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a-vvvvvvvvvvvvvvvveeeeeeeeeeeeeeeerrrrrrrrrrrrrrrryyyyyyyyyyyyyyyy-long-host-name-component\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a-vvvvvvvvvvvvvvvveeeeeeeeeeeeeeeerrrrrrrrrrrrrrrryyyyyyyyyyyyyyyy-long-host-name-component\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestStartsWithHyphen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"-hostname\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"-hostname\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestEndsWithHyphen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostname-\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostname-\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestStartsWithUnderscore()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"_hostname\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"_hostname\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestEndsWithUnderscore()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostname_\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostname_\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestContainsUnderscore()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"host_name\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"host_name\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMaximumLabelLength()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijk.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestExceedsMaximumLabelLength()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl.com\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLabel()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostname\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostname\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLabelWithHyphen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"host-name\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"host-name\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLabelWithDigits()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"h0stn4me\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"h0stn4me\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLabelEndingWithDigit()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostnam3\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hostnam3\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestEmptyString()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleDot()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\".\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\".\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestLeadingDot()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\".example\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\".example\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTrailingDot()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"example.\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"example.\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIdnLabelSeparator()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"example\\uff0ecom\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"example\\uff0ecom\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

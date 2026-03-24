@@ -18,21 +18,21 @@ public class SuiteIdInsideAnEnumIsNotARealIdentifier : IClassFixture<SuiteIdInsi
     [Fact]
     public void TestExactMatchToEnumAndTypeMatches()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"$id\": \"https://localhost:1234/draft2020-12/id/my_identifier.json\",\r\n                    \"type\": \"null\"\r\n                }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"$id\": \"https://localhost:1234/draft2020-12/id/my_identifier.json\",\r\n                    \"type\": \"null\"\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMatchRefToId()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string to match #/$defs/id_in_enum\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string to match #/$defs/id_in_enum\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoMatchOnEnumOrRefToId()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

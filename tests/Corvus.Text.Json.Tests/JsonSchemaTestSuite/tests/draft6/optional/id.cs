@@ -18,21 +18,21 @@ public class SuiteIdInsideAnEnumIsNotARealIdentifier : IClassFixture<SuiteIdInsi
     [Fact]
     public void TestExactMatchToEnumAndTypeMatches()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"$id\": \"https://localhost:1234/id/my_identifier.json\",\r\n                    \"type\": \"null\"\r\n                }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"$id\": \"https://localhost:1234/id/my_identifier.json\",\r\n                    \"type\": \"null\"\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMatchRefToId()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string to match #/definitions/id_in_enum\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string to match #/definitions/id_in_enum\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoMatchOnEnumOrRefToId()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -71,14 +71,14 @@ public class SuiteNonSchemaObjectContainingAPlainNameIdProperty : IClassFixture<
     [Fact]
     public void TestSkipTraversingDefinitionForAValidResult()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"skip not_a_real_anchor\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"skip not_a_real_anchor\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestConstAtConstNotAnchorDoesNotMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -117,14 +117,14 @@ public class SuiteNonSchemaObjectContainingAnIdProperty : IClassFixture<SuiteNon
     [Fact]
     public void TestSkipTraversingDefinitionForAValidResult()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"skip not_a_real_id\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"skip not_a_real_id\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestConstAtConstNotIdDoesNotMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

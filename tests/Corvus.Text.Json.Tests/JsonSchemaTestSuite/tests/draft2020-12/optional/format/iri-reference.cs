@@ -18,91 +18,91 @@ public class SuiteValidationOfIriReferences : IClassFixture<SuiteValidationOfIri
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidIri()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"http://ƒøø.ßår/?∂éœ=πîx#πîüx\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"http://ƒøø.ßår/?∂éœ=πîx#πîüx\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidProtocolRelativeIriReference()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"//ƒøø.ßår/?∂éœ=πîx#πîüx\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"//ƒøø.ßår/?∂éœ=πîx#πîüx\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidRelativeIriReference()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"/âππ\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"/âππ\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidIriReference()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\\\\\\WINDOWS\\\\filëßåré\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\\\\\\WINDOWS\\\\filëßåré\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidIriReference()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"âππ\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"âππ\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidIriFragment()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"#ƒrägmênt\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"#ƒrägmênt\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidIriFragment()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"#ƒräg\\\\mênt\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"#ƒräg\\\\mênt\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

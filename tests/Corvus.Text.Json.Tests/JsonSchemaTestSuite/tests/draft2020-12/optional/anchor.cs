@@ -18,28 +18,28 @@ public class SuiteAnchorInsideAnEnumIsNotARealIdentifier : IClassFixture<SuiteAn
     [Fact]
     public void TestExactMatchToEnumAndTypeMatches()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"$anchor\": \"my_anchor\",\r\n                    \"type\": \"null\"\r\n                }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"$anchor\": \"my_anchor\",\r\n                    \"type\": \"null\"\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInImplementationsThatStripAnchorThisMayMatchEitherDef()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"type\": \"null\"\r\n                }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"type\": \"null\"\r\n                }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMatchRefToAnchor()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string to match #/$defs/anchor_in_enum\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a string to match #/$defs/anchor_in_enum\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoMatchOnEnumOrRefToAnchor()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

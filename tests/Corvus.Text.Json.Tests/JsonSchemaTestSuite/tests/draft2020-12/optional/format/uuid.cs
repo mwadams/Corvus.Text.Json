@@ -18,154 +18,154 @@ public class SuiteUuidFormat : IClassFixture<SuiteUuidFormat.Fixture>
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllUpperCase()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2EB8AA08-AA98-11EA-B4AA-73B441D16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2EB8AA08-AA98-11EA-B4AA-73B441D16380\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllLowerCase()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-b4aa-73b441d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-b4aa-73b441d16380\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMixedCase()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-AA98-11ea-B4Aa-73B441D16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-AA98-11ea-B4Aa-73B441D16380\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllZeroesIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"00000000-0000-0000-0000-000000000000\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"00000000-0000-0000-0000-000000000000\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWrongLength()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-b4aa-73b441d1638\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-b4aa-73b441d1638\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMissingSection()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-73b441d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-73b441d16380\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBadCharactersNotHex()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-b4ga-73b441d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08-aa98-11ea-b4ga-73b441d16380\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoDashes()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08aa9811eab4aa73b441d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08aa9811eab4aa73b441d16380\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooFewDashes()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08aa98-11ea-b4aa73b441d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08aa98-11ea-b4aa73b441d16380\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooManyDashes()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8-aa08-aa98-11ea-b4aa73b44-1d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8-aa08-aa98-11ea-b4aa73b44-1d16380\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestDashesInTheWrongSpot()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08aa9811eab4aa73b441d16380----\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa08aa9811eab4aa73b441d16380----\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestShiftedDashes()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa0-8aa98-11e-ab4aa7-3b441d16380\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2eb8aa0-8aa98-11e-ab4aa7-3b441d16380\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidVersion4()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"98d80576-482e-427f-8434-7f86890ab222\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"98d80576-482e-427f-8434-7f86890ab222\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidVersion5()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"99c17cbb-656f-564a-940f-1a4568f03487\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"99c17cbb-656f-564a-940f-1a4568f03487\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestHypotheticalVersion6()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"99c17cbb-656f-664a-940f-1a4568f03487\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"99c17cbb-656f-664a-940f-1a4568f03487\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestHypotheticalVersion15()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"99c17cbb-656f-f64a-940f-1a4568f03487\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"99c17cbb-656f-f64a-940f-1a4568f03487\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

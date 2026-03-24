@@ -18,42 +18,42 @@ public class SuiteMaxPropertiesValidation : IClassFixture<SuiteMaxPropertiesVali
     [Fact]
     public void TestShorterIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestExactLengthIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooLongIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2, \"baz\": 3}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": 1, \"bar\": 2, \"baz\": 3}");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresStrings()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobar\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foobar\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresOtherNonObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -92,14 +92,14 @@ public class SuiteMaxProperties0MeansTheObjectIsEmpty : IClassFixture<SuiteMaxPr
     [Fact]
     public void TestNoPropertiesIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOnePropertyIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

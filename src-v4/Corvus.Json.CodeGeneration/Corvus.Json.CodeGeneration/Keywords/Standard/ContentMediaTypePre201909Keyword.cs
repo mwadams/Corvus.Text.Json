@@ -11,7 +11,7 @@ namespace Corvus.Json.CodeGeneration.Keywords;
 /// The contentMediaType keyword.
 /// </summary>
 public sealed class ContentMediaTypePre201909Keyword
-    : IContentMediaTypeValidationKeyword
+    : IContentMediaTypeValidationKeyword, IAnnotationProducingKeyword
 {
     private ContentMediaTypePre201909Keyword()
     {
@@ -94,4 +94,23 @@ public sealed class ContentMediaTypePre201909Keyword
         format = null;
         return false;
     }
+
+    /// <inheritdoc/>
+    public bool TryGetAnnotationJsonValue(TypeDeclaration typeDeclaration, out string rawJsonValue)
+    {
+        if (typeDeclaration.TryGetKeyword(this, out JsonElement value))
+        {
+            rawJsonValue = value.GetRawText();
+            return true;
+        }
+
+        rawJsonValue = string.Empty;
+        return false;
+    }
+
+    /// <inheritdoc/>
+    public CoreTypes AnnotationAppliesToCoreTypes(TypeDeclaration typeDeclaration) => CoreTypes.String;
+
+    /// <inheritdoc/>
+    public bool AnnotationPreconditionsMet(TypeDeclaration typeDeclaration) => true;
 }

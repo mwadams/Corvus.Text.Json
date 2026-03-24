@@ -18,112 +18,112 @@ public class SuiteValidationOfIpAddresses : IClassFixture<SuiteValidationOfIpAdd
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidIpAddress()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"192.168.0.1\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"192.168.0.1\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIpAddressWithTooManyComponents()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0.0.0.1\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0.0.0.1\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIpAddressWithOutOfRangeValues()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"256.256.256.256\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"256.256.256.256\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIpAddressWithout4Components()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"127.0\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIpAddressAsAnInteger()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"0x7f000001\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"0x7f000001\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIpAddressAsAnIntegerDecimal()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2130706433\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2130706433\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidLeadingZeroesAsTheyAreTreatedAsOctals()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"087.10.0.1\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"087.10.0.1\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValueWithoutLeadingZeroIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"87.10.0.1\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"87.10.0.1\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidNonAscii২ABengali2()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1২7.0.0.1\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"1২7.0.0.1\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNetmaskIsNotAPartOfIpv4Address()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"192.168.1.0/24\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"192.168.1.0/24\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

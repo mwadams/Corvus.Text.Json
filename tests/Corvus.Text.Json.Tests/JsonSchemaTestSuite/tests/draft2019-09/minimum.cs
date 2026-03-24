@@ -18,28 +18,28 @@ public class SuiteMinimumValidation : IClassFixture<SuiteMinimumValidation.Fixtu
     [Fact]
     public void TestAboveTheMinimumIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.6");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.6");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1.1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1.1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBelowTheMinimumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0.6");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0.6");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -78,49 +78,49 @@ public class SuiteMinimumValidationWithSignedInteger : IClassFixture<SuiteMinimu
     [Fact]
     public void TestNegativeAboveTheMinimumIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestPositiveAboveTheMinimumIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-2");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-2");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointWithFloatIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-2.0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-2.0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFloatBelowTheMinimumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-2.0001");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-2.0001");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntBelowTheMinimumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-3");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-3");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

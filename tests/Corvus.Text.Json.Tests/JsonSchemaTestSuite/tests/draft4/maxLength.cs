@@ -18,35 +18,35 @@ public class SuiteMaxLengthValidation : IClassFixture<SuiteMaxLengthValidation.F
     [Fact]
     public void TestShorterIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"f\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"f\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestExactLengthIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"fo\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"fo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooLongIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonStrings()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoGraphemesIsLongEnough()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\uD83D\\uDCA9\\uD83D\\uDCA9\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\uD83D\\uDCA9\\uD83D\\uDCA9\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

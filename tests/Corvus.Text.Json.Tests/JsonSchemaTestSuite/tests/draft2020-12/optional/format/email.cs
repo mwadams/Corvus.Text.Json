@@ -18,168 +18,168 @@ public class SuiteValidationOfEMailAddresses : IClassFixture<SuiteValidationOfEM
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidEMailAddress()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidEMailAddress()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2962\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"2962\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTildeInLocalPartIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"te~st@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"te~st@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTildeBeforeLocalPartIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"~test@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"~test@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTildeAfterLocalPartIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"test~@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"test~@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAQuotedStringWithASpaceInTheLocalPartIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"joe bloggs\\\"@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"joe bloggs\\\"@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAQuotedStringWithADoubleDotInTheLocalPartIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"joe..bloggs\\\"@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"joe..bloggs\\\"@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAQuotedStringWithAInTheLocalPartIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"joe@bloggs\\\"@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"joe@bloggs\\\"@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIPv4AddressLiteralAfterTheIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@[127.0.0.1]\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@[127.0.0.1]\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnIPv6AddressLiteralAfterTheIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@[IPv6:::1]\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@[IPv6:::1]\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestDotBeforeLocalPartIsNotValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\".test@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\".test@example.com\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestDotAfterLocalPartIsNotValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"test.@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"test.@example.com\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoSeparatedDotsInsideLocalPartAreValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"te.s.t@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"te.s.t@example.com\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoSubsequentDotsInsideLocalPartAreNotValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"te..st@example.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"te..st@example.com\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidDomain()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@invalid=domain.com\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@invalid=domain.com\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidIPv4AddressLiteral()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@[127.0.0.300]\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"joe.bloggs@[127.0.0.300]\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoEmailAddressesIsNotValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"user1@oceania.org, user2@oceania.org\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"user1@oceania.org, user2@oceania.org\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFullFromHeaderIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"Winston Smith\\\" <winston.smith@recdep.minitrue> (Records Department)\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\\\"Winston Smith\\\" <winston.smith@recdep.minitrue> (Records Department)\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

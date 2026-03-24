@@ -18,14 +18,14 @@ public class SuiteInteger : IClassFixture<SuiteInteger.Fixture>
     [Fact]
     public void TestABignumIsAnInteger()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12345678910111213141516171819202122232425262728293031");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12345678910111213141516171819202122232425262728293031");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestANegativeBignumIsAnInteger()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-12345678910111213141516171819202122232425262728293031");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-12345678910111213141516171819202122232425262728293031");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteNumber : IClassFixture<SuiteNumber.Fixture>
     [Fact]
     public void TestABignumIsANumber()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("98249283749234923498293171823948729348710298301928331");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("98249283749234923498293171823948729348710298301928331");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestANegativeBignumIsANumber()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-98249283749234923498293171823948729348710298301928331");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-98249283749234923498293171823948729348710298301928331");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -110,7 +110,7 @@ public class SuiteString : IClassFixture<SuiteString.Fixture>
     [Fact]
     public void TestABignumIsNotAString()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("98249283749234923498293171823948729348710298301928331");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("98249283749234923498293171823948729348710298301928331");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -149,7 +149,7 @@ public class SuiteMaximumIntegerComparison : IClassFixture<SuiteMaximumIntegerCo
     [Fact]
     public void TestComparisonWorksForHighNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("18446744073709551600");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("18446744073709551600");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -188,7 +188,7 @@ public class SuiteFloatComparisonWithHighPrecision : IClassFixture<SuiteFloatCom
     [Fact]
     public void TestComparisonWorksForHighNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("972783798187987123879878123.188781371");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("972783798187987123879878123.188781371");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -227,7 +227,7 @@ public class SuiteMinimumIntegerComparison : IClassFixture<SuiteMinimumIntegerCo
     [Fact]
     public void TestComparisonWorksForVeryNegativeNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-18446744073709551600");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-18446744073709551600");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -266,7 +266,7 @@ public class SuiteFloatComparisonWithHighPrecisionOnNegativeNumbers : IClassFixt
     [Fact]
     public void TestComparisonWorksForVeryNegativeNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-972783798187987123879878123.188781371");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-972783798187987123879878123.188781371");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

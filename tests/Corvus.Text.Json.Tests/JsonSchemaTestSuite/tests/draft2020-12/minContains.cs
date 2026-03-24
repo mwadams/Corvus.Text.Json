@@ -18,14 +18,14 @@ public class SuiteMinContainsWithoutContainsIsIgnored : IClassFixture<SuiteMinCo
     [Fact]
     public void TestOneItemValidAgainstLoneMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestZeroItemsStillValidAgainstLoneMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,35 +64,35 @@ public class SuiteMinContains1WithContains : IClassFixture<SuiteMinContains1With
     [Fact]
     public void TestEmptyData()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoElementsMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleElementMatchesValidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSomeElementsMatchValidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchValidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -131,42 +131,42 @@ public class SuiteMinContains2WithContains : IClassFixture<SuiteMinContains2With
     [Fact]
     public void TestEmptyData()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchInvalidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSomeElementsMatchInvalidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchValidMinContainsExactlyAsNeeded()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchValidMinContainsMoreThanNeeded()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1, 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSomeElementsMatchValidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 2, 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -205,14 +205,14 @@ public class SuiteMinContains2WithContainsWithADecimalValue : IClassFixture<Suit
     [Fact]
     public void TestOneElementMatchesInvalidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBothElementsMatchValidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -251,28 +251,28 @@ public class SuiteMaxContainsMinContains : IClassFixture<SuiteMaxContainsMinCont
     [Fact]
     public void TestEmptyData()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchInvalidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchInvalidMaxContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1, 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllElementsMatchValidMaxContainsAndMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -311,28 +311,28 @@ public class SuiteMaxContainsMinContains1 : IClassFixture<SuiteMaxContainsMinCon
     [Fact]
     public void TestEmptyData()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidMaxContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1, 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidMaxContainsAndMinContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -371,14 +371,14 @@ public class SuiteMinContains0 : IClassFixture<SuiteMinContains0.Fixture>
     [Fact]
     public void TestEmptyData()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMinContains0MakesContainsAlwaysPass()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 2 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -417,21 +417,21 @@ public class SuiteMinContains0WithMaxContains : IClassFixture<SuiteMinContains0W
     [Fact]
     public void TestEmptyData()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNotMoreThanMaxContains()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooMany()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

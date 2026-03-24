@@ -18,182 +18,182 @@ public class SuiteValidationOfDurationStrings : IClassFixture<SuiteValidationOfD
     [Fact]
     public void TestAllStringFormatsIgnoreIntegers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("12");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreFloats()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("13.7");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreObjects()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreBooleans()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("false");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAllStringFormatsIgnoreNulls()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("null");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidDurationString()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P4DT12H30M5S\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P4DT12H30M5S\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidDurationString()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT1D\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT1D\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMustStartWithP()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"4DT12H30M5S\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"4DT12H30M5S\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoElementsPresent()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoTimeElementsPresent()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1YT\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1YT\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoDateOrTimeElementsPresent()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestElementsOutOfOrder()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P2D1Y\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P2D1Y\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMissingTimeSeparator()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1D2H\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1D2H\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTimeElementInTheDatePosition()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P2S\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P2S\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestFourYearsDuration()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P4Y\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P4Y\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestZeroTimeInSeconds()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT0S\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT0S\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestZeroTimeInDays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P0D\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P0D\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOneMonthDuration()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1M\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1M\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOneMinuteDuration()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT1M\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT1M\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOneAndAHalfDaysInHours()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT36H\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"PT36H\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOneAndAHalfDaysInDaysAndHours()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1DT12H\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1DT12H\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoWeeks()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P2W\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P2W\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWeeksCannotBeCombinedWithOtherUnits()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1Y2W\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1Y2W\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidNonAscii২ABengali2()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P২Y\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P২Y\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestElementWithoutUnit()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"P1\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

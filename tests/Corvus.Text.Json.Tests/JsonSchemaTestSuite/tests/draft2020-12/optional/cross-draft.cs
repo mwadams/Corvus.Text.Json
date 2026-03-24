@@ -18,7 +18,7 @@ public class SuiteRefsToHistoricDraftsAreProcessedAsHistoricDrafts : IClassFixtu
     [Fact]
     public void TestFirstItemNotAStringIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2, 3]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

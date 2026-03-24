@@ -18,14 +18,14 @@ public class SuiteLocationIndependentIdentifier : IClassFixture<SuiteLocationInd
     [Fact]
     public void TestMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteLocationIndependentIdentifierWithAbsoluteUri : IClassFixture<S
     [Fact]
     public void TestMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -110,14 +110,14 @@ public class SuiteLocationIndependentIdentifierWithBaseUriChangeInSubschema : IC
     [Fact]
     public void TestMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -156,14 +156,14 @@ public class SuiteSameAnchorWithDifferentBaseUri : IClassFixture<SuiteSameAnchor
     [Fact]
     public void TestRefResolvesToDefsAAllOf1()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRefDoesNotResolveToDefsAAllOf0()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

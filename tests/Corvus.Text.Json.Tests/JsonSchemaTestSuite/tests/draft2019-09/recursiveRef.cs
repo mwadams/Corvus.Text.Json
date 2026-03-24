@@ -18,28 +18,28 @@ public class SuiteRecursiveRefWithoutRecursiveAnchorWorksLikeRef : IClassFixture
     [Fact]
     public void TestMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": false}");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\"foo\": false}");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRecursiveMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"foo\": false } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"foo\": false } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestMismatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"bar\": false }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"bar\": false }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRecursiveMismatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": false } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": false } }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -78,35 +78,35 @@ public class SuiteRecursiveRefWithoutUsingNesting : IClassFixture<SuiteRecursive
     [Fact]
     public void TestIntegerMatchesAtTheOuterLevel()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLevelMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntegerDoesNotMatchAsAPropertyValue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsPropertiesMatchWithInnerDefinition()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsNoMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -145,35 +145,35 @@ public class SuiteRecursiveRefWithNesting : IClassFixture<SuiteRecursiveRefWithN
     [Fact]
     public void TestIntegerMatchesAtTheOuterLevel()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLevelMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntegerNowMatchesAsAPropertyValue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsPropertiesMatchWithInnerDefinition()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsPropertiesMatchWithRecursiveRef()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -212,35 +212,35 @@ public class SuiteRecursiveRefWithRecursiveAnchorFalseWorksLikeRef : IClassFixtu
     [Fact]
     public void TestIntegerMatchesAtTheOuterLevel()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLevelMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntegerDoesNotMatchAsAPropertyValue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsPropertiesMatchWithInnerDefinition()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsIntegerDoesNotMatchAsAPropertyValue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -279,35 +279,35 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorWorksLikeRef : IClassFixture<
     [Fact]
     public void TestIntegerMatchesAtTheOuterLevel()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestSingleLevelMatch()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": \"hi\" }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntegerDoesNotMatchAsAPropertyValue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": 1 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsPropertiesMatchWithInnerDefinition()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": \"hi\" } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTwoLevelsIntegerDoesNotMatchAsAPropertyValue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -346,21 +346,21 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorInTheInitialTargetSchemaResou
     [Fact]
     public void TestLeafNodeDoesNotMatchNoRecursion()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": true }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": true }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestLeafNodeMatchesRecursionUsesTheInnerSchema()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestLeafNodeDoesNotMatchRecursionUsesTheInnerSchema()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": true } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": true } }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -399,21 +399,21 @@ public class SuiteRecursiveRefWithNoRecursiveAnchorInTheOuterSchemaResource : IC
     [Fact]
     public void TestLeafNodeDoesNotMatchNoRecursion()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": true }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": true }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestLeafNodeMatchesRecursionOnlyUsesInnerSchema()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": 1 } }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestLeafNodeDoesNotMatchRecursionOnlyUsesInnerSchema()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": true } }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"foo\": { \"bar\": true } }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -452,14 +452,14 @@ public class SuiteMultipleDynamicPathsToTheRecursiveRefKeyword : IClassFixture<S
     [Fact]
     public void TestRecurseToAnyLeafNodeFloatsAreAllowed()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 1.1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 1.1 }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestRecurseToIntegerNodeFloatsAreNotAllowed()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"november\": 1.1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"november\": 1.1 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -498,14 +498,14 @@ public class SuiteDynamicRecursiveRefDestinationNotPredictableAtSchemaCompileTim
     [Fact]
     public void TestNumericNode()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 1.1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"alpha\": 1.1 }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIntegerNode()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"november\": 1.1 }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{ \"november\": 1.1 }");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

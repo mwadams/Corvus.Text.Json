@@ -346,10 +346,14 @@
 
   <ItemGroup>
     <Compile Include="JsonSchemaTestSuite\**\*.cs" />
+    <Compile Include="StandaloneEvaluatorTestSuite\**\*.cs" />
+    <Compile Include="AnnotationTestSuite\**\*.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="JsonSchemaTestSuite\" />
+    <Folder Include="StandaloneEvaluatorTestSuite\" />
+    <Folder Include="AnnotationTestSuite\" />
   </ItemGroup>
 
 </Project>

@@ -18,28 +18,28 @@ public class SuiteMinItemsValidation : IClassFixture<SuiteMinItemsValidation.Fix
     [Fact]
     public void TestLongerIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestExactLengthIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooShortIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonArrays()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -78,14 +78,14 @@ public class SuiteMinItemsValidationWithADecimal : IClassFixture<SuiteMinItemsVa
     [Fact]
     public void TestLongerIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, 2]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestTooShortIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

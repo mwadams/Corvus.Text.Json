@@ -18,42 +18,42 @@ public class SuiteASchemaGivenForPrefixItems : IClassFixture<SuiteASchemaGivenFo
     [Fact]
     public void TestCorrectTypes()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\" ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\" ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestWrongTypes()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"foo\", 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ \"foo\", 1 ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIncompleteArrayOfItems()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestArrayWithAdditionalItems()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\", true ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\", true ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestEmptyArray()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestJavaScriptPseudoArrayIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"0\": \"invalid\",\r\n                    \"1\": \"valid\",\r\n                    \"length\": 2\r\n                }");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("{\r\n                    \"0\": \"invalid\",\r\n                    \"1\": \"valid\",\r\n                    \"length\": 2\r\n                }");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -92,21 +92,21 @@ public class SuitePrefixItemsWithBooleanSchemas : IClassFixture<SuitePrefixItems
     [Fact]
     public void TestArrayWithOneItemIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1 ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestArrayWithTwoItemsIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\" ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ 1, \"foo\" ]");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestEmptyArrayIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -145,7 +145,7 @@ public class SuiteAdditionalItemsAreAllowedByDefault : IClassFixture<SuiteAdditi
     [Fact]
     public void TestOnlyTheFirstItemIsValidated()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, \"foo\", false]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[1, \"foo\", false]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -184,7 +184,7 @@ public class SuitePrefixItemsWithNullInstanceElements : IClassFixture<SuitePrefi
     [Fact]
     public void TestAllowsNullElements()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ null ]");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("[ null ]");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

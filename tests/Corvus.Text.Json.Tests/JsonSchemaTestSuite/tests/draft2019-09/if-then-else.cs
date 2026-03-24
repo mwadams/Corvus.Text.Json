@@ -18,14 +18,14 @@ public class SuiteIgnoreIfWithoutThenOrElse : IClassFixture<SuiteIgnoreIfWithout
     [Fact]
     public void TestValidWhenValidAgainstLoneIf()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidWhenInvalidAgainstLoneIf()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hello\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hello\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -64,14 +64,14 @@ public class SuiteIgnoreThenWithoutIf : IClassFixture<SuiteIgnoreThenWithoutIf.F
     [Fact]
     public void TestValidWhenValidAgainstLoneThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidWhenInvalidAgainstLoneThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hello\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hello\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -110,14 +110,14 @@ public class SuiteIgnoreElseWithoutIf : IClassFixture<SuiteIgnoreElseWithoutIf.F
     [Fact]
     public void TestValidWhenValidAgainstLoneElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidWhenInvalidAgainstLoneElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hello\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"hello\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -156,21 +156,21 @@ public class SuiteIfAndThenWithoutElse : IClassFixture<SuiteIfAndThenWithoutElse
     [Fact]
     public void TestValidThroughThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidThroughThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-100");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidWhenIfTestFails()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -209,21 +209,21 @@ public class SuiteIfAndElseWithoutThen : IClassFixture<SuiteIfAndElseWithoutThen
     [Fact]
     public void TestValidWhenIfTestPasses()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidThroughElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("4");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("4");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidThroughElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -262,28 +262,28 @@ public class SuiteValidateAgainstCorrectBranchThenVsElse : IClassFixture<SuiteVa
     [Fact]
     public void TestValidThroughThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidThroughThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-100");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidThroughElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("4");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("4");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidThroughElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -322,14 +322,14 @@ public class SuiteNonInterferenceAcrossCombinedSchemas : IClassFixture<SuiteNonI
     [Fact]
     public void TestValidButWouldHaveBeenInvalidThroughThen()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("-100");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestValidButWouldHaveBeenInvalidThroughElse()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -368,14 +368,14 @@ public class SuiteIfWithBooleanSchemaTrue : IClassFixture<SuiteIfWithBooleanSche
     [Fact]
     public void TestBooleanSchemaTrueInIfAlwaysChoosesTheThenPathValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"then\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"then\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBooleanSchemaTrueInIfAlwaysChoosesTheThenPathInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"else\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"else\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -414,14 +414,14 @@ public class SuiteIfWithBooleanSchemaFalse : IClassFixture<SuiteIfWithBooleanSch
     [Fact]
     public void TestBooleanSchemaFalseInIfAlwaysChoosesTheElsePathInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"then\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"then\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBooleanSchemaFalseInIfAlwaysChoosesTheElsePathValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"else\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"else\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -460,28 +460,28 @@ public class SuiteIfAppearsAtTheEndWhenSerializedKeywordProcessingSequence : ICl
     [Fact]
     public void TestYesRedirectsToThenAndPasses()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"yes\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"yes\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestOtherRedirectsToElseAndPasses()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"other\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"other\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestNoRedirectsToThenAndFails()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"no\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"no\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestInvalidRedirectsToElseAndFails()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"invalid\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"invalid\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
@@ -520,14 +520,14 @@ public class SuiteThenFalseFailsWhenConditionMatches : IClassFixture<SuiteThenFa
     [Fact]
     public void TestMatchesIfThenFalseInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestDoesNotMatchIfThenIgnoredValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -566,14 +566,14 @@ public class SuiteElseFalseFailsWhenConditionDoesNotMatch : IClassFixture<SuiteE
     [Fact]
     public void TestMatchesIfElseIgnoredValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("1");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestDoesNotMatchIfElseExecutesInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

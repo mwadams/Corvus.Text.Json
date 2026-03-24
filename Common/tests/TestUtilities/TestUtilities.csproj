@@ -125,6 +125,7 @@
     <Compile Include="TestEventListener.cs" />
 
     <Compile Include="TestEvaluatorHelper.cs" />
+    <Compile Include="AnnotationTestHelper.cs" />
     <Compile Include="TestJsonSchemaCodeGenerator.cs" />
   </ItemGroup>
 

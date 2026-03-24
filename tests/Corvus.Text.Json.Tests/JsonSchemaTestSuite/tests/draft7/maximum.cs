@@ -18,28 +18,28 @@ public class SuiteMaximumValidation : IClassFixture<SuiteMaximumValidation.Fixtu
     [Fact]
     public void TestBelowTheMaximumIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.6");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.6");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.0");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAboveTheMaximumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.5");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.5");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -78,28 +78,28 @@ public class SuiteMaximumValidationWithUnsignedInteger : IClassFixture<SuiteMaxi
     [Fact]
     public void TestBelowTheMaximumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("299.97");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("299.97");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointIntegerIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("300");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("300");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointFloatIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("300.00");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("300.00");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAboveTheMaximumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("300.5");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("300.5");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 

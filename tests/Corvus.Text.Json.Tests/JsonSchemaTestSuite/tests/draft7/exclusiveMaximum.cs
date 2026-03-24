@@ -18,28 +18,28 @@ public class SuiteExclusiveMaximumValidation : IClassFixture<SuiteExclusiveMaxim
     [Fact]
     public void TestBelowTheExclusiveMaximumIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.2");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("2.2");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestBoundaryPointIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.0");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.0");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAboveTheExclusiveMaximumIsInvalid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.5");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("3.5");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonNumbers()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"x\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

@@ -18,21 +18,21 @@ public class SuiteValidationWithoutSchema : IClassFixture<SuiteValidationWithout
     [Fact]
     public void TestA3CharacterStringIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"foo\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestA1CharacterStringIsNotValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"a\"");
         Assert.False(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestANonStringIsValid()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("5");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("5");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 

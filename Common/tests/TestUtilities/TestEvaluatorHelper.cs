@@ -176,21 +176,50 @@ public class TestEvaluatorHelper
 
         TypeDeclaration rootType = _jsonSchemaTypeBuilder.AddTypeDeclarations(new JsonReference(path), _defaultVocabulary, true);
 
+        // Store the original (unreduced) root type before the pipeline reduces it.
+        // The pipeline's GetCandidateTypesToGenerate replaces annotation-only schemas
+        // with their reduced target (e.g., JsonAny), which loses the keyword information
+        // needed by the evaluator.
+        languageProvider.SetEvaluatorRootTypes(rootType);
+
         IReadOnlyCollection<GeneratedCodeFile> generatedCode =
             _jsonSchemaTypeBuilder.GenerateCodeUsing(
                 languageProvider,
                 CancellationToken.None,
                 rootType);
 
-        TypeDeclaration reducedRoot = rootType.ReducedTypeDeclaration().ReducedType;
+        // Find the evaluator class name from the generated code files.
+        // The evaluator file follows the naming pattern {EvaluatorClassName}.Evaluator.cs
+        GeneratedCodeFile? evaluatorFile = null;
+        foreach (GeneratedCodeFile f in generatedCode)
+        {
+            if (f.FileName.Contains(".Evaluator."))
+            {
+                evaluatorFile = f;
+                break;
+            }
+        }
 
-        // Compute the evaluator fully qualified type name.
-        // The evaluator class name is {DotnetTypeName}Evaluator, in the same namespace as the root type.
-        string evaluatorTypeName = reducedRoot.FullyQualifiedDotnetTypeName() + "Evaluator";
+        if (evaluatorFile is null)
+        {
+            throw new InvalidOperationException(
+                "No evaluator file found in generated code. Files: " +
+                string.Join(", ", generatedCode.Select(f => f.FileName)));
+        }
+
+        // Extract the class name: "FooEvaluator.Evaluator.cs" → "FooEvaluator"
+        string evaluatorClassName = evaluatorFile.FileName;
+        int dotEvaluator = evaluatorClassName.IndexOf(".Evaluator.");
+        if (dotEvaluator >= 0)
+        {
+            evaluatorClassName = evaluatorClassName[..dotEvaluator];
+        }
+
+        string evaluatorTypeName = $"{defaultNamespace}.{evaluatorClassName}";
 
         Type evaluatorType = DynamicCompiler.CompileGeneratedType(evaluatorTypeName, generatedCode, hostAssembly);
 
-        return new CompiledEvaluator(evaluatorType);
+        return new CompiledEvaluator(evaluatorType, evaluatorFile.FileContent);
     }
 }
 
@@ -204,9 +233,10 @@ public class CompiledEvaluator
 
     private readonly MethodInfo _evaluateMethodDef;
 
-    internal CompiledEvaluator(Type evaluatorType)
+    internal CompiledEvaluator(Type evaluatorType, string? generatedCode = null)
     {
         _evaluatorType = evaluatorType;
+        GeneratedCode = generatedCode;
 
         _evaluateMethodDef = evaluatorType.GetMethods(BindingFlags.Public | BindingFlags.Static)
             .Single(m => m.Name == "Evaluate" && m.IsGenericMethodDefinition);
@@ -216,6 +246,11 @@ public class CompiledEvaluator
     /// Gets the compiled evaluator <see cref="Type"/>.
     /// </summary>
     public Type EvaluatorType => _evaluatorType;
+
+    /// <summary>
+    /// Gets the generated source code of the evaluator (if available).
+    /// </summary>
+    public string? GeneratedCode { get; }
 
     /// <summary>
     /// Evaluates a <see cref="JsonElement"/> instance against the compiled schema evaluator.

@@ -18,21 +18,21 @@ public class SuiteValidationOfStringEncodedContentBasedOnMediaType : IClassFixtu
     [Fact]
     public void TestAValidJsonDocument()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{\\\"foo\\\": \\\"bar\\\"}\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{\\\"foo\\\": \\\"bar\\\"}\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidJsonDocumentValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{:}\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{:}\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonStrings()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -71,21 +71,21 @@ public class SuiteValidationOfBinaryStringEncoding : IClassFixture<SuiteValidati
     [Fact]
     public void TestAValidBase64String()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOiAiYmFyIn0K\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOiAiYmFyIn0K\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidBase64StringIsNotAValidCharacterValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOi%iYmFyIn0K\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOi%iYmFyIn0K\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonStrings()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -124,28 +124,28 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocuments : IClassFixture<Su
     [Fact]
     public void TestAValidBase64EncodedJsonDocument()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOiAiYmFyIn0K\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOiAiYmFyIn0K\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidlyEncodedInvalidJsonDocumentValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"ezp9Cg==\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"ezp9Cg==\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidBase64StringThatIsValidJsonValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{}\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{}\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonStrings()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
@@ -184,56 +184,56 @@ public class SuiteValidationOfBinaryEncodedMediaTypeDocumentsWithSchema : IClass
     [Fact]
     public void TestAValidBase64EncodedJsonDocument()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOiAiYmFyIn0K\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJmb28iOiAiYmFyIn0K\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnotherValidBase64EncodedJsonDocument()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJib28iOiAyMCwgImZvbyI6ICJiYXoifQ==\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJib28iOiAyMCwgImZvbyI6ICJiYXoifQ==\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidBase64EncodedJsonDocumentValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJib28iOiAyMH0=\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"eyJib28iOiAyMH0=\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnEmptyObjectAsABase64EncodedJsonDocumentValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"e30=\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"e30=\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnEmptyArrayAsABase64EncodedJsonDocument()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"W10=\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"W10=\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAValidlyEncodedInvalidJsonDocumentValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"ezp9Cg==\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"ezp9Cg==\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestAnInvalidBase64StringThatIsValidJsonValidatesTrue()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{}\"");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("\"{}\"");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
     [Fact]
     public void TestIgnoresNonStrings()
     {
-        DynamicJsonElement dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
+        var dynamicInstance = _fixture.DynamicJsonType.ParseInstance("100");
         Assert.True(dynamicInstance.EvaluateSchema());
     }
 
