@@ -1052,15 +1052,22 @@ internal static partial class StandaloneEvaluatorGenerator
             return;
         }
 
-        if (!TryGetSingleCoreType(allowedTypes, out CoreTypes singleType))
-        {
-            // Multiple types: individual keyword handlers have their own type guards.
-            return;
-        }
+        string typeKeywordLiteral = GetTypeKeywordLiteral(typeDeclaration);
 
+        if (TryGetSingleCoreType(allowedTypes, out CoreTypes singleType))
+        {
+            EmitSingleTypeValidation(ctx, typeDeclaration, singleType, typeKeywordLiteral);
+        }
+        else
+        {
+            EmitMultiTypeValidation(ctx, typeDeclaration, allowedTypes, typeKeywordLiteral);
+        }
+    }
+
+    private static void EmitSingleTypeValidation(GenerationContext ctx, TypeDeclaration typeDeclaration, CoreTypes singleType, string typeKeywordLiteral)
+    {
         string matchMethod = GetMatchMethodName(singleType);
         string ignoredField = GetIgnoredNotTypeName(singleType);
-        string typeKeywordLiteral = GetTypeKeywordLiteral(typeDeclaration);
 
         ctx.AppendLine();
 
@@ -1101,6 +1108,185 @@ internal static partial class StandaloneEvaluatorGenerator
 
         ctx.PopIndent();
         ctx.AppendLine("}");
+    }
+
+    private static void EmitMultiTypeValidation(GenerationContext ctx, TypeDeclaration typeDeclaration, CoreTypes allowedTypes, string typeKeywordLiteral)
+    {
+        bool hasInteger = (allowedTypes & CoreTypes.Integer) != 0;
+        bool hasNumber = (allowedTypes & CoreTypes.Number) != 0;
+
+        ctx.AppendLine();
+        ctx.AppendLine("bool typeMatch = false;");
+
+        if ((allowedTypes & CoreTypes.Object) != 0)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.StartObject)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if ((allowedTypes & CoreTypes.Array) != 0)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.StartArray)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if ((allowedTypes & CoreTypes.Null) != 0)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.Null)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if ((allowedTypes & CoreTypes.Boolean) != 0)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType is JsonTokenType.True or JsonTokenType.False)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if (hasNumber)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+        else if (hasInteger)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("ReadOnlyMemory<byte> typeCheckRawValue = parentDocument.GetRawSimpleValue(parentIndex);");
+            ctx.AppendLine("JsonElementHelpers.TryParseNumber(typeCheckRawValue.Span, out _, out _, out _, out int integerTypeExponent);");
+            ctx.AppendLine("if (integerTypeExponent == 0)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        if ((allowedTypes & CoreTypes.String) != 0)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine("if (tokenType == JsonTokenType.String)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("typeMatch = true;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        string typeListString = BuildTypeListString(allowedTypes);
+        string typeListLiteral = FormatUtf8Literal(typeListString);
+
+        ctx.AppendLine();
+        ctx.AppendLine($"context.EvaluatedKeyword(typeMatch, static (buffer, out written) => JsonSchemaEvaluation.ExpectedType({typeListLiteral}, buffer, out written), {typeKeywordLiteral});");
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (!typeMatch)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        ctx.AppendLine("if (!context.HasCollector)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("return;");
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+
+        EmitAllTypeSensitiveIgnoredKeywords(ctx, typeDeclaration);
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static string BuildTypeListString(CoreTypes types)
+    {
+        var parts = new List<string>();
+        if ((types & CoreTypes.Array) != 0)
+        {
+            parts.Add("\"array\"");
+        }
+
+        if ((types & CoreTypes.Object) != 0)
+        {
+            parts.Add("\"object\"");
+        }
+
+        if ((types & CoreTypes.Null) != 0)
+        {
+            parts.Add("\"null\"");
+        }
+
+        if ((types & CoreTypes.Boolean) != 0)
+        {
+            parts.Add("\"boolean\"");
+        }
+
+        if ((types & CoreTypes.Number) != 0)
+        {
+            parts.Add("\"number\"");
+        }
+
+        if ((types & CoreTypes.Integer) != 0 && (types & CoreTypes.Number) == 0)
+        {
+            parts.Add("\"integer\"");
+        }
+
+        if ((types & CoreTypes.String) != 0)
+        {
+            parts.Add("\"string\"");
+        }
+
+        return "[" + string.Join(", ", parts) + "]";
+    }
+
+    private static void EmitAllTypeSensitiveIgnoredKeywords(GenerationContext ctx, TypeDeclaration typeDeclaration)
+    {
+        foreach (IKeyword keyword in typeDeclaration.Keywords())
+        {
+            string? ignoredField = keyword switch
+            {
+                IObjectValidationKeyword => "IgnoredNotTypeObject",
+                IArrayValidationKeyword => "IgnoredNotTypeArray",
+                IStringValidationKeyword => "IgnoredNotTypeString",
+                INumberValidationKeyword => "IgnoredNotTypeNumber",
+                IBooleanValidationKeyword => "IgnoredNotTypeBoolean",
+                INullValidationKeyword => "IgnoredNotTypeNull",
+                _ => null,
+            };
+
+            if (ignoredField is not null)
+            {
+                ctx.AppendLine();
+                ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.{ignoredField}, {FormatUtf8Literal(keyword.Keyword)});");
+            }
+        }
     }
 
     private static void EmitConstValidation(GenerationContext ctx, TypeDeclaration typeDeclaration)
@@ -1545,10 +1731,137 @@ internal static partial class StandaloneEvaluatorGenerator
             return;
         }
 
-        // Format is emitted as an annotation via EmitAnnotations when not asserted.
-        // When asserted (IFormatValidationKeyword), format assertion validation is not yet
-        // supported by the standalone evaluator. The annotation is still emitted.
-        // TODO: Implement format assertion validation when a format validation API is available.
+        string? format = typeDeclaration.ExplicitFormat();
+        if (format is null)
+        {
+            return;
+        }
+
+        string formatKeywordLiteral = FormatUtf8Literal(((IKeyword)formatKw).Keyword);
+
+        JsonTokenType? expectedTokenType = FormatHandlerRegistry.Instance.FormatHandlers.GetExpectedTokenType(format);
+        if (expectedTokenType is null)
+        {
+            // Unrecognized format — emit ignored annotation.
+            ctx.AppendLine();
+            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredUnrecognizedFormat, {formatKeywordLiteral});");
+            return;
+        }
+
+        if (!(typeDeclaration.IsFormatAssertion() || typeDeclaration.AlwaysAssertFormat()))
+        {
+            // Format is not asserted — emit ignored annotation.
+            ctx.AppendLine();
+            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredFormatNotAsserted, {formatKeywordLiteral});");
+            return;
+        }
+
+        string? matchMethodName = GetFormatMatchMethodName(format);
+        if (matchMethodName is null)
+        {
+            // No match method for this format — emit ignored annotation.
+            ctx.AppendLine();
+            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredUnrecognizedFormat, {formatKeywordLiteral});");
+            return;
+        }
+
+        ctx.AppendLine();
+
+        if (expectedTokenType == JsonTokenType.String)
+        {
+            ctx.AppendLine("if (tokenType == JsonTokenType.String)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("using UnescapedUtf8JsonString unescapedFormatString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
+            ctx.AppendLine($"JsonSchemaEvaluation.{matchMethodName}(unescapedFormatString.Span, {formatKeywordLiteral}, ref context);");
+            ctx.AppendLine();
+            ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine("else");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeString, {formatKeywordLiteral});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+        else if (expectedTokenType == JsonTokenType.Number)
+        {
+            ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("ReadOnlyMemory<byte> formatRawValue = parentDocument.GetRawSimpleValue(parentIndex);");
+            ctx.AppendLine("JsonElementHelpers.TryParseNumber(formatRawValue.Span, out bool formatIsNeg, out ReadOnlySpan<byte> formatIntegral, out ReadOnlySpan<byte> formatFractional, out int formatExponent);");
+            ctx.AppendLine($"JsonSchemaEvaluation.{matchMethodName}(formatIsNeg, formatIntegral, formatFractional, formatExponent, {formatKeywordLiteral}, ref context);");
+            ctx.AppendLine();
+            ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine("else");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeNumber, {formatKeywordLiteral});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+    }
+
+    private static string? GetFormatMatchMethodName(string format)
+    {
+        return format switch
+        {
+            // String formats
+            "date" => "MatchDate",
+            "date-time" => "MatchDateTime",
+            "time" => "MatchTime",
+            "duration" => "MatchDuration",
+            "email" => "MatchEmail",
+            "idn-email" => "MatchIdnEmail",
+            "hostname" => "MatchHostname",
+            "idn-hostname" => "MatchIdnHostname",
+            "ipv4" => "MatchIPV4",
+            "ipv6" => "MatchIPV6",
+            "uuid" => "MatchUuid",
+            "uri" => "MatchUri",
+            "uri-template" => "MatchUriTemplate",
+            "uri-reference" => "MatchUriReference",
+            "iri" => "MatchIri",
+            "iri-reference" => "MatchIriReference",
+            "json-pointer" => "MatchJsonPointer",
+            "relative-json-pointer" => "MatchRelativeJsonPointer",
+            "regex" => "MatchRegex",
+            "corvus-base64-content-pre201909" => "MatchBase64Content",
+            "corvus-base64-string-pre201909" => "MatchBase64String",
+            "corvus-json-content-pre201909" => "MatchJsonContent",
+
+            // Number formats
+            "byte" => "MatchByte",
+            "sbyte" => "MatchSByte",
+            "int16" => "MatchInt16",
+            "int32" => "MatchInt32",
+            "int64" => "MatchInt64",
+            "int128" => "MatchInt128",
+            "uint16" => "MatchUInt16",
+            "uint32" => "MatchUInt32",
+            "uint64" => "MatchUInt64",
+            "uint128" => "MatchUInt128",
+            "half" => "MatchHalf",
+            "single" => "MatchSingle",
+            "double" => "MatchDouble",
+            "decimal" => "MatchDecimal",
+
+            _ => null,
+        };
     }
 
     private static void EmitCompositionValidation(
@@ -1722,6 +2035,49 @@ internal static partial class StandaloneEvaluatorGenerator
             }
         }
 
+        // Collect required-only properties (required but not in properties schema).
+        var requiredOnlyProperties = new List<PropertyDeclaration>();
+        foreach (PropertyDeclaration prop in typeDeclaration.PropertyDeclarations)
+        {
+            if (prop.LocalOrComposed == LocalOrComposed.Local &&
+                prop.RequiredOrOptional == RequiredOrOptional.Required &&
+                !(prop.Keyword is IObjectPropertyValidationKeyword))
+            {
+                requiredOnlyProperties.Add(prop);
+            }
+        }
+
+        // Collect dependent required declarations (dependentRequired and property-dependency part of dependencies).
+        var dependentRequiredDeclarations = new List<DependentRequiredDeclaration>();
+        if (typeDeclaration.DependentRequired() is { } depReqDict)
+        {
+            foreach (IReadOnlyCollection<DependentRequiredDeclaration> depReqCollection in depReqDict.Values)
+            {
+                dependentRequiredDeclarations.AddRange(depReqCollection);
+            }
+        }
+
+        // Build a unique set of property names for dependent required tracking.
+        var depReqPropertyNames = new List<string>();
+        var depReqPropertyIndices = new Dictionary<string, int>();
+        foreach (DependentRequiredDeclaration decl in dependentRequiredDeclarations)
+        {
+            if (!depReqPropertyIndices.ContainsKey(decl.JsonPropertyName))
+            {
+                depReqPropertyIndices[decl.JsonPropertyName] = depReqPropertyNames.Count;
+                depReqPropertyNames.Add(decl.JsonPropertyName);
+            }
+
+            foreach (string dep in decl.Dependencies)
+            {
+                if (!depReqPropertyIndices.ContainsKey(dep))
+                {
+                    depReqPropertyIndices[dep] = depReqPropertyNames.Count;
+                    depReqPropertyNames.Add(dep);
+                }
+            }
+        }
+
         // Collect additionalProperties fallback (plain fallback only — not evaluated-tracking keywords).
         // Both additionalProperties (ILocalEvaluatedPropertyValidationKeyword) and unevaluatedProperties
         // (ILocalAndAppliedEvaluatedPropertyValidationKeyword) are handled by EmitUnevaluatedProperties.
@@ -1787,7 +2143,7 @@ internal static partial class StandaloneEvaluatorGenerator
             }
         }
 
-        bool needsEnumeration = properties.Count > 0 || patternProperties.Count > 0 || additionalPropertiesInfo is not null || propertyNamesInfo is not null || dependentSchemas.Count > 0;
+        bool needsEnumeration = properties.Count > 0 || patternProperties.Count > 0 || additionalPropertiesInfo is not null || propertyNamesInfo is not null || dependentSchemas.Count > 0 || requiredOnlyProperties.Count > 0 || dependentRequiredDeclarations.Count > 0;
         bool needsPropertyCount = needsEnumeration || propCountKeywords.Count > 0 || typeDeclaration.RequiresPropertyCount();
 
         if (!needsEnumeration && propCountKeywords.Count == 0 && requiredProperties.Count == 0)
@@ -1812,9 +2168,10 @@ internal static partial class StandaloneEvaluatorGenerator
             }
         }
 
-        // Required property bitmask.
-        int requiredIntCount = requiredProperties.Count > 0 ? (int)System.Math.Ceiling(requiredProperties.Count / 32.0) : 0;
-        if (requiredProperties.Count > 0)
+        // Required property bitmask (includes both property-schema required and required-only).
+        int totalRequiredCount = requiredProperties.Count + requiredOnlyProperties.Count;
+        int requiredIntCount = totalRequiredCount > 0 ? (int)System.Math.Ceiling(totalRequiredCount / 32.0) : 0;
+        if (totalRequiredCount > 0)
         {
             ctx.AppendLine($"Span<uint> requiredBits = stackalloc uint[{requiredIntCount}];");
         }
@@ -1830,6 +2187,13 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             int depSchemaIntCount = (int)System.Math.Ceiling(dependentSchemas.Count / 32.0);
             ctx.AppendLine($"Span<uint> depSchemaBits = stackalloc uint[{depSchemaIntCount}];");
+        }
+
+        // DependentRequired property tracking bitmask.
+        if (depReqPropertyNames.Count > 0)
+        {
+            int depReqIntCount = (int)System.Math.Ceiling(depReqPropertyNames.Count / 32.0);
+            ctx.AppendLine($"Span<uint> depReqBits = stackalloc uint[{depReqIntCount}];");
         }
 
         if (needsEnumeration)
@@ -1942,11 +2306,12 @@ internal static partial class StandaloneEvaluatorGenerator
                 string pnSchemaPathField = propertyNamesInfo.SchemaPathFieldName ?? "null";
 
                 ctx.AppendLine();
+                ctx.AppendLine("using var propertyNameDoc = FixedStringJsonDocument<JsonElement>.Parse(parentDocument.GetPropertyNameRaw(currentIndex, true), parentDocument.ValueIsEscaped(currentIndex, true));");
                 ctx.AppendLine("JsonSchemaContext propertyNameCtx =");
                 ctx.PushIndent();
-                ctx.AppendLine($"context.PushChildContext(parentDocument, currentIndex, useEvaluatedItems: false, useEvaluatedProperties: false, evaluationPath: {pnPathField}, schemaEvaluationPath: {pnSchemaPathField});");
+                ctx.AppendLine($"context.PushChildContext(propertyNameDoc, 0, useEvaluatedItems: false, useEvaluatedProperties: false, evaluationPath: {pnPathField}, schemaEvaluationPath: {pnSchemaPathField});");
                 ctx.PopIndent();
-                ctx.AppendLine($"{propertyNamesInfo.MethodName}(parentDocument, currentIndex, ref propertyNameCtx);");
+                ctx.AppendLine($"{propertyNamesInfo.MethodName}(propertyNameDoc, 0, ref propertyNameCtx);");
                 ctx.AppendLine("if (!propertyNameCtx.IsMatch)");
                 ctx.AppendLine("{");
                 ctx.PushIndent();
@@ -1959,6 +2324,40 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine("{");
                 ctx.PushIndent();
                 ctx.AppendLine("return;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            // Track required-only properties (required but not in properties schema).
+            for (int i = 0; i < requiredOnlyProperties.Count; i++)
+            {
+                PropertyDeclaration prop = requiredOnlyProperties[i];
+                int bitIndex = requiredProperties.Count + i;
+                int offset = bitIndex / 32;
+                int bit = bitIndex % 32;
+                string quotedPropName = SymbolDisplay.FormatLiteral(prop.JsonPropertyName, true);
+
+                ctx.AppendLine();
+                ctx.AppendLine($"if (unescapedPropertyName.Span.SequenceEqual({quotedPropName}u8))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"requiredBits[{offset}] |= 0x{(1u << bit):X8};");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            // Track dependent required property names.
+            for (int i = 0; i < depReqPropertyNames.Count; i++)
+            {
+                string quotedName = SymbolDisplay.FormatLiteral(depReqPropertyNames[i], true);
+                int offset = i / 32;
+                int bit = i % 32;
+
+                ctx.AppendLine();
+                ctx.AppendLine($"if (unescapedPropertyName.Span.SequenceEqual({quotedName}u8))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"depReqBits[{offset}] |= 0x{(1u << bit):X8};");
                 ctx.PopIndent();
                 ctx.AppendLine("}");
             }
@@ -2082,6 +2481,63 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.AppendLine($"context.EvaluatedKeywordForProperty(false, messageProvider: null, {quotedPropName}u8, {keywordLiteral});");
             ctx.PopIndent();
             ctx.AppendLine("}");
+        }
+
+        // Required-only property validation.
+        for (int i = 0; i < requiredOnlyProperties.Count; i++)
+        {
+            PropertyDeclaration prop = requiredOnlyProperties[i];
+            int bitIndex = requiredProperties.Count + i;
+            int offset = bitIndex / 32;
+            int bit = bitIndex % 32;
+            string mask = $"0x{(1u << bit):X8}";
+            string quotedPropName = SymbolDisplay.FormatLiteral(prop.JsonPropertyName, true);
+            string keywordLiteral = prop.RequiredKeyword is IKeyword reqKw ? FormatUtf8Literal(reqKw.Keyword) : FormatUtf8Literal("required");
+
+            ctx.AppendLine();
+            ctx.AppendLine($"if ((requiredBits[{offset}] & {mask}) == 0)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.EvaluatedKeywordForProperty(false, messageProvider: null, {quotedPropName}u8, {keywordLiteral});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+
+        // Dependent required property validation.
+        if (dependentRequiredDeclarations.Count > 0)
+        {
+            foreach (DependentRequiredDeclaration decl in dependentRequiredDeclarations)
+            {
+                int triggerIndex = depReqPropertyIndices[decl.JsonPropertyName];
+                int triggerOffset = triggerIndex / 32;
+                int triggerBit = triggerIndex % 32;
+                string triggerMask = $"0x{(1u << triggerBit):X8}";
+                string keywordLiteral = FormatUtf8Literal(((IKeyword)decl.Keyword).Keyword);
+
+                ctx.AppendLine();
+                ctx.AppendLine($"if ((depReqBits[{triggerOffset}] & {triggerMask}) != 0)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+
+                foreach (string dep in decl.Dependencies)
+                {
+                    int depIndex = depReqPropertyIndices[dep];
+                    int depOffset = depIndex / 32;
+                    int depBit = depIndex % 32;
+                    string depMask = $"0x{(1u << depBit):X8}";
+                    string quotedDepName = SymbolDisplay.FormatLiteral(dep, true);
+
+                    ctx.AppendLine($"if ((depReqBits[{depOffset}] & {depMask}) == 0)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"context.EvaluatedKeywordForProperty(false, messageProvider: null, {quotedDepName}u8, {keywordLiteral});");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                }
+
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
         }
 
         ctx.PopIndent();
