@@ -2,10 +2,9 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-using System.Collections.Generic;
+using System.Buffers;
 using Corvus.Text.Json;
 using Xunit;
-using STJ = System.Text.Json;
 
 namespace TestUtilities;
 
@@ -42,188 +41,96 @@ public static class AnnotationTestHelper
             JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
         evaluator.Evaluate(instance, collector);
 
-        Dictionary<(string InstanceLocation, string Keyword), Dictionary<string, string>> annotations =
-            JsonSchemaAnnotationProducer.CollectAnnotations(collector);
-
-        // Parse expected JSON to get the expected schema location → value map.
-        using STJ.JsonDocument expectedDoc = STJ.JsonDocument.Parse(expectedJson);
-        STJ.JsonElement expectedElement = expectedDoc.RootElement;
-
-        if (expectedElement.ValueKind != STJ.JsonValueKind.Object)
+        // Write the annotations to a buffer using the Utf8JsonWriter API.
+        var buffer = new ArrayBufferWriter<byte>(4096);
+        using (var writer = new Utf8JsonWriter(buffer, default))
         {
-            Assert.Fail($"Expected JSON must be an object, but was {expectedElement.ValueKind}.");
-            return;
+            JsonSchemaAnnotationProducer.WriteAnnotationsTo(collector, writer);
         }
 
-        // Build the expected map.
-        Dictionary<string, string> expectedMap = [];
-        foreach (STJ.JsonProperty prop in expectedElement.EnumerateObject())
-        {
-            expectedMap[prop.Name] = prop.Value.GetRawText();
-        }
+        // Parse the produced annotations as a CTJ JsonElement.
+        using ParsedJsonDocument<Corvus.Text.Json.JsonElement> producedDoc =
+            ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(buffer.WrittenMemory);
+        Corvus.Text.Json.JsonElement producedRoot = producedDoc.RootElement;
 
-        if (expectedMap.Count == 0)
+        // Parse the expected JSON as a CTJ JsonElement.
+        using ParsedJsonDocument<Corvus.Text.Json.JsonElement> expectedDoc =
+            ParsedJsonDocument<Corvus.Text.Json.JsonElement>.Parse(expectedJson);
+        Corvus.Text.Json.JsonElement expectedElement = expectedDoc.RootElement;
+
+        // Navigate to [instanceLocation][keyword] in the produced element.
+        bool hasExpectedAnnotations = expectedElement.EnumerateObject().MoveNext();
+
+        if (!hasExpectedAnnotations)
         {
             // Empty expected = no annotations at this location/keyword.
-            if (annotations.TryGetValue((location, keyword), out Dictionary<string, string>? unexpectedValues))
+            if (producedRoot.TryGetProperty(location, out Corvus.Text.Json.JsonElement locationObj) &&
+                locationObj.TryGetProperty(keyword, out _))
             {
                 Assert.Fail(
                     $"Expected no annotations at location={location}, keyword={keyword}, " +
-                    $"but found {unexpectedValues.Count} annotation(s): " +
-                    string.Join(", ", unexpectedValues.Select(kv => $"{kv.Key}={kv.Value}")));
+                    $"but annotations were present in the produced output.");
             }
 
             return;
         }
 
-        // Non-empty expected — annotations should exist.
-        if (!annotations.TryGetValue((location, keyword), out Dictionary<string, string>? actualValues))
+        // Non-empty expected — annotations should exist at the given location/keyword.
+        if (!producedRoot.TryGetProperty(location, out Corvus.Text.Json.JsonElement producedLocationObj))
         {
-            // Dump all results from collector for diagnostics.
-            var allResults = new System.Text.StringBuilder();
-            allResults.AppendLine($"Expected annotations at location={location}, keyword={keyword}, but none were found.");
-            allResults.AppendLine($"Available annotation keys: [{string.Join(", ", annotations.Keys.Select(k => $"({k.InstanceLocation}, {k.Keyword})"))}]");
-            allResults.AppendLine("All collector results:");
-            int resultIdx = 0;
-            foreach (JsonSchemaResultsCollector.Result r in collector.EnumerateResults())
-            {
-                allResults.AppendLine($"  [{resultIdx}] IsMatch={r.IsMatch}, EvalLoc={r.GetEvaluationLocationText()}, SchemaLoc={r.GetSchemaEvaluationLocationText()}, DocLoc={r.GetDocumentEvaluationLocationText()}, Msg={r.GetMessageText()}");
-                resultIdx++;
-            }
-
-            if (evaluator.GeneratedCode is not null)
-            {
-                allResults.AppendLine("Generated evaluator code:");
-                allResults.AppendLine(evaluator.GeneratedCode);
-            }
-
-            Assert.Fail(allResults.ToString());
+            Assert.Fail(BuildDiagnostics(
+                $"Expected annotations at location={location}, keyword={keyword}, but the instance location was not found in produced output.",
+                collector,
+                evaluator,
+                producedRoot));
         }
 
-        // Assert each expected entry exists and matches.
-        foreach (KeyValuePair<string, string> expected in expectedMap)
+        if (!producedLocationObj.TryGetProperty(keyword, out Corvus.Text.Json.JsonElement producedKeywordObj))
         {
-            Assert.True(
-                actualValues!.TryGetValue(expected.Key, out string? actualValue),
-                $"Expected annotation at schema location {expected.Key} for location={location}, keyword={keyword}, " +
-                $"but it was not found. Available schema locations: [{string.Join(", ", actualValues.Keys)}]");
-
-            // Compare as JSON values to handle formatting differences.
-            AssertJsonEqual(expected.Value, actualValue!, $"location={location}, keyword={keyword}, schemaLocation={expected.Key}");
+            Assert.Fail(BuildDiagnostics(
+                $"Expected annotations at location={location}, keyword={keyword}, but the keyword was not found under the instance location.",
+                collector,
+                evaluator,
+                producedRoot));
         }
 
-        // Assert no unexpected annotations.
-        if (expectedMap.Count != actualValues!.Count)
+        // DeepEquals comparison.
+        if (!producedKeywordObj.Equals(expectedElement))
         {
-            var diag = new System.Text.StringBuilder();
-            diag.AppendLine($"Annotation count mismatch at location={location}, keyword={keyword}. Expected {expectedMap.Count}, Actual {actualValues.Count}.");
-            diag.AppendLine("Expected schema locations:");
-            foreach (var kv in expectedMap)
-            {
-                diag.AppendLine($"  {kv.Key} => {kv.Value}");
-            }
-
-            diag.AppendLine("Actual schema locations:");
-            foreach (var kv in actualValues)
-            {
-                diag.AppendLine($"  {kv.Key} => {kv.Value}");
-            }
-
-            diag.AppendLine("All collector results:");
-            int ridx = 0;
-            foreach (JsonSchemaResultsCollector.Result r in collector.EnumerateResults())
-            {
-                diag.AppendLine($"  [{ridx}] IsMatch={r.IsMatch}, EvalLoc={r.GetEvaluationLocationText()}, SchemaLoc={r.GetSchemaEvaluationLocationText()}, DocLoc={r.GetDocumentEvaluationLocationText()}, Msg={r.GetMessageText()}");
-                ridx++;
-            }
-
-            if (evaluator.GeneratedCode is not null)
-            {
-                diag.AppendLine("Generated evaluator code:");
-                diag.AppendLine(evaluator.GeneratedCode);
-            }
-
-            Assert.Fail(diag.ToString());
+            Assert.Fail(BuildDiagnostics(
+                $"Annotation mismatch at location={location}, keyword={keyword}.\n" +
+                $"Expected: {expectedElement.GetRawText()}\n" +
+                $"Actual:   {producedKeywordObj.GetRawText()}",
+                collector,
+                evaluator,
+                producedRoot));
         }
     }
 
-    private static void AssertJsonEqual(string expectedRawJson, string actualRawJson, string context)
+    private static string BuildDiagnostics(
+        string message,
+        JsonSchemaResultsCollector collector,
+        CompiledEvaluator evaluator,
+        Corvus.Text.Json.JsonElement producedRoot)
     {
-        using STJ.JsonDocument expectedDoc = STJ.JsonDocument.Parse(expectedRawJson);
-        using STJ.JsonDocument actualDoc = STJ.JsonDocument.Parse(actualRawJson);
+        var diag = new System.Text.StringBuilder();
+        diag.AppendLine(message);
+        diag.AppendLine($"Produced annotations: {producedRoot.GetRawText()}");
 
-        if (!JsonElementDeepEquals(expectedDoc.RootElement, actualDoc.RootElement))
+        diag.AppendLine("All collector results:");
+        int resultIdx = 0;
+        foreach (JsonSchemaResultsCollector.Result r in collector.EnumerateResults())
         {
-            Assert.Fail($"JSON mismatch at {context}. Expected: {expectedRawJson}, Actual: {actualRawJson}");
-        }
-    }
-
-    private static bool JsonElementDeepEquals(STJ.JsonElement a, STJ.JsonElement b)
-    {
-        if (a.ValueKind != b.ValueKind)
-        {
-            return false;
+            diag.AppendLine($"  [{resultIdx}] IsMatch={r.IsMatch}, EvalLoc={r.GetEvaluationLocationText()}, SchemaLoc={r.GetSchemaEvaluationLocationText()}, DocLoc={r.GetDocumentEvaluationLocationText()}, Msg={r.GetMessageText()}");
+            resultIdx++;
         }
 
-        switch (a.ValueKind)
+        if (evaluator.GeneratedCode is not null)
         {
-            case STJ.JsonValueKind.Object:
-                int aCount = 0;
-                foreach (STJ.JsonProperty prop in a.EnumerateObject())
-                {
-                    aCount++;
-                    if (!b.TryGetProperty(prop.Name, out STJ.JsonElement bVal))
-                    {
-                        return false;
-                    }
-
-                    if (!JsonElementDeepEquals(prop.Value, bVal))
-                    {
-                        return false;
-                    }
-                }
-
-                int bCount = 0;
-                foreach (STJ.JsonProperty _ in b.EnumerateObject())
-                {
-                    bCount++;
-                }
-
-                return aCount == bCount;
-
-            case STJ.JsonValueKind.Array:
-                int aLen = a.GetArrayLength();
-                int bLen = b.GetArrayLength();
-                if (aLen != bLen)
-                {
-                    return false;
-                }
-
-                STJ.JsonElement.ArrayEnumerator aEnum = a.EnumerateArray();
-                STJ.JsonElement.ArrayEnumerator bEnum = b.EnumerateArray();
-                while (aEnum.MoveNext() && bEnum.MoveNext())
-                {
-                    if (!JsonElementDeepEquals(aEnum.Current, bEnum.Current))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-
-            case STJ.JsonValueKind.String:
-                return a.GetString() == b.GetString();
-
-            case STJ.JsonValueKind.Number:
-                return a.GetRawText() == b.GetRawText();
-
-            case STJ.JsonValueKind.True:
-            case STJ.JsonValueKind.False:
-            case STJ.JsonValueKind.Null:
-                return true;
-
-            default:
-                return a.GetRawText() == b.GetRawText();
+            diag.AppendLine("Generated evaluator code:");
+            diag.AppendLine(evaluator.GeneratedCode);
         }
+
+        return diag.ToString();
     }
 }
