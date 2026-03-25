@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -112,7 +113,7 @@ public class AnyOfConstValidationHandler : IChildValidationHandler
                             break;
                         case JsonValueKind.String:
                             generator
-                                .AppendStringConstantValidation(typeDeclaration, item.Value, shortCircuitSuccessLabel);
+                                .AppendStringConstantValidation(typeDeclaration, keyword, item.Value, shortCircuitSuccessLabel);
                             break;
                         case JsonValueKind.Number:
                             generator
@@ -149,7 +150,9 @@ public class AnyOfConstValidationHandler : IChildValidationHandler
 
 file static class AnyOfConstValidationHandlerExtensions
 {
-    public static CodeGenerator AppendStringConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, (int, JsonElement)[] constantValues, string shortCircuitSuccessLabel)
+    private const int MinEnumValuesForHashSet = 3;
+
+    public static CodeGenerator AppendStringConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, IAnyOfConstantValidationKeyword keyword, (int, JsonElement)[] constantValues, string shortCircuitSuccessLabel)
     {
         generator
             .AppendSeparatorLine()
@@ -159,18 +162,32 @@ file static class AnyOfConstValidationHandlerExtensions
             .PushIndent()
                 .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false);
 
-        foreach ((_, JsonElement constantValue) in constantValues)
+        if (typeDeclaration.TryGetEnumStringSetFieldName(keyword.Keyword, out string? enumStringSetFieldName))
         {
-            string quotedStringValue = SymbolDisplay.FormatLiteral(constantValue.GetString()!, true);
-
             generator
                 .AppendSeparatorLine()
-                .AppendLineIndent("if (unescapedUtf8JsonString.Span.SequenceEqual(", quotedStringValue, "u8))")
+                .AppendLineIndent("if (", enumStringSetFieldName, ".Contains(unescapedUtf8JsonString.Span))")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
                 .PopIndent()
                 .AppendLineIndent("}");
+        }
+        else
+        {
+            foreach ((_, JsonElement constantValue) in constantValues)
+            {
+                string quotedStringValue = SymbolDisplay.FormatLiteral(constantValue.GetString()!, true);
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("if (unescapedUtf8JsonString.Span.SequenceEqual(", quotedStringValue, "u8))")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
+                    .PopIndent()
+                    .AppendLineIndent("}");
+            }
         }
 
         generator
@@ -183,6 +200,13 @@ file static class AnyOfConstValidationHandlerExtensions
 
     public static CodeGenerator AppendNumberConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, (int, JsonElement)[] constantValues, string shortCircuitSuccessLabel)
     {
+        // Check if all numeric values are integers within long range (at code-gen time).
+        // If so, emit a switch statement for O(1) dispatch.
+        if (constantValues.Length > MinEnumValuesForHashSet && TryGetAllInt64Values(constantValues, out long[]? longValues))
+        {
+            return generator.AppendIntegerSwitchConstantValidation(typeDeclaration, longValues, shortCircuitSuccessLabel);
+        }
+
         generator
             .AppendSeparatorLine()
             .AppendLineIndent("if (tokenType == JsonTokenType.Number)")
@@ -225,6 +249,60 @@ file static class AnyOfConstValidationHandlerExtensions
             .AppendLineIndent("}");
 
         return generator;
+    }
+
+    private static CodeGenerator AppendIntegerSwitchConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, long[] longValues, string shortCircuitSuccessLabel)
+    {
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("if (tokenType == JsonTokenType.Number)")
+            .PushMemberScope("constantValidation", ScopeType.Method)
+            .AppendLineIndent("{")
+            .PushIndent()
+            .AppendNormalizedJsonNumberIfNotAppended(typeDeclaration, false)
+            .AppendSeparatorLine()
+            .AppendLineIndent("if (JsonElementHelpers.TryGetNormalizedInt64(isNegative, integral, fractional, exponent, out long enumLongValue))")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("switch (enumLongValue)")
+                .AppendLineIndent("{")
+                .PushIndent();
+
+        foreach (long v in longValues)
+        {
+            generator
+                .AppendLineIndent("case ", v.ToString(), ":");
+        }
+
+        generator
+                    .PushIndent()
+                    .AppendLineIndent("goto ", shortCircuitSuccessLabel, ";")
+                    .PopIndent()
+                .PopIndent()
+                .AppendLineIndent("}")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .PopMemberScope()
+            .PopIndent()
+            .AppendLineIndent("}");
+
+        return generator;
+    }
+
+    private static bool TryGetAllInt64Values((int, JsonElement)[] constantValues, [NotNullWhen(true)] out long[]? longValues)
+    {
+        longValues = new long[constantValues.Length];
+
+        for (int i = 0; i < constantValues.Length; i++)
+        {
+            if (!constantValues[i].Item2.TryGetInt64(out longValues[i]))
+            {
+                longValues = null;
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public static CodeGenerator AppendBooleanConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool expectation, string shortCircuitSuccessLabel)

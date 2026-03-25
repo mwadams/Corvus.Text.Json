@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
@@ -1455,21 +1456,41 @@ internal static partial class StandaloneEvaluatorGenerator
 
         if (hasStringValues)
         {
+            JsonElement[] stringConstants = constants.Where(c => c.ValueKind == JsonValueKind.String).ToArray();
+
             ctx.AppendLine("if (tokenType == JsonTokenType.String)");
             ctx.AppendLine("{");
             ctx.PushIndent();
             ctx.AppendLine("using UnescapedUtf8JsonString enumUnescaped = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);");
             ctx.AppendLine();
-            foreach (JsonElement c in constants.Where(c => c.ValueKind == JsonValueKind.String))
+
+            if (stringConstants.Length > MinEnumValuesForHashSet)
             {
-                string val = SymbolDisplay.FormatLiteral(c.GetString()!, true);
-                ctx.AppendLine($"if (enumUnescaped.Span.SequenceEqual({val}u8))");
+                string fieldName = $"EnumStringSet_{ctx.DeferredEnumStringSets.Count}";
+                string builderName = $"BuildEnumStringSet_{ctx.DeferredEnumStringSets.Count}";
+                string[] values = stringConstants.Select(c => c.GetString()!).ToArray();
+                ctx.DeferredEnumStringSets.Add((fieldName, builderName, values));
+
+                ctx.AppendLine($"if ({fieldName}.Contains(enumUnescaped.Span))");
                 ctx.AppendLine("{");
                 ctx.PushIndent();
                 ctx.AppendLine("goto enumShortCircuitSuccess;");
                 ctx.PopIndent();
                 ctx.AppendLine("}");
-                ctx.AppendLine();
+            }
+            else
+            {
+                foreach (JsonElement c in stringConstants)
+                {
+                    string val = SymbolDisplay.FormatLiteral(c.GetString()!, true);
+                    ctx.AppendLine($"if (enumUnescaped.Span.SequenceEqual({val}u8))");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("goto enumShortCircuitSuccess;");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine();
+                }
             }
 
             ctx.PopIndent();
@@ -1478,6 +1499,12 @@ internal static partial class StandaloneEvaluatorGenerator
 
         if (hasNumberValues)
         {
+            JsonElement[] numberConstants = constants.Where(c => c.ValueKind == JsonValueKind.Number).ToArray();
+
+            // Check if all numeric values are integers within long range for switch optimization.
+            long[]? longValues = null;
+            bool useSwitch = numberConstants.Length > MinEnumValuesForHashSet && TryGetAllInt64ValuesFromElements(numberConstants, out longValues);
+
             ctx.AppendLine();
             ctx.AppendLine("if (tokenType == JsonTokenType.Number)");
             ctx.AppendLine("{");
@@ -1485,23 +1512,48 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.AppendLine("ReadOnlyMemory<byte> enumRaw = parentDocument.GetRawSimpleValue(parentIndex);");
             ctx.AppendLine("JsonElementHelpers.TryParseNumber(enumRaw.Span, out bool enumIsNeg, out ReadOnlySpan<byte> enumIntegral, out ReadOnlySpan<byte> enumFractional, out int enumExponent);");
             ctx.AppendLine();
-            foreach (JsonElement c in constants.Where(c => c.ValueKind == JsonValueKind.Number))
-            {
-                string rawText = c.GetRawText();
-                byte[] rawBytes = System.Text.Encoding.UTF8.GetBytes(rawText);
-                JsonElementHelpers.ParseNumber(rawBytes, out bool isNeg, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exp);
-                string isNegStr = BoolLiteral(isNeg);
-                string integralStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(integral.ToArray()), true);
-                string fractionalStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(fractional.ToArray()), true);
-                string expStr = exp.ToString();
 
-                ctx.AppendLine($"if (JsonElementHelpers.CompareNormalizedJsonNumbers(enumIsNeg, enumIntegral, enumFractional, enumExponent, {isNegStr}, {integralStr}u8, {fractionalStr}u8, {expStr}) == 0)");
+            if (useSwitch)
+            {
+                ctx.AppendLine("if (JsonElementHelpers.TryGetNormalizedInt64(enumIsNeg, enumIntegral, enumFractional, enumExponent, out long enumLongValue))");
                 ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine("switch (enumLongValue)");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                foreach (long v in longValues!)
+                {
+                    ctx.AppendLine($"case {v}:");
+                }
+
                 ctx.PushIndent();
                 ctx.AppendLine("goto enumShortCircuitSuccess;");
                 ctx.PopIndent();
+                ctx.PopIndent();
                 ctx.AppendLine("}");
-                ctx.AppendLine();
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+            else
+            {
+                foreach (JsonElement c in numberConstants)
+                {
+                    string rawText = c.GetRawText();
+                    byte[] rawBytes = System.Text.Encoding.UTF8.GetBytes(rawText);
+                    JsonElementHelpers.ParseNumber(rawBytes, out bool isNeg, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exp);
+                    string isNegStr = BoolLiteral(isNeg);
+                    string integralStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(integral.ToArray()), true);
+                    string fractionalStr = SymbolDisplay.FormatLiteral(System.Text.Encoding.UTF8.GetString(fractional.ToArray()), true);
+                    string expStr = exp.ToString();
+
+                    ctx.AppendLine($"if (JsonElementHelpers.CompareNormalizedJsonNumbers(enumIsNeg, enumIntegral, enumFractional, enumExponent, {isNegStr}, {integralStr}u8, {fractionalStr}u8, {expStr}) == 0)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine("goto enumShortCircuitSuccess;");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine();
+                }
             }
 
             ctx.PopIndent();
@@ -3768,6 +3820,24 @@ internal static partial class StandaloneEvaluatorGenerator
         return value ? "true" : "false";
     }
 
+    private const int MinEnumValuesForHashSet = 3;
+
+    private static bool TryGetAllInt64ValuesFromElements(JsonElement[] elements, [NotNullWhen(true)] out long[]? longValues)
+    {
+        longValues = new long[elements.Length];
+
+        for (int i = 0; i < elements.Length; i++)
+        {
+            if (!elements[i].TryGetInt64(out longValues[i]))
+            {
+                longValues = null;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private static void EmitFileHeader(GenerationContext ctx, CSharpLanguageProvider.Options options)
     {
         ctx.AppendLine("// <auto-generated/>");
@@ -3825,7 +3895,7 @@ internal static partial class StandaloneEvaluatorGenerator
 
     private static void EmitDeferredConstantFields(GenerationContext ctx)
     {
-        if (ctx.DeferredConstantFields.Count == 0)
+        if (ctx.DeferredConstantFields.Count == 0 && ctx.DeferredEnumStringSets.Count == 0)
         {
             return;
         }
@@ -3835,6 +3905,28 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             string quotedRawText = SymbolDisplay.FormatLiteral(kvp.Key, true);
             ctx.AppendLine($"private static readonly ParsedJsonDocument<JsonElement> {kvp.Value} = ParsedJsonDocument<JsonElement>.Parse({quotedRawText});");
+        }
+
+        foreach ((string fieldName, string builderName, string[] values) in ctx.DeferredEnumStringSets)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine($"private static EnumStringSet {builderName}()");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return new EnumStringSet([");
+            ctx.PushIndent();
+            foreach (string val in values)
+            {
+                string quotedVal = SymbolDisplay.FormatLiteral(val, true);
+                ctx.AppendLine($"static () => {quotedVal}u8,");
+            }
+
+            ctx.PopIndent();
+            ctx.AppendLine("]);");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine();
+            ctx.AppendLine($"private static EnumStringSet {fieldName} {{ get; }} = {builderName}();");
         }
     }
 
@@ -4015,6 +4107,11 @@ internal static partial class StandaloneEvaluatorGenerator
         /// Gets the deferred constant document fields. Maps raw JSON text to field name.
         /// </summary>
         public Dictionary<string, string> DeferredConstantFields { get; } = [];
+
+        /// <summary>
+        /// Gets the deferred EnumStringSet fields. Maps a unique key to (fieldName, builderName, list of string values).
+        /// </summary>
+        public List<(string FieldName, string BuilderName, string[] Values)> DeferredEnumStringSets { get; } = [];
 
         /// <summary>
         /// Increases the indentation level by one.

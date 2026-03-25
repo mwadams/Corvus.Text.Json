@@ -9,6 +9,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -31,6 +32,8 @@ internal static partial class CodeGenerationExtensions
     private const string UnescapedUtf8JsonStringAppendedInScopeKey = "UnescapedUtf8JsonStringAppendedInScope";
     private const string StringLengthAppendedKey = "StringLengthAppended";
     private const string StringLengthAppendedInScopeKey = "StringLengthAppendedInScope";
+    private const string EnumStringSetFieldNameKeyPrefix = "AnyOfConstValidationHandler.EnumStringSetFieldName.";
+    private const int MinEnumValuesForHashSet = 3;
 
     public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
     {
@@ -1078,5 +1081,90 @@ internal static partial class CodeGenerationExtensions
             .AppendLine(" = ParsedJsonDocument<", typeDeclaration.DotnetTypeName(), ">.NumberConstant([..", SymbolDisplay.FormatLiteral(value.GetRawText(), true), "u8]);");
 
         return generator;
+    }
+
+    /// <summary>
+    /// Emits static <see cref="EnumStringSet"/> fields for any-of constant validation keywords
+    /// that have more than <see cref="MinEnumValuesForHashSet"/> string enum values.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the fields.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    /// <remarks>
+    /// This is called at JsonSchema class scope so the emitted fields are class-level statics.
+    /// The field names are stored in type metadata so that the validation code can reference them.
+    /// </remarks>
+    public static CodeGenerator AppendEnumStringSetFields(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.AnyOfConstantValues() is not IReadOnlyDictionary<IAnyOfConstantValidationKeyword, JsonElement[]> constDictionary)
+        {
+            return generator;
+        }
+
+        foreach (KeyValuePair<IAnyOfConstantValidationKeyword, JsonElement[]> entry in constDictionary)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            IAnyOfConstantValidationKeyword keyword = entry.Key;
+            JsonElement[] elements = entry.Value;
+
+            JsonElement[] stringValues = elements.Where(e => e.ValueKind == JsonValueKind.String).ToArray();
+
+            if (stringValues.Length <= MinEnumValuesForHashSet)
+            {
+                continue;
+            }
+
+            string fieldName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("EnumStringSet");
+            string builderName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("BuildEnumStringSet");
+
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("private static EnumStringSet ", builderName, "()")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("return new EnumStringSet([")
+                    .PushIndent();
+
+            foreach (JsonElement value in stringValues)
+            {
+                string quotedValue = SymbolDisplay.FormatLiteral(value.GetString()!, true);
+                generator
+                    .AppendLineIndent("static () => ", quotedValue, "u8,");
+            }
+
+            generator
+                    .PopIndent()
+                    .AppendLineIndent("]);")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
+                .AppendLineIndent("private static EnumStringSet ", fieldName, " { get; } = ", builderName, "();");
+
+            typeDeclaration.SetMetadata(EnumStringSetFieldNameKeyPrefix + keyword.Keyword, fieldName);
+        }
+
+        return generator;
+    }
+
+    /// <summary>
+    /// Tries to get the name of the <see cref="EnumStringSet"/> field that was emitted for the
+    /// given keyword, if one was generated.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="keywordName">The keyword name (e.g. "enum").</param>
+    /// <param name="fieldName">When this method returns <see langword="true"/>, contains the field name.</param>
+    /// <returns><see langword="true"/> if a hash set field was emitted; otherwise <see langword="false"/>.</returns>
+    public static bool TryGetEnumStringSetFieldName(this TypeDeclaration typeDeclaration, string keywordName, [NotNullWhen(true)] out string? fieldName)
+    {
+        return typeDeclaration.TryGetMetadata(EnumStringSetFieldNameKeyPrefix + keywordName, out fieldName);
     }
 }

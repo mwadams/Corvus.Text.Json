@@ -16,7 +16,7 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 /// <summary>
 /// A validation handler for <see cref="ICompositionAnyOfValidationKeyword"/> capability.
 /// </summary>
-internal sealed class CompositionAnyOfValidationHandler : KeywordValidationHandlerBase
+internal sealed class CompositionAnyOfValidationHandler : KeywordValidationHandlerBase, IJsonSchemaClassSetup
 {
     private CompositionAnyOfValidationHandler()
     {
@@ -60,6 +60,17 @@ internal sealed class CompositionAnyOfValidationHandler : KeywordValidationHandl
     public override bool HandlesKeyword(IKeyword keyword)
     {
         return keyword is IAnyOfValidationKeyword;
+    }
+
+    /// <inheritdoc/>
+    public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        return generator.AppendEnumStringSetFields(typeDeclaration);
     }
 
     private static CompositionAnyOfValidationHandler CreateDefault()

@@ -227,6 +227,7 @@
     <Compile Include="BufferFactory.cs" />
     <Compile Include="BufferSegment.cs" />
     <Compile Include="DebuggerTests.cs" />
+    <Compile Include="EnumStringSetValidationTests.cs" />
     <Compile Include="FixedSizedBufferWriter.cs" />
     <Compile Include="InvalidBufferWriter.cs" />
     <Compile Include="JsonBase64TestData.cs" />
