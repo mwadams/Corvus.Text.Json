@@ -3538,6 +3538,18 @@ internal static partial class StandaloneEvaluatorGenerator
             string endLabel = $"oneOfEnd{suffix}";
             bool needsLabel = entries.Count > 1;
 
+            // Try discriminator fast path
+            if (CodeGenerationExtensions.TryGetOneOfDiscriminator(
+                    kvp.Value,
+                    out string? discriminatorPropertyName,
+                    out List<(string Value, int BranchIndex)>? discriminatorValues))
+            {
+                EmitOneOfDiscriminatorFastPath(
+                    ctx, discriminatorPropertyName, discriminatorValues,
+                    entries, useItems, useProps, suffix, keywordName);
+            }
+
+            // Sequential evaluation path (used when collector is present, or no discriminator)
             ctx.AppendLine();
             ctx.AppendLine($"int {countVar} = 0;");
 
@@ -3593,6 +3605,141 @@ internal static partial class StandaloneEvaluatorGenerator
 
             groupIdx++;
         }
+    }
+
+    private static void EmitOneOfDiscriminatorFastPath(
+        GenerationContext ctx,
+        string discriminatorPropertyName,
+        List<(string Value, int BranchIndex)> discriminatorValues,
+        List<SubschemaInfo> entries,
+        bool useItems,
+        bool useProps,
+        string suffix,
+        string keywordName)
+    {
+        string? mapFieldName = null;
+
+        // Use hash map for 4+ branches
+        if (discriminatorValues.Count > MinEnumValuesForHashSet)
+        {
+            mapFieldName = $"OneOfDiscriminatorMap_{ctx.DeferredEnumStringMaps.Count}";
+            string builderName = $"BuildOneOfDiscriminatorMap_{ctx.DeferredEnumStringMaps.Count}";
+            string[] keys = discriminatorValues.Select(d => d.Value).ToArray();
+            ctx.DeferredEnumStringMaps.Add((mapFieldName, builderName, keys));
+        }
+
+        string quotedPropertyName = SymbolDisplay.FormatLiteral(discriminatorPropertyName, true);
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (!context.HasCollector)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        ctx.AppendLine("int oneOfDiscriminatorBranch = -1;");
+        ctx.AppendLine("var oneOfDiscriminatorEnum = new ObjectEnumerator(parentDocument, parentIndex);");
+        ctx.AppendLine("while (oneOfDiscriminatorEnum.MoveNext())");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("using (UnescapedUtf8JsonString oneOfDiscriminatorPropName = parentDocument.GetPropertyNameUnescaped(oneOfDiscriminatorEnum.CurrentIndex))");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"if (oneOfDiscriminatorPropName.Span.SequenceEqual({quotedPropertyName}u8))");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("if (parentDocument.GetJsonTokenType(oneOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine("using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(oneOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);");
+
+        if (mapFieldName is not null)
+        {
+            ctx.AppendLine($"if ({mapFieldName}.TryGetValue(discriminatorValue.Span, out oneOfDiscriminatorBranch))");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("break;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+        }
+        else
+        {
+            foreach ((string value, int branchIndex) in discriminatorValues)
+            {
+                string quotedValue = SymbolDisplay.FormatLiteral(value, true);
+                ctx.AppendLine($"if (discriminatorValue.Span.SequenceEqual({quotedValue}u8))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"oneOfDiscriminatorBranch = {branchIndex};");
+                ctx.AppendLine("break;");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");  // close: if (GetJsonTokenType == String)
+        ctx.AppendLine();
+        ctx.AppendLine("break;");  // found the discriminator property, stop iterating
+        ctx.PopIndent();
+        ctx.AppendLine("}");  // close: if (propName.SequenceEqual)
+        ctx.PopIndent();
+        ctx.AppendLine("}");  // close: using (propName)
+        ctx.PopIndent();
+        ctx.AppendLine("}");  // close: while (MoveNext)
+
+        // Dispatch to matching branch via switch
+        ctx.AppendLine();
+        ctx.AppendLine("switch (oneOfDiscriminatorBranch)");
+        ctx.AppendLine("{");
+
+        foreach ((_, int branchIndex) in discriminatorValues)
+        {
+            SubschemaInfo info = entries[branchIndex];
+            string ctxVar = $"oneOfDiscCtx{suffix}_{branchIndex}";
+            string pathField = info.PathFieldName ?? "null";
+            string schemaPathField = info.SchemaPathFieldName ?? "null";
+
+            ctx.PushIndent();
+            ctx.AppendLine($"case {branchIndex}:");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"JsonSchemaContext {ctxVar} =");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.PushChildContext(parentDocument, parentIndex, useEvaluatedItems: {BoolLiteral(useItems || info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(useProps || info.UseEvaluatedProperties)}, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+            ctx.PopIndent();
+            ctx.AppendLine($"{info.MethodName}(parentDocument, parentIndex, ref {ctxVar});");
+            ctx.AppendLine($"if ({ctxVar}.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.ApplyEvaluated(ref {ctxVar});");
+            ctx.AppendLine($"context.CommitChildContext(true, ref {ctxVar});");
+            ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedExactlyOneSchema, {FormatUtf8Literal(keywordName)});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine("else");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.CommitChildContext(false, ref {ctxVar});");
+            ctx.AppendLine($"context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, {FormatUtf8Literal(keywordName)});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.PopIndent();
+        }
+
+        ctx.PushIndent();
+        ctx.AppendLine("default:");
+        ctx.PushIndent();
+        ctx.AppendLine($"context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, {FormatUtf8Literal(keywordName)});");
+        ctx.AppendLine("return;");
+        ctx.PopIndent();
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
     }
 
     private static void EmitNotValidation(
@@ -3895,7 +4042,7 @@ internal static partial class StandaloneEvaluatorGenerator
 
     private static void EmitDeferredConstantFields(GenerationContext ctx)
     {
-        if (ctx.DeferredConstantFields.Count == 0 && ctx.DeferredEnumStringSets.Count == 0)
+        if (ctx.DeferredConstantFields.Count == 0 && ctx.DeferredEnumStringSets.Count == 0 && ctx.DeferredEnumStringMaps.Count == 0)
         {
             return;
         }
@@ -3927,6 +4074,28 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.AppendLine("}");
             ctx.AppendLine();
             ctx.AppendLine($"private static EnumStringSet {fieldName} {{ get; }} = {builderName}();");
+        }
+
+        foreach ((string fieldName, string builderName, string[] keys) in ctx.DeferredEnumStringMaps)
+        {
+            ctx.AppendLine();
+            ctx.AppendLine($"private static EnumStringMap {builderName}()");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine("return new EnumStringMap([");
+            ctx.PushIndent();
+            foreach (string key in keys)
+            {
+                string quotedKey = SymbolDisplay.FormatLiteral(key, true);
+                ctx.AppendLine($"static () => {quotedKey}u8,");
+            }
+
+            ctx.PopIndent();
+            ctx.AppendLine("]);");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine();
+            ctx.AppendLine($"private static EnumStringMap {fieldName} {{ get; }} = {builderName}();");
         }
     }
 
@@ -4112,6 +4281,11 @@ internal static partial class StandaloneEvaluatorGenerator
         /// Gets the deferred EnumStringSet fields. Maps a unique key to (fieldName, builderName, list of string values).
         /// </summary>
         public List<(string FieldName, string BuilderName, string[] Values)> DeferredEnumStringSets { get; } = [];
+
+        /// <summary>
+        /// Gets the deferred EnumStringMap fields for oneOf discriminator dispatch.
+        /// </summary>
+        public List<(string FieldName, string BuilderName, string[] Keys)> DeferredEnumStringMaps { get; } = [];
 
         /// <summary>
         /// Increases the indentation level by one.

@@ -213,6 +213,7 @@
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\UniqueItemsHashSet.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\PropertySchemaMatchers.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\EnumStringSet.cs" />
+    <Compile Include="Corvus\Text\Json\JsonSchema\Internal\EnumStringMap.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.Mutable.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.JsonSchema.cs" />
     <Compile Include="Corvus\Text\Json\JsonSchema\Internal\JsonElementForBooleanFalseSchema.cs" />

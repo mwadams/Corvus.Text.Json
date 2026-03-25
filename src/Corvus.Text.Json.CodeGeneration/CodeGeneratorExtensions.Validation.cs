@@ -33,6 +33,9 @@ internal static partial class CodeGenerationExtensions
     private const string StringLengthAppendedKey = "StringLengthAppended";
     private const string StringLengthAppendedInScopeKey = "StringLengthAppendedInScope";
     private const string EnumStringSetFieldNameKeyPrefix = "AnyOfConstValidationHandler.EnumStringSetFieldName.";
+    private const string OneOfDiscriminatorMapFieldNameKeyPrefix = "OneOfDiscriminator.EnumStringMapFieldName.";
+    private const string OneOfDiscriminatorPropertyNameKeyPrefix = "OneOfDiscriminator.PropertyName.";
+    private const string OneOfDiscriminatorValuesKeyPrefix = "OneOfDiscriminator.Values.";
     private const int MinEnumValuesForHashSet = 3;
 
     public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
@@ -1084,6 +1087,121 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
+    /// Emits a static <c>EnumStringMap</c> field for oneOf discriminator-based dispatch
+    /// when a discriminator property has been detected for the given type declaration.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the fields.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    /// <remarks>
+    /// <para>
+    /// This is called at JsonSchema class scope so the emitted field is a class-level static.
+    /// The field name, discriminator property name, and discriminator values are stored in type
+    /// metadata so that the oneOf validation handler can reference them.
+    /// </para>
+    /// </remarks>
+    public static CodeGenerator AppendOneOfDiscriminatorMapFields(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.OneOfCompositionTypes() is not { } oneOf)
+        {
+            return generator;
+        }
+
+        foreach (KeyValuePair<IOneOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> kvp in oneOf)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            IOneOfSubschemaValidationKeyword keyword = kvp.Key;
+            IReadOnlyCollection<TypeDeclaration> subschemaTypes = kvp.Value;
+
+            if (!TryGetOneOfDiscriminator(subschemaTypes, out string? discriminatorPropertyName, out List<(string Value, int BranchIndex)>? discriminatorValues))
+            {
+                continue;
+            }
+
+            // Store discriminator metadata for the validation handler to use
+            typeDeclaration.SetMetadata(OneOfDiscriminatorPropertyNameKeyPrefix + keyword.Keyword, discriminatorPropertyName);
+            typeDeclaration.SetMetadata(OneOfDiscriminatorValuesKeyPrefix + keyword.Keyword, discriminatorValues);
+
+            // Only emit a hash map field when there are enough branches to justify it
+            if (discriminatorValues.Count > MinEnumValuesForHashSet)
+            {
+                string fieldName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("OneOfDiscriminatorMap");
+                string builderName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("BuildOneOfDiscriminatorMap");
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private static EnumStringMap ", builderName, "()")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("return new EnumStringMap([")
+                        .PushIndent();
+
+                foreach ((string value, _) in discriminatorValues)
+                {
+                    string quotedValue = SymbolDisplay.FormatLiteral(value, true);
+                    generator
+                        .AppendLineIndent("static () => ", quotedValue, "u8,");
+                }
+
+                generator
+                        .PopIndent()
+                        .AppendLineIndent("]);")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private static EnumStringMap ", fieldName, " { get; } = ", builderName, "();");
+
+                typeDeclaration.SetMetadata(OneOfDiscriminatorMapFieldNameKeyPrefix + keyword.Keyword, fieldName);
+            }
+        }
+
+        return generator;
+    }
+
+    /// <summary>
+    /// Tries to get the discriminator metadata for a oneOf keyword.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="keywordName">The keyword name (e.g. "oneOf").</param>
+    /// <param name="discriminatorPropertyName">When successful, the JSON property name of the discriminator.</param>
+    /// <param name="discriminatorValues">When successful, the list of (value, branchIndex) pairs.</param>
+    /// <param name="mapFieldName">When successful and a hash map was emitted, the field name; otherwise <see langword="null"/>.</param>
+    /// <returns><see langword="true"/> if discriminator metadata was found; otherwise, <see langword="false"/>.</returns>
+    public static bool TryGetOneOfDiscriminatorMetadata(
+        this TypeDeclaration typeDeclaration,
+        string keywordName,
+        [NotNullWhen(true)] out string? discriminatorPropertyName,
+        [NotNullWhen(true)] out List<(string Value, int BranchIndex)>? discriminatorValues,
+        out string? mapFieldName)
+    {
+        discriminatorPropertyName = null;
+        discriminatorValues = null;
+        mapFieldName = null;
+
+        if (!typeDeclaration.TryGetMetadata(OneOfDiscriminatorPropertyNameKeyPrefix + keywordName, out string? propName) ||
+            propName is null ||
+            !typeDeclaration.TryGetMetadata(OneOfDiscriminatorValuesKeyPrefix + keywordName, out List<(string Value, int BranchIndex)>? values) ||
+            values is null)
+        {
+            return false;
+        }
+
+        discriminatorPropertyName = propName;
+        discriminatorValues = values;
+        typeDeclaration.TryGetMetadata(OneOfDiscriminatorMapFieldNameKeyPrefix + keywordName, out mapFieldName);
+        return true;
+    }
+
+    /// <summary>
     /// Emits static <see cref="EnumStringSet"/> fields for any-of constant validation keywords
     /// that have more than <see cref="MinEnumValuesForHashSet"/> string enum values.
     /// </summary>
@@ -1166,5 +1284,133 @@ internal static partial class CodeGenerationExtensions
     public static bool TryGetEnumStringSetFieldName(this TypeDeclaration typeDeclaration, string keywordName, [NotNullWhen(true)] out string? fieldName)
     {
         return typeDeclaration.TryGetMetadata(EnumStringSetFieldNameKeyPrefix + keywordName, out fieldName);
+    }
+
+    /// <summary>
+    /// Tries to detect a discriminator property across oneOf subschemas.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A discriminator is a property that is (1) present in ALL oneOf branches,
+    /// (2) required in every branch, (3) has a single string constant value in each
+    /// branch (either <c>const: "X"</c> or <c>enum: ["X"]</c>), and (4) all values
+    /// are distinct across branches.
+    /// </para>
+    /// </remarks>
+    /// <param name="subschemaTypes">The oneOf branch type declarations.</param>
+    /// <param name="discriminatorPropertyName">When successful, the JSON property name of the discriminator.</param>
+    /// <param name="discriminatorValues">When successful, a list of (utf8Value, branchIndex) pairs in branch order.</param>
+    /// <returns><see langword="true"/> if a discriminator was detected; otherwise, <see langword="false"/>.</returns>
+    public static bool TryGetOneOfDiscriminator(
+        IReadOnlyCollection<TypeDeclaration> subschemaTypes,
+        [NotNullWhen(true)] out string? discriminatorPropertyName,
+        [NotNullWhen(true)] out List<(string Value, int BranchIndex)>? discriminatorValues)
+    {
+        discriminatorPropertyName = null;
+        discriminatorValues = null;
+
+        if (subschemaTypes.Count < 2)
+        {
+            return false;
+        }
+
+        // Collect property declarations for each branch
+        TypeDeclaration[] branches = subschemaTypes.ToArray();
+
+        // Get candidate property names from the first branch
+        IReadOnlyList<PropertyDeclaration> firstBranchProps = branches[0].PropertyDeclarations;
+
+        foreach (PropertyDeclaration candidateProp in firstBranchProps)
+        {
+            if (candidateProp.RequiredOrOptional == RequiredOrOptional.Optional)
+            {
+                continue;
+            }
+
+            string candidateName = candidateProp.JsonPropertyName;
+
+            // Try to extract a single string constant from this candidate in the first branch
+            if (!TryGetSingleStringConstant(candidateProp, out string? firstValue))
+            {
+                continue;
+            }
+
+            // Now check all remaining branches
+            var values = new List<(string Value, int BranchIndex)>(branches.Length)
+            {
+                (firstValue, 0),
+            };
+
+            HashSet<string> seenValues = [firstValue];
+            bool isDiscriminator = true;
+
+            for (int i = 1; i < branches.Length; i++)
+            {
+                PropertyDeclaration? matchingProp = FindPropertyByName(branches[i].PropertyDeclarations, candidateName);
+
+                if (matchingProp is null ||
+                    matchingProp.RequiredOrOptional == RequiredOrOptional.Optional ||
+                    !TryGetSingleStringConstant(matchingProp, out string? branchValue) ||
+                    !seenValues.Add(branchValue))
+                {
+                    isDiscriminator = false;
+                    break;
+                }
+
+                values.Add((branchValue, i));
+            }
+
+            if (isDiscriminator)
+            {
+                discriminatorPropertyName = candidateName;
+                discriminatorValues = values;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool TryGetSingleStringConstant(PropertyDeclaration prop, [NotNullWhen(true)] out string? value)
+    {
+        value = null;
+        TypeDeclaration propType = prop.UnreducedPropertyType;
+
+        // Check const keyword first
+        JsonElement constValue = propType.SingleConstantValue();
+        if (constValue.ValueKind == JsonValueKind.String)
+        {
+            value = constValue.GetString()!;
+            return true;
+        }
+
+        // Check enum keyword for single-value string enum (e.g. enum: ["Point"])
+        if (propType.AnyOfConstantValues() is IReadOnlyDictionary<IAnyOfConstantValidationKeyword, JsonElement[]> constDict)
+        {
+            foreach (KeyValuePair<IAnyOfConstantValidationKeyword, JsonElement[]> entry in constDict)
+            {
+                JsonElement[] stringElements = entry.Value.Where(e => e.ValueKind == JsonValueKind.String).ToArray();
+                if (stringElements.Length == 1 && entry.Value.Length == 1)
+                {
+                    value = stringElements[0].GetString()!;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static PropertyDeclaration? FindPropertyByName(IReadOnlyList<PropertyDeclaration> properties, string jsonPropertyName)
+    {
+        foreach (PropertyDeclaration prop in properties)
+        {
+            if (prop.JsonPropertyName == jsonPropertyName)
+            {
+                return prop;
+            }
+        }
+
+        return null;
     }
 }
