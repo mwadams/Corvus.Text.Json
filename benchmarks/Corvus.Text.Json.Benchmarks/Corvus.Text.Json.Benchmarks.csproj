@@ -31,4 +31,14 @@
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
     <ProjectReference Include="..\Corvus.Text.Json.ClassicBenchmarkModels\Corvus.Text.Json.ClassicBenchmarkModels.csproj" />
   </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
+    <ProjectReference Include="..\Corvus.Text.Json.DependabotBenchmarkModels\Corvus.Text.Json.DependabotBenchmarkModels.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
+    <Content Include="..\Corvus.Text.Json.DependabotBenchmarkModels\dependabot-instances.jsonl" Link="dependabot-instances.jsonl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

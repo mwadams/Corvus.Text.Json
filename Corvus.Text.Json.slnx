@@ -57,6 +57,10 @@
     <Project Path="src-v4/Corvus.Json.SourceGeneratorTools.ForLanguageProvider/Corvus.Json.SourceGeneratorTools.ForLanguageProvider.csproj" />
     <Project Path="src-v4/Corvus.Json.SourceGeneratorTools/Corvus.Json.SourceGeneratorTools.csproj" />
   </Folder>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/Corvus.Text.Json.DependabotBenchmarkModels/Corvus.Text.Json.DependabotBenchmarkModels.csproj" />
+  </Folder>
+  <Folder Name="/src/" />
   <Folder Name="/v4/">
     <Project Path="src-v4/Corvus.Json.Validator/Corvus.Json.Validator.csproj" />
   </Folder>
