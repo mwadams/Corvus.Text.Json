@@ -34,10 +34,14 @@
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
     <ProjectReference Include="..\Corvus.Text.Json.DependabotBenchmarkModels\Corvus.Text.Json.DependabotBenchmarkModels.csproj" />
+    <ProjectReference Include="..\Corvus.Text.Json.GeoJsonBenchmarkModels\Corvus.Text.Json.GeoJsonBenchmarkModels.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net481'">
     <Content Include="..\Corvus.Text.Json.DependabotBenchmarkModels\dependabot-instances.jsonl" Link="dependabot-instances.jsonl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Corvus.Text.Json.GeoJsonBenchmarkModels\geojson-instances.jsonl" Link="geojson-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
