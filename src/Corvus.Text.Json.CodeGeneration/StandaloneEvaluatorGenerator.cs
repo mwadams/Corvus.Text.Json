@@ -3277,6 +3277,51 @@ internal static partial class StandaloneEvaluatorGenerator
                 continue;
             }
 
+            // Optimization: when a $ref (IReferenceKeyword) resolves to a single target,
+            // call the target method directly when there is no collector, skipping the
+            // PushChildContext/CommitChildContext overhead on the hot validation-only path.
+            if (kvp.Key is IReferenceKeyword && entries.Count == 1)
+            {
+                SubschemaInfo info = entries[0];
+                bool childNeedsItems = useItems || info.UseEvaluatedItems;
+                bool childNeedsProps = useProps || info.UseEvaluatedProperties;
+
+                // We can only inline when the child doesn't require additional evaluation
+                // tracking beyond what the parent already provides.
+                if (childNeedsItems == useItems && childNeedsProps == useProps)
+                {
+                    string contextVar = $"allOfCtx{(groupIdx > 0 ? groupIdx.ToString() : string.Empty)}_0";
+                    string pathField = info.PathFieldName ?? "null";
+                    string schemaPathField = info.SchemaPathFieldName ?? "null";
+
+                    ctx.AppendLine();
+                    ctx.AppendLine("if (context.HasCollector)");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+
+                    ctx.AppendLine($"JsonSchemaContext {contextVar} =");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"context.PushChildContext(parentDocument, parentIndex, useEvaluatedItems: {BoolLiteral(childNeedsItems)}, useEvaluatedProperties: {BoolLiteral(childNeedsProps)}, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+                    ctx.PopIndent();
+                    ctx.AppendLine($"{info.MethodName}(parentDocument, parentIndex, ref {contextVar});");
+                    ctx.AppendLine($"context.ApplyEvaluated(ref {contextVar});");
+                    ctx.AppendLine($"context.CommitChildContext({contextVar}.IsMatch, ref {contextVar});");
+                    ctx.AppendLine($"context.EvaluatedKeyword(context.IsMatch, context.IsMatch ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, {FormatUtf8Literal(keywordName)});");
+
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+                    ctx.AppendLine("else");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                    ctx.AppendLine($"{info.MethodName}(parentDocument, parentIndex, ref context);");
+                    ctx.PopIndent();
+                    ctx.AppendLine("}");
+
+                    groupIdx++;
+                    continue;
+                }
+            }
+
             string suffix = groupIdx > 0 ? groupIdx.ToString() : string.Empty;
             string composedVar = $"allOfComposedIsMatch{suffix}";
             string endLabel = $"allOfEnd{suffix}";
