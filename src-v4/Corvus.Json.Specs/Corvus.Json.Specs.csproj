@@ -27,16 +27,16 @@
 		<PackageReference Include="Microsoft.Extensions.DependencyModel" Version="10.0.4" />
 		<PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
 		<PackageReference Include="System.Net.Http" Version="4.3.4" />
-		<ReqnrollFeatureFiles Remove="Features/**/numeric-format.feature" />
+		<ReqnrollFeatureFile Remove="Features/**/numeric-format.feature" />
 		<Compile Remove="Features/**/numeric-format.feature.cs" />
-    <ReqnrollFeatureFiles Remove="Features/**/*-net80.feature" />
+    <ReqnrollFeatureFile Remove="Features/**/*-net80.feature" />
     <Compile Remove="Features/**/*-net80.feature.cs" />
-    <ReqnrollFeatureFiles Remove="Features/**/TruncatePath.feature" />
+    <ReqnrollFeatureFile Remove="Features/**/TruncatePath.feature" />
     <Compile Remove="Features/**/TruncatePath.feature.cs" />
   </ItemGroup>
 
 	<ItemGroup Condition="'$(TargetFramework)' == 'net80'">
-    <ReqnrollFeatureFiles Remove="Features/**/numeric-format-netstandard20.feature" />
+    <ReqnrollFeatureFile Remove="Features/**/numeric-format-netstandard20.feature" />
 		<Compile Remove="Features/**/numeric-format-netstandard20.feature.cs" />
   </ItemGroup>
 

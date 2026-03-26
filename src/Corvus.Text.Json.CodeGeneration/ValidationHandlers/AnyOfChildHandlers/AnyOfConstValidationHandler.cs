@@ -152,6 +152,11 @@ file static class AnyOfConstValidationHandlerExtensions
 {
     private const int MinEnumValuesForHashSet = 3;
 
+    // TODO: For pure string enums where type is constrained to string, the string constant
+    // validation could be emitted inside the type-check else clause (alongside maxLength etc.)
+    // where unescapedUtf8JsonString is already in scope, avoiding the redundant re-declaration
+    // and the tokenType guard. This would require making the enum string check participate in
+    // the string validation scope rather than running as a separate top-level handler.
     public static CodeGenerator AppendStringConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, IAnyOfConstantValidationKeyword keyword, (int, JsonElement)[] constantValues, string shortCircuitSuccessLabel)
     {
         generator

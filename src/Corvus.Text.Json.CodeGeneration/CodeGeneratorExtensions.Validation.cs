@@ -93,7 +93,19 @@ internal static partial class CodeGenerationExtensions
     {
         if (typeDeclaration.TryGetMetadata(UnescapedUtf8JsonStringAppendedKey, out bool? _))
         {
-            return generator;
+            // If the variable was declared in the current scope, it is still
+            // accessible — skip re-declaration.
+            if (typeDeclaration.TryGetMetadata(UnescapedUtf8JsonStringAppendedInScopeKey, out string? scope)
+                && scope == generator.FullyQualifiedScope)
+            {
+                return generator;
+            }
+
+            // The variable was declared in a different scope that may no longer
+            // be active (e.g. a type-check else clause that has since closed).
+            // Clear the stale metadata so we can re-declare in the current scope.
+            typeDeclaration.RemoveMetadata(UnescapedUtf8JsonStringAppendedKey);
+            typeDeclaration.RemoveMetadata(UnescapedUtf8JsonStringAppendedInScopeKey);
         }
 
         typeDeclaration.SetMetadata(UnescapedUtf8JsonStringAppendedKey, true);
@@ -640,8 +652,8 @@ internal static partial class CodeGenerationExtensions
                 {
                     string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
                     string propertyBaseName = value.GetString()!;
-                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope);
-                    string utf8PropertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: "Utf8");
+                    string propertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope);
+                    string utf8PropertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope(propertyName, rootScope: enumValuesScope, suffix: "Utf8");
 
                     generator
                         .AppendSeparatorLine()
@@ -672,7 +684,7 @@ internal static partial class CodeGenerationExtensions
                     string jsonFieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: $"Json{suffix}");
                     string rawText = value.GetRawText();
                     string propertyBaseName = rawText.Replace(".", "Point").Replace("-", "Minus");
-                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, prefix: "Number");
+                    string propertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, prefix: "Number");
 
                     generator
                         .AppendSeparatorLine()
@@ -692,7 +704,7 @@ internal static partial class CodeGenerationExtensions
                 case JsonValueKind.True:
                 {
                     string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("True", rootScope: enumValuesScope);
+                    string propertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("True", rootScope: enumValuesScope);
 
                     generator
                         .AppendSeparatorLine()
@@ -712,7 +724,7 @@ internal static partial class CodeGenerationExtensions
                 case JsonValueKind.False:
                 {
                     string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("False", rootScope: enumValuesScope);
+                    string propertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("False", rootScope: enumValuesScope);
 
                     generator
                         .AppendSeparatorLine()
@@ -732,7 +744,7 @@ internal static partial class CodeGenerationExtensions
                 case JsonValueKind.Null:
                 {
                     string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
-                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope("Null", rootScope: enumValuesScope);
+                    string propertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("Null", rootScope: enumValuesScope);
 
                     generator
                         .AppendSeparatorLine()
@@ -754,7 +766,7 @@ internal static partial class CodeGenerationExtensions
                 {
                     string fieldName = generator.GetStaticReadOnlyFieldNameInScope(keywordName, rootScope: constantsScope, suffix: suffix);
                     string propertyBaseName = value.ValueKind == JsonValueKind.Array ? "ArrayValue" : "ObjectValue";
-                    string propertyName = generator.GetStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: suffix);
+                    string propertyName = generator.GetUniqueStaticReadOnlyPropertyNameInScope(propertyBaseName, rootScope: enumValuesScope, suffix: suffix);
 
                     generator
                         .AppendSeparatorLine()

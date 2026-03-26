@@ -27,20 +27,88 @@ public readonly partial struct Schema
 {
     public static partial class JsonSchema
     {
+        private static readonly JsonSchemaPathProvider HoistedAllOf0HelpersSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/helpers"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf0SpecDirSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/spec_dir"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf0SpecFilesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/spec_files"u8, buffer, out written);
+
+        private static readonly JsonSchemaMessageProvider<int> HoistedAllOf0RequiredPropertySpecDirPresent = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyPresent("spec_dir"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider<int> HoistedAllOf0RequiredPropertySpecDirNotPresent = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyNotPresent("spec_dir"u8, buffer, out written);
+
+        private const int HoistedAllOf0RequiredOffsetForSpecDir = 0;
+        private const uint HoistedAllOf0RequiredBitForSpecDir = 0b00000000000000000000000000000001;
+
+        private static readonly JsonSchemaMessageProvider<int> HoistedAllOf0RequiredPropertySpecFilesPresent = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyPresent("spec_files"u8, buffer, out written);
+        private static readonly JsonSchemaMessageProvider<int> HoistedAllOf0RequiredPropertySpecFilesNotPresent = static (_, buffer, out written) => JsonSchemaEvaluation.RequiredPropertyNotPresent("spec_files"u8, buffer, out written);
+
+        private const int HoistedAllOf0RequiredOffsetForSpecFiles = 0;
+        private const uint HoistedAllOf0RequiredBitForSpecFiles = 0b00000000000000000000000000000010;
+
+        private const uint HoistedAllOf0RequiredBitMask0 =
+            HoistedAllOf0RequiredBitForSpecDir | HoistedAllOf0RequiredBitForSpecFiles;
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf1EnvSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/env/$ref"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2AutoCleanClosureSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/autoCleanClosure"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2FailSpecWithNoExpectationsSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/failSpecWithNoExpectations"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2HideDisbaledSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/hideDisbaled"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2RandomSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/random"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2SeedSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/seed"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2StopOnSpecFailureSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/stopOnSpecFailure"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2StopSpecOnExpectationFailureSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/stopSpecOnExpectationFailure"u8, buffer, out written);
+
+        private static readonly JsonSchemaPathProvider HoistedAllOf2VerboseDepricationSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/properties/verboseDeprication"u8, buffer, out written);
+
+        private static PropertySchemaMatchers<MatchIndex> HoistedMatchersBuilder()
+        {
+            return new PropertySchemaMatchers<MatchIndex>([
+                (static () => "helpers"u8, new MatchIndex(0)),
+                (static () => "spec_dir"u8, new MatchIndex(1)),
+                (static () => "spec_files"u8, new MatchIndex(2)),
+                (static () => "env"u8, new MatchIndex(3)),
+                (static () => "autoCleanClosure"u8, new MatchIndex(4)),
+                (static () => "failSpecWithNoExpectations"u8, new MatchIndex(5)),
+                (static () => "hideDisbaled"u8, new MatchIndex(6)),
+                (static () => "random"u8, new MatchIndex(7)),
+                (static () => "seed"u8, new MatchIndex(8)),
+                (static () => "stopOnSpecFailure"u8, new MatchIndex(9)),
+                (static () => "stopSpecOnExpectationFailure"u8, new MatchIndex(10)),
+                (static () => "verboseDeprication"u8, new MatchIndex(11)),
+            ]);
+        }
+
+        private static PropertySchemaMatchers<MatchIndex> HoistedMatchers { get; } = HoistedMatchersBuilder();
+
+        private static bool TryGetHoistedPropertyIndex(ReadOnlySpan<byte> span,
+#if NET
+        [NotNullWhen(true)]
+#endif
+        out MatchIndex? index)
+        {
+            return HoistedMatchers.TryGetNamedMatcher(span, out index);
+        }
+
         /// <summary>
         /// Gets a provider for the schema location from which this type was generated.
         /// </summary>
-        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("51fb719f-208d-4a3e-8c06-a03a931f5509/Schema"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json"u8, buffer, out written);
 
         /// <summary>
         /// Gets the schema location from which this type was generated.
         /// </summary>
-        public const string SchemaLocation = "51fb719f-208d-4a3e-8c06-a03a931f5509/Schema";
+        public const string SchemaLocation = "schema.json";
 
         /// <summary>
         /// Gets the schema location from which this type was generated as a UTF-8 string.
         /// </summary>
-        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "51fb719f-208d-4a3e-8c06-a03a931f5509/Schema"u8;
+        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json"u8;
         private static readonly JsonSchemaPathProvider AllOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/allOf/0/$ref"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider AllOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/allOf/1"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider AllOf2SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/allOf/2/$ref"u8, buffer, out written);
@@ -64,36 +132,261 @@ public readonly partial struct Schema
 
             bool allOfComposedIsMatch = true;
 
-            JsonSchemaContext allOfContext0 =
+            JsonSchemaContext hoistedAllOf0_context =
                 Corvus.JasmineBenchmark.Baseline.Schema.RootItems.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AllOf0SchemaEvaluationPath);
-            Corvus.JasmineBenchmark.Baseline.Schema.RootItems.JsonSchema.Evaluate(parentDocument, parentIndex, ref allOfContext0);
-            allOfComposedIsMatch = allOfComposedIsMatch && allOfContext0.IsMatch;
-            context.ApplyEvaluated(ref allOfContext0);
-            context.CommitChildContext(allOfContext0.IsMatch, ref allOfContext0);
+            Span<uint> hoistedAllOf0_requiredBits = stackalloc uint[1];
 
-            if (!context.HasCollector && !context.IsMatch)
-            {
-                return;
-            }
-
-            JsonSchemaContext allOfContext1 =
+            JsonSchemaContext hoistedAllOf1_context =
                 Corvus.JasmineBenchmark.Baseline.Schema.AllOf1Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AllOf1SchemaEvaluationPath);
-            Corvus.JasmineBenchmark.Baseline.Schema.AllOf1Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref allOfContext1);
-            allOfComposedIsMatch = allOfComposedIsMatch && allOfContext1.IsMatch;
-            context.ApplyEvaluated(ref allOfContext1);
-            context.CommitChildContext(allOfContext1.IsMatch, ref allOfContext1);
 
-            if (!context.HasCollector && !context.IsMatch)
+            JsonSchemaContext hoistedAllOf2_context =
+                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AllOf2SchemaEvaluationPath);
+
+            if (parentDocument.GetJsonTokenType(parentIndex) == JsonTokenType.StartObject)
             {
-                return;
+                int objectValidation_propertyCount = 0;
+
+                var objectValidation_enumerator = new ObjectEnumerator(parentDocument, parentIndex);
+                while (objectValidation_enumerator.MoveNext())
+                {
+                    int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
+                    using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
+
+                    if (TryGetHoistedPropertyIndex(objectValidation_unescapedPropertyName.Span, out MatchIndex? matchIndex))
+                    {
+                        switch (matchIndex!.Value)
+                        {
+                            case 0:
+                                hoistedAllOf0_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.RootItems.JsonStringArray.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf0_context,
+                                        "helpers"u8,
+                                        evaluationPath: HoistedAllOf0HelpersSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.RootItems.JsonStringArray.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext);
+                                hoistedAllOf0_context.CommitChildContext(hoistedChildContext.IsMatch, ref hoistedChildContext);
+                                break;
+                            case 1:
+                                hoistedAllOf0_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+                                hoistedAllOf0_requiredBits[HoistedAllOf0RequiredOffsetForSpecDir] |= HoistedAllOf0RequiredBitForSpecDir;
+
+                                JsonSchemaContext hoistedChildContext1 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.RootItems.SpecDirEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf0_context,
+                                        "spec_dir"u8,
+                                        evaluationPath: HoistedAllOf0SpecDirSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.RootItems.SpecDirEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext1);
+                                hoistedAllOf0_context.CommitChildContext(hoistedChildContext1.IsMatch, ref hoistedChildContext1);
+                                break;
+                            case 2:
+                                hoistedAllOf0_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+                                hoistedAllOf0_requiredBits[HoistedAllOf0RequiredOffsetForSpecFiles] |= HoistedAllOf0RequiredBitForSpecFiles;
+
+                                JsonSchemaContext hoistedChildContext2 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.RootItems.SpecFilesJArray.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf0_context,
+                                        "spec_files"u8,
+                                        evaluationPath: HoistedAllOf0SpecFilesSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.RootItems.SpecFilesJArray.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext2);
+                                hoistedAllOf0_context.CommitChildContext(hoistedChildContext2.IsMatch, ref hoistedChildContext2);
+                                break;
+                            case 3:
+                                hoistedAllOf1_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext3 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf1_context,
+                                        "env"u8,
+                                        evaluationPath: HoistedAllOf1EnvSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext3);
+                                hoistedAllOf1_context.CommitChildContext(hoistedChildContext3.IsMatch, ref hoistedChildContext3);
+                                break;
+                            case 4:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext4 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.AutoCleanClosureEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "autoCleanClosure"u8,
+                                        evaluationPath: HoistedAllOf2AutoCleanClosureSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.AutoCleanClosureEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext4);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext4.IsMatch, ref hoistedChildContext4);
+                                break;
+                            case 5:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext5 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.FailSpecWithNoExpectationsEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "failSpecWithNoExpectations"u8,
+                                        evaluationPath: HoistedAllOf2FailSpecWithNoExpectationsSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.FailSpecWithNoExpectationsEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext5);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext5.IsMatch, ref hoistedChildContext5);
+                                break;
+                            case 6:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext6 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.HideDisbaledEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "hideDisbaled"u8,
+                                        evaluationPath: HoistedAllOf2HideDisbaledSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.HideDisbaledEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext6);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext6.IsMatch, ref hoistedChildContext6);
+                                break;
+                            case 7:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext7 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.WhetherToRandomizeSpecExecutionOrder.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "random"u8,
+                                        evaluationPath: HoistedAllOf2RandomSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.WhetherToRandomizeSpecExecutionOrder.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext7);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext7.IsMatch, ref hoistedChildContext7);
+                                break;
+                            case 8:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext8 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.SeedEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "seed"u8,
+                                        evaluationPath: HoistedAllOf2SeedSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.SeedEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext8);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext8.IsMatch, ref hoistedChildContext8);
+                                break;
+                            case 9:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext9 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.StopOnSpecFailureEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "stopOnSpecFailure"u8,
+                                        evaluationPath: HoistedAllOf2StopOnSpecFailureSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.StopOnSpecFailureEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext9);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext9.IsMatch, ref hoistedChildContext9);
+                                break;
+                            case 10:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext10 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.WhetherToCauseSpecsToOnlyHaveOneExpectationFailure.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "stopSpecOnExpectationFailure"u8,
+                                        evaluationPath: HoistedAllOf2StopSpecOnExpectationFailureSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.WhetherToCauseSpecsToOnlyHaveOneExpectationFailure.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext10);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext10.IsMatch, ref hoistedChildContext10);
+                                break;
+                            case 11:
+                                hoistedAllOf2_context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);
+
+                                JsonSchemaContext hoistedChildContext11 =
+                                    Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.VerboseDepricationEntity.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref hoistedAllOf2_context,
+                                        "verboseDeprication"u8,
+                                        evaluationPath: HoistedAllOf2VerboseDepricationSchemaEvaluationPath);
+
+                                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.VerboseDepricationEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref hoistedChildContext11);
+                                hoistedAllOf2_context.CommitChildContext(hoistedChildContext11.IsMatch, ref hoistedChildContext11);
+                                break;
+                        }
+                    }
+
+                    objectValidation_propertyCount++;
+                }
             }
 
-            JsonSchemaContext allOfContext2 =
-                Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AllOf2SchemaEvaluationPath);
-            Corvus.JasmineBenchmark.Baseline.Schema.EnvItems.JsonSchema.Evaluate(parentDocument, parentIndex, ref allOfContext2);
-            allOfComposedIsMatch = allOfComposedIsMatch && allOfContext2.IsMatch;
-            context.ApplyEvaluated(ref allOfContext2);
-            context.CommitChildContext(allOfContext2.IsMatch, ref allOfContext2);
+            if ((~(hoistedAllOf0_requiredBits[0]) & HoistedAllOf0RequiredBitMask0) == 0)
+            {
+                hoistedAllOf0_context.EvaluatedKeywordForProperty(true, 0, HoistedAllOf0RequiredPropertySpecDirPresent, "spec_dir"u8, "required"u8);
+                hoistedAllOf0_context.EvaluatedKeywordForProperty(true, 1, HoistedAllOf0RequiredPropertySpecFilesPresent, "spec_files"u8, "required"u8);
+            }
+            else if (!hoistedAllOf0_context.HasCollector)
+            {
+                hoistedAllOf0_context.EvaluatedBooleanSchema(false);
+            }
+            else
+            {
+                if ((hoistedAllOf0_requiredBits[HoistedAllOf0RequiredOffsetForSpecDir] & HoistedAllOf0RequiredBitForSpecDir) == 0)
+                {
+                    hoistedAllOf0_context.EvaluatedKeywordForProperty(false, 0, HoistedAllOf0RequiredPropertySpecDirNotPresent, "spec_dir"u8, "required"u8);
+                }
+                else
+                {
+                    hoistedAllOf0_context.EvaluatedKeywordForProperty(true, 0, HoistedAllOf0RequiredPropertySpecDirPresent, "spec_dir"u8, "required"u8);
+                }
+
+                if ((hoistedAllOf0_requiredBits[HoistedAllOf0RequiredOffsetForSpecFiles] & HoistedAllOf0RequiredBitForSpecFiles) == 0)
+                {
+                    hoistedAllOf0_context.EvaluatedKeywordForProperty(false, 1, HoistedAllOf0RequiredPropertySpecFilesNotPresent, "spec_files"u8, "required"u8);
+                }
+                else
+                {
+                    hoistedAllOf0_context.EvaluatedKeywordForProperty(true, 1, HoistedAllOf0RequiredPropertySpecFilesPresent, "spec_files"u8, "required"u8);
+                }
+            }
+
+            allOfComposedIsMatch = allOfComposedIsMatch && hoistedAllOf0_context.IsMatch;
+            context.ApplyEvaluated(ref hoistedAllOf0_context);
+            context.CommitChildContext(hoistedAllOf0_context.IsMatch, ref hoistedAllOf0_context);
+
+            allOfComposedIsMatch = allOfComposedIsMatch && hoistedAllOf1_context.IsMatch;
+            context.ApplyEvaluated(ref hoistedAllOf1_context);
+            context.CommitChildContext(hoistedAllOf1_context.IsMatch, ref hoistedAllOf1_context);
+
+            allOfComposedIsMatch = allOfComposedIsMatch && hoistedAllOf2_context.IsMatch;
+            context.ApplyEvaluated(ref hoistedAllOf2_context);
+            context.CommitChildContext(hoistedAllOf2_context.IsMatch, ref hoistedAllOf2_context);
+
             context.EvaluatedKeyword(allOfComposedIsMatch, allOfComposedIsMatch  ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, "allOf"u8);
         }
 

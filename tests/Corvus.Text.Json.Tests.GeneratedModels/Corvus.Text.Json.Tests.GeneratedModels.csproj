@@ -52,6 +52,9 @@
     <AdditionalFiles Include="closed-object-no-patterns-2020-12.json" />
     <AdditionalFiles Include="unevaluated-closed-object-no-patterns-2020-12.json" />
     <AdditionalFiles Include="self-referencing-object-2020-12.json" />
+    <AdditionalFiles Include="case-insensitive-enum-2020-12.json" />
+    <AdditionalFiles Include="reserved-property-names-2020-12.json" />
+    <AdditionalFiles Include="string-maxlength-enum-2020-12.json" />
   </ItemGroup>
 
   <ItemGroup>
