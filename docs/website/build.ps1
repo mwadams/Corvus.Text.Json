@@ -681,6 +681,25 @@ if ($BasePathPrefix) {
         Write-Host "  Rewrote paths in $jsRewriteCount JS files." -ForegroundColor Gray
     }
 
+    # Rewrite search-index.json files — URLs inside must also carry the base prefix
+    $searchJsonFiles = Get-ChildItem $outputDir -Filter "search-index.json" -Recurse -File -ErrorAction SilentlyContinue
+    $jsonRewriteCount = 0
+    foreach ($jsonFile in $searchJsonFiles) {
+        $content = [System.IO.File]::ReadAllText($jsonFile.FullName)
+        $original = $content
+
+        # Rewrite "Url": "/api/..." and "Url": "/docs/..." etc.
+        $content = $content -replace '("Url"\s*:\s*")(/(?!/)(?:api|docs|examples|getting-started))', "`$1$BasePathPrefix`$2"
+
+        if ($content -ne $original) {
+            [System.IO.File]::WriteAllText($jsonFile.FullName, $content)
+            $jsonRewriteCount++
+        }
+    }
+    if ($jsonRewriteCount -gt 0) {
+        Write-Host "  Rewrote URLs in $jsonRewriteCount search-index.json files." -ForegroundColor Gray
+    }
+
     Write-StepDuration "Path rewriting" $sw
 } else {
     Write-Host "`n[10/10] No base path prefix - skipping path rewriting." -ForegroundColor DarkGray

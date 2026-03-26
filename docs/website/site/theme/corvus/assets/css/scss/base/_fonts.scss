@@ -1,5 +1,8 @@
 // ==========================================================================
-// Fonts — @font-face declarations for Inter (woff2)
+// Fonts — self-hosted @font-face declarations (Inter + JetBrains Mono)
+//
+// Paths are relative to the compiled main.css at the output root.
+// The assets/fonts/ directory is copied by build.ps1 step 6.
 // ==========================================================================
 
 @font-face {
@@ -7,7 +10,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url('../../fonts/Inter-Regular.woff2') format('woff2');
+  src: url('assets/fonts/Inter-Regular.woff2') format('woff2');
 }
 
 @font-face {
@@ -15,5 +18,21 @@
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url('../../fonts/Inter-Medium.woff2') format('woff2');
+  src: url('assets/fonts/Inter-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('assets/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('assets/fonts/JetBrainsMono-Medium.woff2') format('woff2');
 }
