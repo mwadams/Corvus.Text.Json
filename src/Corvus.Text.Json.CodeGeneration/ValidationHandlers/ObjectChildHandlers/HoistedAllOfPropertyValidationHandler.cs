@@ -20,7 +20,10 @@ namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers
 /// </summary>
 internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectPropertyValidationHandler2, IJsonSchemaClassSetup
 {
-    private const string HoistedBranchMetadataKey = "HoistedAllOfPropertyValidationHandler.BranchMetadata";
+    internal const string HoistedBranchMetadataKey = "HoistedAllOfPropertyValidationHandler.BranchMetadata";
+    internal const string UnifiedMapMetadataKey = "HoistedAllOfPropertyValidationHandler.UnifiedMap";
+    internal const string StandaloneMapBuiltKey = "HoistedAllOfPropertyValidationHandler.StandaloneMapBuilt";
+    internal const int MinHoistedPropertiesForMap = 4;
 
     /// <summary>
     /// Gets the singleton instance.
@@ -115,6 +118,21 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
             }
         }
 
+        // For standalone case (no parent ObjectValidationHandler), emit the map directly.
+        // For parent-hosted case, PropertiesValidationHandler will build the unified map.
+        bool parentHasObjectValidation = typeDeclaration.ValidationKeywords()
+            .Any(k => k is IObjectValidationKeyword);
+
+        if (!parentHasObjectValidation)
+        {
+            int totalHoistedProperties = branchMetadataList.Sum(b => b.Properties.Count);
+            if (totalHoistedProperties >= MinHoistedPropertiesForMap)
+            {
+                EmitPropertyIndexMap(generator, branchMetadataList, localEntries: null);
+                typeDeclaration.SetMetadata(StandaloneMapBuiltKey, true);
+            }
+        }
+
         return generator;
     }
 
@@ -164,6 +182,14 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
             return generator;
         }
 
+        // If a unified map was built (by PropertiesValidationHandler for parent-hosted case),
+        // emit the unified switch covering both local and hoisted properties.
+        if (typeDeclaration.TryGetMetadata(UnifiedMapMetadataKey, out UnifiedMapInfo? unifiedMap) && unifiedMap is not null)
+        {
+            return EmitUnifiedSwitch(generator, typeDeclaration, unifiedMap);
+        }
+
+        // Otherwise, emit SequenceEqual chains (no map, or below threshold).
         foreach (HoistedBranchMetadata branchMeta in branchMetadataList)
         {
             if (branchMeta.Properties.Count == 0)
@@ -178,51 +204,7 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
             bool first = true;
             foreach (HoistedPropertyMetadata propMeta in branchMeta.Properties)
             {
-                string propertyJsonName = SymbolDisplay.FormatLiteral(propMeta.JsonPropertyName, true);
-                string childContextName = generator.GetUniqueVariableNameInScope("hoistedChildContext");
-
-                if (first)
-                {
-                    generator.AppendLineIndent("if (objectValidation_unescapedPropertyName.Span.SequenceEqual(", propertyJsonName, "u8))");
-                    first = false;
-                }
-                else
-                {
-                    generator.AppendLineIndent("else if (objectValidation_unescapedPropertyName.Span.SequenceEqual(", propertyJsonName, "u8))");
-                }
-
-                generator
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent(branchMeta.ContextName, ".AddLocalEvaluatedProperty(objectValidation_propertyCount);")
-                        .AppendLineIndent("context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);");
-
-                HoistedRequiredMetadata? reqMeta = branchMeta.RequiredProperties
-                    .FirstOrDefault(r => r.JsonPropertyName == propMeta.JsonPropertyName);
-                if (reqMeta is not null)
-                {
-                    generator
-                        .AppendLineIndent(branchMeta.RequiredBitsName, "[", reqMeta.OffsetName, "] |= ", reqMeta.BitName, ";");
-                }
-
-                generator
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("JsonSchemaContext ", childContextName, " =")
-                    .PushIndent()
-                        .AppendLineIndent(propMeta.ReducedTypeName, ".", propMeta.JsonSchemaClassName, ".PushChildContextUnescaped(")
-                        .PushIndent()
-                            .AppendLineIndent("parentDocument,")
-                            .AppendLineIndent("objectValidation_currentIndex,")
-                            .AppendLineIndent("ref ", branchMeta.ContextName, ",")
-                            .AppendLineIndent(propertyJsonName, "u8,")
-                            .AppendLineIndent("evaluationPath: ", propMeta.EvalPathName, ");")
-                        .PopIndent()
-                    .PopIndent()
-                    .AppendSeparatorLine()
-                    .AppendLineIndent(propMeta.ReducedTypeName, ".", propMeta.JsonSchemaClassName, ".Evaluate(parentDocument, objectValidation_currentIndex, ref ", childContextName, ");")
-                    .AppendLineIndent(branchMeta.ContextName, ".CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");")
-                    .PopIndent()
-                    .AppendLineIndent("}");
+                EmitSequenceEqualPropertyMatch(generator, branchMeta, propMeta, ref first);
             }
         }
 
@@ -335,65 +317,61 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
                     .AppendLineIndent("using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);");
 
         // Emit per-property matching for each branch
-        foreach (HoistedBranchMetadata branchMeta in keywordBranches)
+        bool useMap = typeDeclaration.TryGetMetadata(StandaloneMapBuiltKey, out bool standaloneMapBuilt) && standaloneMapBuilt;
+
+        if (useMap)
         {
-            if (branchMeta.Properties.Count == 0)
+            // Map-based dispatch
+            string matchIndexVar = generator.GetUniqueVariableNameInScope("matchIndex");
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("if (TryGetHoistedPropertyIndex(objectValidation_unescapedPropertyName.Span, out MatchIndex? ", matchIndexVar, "))")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("switch (", matchIndexVar, "!.Value)")
+                    .AppendLineIndent("{")
+                    .PushIndent();
+
+            int flatIndex = 0;
+            foreach (HoistedBranchMetadata branchMeta in keywordBranches)
             {
-                continue;
+                foreach (HoistedPropertyMetadata propMeta in branchMeta.Properties)
+                {
+                    generator.AppendLineIndent("case ", flatIndex.ToString(), ":");
+                    generator.PushIndent();
+                    EmitHoistedPropertySwitchCaseBody(generator, branchMeta, propMeta);
+                    generator
+                        .AppendLineIndent("break;")
+                        .PopIndent();
+                    flatIndex++;
+                }
             }
 
             generator
-                .AppendSeparatorLine()
-                .AppendLineIndent("// Hoisted allOf[", branchMeta.BranchIndex.ToString(), "] property matching");
-
-            bool first = true;
-            foreach (HoistedPropertyMetadata propMeta in branchMeta.Properties)
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+        else
+        {
+            // SequenceEqual chains (below threshold)
+            foreach (HoistedBranchMetadata branchMeta in keywordBranches)
             {
-                string propertyJsonName = SymbolDisplay.FormatLiteral(propMeta.JsonPropertyName, true);
-                string childContextName = generator.GetUniqueVariableNameInScope("hoistedChildContext");
-
-                if (first)
+                if (branchMeta.Properties.Count == 0)
                 {
-                    generator.AppendLineIndent("if (objectValidation_unescapedPropertyName.Span.SequenceEqual(", propertyJsonName, "u8))");
-                    first = false;
-                }
-                else
-                {
-                    generator.AppendLineIndent("else if (objectValidation_unescapedPropertyName.Span.SequenceEqual(", propertyJsonName, "u8))");
-                }
-
-                generator
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent(branchMeta.ContextName, ".AddLocalEvaluatedProperty(objectValidation_propertyCount);")
-                        .AppendLineIndent("context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);");
-
-                HoistedRequiredMetadata? reqMeta = branchMeta.RequiredProperties
-                    .FirstOrDefault(r => r.JsonPropertyName == propMeta.JsonPropertyName);
-                if (reqMeta is not null)
-                {
-                    generator
-                        .AppendLineIndent(branchMeta.RequiredBitsName, "[", reqMeta.OffsetName, "] |= ", reqMeta.BitName, ";");
+                    continue;
                 }
 
                 generator
                     .AppendSeparatorLine()
-                    .AppendLineIndent("JsonSchemaContext ", childContextName, " =")
-                    .PushIndent()
-                        .AppendLineIndent(propMeta.ReducedTypeName, ".", propMeta.JsonSchemaClassName, ".PushChildContextUnescaped(")
-                        .PushIndent()
-                            .AppendLineIndent("parentDocument,")
-                            .AppendLineIndent("objectValidation_currentIndex,")
-                            .AppendLineIndent("ref ", branchMeta.ContextName, ",")
-                            .AppendLineIndent(propertyJsonName, "u8,")
-                            .AppendLineIndent("evaluationPath: ", propMeta.EvalPathName, ");")
-                        .PopIndent()
-                    .PopIndent()
-                    .AppendSeparatorLine()
-                    .AppendLineIndent(propMeta.ReducedTypeName, ".", propMeta.JsonSchemaClassName, ".Evaluate(parentDocument, objectValidation_currentIndex, ref ", childContextName, ");")
-                    .AppendLineIndent(branchMeta.ContextName, ".CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");")
-                    .PopIndent()
-                    .AppendLineIndent("}");
+                    .AppendLineIndent("// Hoisted allOf[", branchMeta.BranchIndex.ToString(), "] property matching");
+
+                bool first = true;
+                foreach (HoistedPropertyMetadata propMeta in branchMeta.Properties)
+                {
+                    EmitSequenceEqualPropertyMatch(generator, branchMeta, propMeta, ref first);
+                }
             }
         }
 
@@ -422,6 +400,223 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
         generator
             .AppendSeparatorLine()
             .AppendLineIndent("context.EvaluatedKeyword(", composedIsMatchName, ", ", composedIsMatchName, "  ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, ", formattedKeyword, "u8);");
+
+        return generator;
+    }
+
+    /// <summary>
+    /// Emits the property index map (PropertySchemaMatchers&lt;MatchIndex&gt;) as static class members.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="hoistedBranches">The hoisted branch metadata.</param>
+    /// <param name="localEntries">Optional local property entries for unified map (null for standalone).</param>
+    internal static void EmitPropertyIndexMap(
+        CodeGenerator generator,
+        List<HoistedBranchMetadata> hoistedBranches,
+        List<UnifiedMapLocalEntry>? localEntries)
+    {
+        string jsonPropertyNamesClassName = generator.JsonPropertyNamesClassName();
+        string matchersName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("HoistedMatchers");
+        string builderName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("HoistedMatchersBuilder");
+
+        string tryGetName = localEntries is not null
+            ? "TryGetUnifiedPropertyIndex"
+            : "TryGetHoistedPropertyIndex";
+
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("private static PropertySchemaMatchers<MatchIndex> ", builderName, "()")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return new PropertySchemaMatchers<MatchIndex>([")
+                .PushIndent();
+
+        int index = 0;
+
+        // Local entries first (parent-hosted unified map)
+        if (localEntries is not null)
+        {
+            foreach (UnifiedMapLocalEntry local in localEntries)
+            {
+                generator
+                    .AppendLineIndent("(static () => ", jsonPropertyNamesClassName, ".", local.PropertyDotnetName, "Utf8, new MatchIndex(", index.ToString(), ")),");
+                index++;
+            }
+        }
+
+        // Hoisted entries
+        foreach (HoistedBranchMetadata branchMeta in hoistedBranches)
+        {
+            foreach (HoistedPropertyMetadata propMeta in branchMeta.Properties)
+            {
+                string propertyJsonName = SymbolDisplay.FormatLiteral(propMeta.JsonPropertyName, true);
+                generator
+                    .AppendLineIndent("(static () => ", propertyJsonName, "u8, new MatchIndex(", index.ToString(), ")),");
+                index++;
+            }
+        }
+
+        generator
+                .PopIndent()
+                .AppendLineIndent("]);")
+            .PopIndent()
+            .AppendLineIndent("}")
+            .AppendSeparatorLine()
+            .AppendLineIndent("private static PropertySchemaMatchers<MatchIndex> ", matchersName, " { get; } = ", builderName, "();")
+            .AppendSeparatorLine()
+            .ReserveName(tryGetName)
+            .AppendLineIndent("private static bool ", tryGetName, "(ReadOnlySpan<byte> span,")
+            .AppendLine("#if NET")
+            .AppendLineIndent("[NotNullWhen(true)]")
+            .AppendLine("#endif")
+            .AppendLineIndent("out MatchIndex? index)")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("return ", matchersName, ".TryGetNamedMatcher(span, out index);")
+            .PopIndent()
+            .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Emits the body of a switch case for a hoisted property (used by both standalone and unified switch).
+    /// </summary>
+    internal static void EmitHoistedPropertySwitchCaseBody(
+        CodeGenerator generator,
+        HoistedBranchMetadata branchMeta,
+        HoistedPropertyMetadata propMeta)
+    {
+        string propertyJsonName = SymbolDisplay.FormatLiteral(propMeta.JsonPropertyName, true);
+        string childContextName = generator.GetUniqueVariableNameInScope("hoistedChildContext");
+
+        generator
+            .AppendLineIndent(branchMeta.ContextName, ".AddLocalEvaluatedProperty(objectValidation_propertyCount);")
+            .AppendLineIndent("context.AddAppliedEvaluatedProperty(objectValidation_propertyCount);");
+
+        HoistedRequiredMetadata? reqMeta = branchMeta.RequiredProperties
+            .FirstOrDefault(r => r.JsonPropertyName == propMeta.JsonPropertyName);
+        if (reqMeta is not null)
+        {
+            generator
+                .AppendLineIndent(branchMeta.RequiredBitsName, "[", reqMeta.OffsetName, "] |= ", reqMeta.BitName, ";");
+        }
+
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("JsonSchemaContext ", childContextName, " =")
+            .PushIndent()
+                .AppendLineIndent(propMeta.ReducedTypeName, ".", propMeta.JsonSchemaClassName, ".PushChildContextUnescaped(")
+                .PushIndent()
+                    .AppendLineIndent("parentDocument,")
+                    .AppendLineIndent("objectValidation_currentIndex,")
+                    .AppendLineIndent("ref ", branchMeta.ContextName, ",")
+                    .AppendLineIndent(propertyJsonName, "u8,")
+                    .AppendLineIndent("evaluationPath: ", propMeta.EvalPathName, ");")
+                .PopIndent()
+            .PopIndent()
+            .AppendSeparatorLine()
+            .AppendLineIndent(propMeta.ReducedTypeName, ".", propMeta.JsonSchemaClassName, ".Evaluate(parentDocument, objectValidation_currentIndex, ref ", childContextName, ");")
+            .AppendLineIndent(branchMeta.ContextName, ".CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");");
+    }
+
+    /// <summary>
+    /// Emits a SequenceEqual-based property match for a single hoisted property.
+    /// </summary>
+    private static void EmitSequenceEqualPropertyMatch(
+        CodeGenerator generator,
+        HoistedBranchMetadata branchMeta,
+        HoistedPropertyMetadata propMeta,
+        ref bool first)
+    {
+        string propertyJsonName = SymbolDisplay.FormatLiteral(propMeta.JsonPropertyName, true);
+
+        if (first)
+        {
+            generator.AppendLineIndent("if (objectValidation_unescapedPropertyName.Span.SequenceEqual(", propertyJsonName, "u8))");
+            first = false;
+        }
+        else
+        {
+            generator.AppendLineIndent("else if (objectValidation_unescapedPropertyName.Span.SequenceEqual(", propertyJsonName, "u8))");
+        }
+
+        generator
+            .AppendLineIndent("{")
+            .PushIndent();
+
+        EmitHoistedPropertySwitchCaseBody(generator, branchMeta, propMeta);
+
+        generator
+            .PopIndent()
+            .AppendLineIndent("}");
+    }
+
+    /// <summary>
+    /// Emits the unified switch covering both local and hoisted properties for the parent-hosted case.
+    /// </summary>
+    private static CodeGenerator EmitUnifiedSwitch(
+        CodeGenerator generator,
+        TypeDeclaration typeDeclaration,
+        UnifiedMapInfo unifiedMap)
+    {
+        if (!typeDeclaration.TryGetMetadata(HoistedBranchMetadataKey, out List<HoistedBranchMetadata>? branchMetadataList) ||
+            branchMetadataList is null)
+        {
+            return generator;
+        }
+
+        string matchIndexVar = generator.GetUniqueVariableNameInScope("matchIndex");
+        generator
+            .AppendSeparatorLine()
+            .AppendLineIndent("if (TryGetUnifiedPropertyIndex(objectValidation_unescapedPropertyName.Span, out MatchIndex? ", matchIndexVar, "))")
+            .AppendLineIndent("{")
+            .PushIndent()
+                .AppendLineIndent("switch (", matchIndexVar, "!.Value)")
+                .AppendLineIndent("{")
+                .PushIndent();
+
+        // Local property cases
+        foreach (UnifiedMapLocalEntry local in unifiedMap.LocalEntries)
+        {
+            generator.AppendLineIndent("case ", local.MapIndex.ToString(), ":");
+            generator.PushIndent();
+
+            PropertiesValidationHandler.AppendLocalPropertyDirectCall(generator, typeDeclaration, local.MethodName);
+
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("if (!context.HasCollector && !context.IsMatch)")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendLineIndent("return;")
+                .PopIndent()
+                .AppendLineIndent("}")
+                .AppendSeparatorLine()
+                .AppendLineIndent("break;")
+                .PopIndent();
+        }
+
+        // Hoisted property cases
+        int hoistedBaseIndex = unifiedMap.LocalEntries.Count;
+        int flatIndex = hoistedBaseIndex;
+        foreach (HoistedBranchMetadata branchMeta in branchMetadataList)
+        {
+            foreach (HoistedPropertyMetadata propMeta in branchMeta.Properties)
+            {
+                generator.AppendLineIndent("case ", flatIndex.ToString(), ":");
+                generator.PushIndent();
+                EmitHoistedPropertySwitchCaseBody(generator, branchMeta, propMeta);
+                generator
+                    .AppendLineIndent("break;")
+                    .PopIndent();
+                flatIndex++;
+            }
+        }
+
+        generator
+                .PopIndent()
+                .AppendLineIndent("}")
+            .PopIndent()
+            .AppendLineIndent("}");
 
         return generator;
     }
@@ -666,7 +861,7 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
         }
     }
 
-    private sealed class HoistedBranchMetadata
+    internal sealed class HoistedBranchMetadata
     {
         public HoistedBranchMetadata(
             string keywordName, int branchIndex,
@@ -712,7 +907,7 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
         public Dictionary<int, string> RequiredBitmasks { get; }
     }
 
-    private sealed class HoistedPropertyMetadata
+    internal sealed class HoistedPropertyMetadata
     {
         public HoistedPropertyMetadata(
             string jsonPropertyName, string dotnetPropertyName,
@@ -740,7 +935,7 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
         public string KeywordPathModifier { get; }
     }
 
-    private sealed class HoistedRequiredMetadata
+    internal sealed class HoistedRequiredMetadata
     {
         public HoistedRequiredMetadata(
             string jsonPropertyName,
@@ -774,5 +969,31 @@ internal sealed class HoistedAllOfPropertyValidationHandler : IChildObjectProper
         public string NotPresentMessageName { get; }
 
         public string RequiredKeywordName { get; }
+    }
+
+    internal sealed class UnifiedMapInfo
+    {
+        public UnifiedMapInfo(List<UnifiedMapLocalEntry> localEntries)
+        {
+            LocalEntries = localEntries;
+        }
+
+        public List<UnifiedMapLocalEntry> LocalEntries { get; }
+    }
+
+    internal sealed class UnifiedMapLocalEntry
+    {
+        public UnifiedMapLocalEntry(int mapIndex, string methodName, string propertyDotnetName)
+        {
+            MapIndex = mapIndex;
+            MethodName = methodName;
+            PropertyDotnetName = propertyDotnetName;
+        }
+
+        public int MapIndex { get; }
+
+        public string MethodName { get; }
+
+        public string PropertyDotnetName { get; }
     }
 }

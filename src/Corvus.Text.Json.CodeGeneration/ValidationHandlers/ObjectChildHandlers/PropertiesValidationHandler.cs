@@ -22,7 +22,7 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
 
     internal const int MinPropertiesForMap = 1;
 
-    private List<INamedPropertyChildHandler> children = [];
+    internal List<INamedPropertyChildHandler> children = [];
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="PropertiesValidationHandler"/>.
@@ -65,7 +65,20 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
             }
         }
 
-        if (propertiesToGenerate.Count == 0)
+        // Check for hoisted allOf branches that might need a unified map
+        bool hasHoistedBranches = typeDeclaration.TryGetMetadata(
+            HoistedAllOfPropertyValidationHandler.HoistedBranchMetadataKey,
+            out List<HoistedAllOfPropertyValidationHandler.HoistedBranchMetadata>? hoistedBranches) &&
+            hoistedBranches is not null;
+
+        int totalHoistedProperties = hasHoistedBranches
+            ? hoistedBranches!.Sum(b => b.Properties.Count)
+            : 0;
+
+        bool shouldBuildUnifiedMap = hasHoistedBranches &&
+            totalHoistedProperties >= HoistedAllOfPropertyValidationHandler.MinHoistedPropertiesForMap;
+
+        if (propertiesToGenerate.Count == 0 && !shouldBuildUnifiedMap)
         {
             return generator;
         }
@@ -103,15 +116,34 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
                 .AppendLineIndent("}");
         }
 
-        generator
-            .BuildPropertyValidatorMap(typeDeclaration, children, propertyAndMethodNames, propertyValidatorDelegateName);
+        if (shouldBuildUnifiedMap)
+        {
+            // Build a unified map containing both local and hoisted property names
+            List<HoistedAllOfPropertyValidationHandler.UnifiedMapLocalEntry> localEntries = [];
+            int index = 0;
+            foreach ((string propertyName, string methodName) in propertyAndMethodNames)
+            {
+                localEntries.Add(new HoistedAllOfPropertyValidationHandler.UnifiedMapLocalEntry(index, methodName, propertyName));
+                index++;
+            }
+
+            HoistedAllOfPropertyValidationHandler.EmitPropertyIndexMap(generator, hoistedBranches!, localEntries);
+
+            var unifiedMap = new HoistedAllOfPropertyValidationHandler.UnifiedMapInfo(localEntries);
+            typeDeclaration.SetMetadata(HoistedAllOfPropertyValidationHandler.UnifiedMapMetadataKey, unifiedMap);
+        }
+        else
+        {
+            generator
+                .BuildPropertyValidatorMap(typeDeclaration, children, propertyAndMethodNames, propertyValidatorDelegateName);
+
+            typeDeclaration.SetMetadata(PropertyValidatorDelegateNameKey, propertyValidatorDelegateName);
+        }
 
         foreach (INamedPropertyChildHandler child in children)
         {
             child.EndJsonSchemaClassSetup(generator, typeDeclaration);
         }
-
-        typeDeclaration.SetMetadata(PropertyValidatorDelegateNameKey, propertyValidatorDelegateName);
 
         return generator;
     }
@@ -141,6 +173,14 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
 
     public CodeGenerator AppendObjectPropertyValidationCode(CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
+        // If a unified map was built, the HoistedAllOfPropertyValidationHandler emits the
+        // unified switch covering both local and hoisted properties. Skip our own lookup.
+        if (typeDeclaration.TryGetMetadata(HoistedAllOfPropertyValidationHandler.UnifiedMapMetadataKey,
+            out HoistedAllOfPropertyValidationHandler.UnifiedMapInfo? _))
+        {
+            return generator;
+        }
+
         if (!typeDeclaration.TryGetMetadata(PropertyValidatorDelegateNameKey, out string? propertyValidatorDelegateName) ||
             propertyValidatorDelegateName is null)
         {
@@ -178,6 +218,23 @@ public class PropertiesValidationHandler : IChildObjectPropertyValidationHandler
     }
 
     public bool WillEmitCodeFor(TypeDeclaration typeDeclaration) => children.Any(c => c.WillEmitCodeFor(typeDeclaration));
+
+    /// <summary>
+    /// Emits a direct call to a local property's static validation method (used by the unified switch).
+    /// </summary>
+    internal static void AppendLocalPropertyDirectCall(CodeGenerator generator, TypeDeclaration typeDeclaration, string methodName)
+    {
+        generator
+            .AppendIndent(methodName, "(parentDocument, objectValidation_currentIndex, objectValidation_propertyCount, ref context");
+
+        foreach (INamedPropertyChildHandler child in Instance.children)
+        {
+            child.AppendValidatorArguments(generator, typeDeclaration);
+        }
+
+        generator
+            .AppendLine(");");
+    }
 }
 
 file static class PropertiesValidationHandlerExtensions
