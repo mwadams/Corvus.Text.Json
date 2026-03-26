@@ -49,7 +49,24 @@ $outputDir = Join-Path $here ".output"
 # Paths used by multiple steps
 $toolProject = Join-Path $here "tools\XmlDocToMarkdown"
 $sharedViewsDir = Join-Path $siteDir "theme\corvus\views\Shared"
-$canonicalRepoUrl = "https://github.com/corvus-dotnet/Corvus.Text.Json"
+
+# Derive canonical repo URL from git remote (normalise SSH → HTTPS, strip .git)
+$canonicalRepoUrl = $null
+try {
+    $remoteUrl = (git -C $repoRoot remote get-url origin 2>$null)
+    if ($remoteUrl) {
+        $remoteUrl = $remoteUrl.Trim()
+        if ($remoteUrl -match '^git@github\.com:(.+)$') {
+            $remoteUrl = "https://github.com/$($Matches[1])"
+        }
+        $remoteUrl = $remoteUrl -replace '\.git$', ''
+        $canonicalRepoUrl = $remoteUrl
+    }
+} catch { }
+if (-not $canonicalRepoUrl) {
+    $canonicalRepoUrl = "https://github.com/corvus-dotnet/Corvus.Text.Json"
+    Write-Warning "Could not detect repo URL from git remote — using default: $canonicalRepoUrl"
+}
 
 # V5 paths
 $v5XmlPath = Join-Path $repoRoot "src\Corvus.Text.Json\bin\Release\net10.0\Corvus.Text.Json.xml"
@@ -703,6 +720,29 @@ if ($BasePathPrefix) {
     Write-StepDuration "Path rewriting" $sw
 } else {
     Write-Host "`n[10/10] No base path prefix - skipping path rewriting." -ForegroundColor DarkGray
+}
+
+# -- Step 10b: Replace default GitHub URL with the one derived from git --------
+# The Razor template has a hardcoded default; if the git-derived URL differs
+# (e.g. building from a fork), rewrite all HTML references.
+$defaultGitHubUrl = "https://github.com/corvus-dotnet/Corvus.Text.Json"
+if ($canonicalRepoUrl -ne $defaultGitHubUrl) {
+    Write-Host "`n  Rewriting GitHub URLs: $defaultGitHubUrl -> $canonicalRepoUrl" -ForegroundColor Cyan
+    $htmlFiles = Get-ChildItem $outputDir -Filter "*.html" -Recurse -File |
+        Where-Object { $_.FullName -notlike "*\playground\*" }
+    $ghRewriteCount = 0
+    foreach ($htmlFile in $htmlFiles) {
+        $content = [System.IO.File]::ReadAllText($htmlFile.FullName)
+        $original = $content
+        $content = $content.Replace($defaultGitHubUrl, $canonicalRepoUrl)
+        if ($content -ne $original) {
+            [System.IO.File]::WriteAllText($htmlFile.FullName, $content)
+            $ghRewriteCount++
+        }
+    }
+    if ($ghRewriteCount -gt 0) {
+        Write-Host "  Rewrote GitHub URLs in $ghRewriteCount HTML files." -ForegroundColor Gray
+    }
 }
 
 # Write robots.txt to prevent indexing of preview/staging deployments
