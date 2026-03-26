@@ -652,8 +652,8 @@ if ($BasePathPrefix) {
         $content = [System.IO.File]::ReadAllText($htmlFile.FullName)
         $original = $content
 
-        # Rewrite href="/..." and src="/..." and content="/..." (but not protocol-relative "//" URLs)
-        $content = $content -replace '(href|src|content)="(/(?!/))', "`$1=`"$BasePathPrefix`$2"
+        # Rewrite href="/..." and src="/..." and content="/..." and data-search-index="/..." (but not protocol-relative "//" URLs)
+        $content = $content -replace '(href|src|content|data-search-index)="(/(?!/))', "`$1=`"$BasePathPrefix`$2"
 
         if ($content -ne $original) {
             [System.IO.File]::WriteAllText($htmlFile.FullName, $content)
