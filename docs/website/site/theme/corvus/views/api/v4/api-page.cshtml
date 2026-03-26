@@ -1,6 +1,7 @@
 @model SiteViewModel
 @{
     Layout = "../../Shared/_Layout.cshtml";
+    ViewBag.GitHubUrl = "https://github.com/corvus-dotnet/Corvus.Text.Json";
 }
 <div class="layout-docs container">
     @await Html.PartialAsync("_ApiSidebarV4").ConfigureAwait(false)
