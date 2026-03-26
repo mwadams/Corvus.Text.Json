@@ -79,6 +79,7 @@ internal sealed class ObjectValidationHandler : TypeSensitiveKeywordValidationHa
         var result = new ObjectValidationHandler();
         result
             .RegisterChildHandlers(
+                HoistedAllOfPropertyValidationHandler.Instance,
                 PropertyCountValidationHandler.Instance,
                 PropertiesValidationHandler.Instance,
                 PropertyNamesValidationHandler.Instance,

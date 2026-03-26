@@ -8,15 +8,17 @@
 // </licensing>
 
 using System.Collections.Generic;
+using System.Linq;
 using Corvus.Json.CodeGeneration;
 using Corvus.Text.Json.CodeGeneration.ValidationHandlers.AllOfChildHandlers;
+using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers;
 
 /// <summary>
 /// A validation handler for <see cref="ICompositionAllOfValidationKeyword"/> capability.
 /// </summary>
-internal sealed class CompositionAllOfValidationHandler : KeywordValidationHandlerBase
+internal sealed class CompositionAllOfValidationHandler : KeywordValidationHandlerBase, IJsonSchemaClassSetup
 {
     private CompositionAllOfValidationHandler()
     {
@@ -53,6 +55,16 @@ internal sealed class CompositionAllOfValidationHandler : KeywordValidationHandl
         generator
             .AppendCompositionAllOfValidation(this, typeDeclaration, childHandlers, ValidationHandlerPriority);
 
+        return generator;
+    }
+
+    /// <inheritdoc/>
+    public CodeGenerator AppendJsonSchemaClassSetup(CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        // Trigger hoisted allOf branch detection even when the parent type has no
+        // IObjectValidationKeyword (and thus ObjectValidationHandler won't activate).
+        // Detection is idempotent — if ObjectValidationHandler already ran it, this is a no-op.
+        HoistedAllOfPropertyValidationHandler.Instance.AppendJsonSchemaClassSetup(generator, typeDeclaration);
         return generator;
     }
 

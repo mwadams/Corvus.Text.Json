@@ -92,6 +92,7 @@
     <Compile Include="ValidationHandlers\IJsonSchemaClassSetup.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\IChildArrayItemValidationHandler2.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\IChildObjectPropertyValidationHandler2.cs" />
+    <Compile Include="ValidationHandlers\ObjectChildHandlers\HoistedAllOfPropertyValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\NamedPropertyChildHandlers\INamedPropertyChildHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PatternPropertiesValidationHandler.cs" />
     <Compile Include="ValidationHandlers\ObjectChildHandlers\PropertiesValidationHandler.cs" />

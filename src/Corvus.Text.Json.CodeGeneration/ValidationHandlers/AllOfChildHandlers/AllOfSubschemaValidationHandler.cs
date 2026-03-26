@@ -8,7 +8,9 @@
 // </licensing>
 
 using System.Collections.Generic;
+using System.Linq;
 using Corvus.Json.CodeGeneration;
+using Corvus.Text.Json.CodeGeneration.ValidationHandlers.ObjectChildHandlers;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace Corvus.Text.Json.CodeGeneration.ValidationHandlers.AllOfChildHandlers;
@@ -40,6 +42,13 @@ public class AllOfSubschemaValidationHandler : IChildValidationHandler
             return generator;
         }
 
+        // Determine if the parent type has its own object validation keywords.
+        // If it does, ObjectValidationHandler will create the property loop and the
+        // HoistedAllOfPropertyValidationHandler child will emit the hoisted code there.
+        // If not, we must emit a standalone object loop here in the composition phase.
+        bool parentHasObjectValidation = typeDeclaration.ValidationKeywords()
+            .Any(k => k is IObjectValidationKeyword);
+
         bool requiresShortCut = false;
 
         if (typeDeclaration.AllOfCompositionTypes() is IReadOnlyDictionary<IAllOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> subschemaDictionary)
@@ -57,13 +66,28 @@ public class AllOfSubschemaValidationHandler : IChildValidationHandler
                     .AppendSeparatorLine()
                     .AppendLineIndent("bool ", composedIsMatchName, " = true;");
 
+                // Check if the hoisted handler detected any hoistable branches for this keyword
+                bool hasHoistedBranches = CodeGenerationExtensions.TryGetHoistedAllOfBranches(
+                    typeDeclaration, keyword.Keyword, out List<CodeGenerationExtensions.HoistedAllOfBranchInfo>? hoistedBranches);
+
                 IReadOnlyCollection<TypeDeclaration> subschemaTypes = subschemaDictionary[keyword];
+                int totalBranches = subschemaTypes.Count;
+                int hoistedCount = hasHoistedBranches ? hoistedBranches!.Count : 0;
+                bool allBranchesHoisted = hasHoistedBranches && hoistedCount == totalBranches;
+
                 int i = 0;
                 foreach (TypeDeclaration subschemaType in subschemaTypes)
                 {
                     if (generator.IsCancellationRequested)
                     {
                         return generator;
+                    }
+
+                    // Skip branches that were hoisted by the HoistedAllOfPropertyValidationHandler
+                    if (hasHoistedBranches && hoistedBranches!.Any(b => b.BranchIndex == i))
+                    {
+                        i++;
+                        continue;
                     }
 
                     if (requiresShortCut)
@@ -93,9 +117,26 @@ public class AllOfSubschemaValidationHandler : IChildValidationHandler
                     i++;
                 }
 
-                string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
-                generator
-                    .AppendLineIndent("context.EvaluatedKeyword(", composedIsMatchName, ", ", composedIsMatchName, "  ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, ", formattedKeyword, "u8);");
+                if (hasHoistedBranches && !parentHasObjectValidation)
+                {
+                    // Standalone case: no ObjectValidationHandler will run, so emit the full
+                    // object loop with hoisted property matching here in the composition phase.
+                    HoistedAllOfPropertyValidationHandler.AppendStandaloneObjectLoop(
+                        generator, typeDeclaration, composedIsMatchName, keyword.Keyword);
+                }
+                else if (hasHoistedBranches)
+                {
+                    // Store the composedIsMatch variable name for the hoisted handler to use post-loop
+                    typeDeclaration.SetMetadata($"HoistedAllOf.ComposedIsMatchName.{keyword.Keyword}", composedIsMatchName);
+
+                    // Defer EvaluatedKeyword — the HoistedAllOfPropertyValidationHandler will emit it post-loop
+                }
+                else
+                {
+                    string formattedKeyword = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
+                    generator
+                        .AppendLineIndent("context.EvaluatedKeyword(", composedIsMatchName, ", ", composedIsMatchName, "  ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, ", formattedKeyword, "u8);");
+                }
             }
         }
 

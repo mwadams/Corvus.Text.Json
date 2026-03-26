@@ -932,6 +932,29 @@ public struct JsonSchemaContext
     }
 
     /// <summary>
+    /// Adds a property at the specified index to the applied evaluated properties collection.
+    /// </summary>
+    /// <param name="index">The index of the property to mark as applied evaluated.</param>
+    /// <remarks>
+    /// Use this instead of <see cref="AddLocalEvaluatedProperty(int)"/> when the property
+    /// was evaluated by an applicator (e.g. a hoisted allOf branch) rather than by a keyword
+    /// defined directly in this schema. This ensures that <c>additionalProperties</c> still
+    /// sees the property as additional, while <c>unevaluatedProperties</c> recognises it as
+    /// evaluated.
+    /// </remarks>
+    public void AddAppliedEvaluatedProperty(int index)
+    {
+        if ((_lengthAndUsingFeatures & (uint)UsingFeatures.EvaluatedProperties) != 0)
+        {
+            // Calculate the offset into the array
+            int intOffset = index >> 5; // divide by 32 ==> shift right 5
+            int bitOffset = index & 0b1_1111; // remainder of dividing by 32
+            int bit = 1 << bitOffset;
+            AppliedEvaluated[intOffset] |= bit;
+        }
+    }
+
+    /// <summary>
     /// Core implementation for creating child contexts with optimized buffer allocation strategies.
     /// </summary>
     /// <param name="sequenceNumber">The sequence number assigned by the results collector for tracking.</param>

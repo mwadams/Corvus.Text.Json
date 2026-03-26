@@ -36,6 +36,7 @@ internal static partial class CodeGenerationExtensions
     private const string OneOfDiscriminatorMapFieldNameKeyPrefix = "OneOfDiscriminator.EnumStringMapFieldName.";
     private const string OneOfDiscriminatorPropertyNameKeyPrefix = "OneOfDiscriminator.PropertyName.";
     private const string OneOfDiscriminatorValuesKeyPrefix = "OneOfDiscriminator.Values.";
+    private const string HoistedAllOfBranchesKeyPrefix = "HoistedAllOf.Branches.";
     private const int MinEnumValuesForHashSet = 3;
 
     public static CodeGenerator AppendNormalizedJsonNumberIfNotAppended(this CodeGenerator generator, TypeDeclaration typeDeclaration, bool includeTokenTypeCheck = true)
@@ -1412,5 +1413,174 @@ internal static partial class CodeGenerationExtensions
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Determines whether a composition branch's validation can be hoisted into a parent's
+    /// property enumeration loop instead of being called as an opaque <c>Evaluate()</c>.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// A type declaration is hoistable if its validation consists entirely of:
+    /// <list type="bullet">
+    ///   <item>Core type checks (must allow object)</item>
+    ///   <item>Object property validation keywords (properties, patternProperties,
+    ///         additionalProperties, propertyNames, required, minProperties, maxProperties,
+    ///         dependentRequired, dependentSchemas)</item>
+    ///   <item>Composition keywords (allOf, anyOf, oneOf) where ALL sub-branches are
+    ///         themselves hoistable (recursive check)</item>
+    /// </list>
+    /// </para>
+    /// <para>
+    /// Keywords that block hoisting include: const, enum, string, number, array, format,
+    /// if/then/else, and not.
+    /// </para>
+    /// </remarks>
+    /// <param name="typeDeclaration">The type declaration to check.</param>
+    /// <returns><see langword="true"/> if the type can be hoisted; otherwise, <see langword="false"/>.</returns>
+    public static bool IsHoistableObjectSubschema(TypeDeclaration typeDeclaration)
+    {
+        return IsHoistableObjectSubschemaCore(typeDeclaration, []);
+    }
+
+    private static bool IsHoistableObjectSubschemaCore(TypeDeclaration typeDeclaration, HashSet<TypeDeclaration> visited)
+    {
+        // Guard against circular references
+        if (!visited.Add(typeDeclaration))
+        {
+            return true;
+        }
+
+        // Follow reduction (e.g. $ref targets)
+        ReducedTypeDeclaration reduced = typeDeclaration.ReducedTypeDeclaration();
+        TypeDeclaration effectiveType = reduced.ReducedType;
+
+        // If the effective type is different, check it instead (but keep our visited set)
+        if (!ReferenceEquals(effectiveType, typeDeclaration))
+        {
+            if (!visited.Add(effectiveType))
+            {
+                return true;
+            }
+        }
+
+        // The type must allow object (it may also allow other types, but we only hoist
+        // object property evaluation — the type check itself is handled by the parent)
+        CoreTypes allowed = effectiveType.AllowedCoreTypes();
+        if (allowed != CoreTypes.None && (allowed & CoreTypes.Object) == 0)
+        {
+            // This type explicitly disallows object — it can't be property-hoisted
+            return false;
+        }
+
+        // Check all validation keywords — only leaf property schemas are hoistable.
+        // We require that every validation keyword is one of: type check, properties, or required.
+        // Composition keywords (allOf, anyOf, oneOf, $ref) are NOT hoistable because
+        // the deepest composition evaluation must occur first with contexts committed
+        // bottom-up. We only hoist flat property+required schemas into the parent's loop.
+        IReadOnlyCollection<IValidationKeyword> keywords = effectiveType.ValidationKeywords();
+        bool hasPropertyKeyword = false;
+        foreach (IValidationKeyword keyword in keywords)
+        {
+            if (keyword is ICoreTypeValidationKeyword)
+            {
+                // Type checks are hoistable (shared with parent)
+                continue;
+            }
+
+            if (keyword is IObjectPropertyValidationKeyword)
+            {
+                hasPropertyKeyword = true;
+                continue;
+            }
+
+            if (keyword is IObjectRequiredPropertyValidationKeyword)
+            {
+                // Properties and required keywords are hoistable into the parent's property loop
+                continue;
+            }
+
+            // Any other validation keyword blocks hoisting:
+            // - IObjectValidationKeyword (additionalProperties, patternProperties, etc.)
+            // - Composition keywords (allOf, anyOf, oneOf, $ref)
+            // - Constraint keywords (string, number, array, format, const, enum, etc.)
+            return false;
+        }
+
+        // Must have at least one properties keyword — boolean schemas and empty schemas
+        // have nothing to hoist and must be evaluated normally.
+        return hasPropertyKeyword;
+    }
+
+    /// <summary>
+    /// Information about an allOf branch that has been hoisted into the parent's property loop.
+    /// </summary>
+    public readonly struct HoistedAllOfBranchInfo
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HoistedAllOfBranchInfo"/> struct.
+        /// </summary>
+        public HoistedAllOfBranchInfo(
+            int branchIndex,
+            TypeDeclaration subschemaType,
+            TypeDeclaration reducedType,
+            string targetTypeName,
+            string jsonSchemaClassName,
+            string evalPathPropertyName)
+        {
+            BranchIndex = branchIndex;
+            SubschemaType = subschemaType;
+            ReducedType = reducedType;
+            TargetTypeName = targetTypeName;
+            JsonSchemaClassName = jsonSchemaClassName;
+            EvalPathPropertyName = evalPathPropertyName;
+        }
+
+        /// <summary>Gets the index of the branch in the allOf composition.</summary>
+        public int BranchIndex { get; }
+
+        /// <summary>Gets the original (unreduced) type declaration of the branch.</summary>
+        public TypeDeclaration SubschemaType { get; }
+
+        /// <summary>Gets the reduced type declaration of the branch.</summary>
+        public TypeDeclaration ReducedType { get; }
+
+        /// <summary>Gets the fully qualified .NET type name of the reduced type.</summary>
+        public string TargetTypeName { get; }
+
+        /// <summary>Gets the name of the JsonSchema class for the reduced type.</summary>
+        public string JsonSchemaClassName { get; }
+
+        /// <summary>Gets the name of the evaluation path property in the parent scope.</summary>
+        public string EvalPathPropertyName { get; }
+    }
+
+    /// <summary>
+    /// Stores hoisted allOf branch info as metadata on the type declaration.
+    /// </summary>
+    public static void SetHoistedAllOfBranches(
+        TypeDeclaration typeDeclaration,
+        string keywordName,
+        List<HoistedAllOfBranchInfo> branches)
+    {
+        typeDeclaration.SetMetadata(HoistedAllOfBranchesKeyPrefix + keywordName, branches);
+    }
+
+    /// <summary>
+    /// Tries to retrieve hoisted allOf branch info from the type declaration's metadata.
+    /// </summary>
+    public static bool TryGetHoistedAllOfBranches(
+        TypeDeclaration typeDeclaration,
+        string keywordName,
+        [NotNullWhen(true)] out List<HoistedAllOfBranchInfo>? branches)
+    {
+        if (typeDeclaration.TryGetMetadata(HoistedAllOfBranchesKeyPrefix + keywordName, out branches) &&
+            branches is not null)
+        {
+            return true;
+        }
+
+        branches = null;
+        return false;
     }
 }
