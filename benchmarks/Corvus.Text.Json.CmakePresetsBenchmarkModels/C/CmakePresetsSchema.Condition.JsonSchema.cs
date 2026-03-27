@@ -38,6 +38,24 @@ public readonly partial struct CmakePresetsSchema
     {
         public static partial class JsonSchema
         {
+            private static EnumStringMap BuildAnyOfDiscriminatorMap()
+            {
+                return new EnumStringMap([
+                    static () => "const"u8,
+                    static () => "not"u8,
+                    static () => "equals"u8,
+                    static () => "notEquals"u8,
+                    static () => "inList"u8,
+                    static () => "notInList"u8,
+                    static () => "matches"u8,
+                    static () => "notMatches"u8,
+                    static () => "anyOf"u8,
+                    static () => "allOf"u8,
+                ]);
+            }
+
+            private static EnumStringMap AnyOfDiscriminatorMap { get; } = BuildAnyOfDiscriminatorMap();
+
             /// <summary>
             /// Gets a provider for the schema location from which this type was generated.
             /// </summary>
@@ -80,6 +98,227 @@ public readonly partial struct CmakePresetsSchema
                     (JsonTokenType.None or
                     JsonTokenType.EndObject or
                     JsonTokenType.EndArray));
+
+                if (!context.HasCollector)
+                {
+                    int anyOfDiscriminatorBranch = -1;
+                    var anyOfDiscriminatorEnum = new ObjectEnumerator(parentDocument, parentIndex);
+                    while (anyOfDiscriminatorEnum.MoveNext())
+                    {
+                        using (UnescapedUtf8JsonString anyOfDiscriminatorPropName = parentDocument.GetPropertyNameUnescaped(anyOfDiscriminatorEnum.CurrentIndex))
+                        {
+                            if (anyOfDiscriminatorPropName.Span.SequenceEqual("type"u8))
+                            {
+                                if (parentDocument.GetJsonTokenType(anyOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)
+                                {
+                                    using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(anyOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);
+                                    if (AnyOfDiscriminatorMap.TryGetValue(discriminatorValue.Span, out anyOfDiscriminatorBranch))
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+
+                    switch (anyOfDiscriminatorBranch)
+                    {
+                        case 0:
+                        {
+                            JsonSchemaContext discriminatorContext1 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredTypeAndValue.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf1SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredTypeAndValue.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext1);
+                            if (discriminatorContext1.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext1);
+                                context.CommitChildContext(true, ref discriminatorContext1);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext1);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 1:
+                        {
+                            JsonSchemaContext discriminatorContext2 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredConditionAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf2SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredConditionAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext2);
+                            if (discriminatorContext2.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext2);
+                                context.CommitChildContext(true, ref discriminatorContext2);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext2);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 2:
+                        {
+                            JsonSchemaContext discriminatorContext3 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredLhsAndRhsAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf3SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredLhsAndRhsAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext3);
+                            if (discriminatorContext3.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext3);
+                                context.CommitChildContext(true, ref discriminatorContext3);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext3);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 3:
+                        {
+                            JsonSchemaContext discriminatorContext4 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredLhsAndRhsAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf4SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredLhsAndRhsAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext4);
+                            if (discriminatorContext4.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext4);
+                                context.CommitChildContext(true, ref discriminatorContext4);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext4);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 4:
+                        {
+                            JsonSchemaContext discriminatorContext5 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredListAndStringEntityAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf5SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredListAndStringEntityAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext5);
+                            if (discriminatorContext5.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext5);
+                                context.CommitChildContext(true, ref discriminatorContext5);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext5);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 5:
+                        {
+                            JsonSchemaContext discriminatorContext6 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredListAndStringEntityAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf6SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredListAndStringEntityAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext6);
+                            if (discriminatorContext6.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext6);
+                                context.CommitChildContext(true, ref discriminatorContext6);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext6);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 6:
+                        {
+                            JsonSchemaContext discriminatorContext7 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredRegexAndStringEntityAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf7SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredRegexAndStringEntityAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext7);
+                            if (discriminatorContext7.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext7);
+                                context.CommitChildContext(true, ref discriminatorContext7);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext7);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 7:
+                        {
+                            JsonSchemaContext discriminatorContext8 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredRegexAndStringEntityAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf8SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredRegexAndStringEntityAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext8);
+                            if (discriminatorContext8.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext8);
+                                context.CommitChildContext(true, ref discriminatorContext8);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext8);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 8:
+                        {
+                            JsonSchemaContext discriminatorContext9 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredConditionsAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf9SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.RequiredConditionsAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext9);
+                            if (discriminatorContext9.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext9);
+                                context.CommitChildContext(true, ref discriminatorContext9);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext9);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        case 9:
+                        {
+                            JsonSchemaContext discriminatorContext10 =
+                                Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredConditionsAndType.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf10SchemaEvaluationPath);
+                            Corvus.CmakePresetsBenchmark.Current.CmakePresetsSchema.Condition.ConditionRequiredConditionsAndType.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext10);
+                            if (discriminatorContext10.IsMatch)
+                            {
+                                context.ApplyEvaluated(ref discriminatorContext10);
+                                context.CommitChildContext(true, ref discriminatorContext10);
+                                context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(false, ref discriminatorContext10);
+                                context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                            }
+
+                            return;
+                        }
+                        default:
+                            break;
+                    }
+                }
 
                 bool anyOfComposedIsMatch = false;
 
