@@ -70,7 +70,9 @@ internal sealed class CompositionAnyOfValidationHandler : TypeSensitiveKeywordVa
             return generator;
         }
 
-        return generator.AppendEnumStringSetFields(typeDeclaration);
+        return generator
+            .AppendEnumStringSetFields(typeDeclaration)
+            .AppendAnyOfDiscriminatorMapFields(typeDeclaration);
     }
 
     private static CompositionAnyOfValidationHandler CreateDefault()

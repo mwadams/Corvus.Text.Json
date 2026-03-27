@@ -36,6 +36,9 @@ internal static partial class CodeGenerationExtensions
     private const string OneOfDiscriminatorMapFieldNameKeyPrefix = "OneOfDiscriminator.EnumStringMapFieldName.";
     private const string OneOfDiscriminatorPropertyNameKeyPrefix = "OneOfDiscriminator.PropertyName.";
     private const string OneOfDiscriminatorValuesKeyPrefix = "OneOfDiscriminator.Values.";
+    private const string AnyOfDiscriminatorMapFieldNameKeyPrefix = "AnyOfDiscriminator.EnumStringMapFieldName.";
+    private const string AnyOfDiscriminatorPropertyNameKeyPrefix = "AnyOfDiscriminator.PropertyName.";
+    private const string AnyOfDiscriminatorValuesKeyPrefix = "AnyOfDiscriminator.Values.";
     private const string HoistedAllOfBranchesKeyPrefix = "HoistedAllOf.Branches.";
     private const int MinEnumValuesForHashSet = 3;
 
@@ -1211,6 +1214,111 @@ internal static partial class CodeGenerationExtensions
         discriminatorPropertyName = propName;
         discriminatorValues = values;
         typeDeclaration.TryGetMetadata(OneOfDiscriminatorMapFieldNameKeyPrefix + keywordName, out mapFieldName);
+        return true;
+    }
+
+    /// <summary>
+    /// Emits static <see cref="EnumStringMap"/> fields for anyOf discriminator-based dispatch.
+    /// </summary>
+    /// <param name="generator">The code generator.</param>
+    /// <param name="typeDeclaration">The type declaration for which to emit the fields.</param>
+    /// <returns>A reference to the generator having completed the operation.</returns>
+    public static CodeGenerator AppendAnyOfDiscriminatorMapFields(this CodeGenerator generator, TypeDeclaration typeDeclaration)
+    {
+        if (generator.IsCancellationRequested)
+        {
+            return generator;
+        }
+
+        if (typeDeclaration.AnyOfCompositionTypes() is not { } anyOf)
+        {
+            return generator;
+        }
+
+        foreach (KeyValuePair<IAnyOfSubschemaValidationKeyword, IReadOnlyCollection<TypeDeclaration>> kvp in anyOf)
+        {
+            if (generator.IsCancellationRequested)
+            {
+                return generator;
+            }
+
+            IAnyOfSubschemaValidationKeyword keyword = kvp.Key;
+            IReadOnlyCollection<TypeDeclaration> subschemaTypes = kvp.Value;
+
+            if (!TryGetOneOfDiscriminator(subschemaTypes, out string? discriminatorPropertyName, out List<(string Value, int BranchIndex)>? discriminatorValues))
+            {
+                continue;
+            }
+
+            typeDeclaration.SetMetadata(AnyOfDiscriminatorPropertyNameKeyPrefix + keyword.Keyword, discriminatorPropertyName);
+            typeDeclaration.SetMetadata(AnyOfDiscriminatorValuesKeyPrefix + keyword.Keyword, discriminatorValues);
+
+            if (discriminatorValues.Count > MinEnumValuesForHashSet)
+            {
+                string fieldName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("AnyOfDiscriminatorMap");
+                string builderName = generator.GetUniqueStaticReadOnlyPropertyNameInScope("BuildAnyOfDiscriminatorMap");
+
+                generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private static EnumStringMap ", builderName, "()")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("return new EnumStringMap([")
+                        .PushIndent();
+
+                foreach ((string value, _) in discriminatorValues)
+                {
+                    string quotedValue = SymbolDisplay.FormatLiteral(value, true);
+                    generator
+                        .AppendLineIndent("static () => ", quotedValue, "u8,");
+                }
+
+                generator
+                        .PopIndent()
+                        .AppendLineIndent("]);")
+                    .PopIndent()
+                    .AppendLineIndent("}")
+                    .AppendSeparatorLine()
+                    .AppendLineIndent("private static EnumStringMap ", fieldName, " { get; } = ", builderName, "();");
+
+                typeDeclaration.SetMetadata(AnyOfDiscriminatorMapFieldNameKeyPrefix + keyword.Keyword, fieldName);
+            }
+        }
+
+        return generator;
+    }
+
+    /// <summary>
+    /// Tries to get the discriminator metadata for an anyOf keyword.
+    /// </summary>
+    /// <param name="typeDeclaration">The type declaration.</param>
+    /// <param name="keywordName">The keyword name (e.g. "anyOf").</param>
+    /// <param name="discriminatorPropertyName">When successful, the JSON property name of the discriminator.</param>
+    /// <param name="discriminatorValues">When successful, the list of (value, branchIndex) pairs.</param>
+    /// <param name="mapFieldName">When successful and a hash map was emitted, the field name; otherwise <see langword="null"/>.</param>
+    /// <returns><see langword="true"/> if discriminator metadata was found; otherwise, <see langword="false"/>.</returns>
+    public static bool TryGetAnyOfDiscriminatorMetadata(
+        this TypeDeclaration typeDeclaration,
+        string keywordName,
+        [NotNullWhen(true)] out string? discriminatorPropertyName,
+        [NotNullWhen(true)] out List<(string Value, int BranchIndex)>? discriminatorValues,
+        out string? mapFieldName)
+    {
+        discriminatorPropertyName = null;
+        discriminatorValues = null;
+        mapFieldName = null;
+
+        if (!typeDeclaration.TryGetMetadata(AnyOfDiscriminatorPropertyNameKeyPrefix + keywordName, out string? propName) ||
+            propName is null ||
+            !typeDeclaration.TryGetMetadata(AnyOfDiscriminatorValuesKeyPrefix + keywordName, out List<(string Value, int BranchIndex)>? values) ||
+            values is null)
+        {
+            return false;
+        }
+
+        discriminatorPropertyName = propName;
+        discriminatorValues = values;
+        typeDeclaration.TryGetMetadata(AnyOfDiscriminatorMapFieldNameKeyPrefix + keywordName, out mapFieldName);
         return true;
     }
 
