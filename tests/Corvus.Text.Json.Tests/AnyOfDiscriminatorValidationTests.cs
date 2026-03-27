@@ -315,10 +315,12 @@ public class AnyOfDiscriminatorWith2Branches : IClassFixture<AnyOfDiscriminatorW
 }
 
 /// <summary>
-/// Tests for anyOf where discriminator detection should NOT trigger (optional property, not required).
+/// Tests for anyOf with non-required discriminator properties.
+/// The discriminator fast path still applies but falls through to sequential
+/// when the discriminator property is absent from the instance.
 /// </summary>
 [Trait("Optimization", "AnyOfDiscriminator")]
-public class AnyOfWithoutDiscriminator : IClassFixture<AnyOfWithoutDiscriminator.Fixture>
+public class AnyOfWithNonRequiredDiscriminator : IClassFixture<AnyOfWithNonRequiredDiscriminator.Fixture>
 {
     private const string Schema = """
         {
@@ -338,7 +340,7 @@ public class AnyOfWithoutDiscriminator : IClassFixture<AnyOfWithoutDiscriminator
 
     private readonly Fixture fixture;
 
-    public AnyOfWithoutDiscriminator(Fixture fixture)
+    public AnyOfWithNonRequiredDiscriminator(Fixture fixture)
     {
         this.fixture = fixture;
     }
@@ -348,17 +350,16 @@ public class AnyOfWithoutDiscriminator : IClassFixture<AnyOfWithoutDiscriminator
     [InlineData("""{"kind": "bravo", "value": "hello"}""")]
     public void MatchingBranchIsAccepted(string json)
     {
-        // Without required, discriminator detection should not fire.
-        // Standard anyOf applies — at least one branch must match.
+        // With non-required discriminator, fast path dispatches when property is present.
         var instance = this.fixture.DynamicJsonType.ParseInstance(json);
         Assert.True(instance.EvaluateSchema());
     }
 
     [Fact]
-    public void ObjectWithoutKindMatchesBothBranches()
+    public void MissingDiscriminatorFallsThroughToSequential()
     {
-        // Without 'kind' required, {"value": 42} matches branch 0 (value is number).
-        // Branch 1 expects value to be string, so 42 fails there.
+        // Without 'kind' present, discriminator fast path falls through to sequential.
+        // {"value": 42} matches branch 0 (value is number).
         // anyOf: at least one match → pass.
         var instance = this.fixture.DynamicJsonType.ParseInstance("""{"value": 42}""");
         Assert.True(instance.EvaluateSchema());

@@ -285,13 +285,12 @@ file static class AnyOfSubschemaValidationHandlerExtensions
                 .PopIndent();
         }
 
-        // Default: discriminator value not recognized or property not found → fail
+        // Default: discriminator value not recognized or property not found → fall through to sequential
         generator
             .PushIndent()
             .AppendLineIndent("default:")
             .PushIndent()
-                .AppendLineIndent("context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, ", formattedKeyword, "u8);")
-                .AppendLineIndent("return;")
+                .AppendLineIndent("break;")
             .PopIndent()
             .PopIndent()
             .AppendLineIndent("}")

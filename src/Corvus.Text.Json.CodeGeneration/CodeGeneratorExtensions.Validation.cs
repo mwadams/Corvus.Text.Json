@@ -1245,7 +1245,7 @@ internal static partial class CodeGenerationExtensions
             IAnyOfSubschemaValidationKeyword keyword = kvp.Key;
             IReadOnlyCollection<TypeDeclaration> subschemaTypes = kvp.Value;
 
-            if (!TryGetOneOfDiscriminator(subschemaTypes, out string? discriminatorPropertyName, out List<(string Value, int BranchIndex)>? discriminatorValues))
+            if (!TryGetOneOfDiscriminator(subschemaTypes, out string? discriminatorPropertyName, out List<(string Value, int BranchIndex)>? discriminatorValues, requireRequired: false))
             {
                 continue;
             }
@@ -1425,7 +1425,8 @@ internal static partial class CodeGenerationExtensions
     public static bool TryGetOneOfDiscriminator(
         IReadOnlyCollection<TypeDeclaration> subschemaTypes,
         [NotNullWhen(true)] out string? discriminatorPropertyName,
-        [NotNullWhen(true)] out List<(string Value, int BranchIndex)>? discriminatorValues)
+        [NotNullWhen(true)] out List<(string Value, int BranchIndex)>? discriminatorValues,
+        bool requireRequired = true)
     {
         discriminatorPropertyName = null;
         discriminatorValues = null;
@@ -1443,7 +1444,7 @@ internal static partial class CodeGenerationExtensions
 
         foreach (PropertyDeclaration candidateProp in firstBranchProps)
         {
-            if (candidateProp.RequiredOrOptional == RequiredOrOptional.Optional)
+            if (requireRequired && candidateProp.RequiredOrOptional == RequiredOrOptional.Optional)
             {
                 continue;
             }
@@ -1470,7 +1471,7 @@ internal static partial class CodeGenerationExtensions
                 PropertyDeclaration? matchingProp = FindPropertyByName(branches[i].PropertyDeclarations, candidateName);
 
                 if (matchingProp is null ||
-                    matchingProp.RequiredOrOptional == RequiredOrOptional.Optional ||
+                    (requireRequired && matchingProp.RequiredOrOptional == RequiredOrOptional.Optional) ||
                     !TryGetSingleStringConstant(matchingProp, out string? branchValue) ||
                     !seenValues.Add(branchValue))
                 {
