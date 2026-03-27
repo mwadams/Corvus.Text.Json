@@ -255,6 +255,65 @@ internal static partial class CodeGenerationExtensions
         return generator;
     }
 
+    private static readonly System.Text.RegularExpressions.Regex PrefixPattern =
+        new(@"^\^([a-zA-Z0-9\-_/@.]+)(\.\*)?$", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    private static readonly System.Text.RegularExpressions.Regex RangePattern =
+        new(@"^\^\.\{(\d+),(\d+)\}\$$", System.Text.RegularExpressions.RegexOptions.Compiled);
+
+    /// <summary>
+    /// Classifies a regular expression pattern for potential inline code generation
+    /// instead of emitting a full <see cref="System.Text.RegularExpressions.Regex"/> object.
+    /// </summary>
+    /// <param name="pattern">The raw regex pattern string.</param>
+    /// <returns>The classification of the pattern.</returns>
+    internal static RegexPatternCategory ClassifyRegexPattern(string pattern)
+    {
+        if (pattern is ".*" or "^.*$" or "^(.*)$" or "(.*)" or "[\\s\\S]*" or "^[\\s\\S]*$")
+        {
+            return RegexPatternCategory.Noop;
+        }
+
+        if (pattern is ".+" or "^.+$" or "^(.+)$" or "(.+)" or ".")
+        {
+            return RegexPatternCategory.NonEmpty;
+        }
+
+        if (PrefixPattern.IsMatch(pattern))
+        {
+            return RegexPatternCategory.Prefix;
+        }
+
+        if (RangePattern.IsMatch(pattern))
+        {
+            return RegexPatternCategory.Range;
+        }
+
+        return RegexPatternCategory.FullRegex;
+    }
+
+    /// <summary>
+    /// Extracts the literal prefix from a prefix-category regex pattern.
+    /// </summary>
+    /// <param name="pattern">A pattern previously classified as <see cref="RegexPatternCategory.Prefix"/>.</param>
+    /// <returns>The literal prefix string.</returns>
+    internal static string ExtractRegexPrefix(string pattern)
+    {
+        System.Text.RegularExpressions.Match match = PrefixPattern.Match(pattern);
+        return match.Groups[1].Value;
+    }
+
+    /// <summary>
+    /// Extracts the minimum and maximum length from a range-category regex pattern.
+    /// </summary>
+    /// <param name="pattern">A pattern previously classified as <see cref="RegexPatternCategory.Range"/>.</param>
+    /// <returns>A tuple of (minimum, maximum) length values.</returns>
+    internal static (int Min, int Max) ExtractRegexRange(string pattern)
+    {
+        System.Text.RegularExpressions.Match match = RangePattern.Match(pattern);
+        return (int.Parse(match.Groups[1].Value), int.Parse(match.Groups[2].Value));
+    }
+
     public static CodeGenerator AppendRegexValidationFields(this CodeGenerator generator, TypeDeclaration typeDeclaration)
     {
         if (generator.IsCancellationRequested)
@@ -274,17 +333,32 @@ internal static partial class CodeGenerationExtensions
 
                 if (constant.Value.Count > 0)
                 {
-                    generator.AppendSeparatorLine();
                     if (constant.Value.Count == 1)
                     {
-                        generator.AppendRegexValidationField(constant.Key, null);
+                        if (ClassifyRegexPattern(constant.Value[0]) == RegexPatternCategory.FullRegex)
+                        {
+                            generator
+                                .AppendSeparatorLine()
+                                .AppendRegexValidationField(constant.Key, null);
+                        }
                     }
                     else
                     {
+                        bool needsSeparator = true;
                         int i = 1;
                         foreach (string value in constant.Value)
                         {
-                            generator.AppendRegexValidationField(constant.Key, i);
+                            if (ClassifyRegexPattern(value) == RegexPatternCategory.FullRegex)
+                            {
+                                if (needsSeparator)
+                                {
+                                    generator.AppendSeparatorLine();
+                                    needsSeparator = false;
+                                }
+
+                                generator.AppendRegexValidationField(constant.Key, i);
+                            }
+
                             i++;
                         }
                     }
@@ -314,21 +388,30 @@ internal static partial class CodeGenerationExtensions
 
                 if (constant.Value.Count == 1)
                 {
-                    generator
-                        .AppendSeparatorLine()
-                        .AppendRegexValidationFactoryMethod(constant.Key, null, constant.Value[0]);
+                    if (ClassifyRegexPattern(constant.Value[0]) == RegexPatternCategory.FullRegex)
+                    {
+                        generator
+                            .AppendSeparatorLine()
+                            .AppendRegexValidationFactoryMethod(constant.Key, null, constant.Value[0]);
+                    }
                 }
                 else
                 {
+                    bool needsSeparator = true;
                     int i = 1;
                     foreach (string value in constant.Value)
                     {
-                        if (i == 1)
+                        if (ClassifyRegexPattern(value) == RegexPatternCategory.FullRegex)
                         {
-                            generator.AppendSeparatorLine();
+                            if (needsSeparator)
+                            {
+                                generator.AppendSeparatorLine();
+                                needsSeparator = false;
+                            }
+
+                            generator.AppendRegexValidationFactoryMethod(constant.Key, i, value);
                         }
 
-                        generator.AppendRegexValidationFactoryMethod(constant.Key, i, value);
                         i++;
                     }
                 }

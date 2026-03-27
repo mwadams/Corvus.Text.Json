@@ -42,11 +42,6 @@ public readonly partial struct OpenapiSchema
             private static readonly JsonSchemaPathProvider PatternPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/patternProperties/^x-"u8, buffer, out written);
 
             /// <summary>
-            /// A regular expression for the <c>patternProperties</c> keyword.
-            /// </summary>
-            public static readonly Regex PatternProperties = CreatePatternProperties();
-
-            /// <summary>
             /// Gets a provider for the schema location from which this type was generated.
             /// </summary>
             public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("https://spec.openapis.org/oas/3.1/schema/2022-10-07#/$defs/specification-extensions"u8, buffer, out written);
@@ -90,7 +85,7 @@ public readonly partial struct OpenapiSchema
                         int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                         using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                        if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                        if (objectValidation_unescapedPropertyName.Span.StartsWith("x-"u8))
                         {
                             context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                             JsonSchemaContext childContext =
@@ -138,13 +133,6 @@ public readonly partial struct OpenapiSchema
                     context.Dispose();
                 }
             }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-            [GeneratedRegex("^x-")]
-            private static partial Regex CreatePatternProperties();
-#else
-            private static Regex CreatePatternProperties() => new("^x-", RegexOptions.Compiled);
-#endif
 
             /// <summary>
             /// Push the current context as a child context for schema evaluation.

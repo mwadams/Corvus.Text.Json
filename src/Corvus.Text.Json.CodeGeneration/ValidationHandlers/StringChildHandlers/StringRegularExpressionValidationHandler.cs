@@ -89,16 +89,70 @@ public static class StringRegularExpressionValidationExtensions
 
         Debug.Assert(expressions.Count == 1, "Expected exactly one regular expression for keyword.");
 
-        string regularExpression = SymbolDisplay.FormatLiteral(expressions[0], true);
-        string regularExpressionMemberName = generator.GetStaticReadOnlyFieldNameInScope(keyword.Keyword);
+        string rawPattern = expressions[0];
+        string regularExpression = SymbolDisplay.FormatLiteral(rawPattern, true);
+        string keywordLiteral = SymbolDisplay.FormatLiteral(keyword.Keyword, true);
+        RegexPatternCategory category = CodeGenerationExtensions.ClassifyRegexPattern(rawPattern);
 
-        return generator
-            .AppendSeparatorLine()
-            .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false)
-            .AppendLineIndent(
-                "JsonSchemaEvaluation.MatchRegularExpression(unescapedUtf8JsonString.Span, ",
-                regularExpressionMemberName, ",",
-                regularExpression, ", ",
-                SymbolDisplay.FormatLiteral(keyword.Keyword, true), "u8, ref context);");
+        switch (category)
+        {
+            case RegexPatternCategory.Noop:
+                return generator
+                    .AppendSeparatorLine()
+                    .AppendLineIndent(
+                        "JsonSchemaEvaluation.MatchNoopRegularExpression(",
+                        regularExpression, ", ",
+                        keywordLiteral, "u8, ref context);");
+
+            case RegexPatternCategory.NonEmpty:
+                return generator
+                    .AppendSeparatorLine()
+                    .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false)
+                    .AppendLineIndent(
+                        "JsonSchemaEvaluation.MatchNonEmptyRegularExpression(unescapedUtf8JsonString.Span, ",
+                        regularExpression, ", ",
+                        keywordLiteral, "u8, ref context);");
+
+            case RegexPatternCategory.Prefix:
+            {
+                string prefix = CodeGenerationExtensions.ExtractRegexPrefix(rawPattern);
+                string prefixLiteral = SymbolDisplay.FormatLiteral(prefix, true);
+                return generator
+                    .AppendSeparatorLine()
+                    .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false)
+                    .AppendLineIndent(
+                        "JsonSchemaEvaluation.MatchPrefixRegularExpression(unescapedUtf8JsonString.Span, ",
+                        prefixLiteral, "u8, ",
+                        regularExpression, ", ",
+                        keywordLiteral, "u8, ref context);");
+            }
+
+            case RegexPatternCategory.Range:
+            {
+                (int min, int max) = CodeGenerationExtensions.ExtractRegexRange(rawPattern);
+                return generator
+                    .AppendSeparatorLine()
+                    .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false)
+                    .AppendLineIndent(
+                        "JsonSchemaEvaluation.MatchRangeRegularExpression(unescapedUtf8JsonString.Span, ",
+                        min.ToString(), ", ", max.ToString(), ", ",
+                        regularExpression, ", ",
+                        keywordLiteral, "u8, ref context);");
+            }
+
+            default:
+            {
+                string regularExpressionMemberName = generator.GetStaticReadOnlyFieldNameInScope(keyword.Keyword);
+
+                return generator
+                    .AppendSeparatorLine()
+                    .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false)
+                    .AppendLineIndent(
+                        "JsonSchemaEvaluation.MatchRegularExpression(unescapedUtf8JsonString.Span, ",
+                        regularExpressionMemberName, ",",
+                        regularExpression, ", ",
+                        keywordLiteral, "u8, ref context);");
+            }
+        }
     }
 }

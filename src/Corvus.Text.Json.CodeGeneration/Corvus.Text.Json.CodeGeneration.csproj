@@ -34,6 +34,7 @@
   <ItemGroup>
     <Compile Include="StandaloneEvaluatorGenerator.cs" />
     <Compile Include="CodeGenerationMode.cs" />
+    <Compile Include="RegexPatternCategory.cs" />
     <Compile Include="CodeFileBuilders\JsonSchemaPartial.cs" />
     <Compile Include="CodeFileBuilders\MutableCorePartial.cs" />
     <Compile Include="CodeFileBuilders\CorePartial.cs" />

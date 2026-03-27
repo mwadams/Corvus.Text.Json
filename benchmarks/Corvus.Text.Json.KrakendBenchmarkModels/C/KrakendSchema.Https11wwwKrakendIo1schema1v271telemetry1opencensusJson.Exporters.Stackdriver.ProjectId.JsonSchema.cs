@@ -89,11 +89,6 @@ public readonly partial struct KrakendSchema
                     public static partial class JsonSchema
                     {
                         /// <summary>
-                        /// A regular expression for the <c>pattern</c> keyword.
-                        /// </summary>
-                        public static readonly Regex Pattern = CreatePattern();
-
-                        /// <summary>
                         /// Gets a provider for the schema location from which this type was generated.
                         /// </summary>
                         public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id"u8, buffer, out written);
@@ -137,8 +132,7 @@ public readonly partial struct KrakendSchema
                             }
                             else
                             {
-                                using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
-                                JsonSchemaEvaluation.MatchRegularExpression(unescapedUtf8JsonString.Span, Pattern,"^.*$", "pattern"u8, ref context);
+                                JsonSchemaEvaluation.MatchNoopRegularExpression("^.*$", "pattern"u8, ref context);
                             }
                         }
 
@@ -165,13 +159,6 @@ public readonly partial struct KrakendSchema
                                 context.Dispose();
                             }
                         }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                        [GeneratedRegex("^.*$")]
-                        private static partial Regex CreatePattern();
-#else
-                        private static Regex CreatePattern() => new("^.*$", RegexOptions.Compiled);
-#endif
 
                         /// <summary>
                         /// Push the current context as a child context for schema evaluation.

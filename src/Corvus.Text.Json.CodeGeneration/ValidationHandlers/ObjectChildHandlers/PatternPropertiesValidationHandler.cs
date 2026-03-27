@@ -127,12 +127,6 @@ file static class PatternPropertiesValidationExtensions
             return generator;
         }
 
-        string regexAccessor =
-            generator.GetStaticReadOnlyFieldNameInScope(
-                property.Keyword.Keyword,
-                rootScope: generator.JsonSchemaClassScope(),
-                suffix: index?.ToString());
-
         string keywordString = SymbolDisplay.FormatLiteral(property.Keyword.Keyword, true);
         string propertyClassName = property.ReducedPatternPropertyType.FullyQualifiedDotnetTypeName();
         string jsonSchemaClassName = generator.JsonSchemaClassName(propertyClassName);
@@ -141,30 +135,93 @@ file static class PatternPropertiesValidationExtensions
 
         string evaluationPathProperty = evaluationPathProperties[property.Keyword.Keyword][index.HasValue ? index.Value - 1 : 0];
 
-        return generator
-            .AppendSeparatorLine()
-            .AppendLineIndent(
-                "if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, ", regexAccessor, "))")
-            .AppendLineIndent("{")
-            .PushIndent()
-                .AppendLineIndent("context.AddLocalEvaluatedProperty(objectValidation_propertyCount);")
-                .AppendLineIndent("JsonSchemaContext ", childContextName, " =")
-                .PushIndent()
-                    .AppendLineIndent("PushChildContextUnescaped(")
-                    .PushIndent()
-                        .AppendLineIndent("parentDocument,")
-                        .AppendLineIndent("objectValidation_currentIndex,")
-                        .AppendLineIndent("ref context,")
-                        .AppendLineIndent("objectValidation_unescapedPropertyName.Span,")
-                        .AppendLineIndent("evaluationPath: ", evaluationPathProperty, ");")
-                    .PopIndent()
-                .PopIndent()
-                .AppendSeparatorLine()
-                .AppendLineIndent(propertyClassName, ".", jsonSchemaClassName, ".Evaluate(parentDocument, objectValidation_currentIndex, ref ", childContextName, ");")
-                .AppendLineIndent("context.EvaluatedKeyword(context.IsMatch, ", pattern, ", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, ", keywordString, "u8);")
-                .AppendLineIndent("context.CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");")
+        RegexPatternCategory category = CodeGenerationExtensions.ClassifyRegexPattern(property.Pattern);
 
+        generator
+            .AppendSeparatorLine();
+
+        if (category == RegexPatternCategory.Noop)
+        {
+            // Noop patterns always match — emit body without an if-guard.
+            generator
+                .AppendLineIndent("// Pattern ", pattern, " always matches.")
+                .AppendPatternPropertyValidationBody(
+                    propertyClassName, jsonSchemaClassName, childContextName, pattern, keywordString, evaluationPathProperty);
+        }
+        else
+        {
+            string condition = BuildPatternPropertyCondition(generator, property, index, category);
+
+            generator
+                .AppendLineIndent("if (", condition, ")")
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendPatternPropertyValidationBody(
+                        propertyClassName, jsonSchemaClassName, childContextName, pattern, keywordString, evaluationPathProperty)
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
+
+        return generator;
+    }
+
+    private static CodeGenerator AppendPatternPropertyValidationBody(
+        this CodeGenerator generator,
+        string propertyClassName,
+        string jsonSchemaClassName,
+        string childContextName,
+        string pattern,
+        string keywordString,
+        string evaluationPathProperty)
+    {
+        return generator
+            .AppendLineIndent("context.AddLocalEvaluatedProperty(objectValidation_propertyCount);")
+            .AppendLineIndent("JsonSchemaContext ", childContextName, " =")
+            .PushIndent()
+                .AppendLineIndent("PushChildContextUnescaped(")
+                .PushIndent()
+                    .AppendLineIndent("parentDocument,")
+                    .AppendLineIndent("objectValidation_currentIndex,")
+                    .AppendLineIndent("ref context,")
+                    .AppendLineIndent("objectValidation_unescapedPropertyName.Span,")
+                    .AppendLineIndent("evaluationPath: ", evaluationPathProperty, ");")
+                .PopIndent()
             .PopIndent()
-            .AppendLineIndent("}");
+            .AppendSeparatorLine()
+            .AppendLineIndent(propertyClassName, ".", jsonSchemaClassName, ".Evaluate(parentDocument, objectValidation_currentIndex, ref ", childContextName, ");")
+            .AppendLineIndent("context.EvaluatedKeyword(context.IsMatch, ", pattern, ", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, ", keywordString, "u8);")
+            .AppendLineIndent("context.CommitChildContext(", childContextName, ".IsMatch, ref ", childContextName, ");");
+    }
+
+    private static string BuildPatternPropertyCondition(CodeGenerator generator, PatternPropertyDeclaration property, int? index, RegexPatternCategory category)
+    {
+        switch (category)
+        {
+            case RegexPatternCategory.NonEmpty:
+                return "objectValidation_unescapedPropertyName.Span.Length > 0";
+
+            case RegexPatternCategory.Prefix:
+            {
+                string prefix = CodeGenerationExtensions.ExtractRegexPrefix(property.Pattern);
+                string prefixLiteral = SymbolDisplay.FormatLiteral(prefix, true);
+                return $"objectValidation_unescapedPropertyName.Span.StartsWith({prefixLiteral}u8)";
+            }
+
+            case RegexPatternCategory.Range:
+            {
+                (int min, int max) = CodeGenerationExtensions.ExtractRegexRange(property.Pattern);
+                return $"JsonSchemaEvaluation.MatchRangeRegularExpression(objectValidation_unescapedPropertyName.Span, {min}, {max})";
+            }
+
+            default:
+            {
+                string regexAccessor =
+                    generator.GetStaticReadOnlyFieldNameInScope(
+                        property.Keyword.Keyword,
+                        rootScope: generator.JsonSchemaClassScope(),
+                        suffix: index?.ToString());
+                return $"JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, {regexAccessor})";
+            }
+        }
     }
 }

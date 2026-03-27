@@ -50,11 +50,6 @@ public readonly partial struct VercelSchema
                 public static partial class JsonSchema
                 {
                     /// <summary>
-                    /// A regular expression for the <c>pattern</c> keyword.
-                    /// </summary>
-                    public static readonly Regex Pattern = CreatePattern();
-
-                    /// <summary>
                     /// Gets a provider for the schema location from which this type was generated.
                     /// </summary>
                     public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("vercel-schema.json#/properties/crons/items/properties/path"u8, buffer, out written);
@@ -109,7 +104,7 @@ public readonly partial struct VercelSchema
                                 return;
                             }
 
-                            JsonSchemaEvaluation.MatchRegularExpression(unescapedUtf8JsonString.Span, Pattern,"^/.*", "pattern"u8, ref context);
+                            JsonSchemaEvaluation.MatchPrefixRegularExpression(unescapedUtf8JsonString.Span, "/"u8, "^/.*", "pattern"u8, ref context);
                         }
                     }
 
@@ -136,13 +131,6 @@ public readonly partial struct VercelSchema
                             context.Dispose();
                         }
                     }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                    [GeneratedRegex("^/.*")]
-                    private static partial Regex CreatePattern();
-#else
-                    private static Regex CreatePattern() => new("^/.*", RegexOptions.Compiled);
-#endif
 
                     /// <summary>
                     /// Push the current context as a child context for schema evaluation.

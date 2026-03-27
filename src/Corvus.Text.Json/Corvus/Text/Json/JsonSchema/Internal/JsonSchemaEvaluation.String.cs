@@ -212,6 +212,101 @@ public static partial class JsonSchemaEvaluation
     }
 
     /// <summary>
+    /// Records a successful match for a noop regular expression pattern
+    /// (one that always matches, such as <c>.*</c>).
+    /// </summary>
+    /// <param name="originalExpressionString">The original pattern string for diagnostics.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    [CLSCompliant(false)]
+    public static void MatchNoopRegularExpression(string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
+    }
+
+    /// <summary>
+    /// Validates that a string is non-empty, as a replacement for patterns like <c>.+</c>.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="originalExpressionString">The original pattern string for diagnostics.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the string is non-empty; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchNonEmptyRegularExpression(ReadOnlySpan<byte> value, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (value.Length == 0)
+        {
+            context.EvaluatedKeyword(false, originalExpressionString, messageProvider: ExpectedStringMatchesRegularExpression, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string starts with a literal prefix, as a replacement for patterns like <c>^prefix</c>.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="prefix">The expected UTF-8 encoded prefix.</param>
+    /// <param name="originalExpressionString">The original pattern string for diagnostics.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the string starts with the prefix; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchPrefixRegularExpression(ReadOnlySpan<byte> value, ReadOnlySpan<byte> prefix, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        if (!value.StartsWith(prefix))
+        {
+            context.EvaluatedKeyword(false, originalExpressionString, messageProvider: ExpectedStringMatchesRegularExpression, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a string's Unicode codepoint length is within a range, as a replacement for patterns like <c>^.{n,m}$</c>.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded string value to validate.</param>
+    /// <param name="min">The minimum number of Unicode codepoints.</param>
+    /// <param name="max">The maximum number of Unicode codepoints.</param>
+    /// <param name="originalExpressionString">The original pattern string for diagnostics.</param>
+    /// <param name="keyword">The keyword being evaluated.</param>
+    /// <param name="context">The JSON schema validation context.</param>
+    /// <returns><see langword="true"/> if the string length is within the range; otherwise, <see langword="false"/>.</returns>
+    [CLSCompliant(false)]
+    public static bool MatchRangeRegularExpression(ReadOnlySpan<byte> value, int min, int max, string originalExpressionString, ReadOnlySpan<byte> keyword, ref JsonSchemaContext context)
+    {
+        int runeCount = JsonElementHelpers.CountRunes(value);
+
+        if (runeCount < min || runeCount > max)
+        {
+            context.EvaluatedKeyword(false, originalExpressionString, messageProvider: ExpectedStringMatchesRegularExpression, keyword);
+            return false;
+        }
+
+        context.EvaluatedKeyword(true, originalExpressionString, ExpectedStringMatchesRegularExpression, keyword);
+        return true;
+    }
+
+    /// <summary>
+    /// Validates that a UTF-8 byte span's Unicode codepoint length is within a range.
+    /// Used for <c>patternProperties</c> matching where no context reporting is needed.
+    /// </summary>
+    /// <param name="value">The UTF-8 encoded value to check.</param>
+    /// <param name="min">The minimum number of Unicode codepoints.</param>
+    /// <param name="max">The maximum number of Unicode codepoints.</param>
+    /// <returns><see langword="true"/> if the length is within range; otherwise, <see langword="false"/>.</returns>
+    public static bool MatchRangeRegularExpression(ReadOnlySpan<byte> value, int min, int max)
+    {
+        int runeCount = JsonElementHelpers.CountRunes(value);
+        return runeCount >= min && runeCount <= max;
+    }
+
+    /// <summary>
     /// Validates that a string equals the given value.
     /// </summary>
     /// <param name="actual">The UTF-8 encoded string value to validate.</param>

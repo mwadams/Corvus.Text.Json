@@ -59,11 +59,6 @@ public readonly partial struct VercelSchema
                         private static readonly JsonSchemaPathProvider AdditionalPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/additionalProperties"u8, buffer, out written);
 
                         /// <summary>
-                        /// A regular expression for the <c>patternProperties</c> keyword.
-                        /// </summary>
-                        public static readonly Regex PatternProperties = CreatePatternProperties();
-
-                        /// <summary>
                         /// Gets a provider for the schema location from which this type was generated.
                         /// </summary>
                         public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("vercel-schema.json#/properties/routes/items/anyOf/0/properties/headers"u8, buffer, out written);
@@ -118,7 +113,7 @@ public readonly partial struct VercelSchema
                                     int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                                     using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                                    if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                                    if (JsonSchemaEvaluation.MatchRangeRegularExpression(objectValidation_unescapedPropertyName.Span, 1, 256))
                                     {
                                         context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                                         JsonSchemaContext childContext =
@@ -195,13 +190,6 @@ public readonly partial struct VercelSchema
                                 context.Dispose();
                             }
                         }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                        [GeneratedRegex("^.{1,256}$")]
-                        private static partial Regex CreatePatternProperties();
-#else
-                        private static Regex CreatePatternProperties() => new("^.{1,256}$", RegexOptions.Compiled);
-#endif
 
                         /// <summary>
                         /// Push the current context as a child context for schema evaluation.

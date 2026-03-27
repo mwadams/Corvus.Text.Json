@@ -2640,11 +2640,6 @@ public readonly partial struct ClangFormatSchema
         private static readonly JsonSchemaPathProvider AdditionalPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/additionalProperties"u8, buffer, out written);
 
         /// <summary>
-        /// A regular expression for the <c>patternProperties</c> keyword.
-        /// </summary>
-        public static readonly Regex PatternProperties = CreatePatternProperties();
-
-        /// <summary>
         /// Gets a provider for the schema location from which this type was generated.
         /// </summary>
         public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("clang-format-schema.json"u8, buffer, out written);
@@ -2708,7 +2703,7 @@ public readonly partial struct ClangFormatSchema
                         }
                     }
 
-                    if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                    if (objectValidation_unescapedPropertyName.Span.StartsWith("x-"u8))
                     {
                         context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                         JsonSchemaContext childContext =
@@ -2776,13 +2771,6 @@ public readonly partial struct ClangFormatSchema
                 context.Dispose();
             }
         }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-        [GeneratedRegex("^x-")]
-        private static partial Regex CreatePatternProperties();
-#else
-        private static Regex CreatePatternProperties() => new("^x-", RegexOptions.Compiled);
-#endif
 
         /// <summary>
         /// Push the current context as a child context for schema evaluation.

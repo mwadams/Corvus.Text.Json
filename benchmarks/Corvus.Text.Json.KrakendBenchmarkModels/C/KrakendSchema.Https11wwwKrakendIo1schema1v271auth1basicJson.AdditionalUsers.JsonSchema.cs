@@ -58,11 +58,6 @@ public readonly partial struct KrakendSchema
                 private static readonly JsonSchemaPathProvider PatternPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/patternProperties/(.*)"u8, buffer, out written);
 
                 /// <summary>
-                /// A regular expression for the <c>patternProperties</c> keyword.
-                /// </summary>
-                public static readonly Regex PatternProperties = CreatePatternProperties();
-
-                /// <summary>
                 /// Gets a provider for the schema location from which this type was generated.
                 /// </summary>
                 public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1auth~1basic.json/properties/users"u8, buffer, out written);
@@ -114,21 +109,19 @@ public readonly partial struct KrakendSchema
                             int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                             using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                            if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
-                            {
-                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                                JsonSchemaContext childContext =
-                                    PushChildContextUnescaped(
-                                        parentDocument,
-                                        objectValidation_currentIndex,
-                                        ref context,
-                                        objectValidation_unescapedPropertyName.Span,
-                                        evaluationPath: PatternPropertiesSchemaEvaluationPath);
+                            // Pattern "(.*)" always matches.
+                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                            JsonSchemaContext childContext =
+                                PushChildContextUnescaped(
+                                    parentDocument,
+                                    objectValidation_currentIndex,
+                                    ref context,
+                                    objectValidation_unescapedPropertyName.Span,
+                                    evaluationPath: PatternPropertiesSchemaEvaluationPath);
 
-                                Corvus.KrakendBenchmark.Current.KrakendSchema.Https11wwwKrakendIo1schema1v271auth1basicJson.AdditionalUsers.Entity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-                                context.EvaluatedKeyword(context.IsMatch, "(.*)", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
-                                context.CommitChildContext(childContext.IsMatch, ref childContext);
-                            }
+                            Corvus.KrakendBenchmark.Current.KrakendSchema.Https11wwwKrakendIo1schema1v271auth1basicJson.AdditionalUsers.Entity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+                            context.EvaluatedKeyword(context.IsMatch, "(.*)", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
+                            context.CommitChildContext(childContext.IsMatch, ref childContext);
 
                             objectValidation_propertyCount++;
                         }
@@ -158,13 +151,6 @@ public readonly partial struct KrakendSchema
                         context.Dispose();
                     }
                 }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                [GeneratedRegex("(.*)")]
-                private static partial Regex CreatePatternProperties();
-#else
-                private static Regex CreatePatternProperties() => new("(.*)", RegexOptions.Compiled);
-#endif
 
                 /// <summary>
                 /// Push the current context as a child context for schema evaluation.
