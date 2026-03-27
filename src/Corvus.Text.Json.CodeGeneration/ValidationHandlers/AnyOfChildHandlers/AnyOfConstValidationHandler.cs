@@ -152,20 +152,31 @@ file static class AnyOfConstValidationHandlerExtensions
 {
     private const int MinEnumValuesForHashSet = 3;
 
-    // TODO: For pure string enums where type is constrained to string, the string constant
-    // validation could be emitted inside the type-check else clause (alongside maxLength etc.)
-    // where unescapedUtf8JsonString is already in scope, avoiding the redundant re-declaration
-    // and the tokenType guard. This would require making the enum string check participate in
-    // the string validation scope rather than running as a separate top-level handler.
+    // When the type is constrained to a single string type, this handler runs inside the
+    // type-check else clause (invoked by TypeValidationHandler's additionalWork callback).
+    // In that scope, we know tokenType == String, so we skip the redundant guard and use
+    // includeTokenTypeCheck: false. If string constraints already declared
+    // unescapedUtf8JsonString, AppendUnescapedUtf8JsonStringIfNotAppended reuses it.
+    // When the type is NOT constrained to string, we emit the original if-block wrapper.
     public static CodeGenerator AppendStringConstantValidation(this CodeGenerator generator, TypeDeclaration typeDeclaration, IAnyOfConstantValidationKeyword keyword, (int, JsonElement)[] constantValues, string shortCircuitSuccessLabel)
     {
-        generator
-            .AppendSeparatorLine()
-            .AppendLineIndent("if (tokenType == JsonTokenType.String)")
-            .PushMemberScope("constantValidation", ScopeType.Method)
-            .AppendLineIndent("{")
-            .PushIndent()
-                .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false);
+        bool isStringTypeVerified = typeDeclaration.AllowedCoreTypes() == CoreTypes.String;
+
+        if (isStringTypeVerified)
+        {
+            generator
+                .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, includeTokenTypeCheck: false);
+        }
+        else
+        {
+            generator
+                .AppendSeparatorLine()
+                .AppendLineIndent("if (tokenType == JsonTokenType.String)")
+                .PushMemberScope("constantValidation", ScopeType.Method)
+                .AppendLineIndent("{")
+                .PushIndent()
+                    .AppendUnescapedUtf8JsonStringIfNotAppended(typeDeclaration, false);
+        }
 
         if (typeDeclaration.TryGetEnumStringSetFieldName(keyword.Keyword, out string? enumStringSetFieldName))
         {
@@ -195,10 +206,13 @@ file static class AnyOfConstValidationHandlerExtensions
             }
         }
 
-        generator
-            .PopMemberScope()
-            .PopIndent()
-            .AppendLineIndent("}");
+        if (!isStringTypeVerified)
+        {
+            generator
+                .PopMemberScope()
+                .PopIndent()
+                .AppendLineIndent("}");
+        }
 
         return generator;
     }

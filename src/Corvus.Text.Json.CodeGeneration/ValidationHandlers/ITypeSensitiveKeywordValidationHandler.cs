@@ -29,7 +29,7 @@ internal interface ITypeSensitiveKeywordValidationHandler : ITypeInsensitiveKeyw
 }
 
 /// <summary>
-/// A validation handler for keywords that are sensitive to the Core type of the instance
+/// A validation handler for keywords that are not sensitive to the Core type of the instance
 /// they are validating.
 /// </summary>
 internal interface ITypeInsensitiveKeywordValidationHandler : IKeywordValidationHandler
