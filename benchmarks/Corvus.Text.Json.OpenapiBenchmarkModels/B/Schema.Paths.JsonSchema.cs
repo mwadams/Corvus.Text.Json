@@ -44,11 +44,6 @@ public readonly partial struct Schema
             private static readonly JsonSchemaPathProvider UnevaluatedPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/unevaluatedProperties"u8, buffer, out written);
 
             /// <summary>
-            /// A regular expression for the <c>patternProperties</c> keyword.
-            /// </summary>
-            public static readonly Regex PatternProperties = CreatePatternProperties();
-
-            /// <summary>
             /// Gets a provider for the schema location from which this type was generated.
             /// </summary>
             public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("https://spec.openapis.org/oas/3.1/schema/2022-10-07#/$defs/paths"u8, buffer, out written);
@@ -123,7 +118,7 @@ public readonly partial struct Schema
                         int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                         using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                        if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                        if (objectValidation_unescapedPropertyName.Span.StartsWith("/"u8))
                         {
                             context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                             JsonSchemaContext childContext =
@@ -191,13 +186,6 @@ public readonly partial struct Schema
                     context.Dispose();
                 }
             }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-            [GeneratedRegex("^/")]
-            private static partial Regex CreatePatternProperties();
-#else
-            private static Regex CreatePatternProperties() => new("^/", RegexOptions.Compiled);
-#endif
 
             /// <summary>
             /// Push the current context as a child context for schema evaluation.

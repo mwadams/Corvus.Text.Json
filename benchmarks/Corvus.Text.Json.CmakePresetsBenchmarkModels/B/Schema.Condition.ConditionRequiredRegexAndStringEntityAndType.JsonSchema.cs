@@ -158,17 +158,17 @@ public readonly partial struct Schema
                 /// <summary>
                 /// Gets a provider for the schema location from which this type was generated.
                 /// </summary>
-                public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/definitions/condition/anyOf/7"u8, buffer, out written);
+                public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("cmake-presets-schema.json#/definitions/condition/anyOf/7"u8, buffer, out written);
 
                 /// <summary>
                 /// Gets the schema location from which this type was generated.
                 /// </summary>
-                public const string SchemaLocation = "schema.json#/definitions/condition/anyOf/7";
+                public const string SchemaLocation = "cmake-presets-schema.json#/definitions/condition/anyOf/7";
 
                 /// <summary>
                 /// Gets the schema location from which this type was generated as a UTF-8 string.
                 /// </summary>
-                public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/definitions/condition/anyOf/7"u8;
+                public static ReadOnlySpan<byte> SchemaLocationUtf8 => "cmake-presets-schema.json#/definitions/condition/anyOf/7"u8;
 
                 /// <summary>
                 /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -219,28 +219,30 @@ public readonly partial struct Schema
                                     return;
                                 }
                             }
-
-                            if (!context.HasLocalEvaluatedProperty(objectValidation_propertyCount))
+                            else
                             {
-                                JsonSchemaContext childContext = Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped(
-                                    parentDocument,
-                                    objectValidation_currentIndex,
-                                    ref context,
-                                    objectValidation_unescapedPropertyName.Span,
-                                    evaluationPath: AdditionalPropertiesSchemaEvaluationPath);
-
-                                Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-
-                                if (!childContext.IsMatch)
+                                if (!context.HasLocalEvaluatedProperty(objectValidation_propertyCount))
                                 {
-                                    context.CommitChildContext(false, ref childContext);
-                                    context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
-                                }
-                                else
-                                {
-                                    context.CommitChildContext(true, ref childContext);
-                                    context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                                    context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                                    JsonSchemaContext childContext = Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref context,
+                                        objectValidation_unescapedPropertyName.Span,
+                                        evaluationPath: AdditionalPropertiesSchemaEvaluationPath);
+
+                                    Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+
+                                    if (!childContext.IsMatch)
+                                    {
+                                        context.CommitChildContext(false, ref childContext);
+                                        context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                                    }
+                                    else
+                                    {
+                                        context.CommitChildContext(true, ref childContext);
+                                        context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                        context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                                    }
                                 }
                             }
 

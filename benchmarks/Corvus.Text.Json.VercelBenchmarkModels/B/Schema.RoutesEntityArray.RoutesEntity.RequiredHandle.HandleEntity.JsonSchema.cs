@@ -197,17 +197,17 @@ public readonly partial struct Schema
                         /// <summary>
                         /// Gets a provider for the schema location from which this type was generated.
                         /// </summary>
-                        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/properties/routes/items/anyOf/1/properties/handle"u8, buffer, out written);
+                        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("vercel-schema.json#/properties/routes/items/anyOf/1/properties/handle"u8, buffer, out written);
 
                         /// <summary>
                         /// Gets the schema location from which this type was generated.
                         /// </summary>
-                        public const string SchemaLocation = "schema.json#/properties/routes/items/anyOf/1/properties/handle";
+                        public const string SchemaLocation = "vercel-schema.json#/properties/routes/items/anyOf/1/properties/handle";
 
                         /// <summary>
                         /// Gets the schema location from which this type was generated as a UTF-8 string.
                         /// </summary>
-                        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/properties/routes/items/anyOf/1/properties/handle"u8;
+                        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "vercel-schema.json#/properties/routes/items/anyOf/1/properties/handle"u8;
 
                         /// <summary>
                         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -242,36 +242,26 @@ public readonly partial struct Schema
 
                                 int stringLength = JsonElementHelpers.CountRunes(unescapedUtf8JsonString.Span);
                                 JsonSchemaEvaluation.MatchLengthLessThanOrEquals(32,stringLength, "maxLength"u8, ref context);
-                            }
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            if (tokenType == JsonTokenType.String)
-                            {
-                                using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
 
                                 if (EnumStringSet.Contains(unescapedUtf8JsonString.Span))
                                 {
                                     goto enumShortCircuitSuccess;
                                 }
-                            }
 
-                            context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
+                                context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
 
-                            if (!context.HasCollector)
-                            {
-                                return;
-                            }
+                                if (!context.HasCollector)
+                                {
+                                    return;
+                                }
 
-                            goto enumAfterFailure;
+                                goto enumAfterFailure;
 
 enumShortCircuitSuccess:
-                            context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
+                                context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
 
 enumAfterFailure:;
+                            }
                         }
 
                         internal static bool Evaluate(

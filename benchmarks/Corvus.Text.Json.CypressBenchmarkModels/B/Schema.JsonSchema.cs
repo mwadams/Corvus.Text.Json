@@ -200,17 +200,17 @@ public readonly partial struct Schema
         /// <summary>
         /// Gets a provider for the schema location from which this type was generated.
         /// </summary>
-        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("cypress-schema.json"u8, buffer, out written);
 
         /// <summary>
         /// Gets the schema location from which this type was generated.
         /// </summary>
-        public const string SchemaLocation = "schema.json";
+        public const string SchemaLocation = "cypress-schema.json";
 
         /// <summary>
         /// Gets the schema location from which this type was generated as a UTF-8 string.
         /// </summary>
-        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json"u8;
+        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "cypress-schema.json"u8;
         private static readonly JsonSchemaPathProvider AllOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/allOf/0/$ref"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider AllOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/allOf/1"u8, buffer, out written);
 

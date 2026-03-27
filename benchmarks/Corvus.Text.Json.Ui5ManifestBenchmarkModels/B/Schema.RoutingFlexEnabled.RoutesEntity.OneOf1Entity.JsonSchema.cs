@@ -57,24 +57,19 @@ public readonly partial struct Schema
                     private static readonly JsonSchemaPathProvider PatternPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/patternProperties/[\\s\\S]*/$ref"u8, buffer, out written);
 
                     /// <summary>
-                    /// A regular expression for the <c>patternProperties</c> keyword.
-                    /// </summary>
-                    public static readonly Regex PatternProperties = CreatePatternProperties();
-
-                    /// <summary>
                     /// Gets a provider for the schema location from which this type was generated.
                     /// </summary>
-                    public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/definitions/routing_flexEnabled/properties/routes/oneOf/1"u8, buffer, out written);
+                    public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("ui5-manifest-schema.json#/definitions/routing_flexEnabled/properties/routes/oneOf/1"u8, buffer, out written);
 
                     /// <summary>
                     /// Gets the schema location from which this type was generated.
                     /// </summary>
-                    public const string SchemaLocation = "schema.json#/definitions/routing_flexEnabled/properties/routes/oneOf/1";
+                    public const string SchemaLocation = "ui5-manifest-schema.json#/definitions/routing_flexEnabled/properties/routes/oneOf/1";
 
                     /// <summary>
                     /// Gets the schema location from which this type was generated as a UTF-8 string.
                     /// </summary>
-                    public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/definitions/routing_flexEnabled/properties/routes/oneOf/1"u8;
+                    public static ReadOnlySpan<byte> SchemaLocationUtf8 => "ui5-manifest-schema.json#/definitions/routing_flexEnabled/properties/routes/oneOf/1"u8;
 
                     /// <summary>
                     /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -113,21 +108,19 @@ public readonly partial struct Schema
                                 int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                                 using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                                if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
-                                {
-                                    context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                                    JsonSchemaContext childContext =
-                                        PushChildContextUnescaped(
-                                            parentDocument,
-                                            objectValidation_currentIndex,
-                                            ref context,
-                                            objectValidation_unescapedPropertyName.Span,
-                                            evaluationPath: PatternPropertiesSchemaEvaluationPath);
+                                // Pattern "[\\s\\S]*" always matches.
+                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                JsonSchemaContext childContext =
+                                    PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref context,
+                                        objectValidation_unescapedPropertyName.Span,
+                                        evaluationPath: PatternPropertiesSchemaEvaluationPath);
 
-                                    Corvus.Ui5ManifestBenchmark.Baseline.Schema.RouteWithoutName.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-                                    context.EvaluatedKeyword(context.IsMatch, "[\\s\\S]*", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
-                                    context.CommitChildContext(childContext.IsMatch, ref childContext);
-                                }
+                                Corvus.Ui5ManifestBenchmark.Baseline.Schema.RouteWithoutName.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+                                context.EvaluatedKeyword(context.IsMatch, "[\\s\\S]*", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
+                                context.CommitChildContext(childContext.IsMatch, ref childContext);
 
                                 objectValidation_propertyCount++;
                             }
@@ -157,13 +150,6 @@ public readonly partial struct Schema
                             context.Dispose();
                         }
                     }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                    [GeneratedRegex("[\\s\\S]*")]
-                    private static partial Regex CreatePatternProperties();
-#else
-                    private static Regex CreatePatternProperties() => new("[\\s\\S]*", RegexOptions.Compiled);
-#endif
 
                     /// <summary>
                     /// Push the current context as a child context for schema evaluation.

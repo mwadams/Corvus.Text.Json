@@ -106,17 +106,17 @@ public readonly partial struct Schema
             /// <summary>
             /// Gets a provider for the schema location from which this type was generated.
             /// </summary>
-            public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1plugin~1url-rewrite.json"u8, buffer, out written);
+            public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1plugin~1url-rewrite.json"u8, buffer, out written);
 
             /// <summary>
             /// Gets the schema location from which this type was generated.
             /// </summary>
-            public const string SchemaLocation = "schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1plugin~1url-rewrite.json";
+            public const string SchemaLocation = "krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1plugin~1url-rewrite.json";
 
             /// <summary>
             /// Gets the schema location from which this type was generated as a UTF-8 string.
             /// </summary>
-            public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1plugin~1url-rewrite.json"u8;
+            public static ReadOnlySpan<byte> SchemaLocationUtf8 => "krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1plugin~1url-rewrite.json"u8;
             private static readonly JsonSchemaPathProvider AnyOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/anyOf/0"u8, buffer, out written);
             private static readonly JsonSchemaPathProvider AnyOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/anyOf/1"u8, buffer, out written);
 
@@ -223,44 +223,46 @@ public readonly partial struct Schema
                                 return;
                             }
                         }
-
-                        if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                        else
                         {
-                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                            JsonSchemaContext childContext =
-                                PushChildContextUnescaped(
+                            if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                            {
+                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                JsonSchemaContext childContext =
+                                    PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref context,
+                                        objectValidation_unescapedPropertyName.Span,
+                                        evaluationPath: PatternPropertiesSchemaEvaluationPath);
+
+                                Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+                                context.EvaluatedKeyword(context.IsMatch, "^[@$_#]", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
+                                context.CommitChildContext(childContext.IsMatch, ref childContext);
+                            }
+
+                            if (!context.HasLocalEvaluatedProperty(objectValidation_propertyCount))
+                            {
+                                JsonSchemaContext childContext1 = Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped(
                                     parentDocument,
                                     objectValidation_currentIndex,
                                     ref context,
                                     objectValidation_unescapedPropertyName.Span,
-                                    evaluationPath: PatternPropertiesSchemaEvaluationPath);
+                                    evaluationPath: AdditionalPropertiesSchemaEvaluationPath);
 
-                            Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-                            context.EvaluatedKeyword(context.IsMatch, "^[@$_#]", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
-                            context.CommitChildContext(childContext.IsMatch, ref childContext);
-                        }
+                                Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext1);
 
-                        if (!context.HasLocalEvaluatedProperty(objectValidation_propertyCount))
-                        {
-                            JsonSchemaContext childContext1 = Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped(
-                                parentDocument,
-                                objectValidation_currentIndex,
-                                ref context,
-                                objectValidation_unescapedPropertyName.Span,
-                                evaluationPath: AdditionalPropertiesSchemaEvaluationPath);
-
-                            Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext1);
-
-                            if (!childContext1.IsMatch)
-                            {
-                                context.CommitChildContext(false, ref childContext1);
-                                context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
-                            }
-                            else
-                            {
-                                context.CommitChildContext(true, ref childContext1);
-                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                                context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                                if (!childContext1.IsMatch)
+                                {
+                                    context.CommitChildContext(false, ref childContext1);
+                                    context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(true, ref childContext1);
+                                    context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                    context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                                }
                             }
                         }
 

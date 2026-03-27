@@ -113,319 +113,316 @@ public readonly partial struct Schema
                                     return;
                                 }
                             }
-
-                            if (!context.HasCollector && !context.IsMatch)
+                            else
                             {
-                                return;
-                            }
+                                bool anyOfComposedIsMatch = false;
 
-                            bool anyOfComposedIsMatch = false;
+                                JsonSchemaContext anyOfContext0 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf0Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf0SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf0Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext0);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext0.IsMatch;
 
-                            JsonSchemaContext anyOfContext0 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf0Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf0SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf0Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext0);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext0.IsMatch;
-
-                            if (anyOfContext0.IsMatch)
-                            {
-                                if (!anyOfContext0.RequiresEvaluationTracking && !anyOfContext0.HasCollector)
+                                if (anyOfContext0.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext0.RequiresEvaluationTracking && !anyOfContext0.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext0);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext0);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext0);
 
-                            context.CommitChildContext(true, ref anyOfContext0);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext1 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf1Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf1SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf1Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext1);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext1.IsMatch;
-
-                            if (anyOfContext1.IsMatch)
-                            {
-                                if (!anyOfContext1.RequiresEvaluationTracking && !anyOfContext1.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext1);
-                            }
+                                JsonSchemaContext anyOfContext1 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf1Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf1SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf1Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext1);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext1.IsMatch;
 
-                            context.CommitChildContext(true, ref anyOfContext1);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext2 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf10Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf2SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf10Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext2);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext2.IsMatch;
-
-                            if (anyOfContext2.IsMatch)
-                            {
-                                if (!anyOfContext2.RequiresEvaluationTracking && !anyOfContext2.HasCollector)
+                                if (anyOfContext1.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext1.RequiresEvaluationTracking && !anyOfContext1.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext1);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext2);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext1);
 
-                            context.CommitChildContext(true, ref anyOfContext2);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext3 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf11Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf3SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf11Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext3);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext3.IsMatch;
-
-                            if (anyOfContext3.IsMatch)
-                            {
-                                if (!anyOfContext3.RequiresEvaluationTracking && !anyOfContext3.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext3);
-                            }
+                                JsonSchemaContext anyOfContext2 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf10Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf2SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf10Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext2);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext2.IsMatch;
 
-                            context.CommitChildContext(true, ref anyOfContext3);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext4 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf12Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf4SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf12Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext4);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext4.IsMatch;
-
-                            if (anyOfContext4.IsMatch)
-                            {
-                                if (!anyOfContext4.RequiresEvaluationTracking && !anyOfContext4.HasCollector)
+                                if (anyOfContext2.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext2.RequiresEvaluationTracking && !anyOfContext2.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext2);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext4);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext2);
 
-                            context.CommitChildContext(true, ref anyOfContext4);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext5 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf13Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf5SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf13Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext5);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext5.IsMatch;
-
-                            if (anyOfContext5.IsMatch)
-                            {
-                                if (!anyOfContext5.RequiresEvaluationTracking && !anyOfContext5.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext5);
-                            }
+                                JsonSchemaContext anyOfContext3 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf11Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf3SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf11Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext3);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext3.IsMatch;
 
-                            context.CommitChildContext(true, ref anyOfContext5);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext6 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf2Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf6SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf2Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext6);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext6.IsMatch;
-
-                            if (anyOfContext6.IsMatch)
-                            {
-                                if (!anyOfContext6.RequiresEvaluationTracking && !anyOfContext6.HasCollector)
+                                if (anyOfContext3.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext3.RequiresEvaluationTracking && !anyOfContext3.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext3);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext6);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext3);
 
-                            context.CommitChildContext(true, ref anyOfContext6);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext7 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf3Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf7SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf3Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext7);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext7.IsMatch;
-
-                            if (anyOfContext7.IsMatch)
-                            {
-                                if (!anyOfContext7.RequiresEvaluationTracking && !anyOfContext7.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext7);
-                            }
+                                JsonSchemaContext anyOfContext4 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf12Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf4SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf12Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext4);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext4.IsMatch;
 
-                            context.CommitChildContext(true, ref anyOfContext7);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext8 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf4Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf8SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf4Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext8);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext8.IsMatch;
-
-                            if (anyOfContext8.IsMatch)
-                            {
-                                if (!anyOfContext8.RequiresEvaluationTracking && !anyOfContext8.HasCollector)
+                                if (anyOfContext4.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext4.RequiresEvaluationTracking && !anyOfContext4.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext4);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext8);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext4);
 
-                            context.CommitChildContext(true, ref anyOfContext8);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext9 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf5Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf9SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf5Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext9);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext9.IsMatch;
-
-                            if (anyOfContext9.IsMatch)
-                            {
-                                if (!anyOfContext9.RequiresEvaluationTracking && !anyOfContext9.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext9);
-                            }
+                                JsonSchemaContext anyOfContext5 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf13Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf5SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf13Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext5);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext5.IsMatch;
 
-                            context.CommitChildContext(true, ref anyOfContext9);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext10 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf6Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf10SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf6Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext10);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext10.IsMatch;
-
-                            if (anyOfContext10.IsMatch)
-                            {
-                                if (!anyOfContext10.RequiresEvaluationTracking && !anyOfContext10.HasCollector)
+                                if (anyOfContext5.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext5.RequiresEvaluationTracking && !anyOfContext5.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext5);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext10);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext5);
 
-                            context.CommitChildContext(true, ref anyOfContext10);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext11 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf7Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf11SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf7Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext11);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext11.IsMatch;
-
-                            if (anyOfContext11.IsMatch)
-                            {
-                                if (!anyOfContext11.RequiresEvaluationTracking && !anyOfContext11.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext11);
-                            }
+                                JsonSchemaContext anyOfContext6 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf2Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf6SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf2Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext6);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext6.IsMatch;
 
-                            context.CommitChildContext(true, ref anyOfContext11);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext12 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf8Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf12SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf8Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext12);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext12.IsMatch;
-
-                            if (anyOfContext12.IsMatch)
-                            {
-                                if (!anyOfContext12.RequiresEvaluationTracking && !anyOfContext12.HasCollector)
+                                if (anyOfContext6.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    if (!anyOfContext6.RequiresEvaluationTracking && !anyOfContext6.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext6);
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext12);
-                            }
+                                context.CommitChildContext(true, ref anyOfContext6);
 
-                            context.CommitChildContext(true, ref anyOfContext12);
-
-                            if (!context.HasCollector && !context.IsMatch)
-                            {
-                                return;
-                            }
-
-                            JsonSchemaContext anyOfContext13 =
-                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf9Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf13SchemaEvaluationPath);
-                            Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf9Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext13);
-                            anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext13.IsMatch;
-
-                            if (anyOfContext13.IsMatch)
-                            {
-                                if (!anyOfContext13.RequiresEvaluationTracking && !anyOfContext13.HasCollector)
+                                if (!context.HasCollector && !context.IsMatch)
                                 {
-                                    goto anyOfShortCircuitSuccess;
+                                    return;
                                 }
 
-                                context.ApplyEvaluated(ref anyOfContext13);
+                                JsonSchemaContext anyOfContext7 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf3Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf7SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf3Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext7);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext7.IsMatch;
+
+                                if (anyOfContext7.IsMatch)
+                                {
+                                    if (!anyOfContext7.RequiresEvaluationTracking && !anyOfContext7.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext7);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext7);
+
+                                if (!context.HasCollector && !context.IsMatch)
+                                {
+                                    return;
+                                }
+
+                                JsonSchemaContext anyOfContext8 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf4Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf8SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf4Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext8);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext8.IsMatch;
+
+                                if (anyOfContext8.IsMatch)
+                                {
+                                    if (!anyOfContext8.RequiresEvaluationTracking && !anyOfContext8.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext8);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext8);
+
+                                if (!context.HasCollector && !context.IsMatch)
+                                {
+                                    return;
+                                }
+
+                                JsonSchemaContext anyOfContext9 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf5Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf9SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf5Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext9);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext9.IsMatch;
+
+                                if (anyOfContext9.IsMatch)
+                                {
+                                    if (!anyOfContext9.RequiresEvaluationTracking && !anyOfContext9.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext9);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext9);
+
+                                if (!context.HasCollector && !context.IsMatch)
+                                {
+                                    return;
+                                }
+
+                                JsonSchemaContext anyOfContext10 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf6Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf10SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf6Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext10);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext10.IsMatch;
+
+                                if (anyOfContext10.IsMatch)
+                                {
+                                    if (!anyOfContext10.RequiresEvaluationTracking && !anyOfContext10.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext10);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext10);
+
+                                if (!context.HasCollector && !context.IsMatch)
+                                {
+                                    return;
+                                }
+
+                                JsonSchemaContext anyOfContext11 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf7Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf11SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf7Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext11);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext11.IsMatch;
+
+                                if (anyOfContext11.IsMatch)
+                                {
+                                    if (!anyOfContext11.RequiresEvaluationTracking && !anyOfContext11.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext11);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext11);
+
+                                if (!context.HasCollector && !context.IsMatch)
+                                {
+                                    return;
+                                }
+
+                                JsonSchemaContext anyOfContext12 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf8Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf12SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf8Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext12);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext12.IsMatch;
+
+                                if (anyOfContext12.IsMatch)
+                                {
+                                    if (!anyOfContext12.RequiresEvaluationTracking && !anyOfContext12.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext12);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext12);
+
+                                if (!context.HasCollector && !context.IsMatch)
+                                {
+                                    return;
+                                }
+
+                                JsonSchemaContext anyOfContext13 =
+                                    Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf9Entity.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf13SchemaEvaluationPath);
+                                Corvus.JsconfigBenchmark.Baseline.Schema.CompilerOptionsDefinition.InstructsTheTypeScriptCompilerHowToCompileTsFiles.LibEntityArray.LibEntity.AnyOf9Entity.JsonSchema.Evaluate(parentDocument, parentIndex, ref anyOfContext13);
+                                anyOfComposedIsMatch = anyOfComposedIsMatch || anyOfContext13.IsMatch;
+
+                                if (anyOfContext13.IsMatch)
+                                {
+                                    if (!anyOfContext13.RequiresEvaluationTracking && !anyOfContext13.HasCollector)
+                                    {
+                                        goto anyOfShortCircuitSuccess;
+                                    }
+
+                                    context.ApplyEvaluated(ref anyOfContext13);
+                                }
+
+                                context.CommitChildContext(true, ref anyOfContext13);
+
+                            anyOfShortCircuitSuccess:
+                                context.EvaluatedKeyword(anyOfComposedIsMatch, anyOfComposedIsMatch  ? JsonSchemaEvaluation.MatchedAtLeastOneSchema : JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
                             }
-
-                            context.CommitChildContext(true, ref anyOfContext13);
-
-                        anyOfShortCircuitSuccess:
-                            context.EvaluatedKeyword(anyOfComposedIsMatch, anyOfComposedIsMatch  ? JsonSchemaEvaluation.MatchedAtLeastOneSchema : JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
                         }
 
                         internal static bool Evaluate(

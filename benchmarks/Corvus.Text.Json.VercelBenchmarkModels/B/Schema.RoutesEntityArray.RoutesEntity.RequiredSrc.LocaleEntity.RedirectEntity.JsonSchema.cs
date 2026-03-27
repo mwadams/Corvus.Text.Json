@@ -64,24 +64,19 @@ public readonly partial struct Schema
                             private static readonly JsonSchemaPathProvider AdditionalPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/additionalProperties"u8, buffer, out written);
 
                             /// <summary>
-                            /// A regular expression for the <c>patternProperties</c> keyword.
-                            /// </summary>
-                            public static readonly Regex PatternProperties = CreatePatternProperties();
-
-                            /// <summary>
                             /// Gets a provider for the schema location from which this type was generated.
                             /// </summary>
-                            public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/properties/routes/items/anyOf/0/properties/locale/properties/redirect"u8, buffer, out written);
+                            public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("vercel-schema.json#/properties/routes/items/anyOf/0/properties/locale/properties/redirect"u8, buffer, out written);
 
                             /// <summary>
                             /// Gets the schema location from which this type was generated.
                             /// </summary>
-                            public const string SchemaLocation = "schema.json#/properties/routes/items/anyOf/0/properties/locale/properties/redirect";
+                            public const string SchemaLocation = "vercel-schema.json#/properties/routes/items/anyOf/0/properties/locale/properties/redirect";
 
                             /// <summary>
                             /// Gets the schema location from which this type was generated as a UTF-8 string.
                             /// </summary>
-                            public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/properties/routes/items/anyOf/0/properties/locale/properties/redirect"u8;
+                            public static ReadOnlySpan<byte> SchemaLocationUtf8 => "vercel-schema.json#/properties/routes/items/anyOf/0/properties/locale/properties/redirect"u8;
 
                             /// <summary>
                             /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -123,7 +118,7 @@ public readonly partial struct Schema
                                         int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                                         using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                                        if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                                        if (JsonSchemaEvaluation.MatchRangeRegularExpression(objectValidation_unescapedPropertyName.Span, 1, 256))
                                         {
                                             context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                                             JsonSchemaContext childContext =
@@ -200,13 +195,6 @@ public readonly partial struct Schema
                                     context.Dispose();
                                 }
                             }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                            [GeneratedRegex("^.{1,256}$")]
-                            private static partial Regex CreatePatternProperties();
-#else
-                            private static Regex CreatePatternProperties() => new("^.{1,256}$", RegexOptions.Compiled);
-#endif
 
                             /// <summary>
                             /// Push the current context as a child context for schema evaluation.

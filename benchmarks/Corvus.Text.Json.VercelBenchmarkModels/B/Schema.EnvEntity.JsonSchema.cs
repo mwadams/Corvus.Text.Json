@@ -44,24 +44,19 @@ public readonly partial struct Schema
             private static readonly JsonSchemaPathProvider AdditionalPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/additionalProperties"u8, buffer, out written);
 
             /// <summary>
-            /// A regular expression for the <c>patternProperties</c> keyword.
-            /// </summary>
-            public static readonly Regex PatternProperties = CreatePatternProperties();
-
-            /// <summary>
             /// Gets a provider for the schema location from which this type was generated.
             /// </summary>
-            public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/properties/env"u8, buffer, out written);
+            public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("vercel-schema.json#/properties/env"u8, buffer, out written);
 
             /// <summary>
             /// Gets the schema location from which this type was generated.
             /// </summary>
-            public const string SchemaLocation = "schema.json#/properties/env";
+            public const string SchemaLocation = "vercel-schema.json#/properties/env";
 
             /// <summary>
             /// Gets the schema location from which this type was generated as a UTF-8 string.
             /// </summary>
-            public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/properties/env"u8;
+            public static ReadOnlySpan<byte> SchemaLocationUtf8 => "vercel-schema.json#/properties/env"u8;
 
             /// <summary>
             /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -103,7 +98,7 @@ public readonly partial struct Schema
                         int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                         using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                        if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                        if (objectValidation_unescapedPropertyName.Span.Length > 0)
                         {
                             context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                             JsonSchemaContext childContext =
@@ -180,13 +175,6 @@ public readonly partial struct Schema
                     context.Dispose();
                 }
             }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-            [GeneratedRegex(".+")]
-            private static partial Regex CreatePatternProperties();
-#else
-            private static Regex CreatePatternProperties() => new(".+", RegexOptions.Compiled);
-#endif
 
             /// <summary>
             /// Push the current context as a child context for schema evaluation.

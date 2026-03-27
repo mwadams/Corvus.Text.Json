@@ -157,17 +157,17 @@ public readonly partial struct Schema
                     /// <summary>
                     /// Gets a provider for the schema location from which this type was generated.
                     /// </summary>
-                    public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/definitions/target/properties/transition/anyOf/1"u8, buffer, out written);
+                    public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("ui5-manifest-schema.json#/definitions/target/properties/transition/anyOf/1"u8, buffer, out written);
 
                     /// <summary>
                     /// Gets the schema location from which this type was generated.
                     /// </summary>
-                    public const string SchemaLocation = "schema.json#/definitions/target/properties/transition/anyOf/1";
+                    public const string SchemaLocation = "ui5-manifest-schema.json#/definitions/target/properties/transition/anyOf/1";
 
                     /// <summary>
                     /// Gets the schema location from which this type was generated as a UTF-8 string.
                     /// </summary>
-                    public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/definitions/target/properties/transition/anyOf/1"u8;
+                    public static ReadOnlySpan<byte> SchemaLocationUtf8 => "ui5-manifest-schema.json#/definitions/target/properties/transition/anyOf/1"u8;
 
                     /// <summary>
                     /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -195,13 +195,7 @@ public readonly partial struct Schema
                                 return;
                             }
                         }
-
-                        if (!context.HasCollector && !context.IsMatch)
-                        {
-                            return;
-                        }
-
-                        if (tokenType == JsonTokenType.String)
+                        else
                         {
                             using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
 
@@ -209,21 +203,21 @@ public readonly partial struct Schema
                             {
                                 goto enumShortCircuitSuccess;
                             }
-                        }
 
-                        context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
+                            context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
 
-                        if (!context.HasCollector)
-                        {
-                            return;
-                        }
+                            if (!context.HasCollector)
+                            {
+                                return;
+                            }
 
-                        goto enumAfterFailure;
+                            goto enumAfterFailure;
 
 enumShortCircuitSuccess:
-                        context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
+                            context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
 
 enumAfterFailure:;
+                        }
                     }
 
                     internal static bool Evaluate(

@@ -164,13 +164,7 @@ public readonly partial struct Schema
                                 return;
                             }
                         }
-
-                        if (!context.HasCollector && !context.IsMatch)
-                        {
-                            return;
-                        }
-
-                        if (tokenType == JsonTokenType.String)
+                        else
                         {
                             using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
 
@@ -188,21 +182,21 @@ public readonly partial struct Schema
                             {
                                 goto enumShortCircuitSuccess;
                             }
-                        }
 
-                        context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
+                            context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
 
-                        if (!context.HasCollector)
-                        {
-                            return;
-                        }
+                            if (!context.HasCollector)
+                            {
+                                return;
+                            }
 
-                        goto enumAfterFailure;
+                            goto enumAfterFailure;
 
 enumShortCircuitSuccess:
-                        context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
+                            context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
 
 enumAfterFailure:;
+                        }
                     }
 
                     internal static bool Evaluate(

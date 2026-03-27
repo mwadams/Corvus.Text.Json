@@ -51,6 +51,59 @@ public readonly partial struct Schema
         {
             public static partial class JsonSchema
             {
+                private static EnumStringMap BuildAnyOfDiscriminatorMap()
+                {
+                    return new EnumStringMap([
+                        static () => "AIX"u8,
+                        static () => "Alpine"u8,
+                        static () => "DellOS"u8,
+                        static () => "Devuan"u8,
+                        static () => "DragonFlyBSD"u8,
+                        static () => "EL"u8,
+                        static () => "eos"u8,
+                        static () => "Fedora"u8,
+                        static () => "FreeBSD"u8,
+                        static () => "GenericBSD"u8,
+                        static () => "GenericLinux"u8,
+                        static () => "GenericUNIX"u8,
+                        static () => "Amazon"u8,
+                        static () => "Gentoo"u8,
+                        static () => "HardenedBSD"u8,
+                        static () => "IOS"u8,
+                        static () => "Junos"u8,
+                        static () => "Kali"u8,
+                        static () => "macOS"u8,
+                        static () => "MacOSX"u8,
+                        static () => "Mageia"u8,
+                        static () => "NXOS"u8,
+                        static () => "OpenBSD"u8,
+                        static () => "Amazon Linux"u8,
+                        static () => "opensuse"u8,
+                        static () => "OpenWrt"u8,
+                        static () => "OracleLinux"u8,
+                        static () => "os10"u8,
+                        static () => "PAN-OS"u8,
+                        static () => "SLES"u8,
+                        static () => "SmartOS"u8,
+                        static () => "Solaris"u8,
+                        static () => "Synology"u8,
+                        static () => "TMOS"u8,
+                        static () => "aos"u8,
+                        static () => "Ubuntu"u8,
+                        static () => "vCenter"u8,
+                        static () => "Void Linux"u8,
+                        static () => "vSphere"u8,
+                        static () => "Windows"u8,
+                        static () => "ArchLinux"u8,
+                        static () => "ClearLinux"u8,
+                        static () => "Cumulus"u8,
+                        static () => "NetBSD"u8,
+                        static () => "Debian"u8,
+                    ]);
+                }
+
+                private static EnumStringMap AnyOfDiscriminatorMap { get; } = BuildAnyOfDiscriminatorMap();
+
                 /// <summary>
                 /// Gets a provider for the schema location from which this type was generated.
                 /// </summary>
@@ -127,6 +180,892 @@ public readonly partial struct Schema
                         (JsonTokenType.None or
                         JsonTokenType.EndObject or
                         JsonTokenType.EndArray));
+
+                    if (!context.HasCollector)
+                    {
+                        int anyOfDiscriminatorBranch = -1;
+                        var anyOfDiscriminatorEnum = new ObjectEnumerator(parentDocument, parentIndex);
+                        while (anyOfDiscriminatorEnum.MoveNext())
+                        {
+                            using (UnescapedUtf8JsonString anyOfDiscriminatorPropName = parentDocument.GetPropertyNameUnescaped(anyOfDiscriminatorEnum.CurrentIndex))
+                            {
+                                if (anyOfDiscriminatorPropName.Span.SequenceEqual("name"u8))
+                                {
+                                    if (parentDocument.GetJsonTokenType(anyOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)
+                                    {
+                                        using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(anyOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);
+                                        if (AnyOfDiscriminatorMap.TryGetValue(discriminatorValue.Span, out anyOfDiscriminatorBranch))
+                                        {
+                                            break;
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        switch (anyOfDiscriminatorBranch)
+                        {
+                            case 0:
+                            {
+                                JsonSchemaContext discriminatorContext0 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.AixPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf0SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.AixPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext0);
+                                if (discriminatorContext0.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext0);
+                                    context.CommitChildContext(true, ref discriminatorContext0);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext0);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 1:
+                            {
+                                JsonSchemaContext discriminatorContext1 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.AlpinePlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf1SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.AlpinePlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext1);
+                                if (discriminatorContext1.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext1);
+                                    context.CommitChildContext(true, ref discriminatorContext1);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext1);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 2:
+                            {
+                                JsonSchemaContext discriminatorContext2 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.DellOsPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf2SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.DellOsPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext2);
+                                if (discriminatorContext2.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext2);
+                                    context.CommitChildContext(true, ref discriminatorContext2);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext2);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 3:
+                            {
+                                JsonSchemaContext discriminatorContext3 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.DevuanPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf3SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.DevuanPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext3);
+                                if (discriminatorContext3.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext3);
+                                    context.CommitChildContext(true, ref discriminatorContext3);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext3);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 4:
+                            {
+                                JsonSchemaContext discriminatorContext4 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.DragonFlyBsdPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf4SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.DragonFlyBsdPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext4);
+                                if (discriminatorContext4.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext4);
+                                    context.CommitChildContext(true, ref discriminatorContext4);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext4);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 5:
+                            {
+                                JsonSchemaContext discriminatorContext5 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.ElPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf5SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.ElPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext5);
+                                if (discriminatorContext5.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext5);
+                                    context.CommitChildContext(true, ref discriminatorContext5);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext5);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 6:
+                            {
+                                JsonSchemaContext discriminatorContext6 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.EosPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf6SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.EosPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext6);
+                                if (discriminatorContext6.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext6);
+                                    context.CommitChildContext(true, ref discriminatorContext6);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext6);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 7:
+                            {
+                                JsonSchemaContext discriminatorContext7 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.FedoraPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf7SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.FedoraPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext7);
+                                if (discriminatorContext7.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext7);
+                                    context.CommitChildContext(true, ref discriminatorContext7);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext7);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 8:
+                            {
+                                JsonSchemaContext discriminatorContext8 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.FreeBsdPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf8SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.FreeBsdPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext8);
+                                if (discriminatorContext8.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext8);
+                                    context.CommitChildContext(true, ref discriminatorContext8);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext8);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 9:
+                            {
+                                JsonSchemaContext discriminatorContext9 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.GenericBsdPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf9SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.GenericBsdPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext9);
+                                if (discriminatorContext9.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext9);
+                                    context.CommitChildContext(true, ref discriminatorContext9);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext9);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 10:
+                            {
+                                JsonSchemaContext discriminatorContext10 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.GenericLinuxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf10SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.GenericLinuxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext10);
+                                if (discriminatorContext10.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext10);
+                                    context.CommitChildContext(true, ref discriminatorContext10);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext10);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 11:
+                            {
+                                JsonSchemaContext discriminatorContext11 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.GenericUnixPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf11SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.GenericUnixPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext11);
+                                if (discriminatorContext11.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext11);
+                                    context.CommitChildContext(true, ref discriminatorContext11);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext11);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 12:
+                            {
+                                JsonSchemaContext discriminatorContext12 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.AmazonPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf12SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.AmazonPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext12);
+                                if (discriminatorContext12.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext12);
+                                    context.CommitChildContext(true, ref discriminatorContext12);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext12);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 13:
+                            {
+                                JsonSchemaContext discriminatorContext13 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.GentooPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf13SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.GentooPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext13);
+                                if (discriminatorContext13.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext13);
+                                    context.CommitChildContext(true, ref discriminatorContext13);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext13);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 14:
+                            {
+                                JsonSchemaContext discriminatorContext14 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.HardenedBsdPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf14SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.HardenedBsdPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext14);
+                                if (discriminatorContext14.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext14);
+                                    context.CommitChildContext(true, ref discriminatorContext14);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext14);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 15:
+                            {
+                                JsonSchemaContext discriminatorContext15 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.IosPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf15SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.IosPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext15);
+                                if (discriminatorContext15.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext15);
+                                    context.CommitChildContext(true, ref discriminatorContext15);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext15);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 16:
+                            {
+                                JsonSchemaContext discriminatorContext16 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.JunosPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf16SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.JunosPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext16);
+                                if (discriminatorContext16.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext16);
+                                    context.CommitChildContext(true, ref discriminatorContext16);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext16);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 17:
+                            {
+                                JsonSchemaContext discriminatorContext17 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.KaliPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf17SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.KaliPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext17);
+                                if (discriminatorContext17.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext17);
+                                    context.CommitChildContext(true, ref discriminatorContext17);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext17);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 18:
+                            {
+                                JsonSchemaContext discriminatorContext18 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.MacOsPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf18SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.MacOsPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext18);
+                                if (discriminatorContext18.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext18);
+                                    context.CommitChildContext(true, ref discriminatorContext18);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext18);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 19:
+                            {
+                                JsonSchemaContext discriminatorContext19 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.MacOsxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf19SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.MacOsxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext19);
+                                if (discriminatorContext19.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext19);
+                                    context.CommitChildContext(true, ref discriminatorContext19);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext19);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 20:
+                            {
+                                JsonSchemaContext discriminatorContext20 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.MageiaPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf20SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.MageiaPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext20);
+                                if (discriminatorContext20.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext20);
+                                    context.CommitChildContext(true, ref discriminatorContext20);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext20);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 21:
+                            {
+                                JsonSchemaContext discriminatorContext21 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.NxosPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf21SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.NxosPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext21);
+                                if (discriminatorContext21.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext21);
+                                    context.CommitChildContext(true, ref discriminatorContext21);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext21);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 22:
+                            {
+                                JsonSchemaContext discriminatorContext22 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.OpenBsdPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf22SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.OpenBsdPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext22);
+                                if (discriminatorContext22.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext22);
+                                    context.CommitChildContext(true, ref discriminatorContext22);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext22);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 23:
+                            {
+                                JsonSchemaContext discriminatorContext23 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.AmazonLinuxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf23SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.AmazonLinuxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext23);
+                                if (discriminatorContext23.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext23);
+                                    context.CommitChildContext(true, ref discriminatorContext23);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext23);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 24:
+                            {
+                                JsonSchemaContext discriminatorContext24 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.OpensusePlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf24SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.OpensusePlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext24);
+                                if (discriminatorContext24.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext24);
+                                    context.CommitChildContext(true, ref discriminatorContext24);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext24);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 25:
+                            {
+                                JsonSchemaContext discriminatorContext25 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.OpenWrtPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf25SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.OpenWrtPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext25);
+                                if (discriminatorContext25.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext25);
+                                    context.CommitChildContext(true, ref discriminatorContext25);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext25);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 26:
+                            {
+                                JsonSchemaContext discriminatorContext26 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.OracleLinuxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf26SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.OracleLinuxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext26);
+                                if (discriminatorContext26.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext26);
+                                    context.CommitChildContext(true, ref discriminatorContext26);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext26);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 27:
+                            {
+                                JsonSchemaContext discriminatorContext27 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.Os10PlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf27SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.Os10PlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext27);
+                                if (discriminatorContext27.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext27);
+                                    context.CommitChildContext(true, ref discriminatorContext27);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext27);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 28:
+                            {
+                                JsonSchemaContext discriminatorContext28 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.PanOsPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf28SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.PanOsPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext28);
+                                if (discriminatorContext28.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext28);
+                                    context.CommitChildContext(true, ref discriminatorContext28);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext28);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 29:
+                            {
+                                JsonSchemaContext discriminatorContext29 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.SlesPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf29SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.SlesPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext29);
+                                if (discriminatorContext29.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext29);
+                                    context.CommitChildContext(true, ref discriminatorContext29);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext29);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 30:
+                            {
+                                JsonSchemaContext discriminatorContext30 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.SmartOsPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf30SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.SmartOsPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext30);
+                                if (discriminatorContext30.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext30);
+                                    context.CommitChildContext(true, ref discriminatorContext30);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext30);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 31:
+                            {
+                                JsonSchemaContext discriminatorContext31 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.SolarisPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf31SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.SolarisPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext31);
+                                if (discriminatorContext31.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext31);
+                                    context.CommitChildContext(true, ref discriminatorContext31);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext31);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 32:
+                            {
+                                JsonSchemaContext discriminatorContext32 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.SynologyPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf32SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.SynologyPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext32);
+                                if (discriminatorContext32.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext32);
+                                    context.CommitChildContext(true, ref discriminatorContext32);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext32);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 33:
+                            {
+                                JsonSchemaContext discriminatorContext33 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.TmosPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf33SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.TmosPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext33);
+                                if (discriminatorContext33.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext33);
+                                    context.CommitChildContext(true, ref discriminatorContext33);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext33);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 34:
+                            {
+                                JsonSchemaContext discriminatorContext34 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.AosPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf34SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.AosPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext34);
+                                if (discriminatorContext34.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext34);
+                                    context.CommitChildContext(true, ref discriminatorContext34);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext34);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 35:
+                            {
+                                JsonSchemaContext discriminatorContext35 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.UbuntuPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf35SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.UbuntuPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext35);
+                                if (discriminatorContext35.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext35);
+                                    context.CommitChildContext(true, ref discriminatorContext35);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext35);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 36:
+                            {
+                                JsonSchemaContext discriminatorContext36 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.VCenterPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf36SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.VCenterPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext36);
+                                if (discriminatorContext36.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext36);
+                                    context.CommitChildContext(true, ref discriminatorContext36);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext36);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 37:
+                            {
+                                JsonSchemaContext discriminatorContext37 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.VoidLinuxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf37SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.VoidLinuxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext37);
+                                if (discriminatorContext37.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext37);
+                                    context.CommitChildContext(true, ref discriminatorContext37);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext37);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 38:
+                            {
+                                JsonSchemaContext discriminatorContext38 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.VSpherePlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf38SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.VSpherePlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext38);
+                                if (discriminatorContext38.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext38);
+                                    context.CommitChildContext(true, ref discriminatorContext38);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext38);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 39:
+                            {
+                                JsonSchemaContext discriminatorContext39 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.WindowsPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf39SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.WindowsPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext39);
+                                if (discriminatorContext39.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext39);
+                                    context.CommitChildContext(true, ref discriminatorContext39);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext39);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 40:
+                            {
+                                JsonSchemaContext discriminatorContext40 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.ArchLinuxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf40SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.ArchLinuxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext40);
+                                if (discriminatorContext40.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext40);
+                                    context.CommitChildContext(true, ref discriminatorContext40);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext40);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 41:
+                            {
+                                JsonSchemaContext discriminatorContext41 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.ClearLinuxPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf41SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.ClearLinuxPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext41);
+                                if (discriminatorContext41.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext41);
+                                    context.CommitChildContext(true, ref discriminatorContext41);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext41);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 42:
+                            {
+                                JsonSchemaContext discriminatorContext42 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.CumulusPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf42SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.CumulusPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext42);
+                                if (discriminatorContext42.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext42);
+                                    context.CommitChildContext(true, ref discriminatorContext42);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext42);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 43:
+                            {
+                                JsonSchemaContext discriminatorContext43 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.NetBsdPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf43SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.NetBsdPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext43);
+                                if (discriminatorContext43.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext43);
+                                    context.CommitChildContext(true, ref discriminatorContext43);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext43);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            case 44:
+                            {
+                                JsonSchemaContext discriminatorContext44 =
+                                    Corvus.AnsibleMetaBenchmark.Baseline.Schema.DebianPlatformModel.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: AnyOf44SchemaEvaluationPath);
+                                Corvus.AnsibleMetaBenchmark.Baseline.Schema.DebianPlatformModel.JsonSchema.Evaluate(parentDocument, parentIndex, ref discriminatorContext44);
+                                if (discriminatorContext44.IsMatch)
+                                {
+                                    context.ApplyEvaluated(ref discriminatorContext44);
+                                    context.CommitChildContext(true, ref discriminatorContext44);
+                                    context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, "anyOf"u8);
+                                }
+                                else
+                                {
+                                    context.CommitChildContext(false, ref discriminatorContext44);
+                                    context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, "anyOf"u8);
+                                }
+
+                                return;
+                            }
+                            default:
+                                break;
+                        }
+                    }
 
                     bool anyOfComposedIsMatch = false;
 

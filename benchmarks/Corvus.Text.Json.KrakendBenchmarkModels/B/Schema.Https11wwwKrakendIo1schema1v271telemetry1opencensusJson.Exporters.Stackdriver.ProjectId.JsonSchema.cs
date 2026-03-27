@@ -89,24 +89,19 @@ public readonly partial struct Schema
                     public static partial class JsonSchema
                     {
                         /// <summary>
-                        /// A regular expression for the <c>pattern</c> keyword.
-                        /// </summary>
-                        public static readonly Regex Pattern = CreatePattern();
-
-                        /// <summary>
                         /// Gets a provider for the schema location from which this type was generated.
                         /// </summary>
-                        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id"u8, buffer, out written);
+                        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id"u8, buffer, out written);
 
                         /// <summary>
                         /// Gets the schema location from which this type was generated.
                         /// </summary>
-                        public const string SchemaLocation = "schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id";
+                        public const string SchemaLocation = "krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id";
 
                         /// <summary>
                         /// Gets the schema location from which this type was generated as a UTF-8 string.
                         /// </summary>
-                        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id"u8;
+                        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "krakend-schema.json#/definitions/https:~1~1www.krakend.io~1schema~1v2.7~1telemetry~1opencensus.json/properties/exporters/properties/stackdriver/properties/project_id"u8;
 
                         /// <summary>
                         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -137,8 +132,7 @@ public readonly partial struct Schema
                             }
                             else
                             {
-                                using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
-                                JsonSchemaEvaluation.MatchRegularExpression(unescapedUtf8JsonString.Span, Pattern,"^.*$", "pattern"u8, ref context);
+                                JsonSchemaEvaluation.MatchNoopRegularExpression("^.*$", "pattern"u8, ref context);
                             }
                         }
 
@@ -165,13 +159,6 @@ public readonly partial struct Schema
                                 context.Dispose();
                             }
                         }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                        [GeneratedRegex("^.*$")]
-                        private static partial Regex CreatePattern();
-#else
-                        private static Regex CreatePattern() => new("^.*$", RegexOptions.Compiled);
-#endif
 
                         /// <summary>
                         /// Push the current context as a child context for schema evaluation.

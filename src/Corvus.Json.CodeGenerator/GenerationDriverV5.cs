@@ -286,30 +286,19 @@ public static class GenerationDriverV5
         outputFile = PathTruncator.TruncatePath(originalFileName);
         if (!writtenFiles.Add(outputFile))
         {
-            if (originalFileName != outputFile)
+            string path = Path.GetDirectoryName(outputFile)!;
+            string baseName = Path.GetFileNameWithoutExtension(outputFile);
+            string extension = Path.GetExtension(outputFile);
+            int counter = 1;
+            do
             {
-                AnsiConsole.MarkupLineInterpolated($"[red]The file path [/][white]{originalFileName}[/] [red]was too long.[/]");
-                AnsiConsole.MarkupLineInterpolated($"[red]It was truncated to [/][white]{outputFile}[/][red], but that file name was already in use.[/]");
-                AnsiConsole.MarkupLineInterpolated($"[red]Consider using a shallower path for your output files, or explicitly map types into a root namespace, rather than nesting in their parent.[/]");
-                outputFile = originalFileName;
+                outputFile = PathTruncator.TruncatePath(Path.Combine(path, $"{baseName}{counter++}{extension}"));
             }
-            else
+            while (!writtenFiles.Add(outputFile) && counter < 1000);
+
+            if (counter == 1000)
             {
-                string path = Path.GetDirectoryName(outputFile)!;
-                string baseName = Path.GetFileNameWithoutExtension(outputFile);
-                string extension = Path.GetExtension(outputFile);
-                int counter = 1;
-                do
-                {
-                    outputFile = PathTruncator.TruncatePath(Path.Combine(path, $"{baseName}{counter++}{extension}"));
-                }
-
-                while (!writtenFiles.Add(outputFile) && counter < 1000);
-
-                if (counter == 1000)
-                {
-                    throw new InvalidOperationException("Unexpected duplicate file generated.");
-                }
+                throw new InvalidOperationException("Unexpected duplicate file generated.");
             }
         }
 

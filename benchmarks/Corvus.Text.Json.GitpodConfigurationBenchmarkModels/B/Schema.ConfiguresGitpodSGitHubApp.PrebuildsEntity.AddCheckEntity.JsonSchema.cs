@@ -152,48 +152,48 @@ public readonly partial struct Schema
                         else if (tokenType == JsonTokenType.String)
                         {
                             typeValidationHandler_foundType = true;
-                        }
 
-                        context.EvaluatedKeyword(typeValidationHandler_foundType, static (buffer, out written) => JsonSchemaEvaluation.ExpectedType("[\"boolean\", \"string\"]"u8, buffer, out written), "type"u8);
+                            if (tokenType == JsonTokenType.String)
+                            {
+                                using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
 
-                        if (!context.HasCollector && !context.IsMatch)
-                        {
-                            return;
-                        }
+                                if (unescapedUtf8JsonString.Span.SequenceEqual("prevent-merge-on-error"u8))
+                                {
+                                    goto enumShortCircuitSuccess;
+                                }
+                            }
 
-                        if (tokenType == JsonTokenType.String)
-                        {
-                            using UnescapedUtf8JsonString unescapedUtf8JsonString = parentDocument.GetUtf8JsonString(parentIndex, JsonTokenType.String);
-
-                            if (unescapedUtf8JsonString.Span.SequenceEqual("prevent-merge-on-error"u8))
+                            if (tokenType == JsonTokenType.True)
                             {
                                 goto enumShortCircuitSuccess;
                             }
-                        }
 
-                        if (tokenType == JsonTokenType.True)
-                        {
-                            goto enumShortCircuitSuccess;
-                        }
+                            if (tokenType == JsonTokenType.False)
+                            {
+                                goto enumShortCircuitSuccess;
+                            }
 
-                        if (tokenType == JsonTokenType.False)
-                        {
-                            goto enumShortCircuitSuccess;
-                        }
+                            context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
 
-                        context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.DidNotMatchAtLeastOneConstantValue, "enum"u8);
+                            if (!context.HasCollector)
+                            {
+                                return;
+                            }
 
-                        if (!context.HasCollector)
-                        {
-                            return;
-                        }
-
-                        goto enumAfterFailure;
+                            goto enumAfterFailure;
 
 enumShortCircuitSuccess:
-                        context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
+                            context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.MatchedAtLeastOneConstantValue, ", formattedKeyword, "u8);
 
 enumAfterFailure:;
+
+                            if (!context.HasCollector && !context.IsMatch)
+                            {
+                                return;
+                            }
+                        }
+
+                        context.EvaluatedKeyword(typeValidationHandler_foundType, static (buffer, out written) => JsonSchemaEvaluation.ExpectedType("[\"boolean\", \"string\"]"u8, buffer, out written), "type"u8);
                     }
 
                     internal static bool Evaluate(

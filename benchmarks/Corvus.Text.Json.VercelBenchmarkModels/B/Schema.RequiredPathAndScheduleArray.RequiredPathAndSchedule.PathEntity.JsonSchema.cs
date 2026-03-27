@@ -50,24 +50,19 @@ public readonly partial struct Schema
                 public static partial class JsonSchema
                 {
                     /// <summary>
-                    /// A regular expression for the <c>pattern</c> keyword.
-                    /// </summary>
-                    public static readonly Regex Pattern = CreatePattern();
-
-                    /// <summary>
                     /// Gets a provider for the schema location from which this type was generated.
                     /// </summary>
-                    public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json#/properties/crons/items/properties/path"u8, buffer, out written);
+                    public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("vercel-schema.json#/properties/crons/items/properties/path"u8, buffer, out written);
 
                     /// <summary>
                     /// Gets the schema location from which this type was generated.
                     /// </summary>
-                    public const string SchemaLocation = "schema.json#/properties/crons/items/properties/path";
+                    public const string SchemaLocation = "vercel-schema.json#/properties/crons/items/properties/path";
 
                     /// <summary>
                     /// Gets the schema location from which this type was generated as a UTF-8 string.
                     /// </summary>
-                    public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json#/properties/crons/items/properties/path"u8;
+                    public static ReadOnlySpan<byte> SchemaLocationUtf8 => "vercel-schema.json#/properties/crons/items/properties/path"u8;
 
                     /// <summary>
                     /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -109,7 +104,7 @@ public readonly partial struct Schema
                                 return;
                             }
 
-                            JsonSchemaEvaluation.MatchRegularExpression(unescapedUtf8JsonString.Span, Pattern,"^/.*", "pattern"u8, ref context);
+                            JsonSchemaEvaluation.MatchPrefixRegularExpression(unescapedUtf8JsonString.Span, "/"u8, "^/.*", "pattern"u8, ref context);
                         }
                     }
 
@@ -136,13 +131,6 @@ public readonly partial struct Schema
                             context.Dispose();
                         }
                     }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                    [GeneratedRegex("^/.*")]
-                    private static partial Regex CreatePattern();
-#else
-                    private static Regex CreatePattern() => new("^/.*", RegexOptions.Compiled);
-#endif
 
                     /// <summary>
                     /// Push the current context as a child context for schema evaluation.

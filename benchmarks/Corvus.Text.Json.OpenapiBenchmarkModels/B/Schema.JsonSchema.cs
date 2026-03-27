@@ -253,17 +253,17 @@ public readonly partial struct Schema
         /// <summary>
         /// Gets a provider for the schema location from which this type was generated.
         /// </summary>
-        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("schema.json"u8, buffer, out written);
+        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("openapi-schema.json"u8, buffer, out written);
 
         /// <summary>
         /// Gets the schema location from which this type was generated.
         /// </summary>
-        public const string SchemaLocation = "schema.json";
+        public const string SchemaLocation = "openapi-schema.json";
 
         /// <summary>
         /// Gets the schema location from which this type was generated as a UTF-8 string.
         /// </summary>
-        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "schema.json"u8;
+        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "openapi-schema.json"u8;
         private static readonly JsonSchemaPathProvider Ref0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$ref"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider AnyOf0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/anyOf/0"u8, buffer, out written);
         private static readonly JsonSchemaPathProvider AnyOf1SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/anyOf/1"u8, buffer, out written);
@@ -410,28 +410,30 @@ public readonly partial struct Schema
                             return;
                         }
                     }
-
-                    if (!context.HasLocalOrAppliedEvaluatedProperty(objectValidation_propertyCount))
+                    else
                     {
-                        JsonSchemaContext childContext = Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped(
-                            parentDocument,
-                            objectValidation_currentIndex,
-                            ref context,
-                            objectValidation_unescapedPropertyName.Span,
-                            evaluationPath: UnevaluatedPropertiesSchemaEvaluationPath);
-
-                        Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-
-                        if (!childContext.IsMatch)
+                        if (!context.HasLocalOrAppliedEvaluatedProperty(objectValidation_propertyCount))
                         {
-                            context.CommitChildContext(false, ref childContext);
-                            context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "unevaluatedProperties"u8);
-                        }
-                        else
-                        {
-                            context.CommitChildContext(true, ref childContext);
-                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                            context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "unevaluatedProperties"u8);
+                            JsonSchemaContext childContext = Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.PushChildContextUnescaped(
+                                parentDocument,
+                                objectValidation_currentIndex,
+                                ref context,
+                                objectValidation_unescapedPropertyName.Span,
+                                evaluationPath: UnevaluatedPropertiesSchemaEvaluationPath);
+
+                            Corvus.Text.Json.JsonElementForBooleanFalseSchema.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+
+                            if (!childContext.IsMatch)
+                            {
+                                context.CommitChildContext(false, ref childContext);
+                                context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "unevaluatedProperties"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(true, ref childContext);
+                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "unevaluatedProperties"u8);
+                            }
                         }
                     }
 
