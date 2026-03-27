@@ -9,23 +9,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="dependabot-schema.json" />
-    <None Remove="dependabot-instances.jsonl" />
+  <ItemGroup>    <None Remove="dependabot-instances.jsonl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="dependabot-schema.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles>
-    <Content Include="dependabot-instances.jsonl">
+  <ItemGroup>    <Content Include="dependabot-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+  <ItemGroup>    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

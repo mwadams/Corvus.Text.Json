@@ -9,23 +9,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="cmake-presets-schema.json" />
-    <None Remove="cmake-presets-instances.jsonl" />
+  <ItemGroup>    <None Remove="cmake-presets-instances.jsonl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="cmake-presets-schema.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles>
-    <Content Include="cmake-presets-instances.jsonl">
+  <ItemGroup>    <Content Include="cmake-presets-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+  <ItemGroup>    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

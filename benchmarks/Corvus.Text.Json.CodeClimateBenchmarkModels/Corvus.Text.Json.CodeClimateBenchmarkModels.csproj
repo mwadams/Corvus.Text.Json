@@ -9,23 +9,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="code-climate-schema.json" />
-    <None Remove="code-climate-instances.jsonl" />
+  <ItemGroup>    <None Remove="code-climate-instances.jsonl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="code-climate-schema.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles>
-    <Content Include="code-climate-instances.jsonl">
+  <ItemGroup>    <Content Include="code-climate-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+  <ItemGroup>    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

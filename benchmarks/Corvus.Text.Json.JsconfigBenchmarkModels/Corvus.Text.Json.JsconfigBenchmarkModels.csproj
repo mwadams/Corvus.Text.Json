@@ -9,23 +9,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="jsconfig-schema.json" />
-    <None Remove="jsconfig-instances.jsonl" />
+  <ItemGroup>    <None Remove="jsconfig-instances.jsonl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="jsconfig-schema.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles>
-    <Content Include="jsconfig-instances.jsonl">
+  <ItemGroup>    <Content Include="jsconfig-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+  <ItemGroup>    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

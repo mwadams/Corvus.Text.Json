@@ -9,23 +9,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="pre-commit-hooks-schema.json" />
-    <None Remove="pre-commit-hooks-instances.jsonl" />
+  <ItemGroup>    <None Remove="pre-commit-hooks-instances.jsonl" />
   </ItemGroup>
 
-  <ItemGroup>
-    <AdditionalFiles Include="pre-commit-hooks-schema.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles>
-    <Content Include="pre-commit-hooks-instances.jsonl">
+  <ItemGroup>    <Content Include="pre-commit-hooks-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
-    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
+  <ItemGroup>    <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
 </Project>

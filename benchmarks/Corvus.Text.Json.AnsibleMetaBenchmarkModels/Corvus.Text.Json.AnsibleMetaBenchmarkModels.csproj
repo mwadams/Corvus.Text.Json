@@ -10,21 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ansible-meta-schema.json" />
     <None Remove="ansible-meta-instances.jsonl" />
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="ansible-meta-schema.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </AdditionalFiles>
     <Content Include="ansible-meta-instances.jsonl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Corvus.Text.Json.SourceGenerator\Corvus.Text.Json.SourceGenerator.csproj" PrivateAssets="all" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     <ProjectReference Include="..\..\src\Corvus.Text.Json\Corvus.Text.Json.csproj" />
   </ItemGroup>
 
