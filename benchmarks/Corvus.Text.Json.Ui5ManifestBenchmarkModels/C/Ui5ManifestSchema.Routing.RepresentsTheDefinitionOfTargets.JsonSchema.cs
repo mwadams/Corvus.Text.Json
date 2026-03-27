@@ -52,11 +52,6 @@ public readonly partial struct Ui5ManifestSchema
                 private static readonly JsonSchemaPathProvider PatternPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/patternProperties/[\\s\\S]*"u8, buffer, out written);
 
                 /// <summary>
-                /// A regular expression for the <c>patternProperties</c> keyword.
-                /// </summary>
-                public static readonly Regex PatternProperties = CreatePatternProperties();
-
-                /// <summary>
                 /// Gets a provider for the schema location from which this type was generated.
                 /// </summary>
                 public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("ui5-manifest-schema.json#/definitions/routing/properties/targets"u8, buffer, out written);
@@ -108,21 +103,19 @@ public readonly partial struct Ui5ManifestSchema
                             int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                             using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                            if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
-                            {
-                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                                JsonSchemaContext childContext =
-                                    PushChildContextUnescaped(
-                                        parentDocument,
-                                        objectValidation_currentIndex,
-                                        ref context,
-                                        objectValidation_unescapedPropertyName.Span,
-                                        evaluationPath: PatternPropertiesSchemaEvaluationPath);
+                            // Pattern "[\\s\\S]*" always matches.
+                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                            JsonSchemaContext childContext =
+                                PushChildContextUnescaped(
+                                    parentDocument,
+                                    objectValidation_currentIndex,
+                                    ref context,
+                                    objectValidation_unescapedPropertyName.Span,
+                                    evaluationPath: PatternPropertiesSchemaEvaluationPath);
 
-                                Corvus.Ui5ManifestBenchmark.Current.Ui5ManifestSchema.Routing.RepresentsTheDefinitionOfTargets.SSEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-                                context.EvaluatedKeyword(context.IsMatch, "[\\s\\S]*", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
-                                context.CommitChildContext(childContext.IsMatch, ref childContext);
-                            }
+                            Corvus.Ui5ManifestBenchmark.Current.Ui5ManifestSchema.Routing.RepresentsTheDefinitionOfTargets.SSEntity.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+                            context.EvaluatedKeyword(context.IsMatch, "[\\s\\S]*", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
+                            context.CommitChildContext(childContext.IsMatch, ref childContext);
 
                             objectValidation_propertyCount++;
                         }
@@ -152,13 +145,6 @@ public readonly partial struct Ui5ManifestSchema
                         context.Dispose();
                     }
                 }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                [GeneratedRegex("[\\s\\S]*")]
-                private static partial Regex CreatePatternProperties();
-#else
-                private static Regex CreatePatternProperties() => new("[\\s\\S]*", RegexOptions.Compiled);
-#endif
 
                 /// <summary>
                 /// Push the current context as a child context for schema evaluation.

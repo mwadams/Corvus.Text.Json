@@ -2702,44 +2702,46 @@ public readonly partial struct ClangFormatSchema
                             return;
                         }
                     }
-
-                    if (objectValidation_unescapedPropertyName.Span.StartsWith("x-"u8))
+                    else
                     {
-                        context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                        JsonSchemaContext childContext =
-                            PushChildContextUnescaped(
+                        if (objectValidation_unescapedPropertyName.Span.StartsWith("x-"u8))
+                        {
+                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                            JsonSchemaContext childContext =
+                                PushChildContextUnescaped(
+                                    parentDocument,
+                                    objectValidation_currentIndex,
+                                    ref context,
+                                    objectValidation_unescapedPropertyName.Span,
+                                    evaluationPath: PatternPropertiesSchemaEvaluationPath);
+
+                            Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+                            context.EvaluatedKeyword(context.IsMatch, "^x-", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
+                            context.CommitChildContext(childContext.IsMatch, ref childContext);
+                        }
+
+                        if (!context.HasLocalEvaluatedProperty(objectValidation_propertyCount))
+                        {
+                            JsonSchemaContext childContext1 = Corvus.Text.Json.JsonElement.JsonSchema.PushChildContextUnescaped(
                                 parentDocument,
                                 objectValidation_currentIndex,
                                 ref context,
                                 objectValidation_unescapedPropertyName.Span,
-                                evaluationPath: PatternPropertiesSchemaEvaluationPath);
+                                evaluationPath: AdditionalPropertiesSchemaEvaluationPath);
 
-                        Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-                        context.EvaluatedKeyword(context.IsMatch, "^x-", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
-                        context.CommitChildContext(childContext.IsMatch, ref childContext);
-                    }
+                            Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext1);
 
-                    if (!context.HasLocalEvaluatedProperty(objectValidation_propertyCount))
-                    {
-                        JsonSchemaContext childContext1 = Corvus.Text.Json.JsonElement.JsonSchema.PushChildContextUnescaped(
-                            parentDocument,
-                            objectValidation_currentIndex,
-                            ref context,
-                            objectValidation_unescapedPropertyName.Span,
-                            evaluationPath: AdditionalPropertiesSchemaEvaluationPath);
-
-                        Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext1);
-
-                        if (!childContext1.IsMatch)
-                        {
-                            context.CommitChildContext(false, ref childContext1);
-                            context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
-                        }
-                        else
-                        {
-                            context.CommitChildContext(true, ref childContext1);
-                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                            context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                            if (!childContext1.IsMatch)
+                            {
+                                context.CommitChildContext(false, ref childContext1);
+                                context.EvaluatedKeyword(false, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                            }
+                            else
+                            {
+                                context.CommitChildContext(true, ref childContext1);
+                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                context.EvaluatedKeyword(true, messageProvider: JsonSchemaEvaluation.ExpectedPropertyMatchesFallbackSchema, "additionalProperties"u8);
+                            }
                         }
                     }
 

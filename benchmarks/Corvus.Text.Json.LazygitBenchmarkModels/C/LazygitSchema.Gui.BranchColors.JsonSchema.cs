@@ -68,11 +68,6 @@ public readonly partial struct LazygitSchema
                 private static readonly JsonSchemaPathProvider AdditionalPropertiesSchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/additionalProperties"u8, buffer, out written);
 
                 /// <summary>
-                /// A regular expression for the <c>patternProperties</c> keyword.
-                /// </summary>
-                public static readonly Regex PatternProperties = CreatePatternProperties();
-
-                /// <summary>
                 /// Gets a provider for the schema location from which this type was generated.
                 /// </summary>
                 public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("https://json.schemastore.org/lazygit.json#/properties/gui/properties/branchColors"u8, buffer, out written);
@@ -125,7 +120,7 @@ public readonly partial struct LazygitSchema
                             int objectValidation_currentIndex = objectValidation_enumerator.CurrentIndex;
                             using UnescapedUtf8JsonString objectValidation_unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(objectValidation_currentIndex);
 
-                            if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                            if (objectValidation_unescapedPropertyName.Span.Length > 0)
                             {
                                 context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
                                 JsonSchemaContext childContext =
@@ -193,13 +188,6 @@ public readonly partial struct LazygitSchema
                         context.Dispose();
                     }
                 }
-
-#if NET8_0_OR_GREATER && !DYNAMIC_BUILD
-                [GeneratedRegex(".")]
-                private static partial Regex CreatePatternProperties();
-#else
-                private static Regex CreatePatternProperties() => new(".", RegexOptions.Compiled);
-#endif
 
                 /// <summary>
                 /// Push the current context as a child context for schema evaluation.

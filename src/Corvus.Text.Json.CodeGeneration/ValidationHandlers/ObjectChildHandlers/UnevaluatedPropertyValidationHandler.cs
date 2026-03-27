@@ -154,6 +154,7 @@ file static class UnevaluatedPropertyValidationExtensions
     public static CodeGenerator AppendFallbackValidation(this CodeGenerator generator, FallbackObjectPropertyType fallbackProperty, string schemaEvaluationPathProviderName)
     {
         string keywordAsQuotedString = SymbolDisplay.FormatLiteral(fallbackProperty.Keyword.Keyword, true);
+
         string propertyClassName = fallbackProperty.ReducedType.FullyQualifiedDotnetTypeName();
         string jsonSchemaClassName = generator.JsonSchemaClassName(propertyClassName);
 

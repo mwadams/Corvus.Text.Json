@@ -258,21 +258,23 @@ public readonly partial struct KrakendSchema
                                 return;
                             }
                         }
-
-                        if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                        else
                         {
-                            context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
-                            JsonSchemaContext childContext =
-                                PushChildContextUnescaped(
-                                    parentDocument,
-                                    objectValidation_currentIndex,
-                                    ref context,
-                                    objectValidation_unescapedPropertyName.Span,
-                                    evaluationPath: PatternPropertiesSchemaEvaluationPath);
+                            if (JsonSchemaEvaluation.MatchRegularExpression(objectValidation_unescapedPropertyName.Span, PatternProperties))
+                            {
+                                context.AddLocalEvaluatedProperty(objectValidation_propertyCount);
+                                JsonSchemaContext childContext =
+                                    PushChildContextUnescaped(
+                                        parentDocument,
+                                        objectValidation_currentIndex,
+                                        ref context,
+                                        objectValidation_unescapedPropertyName.Span,
+                                        evaluationPath: PatternPropertiesSchemaEvaluationPath);
 
-                            Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
-                            context.EvaluatedKeyword(context.IsMatch, "^[@$_#]", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
-                            context.CommitChildContext(childContext.IsMatch, ref childContext);
+                                Corvus.Text.Json.JsonElement.JsonSchema.Evaluate(parentDocument, objectValidation_currentIndex, ref childContext);
+                                context.EvaluatedKeyword(context.IsMatch, "^[@$_#]", messageProvider: JsonSchemaEvaluation.ExpectedMatchPatternPropertySchema, "patternProperties"u8);
+                                context.CommitChildContext(childContext.IsMatch, ref childContext);
+                            }
                         }
 
                         objectValidation_propertyCount++;
