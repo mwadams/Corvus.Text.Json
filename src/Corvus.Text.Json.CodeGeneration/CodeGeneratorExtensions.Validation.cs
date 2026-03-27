@@ -1245,7 +1245,7 @@ internal static partial class CodeGenerationExtensions
             IAnyOfSubschemaValidationKeyword keyword = kvp.Key;
             IReadOnlyCollection<TypeDeclaration> subschemaTypes = kvp.Value;
 
-            if (!TryGetOneOfDiscriminator(subschemaTypes, out string? discriminatorPropertyName, out List<(string Value, int BranchIndex)>? discriminatorValues, requireRequired: false))
+            if (!TryGetOneOfDiscriminator(subschemaTypes, out string? discriminatorPropertyName, out List<(string Value, int BranchIndex)>? discriminatorValues, requireRequired: false, allowPartial: true))
             {
                 continue;
             }
@@ -1408,25 +1408,38 @@ internal static partial class CodeGenerationExtensions
     }
 
     /// <summary>
-    /// Tries to detect a discriminator property across oneOf subschemas.
+    /// Tries to detect a discriminator property across oneOf/anyOf subschemas.
     /// </summary>
     /// <remarks>
     /// <para>
-    /// A discriminator is a property that is (1) present in ALL oneOf branches,
-    /// (2) required in every branch, (3) has a single string constant value in each
-    /// branch (either <c>const: "X"</c> or <c>enum: ["X"]</c>), and (4) all values
-    /// are distinct across branches.
+    /// A discriminator is a property that has a single string constant value
+    /// (either <c>const: "X"</c> or <c>enum: ["X"]</c>) with distinct values
+    /// across branches.
+    /// </para>
+    /// <para>
+    /// When <paramref name="allowPartial"/> is <see langword="false"/> (the default,
+    /// used for oneOf), the discriminator must be present in ALL branches.
+    /// When <paramref name="allowPartial"/> is <see langword="true"/> (used for anyOf),
+    /// branches that lack the discriminator property are skipped — the fast-path
+    /// default case will fall through to sequential evaluation for such branches.
+    /// </para>
+    /// <para>
+    /// The method tries each branch as a potential seed for candidate property names,
+    /// so it works even when the first branch has no properties (e.g. <c>type: boolean</c>).
     /// </para>
     /// </remarks>
-    /// <param name="subschemaTypes">The oneOf branch type declarations.</param>
+    /// <param name="subschemaTypes">The oneOf/anyOf branch type declarations.</param>
     /// <param name="discriminatorPropertyName">When successful, the JSON property name of the discriminator.</param>
-    /// <param name="discriminatorValues">When successful, a list of (utf8Value, branchIndex) pairs in branch order.</param>
+    /// <param name="discriminatorValues">When successful, a list of (utf8Value, branchIndex) pairs for discriminated branches.</param>
+    /// <param name="requireRequired">When <see langword="true"/>, only required properties are considered.</param>
+    /// <param name="allowPartial">When <see langword="true"/>, branches without the discriminator property are skipped instead of failing.</param>
     /// <returns><see langword="true"/> if a discriminator was detected; otherwise, <see langword="false"/>.</returns>
     public static bool TryGetOneOfDiscriminator(
         IReadOnlyCollection<TypeDeclaration> subschemaTypes,
         [NotNullWhen(true)] out string? discriminatorPropertyName,
         [NotNullWhen(true)] out List<(string Value, int BranchIndex)>? discriminatorValues,
-        bool requireRequired = true)
+        bool requireRequired = true,
+        bool allowPartial = false)
     {
         discriminatorPropertyName = null;
         discriminatorValues = null;
@@ -1436,57 +1449,75 @@ internal static partial class CodeGenerationExtensions
             return false;
         }
 
-        // Collect property declarations for each branch
         TypeDeclaration[] branches = subschemaTypes.ToArray();
 
-        // Get candidate property names from the first branch
-        IReadOnlyList<PropertyDeclaration> firstBranchProps = branches[0].PropertyDeclarations;
-
-        foreach (PropertyDeclaration candidateProp in firstBranchProps)
+        // Try each branch as a seed for candidate discriminator properties.
+        // This handles cases where early branches have no properties (e.g. type: boolean).
+        for (int seedIdx = 0; seedIdx < branches.Length; seedIdx++)
         {
-            if (requireRequired && candidateProp.RequiredOrOptional == RequiredOrOptional.Optional)
+            IReadOnlyList<PropertyDeclaration> seedProps = branches[seedIdx].PropertyDeclarations;
+
+            foreach (PropertyDeclaration candidateProp in seedProps)
             {
-                continue;
-            }
-
-            string candidateName = candidateProp.JsonPropertyName;
-
-            // Try to extract a single string constant from this candidate in the first branch
-            if (!TryGetSingleStringConstant(candidateProp, out string? firstValue))
-            {
-                continue;
-            }
-
-            // Now check all remaining branches
-            var values = new List<(string Value, int BranchIndex)>(branches.Length)
-            {
-                (firstValue, 0),
-            };
-
-            HashSet<string> seenValues = [firstValue];
-            bool isDiscriminator = true;
-
-            for (int i = 1; i < branches.Length; i++)
-            {
-                PropertyDeclaration? matchingProp = FindPropertyByName(branches[i].PropertyDeclarations, candidateName);
-
-                if (matchingProp is null ||
-                    (requireRequired && matchingProp.RequiredOrOptional == RequiredOrOptional.Optional) ||
-                    !TryGetSingleStringConstant(matchingProp, out string? branchValue) ||
-                    !seenValues.Add(branchValue))
+                if (requireRequired && candidateProp.RequiredOrOptional == RequiredOrOptional.Optional)
                 {
-                    isDiscriminator = false;
-                    break;
+                    continue;
                 }
 
-                values.Add((branchValue, i));
-            }
+                string candidateName = candidateProp.JsonPropertyName;
 
-            if (isDiscriminator)
-            {
-                discriminatorPropertyName = candidateName;
-                discriminatorValues = values;
-                return true;
+                if (!TryGetSingleStringConstant(candidateProp, out string? seedValue))
+                {
+                    continue;
+                }
+
+                var values = new List<(string Value, int BranchIndex)>(branches.Length)
+                {
+                    (seedValue, seedIdx),
+                };
+
+                HashSet<string> seenValues = [seedValue];
+                bool isViable = true;
+
+                for (int i = 0; i < branches.Length; i++)
+                {
+                    if (i == seedIdx)
+                    {
+                        continue;
+                    }
+
+                    PropertyDeclaration? matchingProp = FindPropertyByName(branches[i].PropertyDeclarations, candidateName);
+
+                    if (matchingProp is null)
+                    {
+                        if (allowPartial)
+                        {
+                            // Branch doesn't have the discriminator property — skip it.
+                            // The fast-path default case will fall through to sequential evaluation.
+                            continue;
+                        }
+
+                        isViable = false;
+                        break;
+                    }
+
+                    if ((requireRequired && matchingProp.RequiredOrOptional == RequiredOrOptional.Optional) ||
+                        !TryGetSingleStringConstant(matchingProp, out string? branchValue) ||
+                        !seenValues.Add(branchValue))
+                    {
+                        isViable = false;
+                        break;
+                    }
+
+                    values.Add((branchValue, i));
+                }
+
+                if (isViable && values.Count >= 2)
+                {
+                    discriminatorPropertyName = candidateName;
+                    discriminatorValues = values;
+                    return true;
+                }
             }
         }
 

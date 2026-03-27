@@ -233,6 +233,7 @@
     <Compile Include="StringMaxLengthEnumTests.cs" />
     <Compile Include="OneOfDiscriminatorValidationTests.cs" />
     <Compile Include="AnyOfDiscriminatorValidationTests.cs" />
+    <Compile Include="AnyOfPartialDiscriminatorValidationTests.cs" />
     <Compile Include="NoopRegexOptimizationTests.cs" />
     <Compile Include="NonEmptyRegexOptimizationTests.cs" />
     <Compile Include="PrefixRegexOptimizationTests.cs" />

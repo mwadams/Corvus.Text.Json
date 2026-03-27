@@ -222,6 +222,8 @@ file static class OneOfSubschemaHandlerExtensions
                         .AppendLineIndent("using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(oneOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);");
 
         // Map value to branch index
+        // Both hash map (TryGetValue returns 0-based insertion index) and SequenceEqual
+        // paths produce a 0-based case index that aligns with the switch statement below.
         if (mapFieldName is not null)
         {
             // Hash-based lookup for 4+ branches
@@ -236,17 +238,19 @@ file static class OneOfSubschemaHandlerExtensions
         else
         {
             // Sequential SequenceEqual for <= 3 branches
-            foreach ((string value, int branchIndex) in discriminatorValues)
+            int caseIndex = 0;
+            foreach ((string value, _) in discriminatorValues)
             {
                 string quotedValue = SymbolDisplay.FormatLiteral(value, true);
                 generator
                         .AppendLineIndent("if (discriminatorValue.Span.SequenceEqual(", quotedValue, "u8))")
                         .AppendLineIndent("{")
                         .PushIndent()
-                            .AppendLineIndent("oneOfDiscriminatorBranch = ", branchIndex.ToString(), ";")
+                            .AppendLineIndent("oneOfDiscriminatorBranch = ", caseIndex.ToString(), ";")
                             .AppendLineIndent("break;")
                         .PopIndent()
                         .AppendLineIndent("}");
+                caseIndex++;
             }
         }
 
@@ -268,12 +272,13 @@ file static class OneOfSubschemaHandlerExtensions
             .AppendLineIndent("switch (oneOfDiscriminatorBranch)")
             .AppendLineIndent("{");
 
+        int switchCaseIndex = 0;
         foreach ((_, int branchIndex) in discriminatorValues)
         {
             string ctx = generator.GetUniqueVariableNameInScope("DiscriminatorContext", suffix: branchIndex.ToString());
             generator
                 .PushIndent()
-                .AppendLineIndent("case ", branchIndex.ToString(), ":")
+                .AppendLineIndent("case ", switchCaseIndex.ToString(), ":")
                 .AppendLineIndent("{")
                 .PushIndent()
                     .AppendLineIndent("JsonSchemaContext ", ctx, " =")
@@ -301,6 +306,7 @@ file static class OneOfSubschemaHandlerExtensions
                 .PopIndent()
                 .AppendLineIndent("}")
                 .PopIndent();
+            switchCaseIndex++;
         }
 
         // Default: discriminator value not recognized or property not found → fail
