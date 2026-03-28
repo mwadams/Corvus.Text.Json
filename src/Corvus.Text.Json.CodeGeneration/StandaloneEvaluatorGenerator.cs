@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Corvus.Json;
 using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.Keywords;
@@ -567,6 +568,12 @@ internal static partial class StandaloneEvaluatorGenerator
             {
                 foreach (PatternPropertyDeclaration patternProp in patternPropertyCollection)
                 {
+                    // Only emit a Regex field for patterns that require full regex evaluation.
+                    if (CodeGenerationExtensions.ClassifyRegexPattern(patternProp.Pattern) != RegexPatternCategory.FullRegex)
+                    {
+                        continue;
+                    }
+
                     string fieldName = $"PatternRegex_{MakeSafeIdentifier(patternProp.Pattern)}";
                     if (emittedPatterns.Add(fieldName))
                     {
@@ -582,6 +589,12 @@ internal static partial class StandaloneEvaluatorGenerator
         {
             if (keyword.TryGetValidationRegularExpressions(typeDeclaration, out IReadOnlyList<string>? expressions) && expressions.Count > 0)
             {
+                // Only emit a Regex field for patterns that require full regex evaluation.
+                if (CodeGenerationExtensions.ClassifyRegexPattern(expressions[0]) != RegexPatternCategory.FullRegex)
+                {
+                    continue;
+                }
+
                 string fieldName = "PatternRegex_" + MakeSafeIdentifier(keyword.Keyword);
                 if (emittedPatterns.Add(fieldName))
                 {
@@ -1677,10 +1690,43 @@ internal static partial class StandaloneEvaluatorGenerator
                     continue;
                 }
 
-                string regex = SymbolDisplay.FormatLiteral(expressions[0], true);
-                string fieldName = "PatternRegex_" + MakeSafeIdentifier(keyword.Keyword);
+                string rawPattern = expressions[0];
+                string regex = SymbolDisplay.FormatLiteral(rawPattern, true);
+                RegexPatternCategory category = CodeGenerationExtensions.ClassifyRegexPattern(rawPattern);
 
-                ctx.AppendLine($"JsonSchemaEvaluation.MatchRegularExpression(unescapedString.Span, {fieldName}, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                switch (category)
+                {
+                    case RegexPatternCategory.Noop:
+                        ctx.AppendLine($"JsonSchemaEvaluation.MatchNoopRegularExpression({regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                        break;
+
+                    case RegexPatternCategory.NonEmpty:
+                        ctx.AppendLine($"JsonSchemaEvaluation.MatchNonEmptyRegularExpression(unescapedString.Span, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                        break;
+
+                    case RegexPatternCategory.Prefix:
+                    {
+                        string prefix = CodeGenerationExtensions.ExtractRegexPrefix(rawPattern);
+                        string prefixLiteral = SymbolDisplay.FormatLiteral(prefix, true);
+                        ctx.AppendLine($"JsonSchemaEvaluation.MatchPrefixRegularExpression(unescapedString.Span, {prefixLiteral}u8, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                        break;
+                    }
+
+                    case RegexPatternCategory.Range:
+                    {
+                        (int min, int max) = CodeGenerationExtensions.ExtractRegexRange(rawPattern);
+                        ctx.AppendLine($"JsonSchemaEvaluation.MatchRangeRegularExpression(unescapedString.Span, {min}, {max}, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                        break;
+                    }
+
+                    default:
+                    {
+                        string fieldName = "PatternRegex_" + MakeSafeIdentifier(keyword.Keyword);
+                        ctx.AppendLine($"JsonSchemaEvaluation.MatchRegularExpression(unescapedString.Span, {fieldName}, {regex}, {FormatUtf8Literal(keyword.Keyword)}, ref context);");
+                        break;
+                    }
+                }
+
                 ctx.AppendLine();
                 ctx.AppendLine("if (!context.HasCollector && !context.IsMatch)");
                 ctx.AppendLine("{");
@@ -2298,6 +2344,12 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.AppendLine("using UnescapedUtf8JsonString unescapedPropertyName = parentDocument.GetPropertyNameUnescaped(currentIndex);");
 
             // Named property matching via hash-based PropertySchemaMatchers or SequenceEqual fallback.
+            // Determine if we can use an else clause to skip pattern/additional checks for matched properties.
+            bool useElseClause = matcherInfo is not null
+                && (patternProperties.Count > 0 || additionalPropertiesInfo is not null)
+                && propertyNamesInfo is null
+                && !AnyNamedPropertyMatchesPatternProperty(properties, patternProperties);
+
             if (matcherInfo is not null)
             {
                 string delegateName = matcherInfo.DelegateTypeName;
@@ -2317,6 +2369,13 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine("}");
                 ctx.PopIndent();
                 ctx.AppendLine("}");
+
+                if (useElseClause)
+                {
+                    ctx.AppendLine("else");
+                    ctx.AppendLine("{");
+                    ctx.PushIndent();
+                }
             }
 
             // patternProperties matching.
@@ -2331,12 +2390,24 @@ internal static partial class StandaloneEvaluatorGenerator
                     string pathField = info.PathFieldName ?? "null";
                     string schemaPathField = info.SchemaPathFieldName ?? "null";
                     string patternCtxVar = $"patternCtx_{i}";
-                    string regexFieldName = $"PatternRegex_{MakeSafeIdentifier(patternProp.Pattern)}";
+                    RegexPatternCategory category = CodeGenerationExtensions.ClassifyRegexPattern(patternProp.Pattern);
 
                     ctx.AppendLine();
-                    ctx.AppendLine($"if (JsonSchemaEvaluation.MatchRegularExpression(unescapedPropertyName.Span, {regexFieldName}))");
-                    ctx.AppendLine("{");
-                    ctx.PushIndent();
+
+                    if (category == RegexPatternCategory.Noop)
+                    {
+                        // Noop patterns always match — emit body without an if-guard.
+                        string quotedPattern = SymbolDisplay.FormatLiteral(patternProp.Pattern, true);
+                        ctx.AppendLine($"// Pattern {quotedPattern} always matches.");
+                    }
+                    else
+                    {
+                        string condition = BuildPatternPropertyCondition(patternProp, category);
+                        ctx.AppendLine($"if ({condition})");
+                        ctx.AppendLine("{");
+                        ctx.PushIndent();
+                    }
+
                     ctx.AppendLine("context.AddLocalEvaluatedProperty(propertyCount);");
                     ctx.AppendLine($"JsonSchemaContext {patternCtxVar} =");
                     ctx.PushIndent();
@@ -2351,8 +2422,12 @@ internal static partial class StandaloneEvaluatorGenerator
                     ctx.AppendLine("return;");
                     ctx.PopIndent();
                     ctx.AppendLine("}");
-                    ctx.PopIndent();
-                    ctx.AppendLine("}");
+
+                    if (category != RegexPatternCategory.Noop)
+                    {
+                        ctx.PopIndent();
+                        ctx.AppendLine("}");
+                    }
                 }
             }
 
@@ -2386,6 +2461,12 @@ internal static partial class StandaloneEvaluatorGenerator
                 ctx.AppendLine("return;");
                 ctx.PopIndent();
                 ctx.AppendLine("}");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+            }
+
+            if (useElseClause)
+            {
                 ctx.PopIndent();
                 ctx.AppendLine("}");
             }
@@ -3453,6 +3534,21 @@ internal static partial class StandaloneEvaluatorGenerator
             string endLabel = $"anyOfEnd{suffix}";
             bool needsLabel = entries.Count > 1;
 
+            // Try anyOf discriminator fast path
+            if (CodeGenerationExtensions.TryGetOneOfDiscriminator(
+                    kvp.Value,
+                    out string? discriminatorPropertyName,
+                    out List<(string Value, int BranchIndex)>? discriminatorValues,
+                    out JsonValueKind discriminatorValueKind,
+                    requireRequired: false,
+                    allowPartial: true))
+            {
+                EmitAnyOfDiscriminatorFastPath(
+                    ctx, discriminatorPropertyName, discriminatorValues, discriminatorValueKind,
+                    entries, useItems, useProps, suffix, keywordName);
+            }
+
+            // Sequential evaluation path (used when collector is present, or no discriminator)
             ctx.AppendLine();
             ctx.AppendLine($"bool {composedVar} = false;");
 
@@ -3543,11 +3639,10 @@ internal static partial class StandaloneEvaluatorGenerator
                     kvp.Value,
                     out string? discriminatorPropertyName,
                     out List<(string Value, int BranchIndex)>? discriminatorValues,
-                    out JsonValueKind discriminatorValueKind) &&
-                discriminatorValueKind == JsonValueKind.String)
+                    out JsonValueKind discriminatorValueKind))
             {
                 EmitOneOfDiscriminatorFastPath(
-                    ctx, discriminatorPropertyName, discriminatorValues,
+                    ctx, discriminatorPropertyName, discriminatorValues, discriminatorValueKind,
                     entries, useItems, useProps, suffix, keywordName);
             }
 
@@ -3613,6 +3708,7 @@ internal static partial class StandaloneEvaluatorGenerator
         GenerationContext ctx,
         string discriminatorPropertyName,
         List<(string Value, int BranchIndex)> discriminatorValues,
+        JsonValueKind discriminatorValueKind,
         List<SubschemaInfo> entries,
         bool useItems,
         bool useProps,
@@ -3621,8 +3717,8 @@ internal static partial class StandaloneEvaluatorGenerator
     {
         string? mapFieldName = null;
 
-        // Use hash map for 4+ branches
-        if (discriminatorValues.Count > MinEnumValuesForHashSet)
+        // Use hash map for 4+ string branches
+        if (discriminatorValueKind == JsonValueKind.String && discriminatorValues.Count > MinEnumValuesForHashSet)
         {
             mapFieldName = $"OneOfDiscriminatorMap_{ctx.DeferredEnumStringMaps.Count}";
             string builderName = $"BuildOneOfDiscriminatorMap_{ctx.DeferredEnumStringMaps.Count}";
@@ -3637,62 +3733,35 @@ internal static partial class StandaloneEvaluatorGenerator
         ctx.AppendLine("{");
         ctx.PushIndent();
 
+        // Find the discriminator property via direct lookup (uses property map if available, linear scan otherwise)
         ctx.AppendLine("int oneOfDiscriminatorBranch = -1;");
-        ctx.AppendLine("var oneOfDiscriminatorEnum = new ObjectEnumerator(parentDocument, parentIndex);");
-        ctx.AppendLine("while (oneOfDiscriminatorEnum.MoveNext())");
+        ctx.AppendLine("if (parentDocument.GetJsonTokenType(parentIndex) == JsonTokenType.StartObject)");
         ctx.AppendLine("{");
         ctx.PushIndent();
-        ctx.AppendLine("using (UnescapedUtf8JsonString oneOfDiscriminatorPropName = parentDocument.GetPropertyNameUnescaped(oneOfDiscriminatorEnum.CurrentIndex))");
+        ctx.AppendLine($"if (parentDocument.TryGetNamedPropertyValue(parentIndex, {quotedPropertyName}u8, out IJsonDocument? oneOfDiscriminator_doc, out int oneOfDiscriminator_idx))");
         ctx.AppendLine("{");
         ctx.PushIndent();
-        ctx.AppendLine($"if (oneOfDiscriminatorPropName.Span.SequenceEqual({quotedPropertyName}u8))");
-        ctx.AppendLine("{");
-        ctx.PushIndent();
-        ctx.AppendLine("if (parentDocument.GetJsonTokenType(oneOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)");
-        ctx.AppendLine("{");
-        ctx.PushIndent();
-        ctx.AppendLine("using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(oneOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);");
 
-        if (mapFieldName is not null)
+        if (discriminatorValueKind == JsonValueKind.Number)
         {
-            ctx.AppendLine($"if ({mapFieldName}.TryGetValue(discriminatorValue.Span, out oneOfDiscriminatorBranch))");
-            ctx.AppendLine("{");
-            ctx.PushIndent();
-            ctx.AppendLine("break;");
-            ctx.PopIndent();
-            ctx.AppendLine("}");
+            EmitNumericDiscriminatorValueMatch(ctx, discriminatorValues, "oneOfDiscriminatorBranch", "oneOfDiscriminator_doc", "oneOfDiscriminator_idx");
         }
         else
         {
-            foreach ((string value, int branchIndex) in discriminatorValues)
-            {
-                string quotedValue = SymbolDisplay.FormatLiteral(value, true);
-                ctx.AppendLine($"if (discriminatorValue.Span.SequenceEqual({quotedValue}u8))");
-                ctx.AppendLine("{");
-                ctx.PushIndent();
-                ctx.AppendLine($"oneOfDiscriminatorBranch = {branchIndex};");
-                ctx.AppendLine("break;");
-                ctx.PopIndent();
-                ctx.AppendLine("}");
-            }
+            EmitStringDiscriminatorValueMatch(ctx, discriminatorValues, mapFieldName, "oneOfDiscriminatorBranch", "oneOfDiscriminator_doc", "oneOfDiscriminator_idx");
         }
 
         ctx.PopIndent();
-        ctx.AppendLine("}");  // close: if (GetJsonTokenType == String)
-        ctx.AppendLine();
-        ctx.AppendLine("break;");  // found the discriminator property, stop iterating
+        ctx.AppendLine("}");  // close: if (TryGetNamedPropertyValue)
         ctx.PopIndent();
-        ctx.AppendLine("}");  // close: if (propName.SequenceEqual)
-        ctx.PopIndent();
-        ctx.AppendLine("}");  // close: using (propName)
-        ctx.PopIndent();
-        ctx.AppendLine("}");  // close: while (MoveNext)
+        ctx.AppendLine("}");  // close: if (StartObject)
 
         // Dispatch to matching branch via switch
         ctx.AppendLine();
         ctx.AppendLine("switch (oneOfDiscriminatorBranch)");
         ctx.AppendLine("{");
 
+        int switchCaseIndex = 0;
         foreach ((_, int branchIndex) in discriminatorValues)
         {
             SubschemaInfo info = entries[branchIndex];
@@ -3701,7 +3770,7 @@ internal static partial class StandaloneEvaluatorGenerator
             string schemaPathField = info.SchemaPathFieldName ?? "null";
 
             ctx.PushIndent();
-            ctx.AppendLine($"case {branchIndex}:");
+            ctx.AppendLine($"case {switchCaseIndex}:");
             ctx.AppendLine("{");
             ctx.PushIndent();
             ctx.AppendLine($"JsonSchemaContext {ctxVar} =");
@@ -3729,13 +3798,199 @@ internal static partial class StandaloneEvaluatorGenerator
             ctx.PopIndent();
             ctx.AppendLine("}");
             ctx.PopIndent();
+            switchCaseIndex++;
         }
 
         ctx.PushIndent();
         ctx.AppendLine("default:");
         ctx.PushIndent();
-        ctx.AppendLine($"context.EvaluatedKeyword(false, JsonSchemaEvaluation.MatchedNoSchema, {FormatUtf8Literal(keywordName)});");
-        ctx.AppendLine("return;");
+        ctx.AppendLine("break;");
+        ctx.PopIndent();
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitStringDiscriminatorValueMatch(
+        GenerationContext ctx,
+        List<(string Value, int BranchIndex)> discriminatorValues,
+        string? mapFieldName,
+        string branchVar,
+        string docVar,
+        string idxVar)
+    {
+        ctx.AppendLine($"if ({docVar}.GetJsonTokenType({idxVar}) == JsonTokenType.String)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"using UnescapedUtf8JsonString discriminatorValue = {docVar}.GetUtf8JsonString({idxVar}, JsonTokenType.String);");
+
+        if (mapFieldName is not null)
+        {
+            ctx.AppendLine($"{mapFieldName}.TryGetValue(discriminatorValue.Span, out {branchVar});");
+        }
+        else
+        {
+            int caseIndex = 0;
+            foreach ((string value, _) in discriminatorValues)
+            {
+                string quotedValue = SymbolDisplay.FormatLiteral(value, true);
+                string ifKeyword = caseIndex == 0 ? "if" : "else if";
+                ctx.AppendLine($"{ifKeyword} (discriminatorValue.Span.SequenceEqual({quotedValue}u8))");
+                ctx.AppendLine("{");
+                ctx.PushIndent();
+                ctx.AppendLine($"{branchVar} = {caseIndex};");
+                ctx.PopIndent();
+                ctx.AppendLine("}");
+                caseIndex++;
+            }
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitNumericDiscriminatorValueMatch(
+        GenerationContext ctx,
+        List<(string Value, int BranchIndex)> discriminatorValues,
+        string branchVar,
+        string docVar,
+        string idxVar)
+    {
+        ctx.AppendLine($"if ({docVar}.GetJsonTokenType({idxVar}) == JsonTokenType.Number)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"ReadOnlyMemory<byte> discriminatorRawValue = {docVar}.GetRawSimpleValue({idxVar});");
+        ctx.AppendLine("JsonElementHelpers.TryParseNumber(discriminatorRawValue.Span, out bool discriminatorIsNegative, out ReadOnlySpan<byte> discriminatorIntegral, out ReadOnlySpan<byte> discriminatorFractional, out int discriminatorExponent);");
+
+        int caseIndex = 0;
+        foreach ((string value, _) in discriminatorValues)
+        {
+            ReadOnlySpan<byte> rawValue = System.Text.Encoding.UTF8.GetBytes(value);
+            Corvus.Text.Json.CodeGeneration.Internal.JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+
+            string isNegativeStr = isNegative ? "true" : "false";
+            string integralStr = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(integral), true);
+            string fractionalStr = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(fractional), true);
+            string exponentStr = exponent.ToString();
+
+            string ifKeyword = caseIndex == 0 ? "if" : "else if";
+            ctx.AppendLine($"{ifKeyword} (JsonElementHelpers.CompareNormalizedJsonNumbers(discriminatorIsNegative, discriminatorIntegral, discriminatorFractional, discriminatorExponent, {isNegativeStr}, {integralStr}u8, {fractionalStr}u8, {exponentStr}) == 0)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"{branchVar} = {caseIndex};");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            caseIndex++;
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");
+    }
+
+    private static void EmitAnyOfDiscriminatorFastPath(
+        GenerationContext ctx,
+        string discriminatorPropertyName,
+        List<(string Value, int BranchIndex)> discriminatorValues,
+        JsonValueKind discriminatorValueKind,
+        List<SubschemaInfo> entries,
+        bool useItems,
+        bool useProps,
+        string suffix,
+        string keywordName)
+    {
+        string? mapFieldName = null;
+
+        // Use hash map for 4+ string branches
+        if (discriminatorValueKind == JsonValueKind.String && discriminatorValues.Count > MinEnumValuesForHashSet)
+        {
+            mapFieldName = $"AnyOfDiscriminatorMap_{ctx.DeferredEnumStringMaps.Count}";
+            string builderName = $"BuildAnyOfDiscriminatorMap_{ctx.DeferredEnumStringMaps.Count}";
+            string[] keys = discriminatorValues.Select(d => d.Value).ToArray();
+            ctx.DeferredEnumStringMaps.Add((mapFieldName, builderName, keys));
+        }
+
+        string quotedPropertyName = SymbolDisplay.FormatLiteral(discriminatorPropertyName, true);
+
+        ctx.AppendLine();
+        ctx.AppendLine("if (!context.HasCollector)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        // Find the discriminator property via direct lookup (uses property map if available, linear scan otherwise)
+        ctx.AppendLine("int anyOfDiscriminatorBranch = -1;");
+        ctx.AppendLine("if (parentDocument.GetJsonTokenType(parentIndex) == JsonTokenType.StartObject)");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+        ctx.AppendLine($"if (parentDocument.TryGetNamedPropertyValue(parentIndex, {quotedPropertyName}u8, out IJsonDocument? anyOfDiscriminator_doc, out int anyOfDiscriminator_idx))");
+        ctx.AppendLine("{");
+        ctx.PushIndent();
+
+        if (discriminatorValueKind == JsonValueKind.Number)
+        {
+            EmitNumericDiscriminatorValueMatch(ctx, discriminatorValues, "anyOfDiscriminatorBranch", "anyOfDiscriminator_doc", "anyOfDiscriminator_idx");
+        }
+        else
+        {
+            EmitStringDiscriminatorValueMatch(ctx, discriminatorValues, mapFieldName, "anyOfDiscriminatorBranch", "anyOfDiscriminator_doc", "anyOfDiscriminator_idx");
+        }
+
+        ctx.PopIndent();
+        ctx.AppendLine("}");  // close: if (TryGetNamedPropertyValue)
+        ctx.PopIndent();
+        ctx.AppendLine("}");  // close: if (StartObject)
+
+        // Dispatch to matching branch via switch
+        ctx.AppendLine();
+        ctx.AppendLine("switch (anyOfDiscriminatorBranch)");
+        ctx.AppendLine("{");
+
+        int switchCaseIndex = 0;
+        foreach ((_, int branchIndex) in discriminatorValues)
+        {
+            SubschemaInfo info = entries[branchIndex];
+            string ctxVar = $"anyOfDiscCtx{suffix}_{branchIndex}";
+            string pathField = info.PathFieldName ?? "null";
+            string schemaPathField = info.SchemaPathFieldName ?? "null";
+
+            ctx.PushIndent();
+            ctx.AppendLine($"case {switchCaseIndex}:");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"JsonSchemaContext {ctxVar} =");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.PushChildContext(parentDocument, parentIndex, useEvaluatedItems: {BoolLiteral(useItems || info.UseEvaluatedItems)}, useEvaluatedProperties: {BoolLiteral(useProps || info.UseEvaluatedProperties)}, evaluationPath: {pathField}, schemaEvaluationPath: {schemaPathField});");
+            ctx.PopIndent();
+            ctx.AppendLine($"{info.MethodName}(parentDocument, parentIndex, ref {ctxVar});");
+            ctx.AppendLine($"if ({ctxVar}.IsMatch)");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.ApplyEvaluated(ref {ctxVar});");
+            ctx.AppendLine($"context.CommitChildContext(true, ref {ctxVar});");
+            ctx.AppendLine($"context.EvaluatedKeyword(true, JsonSchemaEvaluation.MatchedAtLeastOneSchema, {FormatUtf8Literal(keywordName)});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine("else");
+            ctx.AppendLine("{");
+            ctx.PushIndent();
+            ctx.AppendLine($"context.CommitChildContext(false, ref {ctxVar});");
+            ctx.AppendLine($"context.EvaluatedKeyword(false, JsonSchemaEvaluation.DidNotMatchAtLeastOneSchema, {FormatUtf8Literal(keywordName)});");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.AppendLine();
+            ctx.AppendLine("return;");
+            ctx.PopIndent();
+            ctx.AppendLine("}");
+            ctx.PopIndent();
+            switchCaseIndex++;
+        }
+
+        // Default: discriminator value not recognized or property not found — fall through to sequential
+        ctx.PushIndent();
+        ctx.AppendLine("default:");
+        ctx.PushIndent();
+        ctx.AppendLine("break;");
         ctx.PopIndent();
         ctx.PopIndent();
         ctx.AppendLine("}");
@@ -3939,6 +4194,85 @@ internal static partial class StandaloneEvaluatorGenerator
         }
 
         return sb.ToString().TrimEnd('_');
+    }
+
+    private static string BuildPatternPropertyCondition(PatternPropertyDeclaration patternProp, RegexPatternCategory category)
+    {
+        return category switch
+        {
+            RegexPatternCategory.NonEmpty => "unescapedPropertyName.Span.Length > 0",
+            RegexPatternCategory.Prefix => $"unescapedPropertyName.Span.StartsWith({SymbolDisplay.FormatLiteral(CodeGenerationExtensions.ExtractRegexPrefix(patternProp.Pattern), true)}u8)",
+            RegexPatternCategory.Range => $"JsonSchemaEvaluation.MatchRangeRegularExpression(unescapedPropertyName.Span, {CodeGenerationExtensions.ExtractRegexRange(patternProp.Pattern).Min}, {CodeGenerationExtensions.ExtractRegexRange(patternProp.Pattern).Max})",
+            _ => $"JsonSchemaEvaluation.MatchRegularExpression(unescapedPropertyName.Span, PatternRegex_{MakeSafeIdentifier(patternProp.Pattern)})",
+        };
+    }
+
+    private static bool AnyNamedPropertyMatchesPatternProperty(
+        List<(PropertyDeclaration Property, SubschemaInfo Info)> properties,
+        List<(PatternPropertyDeclaration PatternProp, SubschemaInfo Info)> patternProperties)
+    {
+        if (patternProperties.Count == 0)
+        {
+            return false;
+        }
+
+        IEnumerable<string> propertyNames = properties.Select(p => p.Property.JsonPropertyName);
+
+        foreach ((PatternPropertyDeclaration patternProp, _) in patternProperties)
+        {
+            RegexPatternCategory category = CodeGenerationExtensions.ClassifyRegexPattern(patternProp.Pattern);
+
+            switch (category)
+            {
+                case RegexPatternCategory.Noop:
+                case RegexPatternCategory.NonEmpty:
+                    // .* or .+ matches everything — overlap is guaranteed
+                    return true;
+
+                case RegexPatternCategory.Prefix:
+                {
+                    string prefix = CodeGenerationExtensions.ExtractRegexPrefix(patternProp.Pattern);
+                    if (propertyNames.Any(name => name.StartsWith(prefix, StringComparison.Ordinal)))
+                    {
+                        return true;
+                    }
+
+                    break;
+                }
+
+                case RegexPatternCategory.Range:
+                {
+                    (int min, int max) = CodeGenerationExtensions.ExtractRegexRange(patternProp.Pattern);
+                    if (propertyNames.Any(name => name.Length >= min && name.Length <= max))
+                    {
+                        return true;
+                    }
+
+                    break;
+                }
+
+                default:
+                {
+                    try
+                    {
+                        Regex regex = new(patternProp.Pattern);
+                        if (propertyNames.Any(name => regex.IsMatch(name)))
+                        {
+                            return true;
+                        }
+                    }
+                    catch
+                    {
+                        // If the regex is invalid, assume overlap for safety
+                        return true;
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return false;
     }
 
     private static void DeduplicatePropertyIdentifiers(List<PropertyMatcherEntry> entries)
