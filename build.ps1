@@ -146,6 +146,7 @@ $SkipTest = $false
 $SkipTestReport = $false
 $SkipPackage = $false
 $SkipAnalysis = $false
+$SkipPrAutoflowEnrollmentCheck = $true
 
 
 #
@@ -208,17 +209,13 @@ task PostBuild {
     }
 }
 task PreTest {
-    # Turn down logging when running Specs, otherwise it overloads the GitHub Actions web interface
-    if ($IsRunningOnBuildServer) {
-        $script:LogLevelBackup = $LogLevel
-        $script:LogLevel = "quiet"
-    }
+    # Turn down logging when running Specs to suppress ReqnRoll Given/When/Then output
+    $script:LogLevelBackup = $LogLevel
+    $script:LogLevel = "quiet"
 }
 task PostTest {
     # Revert back to original logging level
-    if ($IsRunningOnBuildServer) {
-        $script:LogLevel = $LogLevelBackup
-    }
+    $script:LogLevel = $LogLevelBackup
 }
 task PreTestReport {}
 task PostTestReport {}
