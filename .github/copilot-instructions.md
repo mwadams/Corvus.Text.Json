@@ -251,6 +251,45 @@ After changing source files, you must rebuild the affected pipeline steps **and*
 
 The generator at `docs/website/tools/XmlDocToMarkdown/` processes XML docs + assemblies into markdown, taxonomy, Razor views, and per-type HTML pages. It supports multi-assembly input (V4 has 8 libraries), versioned output with engine switcher, and per-version search indices. Key entry points: `ApiViewGenerator.cs` (Razor view generation), `HtmlPageGenerator.cs` (per-type HTML), `MarkdownGenerator.cs` (namespace markdown).
 
+## Benchmarks
+
+The `benchmarks/` directory contains BenchmarkDotNet projects that compare validation performance against a frozen baseline. Each benchmark model project (e.g., `Corvus.Text.Json.AnsibleMetaBenchmarkModels`) has two subdirectories:
+
+- **B/ (Baseline)** — frozen, CLI-generated code. **Never regenerate B/.** It represents the fixed comparison point.
+- **C/ (Current)** — regenerated from the current code generator after changes. Always regenerate C/ when codegen changes.
+
+### Namespace and root type conventions
+
+| Directory | Namespace | Root type |
+|---|---|---|
+| B/ | `Corvus.<Name>Benchmark.Baseline` | `Schema` |
+| C/ | `Corvus.<Name>Benchmark.Current` | `<Name>Schema` |
+
+Where `<Name>` is the benchmark name (e.g., `AnsibleMeta`, `GeoJson`, `CmakePresets`).
+
+### Regenerating C/ benchmarks
+
+After making code generator changes, regenerate all C/ directories:
+
+```bash
+# Clean the C/ directory first (old files cause compilation errors)
+Remove-Item -Recurse -Force benchmarks\Corvus.Text.Json.<Name>BenchmarkModels\C\*
+
+# Regenerate with CLI tool
+dotnet run --project src\Corvus.Json.CodeGenerator -f net10.0 -c Release -- <schema-path> --rootNamespace Corvus.<Name>Benchmark.Current --outputRootTypeName <Name>Schema --outputPath benchmarks\Corvus.Text.Json.<Name>BenchmarkModels\C --engine V5
+```
+
+All 37+ benchmark models follow the same pattern — no special cases. (GeoJson previously required special handling for long file paths, but this was fixed by the path truncation collision fix in `GenerationDriverV5.cs`.)
+
+### Running benchmarks
+
+```bash
+cd benchmarks\Corvus.Text.Json.Benchmarks
+dotnet run -c Release -f net10.0 -- --filter=*<SchemaName>* --buildTimeout 1200
+```
+
+The `--buildTimeout 1200` flag is required because the default 120s is too short for this solution with source generators. Always ask the user to confirm their PC is idle before running benchmarks (they are CPU-intensive and results are unreliable under load).
+
 ## Namespaces
 
 | Namespace | Purpose |
