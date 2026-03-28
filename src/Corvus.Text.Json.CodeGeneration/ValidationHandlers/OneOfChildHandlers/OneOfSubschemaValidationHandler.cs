@@ -208,19 +208,15 @@ file static class OneOfSubschemaHandlerExtensions
             .AppendLineIndent("{")
             .PushIndent();
 
-        // Find the discriminator property in the instance
+        // Find the discriminator property via direct lookup (uses property map if available, linear scan otherwise)
         generator
             .AppendLineIndent("int oneOfDiscriminatorBranch = -1;")
-            .AppendLineIndent("var oneOfDiscriminatorEnum = new ObjectEnumerator(parentDocument, parentIndex);")
-            .AppendLineIndent("while (oneOfDiscriminatorEnum.MoveNext())")
+            .AppendLineIndent("if (parentDocument.GetJsonTokenType(parentIndex) == JsonTokenType.StartObject)")
             .AppendLineIndent("{")
             .PushIndent()
-                .AppendLineIndent("using (UnescapedUtf8JsonString oneOfDiscriminatorPropName = parentDocument.GetPropertyNameUnescaped(oneOfDiscriminatorEnum.CurrentIndex))")
-                .AppendLineIndent("{")
-                .PushIndent()
-                .AppendLineIndent("if (oneOfDiscriminatorPropName.Span.SequenceEqual(", quotedPropertyName, "u8))")
-                .AppendLineIndent("{")
-                .PushIndent();
+            .AppendLineIndent("if (parentDocument.TryGetNamedPropertyValue(parentIndex, ", quotedPropertyName, "u8, out IJsonDocument? oneOfDiscriminator_doc, out int oneOfDiscriminator_idx))")
+            .AppendLineIndent("{")
+            .PushIndent();
 
         if (discriminatorValueKind == JsonValueKind.Number)
         {
@@ -232,14 +228,10 @@ file static class OneOfSubschemaHandlerExtensions
         }
 
         generator
-                    .AppendSeparatorLine()
-                    .AppendLineIndent("break;")  // found the discriminator property, stop iterating
-                .PopIndent()
-                .AppendLineIndent("}")  // close: if (propName.SequenceEqual)
             .PopIndent()
-            .AppendLineIndent("}")  // close: using (propName)
+            .AppendLineIndent("}")  // close: if (TryGetNamedPropertyValue)
             .PopIndent()
-            .AppendLineIndent("}");  // close: while (MoveNext)
+            .AppendLineIndent("}");  // close: if (StartObject)
 
         // Dispatch to the matching branch
         generator
@@ -307,10 +299,10 @@ file static class OneOfSubschemaHandlerExtensions
         string branchVar)
     {
         generator
-                    .AppendLineIndent("if (parentDocument.GetJsonTokenType(oneOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)")
+                    .AppendLineIndent("if (oneOfDiscriminator_doc.GetJsonTokenType(oneOfDiscriminator_idx) == JsonTokenType.String)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(oneOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);");
+                        .AppendLineIndent("using UnescapedUtf8JsonString discriminatorValue = oneOfDiscriminator_doc.GetUtf8JsonString(oneOfDiscriminator_idx, JsonTokenType.String);");
 
         // Map value to branch index
         // Both hash map (TryGetValue returns 0-based insertion index) and SequenceEqual
@@ -319,12 +311,7 @@ file static class OneOfSubschemaHandlerExtensions
         {
             // Hash-based lookup for 4+ branches
             generator
-                        .AppendLineIndent("if (", mapFieldName, ".TryGetValue(discriminatorValue.Span, out ", branchVar, "))")
-                        .AppendLineIndent("{")
-                        .PushIndent()
-                            .AppendLineIndent("break;")
-                        .PopIndent()
-                        .AppendLineIndent("}");
+                        .AppendLineIndent(mapFieldName, ".TryGetValue(discriminatorValue.Span, out ", branchVar, ");");
         }
         else
         {
@@ -333,12 +320,12 @@ file static class OneOfSubschemaHandlerExtensions
             foreach ((string value, _) in discriminatorValues)
             {
                 string quotedValue = SymbolDisplay.FormatLiteral(value, true);
+                string ifKeyword = caseIndex == 0 ? "if" : "else if";
                 generator
-                        .AppendLineIndent("if (discriminatorValue.Span.SequenceEqual(", quotedValue, "u8))")
+                        .AppendLineIndent(ifKeyword, " (discriminatorValue.Span.SequenceEqual(", quotedValue, "u8))")
                         .AppendLineIndent("{")
                         .PushIndent()
                             .AppendLineIndent(branchVar, " = ", caseIndex.ToString(), ";")
-                            .AppendLineIndent("break;")
                         .PopIndent()
                         .AppendLineIndent("}");
                 caseIndex++;
@@ -356,10 +343,10 @@ file static class OneOfSubschemaHandlerExtensions
         string branchVar)
     {
         generator
-                    .AppendLineIndent("if (parentDocument.GetJsonTokenType(oneOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.Number)")
+                    .AppendLineIndent("if (oneOfDiscriminator_doc.GetJsonTokenType(oneOfDiscriminator_idx) == JsonTokenType.Number)")
                     .AppendLineIndent("{")
                     .PushIndent()
-                        .AppendLineIndent("ReadOnlyMemory<byte> discriminatorRawValue = parentDocument.GetRawSimpleValue(oneOfDiscriminatorEnum.CurrentIndex);")
+                        .AppendLineIndent("ReadOnlyMemory<byte> discriminatorRawValue = oneOfDiscriminator_doc.GetRawSimpleValue(oneOfDiscriminator_idx);")
                         .AppendLineIndent("JsonElementHelpers.TryParseNumber(discriminatorRawValue.Span, out bool discriminatorIsNegative, out ReadOnlySpan<byte> discriminatorIntegral, out ReadOnlySpan<byte> discriminatorFractional, out int discriminatorExponent);");
 
         int caseIndex = 0;
@@ -374,14 +361,14 @@ file static class OneOfSubschemaHandlerExtensions
             string fractionalStr = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(fractional), true);
             string exponentStr = exponent.ToString();
 
+            string ifKeyword = caseIndex == 0 ? "if" : "else if";
             generator
                         .AppendLineIndent(
-                            "if (JsonElementHelpers.CompareNormalizedJsonNumbers(discriminatorIsNegative, discriminatorIntegral, discriminatorFractional, discriminatorExponent, ",
+                            ifKeyword, " (JsonElementHelpers.CompareNormalizedJsonNumbers(discriminatorIsNegative, discriminatorIntegral, discriminatorFractional, discriminatorExponent, ",
                             isNegativeStr, ", ", integralStr, "u8, ", fractionalStr, "u8, ", exponentStr, ") == 0)")
                         .AppendLineIndent("{")
                         .PushIndent()
                             .AppendLineIndent(branchVar, " = ", caseIndex.ToString(), ";")
-                            .AppendLineIndent("break;")
                         .PopIndent()
                         .AppendLineIndent("}");
             caseIndex++;
