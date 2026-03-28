@@ -442,8 +442,22 @@ Get-ChildItem $docsContentDir -Filter "*.md" -ErrorAction SilentlyContinue |
 Get-ChildItem $docsTaxonomyDir -Filter "*.yml" -ErrorAction SilentlyContinue |
     Where-Object { $_.Name -ne "index.yml" } | Remove-Item -Force
 
-$docCount = 0
+# Build a map of source filenames -> slugs for cross-doc link rewriting
+$docLinkMap = @{}
 $descriptorFiles = Get-ChildItem $descriptorsDir -Filter "*.yml" | Sort-Object Name
+foreach ($df in $descriptorFiles) {
+    $dc = Get-Content $df.FullName -Raw -Encoding utf8
+    foreach ($ln in ($dc -split "`n")) {
+        $ln = $ln.Trim()
+        if ($ln -match '^source:\s*"?(.+?)"?\s*$') {
+            $src = $Matches[1]
+            $bn = [System.IO.Path]::GetFileNameWithoutExtension($src)
+            $docLinkMap[$src] = (ConvertTo-KebabCase $bn) + ".html"
+        }
+    }
+}
+
+$docCount = 0
 
 foreach ($descriptorFile in $descriptorFiles) {
     # Parse simple YAML descriptor (source, navTitle, description)
@@ -484,6 +498,11 @@ foreach ($descriptorFile in $descriptorFiles) {
 
     # Strip markdown "## Table of Contents" section (the TOC through the next --- or ## heading)
     $docBody = $docBody -replace '(?ms)^## Table of Contents\s*\n(- \[.*?\]\(#.*?\)\s*\n)+\s*---\s*\n?', ''
+
+    # Rewrite cross-doc markdown links: (Source.md) -> (slug.html)
+    foreach ($srcFile in $docLinkMap.Keys) {
+        $docBody = $docBody -replace [regex]::Escape("($srcFile)"), "($($docLinkMap[$srcFile]))"
+    }
 
     # Use descriptor nav title, or fall back to doc title
     $navTitle = if ($descriptor['navTitle']) { $descriptor['navTitle'] } else {
