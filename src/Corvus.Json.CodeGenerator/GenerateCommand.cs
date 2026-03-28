@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using Corvus.Json;
 using Corvus.Json.CodeGenerator;
+using Corvus.Text.Json.CodeGeneration;
 using Spectre.Console.Cli;
 using static Corvus.Text.Json.CodeGenerator.GenerateWithDriverCommand;
 
@@ -105,6 +106,11 @@ internal class GenerateCommand : AsyncCommand<GenerateCommand.Settings>
         [CommandOption("--engine")]
         [DefaultValue(Engine.V5)]
         public Engine GenerationEngine { get; init; }
+
+        [Description("The code generation mode. TypeGeneration emits strongly-typed C# types (default). SchemaEvaluationOnly emits a standalone evaluator for validation and annotation collection. Both emits both.")]
+        [CommandOption("--codeGenerationMode")]
+        [DefaultValue(CodeGenerationMode.TypeGeneration)]
+        public CodeGenerationMode CodeGenerationMode { get; init; }
     }
 
     /// <inheritdoc/>
@@ -133,6 +139,6 @@ internal class GenerateCommand : AsyncCommand<GenerateCommand.Settings>
             supportYaml: settings.SupportYaml,
             addExplicitUsings: settings.AddExplicitUsings);
 
-        return GenerationDriver.GenerateTypes(config, settings.GenerationEngine, cancellationToken);
+        return GenerationDriver.GenerateTypes(config, settings.GenerationEngine, settings.CodeGenerationMode, cancellationToken);
     }
 }

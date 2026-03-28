@@ -13,6 +13,7 @@ using Corvus.Json.CodeGeneration;
 using Corvus.Json.CodeGeneration.DocumentResolvers;
 using Corvus.Json.CodeGenerator;
 using Corvus.Json.Internal;
+using Corvus.Text.Json.CodeGeneration;
 using Spectre.Console;
 
 namespace Corvus.Text.Json.CodeGenerator;
@@ -22,7 +23,7 @@ namespace Corvus.Text.Json.CodeGenerator;
 /// </summary>
 public static class GenerationDriverV5
 {
-    internal static async Task<int> GenerateTypes(GeneratorConfig generatorConfig, CancellationToken cancellationToken)
+    internal static async Task<int> GenerateTypes(GeneratorConfig generatorConfig, CodeGenerationMode codeGenerationMode, CancellationToken cancellationToken)
     {
         try
         {
@@ -58,7 +59,7 @@ public static class GenerationDriverV5
 
             await progress.StartAsync(async context =>
             {
-                await ExecuteTask(generatorConfig, context, defaultVocabulary, typeBuilder);
+                await ExecuteTask(generatorConfig, context, defaultVocabulary, typeBuilder, codeGenerationMode);
             });
 
         }
@@ -147,7 +148,7 @@ public static class GenerationDriverV5
         return -1;
     }
 
-    private static async Task ExecuteTask(GeneratorConfig generatorConfig, ProgressContext context, IVocabulary defaultVocabulary, JsonSchemaTypeBuilder typeBuilder)
+    private static async Task ExecuteTask(GeneratorConfig generatorConfig, ProgressContext context, IVocabulary defaultVocabulary, JsonSchemaTypeBuilder typeBuilder, CodeGenerationMode codeGenerationMode)
     {
         ProgressTask outerTask = context.AddTask("Generating JSON types", maxValue: generatorConfig.TypesToGenerate.GetArrayLength());
 
@@ -181,7 +182,7 @@ public static class GenerationDriverV5
             typeBuilderTask.StopTask();
         }
 
-        CodeGeneration.CSharpLanguageProvider.Options options = MapGeneratorConfigToOptions(generatorConfig, namedTypes);
+        CodeGeneration.CSharpLanguageProvider.Options options = MapGeneratorConfigToOptions(generatorConfig, namedTypes, codeGenerationMode);
 
         ProgressTask currentTask = context.AddTask("Generating code for schema.");
         var languageProvider = CodeGeneration.CSharpLanguageProvider.DefaultWithOptions(options);
@@ -208,7 +209,7 @@ public static class GenerationDriverV5
         outerTask.StopTask();
     }
 
-    private static CodeGeneration.CSharpLanguageProvider.Options MapGeneratorConfigToOptions(in GeneratorConfig generatorConfig, in GeneratorConfig.NamedTypeList namedTypes)
+    private static CodeGeneration.CSharpLanguageProvider.Options MapGeneratorConfigToOptions(in GeneratorConfig generatorConfig, in GeneratorConfig.NamedTypeList namedTypes, CodeGenerationMode codeGenerationMode)
     {
         return new CodeGeneration.CSharpLanguageProvider.Options(
             (string)generatorConfig.RootNamespace,
@@ -220,7 +221,8 @@ public static class GenerationDriverV5
             disabledNamingHeuristics: generatorConfig.DisabledNamingHeuristics?.Select(n => (string)n).ToArray(),
             useImplicitOperatorString: generatorConfig.UseImplicitOperatorString ?? false,
             lineEndSequence: (generatorConfig.UseUnixLineEndings ?? false) ? "\n" : "\r\n",
-            addExplicitUsings: generatorConfig.AddExplicitUsings ?? false);
+            addExplicitUsings: generatorConfig.AddExplicitUsings ?? false,
+            codeGenerationMode: codeGenerationMode);
     }
 
     private static async Task<string?> BeginMapFile(GeneratorConfig generatorConfig, string outputPath)

@@ -14,6 +14,7 @@ using Corvus.Json.CodeGeneration.CSharp;
 using Corvus.Json.CodeGeneration.DocumentResolvers;
 using Corvus.Json.CodeGenerator;
 using Corvus.Json.Internal;
+using Corvus.Text.Json.CodeGeneration;
 using Spectre.Console;
 
 namespace Corvus.Text.Json.CodeGenerator;
@@ -23,12 +24,12 @@ namespace Corvus.Text.Json.CodeGenerator;
 /// </summary>
 public static class GenerationDriver
 {
-    internal static async Task<int> GenerateTypes(GeneratorConfig generatorConfig, Engine generationEngine, CancellationToken cancellationToken)
+    internal static async Task<int> GenerateTypes(GeneratorConfig generatorConfig, Engine generationEngine, CodeGenerationMode codeGenerationMode, CancellationToken cancellationToken)
     {
         return generationEngine switch
         {
             Engine.V4 => await GenerationDriverV4.GenerateTypes(generatorConfig, cancellationToken).ConfigureAwait(false),
-            Engine.V5 => await GenerationDriverV5.GenerateTypes(generatorConfig, cancellationToken).ConfigureAwait(false),
+            Engine.V5 => await GenerationDriverV5.GenerateTypes(generatorConfig, codeGenerationMode, cancellationToken).ConfigureAwait(false),
             _ => throw new NotSupportedException($"Unsupported generation engine: {generationEngine}")
         };
     }
