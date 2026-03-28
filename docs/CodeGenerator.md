@@ -6,6 +6,8 @@
 
 The tool supports all major JSON Schema drafts (Draft 4, 6, 7, 2019-09, and 2020-12), OpenAPI 3.0, and YAML input.
 
+> **Tip:** If you only need validation and annotation collection without the full type system, use `--codeGenerationMode SchemaEvaluationOnly` to generate a [standalone schema evaluator](SchemaEvaluator.md).
+
 ## Installation
 
 ```bash
@@ -60,6 +62,7 @@ generatejsonschematypes <schemaFile> [OPTIONS]
 | `--yaml` | `false` | Enable YAML schema support |
 | `--addExplicitUsings` | `false` | Include explicit `using` statements for standard implicit usings |
 | `--engine` | `V5` | Code generation engine: `V5` (Corvus.Text.Json) or `V4` (legacy Corvus.Json.ExtendedTypes) |
+| `--codeGenerationMode` | `TypeGeneration` | `TypeGeneration` (types only), `SchemaEvaluationOnly` ([standalone evaluator](SchemaEvaluator.md) only), or `Both` |
 | `--outputMapFile` | — | Write a JSON map of all generated files |
 
 **Examples:**

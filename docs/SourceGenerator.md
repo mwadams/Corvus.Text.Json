@@ -6,6 +6,8 @@
 
 The source generator produces identical output to the [`generatejsonschematypes` CLI tool](/docs/code-generator.html), but runs automatically during the build with full IntelliSense support as you type.
 
+> **Tip:** If you only need validation and annotation collection without the full type system, you can also generate a [standalone schema evaluator](SchemaEvaluator.md) by setting `EmitEvaluator = true` on the attribute.
+
 ## Installation
 
 Add both the source generator and the core runtime package to your project:
