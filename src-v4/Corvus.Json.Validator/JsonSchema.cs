@@ -62,15 +62,11 @@ public readonly struct JsonSchema
     /// <see langword="null"/> then the <paramref name="canonicalUri"/> an attempt
     /// will be made to find the canonical URI in the schema.</param>
     /// <param name="options">Generation options.</param>
+    /// <param name="refreshCache">If <see langword="true"/>, any cached entry for this schema will be replaced.</param>
     /// <returns>The JSON schema instance.</returns>
     /// <exception cref="InvalidOperationException">No canonical URI could be found for the schema document.</exception>
-    public static JsonSchema FromText(string text, string? canonicalUri = null, Options? options = null)
+    public static JsonSchema FromText(string text, string? canonicalUri = null, Options? options = null, bool refreshCache = false)
     {
-        if (canonicalUri is not null && CachedSchema.TryGetValue(canonicalUri, out ValidateCallback? value))
-        {
-            return new(value);
-        }
-
         options ??= Options.Default;
 
         var document = JsonDocument.Parse(text);
@@ -80,9 +76,21 @@ public readonly struct JsonSchema
             throw new InvalidOperationException("The document does not have a canonical URI and one was not provided.");
         }
 
+        string cacheKey = BuildCacheKey(canonicalUri, options.AlwaysAssertFormat);
+
+        if (!refreshCache && CachedSchema.TryGetValue(cacheKey, out ValidateCallback? cached))
+        {
+            return new(cached);
+        }
+
+        if (refreshCache)
+        {
+            CachedSchema.TryRemove(cacheKey, out _);
+        }
+
         PrepopulatedDocumentResolver documentResolver = new();
         documentResolver.AddDocument(canonicalUri, document);
-        return FromCore(canonicalUri, CompoundWithMetaschemaResolver(documentResolver, options), options.FallbackVocabulary, options.AlwaysAssertFormat);
+        return FromCore(canonicalUri, cacheKey, CompoundWithMetaschemaResolver(documentResolver, options), options.FallbackVocabulary, options.AlwaysAssertFormat);
     }
 
     /// <summary>
@@ -93,15 +101,11 @@ public readonly struct JsonSchema
     /// <see langword="null"/> then the <paramref name="canonicalUri"/> an attempt
     /// will be made to find the canonical URI in the schema.</param>
     /// <param name="options">Generation options.</param>
+    /// <param name="refreshCache">If <see langword="true"/>, any cached entry for this schema will be replaced.</param>
     /// <returns>The JSON schema instance.</returns>
     /// <exception cref="InvalidOperationException">No canonical URI could be found for the schema document.</exception>
-    public static JsonSchema FromStream(Stream stream, string? canonicalUri = null, Options? options = null)
+    public static JsonSchema FromStream(Stream stream, string? canonicalUri = null, Options? options = null, bool refreshCache = false)
     {
-        if (canonicalUri is not null && CachedSchema.TryGetValue(canonicalUri, out ValidateCallback? value))
-        {
-            return new(value);
-        }
-
         options ??= Options.Default;
 
         var document = JsonDocument.Parse(stream);
@@ -111,9 +115,21 @@ public readonly struct JsonSchema
             throw new InvalidOperationException("The document does not have a canonical URI and one was not provided.");
         }
 
+        string cacheKey = BuildCacheKey(canonicalUri, options.AlwaysAssertFormat);
+
+        if (!refreshCache && CachedSchema.TryGetValue(cacheKey, out ValidateCallback? cached))
+        {
+            return new(cached);
+        }
+
+        if (refreshCache)
+        {
+            CachedSchema.TryRemove(cacheKey, out _);
+        }
+
         PrepopulatedDocumentResolver documentResolver = new();
         documentResolver.AddDocument(canonicalUri, document);
-        return FromCore(canonicalUri, CompoundWithMetaschemaResolver(documentResolver, options), options.FallbackVocabulary, options.AlwaysAssertFormat);
+        return FromCore(canonicalUri, cacheKey, CompoundWithMetaschemaResolver(documentResolver, options), options.FallbackVocabulary, options.AlwaysAssertFormat);
     }
 
     /// <summary>
@@ -121,8 +137,9 @@ public readonly struct JsonSchema
     /// </summary>
     /// <param name="fileName">The canonical URI for the document.</param>
     /// <param name="options">Generation options.</param>
+    /// <param name="refreshCache">If <see langword="true"/>, any cached entry for this schema will be replaced.</param>
     /// <returns>The JSON schema instance.</returns>
-    public static JsonSchema FromFile(string fileName, Options? options = null)
+    public static JsonSchema FromFile(string fileName, Options? options = null, bool refreshCache = false)
     {
         options ??= Options.Default;
 
@@ -131,16 +148,23 @@ public readonly struct JsonSchema
             fileName = result;
         }
 
-        if (CachedSchema.TryGetValue($"{fileName}__{options.AlwaysAssertFormat}", out ValidateCallback? value))
+        string cacheKey = BuildCacheKey(fileName, options.AlwaysAssertFormat);
+
+        if (!refreshCache && CachedSchema.TryGetValue(cacheKey, out ValidateCallback? cached))
         {
-            return new(value);
+            return new(cached);
+        }
+
+        if (refreshCache)
+        {
+            CachedSchema.TryRemove(cacheKey, out _);
         }
 
         CompoundDocumentResolver resolver = CompoundWithMetaschemaResolver(null, options);
 
         resolver.AddDocument(fileName, JsonDocument.Parse(File.ReadAllText(fileName)));
 
-        return FromCore(fileName, resolver, options.FallbackVocabulary, options.AlwaysAssertFormat);
+        return FromCore(fileName, cacheKey, resolver, options.FallbackVocabulary, options.AlwaysAssertFormat);
     }
 
     /// <summary>
@@ -149,14 +173,22 @@ public readonly struct JsonSchema
     /// <param name="jsonSchemaUri">The canonical URI for the document.</param>
     /// <param name="baseUriResolver">The base URI resolver.</param>
     /// <param name="options">Generation options.</param>
+    /// <param name="refreshCache">If <see langword="true"/>, any cached entry for this schema will be replaced.</param>
     /// <returns>The JSON schema instance.</returns>
-    public static JsonSchema FromUri(string jsonSchemaUri, BaseUriResolver? baseUriResolver = null, Options? options = null)
+    public static JsonSchema FromUri(string jsonSchemaUri, BaseUriResolver? baseUriResolver = null, Options? options = null, bool refreshCache = false)
     {
         options ??= Options.Default;
 
-        if (CachedSchema.TryGetValue($"{jsonSchemaUri}__{options.AlwaysAssertFormat}", out ValidateCallback? value))
+        string cacheKey = BuildCacheKey(jsonSchemaUri, options.AlwaysAssertFormat);
+
+        if (!refreshCache && CachedSchema.TryGetValue(cacheKey, out ValidateCallback? cached))
         {
-            return new(value);
+            return new(cached);
+        }
+
+        if (refreshCache)
+        {
+            CachedSchema.TryRemove(cacheKey, out _);
         }
 
         CompoundDocumentResolver resolver =
@@ -166,7 +198,7 @@ public readonly struct JsonSchema
                     : null,
                 options);
 
-        return FromCore(jsonSchemaUri, resolver, options.FallbackVocabulary, options.AlwaysAssertFormat);
+        return FromCore(jsonSchemaUri, cacheKey, resolver, options.FallbackVocabulary, options.AlwaysAssertFormat);
     }
 
     /// <summary>
@@ -174,17 +206,11 @@ public readonly struct JsonSchema
     /// </summary>
     /// <param name="jsonSchemaUri">The canonical URI for the document.</param>
     /// <param name="options">Generation options.</param>
+    /// <param name="refreshCache">If <see langword="true"/>, any cached entry for this schema will be replaced.</param>
     /// <returns>The JSON schema instance.</returns>
-    public static JsonSchema From(string jsonSchemaUri, Options? options = null)
+    public static JsonSchema From(string jsonSchemaUri, Options? options = null, bool refreshCache = false)
     {
-        options ??= Options.Default;
-
-        if (CachedSchema.TryGetValue($"{jsonSchemaUri}__{options.AlwaysAssertFormat}", out ValidateCallback? value))
-        {
-            return new(value);
-        }
-
-        return FromCore(jsonSchemaUri, CompoundWithMetaschemaResolver(null, options), options.FallbackVocabulary, options.AlwaysAssertFormat);
+        return FromUri(jsonSchemaUri, options: options, refreshCache: refreshCache);
     }
 
     /// <summary>
@@ -198,7 +224,12 @@ public readonly struct JsonSchema
         return this.validateCallback(jsonElement, ValidationContext.ValidContext, level);
     }
 
-    private static JsonSchema FromCore(string jsonSchemaUri, IDocumentResolver documentResolver, IVocabulary fallbackVocabulary, bool alwaysAssertFormat)
+    private static string BuildCacheKey(string uri, bool alwaysAssertFormat)
+    {
+        return $"{uri}__{alwaysAssertFormat}";
+    }
+
+    private static JsonSchema FromCore(string jsonSchemaUri, string cacheKey, IDocumentResolver documentResolver, IVocabulary fallbackVocabulary, bool alwaysAssertFormat)
     {
         VocabularyRegistry vocabularyRegistry = RegisterVocabularies(documentResolver);
 
@@ -222,7 +253,7 @@ public readonly struct JsonSchema
 #endif
 
         ValidateCallback validateCallback = BuildValidateCallback(generatedType);
-        return new(CachedSchema.GetOrAdd(jsonSchemaUri, validateCallback));
+        return new(CachedSchema.GetOrAdd(cacheKey, validateCallback));
     }
 
     private static bool TryGetCanonicalUri(JsonDocument document, [NotNullWhen(true)] out string? canonicalUri)
