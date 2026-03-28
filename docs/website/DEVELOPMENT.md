@@ -26,6 +26,30 @@ cd docs/website
 
 This runs all 10 pipeline steps (see [Build Pipeline](#build-pipeline) below) and produces a complete site in `.output/`.
 
+### Integrated build (via root build.ps1)
+
+```powershell
+# From the repo root — builds the .NET solution then the website
+./build.ps1 -Website
+```
+
+This runs the standard .NET build (compile, test, package) and then builds the website in the `PostBuild` phase, reusing the already-compiled binaries. The website build skips steps 1a/1b since the solution is already built.
+
+For GitHub Pages subpath hosting:
+
+```powershell
+./build.ps1 -Website -BasePathPrefix "/Corvus.Text.Json"
+```
+
+### Skip .NET compilation (website only)
+
+```powershell
+cd docs/website
+./build.ps1 -SkipDotNetBuild
+```
+
+Skips the V5 and V4 .NET builds (steps 1a/1b), assuming the binaries are already in the `bin/Release` directories from a prior `dotnet build`. Useful when iterating on website content after building the solution once.
+
 ### Preview with local server
 
 ```powershell

@@ -22,6 +22,10 @@
     Requires a previous build to have been completed.
 .PARAMETER Watch
     Monitors for file changes and auto-regenerates.
+.PARAMETER SkipDotNetBuild
+    Skips steps 1a (V5 build) and 1b (V4 builds). Use when the .NET solution
+    has already been built (e.g. by the root build.ps1) and the compiled
+    binaries are already in the bin/Release directories.
 #>
 [CmdletBinding()]
 param (
@@ -35,7 +39,10 @@ param (
     [switch] $Watch,
 
     [Parameter()]
-    [string] $BasePathPrefix = ""
+    [string] $BasePathPrefix = "",
+
+    [Parameter()]
+    [switch] $SkipDotNetBuild
 )
 
 $ErrorActionPreference = 'Stop'
@@ -177,34 +184,40 @@ foreach ($sub in @("docs", "examples", "api", "api-v5", "api-v4")) {
 }
 Write-Host "  Copied source files to site tree." -ForegroundColor Green
 
-# -- Step 1a: Build Corvus.Text.Json (V5) ------------------------------------
-Write-Host "`n[1a/10] Building Corvus.Text.Json (V5)..." -ForegroundColor Cyan
-$sw = [System.Diagnostics.Stopwatch]::StartNew()
-$mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
-& dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
-if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
-& dotnet build $mainProject -c Release -f netstandard2.0 --no-incremental -v q
-if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2.0)" }
-Write-StepDuration "V5 build" $sw
+# -- Step 1a/1b: Build .NET projects (skip when -SkipDotNetBuild) ---------------
+if ($SkipDotNetBuild) {
+    Write-Host "`n[1a/10] Skipping V5 build (-SkipDotNetBuild)." -ForegroundColor DarkGray
+    Write-Host "[1b/10] Skipping V4 builds (-SkipDotNetBuild)." -ForegroundColor DarkGray
+} else {
+    # -- Step 1a: Build Corvus.Text.Json (V5) ------------------------------------
+    Write-Host "`n[1a/10] Building Corvus.Text.Json (V5)..." -ForegroundColor Cyan
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    $mainProject = Join-Path $repoRoot "src\Corvus.Text.Json\Corvus.Text.Json.csproj"
+    & dotnet build $mainProject -c Release -f net10.0 /p:GenerateDocumentationFile=true --no-incremental -v q
+    if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (net10.0)" }
+    & dotnet build $mainProject -c Release -f netstandard2.0 --no-incremental -v q
+    if ($LASTEXITCODE -ne 0) { throw "Failed to build Corvus.Text.Json (netstandard2.0)" }
+    Write-StepDuration "V5 build" $sw
 
-# -- Step 1b: Build V4 libraries ---------------------------------------------
-Write-Host "`n[1b/10] Building V4 libraries..." -ForegroundColor Cyan
-$sw = [System.Diagnostics.Stopwatch]::StartNew()
-$projIndex = 0
-foreach ($proj in $v4Projects) {
-    $projIndex++
-    $projPath = Join-Path $v4SrcDir "$proj\$proj.csproj"
-    if (!(Test-Path $projPath)) {
-        Write-Warning "  V4 project not found: $projPath - skipping"
-        continue
+    # -- Step 1b: Build V4 libraries ---------------------------------------------
+    Write-Host "`n[1b/10] Building V4 libraries..." -ForegroundColor Cyan
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    $projIndex = 0
+    foreach ($proj in $v4Projects) {
+        $projIndex++
+        $projPath = Join-Path $v4SrcDir "$proj\$proj.csproj"
+        if (!(Test-Path $projPath)) {
+            Write-Warning "  V4 project not found: $projPath - skipping"
+            continue
+        }
+        Write-Host "  [$projIndex/$($v4Projects.Count)] Building $proj..." -ForegroundColor Gray
+        & dotnet build $projPath -c Release -f net10.0 --no-incremental -v q
+        if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (net10.0)" }
+        & dotnet build $projPath -c Release -f netstandard2.0 --no-incremental -v q
+        if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (netstandard2.0)" }
     }
-    Write-Host "  [$projIndex/$($v4Projects.Count)] Building $proj..." -ForegroundColor Gray
-    & dotnet build $projPath -c Release -f net10.0 --no-incremental -v q
-    if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (net10.0)" }
-    & dotnet build $projPath -c Release -f netstandard2.0 --no-incremental -v q
-    if ($LASTEXITCODE -ne 0) { throw "Failed to build $proj (netstandard2.0)" }
+    Write-StepDuration "V4 builds - $($v4Projects.Count) libraries" $sw
 }
-Write-StepDuration "V4 builds - $($v4Projects.Count) libraries" $sw
 
 # -- Step 2a: Generate V5 API markdown, taxonomy & views ---------------------
 Write-Host "`n[2a/10] Generating V5 API markdown, taxonomy & views..." -ForegroundColor Cyan
