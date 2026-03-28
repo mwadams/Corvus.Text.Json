@@ -71,24 +71,105 @@ The standalone evaluator produces a single static class with:
 
 ## Annotation Collection
 
-The standalone evaluator integrates with the `JsonSchemaResultsCollector` to produce verbose validation results that include annotations. To collect annotations:
+The standalone evaluator provides **fully compliant** annotation collection conforming to the JSON Schema specification. By contrast, the type-based generator only collects annotations for validation keywords.
+
+To collect annotations, run the evaluator with a `JsonSchemaResultsCollector` in `Verbose` mode, then use `JsonSchemaAnnotationProducer` to extract the annotations.
+
+### Basic enumeration with `foreach`
+
+The `EnumerateAnnotations` method returns a zero-allocation `ref struct` enumerator that you can use in a `foreach` loop:
 
 ```csharp
 using Corvus.Text.Json;
 
-// Parse the document
+// Parse the instance
 using var doc = ParsedJsonDocument<JsonElement>.Parse(jsonText);
+JsonElement instance = doc.RootElement;
 
-// Create a verbose results collector
-var collector = new JsonSchemaResultsCollector(ValidationLevel.Verbose);
+// Validate in Verbose mode
+using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
+instance.EvaluateSchema(collector);
 
-// Run the evaluator (the generated Evaluate method)
-MySchema.JsonSchema.Evaluate(doc, 0, ref context);
+// Enumerate annotations
+foreach (JsonSchemaAnnotationProducer.Annotation annotation
+    in JsonSchemaAnnotationProducer.EnumerateAnnotations(collector))
+{
+    // Each annotation is a ref struct with UTF-8 span properties:
+    //   annotation.InstanceLocation  — e.g. "", "/foo", "/items/0"
+    //   annotation.Keyword           — e.g. "title", "description", "default"
+    //   annotation.SchemaLocation    — e.g. "", "/$defs/foo"
+    //   annotation.Value             — raw JSON value, e.g. "\"My Title\"", "42", "true"
 
-// Access results from the collector for annotation extraction
+    // String accessors are also available:
+    Console.WriteLine(
+        $"  {annotation.GetInstanceLocationText()} " +
+        $"[{annotation.GetKeywordText()}] " +
+        $"@ {annotation.GetSchemaLocationText()} " +
+        $"= {annotation.GetValueText()}");
+}
 ```
 
-The annotation producer filters the verbose results to extract per-instance annotations conforming to the JSON Schema specification for annotation collection.
+> **Note:** The `Annotation` type is a `ref struct` whose spans reference the internal buffers of the `JsonSchemaResultsCollector`. It is only valid during enumeration and must not be stored beyond the current iteration. Use the string accessors (`GetKeywordText()`, etc.) if you need to capture values.
+
+### Writing annotations as JSON
+
+`WriteAnnotationsTo` writes all annotations as a structured JSON object to a `Utf8JsonWriter`. The output is grouped by instance location, then by keyword, then by schema location:
+
+```csharp
+using var collector = JsonSchemaResultsCollector.Create(JsonSchemaResultsLevel.Verbose);
+instance.EvaluateSchema(collector);
+
+using var buffer = new MemoryStream();
+using (var writer = new Utf8JsonWriter(buffer, new JsonWriterOptions { Indented = true }))
+{
+    JsonSchemaAnnotationProducer.WriteAnnotationsTo(collector, writer);
+}
+
+// Output structure:
+// {
+//   "": {                          // instance location (root)
+//     "title": {
+//       "#": "\"Person\""          // schema location → annotation value
+//     },
+//     "description": {
+//       "#": "\"A person object\""
+//     }
+//   },
+//   "/name": {
+//     "title": {
+//       "#/properties/name": "\"Full name\""
+//     }
+//   }
+// }
+```
+
+### Callback-based enumeration
+
+For scenarios where you want to process annotations without a `foreach` loop, use the callback overload. Return `true` to continue, `false` to stop early:
+
+```csharp
+JsonSchemaAnnotationProducer.EnumerateAnnotations(
+    collector,
+    (instanceLocation, keyword, schemaLocation, annotationValue) =>
+    {
+        Console.WriteLine($"{instanceLocation}/{keyword} @ {schemaLocation} = {annotationValue}");
+        return true; // continue enumeration
+    });
+```
+
+### Collecting annotations into a dictionary (testing)
+
+The `CollectAnnotations` method returns a `Dictionary` keyed by `(instanceLocation, keyword)`, useful for testing assertions:
+
+```csharp
+var annotations = JsonSchemaAnnotationProducer.CollectAnnotations(collector);
+
+// Check a specific annotation exists
+Assert.True(annotations.TryGetValue(("", "title"), out var titleMap));
+Assert.Equal("\"Person\"", titleMap["#"]);
+```
+
+> **Note:** `CollectAnnotations` allocates dictionaries. For production use, prefer `EnumerateAnnotations` or `WriteAnnotationsTo`.
 
 ## Performance Optimizations
 
@@ -109,7 +190,7 @@ The standalone evaluator includes the same performance optimizations as the type
 | Mutable builder support | ✅ | ❌ |
 | Implicit/explicit conversions | ✅ | ❌ |
 | Schema validation | ✅ | ✅ |
-| Annotation collection | ✅ | ✅ |
+| Annotation collection | Validation keywords only | Fully compliant |
 | Binary size | Larger | Smaller |
 | Compilation time | Longer | Shorter |
 
