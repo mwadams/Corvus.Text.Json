@@ -3542,7 +3542,9 @@ internal static partial class StandaloneEvaluatorGenerator
             if (CodeGenerationExtensions.TryGetOneOfDiscriminator(
                     kvp.Value,
                     out string? discriminatorPropertyName,
-                    out List<(string Value, int BranchIndex)>? discriminatorValues))
+                    out List<(string Value, int BranchIndex)>? discriminatorValues,
+                    out JsonValueKind discriminatorValueKind) &&
+                discriminatorValueKind == JsonValueKind.String)
             {
                 EmitOneOfDiscriminatorFastPath(
                     ctx, discriminatorPropertyName, discriminatorValues,

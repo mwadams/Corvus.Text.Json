@@ -9,6 +9,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using Corvus.Json.CodeGeneration;
 using Microsoft.CodeAnalysis.CSharp;
 
@@ -79,11 +81,13 @@ public class AnyOfSubschemaValidationHandler : IChildValidationHandler
                         keyword.Keyword,
                         out string? discriminatorPropertyName,
                         out List<(string Value, int BranchIndex)>? discriminatorValues,
+                        out JsonValueKind discriminatorValueKind,
                         out string? mapFieldName))
                 {
                     generator.AppendAnyOfDiscriminatorFastPath(
                         discriminatorPropertyName,
                         discriminatorValues,
+                        discriminatorValueKind,
                         mapFieldName,
                         formattedKeyword,
                         contextNames,
@@ -172,6 +176,7 @@ file static class AnyOfSubschemaValidationHandlerExtensions
         this CodeGenerator generator,
         string discriminatorPropertyName,
         List<(string Value, int BranchIndex)> discriminatorValues,
+        JsonValueKind discriminatorValueKind,
         string? mapFieldName,
         string formattedKeyword,
         string[] contextNames,
@@ -199,46 +204,18 @@ file static class AnyOfSubschemaValidationHandlerExtensions
                 .PushIndent()
                 .AppendLineIndent("if (anyOfDiscriminatorPropName.Span.SequenceEqual(", quotedPropertyName, "u8))")
                 .AppendLineIndent("{")
-                .PushIndent()
-                    .AppendLineIndent("if (parentDocument.GetJsonTokenType(anyOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)")
-                    .AppendLineIndent("{")
-                    .PushIndent()
-                        .AppendLineIndent("using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(anyOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);");
+                .PushIndent();
 
-        // Map value to branch index
-        // Both hash map (TryGetValue returns 0-based insertion index) and SequenceEqual
-        // paths produce a 0-based case index that aligns with the switch statement below.
-        if (mapFieldName is not null)
+        if (discriminatorValueKind == JsonValueKind.Number)
         {
-            generator
-                        .AppendLineIndent("if (", mapFieldName, ".TryGetValue(discriminatorValue.Span, out anyOfDiscriminatorBranch))")
-                        .AppendLineIndent("{")
-                        .PushIndent()
-                            .AppendLineIndent("break;")
-                        .PopIndent()
-                        .AppendLineIndent("}");
+            AppendNumericDiscriminatorValueMatch(generator, discriminatorValues, "anyOfDiscriminatorBranch");
         }
         else
         {
-            int caseIndex = 0;
-            foreach ((string value, _) in discriminatorValues)
-            {
-                string quotedValue = SymbolDisplay.FormatLiteral(value, true);
-                generator
-                        .AppendLineIndent("if (discriminatorValue.Span.SequenceEqual(", quotedValue, "u8))")
-                        .AppendLineIndent("{")
-                        .PushIndent()
-                            .AppendLineIndent("anyOfDiscriminatorBranch = ", caseIndex.ToString(), ";")
-                            .AppendLineIndent("break;")
-                        .PopIndent()
-                        .AppendLineIndent("}");
-                caseIndex++;
-            }
+            AppendStringDiscriminatorValueMatch(generator, discriminatorValues, mapFieldName, "anyOfDiscriminatorBranch");
         }
 
         generator
-                    .PopIndent()
-                    .AppendLineIndent("}")  // close: if (GetJsonTokenType == String)
                     .AppendSeparatorLine()
                     .AppendLineIndent("break;")  // found the discriminator property, stop iterating
                 .PopIndent()
@@ -304,5 +281,99 @@ file static class AnyOfSubschemaValidationHandlerExtensions
             .AppendLineIndent("}");
 
         return generator;
+    }
+
+    private static void AppendStringDiscriminatorValueMatch(
+        CodeGenerator generator,
+        List<(string Value, int BranchIndex)> discriminatorValues,
+        string? mapFieldName,
+        string branchVar)
+    {
+        generator
+                    .AppendLineIndent("if (parentDocument.GetJsonTokenType(anyOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.String)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("using UnescapedUtf8JsonString discriminatorValue = parentDocument.GetUtf8JsonString(anyOfDiscriminatorEnum.CurrentIndex, JsonTokenType.String);");
+
+        // Map value to branch index
+        // Both hash map (TryGetValue returns 0-based insertion index) and SequenceEqual
+        // paths produce a 0-based case index that aligns with the switch statement below.
+        if (mapFieldName is not null)
+        {
+            generator
+                        .AppendLineIndent("if (", mapFieldName, ".TryGetValue(discriminatorValue.Span, out ", branchVar, "))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent("break;")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+        }
+        else
+        {
+            int caseIndex = 0;
+            foreach ((string value, _) in discriminatorValues)
+            {
+                string quotedValue = SymbolDisplay.FormatLiteral(value, true);
+                generator
+                        .AppendLineIndent("if (discriminatorValue.Span.SequenceEqual(", quotedValue, "u8))")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent(branchVar, " = ", caseIndex.ToString(), ";")
+                            .AppendLineIndent("break;")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+                caseIndex++;
+            }
+        }
+
+        generator
+                    .PopIndent()
+                    .AppendLineIndent("}");  // close: if (GetJsonTokenType == String)
+    }
+
+    private static void AppendNumericDiscriminatorValueMatch(
+        CodeGenerator generator,
+        List<(string Value, int BranchIndex)> discriminatorValues,
+        string branchVar)
+    {
+        generator
+                    .AppendLineIndent("if (parentDocument.GetJsonTokenType(anyOfDiscriminatorEnum.CurrentIndex) == JsonTokenType.Number)")
+                    .AppendLineIndent("{")
+                    .PushIndent()
+                        .AppendLineIndent("ReadOnlyMemory<byte> discriminatorRawValue = parentDocument.GetRawSimpleValue(anyOfDiscriminatorEnum.CurrentIndex);")
+                        .AppendLineIndent("JsonElementHelpers.TryParseNumber(discriminatorRawValue.Span, out bool discriminatorIsNegative, out ReadOnlySpan<byte> discriminatorIntegral, out ReadOnlySpan<byte> discriminatorFractional, out int discriminatorExponent);");
+
+        int caseIndex = 0;
+        foreach ((string value, _) in discriminatorValues)
+        {
+            // Parse the constant number value at codegen time to get normalized components
+#if BUILDING_SOURCE_GENERATOR
+            ReadOnlySpan<byte> rawValue = Encoding.UTF8.GetBytes(value);
+#else
+            ReadOnlySpan<byte> rawValue = Encoding.UTF8.GetBytes(value);
+#endif
+            Corvus.Text.Json.CodeGeneration.Internal.JsonElementHelpers.ParseNumber(rawValue, out bool isNegative, out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
+
+            string isNegativeStr = isNegative ? "true" : "false";
+            string integralStr = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(integral), true);
+            string fractionalStr = SymbolDisplay.FormatLiteral(Formatting.GetTextFromUtf8(fractional), true);
+            string exponentStr = exponent.ToString();
+
+            generator
+                        .AppendLineIndent(
+                            "if (JsonElementHelpers.CompareNormalizedJsonNumbers(discriminatorIsNegative, discriminatorIntegral, discriminatorFractional, discriminatorExponent, ",
+                            isNegativeStr, ", ", integralStr, "u8, ", fractionalStr, "u8, ", exponentStr, ") == 0)")
+                        .AppendLineIndent("{")
+                        .PushIndent()
+                            .AppendLineIndent(branchVar, " = ", caseIndex.ToString(), ";")
+                            .AppendLineIndent("break;")
+                        .PopIndent()
+                        .AppendLineIndent("}");
+            caseIndex++;
+        }
+
+        generator
+                    .PopIndent()
+                    .AppendLineIndent("}");  // close: if (GetJsonTokenType == Number)
     }
 }
