@@ -17,30 +17,31 @@ using global::System.Runtime.CompilerServices;
 using global::Corvus.Text.Json;
 using global::Corvus.Text.Json.Internal;
 
-namespace Corvus.Benchmark.Current;
+namespace Corvus.ClassicBenchmark.Current;
 /// <summary>
-/// Generated from JSON Schema.
+/// JSON Schema for a Person entity coming back from a 3rd party API (e.g. a storage format in a database)
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct JsonInt32
-    : IJsonElement<JsonInt32>
+public readonly partial struct Schema
+    : IJsonElement<Schema>
 {
     public static partial class JsonSchema
     {
         /// <summary>
         /// Gets a provider for the schema location from which this type was generated.
         /// </summary>
-        public static readonly JsonSchemaPathProvider? SchemaLocationProvider = null;
+        public static readonly JsonSchemaPathProvider SchemaLocationProvider = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("person-array-schema.json"u8, buffer, out written);
 
         /// <summary>
         /// Gets the schema location from which this type was generated.
         /// </summary>
-        public const string SchemaLocation = "";
+        public const string SchemaLocation = "person-array-schema.json";
 
         /// <summary>
         /// Gets the schema location from which this type was generated as a UTF-8 string.
         /// </summary>
-        public static ReadOnlySpan<byte> SchemaLocationUtf8 => ""u8;
+        public static ReadOnlySpan<byte> SchemaLocationUtf8 => "person-array-schema.json"u8;
+        private static readonly JsonSchemaPathProvider Ref0SchemaEvaluationPath = static (buffer, out written) => JsonSchemaEvaluation.TryCopyPath("#/$ref"u8, buffer, out written);
 
         /// <summary>
         /// Applies the JSON schema semantics defined by this type to the instance determined by the given document and index.
@@ -61,21 +62,28 @@ public readonly partial struct JsonInt32
                 JsonTokenType.EndObject or
                 JsonTokenType.EndArray));
 
-            if (!JsonSchemaEvaluation.MatchTypeNumber(tokenType,"type"u8, ref context))
+            if (!JsonSchemaEvaluation.MatchTypeArray(tokenType,"type"u8, ref context))
             {
                 if (!context.HasCollector)
                 {
                     return;
                 }
-                context.IgnoredKeyword(JsonSchemaEvaluation.IgnoredNotTypeNumber, "format"u8);
             }
-            else
-            {
-                ReadOnlyMemory<byte> rawSimpleValue = parentDocument.GetRawSimpleValue(parentIndex);
 
-                JsonElementHelpers.TryParseNumber(rawSimpleValue.Span, out bool isNegative,out ReadOnlySpan<byte> integral, out ReadOnlySpan<byte> fractional, out int exponent);
-                JsonSchemaEvaluation.MatchInt32(isNegative, integral, fractional, exponent, "format"u8, ref context);
+            if (!context.HasCollector && !context.IsMatch)
+            {
+                return;
             }
+
+            bool refComposedIsMatch = true;
+
+            JsonSchemaContext refContext0 =
+                Corvus.ClassicBenchmark.Current.Schema.PersonArray.JsonSchema.PushChildContext(parentDocument, parentIndex, ref context, schemaEvaluationPath: Ref0SchemaEvaluationPath);
+            Corvus.ClassicBenchmark.Current.Schema.PersonArray.JsonSchema.Evaluate(parentDocument, parentIndex, ref refContext0);
+            refComposedIsMatch = refComposedIsMatch && refContext0.IsMatch;
+            context.ApplyEvaluated(ref refContext0);
+            context.CommitChildContext(refContext0.IsMatch, ref refContext0);
+            context.EvaluatedKeyword(refComposedIsMatch, refComposedIsMatch  ? JsonSchemaEvaluation.MatchedAllSchema : JsonSchemaEvaluation.DidNotMatchAllSchema, "$ref"u8);
         }
 
         internal static bool Evaluate(

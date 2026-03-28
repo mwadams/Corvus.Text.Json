@@ -19,17 +19,17 @@ using global::Corvus.Text.Json.Internal;
 
 namespace Corvus.Benchmark.Current;
 /// <summary>
-/// Generated from JSON Schema.
+/// JSON Schema for a Person entity coming back from a 3rd party API (e.g. a storage format in a database)
 /// </summary>
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
-public readonly partial struct JsonInt32
+public readonly partial struct Schema
 #if NET8_0_OR_GREATER
-    : IJsonElement<JsonInt32>,
+    : IJsonElement<Schema>,
       IFormattable,
       ISpanFormattable,
       IUtf8SpanFormattable
 #else
-    : IJsonElement<JsonInt32>,
+    : IJsonElement<Schema>,
       IFormattable
 #endif
 {
@@ -39,10 +39,10 @@ public readonly partial struct JsonInt32
 
     #pragma warning restore CS8618 // JsonDocument nullability
     /// <summary>
-    /// Initializes a new instance of the <see cref="JsonInt32"/> struct.
+    /// Initializes a new instance of the <see cref="Schema"/> struct.
     /// </summary>
     /// <param name="value">The value from which to construct the instance.</param>
-    internal JsonInt32(IJsonDocument parent, int idx)
+    internal Schema(IJsonDocument parent, int idx)
     {
         Debug.Assert(idx >= 0);
         _parent = parent;
@@ -52,10 +52,182 @@ public readonly partial struct JsonInt32
     /// <summary>
     /// Gets the default instance.
     /// </summary>
-    public static JsonInt32 DefaultInstance { get; }
+    public static Schema DefaultInstance { get; }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetValue(out int value) { CheckValidInstance(); return _parent.TryGetValue(_idx, out value); }
+    /// <summary>
+    /// Gets the value of the property with the given name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>The value of the property with the given name.</returns>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public JsonElement this[ReadOnlySpan<byte> propertyName]
+    {
+        get
+        {
+            CheckValidInstance();
+            if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                return default;
+            }
+
+            return value;
+        }
+    }
+
+    /// <summary>
+    /// Gets the value of the property with the given name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>The value of the property with the given name.</returns>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public JsonElement this[ReadOnlySpan<char> propertyName]
+    {
+        get
+        {
+            CheckValidInstance();
+            if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                return default;
+            }
+
+            return value;
+        }
+    }
+
+    /// <summary>
+    /// Gets the value of the property with the given name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <returns>The value of the property with the given name.</returns>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public JsonElement this[string propertyName]
+    {
+        get
+        {
+            CheckValidInstance();
+            if (!_parent.TryGetNamedPropertyValue(_idx, propertyName, out JsonElement value))
+            {
+                return default;
+            }
+
+            return value;
+        }
+    }
+
+    /// <summary>
+    /// Tries to get the value of the property with the given name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="value">The value of the property, if present.</param>
+    /// <returns><see langword="true"/> if the property was found, otherwise <see langword="false"/>.</returns>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public bool TryGetProperty(ReadOnlySpan<byte> propertyName, out JsonElement value)
+    {
+        CheckValidInstance();
+        return _parent.TryGetNamedPropertyValue(_idx, propertyName, out value);
+    }
+
+    /// <summary>
+    /// Tries to get the value of the property with the given name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="value">The value of the property, if present.</param>
+    /// <returns><see langword="true"/> if the property was found, otherwise <see langword="false"/>.</returns>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public bool TryGetProperty(ReadOnlySpan<char> propertyName, out JsonElement value)
+    {
+        CheckValidInstance();
+        return _parent.TryGetNamedPropertyValue(_idx, propertyName, out value);
+    }
+
+    /// <summary>
+    /// Tries to get the value of the property with the given name.
+    /// </summary>
+    /// <param name="propertyName">The name of the property.</param>
+    /// <param name="value">The value of the property, if present.</param>
+    /// <returns><see langword="true"/> if the property was found, otherwise <see langword="false"/>.</returns>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public bool TryGetProperty(string propertyName, out JsonElement value)
+    {
+        CheckValidInstance();
+        return _parent.TryGetNamedPropertyValue(_idx, propertyName, out value);
+    }
+
+    /// <summary>
+    /// Gets the (optional) <c>age</c> property.
+    /// </summary>
+    public Corvus.Benchmark.Current.Schema.Age AgeValue
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.AgeValueUtf8, out Corvus.Benchmark.Current.Schema.Age value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Gets the (optional) <c>competedInYears</c> property.
+    /// </summary>
+    public Corvus.Benchmark.Current.Schema.CompetedInYears CompetedInYearsValue
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.CompetedInYearsValueUtf8, out Corvus.Benchmark.Current.Schema.CompetedInYears value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Gets the <c>name</c> property.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If the instance is valid, this property will not be <see cref="JsonValueKind.Undefined"/>.
+    /// </para>
+    /// <para>
+    /// A name of a person.
+    /// </para>
+    /// </remarks>
+    public Corvus.Benchmark.Current.Schema.PersonName Name
+    {
+        get
+        {
+            if (_parent.TryGetNamedPropertyValue(_idx, JsonPropertyNames.NameUtf8, out Corvus.Benchmark.Current.Schema.PersonName value))
+            {
+                return value;
+            }
+
+            return default;
+        }
+    }
+
+    /// <summary>
+    /// Gets the number of properties in the object.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public int GetPropertyCount()
+    {
+        CheckValidInstance();
+        return _parent.GetPropertyCount(_idx);
+    }
+
+    /// <summary>
+    /// Enumerates the object.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">The value is not an object.</exception>
+    public ObjectEnumerator<JsonElement> EnumerateObject()
+    {
+        CheckValidInstance();
+        return EnumeratorCreator.CreateObjectEnumerator<JsonElement>(_parent, _idx);
+    }
 
     /// <inheritdoc/>
     public JsonValueKind ValueKind => TokenType.ToValueKind();
@@ -63,23 +235,23 @@ public readonly partial struct JsonInt32
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     private JsonTokenType TokenType => _parent?.GetJsonTokenType(_idx) ?? JsonTokenType.None;
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator int(JsonInt32 value) => value._parent.TryGetValue(value._idx, out int result) ? result : throw new FormatException();
+    /// <summary>
+    /// Conversion to <see cref="Corvus.Benchmark.Current.Schema.Person"/>.
+    /// </summary>
+    /// <param name="value">The value from which to convert.</param>
+    public static implicit operator Corvus.Benchmark.Current.Schema.Person(Schema value)
+    {
+        return Corvus.Benchmark.Current.Schema.Person.From(value);
+    }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator long(JsonInt32 value) => value._parent.TryGetValue(value._idx, out long result) ? result : throw new FormatException();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator double(JsonInt32 value) => value._parent.TryGetValue(value._idx, out double result) ? result : throw new FormatException();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator Corvus.Numerics.BigNumber(JsonInt32 value) => value._parent.TryGetValue(value._idx, out Corvus.Numerics.BigNumber result) ? result : throw new FormatException();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator System.Numerics.BigInteger(JsonInt32 value) => value._parent.TryGetValue(value._idx, out System.Numerics.BigInteger result) ? result : throw new FormatException();
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static explicit operator decimal(JsonInt32 value) => value._parent.TryGetValue(value._idx, out decimal result) ? result : throw new FormatException();
+    /// <summary>
+    /// Conversion from <see cref="Corvus.Benchmark.Current.Schema.Person"/>.
+    /// </summary>
+    /// <param name="value">The value from which to convert.</param>
+    public static explicit operator Schema(Corvus.Benchmark.Current.Schema.Person value)
+    {
+        return From(value);
+    }
 
     /// <summary>
     /// Operator ==.
@@ -89,7 +261,7 @@ public readonly partial struct JsonInt32
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in JsonInt32 left, in JsonInt32 right)
+    public static bool operator ==(in Schema left, in Schema right)
     {
         return left.Equals(right);
     }
@@ -102,7 +274,7 @@ public readonly partial struct JsonInt32
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in JsonInt32 left, in JsonInt32 right)
+    public static bool operator !=(in Schema left, in Schema right)
     {
         return !left.Equals(right);
     }
@@ -115,7 +287,7 @@ public readonly partial struct JsonInt32
     /// <returns>
     /// <c>True</c> if the values are equal.
     /// </returns>
-    public static bool operator ==(in JsonInt32 left, in JsonElement right)
+    public static bool operator ==(in Schema left, in JsonElement right)
     {
         return left.Equals(right);
     }
@@ -128,7 +300,7 @@ public readonly partial struct JsonInt32
     /// <returns>
     /// <c>True</c> if the values are not equal.
     /// </returns>
-    public static bool operator !=(in JsonInt32 left, in JsonElement right)
+    public static bool operator !=(in Schema left, in JsonElement right)
     {
         return !left.Equals(right);
     }
@@ -139,7 +311,7 @@ public readonly partial struct JsonInt32
     /// <param name="value">The instance of this type.</param>
     /// <returns>An instance of JsonElement, initialized from the <see cref="IJsonElement{T}"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator JsonElement(JsonInt32 instance)
+    public static implicit operator JsonElement(Schema instance)
     {
         return JsonElement.From(instance);
     }
@@ -150,9 +322,9 @@ public readonly partial struct JsonInt32
     /// <param name="value">The instance of this type as a JsonElement.</param>
     /// <returns>An instance of the type, initialized from the <see cref="JsonElement"/>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static implicit operator JsonInt32(JsonElement instance)
+    public static implicit operator Schema(JsonElement instance)
     {
-        return JsonInt32.From(instance);
+        return Schema.From(instance);
     }
 
     /// <summary>
@@ -161,7 +333,7 @@ public readonly partial struct JsonInt32
     /// <param name="value">The <see cref="IJsonElement{T}"/> value from which to instantiate the instance.</param>
     /// <returns>An instance of this type, initialized from the JSON element.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonInt32 From<T>(in T instance)
+    public static Schema From<T>(in T instance)
         where T : struct, IJsonElement<T>
     {
         return new(instance.ParentDocument, instance.ParentDocumentIndex);
@@ -185,9 +357,9 @@ public readonly partial struct JsonInt32
     ///   A value could not be read from the span.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonInt32 ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
+    public static Schema ParseValue(ReadOnlySpan<byte> utf8Json, JsonDocumentOptions options = default)
     {
-        return JsonElementHelpers.ParseValue<JsonInt32>(utf8Json, options);
+        return JsonElementHelpers.ParseValue<Schema>(utf8Json, options);
     }
 
     /// <summary>
@@ -208,9 +380,9 @@ public readonly partial struct JsonInt32
     ///   A value could not be read from the span.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonInt32 ParseValue(ReadOnlySpan<char> json, JsonDocumentOptions options = default)
+    public static Schema ParseValue(ReadOnlySpan<char> json, JsonDocumentOptions options = default)
     {
-        return JsonElementHelpers.ParseValue<JsonInt32>(json, options);
+        return JsonElementHelpers.ParseValue<Schema>(json, options);
     }
 
     /// <summary>
@@ -231,9 +403,9 @@ public readonly partial struct JsonInt32
     ///   A value could not be read from the text.
     /// </exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static JsonInt32 ParseValue(string json, JsonDocumentOptions options = default)
+    public static Schema ParseValue(string json, JsonDocumentOptions options = default)
     {
-        return JsonElementHelpers.ParseValue<JsonInt32>(json, options);
+        return JsonElementHelpers.ParseValue<Schema>(json, options);
     }
 
     /// <summary>
@@ -271,9 +443,9 @@ public readonly partial struct JsonInt32
     /// <exception cref="JsonException">
     ///   A value could not be read from the reader.
     /// </exception>
-    public static JsonInt32 ParseValue(ref Utf8JsonReader reader)
+    public static Schema ParseValue(ref Utf8JsonReader reader)
     {
-        return JsonElementHelpers.ParseValue<JsonInt32>(ref reader);
+        return JsonElementHelpers.ParseValue<Schema>(ref reader);
     }
 
     /// <summary>
@@ -314,16 +486,16 @@ public readonly partial struct JsonInt32
     /// <exception cref="JsonException">
     ///   A value could not be read from the reader.
     /// </exception>
-    public static bool TryParseValue(ref Utf8JsonReader reader, out JsonInt32? result)
+    public static bool TryParseValue(ref Utf8JsonReader reader, out Schema? result)
     {
-        return JsonElementHelpers.TryParseValue<JsonInt32>(ref reader, out result);
+        return JsonElementHelpers.TryParseValue<Schema>(ref reader, out result);
     }
 
     /// <inheritdoc/>
     public override bool Equals(object? obj)
     {
         return
-            (obj is IJsonElement value && Equals(new JsonInt32(value.ParentDocument, value.ParentDocumentIndex))) ||
+            (obj is IJsonElement value && Equals(new Schema(value.ParentDocument, value.ParentDocumentIndex))) ||
             (obj is null && this.IsNull());
     }
 
@@ -336,36 +508,6 @@ public readonly partial struct JsonInt32
         where T : struct, IJsonElement
     {
         return JsonElementHelpers.DeepEquals(this, other);
-    }
-
-    /// <summary>
-    /// Compare with a normalized JSON number.
-    /// </summary>
-    /// <param ref="number">The normalized JSON number to compare with.</param>
-    /// <returns><see langword="true"/> if the values are equal.</returns>
-    public bool ValueEquals(in NormalizedJsonNumber number)
-    {
-        if (TokenType != JsonTokenType.Number)
-        {
-            return false;
-        }
-
-        JsonElementHelpers.ParseNumber(
-            _parent.GetRawSimpleValueUnsafe(_idx).Span,
-            out bool leftIsNegative,
-            out ReadOnlySpan<byte> leftIntegral,
-            out ReadOnlySpan<byte> leftFractional,
-            out int leftExponent);
-
-        return JsonElementHelpers.AreEqualNormalizedJsonNumbers(
-            leftIsNegative,
-            leftIntegral,
-            leftFractional,
-            leftExponent,
-            number.IsNegative,
-            number.Integral,
-            number.Fractional,
-            number.Exponent);
     }
 
     /// <inheritdoc/>
@@ -443,11 +585,11 @@ public readonly partial struct JsonInt32
     void IJsonElement.CheckValidInstance() => CheckValidInstance();
 
 #if NET
-    static JsonInt32 IJsonElement<JsonInt32>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
+    static Schema IJsonElement<Schema>.CreateInstance(IJsonDocument parentDocument, int parentDocumentIndex) => new(parentDocument, parentDocumentIndex);
 #endif
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-    private string DebuggerDisplay => $"JsonInt32: ValueKind = {ValueKind} : \"{ToString()}\"";
+    private string DebuggerDisplay => $"Schema: ValueKind = {ValueKind} : \"{ToString()}\"";
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     IJsonDocument IJsonElement.ParentDocument => _parent;
@@ -460,4 +602,78 @@ public readonly partial struct JsonInt32
 
     [DebuggerBrowsable(DebuggerBrowsableState.Never)]
     JsonValueKind IJsonElement.ValueKind => ValueKind;
+
+    /// <summary>
+    /// Gets the value as a <see cref="Corvus.Benchmark.Current.Schema.Person" />.
+    /// </summary>
+    /// <param name="result">The result of the conversions.</param>
+    /// <returns><see langword="true" /> if the conversion was valid.</returns>
+    public bool TryGetAsPerson(out Corvus.Benchmark.Current.Schema.Person result)
+    {
+        if (Corvus.Benchmark.Current.Schema.Person.JsonSchema.Evaluate(_parent, _idx))
+        {
+            result = Corvus.Benchmark.Current.Schema.Person.From(this);
+            return true;
+        }
+
+        result = default;
+        return false;
+    }
+
+    /// <summary>
+    /// Provides UTF8 and string versions of the JSON property names on the object.
+    /// </summary>
+    public static class JsonPropertyNames
+    {
+        /// <summary>
+        /// Gets the JSON property name for <see cref="AgeValue"/>.
+        /// </summary>
+        public const string AgeValue = "age";
+
+        /// <summary>
+        /// Gets the JSON property name for <see cref="CompetedInYearsValue"/>.
+        /// </summary>
+        public const string CompetedInYearsValue = "competedInYears";
+
+        /// <summary>
+        /// Gets the JSON property name for <see cref="Name"/>.
+        /// </summary>
+        public const string Name = "name";
+
+        /// <summary>
+        /// Gets the JSON property name for <see cref="AgeValue"/>.
+        /// </summary>
+        public static ReadOnlySpan<byte> AgeValueUtf8 => "age"u8;
+
+        /// <summary>
+        /// Gets the JSON property name for <see cref="CompetedInYearsValue"/>.
+        /// </summary>
+        public static ReadOnlySpan<byte> CompetedInYearsValueUtf8 => "competedInYears"u8;
+
+        /// <summary>
+        /// Gets the JSON property name for <see cref="Name"/>.
+        /// </summary>
+        public static ReadOnlySpan<byte> NameUtf8 => "name"u8;
+    }
+
+    /// <summary>
+    /// Provides escaped UTF-8 versions of the JSON property names on the object.
+    /// </summary>
+    private static class JsonPropertyNamesEscaped
+    {
+        /// <summary>
+        /// Gets the escaped UTF-8 JSON property name for <see cref="AgeValue"/>.
+        /// </summary>
+        public static ReadOnlySpan<byte> AgeValue => "age"u8;
+
+        /// <summary>
+        /// Gets the escaped UTF-8 JSON property name for <see cref="CompetedInYearsValue"/>.
+        /// </summary>
+        public static ReadOnlySpan<byte> CompetedInYearsValue => "competedInYears"u8;
+
+        /// <summary>
+        /// Gets the escaped UTF-8 JSON property name for <see cref="Name"/>.
+        /// </summary>
+        public static ReadOnlySpan<byte> Name => "name"u8;
+    }
 }
